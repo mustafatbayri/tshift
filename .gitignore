@@ -1,0 +1,45 @@
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+appsettings.Development.json
+appsettings.Local.json
+
+# ---- Node / Next.js ----
+node_modules/
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# ---- Ortam ve sırlar ----
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ---- İşletim sistemi / editör ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+
+# ---- Üretilen büyük dosyalar ----
+01-spike/**/girdi_500.json
+01-spike/**/girdi_1000.json
+01-spike/**/girdi_2000.json
+*.zip

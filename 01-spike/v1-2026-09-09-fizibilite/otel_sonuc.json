@@ -1,0 +1,67 @@
+{
+ "DENGELI": {
+  "metrik": {
+   "atama": 1323,
+   "calisan": 293,
+   "toplam_net_saat": 8901.0,
+   "asgari_karsilama": 1.0,
+   "hedef_karsilama": 0.945518453427065,
+   "eksik_kisi_saat": 434,
+   "fazla_mesai_saat": 102.0,
+   "adalet_sapma": 2.93
+  },
+  "ozet": {
+   "sert": 0,
+   "yumusak": 6,
+   "kod_bazinda": {
+    "HEDEF_KAPSAMA": 1,
+    "SAAT_DENGESI": 5
+   }
+  },
+  "sure_sn": 2.27
+ },
+ "KAPSAMA": {
+  "metrik": {
+   "atama": 1323,
+   "calisan": 293,
+   "toplam_net_saat": 8901.0,
+   "asgari_karsilama": 1.0,
+   "hedef_karsilama": 0.9456439869445142,
+   "eksik_kisi_saat": 433,
+   "fazla_mesai_saat": 124.0,
+   "adalet_sapma": 3.21
+  },
+  "ozet": {
+   "sert": 0,
+   "yumusak": 6,
+   "kod_bazinda": {
+    "HEDEF_KAPSAMA": 1,
+    "SAAT_DENGESI": 5
+   }
+  },
+  "sure_sn": 2.25
+ },
+ "CALISAN": {
+  "metrik": {
+   "atama": 1277,
+   "calisan": 293,
+   "toplam_net_saat": 8564.0,
+   "asgari_karsilama": 0.9982437653670531,
+   "hedef_karsilama": 0.9160180768265127,
+   "eksik_kisi_saat": 669,
+   "fazla_mesai_saat": 0.0,
+   "adalet_sapma": 2.37
+  },
+  "ozet": {
+   "sert": 11,
+   "yumusak": 6,
+   "kod_bazinda": {
+    "ASGARI_KAPSAMA": 10,
+    "ROL_KAPSAMASI": 1,
+    "HEDEF_KAPSAMA": 1,
+    "SAAT_DENGESI": 5
+   }
+  },
+  "sure_sn": 2.28
+ }
+}

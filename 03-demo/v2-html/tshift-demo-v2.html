@@ -1,0 +1,2304 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TShift Demo v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============ tokens ============ */
+:root{
+  --ground:#EEF2F1; --surface:#FFFFFF; --surface-2:#E6EDEB; --surface-3:#F6F9F8; --surface-4:#DCE6E4;
+  --ink:#101A19; --ink-2:#3C4F4C; --muted:#6C817D; --muted-2:#8A9C99;
+  --line:#D5E0DD; --line-2:#B9C9C5;
+  --brand:#17605B; --brand-2:#1F8C84; --brand-ink:#0E4340; --brand-soft:#DCECEA;
+  --ok:#2E7D52; --ok-soft:#DEEFE4; --warn:#9C6510; --warn-soft:#F7EBD5; --crit:#A93A25; --crit-soft:#F7E1DC;
+  --sh-1:0 1px 2px rgba(16,26,25,.06);
+  --sh-2:0 2px 4px rgba(16,26,25,.05), 0 12px 28px -18px rgba(16,26,25,.5);
+  --sh-3:0 8px 24px -8px rgba(16,26,25,.22), 0 30px 60px -30px rgba(16,26,25,.5);
+  --r:8px; --r-sm:5px; --r-lg:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0D1413; --surface:#141D1C; --surface-2:#1C2827; --surface-3:#111A19; --surface-4:#243230;
+  --ink:#E3EBE9; --ink-2:#AEC0BC; --muted:#7E918D; --muted-2:#647873;
+  --line:#243230; --line-2:#33453F;
+  --brand:#4FBDB2; --brand-2:#6ED0C5; --brand-ink:#8EDDD4; --brand-soft:#10312E;
+  --ok:#63C48D; --ok-soft:#112A1D; --warn:#D5A24E; --warn-soft:#2B2312; --crit:#E08A72; --crit-soft:#2E1712;
+  --sh-1:0 1px 2px rgba(0,0,0,.4);
+  --sh-2:0 2px 4px rgba(0,0,0,.4), 0 12px 28px -18px rgba(0,0,0,.9);
+  --sh-3:0 8px 24px -8px rgba(0,0,0,.6), 0 30px 60px -30px rgba(0,0,0,1);
+}}
+:root[data-theme="dark"]{
+  --ground:#0D1413; --surface:#141D1C; --surface-2:#1C2827; --surface-3:#111A19; --surface-4:#243230;
+  --ink:#E3EBE9; --ink-2:#AEC0BC; --muted:#7E918D; --muted-2:#647873;
+  --line:#243230; --line-2:#33453F;
+  --brand:#4FBDB2; --brand-2:#6ED0C5; --brand-ink:#8EDDD4; --brand-soft:#10312E;
+  --ok:#63C48D; --ok-soft:#112A1D; --warn:#D5A24E; --warn-soft:#2B2312; --crit:#E08A72; --crit-soft:#2E1712;
+  --sh-1:0 1px 2px rgba(0,0,0,.4);
+  --sh-2:0 2px 4px rgba(0,0,0,.4), 0 12px 28px -18px rgba(0,0,0,.9);
+  --sh-3:0 8px 24px -8px rgba(0,0,0,.6), 0 30px 60px -30px rgba(0,0,0,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;letter-spacing:-.012em;font-weight:600}
+h1{font-size:1.5rem;letter-spacing:-.02em}
+h2{font-size:1.05rem}
+h3{font-size:.94rem}
+p{margin:0 0 10px}
+a{color:var(--brand);text-decoration:none}
+:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ============ shell ============ */
+.app{display:grid;grid-template-columns:236px 1fr;height:100vh;overflow:hidden}
+.side{background:var(--surface-3);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.logo{padding:16px 18px 12px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)}
+.logo .m{width:26px;height:26px;border-radius:6px;background:var(--brand);display:grid;place-items:center;flex:none}
+.logo .m span{color:#fff;font-weight:700;font-size:.8rem;letter-spacing:-.03em}
+:root[data-theme="dark"] .logo .m span,:root:not([data-theme="light"]) .logo .m span{color:#08201E}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .logo .m span{color:#fff}}
+.logo .t{font-weight:700;font-size:.98rem;letter-spacing:-.02em}
+.logo .t small{display:block;font-weight:500;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nav{flex:1;overflow-y:auto;padding:10px 10px 24px}
+.nav .grp{font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);padding:14px 8px 5px}
+.nav a{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:var(--r-sm);color:var(--ink-2);font-size:.86rem;font-weight:500;cursor:pointer}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a.on{background:var(--brand-soft);color:var(--brand-ink);font-weight:600}
+.nav a .ic{width:15px;text-align:center;flex:none;opacity:.8;font-size:.9em}
+.nav a .cnt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:.68rem;background:var(--surface-4);color:var(--muted);padding:1px 5px;border-radius:9px}
+.nav a.on .cnt{background:var(--brand);color:#fff}
+.whoami{border-top:1px solid var(--line);padding:10px 12px;display:flex;align-items:center;gap:9px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--surface-4);display:grid;place-items:center;font-size:.72rem;font-weight:600;color:var(--ink-2);flex:none}
+.whoami .n{font-size:.8rem;font-weight:600;line-height:1.2}
+.whoami .r{font-size:.68rem;color:var(--muted)}
+
+.main{display:flex;flex-direction:column;overflow:hidden}
+.top{height:52px;border-bottom:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:12px;padding:0 20px;flex:none}
+.crumb{font-size:.78rem;color:var(--muted)}
+.top h1{font-size:1.02rem;font-weight:600}
+.top .sp{flex:1}
+.view{flex:1;overflow-y:auto;padding:22px 24px 80px}
+.view.flush{padding:0}
+.wrap{max-width:1180px}
+
+/* ============ atoms ============ */
+.btn{font:inherit;font-size:.83rem;font-weight:600;padding:7px 13px;border-radius:var(--r-sm);border:1px solid var(--line-2);
+  background:var(--surface);color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--brand);color:var(--brand-ink)}
+.btn.p{background:var(--brand);border-color:var(--brand);color:#fff}
+:root[data-theme="dark"] .btn.p,:root:not([data-theme="light"]) .btn.p{color:#08201E}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn.p{color:#fff}}
+.btn.p:hover{background:var(--brand-2);border-color:var(--brand-2)}
+.btn.sm{font-size:.76rem;padding:4px 9px}
+.btn.gh{border-color:transparent;background:transparent}
+.btn.gh:hover{background:var(--surface-2)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.dg{color:var(--crit);border-color:var(--line-2)}
+.btn.dg:hover{border-color:var(--crit);color:var(--crit)}
+
+.tag{display:inline-flex;align-items:center;gap:4px;font-family:"IBM Plex Mono",monospace;font-size:.66rem;font-weight:600;
+  padding:2px 6px;border-radius:3px;background:var(--surface-4);color:var(--ink-2);white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.crit{background:var(--crit-soft);color:var(--crit)}
+.tag.brand{background:var(--brand-soft);color:var(--brand-ink)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh-1)}
+.card .hd{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.card .hd h3{flex:1}
+.card .bd{padding:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px}
+.stat .k{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:4px}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin-top:3px;line-height:1.1}
+.stat .s{font-size:.74rem;color:var(--muted);margin-top:2px}
+.stat.ok .v{color:var(--ok)} .stat.warn .v{color:var(--warn)} .stat.crit .v{color:var(--crit)}
+
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=email],select,textarea{
+  font:inherit;font-size:.85rem;width:100%;padding:7px 10px;border-radius:var(--r-sm);
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+textarea{min-height:70px;resize:vertical}
+label.f{display:block;margin-bottom:11px}
+label.f .lb{display:block;font-size:.74rem;font-weight:600;color:var(--muted);margin-bottom:4px}
+label.f .hint{font-size:.72rem;color:var(--muted-2);margin-top:3px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+
+.tbl-w{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table.t{border-collapse:collapse;width:100%;font-size:.83rem}
+table.t th{position:sticky;top:0;z-index:1;background:var(--surface-3);text-align:left;padding:9px 12px;
+  font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line-2);white-space:nowrap}
+table.t td{padding:8px 12px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:middle}
+table.t tr:last-child td{border-bottom:none}
+table.t tbody tr:hover td{background:var(--surface-3)}
+table.t td.n{font-family:"IBM Plex Mono",monospace;text-align:right}
+table.t td.s{color:var(--ink);font-weight:500}
+table.t tr.clk{cursor:pointer}
+
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs button{font:inherit;font-size:.84rem;font-weight:600;padding:8px 13px;border:none;background:none;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button.on{color:var(--brand-ink);border-bottom-color:var(--brand)}
+
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-sm);overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:.78rem;font-weight:600;padding:5px 11px;border:none;background:none;color:var(--muted);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line-2)}
+.seg button.on{background:var(--brand-soft);color:var(--brand-ink)}
+
+.empty{text-align:center;padding:46px 20px;color:var(--muted)}
+.empty .big{font-size:1.6rem;margin-bottom:8px;opacity:.4}
+
+/* metric tooltip */
+.q{display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;border:1px solid var(--line-2);
+  font-size:.58rem;font-weight:700;color:var(--muted);cursor:help;flex:none;position:relative;font-family:"Instrument Sans",sans-serif}
+.q:hover{border-color:var(--brand);color:var(--brand)}
+.tip{position:fixed;z-index:400;max-width:290px;background:var(--surface);border:1px solid var(--line-2);
+  border-radius:var(--r);box-shadow:var(--sh-3);padding:11px 13px;font-size:.79rem;line-height:1.45;color:var(--ink-2);pointer-events:none}
+.tip .tt{font-weight:700;color:var(--ink);font-size:.82rem;margin-bottom:3px}
+.tip .ty{font-style:italic;color:var(--brand-ink);margin:5px 0}
+.tip .tx{font-size:.74rem;color:var(--muted);margin-top:5px;border-top:1px solid var(--line);padding-top:5px}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(16,26,25,.45);z-index:300;display:grid;place-items:center;padding:24px}
+.modal{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh-3);width:100%;max-width:560px;
+  max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.modal.wide{max-width:860px} .modal.xwide{max-width:1080px}
+.modal .mh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+.modal .mh h2{flex:1}
+.modal .mh .sub{font-size:.79rem;color:var(--muted);margin-top:2px;font-weight:400}
+.modal .mb{padding:18px 20px;overflow-y:auto;flex:1}
+.modal .mf{padding:13px 20px;border-top:1px solid var(--line);display:flex;gap:9px;justify-content:flex-end;background:var(--surface-3)}
+.x{font:inherit;border:none;background:none;font-size:1.15rem;color:var(--muted);cursor:pointer;line-height:1;padding:2px 5px;border-radius:4px}
+.x:hover{background:var(--surface-2);color:var(--ink)}
+
+/* toast */
+.toasts{position:fixed;right:18px;bottom:18px;z-index:500;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--surface);border:1px solid var(--line-2);border-left:3px solid var(--ok);border-radius:var(--r);
+  box-shadow:var(--sh-3);padding:11px 14px;display:flex;align-items:center;gap:12px;font-size:.84rem;max-width:400px}
+.toast.warn{border-left-color:var(--warn)}
+.toast .msg{flex:1;color:var(--ink-2)}
+
+.note{border-left:3px solid var(--brand);background:var(--surface-3);padding:11px 14px;border-radius:0 var(--r) var(--r) 0;
+  font-size:.83rem;color:var(--ink-2);margin:12px 0}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
+.note b{color:var(--ink)}
+
+.demo-bar{background:var(--warn-soft);color:var(--warn);font-size:.75rem;font-weight:600;padding:5px 20px;
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex:none}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:236px;z-index:200;transform:translateX(-100%);transition:transform .2s;box-shadow:var(--sh-3)}
+  .side.open{transform:none}
+  .burger{display:inline-flex!important}
+}
+.burger{display:none}
+</style></head>
+<body>
+<div id="root"></div>
+<div class="toasts" id="toasts"></div>
+<div id="modal-host"></div>
+<script>
+/* ==========================================================================
+   TShift Demo v2 — tıklanabilir prototip
+   Gerçek veri yok; çağrı merkezi operasyonu benzetimi.
+   Spec: 02-spec/v1.1-master-spec.md
+   ========================================================================== */
+
+/* ---------- yardımcılar ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const el = (t,c,x)=>{const n=document.createElement(t); if(c)n.className=c; if(x!=null)n.textContent=x; return n;};
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const h = (str,...v) => str.reduce((a,s,i)=>a+s+(v[i]==null?'':v[i]),'');
+const pad = n => String(n).padStart(2,'0');
+const saat = v => pad(Math.floor(v)%24)+':'+pad(Math.round((v%1)*60));
+const saatUzun = v => pad(Math.floor(v))+':'+pad(Math.round((v%1)*60));
+const GUNLER = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
+const GUNK = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+const AYLAR = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+function rng(seed){ let s=seed>>>0; return ()=> (s=(s*1664525+1013904223)>>>0)/4294967296; }
+const R = rng(20260909);
+const pick = a => a[Math.floor(R()*a.length)];
+const pickN = (a,n)=>{const c=[...a],o=[];while(o.length<n&&c.length)o.push(c.splice(Math.floor(R()*c.length),1)[0]);return o;};
+const num = n => n.toLocaleString('tr-TR');
+const dec = (n,d=1) => n.toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+function tarihStr(d){ return `${d.getDate()} ${AYLAR[d.getMonth()]} ${d.getFullYear()}`; }
+function tarihKisa(d){ return `${pad(d.getDate())}.${pad(d.getMonth()+1)}`; }
+function gunEkle(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+</script>
+<script>
+/* ==========================================================================
+   VERİ KATMANI — Anadolu Çağrı Merkezi (kurgu operasyon)
+   ========================================================================== */
+const AD_E=['Mert','Burak','Emre','Kaan','Onur','Serkan','Deniz','Barış','Cem','Tolga','Uğur','Efe','Arda','Berk','Volkan','Sinan','Hakan','Murat','Eren','Yiğit','Ozan','Doruk','Kerem','Alp','Tarık'];
+const AD_K=['Selin','Ayşe','Zeynep','Elif','Merve','Ceren','Buse','Gizem','Ece','Pınar','Damla','Sıla','İrem','Aslı','Duygu','Melis','Esra','Tuğçe','Beren','Nihan','Yağmur','Sude','Defne','Nur','Bilge'];
+const SOYAD=['Kaya','Arslan','Demir','Yılmaz','Çelik','Şahin','Yıldız','Aydın','Öztürk','Doğan','Kurt','Koç','Aksoy','Polat','Erdoğan','Tekin','Güneş','Bulut','Ateş','Korkmaz','Şen','Ünal','Turan','Avcı','Kılıç','Sarı','Duman','Taş','Aslan','Çakır'];
+
+const EKIPLER=[
+  {id:'t1',ad:'Müşteri Hizmetleri',kod:'MH',renk:'#17605B'},
+  {id:'t2',ad:'Teknik Destek',kod:'TD',renk:'#8A5A1E'},
+  {id:'t3',ad:'Satış & Kurtarma',kod:'SK',renk:'#4A4488'},
+];
+const DEPARTMAN={id:'d1',ad:'Çağrı Merkezi Operasyon',calisma:'saatli',acilis:8,kapanis:24};
+
+const SABLONLAR=[
+  {id:'s1',ad:'Sabah',kod:'SAB',bas:8,bit:16,mola:60,renk:'#2E7D52'},
+  {id:'s2',ad:'Ara',kod:'ARA',bas:10,bit:18,mola:60,renk:'#17605B'},
+  {id:'s3',ad:'Akşam',kod:'AKS',bas:16,bit:24,mola:60,renk:'#8A5A1E'},
+  {id:'s4',ad:'Yarım gün sabah',kod:'YS',bas:9,bit:13,mola:15,renk:'#4A4488'},
+  {id:'s5',ad:'Yarım gün akşam',kod:'YA',bas:18,bit:22,mola:15,renk:'#7A3A63'},
+];
+
+const YETKINLIKLER=[
+  {id:'y1',ad:'İngilizce',kod:'ING'},
+  {id:'y2',ad:'Kurumsal müşteri',kod:'KUR'},
+  {id:'y3',ad:'Fatura & tahsilat',kod:'FAT'},
+  {id:'y4',ad:'Teknik seviye-2',kod:'TS2'},
+];
+
+/* --- çalışanlar --- */
+const CALISANLAR=[];
+(function(){
+  const N=214;
+  for(let i=0;i<N;i++){
+    const k = R()<0.58;
+    const ad = k?pick(AD_K):pick(AD_E);
+    const soyad = pick(SOYAD);
+    const ekip = R()<0.52?'t1':(R()<0.62?'t2':'t3');
+    const yariZamanli = R()<0.22;
+    const lider = i%18===3;
+    const durum = R()<0.04?'pasif':'aktif';
+    const yetk=[];
+    if(R()<0.28) yetk.push('y1');
+    if(R()<0.22) yetk.push('y2');
+    if(R()<0.35) yetk.push('y3');
+    if(ekip==='t2'&&R()<0.4) yetk.push('y4');
+    CALISANLAR.push({
+      id:'e'+(i+1), sicil:'A'+(4100+i*3+Math.floor(R()*3)),
+      ad, soyad, tam:ad+' '+soyad,
+      ekip, lider,
+      sozlesme: yariZamanli?'yari_zamanli':'tam_zamanli',
+      haftalik: yariZamanli?(R()<0.5?20:24):45,
+      gunlukAzami: yariZamanli?5:9,
+      yetkinlikler:yetk,
+      giris:new Date(2019+Math.floor(R()*7),Math.floor(R()*12),1+Math.floor(R()*28)),
+      durum,
+      eposta:(ad+'.'+soyad).toLocaleLowerCase('tr').replace(/[şğüöçı]/g,c=>({'ş':'s','ğ':'g','ü':'u','ö':'o','ç':'c','ı':'i'}[c]))+'@anadolucm.com',
+      telefon:'0'+(530+Math.floor(R()*40))+' '+(100+Math.floor(R()*900))+' '+(10+Math.floor(R()*90))+' '+(10+Math.floor(R()*90)),
+    });
+  }
+})();
+const AKTIF = CALISANLAR.filter(c=>c.durum==='aktif');
+const byId = Object.fromEntries(CALISANLAR.map(c=>[c.id,c]));
+const ekipAd = id => (EKIPLER.find(e=>e.id===id)||{}).ad||'—';
+const ekipObj = id => EKIPLER.find(e=>e.id===id)||EKIPLER[0];
+const sablonObj = id => SABLONLAR.find(s=>s.id===id)||SABLONLAR[0];
+
+/* --- izinler --- */
+const HAFTA_BAS = new Date(2026,9,12); // 12 Ekim 2026 Pazartesi
+const IZINLER=[];
+(function(){
+  const tipler=['yillik','mazeret','rapor','ucretsiz'];
+  for(let i=0;i<26;i++){
+    const c = pick(AKTIF);
+    const off = Math.floor(R()*26)-8;
+    const uzun = R()<0.3?2+Math.floor(R()*3):1;
+    IZINLER.push({
+      id:'i'+(i+1), calisan:c.id, tip:pick(tipler),
+      bas:gunEkle(HAFTA_BAS,off), bit:gunEkle(HAFTA_BAS,off+uzun-1),
+      gun:uzun, tumGun:true,
+      durum: off<0?'onayli':(R()<0.45?'talep':'onayli'),
+      aciklama: R()<0.3?pick(['Aile ziyareti','Sağlık kontrolü','Taşınma','Düğün','Kişisel']):''
+    });
+  }
+})();
+
+/* --- talep (ekip × gün × saat) --- */
+const TALEP={};
+(function(){
+  const gunKat=[1,1,1.02,1.05,1.12,.82,.6];
+  const saatEgri={8:.35,9:.62,10:.86,11:.95,12:.78,13:.72,14:.9,15:1,16:.96,17:.88,18:.74,19:.62,20:.5,21:.4,22:.3,23:.22};
+  EKIPLER.forEach(t=>{
+    const taban = t.id==='t1'?11:(t.id==='t2'?6:4);
+    for(let g=0;g<7;g++) for(let s=8;s<24;s++){
+      const hedef = Math.max(1,Math.round(taban*gunKat[g]*(saatEgri[s]||.2)));
+      TALEP[`${t.id}|${g}|${s}`]={hedef,asgari:Math.max(1,Math.round(hedef*0.78))};
+    }
+  });
+})();
+const talepAl=(t,g,s)=>TALEP[`${t}|${g}|${s}`]||{hedef:0,asgari:0};
+
+/* --- metrik tanımları (spec §8.8) --- */
+const METRIK={
+  HEDEF_KAPSAMA:{ad:'Hedef kapsama',kisa:'İdeal kişi sayısına ne kadar ulaşıldığı.',yon:'Yüksek olması iyidir.',
+    ornek:'%99,5 iyi bir değerdir; %95’in altı planda gözle görülür açık demektir.',
+    detay:'Her ekip-gün-saat hücresinde sahada olan kişinin, olması istenen kişiye oranı.'},
+  ASGARI_KAPSAMA:{ad:'Asgari kapsama',kisa:'Zorunlu asgari kişi sayısının sağlandığı saatlerin oranı.',yon:'%100 olmak zorundadır.',
+    ornek:'%100 dışında bir değer planın geçersiz olduğu anlamına gelir.',
+    detay:'Sert kuraldır; motor bu değeri %100 tutamıyorsa plan üretmez, çözümsüzlük teşhisi verir.'},
+  ADALET:{ad:'Adalet sapması',kisa:'Gece ve hafta sonu yükünün kişiler arasında ne kadar eşit dağıldığı.',yon:'Düşük olması iyidir.',
+    ornek:'1,15 iyi bir değerdir; 3’ün üstü dengesizlik demektir.',
+    detay:'Kişi başına düşen ağır vardiya sayılarının standart sapması. Aylık pencerede ölçülür.'},
+  GAP:{ad:'Optimuma uzaklık',kisa:'Bulunan plan ile matematiksel en iyi plan arasındaki fark.',yon:'Düşük olması iyidir.',
+    ornek:'%0,01 binde bir demektir — pratikte en iyi plan. %10’un üstü “daha iyisi var” demektir.',
+    detay:'Çözücünün üst ve alt sınırları arasındaki mesafe. Süre bütçesi arttıkça küçülür.'},
+  FM:{ad:'Fazla mesai',kisa:'Sözleşme saatinin üstünde planlanan toplam saat.',yon:'Düşük olması iyidir.',
+    ornek:'Çalışan dostu profilde 0 olmalıdır; dengeli profilde haftalık 10 saat tavanı vardır.',
+    detay:'Yasal yıllık 270 saat sınırına da sayılır.'},
+  TERCIH:{ad:'Karşılanmayan tercih',kisa:'Çalışanın bildirdiği tercihlerden karşılanamayanların sayısı.',yon:'Düşük olması iyidir.',
+    ornek:'12 tercih, 214 kişilik bir operasyonda normaldir. 40’ın üstü memnuniyetsizlik yaratır.',
+    detay:'Tercih yumuşak kuraldır; “yapamam” değil “tercih ederim” anlamına gelir.'},
+  SAAT_DENGE:{ad:'Saat dengesi',kisa:'Kişilerin haftalık saatlerinin sözleşmelerine ortalama uzaklığı.',yon:'Düşük olması iyidir.',
+    ornek:'±2 saat toleransın içindedir; 5 saatin üstü bazı kişilerin çok, bazılarının az çalıştığı anlamına gelir.'},
+  UYUM:{ad:'Plan uyum skoru',kisa:'Planlanan ile fiilen çalışılanın ne kadar örtüştüğü.',yon:'Yüksek olması iyidir.',
+    ornek:'%95 üstü iyi. %85’in altı planın sahada tutmadığını gösterir.',
+    detay:'Geç giriş, erken çıkış ve devamsızlık birlikte hesaplanır.'},
+  KAPANMA:{ad:'Kapanma payı',kisa:'Mola, izin, eğitim ve devamsızlık nedeniyle sahada olunamayan sürenin oranı.',yon:'Operasyona özgüdür.',
+    ornek:'%25 tipiktir. %30 alındığında gereken kadro %45 artar.',
+    detay:'Erlang hesabı “aynı anda kaç kişi telefonda olmalı” der; çizelgeye yazılacak kişi bundan fazladır.'},
+  KARARLILIK:{ad:'Plan kararlılığı',kisa:'Yeniden planlamada kaç kişinin vardiyasının değişmediği.',yon:'Yüksek olması iyidir.',
+    ornek:'%91 ölçüldü — yani gereksiz değişimin %91’i önlendi.'},
+};
+</script>
+<script>
+/* ==========================================================================
+   PLAN ÜRETİCİ (demo benzetimi — gerçek motor CP-SAT'tir, spec §11)
+   ========================================================================== */
+function izinliMi(cid,gunIx){
+  const d=gunEkle(HAFTA_BAS,gunIx);
+  return IZINLER.some(i=>i.calisan===cid&&i.durum==='onayli'&&d>=i.bas&&d<=i.bit);
+}
+function uretPlan(profil){
+  const agir={DENGELI:{fm:0.35,hedef:.9},KAPSAMA:{fm:1,hedef:1},CALISAN:{fm:0,hedef:.78}}[profil];
+  const atamalar=[]; const saatler={}; const gunler={}; const geceSay={};
+  AKTIF.forEach(c=>{saatler[c.id]=0;gunler[c.id]=new Set();geceSay[c.id]=0;});
+  const rr=rng(profil==='DENGELI'?7:(profil==='KAPSAMA'?11:23));
+
+  for(let g=0;g<7;g++){
+    EKIPLER.forEach(t=>{
+      const havuz=AKTIF.filter(c=>c.ekip===t.id&&!izinliMi(c.id,g)&&!gunler[c.id].has(g));
+      // saat başına ihtiyaç
+      const ihtiyac={}; for(let s=8;s<24;s++){const q=talepAl(t.id,g,s); ihtiyac[s]=Math.round(q.asgari+(q.hedef-q.asgari)*agir.hedef);}
+      const doluluk={}; for(let s=8;s<24;s++) doluluk[s]=0;
+      let guard=0;
+      while(guard++<400){
+        let acikS=-1,acikMik=0;
+        for(let s=8;s<24;s++){const d=ihtiyac[s]-doluluk[s]; if(d>acikMik){acikMik=d;acikS=s;}}
+        if(acikS<0) break;
+        const uygunSab=SABLONLAR.filter(sb=>sb.bas<=acikS&&sb.bit>acikS);
+        if(!uygunSab.length) break;
+        const sb=uygunSab[Math.floor(rr()*uygunSab.length)];
+        const sure=sb.bit-sb.bas-sb.mola/60;
+        const aday=havuz.filter(c=>{
+          if(gunler[c.id].has(g)) return false;
+          if(sure>c.gunlukAzami) return false;
+          const yeni=saatler[c.id]+sure;
+          const tavan=c.sozlesme==='yari_zamanli'?c.haftalik:(c.haftalik+(profil==='KAPSAMA'?15:(profil==='DENGELI'?10:0)));
+          if(yeni>tavan) return false;
+          if(gunler[c.id].size>=(c.sozlesme==='yari_zamanli'?4:6)) return false;
+          return true;
+        });
+        if(!aday.length){ ihtiyac[acikS]=doluluk[acikS]; continue; }
+        aday.sort((a,b)=>(saatler[a.id]/a.haftalik)-(saatler[b.id]/b.haftalik));
+        const c=aday[Math.floor(rr()*Math.min(6,aday.length))];
+        atamalar.push({id:'a'+atamalar.length, calisan:c.id, ekip:t.id, sablon:sb.id, gun:g,
+          bas:sb.bas, bit:sb.bit, mola:sb.mola, kilit:false, kaynak:'motor'});
+        gunler[c.id].add(g); saatler[c.id]+=sure;
+        if(sb.bit>=22) geceSay[c.id]=(geceSay[c.id]||0)+1;
+        for(let s=sb.bas;s<sb.bit;s++) doluluk[s]++;
+      }
+    });
+  }
+  return {profil, atamalar, saatler, geceSay};
+}
+function kapsamaHesap(atamalar){
+  const d={};
+  atamalar.forEach(a=>{ for(let s=a.bas;s<a.bit;s++){const k=`${a.ekip}|${a.gun}|${s}`; d[k]=(d[k]||0)+1;} });
+  return d;
+}
+function metrikHesap(p){
+  const d=kapsamaHesap(p.atamalar);
+  let hedefT=0,hedefO=0,asgT=0,asgO=0,acikSaat=0;
+  EKIPLER.forEach(t=>{for(let g=0;g<7;g++)for(let s=8;s<24;s++){
+    const q=talepAl(t.id,g,s), v=d[`${t.id}|${g}|${s}`]||0;
+    hedefT+=q.hedef; hedefO+=Math.min(v,q.hedef);
+    asgT+=q.asgari; asgO+=Math.min(v,q.asgari);
+    if(v<q.asgari) acikSaat++;
+  }});
+  let fm=0,sapmaTop=0,n=0;
+  AKTIF.forEach(c=>{const s=p.saatler[c.id]||0; if(s>c.haftalik) fm+=s-c.haftalik; sapmaTop+=Math.abs(s-c.haftalik); n++;});
+  const geceler=AKTIF.map(c=>p.geceSay[c.id]||0);
+  const ort=geceler.reduce((a,b)=>a+b,0)/geceler.length;
+  const std=Math.sqrt(geceler.reduce((a,b)=>a+(b-ort)**2,0)/geceler.length);
+  const toplamSaat=Object.values(p.saatler).reduce((a,b)=>a+b,0);
+  return {
+    hedef:hedefO/hedefT*100, asgari:asgO/asgT*100, acikSaat,
+    toplamSaat:Math.round(toplamSaat), fm:Math.round(fm),
+    adalet:std, saatDenge:sapmaTop/n,
+    tercih: p.profil==='CALISAN'?3:(p.profil==='DENGELI'?12:31),
+    gap: p.profil==='DENGELI'?0.01:(p.profil==='KAPSAMA'?0.04:0.02),
+    sure: p.profil==='DENGELI'?47:(p.profil==='KAPSAMA'?63:38),
+    sertIhlal:0, kisi:new Set(p.atamalar.map(a=>a.calisan)).size
+  };
+}
+const PLANLAR={};
+['DENGELI','KAPSAMA','CALISAN'].forEach(pr=>{const p=uretPlan(pr); p.metrik=metrikHesap(p); PLANLAR[pr]=p;});
+
+/* --- hafta ortası olay + plana değen izin talepleri (etki analizi için) --- */
+const OLAY_RAPOR=[];
+const IZIN_TALEP=[];
+(function(){
+  const p=PLANLAR.DENGELI;
+  // en dar kapsamalı hücrelerden birkaç kişiyi çıkar
+  const aday=p.atamalar.filter(a=>a.gun>=4&&a.bit>=20);
+  const secilen=[];
+  for(let i=0;i<aday.length&&secilen.length<4;i+=Math.max(1,Math.floor(aday.length/9))){
+    const a=aday[i];
+    if(secilen.some(x=>x.calisan===a.calisan)) continue;
+    secilen.push({calisan:a.calisan,gun:a.gun,ekip:a.ekip});
+  }
+  OLAY_RAPOR.push(...secilen);
+
+  // plan haftasında vardiyası olan kişiler için izin talebi üret
+  const kullanildi=new Set(secilen.map(s=>s.calisan));
+  const havuz=[];
+  p.atamalar.forEach(a=>{ if(a.gun>=1&&a.gun<=5&&!kullanildi.has(a.calisan)&&!havuz.some(x=>x.calisan===a.calisan)) havuz.push(a); });
+  const tipler=['yillik','mazeret','yillik','ucretsiz','mazeret','yillik'];
+  for(let i=0;i<6;i++){
+    const a=havuz[Math.floor(i*havuz.length/7)];
+    if(!a) break;
+    IZIN_TALEP.push({id:'it'+i, calisan:a.calisan, tip:tipler[i],
+      bas:gunEkle(HAFTA_BAS,a.gun), bit:gunEkle(HAFTA_BAS,Math.min(6,a.gun+(i%2))),
+      gun:1+(i%2), tumGun:true, durum:'talep',
+      aciklama:['Aile ziyareti','Sağlık kontrolü','Taşınma','Düğün','Kişisel','Sınav'][i]});
+  }
+  IZINLER.push(...IZIN_TALEP);
+})();
+
+const PROFIL_BILGI={
+  DENGELI:{ad:'Dengeli',aciklama:'Kapsama ile çalışan memnuniyeti arasında denge kurar. Çoğu hafta için doğru seçim.'},
+  KAPSAMA:{ad:'Kapsama odaklı',aciklama:'Hiçbir saat açık kalmasın; gerekirse fazla mesai yapılır. Yoğun dönemler için.'},
+  CALISAN:{ad:'Çalışan odaklı',aciklama:'Tercihler ve adalet önce; kapsamadan bir miktar feragat eder.'},
+};
+
+/* --- gerçekleşen veri (geçmiş hafta) --- */
+const GECMIS_HAFTA=gunEkle(HAFTA_BAS,-7);
+const GERCEKLESEN=[];
+(function(){
+  const p=PLANLAR.DENGELI;
+  p.atamalar.forEach(a=>{
+    if(R()<0.035) { GERCEKLESEN.push({calisan:a.calisan,gun:a.gun,plan:a,devamsiz:true}); return; }
+    const gec=R()<0.16?Math.round(R()*22):0;
+    const erken=R()<0.09?Math.round(R()*18):0;
+    GERCEKLESEN.push({calisan:a.calisan,gun:a.gun,plan:a,devamsiz:false,gec,erken});
+  });
+})();
+
+/* --- kurallar --- */
+const KURALLAR=[
+ {kod:'AKTIF_CALISAN',ad:'Aktif çalışan',tur:'SERT',kat:'uygunluk',yasal:false,par:null,birim:'',aciklama:'Pasif ya da işten ayrılmış çalışana atama yapılamaz.'},
+ {kod:'SOZLESME_GECERLI',ad:'Sözleşme geçerliliği',tur:'SERT',kat:'uygunluk',yasal:true,par:null,birim:'',aciklama:'Sözleşme bitişinden sonraki güne atama yapılamaz. Sezonluk kadroda kritik.'},
+ {kod:'ONAYLI_IZIN',ad:'Onaylı izin',tur:'SERT',kat:'uygunluk',yasal:true,par:null,birim:'',aciklama:'Onaylı izin gününe atama yapılamaz.'},
+ {kod:'UYGUNLUK_TAKVIMI',ad:'Uygunluk takvimi',tur:'SERT',kat:'uygunluk',yasal:false,par:null,birim:'',aciklama:'Çalışanın "uygun değilim" dediği saat aralığına atama yapılamaz. Öğrenci ders programı buradan gelir.'},
+ {kod:'CALISMA_SAATLERI',ad:'Çalışma saatleri',tur:'SERT',kat:'uygunluk',yasal:false,par:null,birim:'',aciklama:'Operasyon kapalıyken atama yapılamaz.'},
+ {kod:'GUNLUK_AZAMI',ad:'Günlük azami süre',tur:'SERT',kat:'sure',yasal:true,par:9,birim:'saat',aciklama:'Bir günde çalışılabilecek azami net süre. Yarı zamanlıda sözleşme tipine göre değişir.'},
+ {kod:'HAFTALIK_AZAMI',ad:'Haftalık azami süre',tur:'SERT',kat:'sure',yasal:true,par:45,birim:'saat',aciklama:'Bir haftada çalışılabilecek azami net süre.'},
+ {kod:'PART_TIME_LIMIT',ad:'Yarı zamanlı tavanı',tur:'SERT',kat:'sure',yasal:false,par:0,birim:'saat tolerans',aciklama:'Yarı zamanlının sözleşme saati aşılamaz — toleranssız.'},
+ {kod:'VARDIYA_ARASI_DINLENME',ad:'Vardiya arası dinlenme',tur:'SERT',kat:'sure',yasal:true,par:11,birim:'saat',aciklama:'İki vardiya arasında kesintisiz dinlenme. Geçen haftanın son vardiyası da sayılır.'},
+ {kod:'HAFTA_TATILI',ad:'Hafta tatili',tur:'SERT',kat:'sure',yasal:true,par:24,birim:'saat / 7 gün',aciklama:'Yedi günlük pencerede kesintisiz dinlenme hakkı.'},
+ {kod:'CAKISMA_YOK',ad:'Çakışma yok',tur:'SERT',kat:'sure',yasal:false,par:null,birim:'',aciklama:'Aynı kişiye çakışan iki vardiya verilemez. Mutlak zamanda ölçülür.'},
+ {kod:'MOLA_HAKKI',ad:'Mola hakkı',tur:'SERT',kat:'sure',yasal:true,par:60,birim:'dk (>7,5 sa)',aciklama:'Vardiya süresine göre zorunlu ara dinlenme. ≤4sa:15dk · 4–7,5sa:30dk · >7,5sa:60dk'},
+ {kod:'ASGARI_VARDIYA_SURESI',ad:'Asgari vardiya süresi',tur:'SERT',kat:'sure',yasal:false,par:4,birim:'saat',aciklama:'Bir kişiye verilebilecek en kısa vardiya.',yeni:true},
+ {kod:'ARDISIK_CALISMA_GUNU',ad:'Ardışık çalışma günü',tur:'SERT',kat:'sure',yasal:false,par:6,birim:'gün',aciklama:'Üst üste çalışılabilecek azami gün.',yeni:true},
+ {kod:'YILLIK_FAZLA_MESAI_TAVANI',ad:'Yıllık fazla mesai tavanı',tur:'SERT',kat:'sure',yasal:true,par:270,birim:'saat / yıl',aciklama:'İş Kanunu yıllık fazla mesai sınırı. Yıl boyunca birikir.',yeni:true},
+ {kod:'GECE_VARDIYASI_AZAMI',ad:'Gece vardiyası azami',tur:'SERT',kat:'gece',yasal:true,par:7.5,birim:'saat',aciklama:'Gece penceresine düşen azami çalışma. İş Kanunu md. 69.'},
+ {kod:'ARDISIK_GECE_LIMIT',ad:'Ardışık gece limiti',tur:'SERT',kat:'gece',yasal:false,par:3,birim:'gece',aciklama:'Aynı kişiye üst üste verilebilecek azami gece.'},
+ {kod:'VARDIYA_ROTASYON_YONU',ad:'Rotasyon yönü',tur:'YUMUŞAK',kat:'gece',yasal:false,par:3,birim:'ağırlık',aciklama:'Vardiya saati ileri kaysın (sabah→akşam→gece), geriye değil.',yeni:true},
+ {kod:'ASGARI_KAPSAMA',ad:'Asgari kapsama',tur:'SERT',kat:'kapsama',yasal:false,par:null,birim:'',aciklama:'Her ekip-gün-saat hücresinde zorunlu asgari kişi. Talep tablosundan gelir.'},
+ {kod:'HEDEF_KAPSAMA',ad:'Hedef kapsama',tur:'YUMUŞAK',kat:'kapsama',yasal:false,par:9,birim:'ağırlık',aciklama:'İdeal kişi sayısına ulaşma.'},
+ {kod:'MOLA_KAPSAMASI',ad:'Mola kapsaması',tur:'SERT',kat:'kapsama',yasal:false,par:null,birim:'',aciklama:'Molalar sırasında asgari kapsamanın altına düşülemez.'},
+ {kod:'ROL_KAPSAMASI',ad:'Rol kapsaması',tur:'SERT',kat:'kapsama',yasal:false,par:1,birim:'takım lideri',aciklama:'Belirli operasyonel rolün her açık saatte sahada bulunması.'},
+ {kod:'YETKINLIK_KAPSAMASI',ad:'Yetkinlik kapsaması',tur:'SERT',kat:'kapsama',yasal:false,par:null,birim:'',aciklama:'Belirli saatlerde belirli yetkinliğin sahada olması.'},
+ {kod:'SAAT_DENGESI',ad:'Saat dengesi',tur:'YUMUŞAK',kat:'adalet',yasal:false,par:5,birim:'ağırlık',aciklama:'Haftalık saatler sözleşmeye yakın ve birbirine denk olsun.'},
+ {kod:'ADALET_DENGESI',ad:'Adalet dengesi',tur:'YUMUŞAK',kat:'adalet',yasal:false,par:5,birim:'ağırlık',aciklama:'Gece ve hafta sonu yükü dengeli dağılsın. Aylık pencerede ölçülür.'},
+ {kod:'ARDISIK_HAFTA_SONU_LIMIT',ad:'Ardışık hafta sonu limiti',tur:'SERT',kat:'adalet',yasal:false,par:2,birim:'hafta sonu',aciklama:'Üst üste kaç hafta sonu çalışılabilir.',yeni:true},
+ {kod:'EKIP_SUREKLILIGI',ad:'Ekip sürekliliği',tur:'YUMUŞAK',kat:'adalet',yasal:false,par:2,birim:'ağırlık',aciklama:'Aynı kişiler mümkün olduğunca aynı ekiple çalışsın.',yeni:true},
+ {kod:'PLAN_KARARLILIGI',ad:'Plan kararlılığı',tur:'YUMUŞAK',kat:'adalet',yasal:false,par:6,birim:'ağırlık',aciklama:'Yeniden planlamada mevcut atamalar korunsun.'},
+ {kod:'FAZLA_MESAI_TAVANI',ad:'Fazla mesai tavanı',tur:'SERT',kat:'sure',yasal:false,par:10,birim:'saat / hafta',aciklama:'Haftalık fazla mesai tavanı. Profile göre değişir: çalışan odaklı 0, dengeli 10, kapsama 15.'},
+ {kod:'TERCIH_KARSILAMA',ad:'Tercih karşılama',tur:'YUMUŞAK',kat:'adalet',yasal:false,par:3,birim:'ağırlık',aciklama:'Çalışanın bildirdiği tercihlerin karşılanma oranı.'},
+ {kod:'KILIT_UYUMU',ad:'Kilit uyumu',tur:'SERT',kat:'duzenleme',yasal:false,par:null,birim:'',aciklama:'Yöneticinin elle yaptığı düzenlemeler plana aynen yansır.'},
+ {kod:'DONMUS_GUN',ad:'Donmuş gün',tur:'SERT',kat:'duzenleme',yasal:false,par:null,birim:'',aciklama:'Geçmiş yeniden planlanamaz.'},
+];
+const KAT_AD={uygunluk:'Uygunluk',sure:'Süre ve dinlenme',gece:'Gece',kapsama:'Kapsama',adalet:'Adalet ve denge',duzenleme:'Düzenleme'};
+</script>
+<script>
+/* ==========================================================================
+   UYGULAMA KABUĞU
+   ========================================================================== */
+const S = {
+  rota:'panel',
+  rol:'mudur',                 // mudur | sef | calisan
+  planDurum:'adaylar_hazir',   // taslak | adaylar_hazir | secildi | onayda | onayli | yayinda
+  secili:null,                 // seçilen profil kodu
+  editor:{atamalar:[],gecmis:[],gorunum:'hafta',gun:4,ustAcik:true,solAcik:true,sagAcik:true,sagSekme:'asistan',secim:null},
+  benCalisan:'e7',
+};
+
+const MENU=[
+  {grp:'Planlama',items:[
+    {id:'panel',ad:'Kontrol merkezi',ic:'◧'},
+    {id:'planlar',ad:'Planlar',ic:'▤'},
+    {id:'karsilastir',ad:'Plan karşılaştırma',ic:'⊞',gizli:true},
+    {id:'editor',ad:'Plan editörü',ic:'▦',gizli:true},
+    {id:'gecmis',ad:'Geçmiş planlar',ic:'◷'},
+  ]},
+  {grp:'Kadro',items:[
+    {id:'calisanlar',ad:'Çalışanlar',ic:'☰',cnt:()=>AKTIF.length},
+    {id:'ekipler',ad:'Ekipler & şubeler',ic:'⌸'},
+    {id:'yetkinlik',ad:'Yetkinlikler',ic:'✦'},
+    {id:'izinler',ad:'İzinler',ic:'◔',cnt:()=>IZINLER.filter(i=>i.durum==='talep').length},
+  ]},
+  {grp:'Tanımlar',items:[
+    {id:'sablonlar',ad:'Vardiya şablonları',ic:'▭'},
+    {id:'kurallar',ad:'Kural yönetimi',ic:'⚖'},
+    {id:'talep',ad:'Talep & kapasite',ic:'◈'},
+  ]},
+  {grp:'Veri & Rapor',items:[
+    {id:'aktarma',ad:'Gerçekleşen veri',ic:'⇪'},
+    {id:'realizasyon',ad:'Plan realizasyon',ic:'◑'},
+    {id:'haftalik',ad:'Haftalık takip',ic:'▥'},
+    {id:'analiz',ad:'Analizler',ic:'◭'},
+  ]},
+  {grp:'Yönetim',items:[
+    {id:'kullanicilar',ad:'Kullanıcılar',ic:'☖'},
+    {id:'bildirim',ad:'Bildirim ayarları',ic:'◇'},
+    {id:'benim',ad:'Benim takvimim',ic:'◐'},
+  ]},
+];
+const EKRAN_AD = id => { for(const g of MENU) for(const i of g.items) if(i.id===id) return i.ad; return ''; };
+
+function git(rota,ops){ S.rota=rota; if(ops) Object.assign(S,ops); ciz(); $('.view')&&($('.view').scrollTop=0); }
+
+/* --- tooltip --- */
+let tipEl=null;
+document.addEventListener('mouseover',e=>{
+  const q=e.target.closest('.q'); if(!q) return;
+  const m=METRIK[q.dataset.m]; if(!m) return;
+  tipEl=el('div','tip');
+  tipEl.innerHTML=`<div class="tt">${esc(m.ad)}</div><div>${esc(m.kisa)}</div>
+    <div class="ty">${esc(m.yon)}</div><div>${esc(m.ornek)}</div>
+    ${m.detay?`<div class="tx">ⓘ ${esc(m.detay)}</div>`:''}`;
+  document.body.appendChild(tipEl);
+  const r=q.getBoundingClientRect(), t=tipEl.getBoundingClientRect();
+  let left=Math.min(r.left, innerWidth-t.width-12), top=r.bottom+7;
+  if(top+t.height>innerHeight-8) top=r.top-t.height-7;
+  tipEl.style.left=Math.max(8,left)+'px'; tipEl.style.top=Math.max(8,top)+'px';
+});
+document.addEventListener('mouseout',e=>{ if(e.target.closest('.q')&&tipEl){tipEl.remove();tipEl=null;} });
+const Q = kod => `<span class="q" data-m="${kod}" tabindex="0" role="img" aria-label="açıklama">?</span>`;
+
+/* --- toast --- */
+function toast(msg,opt={}){
+  const t=el('div','toast'+(opt.warn?' warn':''));
+  t.innerHTML=`<span class="msg">${msg}</span>`;
+  if(opt.geriAl){ const b=el('button','btn sm','Geri al'); b.onclick=()=>{t.remove();opt.geriAl();}; t.appendChild(b); }
+  $('#toasts').appendChild(t);
+  setTimeout(()=>t.remove(), opt.uzun?12000:6000);
+}
+
+/* --- modal --- */
+function modal({baslik,alt,govde,aksiyon,genis}){
+  kapatModal();
+  const sc=el('div','scrim');
+  sc.innerHTML=`<div class="modal ${genis||''}" role="dialog" aria-modal="true">
+    <div class="mh"><div style="flex:1"><h2>${baslik}</h2>${alt?`<div class="sub">${alt}</div>`:''}</div>
+      <button class="x" aria-label="Kapat">×</button></div>
+    <div class="mb"></div><div class="mf"></div></div>`;
+  const bd=$('.mb',sc);
+  if(typeof govde==='string') bd.innerHTML=govde; else bd.appendChild(govde);
+  const mf=$('.mf',sc);
+  (aksiyon||[{ad:'Kapat'}]).forEach(a=>{
+    const b=el('button','btn'+(a.tur==='p'?' p':'')+(a.tur==='dg'?' dg':''),a.ad);
+    b.onclick=()=>{ if(!a.fn||a.fn(bd)!==false) kapatModal(); };
+    mf.appendChild(b);
+  });
+  $('.x',sc).onclick=kapatModal;
+  sc.onclick=e=>{ if(e.target===sc) kapatModal(); };
+  $('#modal-host').appendChild(sc);
+  const f=bd.querySelector('input,select,textarea'); f&&f.focus();
+  return sc;
+}
+function kapatModal(){ $('#modal-host').innerHTML=''; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') kapatModal(); });
+
+/* --- kabuk çizimi --- */
+function ciz(){
+  const root=$('#root');
+  root.innerHTML=`<div class="app">
+    <aside class="side" id="side">
+      <div class="logo"><div class="m"><span>TS</span></div>
+        <div class="t">TShift<small>Anadolu ÇM</small></div></div>
+      <nav class="nav" id="nav"></nav>
+      <div class="whoami">
+        <div class="av">${S.rol==='calisan'?'SA':'MK'}</div>
+        <div style="flex:1"><div class="n">${S.rol==='calisan'?'Selin Arslan':'Murat Kaya'}</div>
+          <div class="r">${S.rol==='mudur'?'Departman müdürü':(S.rol==='sef'?'Takım lideri':'Çalışan')}</div></div>
+        <button class="btn gh sm" id="rolBtn" title="Rol değiştir">⇄</button>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="demo-bar">◆ DEMO — kurgu veriyle çalışan tıklanabilir prototip · Anadolu Çağrı Merkezi (214 çalışan, 3 ekip)</div>
+      <header class="top">
+        <button class="btn gh sm burger" id="burger">☰</button>
+        <div><div class="crumb" id="crumb"></div><h1 id="baslik"></h1></div>
+        <div class="sp"></div><div id="topAks" class="row"></div>
+      </header>
+      <div class="view" id="view"></div>
+    </main></div>`;
+  // menü
+  const nav=$('#nav');
+  MENU.forEach(g=>{
+    const vis=g.items.filter(i=>!i.gizli||S.rota===i.id);
+    if(!vis.length) return;
+    nav.appendChild(el('div','grp',g.grp));
+    vis.forEach(i=>{
+      const a=el('a',S.rota===i.id?'on':'');
+      a.innerHTML=`<span class="ic">${i.ic}</span><span>${i.ad}</span>${i.cnt?`<span class="cnt">${i.cnt()}</span>`:''}`;
+      a.onclick=()=>git(i.id); a.tabIndex=0;
+      a.onkeydown=e=>{if(e.key==='Enter')git(i.id);};
+      nav.appendChild(a);
+    });
+  });
+  $('#burger').onclick=()=>$('#side').classList.toggle('open');
+  $('#rolBtn').onclick=rolDegistir;
+  $('#baslik').textContent=EKRAN_AD(S.rota)||'—';
+  $('#crumb').textContent='Anadolu Çağrı Merkezi · Operasyon';
+  (EKRANLAR[S.rota]||EKRANLAR.panel)($('#view'),$('#topAks'));
+}
+function rolDegistir(){
+  const s=['mudur','sef','calisan']; S.rol=s[(s.indexOf(S.rol)+1)%3];
+  if(S.rol==='calisan') git('benim'); else git(S.rota==='benim'?'panel':S.rota);
+  toast(`Rol değişti: <b>${S.rol==='mudur'?'Departman müdürü':(S.rol==='sef'?'Takım lideri':'Çalışan')}</b>`);
+}
+const EKRANLAR={};
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Kontrol merkezi
+   ========================================================================== */
+EKRANLAR.panel=(v,top)=>{
+  const m=PLANLAR.DENGELI.metrik;
+  const talepBek=IZINLER.filter(i=>i.durum==='talep').length;
+  const durumRozet={taslak:['tag','taslak'],adaylar_hazir:['tag warn','3 aday hazır — seçim bekliyor'],
+    secildi:['tag brand','seçildi — düzenlemede'],onayda:['tag warn','onay bekliyor'],
+    onayli:['tag ok','onaylı'],yayinda:['tag ok','yayında']}[S.planDurum];
+  top.innerHTML='';
+  const b=el('button','btn p','+ Yeni plan'); b.onclick=planSihirbaz; top.appendChild(b);
+
+  v.innerHTML=`<div class="wrap">
+  <div class="grid g4" style="margin-bottom:18px">
+    <div class="stat"><div class="k">Aktif çalışan</div><div class="v">${AKTIF.length}</div><div class="s">${CALISANLAR.length-AKTIF.length} pasif</div></div>
+    <div class="stat ok"><div class="k">Hedef kapsama ${Q('HEDEF_KAPSAMA')}</div><div class="v">%${dec(m.hedef)}</div><div class="s">bu haftanın planı</div></div>
+    <div class="stat"><div class="k">Planlanan saat</div><div class="v">${num(m.toplamSaat)}</div><div class="s">fazla mesai ${m.fm} sa</div></div>
+    <div class="stat ${talepBek?'warn':''}"><div class="k">Bekleyen izin</div><div class="v">${talepBek}</div><div class="s">onay bekliyor</div></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>Bu haftanın planı</h3><span class="${durumRozet[0]}">${durumRozet[1]}</span></div>
+      <div class="bd">
+        <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px">
+          ${tarihStr(HAFTA_BAS)} – ${tarihStr(gunEkle(HAFTA_BAS,6))} · Çağrı Merkezi Operasyon</div>
+        <div class="row" style="gap:20px;margin-bottom:14px">
+          <div><div style="font-size:.7rem;color:var(--muted)">Sert ihlal</div>
+            <div class="mono" style="font-size:1.1rem;color:var(--ok);font-weight:600">0</div></div>
+          <div><div style="font-size:.7rem;color:var(--muted)">Açık saat</div>
+            <div class="mono" style="font-size:1.1rem;font-weight:600">${m.acikSaat}</div></div>
+          <div><div style="font-size:.7rem;color:var(--muted)">Adalet ${Q('ADALET')}</div>
+            <div class="mono" style="font-size:1.1rem;font-weight:600">${dec(m.adalet,2)}</div></div>
+        </div>
+        <div class="row">
+          <button class="btn p" id="pl1">${S.planDurum==='adaylar_hazir'?'Adayları karşılaştır':'Plana git'}</button>
+          <button class="btn" id="pl2">Geçmiş planlar</button>
+        </div>
+      </div></div>
+
+    <div class="card"><div class="hd"><h3>Bekleyen işler</h3></div>
+      <div class="bd" style="padding:0">
+        ${[
+          {t:`${talepBek} izin talebi onay bekliyor`,s:'İzinler ekranında etki analiziyle',r:'izinler',ic:'◔',k:'warn'},
+          {t:'3 çalışanın sözleşmesi 30 gün içinde bitiyor',s:'Sezonluk kadro — planı etkileyebilir',r:'calisanlar',ic:'☰',k:''},
+          {t:'Geçen haftanın gerçekleşen verisi yüklendi',s:'Uyum skoru %94,2 — realizasyon raporuna bak',r:'realizasyon',ic:'◑',k:'ok'},
+          {t:'Cumartesi 22:00 sonrası kapsama sınırda',s:'Ön kontrol uyarısı',r:'talep',ic:'◈',k:'warn'},
+        ].map(x=>`<div class="wi" data-r="${x.r}" style="display:flex;gap:11px;align-items:flex-start;padding:11px 16px;border-bottom:1px solid var(--line);cursor:pointer">
+            <span class="tag ${x.k}" style="margin-top:2px">${x.ic}</span>
+            <div><div style="font-weight:500;font-size:.85rem">${x.t}</div>
+              <div style="font-size:.76rem;color:var(--muted)">${x.s}</div></div></div>`).join('')}
+      </div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px"><div class="hd"><h3>Haftalık kapsama — planlanan vs gereken</h3>
+    <span style="font-size:.75rem;color:var(--muted)">tüm ekipler toplamı</span></div>
+    <div class="bd">${kapsamaGrafik(PLANLAR[S.secili||'DENGELI'])}</div></div>
+  </div>`;
+
+  $('#pl1').onclick=()=>S.planDurum==='adaylar_hazir'?git('karsilastir'):git('editor');
+  $('#pl2').onclick=()=>git('gecmis');
+  $$('.wi',v).forEach(n=>n.onclick=()=>git(n.dataset.r));
+};
+
+function kapsamaGrafik(plan){
+  const d=kapsamaHesap(plan.atamalar);
+  let out='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px">';
+  for(let g=0;g<7;g++){
+    let bars='';
+    for(let s=8;s<24;s++){
+      let olan=0,ger=0;
+      EKIPLER.forEach(t=>{olan+=d[`${t.id}|${g}|${s}`]||0; ger+=talepAl(t.id,g,s).hedef;});
+      const max=28;
+      const ho=Math.min(100,olan/max*100), hg=Math.min(100,ger/max*100);
+      const renk = olan>=ger?'var(--brand)':(olan>=ger*0.85?'var(--warn)':'var(--crit)');
+      bars+=`<div style="flex:1;position:relative;height:56px;display:flex;align-items:flex-end" title="${GUNK[g]} ${pad(s)}:00 — ${olan}/${ger}">
+        <div style="position:absolute;bottom:0;width:100%;height:${hg}%;background:var(--surface-4);border-radius:1px"></div>
+        <div style="position:relative;width:100%;height:${ho}%;background:${renk};border-radius:1px"></div></div>`;
+    }
+    out+=`<div><div style="display:flex;gap:1px;align-items:flex-end">${bars}</div>
+      <div style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:5px;font-weight:600">${GUNK[g]}</div></div>`;
+  }
+  out+='</div><div class="row" style="margin-top:10px;font-size:.72rem;color:var(--muted)">'+
+    '<span><span style="display:inline-block;width:9px;height:9px;background:var(--brand);border-radius:2px"></span> planlanan</span>'+
+    '<span><span style="display:inline-block;width:9px;height:9px;background:var(--surface-4);border-radius:2px"></span> hedef</span>'+
+    '<span><span style="display:inline-block;width:9px;height:9px;background:var(--crit);border-radius:2px"></span> yetersiz</span>'+
+    '<span style="margin-left:auto">08:00–24:00 · her çubuk bir saat</span></div>';
+  return out;
+}
+
+/* ==========================================================================
+   EKRAN — Planlar listesi
+   ========================================================================== */
+EKRANLAR.planlar=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni plan'); b.onclick=planSihirbaz; top.appendChild(b);
+  const satirlar=[
+    {h:HAFTA_BAS,d:S.planDurum,k:PLANLAR[S.secili||'DENGELI'].metrik.hedef,ih:0,ki:'Murat Kaya'},
+    {h:gunEkle(HAFTA_BAS,-7),d:'yayinda',k:98.8,ih:0,ki:'Murat Kaya'},
+    {h:gunEkle(HAFTA_BAS,-14),d:'yayinda',k:99.1,ih:0,ki:'Murat Kaya'},
+    {h:gunEkle(HAFTA_BAS,-21),d:'yayinda',k:97.4,ih:0,ki:'Selin Arslan'},
+    {h:gunEkle(HAFTA_BAS,-28),d:'arsiv',k:99.3,ih:0,ki:'Murat Kaya'},
+  ];
+  const rozet={taslak:'tag',adaylar_hazir:'tag warn',secildi:'tag brand',onayda:'tag warn',onayli:'tag ok',yayinda:'tag ok',arsiv:'tag'};
+  const ad={taslak:'taslak',adaylar_hazir:'adaylar hazır',secildi:'seçildi',onayda:'onayda',onayli:'onaylı',yayinda:'yayında',arsiv:'arşiv'};
+  v.innerHTML=`<div class="wrap">
+    <div class="row" style="margin-bottom:14px">
+      <input type="text" placeholder="Ara…" style="max-width:210px">
+      <select style="max-width:180px"><option>Tüm departmanlar</option><option>Çağrı Merkezi Operasyon</option></select>
+      <select style="max-width:150px"><option>Tüm durumlar</option><option>Yayında</option><option>Onayda</option></select>
+    </div>
+    <div class="tbl-w"><table class="t"><thead><tr>
+      <th>Hafta</th><th>Departman</th><th>Durum</th><th>Kapsama ${Q('HEDEF_KAPSAMA')}</th><th>Sert ihlal</th><th>Oluşturan</th><th></th>
+    </tr></thead><tbody>${satirlar.map((r,i)=>`<tr class="clk" data-i="${i}">
+      <td class="s">${tarihKisa(r.h)} – ${tarihKisa(gunEkle(r.h,6))}<div style="font-size:.72rem;color:var(--muted)">${r.h.getFullYear()}</div></td>
+      <td>Çağrı Merkezi Operasyon</td>
+      <td><span class="${rozet[r.d]}">${ad[r.d]}</span></td>
+      <td class="n">%${dec(r.k)}</td>
+      <td class="n" style="color:var(--ok)">${r.ih}</td>
+      <td>${r.ki}</td>
+      <td style="text-align:right"><span style="color:var(--muted)">›</span></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="note">Satıra tıklayınca duruma göre yönlendirir: <b>adaylar hazır</b> → karşılaştırma ekranı,
+      diğerleri → editör (yetki yoksa salt-okunur).</div>
+  </div>`;
+  $$('tr.clk',v).forEach(tr=>tr.onclick=()=>{
+    const i=+tr.dataset.i;
+    if(i===0) S.planDurum==='adaylar_hazir'?git('karsilastir'):git('editor');
+    else git('gecmis');
+  });
+};
+</script>
+<script>
+/* ==========================================================================
+   Plan oluşturma sihirbazı
+   ========================================================================== */
+function planSihirbaz(){
+  let adim=1;
+  const g=el('div');
+  const ciz1=()=>{
+    if(adim===1){
+      g.innerHTML=`<div style="font-size:.74rem;font-weight:600;color:var(--brand);letter-spacing:.1em;margin-bottom:12px">ADIM 1 / 3 · KAPSAM</div>
+      <div class="f2">
+        <label class="f"><span class="lb">Departman / Şube</span><select><option>Çağrı Merkezi Operasyon</option></select></label>
+        <label class="f"><span class="lb">Hafta</span><select><option>12 – 18 Ekim 2026</option><option>19 – 25 Ekim 2026</option></select></label>
+      </div>
+      <label class="f"><span class="lb">Talep kaynağı</span><select>
+        <option>Çağrı hacminden hesapla (Erlang C) — mevcut profil</option>
+        <option>Doğrudan kişi sayısı</option><option>Geçmiş veriden öğren</option></select>
+        <span class="hint">Talep verisi olmayan müşteri "doğrudan kişi sayısı" ile de ilerleyebilir.</span></label>
+      <label class="f"><span class="lb">Süre bütçesi</span><select><option>15 dakika (önerilen)</option><option>5 dakika</option><option>60 saniye</option></select>
+        <span class="hint">Plan arka planda üretilir; ekranı kapatabilirsiniz, bittiğinde bildirim gelir.</span></label>`;
+    } else if(adim===2){
+      g.innerHTML=`<div style="font-size:.74rem;font-weight:600;color:var(--brand);letter-spacing:.1em;margin-bottom:12px">ADIM 2 / 3 · ÖN KONTROL</div>
+      <p style="font-size:.85rem;color:var(--muted)">Sistem plan üretmeden önce kadroyu ve talebi kontrol etti. Uyarılar engel değildir.</p>
+      ${[
+        ['warn','3 çalışanın sözleşmesi bu hafta bitiyor','Sezonluk kadro: A4137, A4198, A4251. Bitiş sonrası günlere atama yapılmayacak.'],
+        ['warn','5 izin talebi onay bekliyor','Onaylanmazsa plana dâhil edilmeyecek. İzinler ekranından etkileri görülebilir.'],
+        ['ok','Kapasite yeterli','Toplam talep 4.180 saat · kullanılabilir kapasite 5.240 saat. Rahat.'],
+        ['crit','Cumartesi 22:00–24:00 · Teknik Destek','Asgari 3 kişi gerekiyor, gece çalışabilecek uygun 2 kişi var. Plan bu saatte açık verebilir.'],
+      ].map(([k,t,s])=>`<div class="note ${k==='ok'?'':k}" style="margin:9px 0">
+        <b>${t}</b><div style="font-size:.8rem;margin-top:2px">${s}</div></div>`).join('')}`;
+    } else {
+      g.innerHTML=`<div style="font-size:.74rem;font-weight:600;color:var(--brand);letter-spacing:.1em;margin-bottom:14px">ADIM 3 / 3 · ÜRETİM</div>
+      <div id="prog" style="text-align:center;padding:14px 0 6px">
+        <div style="font-size:.9rem;font-weight:600;margin-bottom:14px" id="pmsg">Model kuruluyor…</div>
+        <div style="height:6px;background:var(--surface-4);border-radius:3px;overflow:hidden">
+          <div id="pbar" style="height:100%;width:4%;background:var(--brand);transition:width .5s"></div></div>
+        <div class="mono" style="font-size:.75rem;color:var(--muted);margin-top:9px" id="ptxt">0 / 3 profil</div>
+      </div>`;
+      const asamalar=[['Model kuruluyor…','0 / 3 profil',18],['Dengeli profil çözülüyor…','1 / 3 profil',44],
+        ['Kapsama odaklı profil çözülüyor…','2 / 3 profil',70],['Çalışan odaklı profil çözülüyor…','3 / 3 profil',90],
+        ['Bağımsız denetleyici planları kontrol ediyor…','sert ihlal: 0',100]];
+      let i=0;
+      const tk=setInterval(()=>{
+        if(i>=asamalar.length){ clearInterval(tk); kapatModal();
+          S.planDurum='adaylar_hazir'; toast('Plan üretildi — <b>3 aday hazır</b>',{uzun:true}); git('karsilastir'); return; }
+        const [m,t,p]=asamalar[i++];
+        $('#pmsg').textContent=m; $('#ptxt').textContent=t; $('#pbar').style.width=p+'%';
+      },780);
+    }
+    // butonları güncelle
+    const mf=$('#modal-host .mf'); if(!mf) return;
+    mf.innerHTML='';
+    if(adim<3){
+      const solB=el('button','btn', adim===1?'İptal':'Geri');
+      solB.onclick=()=>{ if(adim===1) kapatModal(); else {adim--;ciz1();} };
+      const sagB=el('button','btn p', adim===1?'Devam →':'Planı üret');
+      sagB.onclick=()=>{ adim++; ciz1(); };
+      const bosluk=el('div'); bosluk.style.flex='1';
+      mf.append(bosluk,solB,sagB);
+    }
+  };
+  modal({baslik:'Yeni plan oluştur',alt:'Çağrı Merkezi Operasyon',govde:g,aksiyon:[],genis:'wide'});
+  ciz1();
+}
+
+function cozumsuzlukModal(){
+  modal({baslik:'Plan üretilemedi',alt:'Çözümsüzlük teşhisi',genis:'wide',govde:`
+    <div class="note crit"><b>Cuma 22:00 – 06:00 · Teknik Destek</b>
+      <div style="margin-top:3px">Asgari 4 kişi gerekiyor, uygun 2 kişi var.</div></div>
+    <h3 style="margin:16px 0 7px">Neden</h3>
+    <ul style="font-size:.85rem;color:var(--ink-2);padding-left:18px;margin:0 0 16px">
+      <li>3 kişi onaylı izinde</li><li>2 kişi ardışık gece limitine takılıyor (limit 3)</li>
+      <li>1 kişi "gece çalışamaz" olarak işaretli</li></ul>
+    <h3 style="margin:0 0 7px">Seçenekler</h3>
+    <div class="tbl-w"><table class="t"><tbody>
+      ${[['Asgari kapsamayı 2\'ye düşür','Bu saatte 2 kişiyle çalışılır','Uygula ve tekrar dene'],
+         ['Ardışık gece limitini 4 yap','Kural parametresi değişir, tüm plana etki eder','Uygula ve tekrar dene'],
+         ['İzinlerden birini iptal et','İzin ekranına gider','İzinlere git'],
+         ['Kapsamı değiştirmeden devam et','Plan bu saatte açık verir, uyarı olarak kalır','Kısmi plan üret']]
+        .map(([a,b,c])=>`<tr><td class="s">${a}<div style="font-size:.75rem;color:var(--muted);font-weight:400">${b}</div></td>
+          <td style="text-align:right"><button class="btn sm">${c}</button></td></tr>`).join('')}
+    </tbody></table></div>`,
+    aksiyon:[{ad:'Kapat'}]});
+}
+
+/* ==========================================================================
+   EKRAN — Plan karşılaştırma
+   ========================================================================== */
+let KRS_SEKME='gun';
+EKRANLAR.karsilastir=(v,top)=>{
+  top.innerHTML=`<span style="font-size:.8rem;color:var(--muted)">${tarihKisa(HAFTA_BAS)} – ${tarihKisa(gunEkle(HAFTA_BAS,6))}</span>`;
+  const prs=['DENGELI','KAPSAMA','CALISAN'];
+  const sec=S.secili||'DENGELI';
+  v.innerHTML=`<div class="wrap">
+    <div class="note">Üç aday aynı çalışan, kural ve talep verisinden üretildi; farkları <b>hangi hedefe ağırlık verdikleri</b>.
+      Bir tanesini seçmeden editöre geçilemez. Sayıların yanındaki <span class="q" style="cursor:default">?</span> işaretlerine gelin.</div>
+    <div class="grid g3" style="margin:16px 0 20px">
+      ${prs.map(p=>{const m=PLANLAR[p].metrik; const on=p===sec;
+        return `<div class="card kart" data-p="${p}" style="cursor:pointer;${on?'border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft)':''}">
+        <div class="hd" style="display:block;padding:14px 16px 10px">
+          <div class="row" style="gap:7px"><h3>${PROFIL_BILGI[p].ad}</h3>${on?'<span class="tag brand">seçili</span>':''}</div>
+          <div style="font-size:.79rem;color:var(--muted);margin-top:4px;line-height:1.4">${PROFIL_BILGI[p].aciklama}</div></div>
+        <div class="bd" style="padding:12px 16px">
+          ${[['Hedef kapsama','HEDEF_KAPSAMA','%'+dec(m.hedef),m.hedef>99?'ok':'warn'],
+             ['Fazla mesai','FM',m.fm+' sa',m.fm===0?'ok':(m.fm>25?'crit':'warn')],
+             ['Karşılanmayan tercih','TERCIH',m.tercih,m.tercih<15?'ok':'warn'],
+             ['Adalet sapması','ADALET',dec(m.adalet,2),m.adalet<1.5?'ok':'warn'],
+             ['Optimuma uzaklık','GAP','%'+dec(m.gap,2),'ok']]
+            .map(([a,k,val,d])=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--line)">
+              <span style="font-size:.79rem;color:var(--muted);flex:1">${a}</span>${Q(k)}
+              <span class="mono" style="font-weight:600;font-size:.88rem;color:var(--${d})">${val}</span></div>`).join('')}
+          <div style="display:flex;align-items:center;gap:6px;padding:7px 0 3px">
+            <span style="font-size:.79rem;color:var(--muted);flex:1">Sert kural ihlali</span>
+            <span class="tag ok">0 ✓</span></div>
+        </div>
+        <div style="padding:0 16px 14px"><button class="btn ${on?'':'p'} sec" data-p="${p}" style="width:100%">
+          ${on?'Seçildi ✓':'Bu planı seç'}</button></div></div>`;}).join('')}
+    </div>
+
+    <div class="tabs" id="krsTabs">
+      <button data-t="gun" class="${KRS_SEKME==='gun'?'on':''}">Gün gün</button>
+      <button data-t="calisan" class="${KRS_SEKME==='calisan'?'on':''}">Çalışan bazlı</button>
+      <button data-t="isi" class="${KRS_SEKME==='isi'?'on':''}">Saatlik kapsama</button>
+      <button data-t="fark" class="${KRS_SEKME==='fark'?'on':''}">Farklar</button>
+    </div>
+    <div id="krsIcerik"></div>
+  </div>`;
+
+  $$('.kart',v).forEach(k=>k.onclick=e=>{ if(e.target.closest('.sec'))return; S.secili=k.dataset.p; git('karsilastir'); });
+  $$('.sec',v).forEach(b=>b.onclick=e=>{ e.stopPropagation(); S.secili=b.dataset.p;
+    if(S.planDurum==='adaylar_hazir') S.planDurum='secildi';
+    editorHazirla(); toast(`<b>${PROFIL_BILGI[b.dataset.p].ad}</b> planı seçildi — editöre geçiliyor`); git('editor'); });
+  $$('#krsTabs button',v).forEach(b=>b.onclick=()=>{KRS_SEKME=b.dataset.t;git('karsilastir');});
+  krsIcerik($('#krsIcerik'),sec);
+};
+
+function krsIcerik(host,sec){
+  const P=PLANLAR, pl=P[sec];
+  if(KRS_SEKME==='gun'){
+    const d=kapsamaHesap(pl.atamalar);
+    let rows='';
+    for(let g=0;g<7;g++){
+      const ats=pl.atamalar.filter(a=>a.gun===g);
+      const kisi=new Set(ats.map(a=>a.calisan)).size;
+      const saat=ats.reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0);
+      let acik=0,gerek=0;
+      EKIPLER.forEach(t=>{for(let s=8;s<24;s++){const q=talepAl(t.id,g,s);gerek+=q.hedef;if((d[`${t.id}|${g}|${s}`]||0)<q.asgari)acik++;}});
+      rows+=`<tr><td class="s">${GUNLER[g]}<div style="font-size:.72rem;color:var(--muted)">${tarihKisa(gunEkle(HAFTA_BAS,g))}</div></td>
+        <td class="n">${kisi}</td><td class="n">${dec(saat,0)}</td><td class="n">${ats.filter(a=>a.bit>=22).length}</td>
+        <td class="n">${acik?`<span style="color:var(--crit)">${acik}</span>`:'<span style="color:var(--ok)">0</span>'}</td>
+        <td>${acik>2?'<span class="tag warn">kapsama sınırda</span>':(g>=5?'<span class="tag">hafta sonu</span>':'<span class="tag ok">sorunsuz</span>')}</td></tr>`;
+    }
+    host.innerHTML=`<div class="tbl-w"><table class="t"><thead><tr><th>Gün</th><th>Sahada kişi</th><th>Toplam saat</th>
+      <th>Gece vardiyası</th><th>Açık saat</th><th>Durum</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  else if(KRS_SEKME==='calisan'){
+    const list=AKTIF.slice(0,40);
+    host.innerHTML=`<div class="tbl-w" style="max-height:520px"><table class="t"><thead><tr>
+      <th>Çalışan</th><th>Ekip</th><th>Sözleşme</th><th>Planlanan saat</th><th>Fark</th><th>Gece</th><th>Hafta sonu</th></tr></thead>
+      <tbody>${list.map(c=>{const s=pl.saatler[c.id]||0; const f=s-c.haftalik;
+        const hs=pl.atamalar.filter(a=>a.calisan===c.id&&a.gun>=5).length;
+        return `<tr><td class="s">${c.tam}<div style="font-size:.72rem;color:var(--muted)" class="mono">${c.sicil}</div></td>
+        <td>${ekipAd(c.ekip)}</td><td>${c.sozlesme==='yari_zamanli'?'Yarı zamanlı '+c.haftalik+' sa':'Tam zamanlı'}</td>
+        <td class="n">${dec(s,0)}</td>
+        <td class="n" style="color:${f>0?'var(--warn)':(f<-6?'var(--crit)':'var(--muted)')}">${f>0?'+':''}${dec(f,0)}</td>
+        <td class="n">${pl.geceSay[c.id]||0}</td><td class="n">${hs}</td></tr>`;}).join('')}
+      </tbody></table></div><div style="font-size:.75rem;color:var(--muted);margin-top:8px">İlk 40 kişi gösteriliyor · toplam ${AKTIF.length}</div>`;
+  }
+  else if(KRS_SEKME==='isi'){
+    const d=kapsamaHesap(pl.atamalar);
+    let out='<div style="overflow-x:auto"><table class="t" style="font-size:.7rem"><thead><tr><th>Ekip / Gün</th>';
+    for(let s=8;s<24;s++) out+=`<th style="padding:6px 3px;text-align:center">${pad(s)}</th>`;
+    out+='</tr></thead><tbody>';
+    EKIPLER.forEach(t=>{
+      for(let g=0;g<7;g++){
+        out+=`<tr><td class="s" style="white-space:nowrap">${g===0?`<b>${t.kod}</b> · `:'<span style="opacity:.4">·</span> '}${GUNK[g]}</td>`;
+        for(let s=8;s<24;s++){
+          const q=talepAl(t.id,g,s), v=d[`${t.id}|${g}|${s}`]||0;
+          const oran = q.hedef?v/q.hedef:1;
+          let bg='var(--surface-3)',fg='var(--muted)';
+          if(v<q.asgari){bg='var(--crit-soft)';fg='var(--crit)';}
+          else if(oran>=1){bg='var(--ok-soft)';fg='var(--ok)';}
+          else if(oran>=0.85){bg='var(--brand-soft)';fg='var(--brand-ink)';}
+          else {bg='var(--warn-soft)';fg='var(--warn)';}
+          out+=`<td class="mono" style="text-align:center;padding:4px 2px;background:${bg};color:${fg};font-weight:600"
+            title="${t.ad} ${GUNLER[g]} ${pad(s)}:00 — olan ${v}, hedef ${q.hedef}, asgari ${q.asgari}">${v}</td>`;
+        }
+        out+='</tr>';
+      }
+    });
+    out+='</tbody></table></div><div class="row" style="margin-top:9px;font-size:.72rem;color:var(--muted)">'+
+      '<span class="tag ok">hedef sağlandı</span><span class="tag brand">hedefe yakın</span>'+
+      '<span class="tag warn">hedefin altında</span><span class="tag crit">asgarinin altında</span></div>';
+    host.innerHTML=out;
+  }
+  else {
+    // farklar
+    const key = p => { const m={}; PLANLAR[p].atamalar.forEach(a=>{ (m[a.calisan]=m[a.calisan]||[]).push(`${GUNK[a.gun]} ${pad(a.bas)}–${pad(a.bit)}`);}); return m; };
+    const A=key('DENGELI'),B=key('KAPSAMA'),C=key('CALISAN');
+    const farkli=AKTIF.filter(c=>{
+      const a=(A[c.id]||[]).join(','),b=(B[c.id]||[]).join(','),k=(C[c.id]||[]).join(',');
+      return !(a===b&&b===k);
+    }).slice(0,45);
+    host.innerHTML=`<div class="note"><b>En çok sorulan soru:</b> "bu planlarda kim için ne değişiyor?"
+      Aşağıda yalnız <b>vardiyası üç planda aynı olmayan</b> kişiler var — ${farkli.length} kişi (toplam ${AKTIF.length}).</div>
+      <div class="tbl-w" style="max-height:520px;margin-top:12px"><table class="t"><thead><tr>
+        <th>Çalışan</th><th>Dengeli</th><th>Kapsama odaklı</th><th>Çalışan odaklı</th></tr></thead>
+      <tbody>${farkli.map(c=>`<tr><td class="s" style="white-space:nowrap">${c.tam}<div style="font-size:.72rem;color:var(--muted)">${ekipAd(c.ekip)}</div></td>
+        ${[A,B,C].map(M=>`<td style="font-size:.75rem" class="mono">${(M[c.id]||['—']).join('<br>')}</td>`).join('')}</tr>`).join('')}
+      </tbody></table></div>`;
+  }
+}
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Plan editörü
+   ========================================================================== */
+function editorHazirla(){
+  const p=PLANLAR[S.secili||'DENGELI'];
+  S.editor.atamalar=p.atamalar.map(a=>({...a}));
+  S.editor.gecmis=[];
+  S.editor.secim=null;
+  // Hafta ortası olay: 4 kişi rapor aldı → planda açık noktalar oluştu.
+  // Demoda asistanın çalıştığı hâli göstermek için gerçekçi bir başlangıç durumu.
+  OLAY_RAPOR.forEach(o=>{
+    const ix=S.editor.atamalar.findIndex(a=>a.calisan===o.calisan&&a.gun===o.gun);
+    if(ix>=0) S.editor.atamalar.splice(ix,1);
+  });
+}
+function ed(){ return S.editor; }
+function saatToplam(cid){ return ed().atamalar.filter(a=>a.calisan===cid).reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0); }
+
+function bosluklar(){
+  const d=kapsamaHesap(ed().atamalar); const out=[];
+  EKIPLER.forEach(t=>{ for(let g=0;g<7;g++){
+    let bas=null;
+    for(let s=8;s<=24;s++){
+      const q=s<24?talepAl(t.id,g,s):{asgari:0};
+      const v=d[`${t.id}|${g}|${s}`]||0;
+      const eksik=s<24?Math.max(0,q.asgari-v):0;
+      if(eksik>0&&bas===null) bas={s,eksik};
+      else if((eksik===0||s===24)&&bas!==null){ out.push({ekip:t.id,gun:g,bas:bas.s,bit:s,eksik:bas.eksik}); bas=null; }
+    }
+  }});
+  return out.sort((a,b)=>b.eksik-a.eksik||a.gun-b.gun);
+}
+function adaylar(b){
+  const gunluk=new Set(ed().atamalar.filter(a=>a.gun===b.gun).map(a=>a.calisan));
+  return AKTIF.filter(c=>c.ekip===b.ekip&&!gunluk.has(c.id)&&!izinliMi(c.id,b.gun))
+    .map(c=>{
+      const sb=SABLONLAR.find(s=>s.bas<=b.bas&&s.bit>=b.bit)||SABLONLAR.find(s=>s.bas<=b.bas&&s.bit>b.bas)||SABLONLAR[2];
+      const sure=sb.bit-sb.bas-sb.mola/60;
+      const once=saatToplam(c.id), sonra=once+sure;
+      const tavan=c.sozlesme==='yari_zamanli'?c.haftalik:c.haftalik+10;
+      return {c,sb,once,sonra,tavan,uygun:sonra<=tavan&&sure<=c.gunlukAzami};
+    })
+    .filter(x=>x.uygun)
+    .sort((a,b2)=>(a.sonra/a.tavan)-(b2.sonra/b2.tavan))
+    .slice(0,3);
+}
+const YUMUSAK_UYARI=[
+  {id:'u1',kisi:'Mert Kaya',kod:'TERCIH_KARSILAMA',metin:'Sabah tercihi karşılanamadı — 3 gün üst üste 12:00 sonrası vardiya aldı.',
+   oneri:'Selin Arslan ile Salı vardiyasını takas et',etki:['Mert: sabah tercihi karşılanır','Selin: haftalık saati değişmez']},
+  {id:'u2',kisi:'Burak Demir',kod:'SAAT_DENGESI',metin:'Haftalık saati sözleşmesinin 7 saat altında kaldı.',
+   oneri:'Perşembe 10:00–18:00 vardiyası ekle',etki:['Burak: 31 → 38 saat','Kapsama Perşembe 15:00–18:00 arası +1']},
+  {id:'u3',kisi:'Ekip: Satış & Kurtarma',kod:'EKIP_SUREKLILIGI',metin:'Cuma ekibinin 6 kişisi bu hafta ilk kez birlikte çalışıyor.',
+   oneri:'Cuma vardiyasında 2 kişiyi geçen haftaki ekipten seç',etki:['Ekip sürekliliği puanı artar','Kapsama değişmez']},
+];
+
+function kayitEkle(tur,ozet,geri){
+  ed().gecmis.unshift({id:'g'+Date.now()+Math.random(),tur,ozet,geri,zaman:new Date(),alindi:false});
+}
+function geriAl(kayit){
+  if(kayit.alindi) return;
+  kayit.geri(); kayit.alindi=true;
+  kayitEkle('geri_al','↩ Geri alındı: '+kayit.ozet,()=>{});
+  ed().gecmis[0].alindi=true;
+  toast('Geri alındı — <b>'+kayit.ozet+'</b>',{warn:true});
+  git('editor');
+}
+
+EKRANLAR.editor=(v,top)=>{
+  if(!ed().atamalar.length) editorHazirla();
+  const E=ed();
+  const d=kapsamaHesap(E.atamalar);
+  let hT=0,hO=0,acik=0;
+  EKIPLER.forEach(t=>{for(let g=0;g<7;g++)for(let s=8;s<24;s++){
+    const q=talepAl(t.id,g,s),val=d[`${t.id}|${g}|${s}`]||0; hT+=q.hedef;hO+=Math.min(val,q.hedef); if(val<q.asgari)acik++;}});
+  const kapsama=hO/hT*100;
+  const toplamSaat=E.atamalar.reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0);
+  const bos=bosluklar();
+
+  top.innerHTML='';
+  const bH=el('button','btn sm','◷ Geçmiş ('+E.gecmis.length+')'); bH.onclick=gecmisModal;
+  const bK=el('button','btn sm', E.ustAcik?'▲ Başlığı gizle':'▼ Başlığı göster');
+  bK.onclick=()=>{E.ustAcik=!E.ustAcik;git('editor');};
+  top.append(bH,bK);
+
+  v.className='view flush';
+  v.innerHTML=`
+  ${E.ustAcik?`<div style="border-bottom:1px solid var(--line);background:var(--surface);padding:12px 20px">
+    <div class="row">
+      <div><div style="font-size:.75rem;color:var(--muted)">${tarihStr(HAFTA_BAS)} – ${tarihStr(gunEkle(HAFTA_BAS,6))} · Çağrı Merkezi Operasyon</div>
+        <div class="row" style="gap:8px;margin-top:2px"><h2>${PROFIL_BILGI[S.secili||'DENGELI'].ad} plan</h2>
+        <span class="tag ${S.planDurum==='yayinda'?'ok':(S.planDurum==='onayda'?'warn':'brand')}">${
+          {secildi:'düzenlemede',onayda:'onay bekliyor',onayli:'onaylı',yayinda:'yayında'}[S.planDurum]||'düzenlemede'}</span></div></div>
+      <div class="sp" style="flex:1"></div>
+      <button class="btn" id="edOnay">Onaya gönder</button>
+      <button class="btn p" id="edYayin">Yayınla</button>
+    </div>
+    <div class="row" style="gap:22px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line)">
+      ${[['Hedef kapsama','HEDEF_KAPSAMA','%'+dec(kapsama),kapsama>99?'ok':'warn'],
+         ['Toplam saat','',dec(toplamSaat,0),''],
+         ['Açık saat','',acik,acik?'crit':'ok'],
+         ['Sert ihlal','','0','ok'],
+         ['Kilitli atama','',E.atamalar.filter(a=>a.kilit).length,'']]
+        .map(([a,k,val,c])=>`<div><div style="font-size:.68rem;color:var(--muted);display:flex;gap:4px;align-items:center">${a}${k?Q(k):''}</div>
+          <div class="mono" style="font-size:1.05rem;font-weight:600;${c?'color:var(--'+c+')':''}">${val}</div></div>`).join('')}
+    </div></div>`:''}
+
+  <div style="display:flex;height:calc(100vh - ${E.ustAcik?250:135}px);overflow:hidden">
+    ${E.solAcik?`<div style="width:222px;border-right:1px solid var(--line);background:var(--surface-3);display:flex;flex-direction:column">
+      <div style="padding:10px;border-bottom:1px solid var(--line)">
+        <div class="row" style="gap:6px;margin-bottom:7px"><b style="font-size:.78rem;flex:1">Çalışanlar</b>
+          <button class="btn gh sm" id="solKapa" title="Paneli kapat">◀</button></div>
+        <input type="text" id="calAra" placeholder="Ara…" style="font-size:.8rem;padding:5px 8px">
+      </div>
+      <div style="flex:1;overflow-y:auto" id="calListe"></div></div>`
+      :`<button class="btn gh sm" id="solAc" style="align-self:flex-start;margin:8px 4px;writing-mode:vertical-rl">▶ Çalışanlar</button>`}
+
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+      <div style="padding:8px 14px;border-bottom:1px solid var(--line);background:var(--surface);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="seg" id="gorSeg">
+          <button data-g="hafta" class="${E.gorunum==='hafta'?'on':''}">Hafta</button>
+          <button data-g="gun" class="${E.gorunum==='gun'?'on':''}">Gün</button>
+          <button data-g="liste" class="${E.gorunum==='liste'?'on':''}">Liste</button>
+        </div>
+        ${E.gorunum!=='hafta'?`<div class="seg" id="gunSeg">${GUNK.map((g,i)=>
+          `<button data-d="${i}" class="${E.gun===i?'on':''}">${g}</button>`).join('')}</div>`:''}
+        <div style="flex:1"></div>
+        <span style="font-size:.74rem;color:var(--muted)">${bos.length?`<span style="color:var(--crit)">● ${bos.length} açık nokta</span>`:'<span style="color:var(--ok)">● açık nokta yok</span>'}</span>
+      </div>
+      <div style="flex:1;overflow:auto;padding:12px" id="takvim"></div>
+    </div>
+
+    ${E.sagAcik?`<div style="width:326px;border-left:1px solid var(--line);background:var(--surface-3);display:flex;flex-direction:column">
+      <div style="display:flex;border-bottom:1px solid var(--line)">
+        <button class="btn gh sm" id="sagKapa" title="Paneli kapat" style="border-radius:0">▶</button>
+        <button class="sgT btn gh sm" data-s="asistan" style="flex:1;border-radius:0;${E.sagSekme==='asistan'?'background:var(--brand-soft);color:var(--brand-ink)':''}">Asistan${bos.length?` (${bos.length})`:''}</button>
+        <button class="sgT btn gh sm" data-s="detay" style="flex:1;border-radius:0;${E.sagSekme==='detay'?'background:var(--brand-soft);color:var(--brand-ink)':''}">Detay</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:12px" id="sagIcerik"></div></div>`
+      :`<button class="btn gh sm" id="sagAc" style="align-self:flex-start;margin:8px 4px;writing-mode:vertical-rl">◀ Asistan</button>`}
+  </div>`;
+
+  // olaylar
+  $('#edOnay')&&($('#edOnay').onclick=()=>{S.planDurum='onayda';toast('Plan <b>onaya gönderildi</b> — Murat Kaya\'ya bildirim gitti');git('editor');});
+  $('#edYayin')&&($('#edYayin').onclick=()=>yayinModal());
+  $('#solKapa')&&($('#solKapa').onclick=()=>{E.solAcik=false;git('editor');});
+  $('#solAc')&&($('#solAc').onclick=()=>{E.solAcik=true;git('editor');});
+  $('#sagKapa')&&($('#sagKapa').onclick=()=>{E.sagAcik=false;git('editor');});
+  $('#sagAc')&&($('#sagAc').onclick=()=>{E.sagAcik=true;git('editor');});
+  $$('#gorSeg button',v).forEach(b=>b.onclick=()=>{E.gorunum=b.dataset.g;git('editor');});
+  $$('#gunSeg button',v).forEach(b=>b.onclick=()=>{E.gun=+b.dataset.d;git('editor');});
+  $$('.sgT',v).forEach(b=>b.onclick=()=>{E.sagSekme=b.dataset.s;git('editor');});
+  if(E.solAcik){ calListeCiz(); $('#calAra').oninput=e=>calListeCiz(e.target.value); }
+  takvimCiz($('#takvim'));
+  if(E.sagAcik) sagPanelCiz($('#sagIcerik'),bos);
+};
+
+function calListeCiz(q){
+  const host=$('#calListe'); if(!host) return;
+  const E=ed();
+  const list=AKTIF.filter(c=>!q||c.tam.toLocaleLowerCase('tr').includes(q.toLocaleLowerCase('tr'))||c.sicil.includes(q)).slice(0,60);
+  host.innerHTML=list.map(c=>{
+    const s=saatToplam(c.id), or=s/c.haftalik;
+    return `<div class="cl" data-c="${c.id}" style="padding:7px 11px;border-bottom:1px solid var(--line);cursor:pointer">
+      <div style="font-size:.81rem;font-weight:500">${c.tam}${c.lider?' <span class="tag brand" style="font-size:.58rem">TL</span>':''}</div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:2px">
+        <span style="font-size:.7rem;color:var(--muted);flex:1">${ekipAd(c.ekip)}</span>
+        <span class="mono" style="font-size:.7rem;color:${or>1?'var(--warn)':(or<0.8?'var(--crit)':'var(--muted)')}">${dec(s,0)}/${c.haftalik}</span></div>
+      <div style="height:3px;background:var(--surface-4);border-radius:2px;margin-top:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.min(100,or*100)}%;background:${or>1?'var(--warn)':'var(--brand)'}"></div></div></div>`;
+  }).join('')||'<div class="empty" style="padding:22px;font-size:.8rem">Sonuç yok</div>';
+  $$('.cl',host).forEach(n=>n.onclick=()=>{ed().secim={tip:'calisan',id:n.dataset.c};ed().sagSekme='detay';ed().sagAcik=true;git('editor');});
+}
+</script>
+<script>
+/* ---------- takvim görünümleri ---------- */
+function takvimCiz(host){
+  const E=ed();
+  if(E.gorunum==='hafta') return haftaGorunum(host);
+  if(E.gorunum==='gun') return gunGorunum(host);
+  return listeGorunum(host);
+}
+
+function haftaGorunum(host){
+  const E=ed(), d=kapsamaHesap(E.atamalar);
+  let out='<div style="min-width:820px"><div style="display:grid;grid-template-columns:52px repeat(7,1fr);gap:2px">';
+  out+='<div></div>'+GUNK.map((g,i)=>`<div style="text-align:center;font-size:.74rem;font-weight:600;padding:4px 0;color:var(--ink-2)">
+      ${GUNLER[i].slice(0,3)} <span style="color:var(--muted);font-weight:400">${tarihKisa(gunEkle(HAFTA_BAS,i))}</span></div>`).join('');
+  for(let s=8;s<24;s++){
+    out+=`<div class="mono" style="font-size:.68rem;color:var(--muted);text-align:right;padding:3px 6px 0 0">${pad(s)}–${pad(s+1)}</div>`;
+    for(let g=0;g<7;g++){
+      let olan=0,asg=0,hed=0;
+      EKIPLER.forEach(t=>{olan+=d[`${t.id}|${g}|${s}`]||0;const q=talepAl(t.id,g,s);asg+=q.asgari;hed+=q.hedef;});
+      const yetersiz=olan<asg;
+      const oran=hed?Math.min(1,olan/hed):0;
+      const bg = yetersiz?'var(--crit-soft)':`color-mix(in srgb, var(--brand-soft) ${Math.round(oran*100)}%, var(--surface))`;
+      out+=`<div class="hc" data-g="${g}" data-s="${s}" style="background:${bg};border:1px solid var(--line);border-radius:3px;
+        padding:2px 4px;min-height:26px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+        <span class="mono" style="font-size:.72rem;font-weight:600;color:${yetersiz?'var(--crit)':'var(--ink-2)'}">${olan}</span>
+        <span class="mono" style="font-size:.62rem;color:var(--muted-2)">/${hed}</span></div>`;
+    }
+  }
+  out+='</div><div class="row" style="margin-top:12px;font-size:.73rem;color:var(--muted)">'+
+    '<span>Hücrede: <b class="mono">sahada olan / hedef</b></span>'+
+    '<span class="tag crit">asgarinin altında</span>'+
+    '<span style="margin-left:auto">Bir hücreye tıklayın → o saatte kimler var</span></div></div>';
+  host.innerHTML=out;
+  $$('.hc',host).forEach(c=>c.onclick=()=>saatDetayModal(+c.dataset.g,+c.dataset.s));
+}
+
+function gunGorunum(host){
+  const E=ed(), g=E.gun;
+  const ats=E.atamalar.filter(a=>a.gun===g);
+  let out=`<div style="min-width:900px">
+    <div class="row" style="margin-bottom:10px"><h3>${GUNLER[g]} · ${tarihStr(gunEkle(HAFTA_BAS,g))}</h3>
+      <span class="tag">${new Set(ats.map(a=>a.calisan)).size} kişi sahada</span>
+      <span class="tag">${dec(ats.reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0),0)} saat</span></div>`;
+  // saat cetveli
+  out+='<div style="display:grid;grid-template-columns:150px 1fr;gap:0 8px;align-items:center;margin-bottom:6px">'+
+    '<div></div><div style="display:grid;grid-template-columns:repeat(16,1fr);font-size:.65rem;color:var(--muted)" class="mono">'+
+    Array.from({length:16},(_,i)=>`<div style="text-align:center">${pad(i+8)}</div>`).join('')+'</div></div>';
+  EKIPLER.forEach(t=>{
+    const tAts=ats.filter(a=>a.ekip===t.id);
+    if(!tAts.length) return;
+    out+=`<div style="margin:12px 0 5px;font-size:.76rem;font-weight:600;color:var(--ink-2);display:flex;gap:7px;align-items:center">
+      <span style="width:9px;height:9px;border-radius:2px;background:${t.renk};display:inline-block"></span>${t.ad}
+      <span style="color:var(--muted);font-weight:400">${tAts.length} vardiya</span></div>`;
+    tAts.sort((a,b)=>a.bas-b.bas||byId[a.calisan].tam.localeCompare(byId[b.calisan].tam,'tr'))
+      .slice(0,26).forEach(a=>{
+      const c=byId[a.calisan], sb=sablonObj(a.sablon);
+      const sol=(a.bas-8)/16*100, gen=(a.bit-a.bas)/16*100;
+      const molaSol=(a.bas+Math.floor((a.bit-a.bas)/2)-8)/16*100, molaGen=(a.mola/60)/16*100;
+      out+=`<div style="display:grid;grid-template-columns:150px 1fr;gap:0 8px;align-items:center;margin-bottom:3px">
+        <div style="font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${c.tam}">
+          ${c.tam}${c.lider?' <span class="tag brand" style="font-size:.55rem">TL</span>':''}</div>
+        <div style="position:relative;height:22px;background:var(--surface-3);border-radius:3px">
+          <div class="bar" data-a="${a.id}" title="${sb.ad} ${pad(a.bas)}:00–${pad(a.bit)}:00, mola ${a.mola} dk"
+            style="position:absolute;left:${sol}%;width:${gen}%;top:0;bottom:0;background:${t.renk};opacity:.85;border-radius:3px;
+            cursor:pointer;display:flex;align-items:center;padding:0 6px;color:#fff;font-size:.66rem;font-weight:600;overflow:hidden">
+            ${pad(a.bas)}:00–${pad(a.bit)}:00${a.kilit?' 🔒':''}</div>
+          <div style="position:absolute;left:${molaSol}%;width:${molaGen}%;top:4px;bottom:4px;background:var(--surface);opacity:.6;border-radius:2px"></div>
+        </div></div>`;
+    });
+    if(tAts.length>26) out+=`<div style="font-size:.73rem;color:var(--muted);padding:4px 0 0 150px">+${tAts.length-26} kişi daha…</div>`;
+  });
+  // saat özeti
+  out+='<div style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px"><h3 style="margin-bottom:8px">Saat saat kapsama</h3>';
+  const d=kapsamaHesap(E.atamalar);
+  out+='<div style="display:flex;gap:3px;flex-wrap:wrap">';
+  for(let s=8;s<24;s++){
+    const parts=EKIPLER.map(t=>{const q=talepAl(t.id,g,s),v=d[`${t.id}|${g}|${s}`]||0;
+      return {kod:t.kod,v,q,ok:v>=q.asgari};});
+    const kotu=parts.some(p=>!p.ok);
+    out+=`<div style="border:1px solid ${kotu?'var(--crit)':'var(--line)'};border-radius:4px;padding:5px 7px;background:${kotu?'var(--crit-soft)':'var(--surface)'}">
+      <div class="mono" style="font-size:.68rem;font-weight:600;margin-bottom:2px">${pad(s)}:00</div>
+      ${parts.map(p=>`<div class="mono" style="font-size:.63rem;color:${p.ok?'var(--muted)':'var(--crit)'}">${p.kod} ${p.v}/${p.q.asgari}${p.ok?' ✓':' ⚠'}</div>`).join('')}</div>`;
+  }
+  out+='</div></div></div>';
+  host.innerHTML=out;
+  $$('.bar',host).forEach(b=>b.onclick=()=>{ed().secim={tip:'atama',id:b.dataset.a};ed().sagSekme='detay';ed().sagAcik=true;git('editor');});
+}
+
+function listeGorunum(host){
+  const E=ed(), g=E.gun;
+  const ats=E.atamalar.filter(a=>a.gun===g)
+    .sort((a,b)=>a.ekip.localeCompare(b.ekip)||a.bas-b.bas||byId[a.calisan].tam.localeCompare(byId[b.calisan].tam,'tr'));
+  host.innerHTML=`<div class="row" style="margin-bottom:10px"><h3>${GUNLER[g]} · ${tarihStr(gunEkle(HAFTA_BAS,g))}</h3>
+      <span class="tag">${ats.length} vardiya</span>
+      <div style="flex:1"></div><button class="btn sm">Excel'e aktar</button></div>
+    <div class="tbl-w"><table class="t"><thead><tr>
+      <th>Çalışan</th><th>Sicil</th><th>Ekip</th><th>Vardiya</th><th>Saat</th><th>Süre</th><th>Mola</th><th>Rol</th><th>Durum</th><th></th>
+    </tr></thead><tbody>${ats.map(a=>{const c=byId[a.calisan],sb=sablonObj(a.sablon);
+      return `<tr><td class="s">${c.tam}</td><td class="mono" style="font-size:.75rem">${c.sicil}</td>
+      <td>${ekipAd(a.ekip)}</td><td>${sb.ad}</td>
+      <td class="mono">${pad(a.bas)}:00–${pad(a.bit)}:00</td>
+      <td class="n">${dec(a.bit-a.bas-a.mola/60,1)} sa</td>
+      <td class="mono" style="font-size:.75rem">${a.mola} dk</td>
+      <td>${c.lider?'<span class="tag brand">Takım lideri</span>':'—'}</td>
+      <td>${a.kilit?'<span class="tag">🔒 kilitli</span>':'<span class="tag ok">✓</span>'}</td>
+      <td style="text-align:right"><button class="btn gh sm sil" data-a="${a.id}">Kaldır</button></td></tr>`;}).join('')}
+    </tbody></table></div>
+    <div class="note">Müdürün "bugün kim var?" sorusunun en hızlı cevabı bu ekran. Sıralanabilir, filtrelenebilir, dışa aktarılabilir.</div>`;
+  $$('.sil',host).forEach(b=>b.onclick=()=>atamaKaldir(b.dataset.a));
+}
+
+function atamaKaldir(aid){
+  const E=ed(); const ix=E.atamalar.findIndex(a=>a.id===aid); if(ix<0)return;
+  const a=E.atamalar[ix], c=byId[a.calisan];
+  E.atamalar.splice(ix,1);
+  const ozet=`${c.tam} · ${GUNK[a.gun]} ${pad(a.bas)}:00–${pad(a.bit)}:00 kaldırıldı`;
+  kayitEkle('sil',ozet,()=>{E.atamalar.push(a);});
+  const kayit=E.gecmis[0];
+  toast('✓ '+ozet,{geriAl:()=>geriAl(kayit)});
+  git('editor');
+}
+function saatDetayModal(g,s){
+  const ats=ed().atamalar.filter(a=>a.gun===g&&a.bas<=s&&a.bit>s);
+  const d=kapsamaHesap(ed().atamalar);
+  modal({baslik:`${GUNLER[g]} ${pad(s)}:00 – ${pad(s+1)}:00`,alt:`${ats.length} kişi sahada`,genis:'wide',govde:`
+    <div class="grid g3" style="margin-bottom:14px">
+      ${EKIPLER.map(t=>{const q=talepAl(t.id,g,s),v=d[`${t.id}|${g}|${s}`]||0;
+        return `<div class="stat ${v<q.asgari?'crit':(v>=q.hedef?'ok':'warn')}"><div class="k">${t.ad}</div>
+        <div class="v">${v}<span style="font-size:.9rem;color:var(--muted)"> / ${q.hedef}</span></div>
+        <div class="s">asgari ${q.asgari}${v<q.asgari?' · <b style="color:var(--crit)">açık</b>':''}</div></div>`;}).join('')}
+    </div>
+    <div class="tbl-w"><table class="t"><thead><tr><th>Çalışan</th><th>Ekip</th><th>Vardiya</th><th>Rol</th></tr></thead>
+    <tbody>${ats.slice(0,30).map(a=>{const c=byId[a.calisan];
+      return `<tr><td class="s">${c.tam}</td><td>${ekipAd(a.ekip)}</td>
+      <td class="mono">${pad(a.bas)}:00–${pad(a.bit)}:00</td>
+      <td>${c.lider?'<span class="tag brand">Takım lideri</span>':'—'}</td></tr>`;}).join('')}</tbody></table></div>
+    ${ats.length>30?`<div style="font-size:.76rem;color:var(--muted);margin-top:7px">+${ats.length-30} kişi daha</div>`:''}`,
+    aksiyon:[{ad:'Kapat'}]});
+}
+</script>
+<script>
+/* ---------- sağ panel: asistan + detay ---------- */
+function sagPanelCiz(host,bos){
+  const E=ed();
+  if(E.sagSekme==='detay'){
+    const sc=E.secim;
+    if(!sc){ host.innerHTML=`<div class="empty" style="padding:30px 12px"><div class="big">◱</div>
+      <div style="font-size:.82rem">Takvimde bir vardiyaya ya da soldaki listeden bir çalışana tıklayın.</div></div>`; return; }
+    if(sc.tip==='calisan'){
+      const c=byId[sc.id], ats=E.atamalar.filter(a=>a.calisan===c.id).sort((a,b)=>a.gun-b.gun);
+      host.innerHTML=`<h3>${c.tam}</h3>
+        <div style="font-size:.75rem;color:var(--muted)" class="mono">${c.sicil} · ${ekipAd(c.ekip)}</div>
+        <div class="grid g2" style="gap:8px;margin:12px 0">
+          <div class="stat" style="padding:9px 11px"><div class="k">Planlanan</div><div class="v" style="font-size:1.1rem">${dec(saatToplam(c.id),0)} sa</div></div>
+          <div class="stat" style="padding:9px 11px"><div class="k">Sözleşme</div><div class="v" style="font-size:1.1rem">${c.haftalik} sa</div></div>
+        </div>
+        <h3 style="font-size:.8rem;margin-bottom:6px">Bu haftaki vardiyaları</h3>
+        ${ats.length?ats.map(a=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+          <span style="font-size:.78rem;font-weight:600;width:32px">${GUNK[a.gun]}</span>
+          <span class="mono" style="font-size:.78rem;flex:1">${pad(a.bas)}:00–${pad(a.bit)}:00</span>
+          <button class="btn gh sm sil2" data-a="${a.id}">Kaldır</button></div>`).join('')
+          :'<div style="font-size:.8rem;color:var(--muted)">Bu hafta vardiyası yok.</div>'}
+        <div class="note" style="margin-top:14px;font-size:.78rem">Yetkinlik: ${c.yetkinlikler.length?c.yetkinlikler.map(y=>YETKINLIKLER.find(x=>x.id===y).ad).join(', '):'—'}<br>
+          Sözleşme: ${c.sozlesme==='yari_zamanli'?'Yarı zamanlı':'Tam zamanlı'} · günlük azami ${c.gunlukAzami} sa</div>`;
+      $$('.sil2',host).forEach(b=>b.onclick=()=>atamaKaldir(b.dataset.a));
+    } else {
+      const a=E.atamalar.find(x=>x.id===sc.id);
+      if(!a){host.innerHTML='<div class="empty" style="padding:26px 12px;font-size:.82rem">Bu atama kaldırıldı.</div>';return;}
+      const c=byId[a.calisan], sb=sablonObj(a.sablon);
+      host.innerHTML=`<h3>${c.tam}</h3>
+        <div style="font-size:.75rem;color:var(--muted)">${GUNLER[a.gun]} · ${ekipAd(a.ekip)}</div>
+        <label class="f" style="margin-top:12px"><span class="lb">Vardiya şablonu</span>
+          <select>${SABLONLAR.map(s=>`<option ${s.id===a.sablon?'selected':''}>${s.ad} (${pad(s.bas)}:00–${pad(s.bit)}:00)</option>`).join('')}</select></label>
+        <div class="f2"><label class="f"><span class="lb">Başlangıç</span><input type="time" value="${pad(a.bas)}:00"></label>
+          <label class="f"><span class="lb">Bitiş</span><input type="time" value="${pad(a.bit%24)}:00"></label></div>
+        <label class="f"><span class="lb">Mola</span><input type="text" value="${a.mola} dakika"></label>
+        <div class="row" style="margin-top:6px">
+          <button class="btn sm" id="kilitle">${a.kilit?'🔒 Kilidi aç':'🔓 Kilitle'}</button>
+          <button class="btn sm dg" id="kaldir">Kaldır</button></div>
+        <div class="note" style="margin-top:14px;font-size:.78rem">Elle yapılan her atama otomatik kilitlenir.
+          Motor kilitli atamayı hiçbir işlemde değiştiremez.</div>`;
+      $('#kilitle',host).onclick=()=>{a.kilit=!a.kilit;toast(a.kilit?'Atama <b>kilitlendi</b>':'Kilit açıldı');git('editor');};
+      $('#kaldir',host).onclick=()=>atamaKaldir(a.id);
+    }
+    return;
+  }
+  // asistan
+  let out='';
+  if(bos.length){
+    out+=`<div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--crit);margin-bottom:8px">⚠ AÇIK NOKTA (${bos.length})</div>`;
+    bos.slice(0,4).forEach((b,bi)=>{
+      const t=ekipObj(b.ekip);
+      const ads=adaylar(b);
+      out+=`<div class="card" style="margin-bottom:10px"><div style="padding:10px 12px;border-bottom:1px solid var(--line)">
+        <div style="font-size:.82rem;font-weight:600">${GUNLER[b.gun]} ${pad(b.bas)}:00–${pad(b.bit)}:00</div>
+        <div style="font-size:.75rem;color:var(--muted)">${t.ad} · <b style="color:var(--crit)">${b.eksik} kişi eksik</b></div></div>
+        <div style="padding:4px 12px 10px">`;
+      if(!ads.length) out+='<div style="font-size:.78rem;color:var(--muted);padding:8px 0">Kural ihlal etmeden bu boşluğu kapatabilecek kimse yok. Talep hedefini düşürmeyi ya da izin planını gözden geçirmeyi deneyin.</div>';
+      ads.forEach((x,i)=>{
+        out+=`<div style="padding:9px 0;border-bottom:${i<ads.length-1?'1px solid var(--line)':'none'}">
+          <div style="font-size:.81rem;font-weight:600">Öneri ${i+1} — ${x.c.tam}</div>
+          <div style="font-size:.74rem;color:var(--muted);margin:2px 0 6px">
+            ${pad(x.sb.bas)}:00–${pad(x.sb.bit)}:00 · haftalık saat ${dec(x.once,0)} → <b>${dec(x.sonra,0)}</b> (sınır ${x.tavan})<br>
+            Yeni kural ihlali yok · adalet etkisi ihmal edilebilir</div>
+          <button class="btn sm p uygula" data-b="${bi}" data-c="${x.c.id}" data-s="${x.sb.id}" style="width:100%">Uygula</button></div>`;
+      });
+      out+='</div></div>';
+    });
+    if(bos.length>4) out+=`<div style="font-size:.75rem;color:var(--muted);margin-bottom:12px">+${bos.length-4} açık nokta daha</div>`;
+  } else {
+    out+=`<div class="note" style="border-left-color:var(--ok);background:var(--ok-soft);margin-top:0">
+      <b>Açık nokta yok.</b> Tüm saatlerde asgari kapsama sağlanıyor.</div>`;
+  }
+  out+=`<div style="font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--warn);margin:16px 0 8px">ⓘ YUMUŞAK UYARI (${YUMUSAK_UYARI.length})</div>`;
+  YUMUSAK_UYARI.forEach(u=>{
+    out+=`<div class="card" style="margin-bottom:10px"><div style="padding:10px 12px">
+      <div style="font-size:.81rem;font-weight:600">${u.kisi}</div>
+      <div style="font-size:.75rem;color:var(--ink-2);margin:3px 0 5px">${u.metin}</div>
+      <span class="tag warn" style="font-size:.6rem">${u.kod}</span>
+      <div style="margin-top:9px;padding-top:9px;border-top:1px solid var(--line)">
+        <div style="font-size:.78rem;font-weight:600;color:var(--brand-ink)">Öneri: ${u.oneri}</div>
+        <ul style="font-size:.73rem;color:var(--muted);margin:4px 0 8px;padding-left:15px">${u.etki.map(e=>`<li>${e}</li>`).join('')}</ul>
+        <button class="btn sm p yum" data-u="${u.id}" style="width:100%">Uygula</button></div></div></div>`;
+  });
+  out+=`<div class="note" style="font-size:.76rem;margin-top:14px">Her aday <b>bağımsız denetleyiciden</b> geçer.
+    Sert kural ihlal eden aday bu listede <b>hiç görünmez</b>. Uygulanan her öneri <b>geri alınabilir</b>.</div>`;
+  host.innerHTML=out;
+
+  $$('.uygula',host).forEach(b=>b.onclick=()=>{
+    const bo=bos[+b.dataset.b], c=byId[b.dataset.c], sb=sablonObj(b.dataset.s);
+    const yeni={id:'a'+Date.now(),calisan:c.id,ekip:bo.ekip,sablon:sb.id,gun:bo.gun,bas:sb.bas,bit:sb.bit,mola:sb.mola,kilit:true,kaynak:'manuel'};
+    ed().atamalar.push(yeni);
+    const ozet=`${c.tam} · ${GUNK[bo.gun]} ${pad(sb.bas)}:00–${pad(sb.bit)}:00 eklendi (öneri)`;
+    kayitEkle('oneri_uygula',ozet,()=>{const i=ed().atamalar.findIndex(a=>a.id===yeni.id);if(i>=0)ed().atamalar.splice(i,1);});
+    const kayit=ed().gecmis[0];
+    toast('✓ '+ozet,{geriAl:()=>geriAl(kayit)});
+    git('editor');
+  });
+  $$('.yum',host).forEach(b=>b.onclick=()=>{
+    const u=YUMUSAK_UYARI.find(x=>x.id===b.dataset.u);
+    const ozet=`${u.kisi} · ${u.oneri}`;
+    kayitEkle('oneri_uygula',ozet,()=>{});
+    const kayit=ed().gecmis[0];
+    toast('✓ '+ozet,{geriAl:()=>geriAl(kayit)});
+    git('editor');
+  });
+}
+
+function gecmisModal(){
+  const E=ed();
+  const g=el('div');
+  if(!E.gecmis.length){ g.innerHTML='<div class="empty"><div class="big">◷</div><div>Bu oturumda henüz düzenleme yapılmadı.</div></div>'; }
+  else {
+    g.innerHTML=`<div class="note" style="margin-top:0">Her düzenleme öncesi ve sonrasıyla kaydedilir, bu yüzden <b>tersine çevrilebilir</b>.
+      Geri alma bir silme değil, yeni bir kayıttır — denetim izi bozulmaz.</div>
+      <div class="tbl-w" style="margin-top:12px"><table class="t"><tbody>
+      ${E.gecmis.map((k,i)=>`<tr><td class="mono" style="width:64px;color:var(--muted);font-size:.75rem">${pad(k.zaman.getHours())}:${pad(k.zaman.getMinutes())}</td>
+        <td class="s" style="${k.alindi?'opacity:.5;text-decoration:line-through':''}">${k.ozet}
+          <div><span class="tag ${k.tur==='oneri_uygula'?'brand':(k.tur==='geri_al'?'':'warn')}" style="font-size:.58rem;margin-top:3px">${
+            {oneri_uygula:'öneri uygulandı',sil:'kaldırıldı',ekle:'eklendi',geri_al:'geri alma'}[k.tur]||k.tur}</span></div></td>
+        <td style="text-align:right;width:96px">${k.alindi||k.tur==='geri_al'?'<span style="font-size:.74rem;color:var(--muted)">—</span>':`<button class="btn sm gal" data-i="${i}">Geri al</button>`}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  modal({baslik:'Düzenleme geçmişi',alt:'Bu oturumda yapılan işlemler',govde:g,genis:'wide',aksiyon:[{ad:'Kapat'}]});
+  $$('.gal',g).forEach(b=>b.onclick=()=>{ kapatModal(); geriAl(E.gecmis[+b.dataset.i]); });
+}
+
+function yayinModal(){
+  modal({baslik:'Planı yayınla',alt:`${tarihStr(HAFTA_BAS)} – ${tarihStr(gunEkle(HAFTA_BAS,6))}`,govde:`
+    <p style="font-size:.86rem">Plan yayınlandığında ${new Set(ed().atamalar.map(a=>a.calisan)).size} çalışan kendi takvimini görebilecek
+    ve seçili kanallardan bildirim gidecek.</p>
+    <div class="note"><b>Bildirim gidecek kanallar</b>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag ok">Uygulama içi</span><span class="tag ok">E-posta</span>
+        <span class="tag">WhatsApp (faz 2)</span><span class="tag">SMS (faz 2)</span></div></div>
+    <div class="note warn">Yayından sonra yapılan her değişiklik <b>revizyon</b> olarak işaretlenir ve
+      yalnız etkilenen çalışanlara ayrıca bildirim gider.</div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Yayınla',tur:'p',fn:()=>{S.planDurum='yayinda';
+      toast('Plan <b>yayınlandı</b> — 214 çalışana bildirim gönderildi',{uzun:true}); git('editor');}}]});
+}
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Çalışanlar
+   ========================================================================== */
+let CAL_FILTRE={q:'',ekip:'',soz:'',sayfa:0};
+EKRANLAR.calisanlar=(v,top)=>{
+  top.innerHTML='';
+  const b1=el('button','btn','⇪ Excel’den yükle'); b1.onclick=()=>git('aktarma');
+  const b2=el('button','btn p','+ Yeni çalışan'); b2.onclick=yeniCalisanModal;
+  top.append(b1,b2);
+  const f=CAL_FILTRE;
+  const list=CALISANLAR.filter(c=>
+    (!f.q||c.tam.toLocaleLowerCase('tr').includes(f.q.toLocaleLowerCase('tr'))||c.sicil.includes(f.q))
+    &&(!f.ekip||c.ekip===f.ekip)&&(!f.soz||c.sozlesme===f.soz));
+  const sayfa=list.slice(f.sayfa*25,f.sayfa*25+25);
+  v.innerHTML=`<div class="wrap">
+    <div class="row" style="margin-bottom:14px">
+      <input type="text" id="fq" value="${esc(f.q)}" placeholder="Ad veya sicil ara…" style="max-width:230px">
+      <select id="fe" style="max-width:190px"><option value="">Tüm ekipler</option>
+        ${EKIPLER.map(e=>`<option value="${e.id}" ${f.ekip===e.id?'selected':''}>${e.ad}</option>`).join('')}</select>
+      <select id="fs" style="max-width:170px"><option value="">Tüm sözleşmeler</option>
+        <option value="tam_zamanli" ${f.soz==='tam_zamanli'?'selected':''}>Tam zamanlı</option>
+        <option value="yari_zamanli" ${f.soz==='yari_zamanli'?'selected':''}>Yarı zamanlı</option></select>
+      <div style="flex:1"></div><span style="font-size:.8rem;color:var(--muted)">${list.length} kayıt</span>
+    </div>
+    <div class="tbl-w"><table class="t"><thead><tr>
+      <th>Ad Soyad</th><th>Sicil</th><th>Ekip</th><th>Sözleşme</th><th>Haftalık</th><th>Rol</th><th>Yetkinlik</th><th>Durum</th>
+    </tr></thead><tbody>${sayfa.map(c=>`<tr class="clk" data-c="${c.id}">
+      <td class="s">${c.tam}</td><td class="mono" style="font-size:.76rem">${c.sicil}</td>
+      <td>${ekipAd(c.ekip)}</td>
+      <td>${c.sozlesme==='yari_zamanli'?'Yarı zamanlı':'Tam zamanlı'}</td>
+      <td class="n">${c.haftalik} sa</td>
+      <td>${c.lider?'<span class="tag brand">Takım lideri</span>':'—'}</td>
+      <td>${c.yetkinlikler.map(y=>`<span class="tag" style="font-size:.58rem">${YETKINLIKLER.find(x=>x.id===y).kod}</span>`).join(' ')||'—'}</td>
+      <td>${c.durum==='aktif'?'<span class="tag ok">aktif</span>':'<span class="tag">pasif</span>'}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn sm" id="prev" ${f.sayfa===0?'disabled':''}>← Önceki</button>
+      <span style="font-size:.8rem;color:var(--muted)">Sayfa ${f.sayfa+1} / ${Math.max(1,Math.ceil(list.length/25))}</span>
+      <button class="btn sm" id="next" ${(f.sayfa+1)*25>=list.length?'disabled':''}>Sonraki →</button></div>
+  </div>`;
+  $('#fq',v).oninput=e=>{f.q=e.target.value;f.sayfa=0;git('calisanlar');};
+  $('#fe',v).onchange=e=>{f.ekip=e.target.value;f.sayfa=0;git('calisanlar');};
+  $('#fs',v).onchange=e=>{f.soz=e.target.value;f.sayfa=0;git('calisanlar');};
+  $('#prev',v).onclick=()=>{f.sayfa--;git('calisanlar');};
+  $('#next',v).onclick=()=>{f.sayfa++;git('calisanlar');};
+  $$('tr.clk',v).forEach(tr=>tr.onclick=()=>calisanDetay(tr.dataset.c));
+};
+
+function yeniCalisanModal(){
+  modal({baslik:'Yeni çalışan',alt:'Zorunlu alanlar doldurulunca kaydedilir',genis:'wide',govde:`
+    <div class="f2">
+      <label class="f"><span class="lb">Ad *</span><input type="text" placeholder="Ör. Deniz"></label>
+      <label class="f"><span class="lb">Soyad *</span><input type="text" placeholder="Ör. Yılmaz"></label>
+      <label class="f"><span class="lb">Personel no *</span><input type="text" placeholder="A4315">
+        <span class="hint">İK sistemiyle eşleştirme anahtarı</span></label>
+      <label class="f"><span class="lb">İşe giriş *</span><input type="date" value="2026-09-15"></label>
+      <label class="f"><span class="lb">E-posta</span><input type="email" placeholder="ad.soyad@anadolucm.com"></label>
+      <label class="f"><span class="lb">Telefon</span><input type="text" placeholder="0532 000 00 00"></label>
+      <label class="f"><span class="lb">Departman / Şube *</span><select><option>Çağrı Merkezi Operasyon</option></select></label>
+      <label class="f"><span class="lb">Birincil ekip *</span><select>${EKIPLER.map(e=>`<option>${e.ad}</option>`).join('')}</select></label>
+      <label class="f"><span class="lb">Sözleşme tipi *</span><select><option>Tam zamanlı</option><option>Yarı zamanlı</option><option>Sezonluk</option></select></label>
+      <label class="f"><span class="lb">Haftalık saat *</span><input type="number" value="45"></label>
+    </div>
+    <label class="f"><span class="lb">Operasyonel rol</span><select><option>—</option><option>Takım lideri</option><option>Vardiya amiri</option></select></label>
+    <div class="note">Kaydettikten sonra çalışan detayında yetkinlik, uygunluk ve kural istisnası tanımlayabilirsiniz.</div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet ve detaya git',tur:'p',fn:()=>{toast('Çalışan kaydedildi — <b>Deniz Yılmaz</b>');}}]});
+}
+
+function calisanDetay(cid){
+  const c=byId[cid];
+  const izin=IZINLER.filter(i=>i.calisan===cid);
+  const ats=(PLANLAR[S.secili||'DENGELI'].atamalar).filter(a=>a.calisan===cid);
+  let sekme='genel';
+  const g=el('div');
+  const render=()=>{
+    g.innerHTML=`<div class="tabs" id="cdT">
+      ${[['genel','Genel'],['soz','Sözleşme'],['yet','Yetkinlikler'],['uyg','Uygunluk'],['izin','İzinler'],['ist','Kural istisnaları'],['pl','Planlar']]
+        .map(([k,a])=>`<button data-k="${k}" class="${sekme===k?'on':''}">${a}</button>`).join('')}</div>
+      <div id="cdI"></div>`;
+    const I=$('#cdI',g);
+    if(sekme==='genel') I.innerHTML=`<div class="f2">
+      ${[['Ad Soyad',c.tam],['Personel no',c.sicil],['E-posta',c.eposta],['Telefon',c.telefon],
+         ['Departman / Şube','Çağrı Merkezi Operasyon'],['Birincil ekip',ekipAd(c.ekip)],
+         ['İşe giriş',tarihStr(c.giris)],['Operasyonel rol',c.lider?'Takım lideri':'—'],
+         ['Durum',c.durum==='aktif'?'Aktif':'Pasif']]
+        .map(([k,val])=>`<label class="f"><span class="lb">${k}</span><input type="text" value="${esc(val)}"></label>`).join('')}</div>`;
+    else if(sekme==='soz') I.innerHTML=`<div class="tbl-w"><table class="t"><thead><tr><th>Tip</th><th>Haftalık</th><th>Günlük azami</th><th>Başlangıç</th><th>Bitiş</th><th>Durum</th></tr></thead>
+      <tbody><tr><td class="s">${c.sozlesme==='yari_zamanli'?'Yarı zamanlı':'Tam zamanlı'}</td><td class="n">${c.haftalik} sa</td>
+      <td class="n">${c.gunlukAzami} sa</td><td>${tarihStr(c.giris)}</td><td>—</td><td><span class="tag ok">aktif</span></td></tr></tbody></table></div>
+      <div class="note"><b>Günlük azami ${c.gunlukAzami} saat</b> — bu değer sözleşme tipinden geliyor ve
+      kiracı varsayılanı olan 9 saati eziyor. Kural parametreleri dört kademede çözülür:
+      çalışan istisnası → sözleşme tipi → departman → kiracı → sistem varsayılanı.</div>
+      <button class="btn sm" style="margin-top:10px">+ Yeni sözleşme</button>`;
+    else if(sekme==='yet') I.innerHTML=`<div class="tbl-w"><table class="t"><thead><tr><th>Yetkinlik</th><th>Seviye</th><th>Sertifika bitişi</th><th></th></tr></thead>
+      <tbody>${c.yetkinlikler.length?c.yetkinlikler.map(y=>{const yy=YETKINLIKLER.find(x=>x.id===y);
+        return `<tr><td class="s">${yy.ad}</td><td class="n">${3+Math.floor(R()*3)}/5</td><td>—</td>
+        <td style="text-align:right"><button class="btn gh sm">Kaldır</button></td></tr>`;}).join('')
+        :'<tr><td colspan="4" style="color:var(--muted)">Tanımlı yetkinlik yok.</td></tr>'}</tbody></table></div>
+      <button class="btn sm" style="margin-top:10px">+ Yetkinlik ekle</button>`;
+    else if(sekme==='uyg') I.innerHTML=`<div class="note">Uygunluk <b>sert</b> kuraldır: "uygun değilim" denen saate atama yapılamaz.
+      Tercih ise yumuşaktır — "yapamam" değil, "tercih ederim" demektir.</div>
+      <div class="tbl-w" style="margin-top:12px"><table class="t"><thead><tr><th>Tip</th><th>Tekrar</th><th>Gün</th><th>Saat</th><th>Açıklama</th></tr></thead>
+      <tbody><tr><td><span class="tag crit">uygun değil</span></td><td>Haftalık</td><td>Salı</td><td class="mono">08:00–14:00</td><td>Üniversite dersi</td></tr>
+      <tr><td><span class="tag ok">tercih ediyor</span></td><td>Haftalık</td><td>Pazartesi</td><td class="mono">08:00–16:00</td><td>Sabah vardiyası</td></tr></tbody></table></div>
+      <button class="btn sm" style="margin-top:10px">+ Uygunluk ekle</button>`;
+    else if(sekme==='izin') I.innerHTML=`<div class="tbl-w"><table class="t"><thead><tr><th>Tip</th><th>Tarih</th><th>Gün</th><th>Durum</th></tr></thead>
+      <tbody>${izin.length?izin.map(i=>`<tr><td class="s">${i.tip}</td><td>${tarihKisa(i.bas)} – ${tarihKisa(i.bit)}</td>
+        <td class="n">${i.gun}</td><td><span class="tag ${i.durum==='onayli'?'ok':'warn'}">${i.durum}</span></td></tr>`).join('')
+        :'<tr><td colspan="4" style="color:var(--muted)">Kayıt yok.</td></tr>'}</tbody></table></div>`;
+    else if(sekme==='ist') I.innerHTML=`<div class="note">Kural istisnası eklerken <b>sebep zorunludur</b> — denetim izi için.</div>
+      <div class="empty" style="padding:30px"><div class="big">⚖</div><div style="font-size:.85rem">Bu çalışan için tanımlı istisna yok.</div></div>
+      <button class="btn sm">+ İstisna ekle</button>`;
+    else I.innerHTML=`<div class="tbl-w"><table class="t"><thead><tr><th>Gün</th><th>Ekip</th><th>Vardiya</th><th>Süre</th></tr></thead>
+      <tbody>${ats.length?ats.sort((a,b)=>a.gun-b.gun).map(a=>`<tr><td class="s">${GUNLER[a.gun]}</td><td>${ekipAd(a.ekip)}</td>
+        <td class="mono">${pad(a.bas)}:00–${pad(a.bit)}:00</td><td class="n">${dec(a.bit-a.bas-a.mola/60,1)} sa</td></tr>`).join('')
+        :'<tr><td colspan="4" style="color:var(--muted)">Bu hafta vardiyası yok.</td></tr>'}</tbody></table></div>`;
+    $$('#cdT button',g).forEach(b=>b.onclick=()=>{sekme=b.dataset.k;render();});
+  };
+  render();
+  modal({baslik:c.tam,alt:`${c.sicil} · ${ekipAd(c.ekip)} · ${c.sozlesme==='yari_zamanli'?'Yarı zamanlı':'Tam zamanlı'} ${c.haftalik} sa`,
+    govde:g,genis:'xwide',aksiyon:[{ad:'Kapat'},{ad:'Kaydet',tur:'p',fn:()=>toast('Değişiklikler kaydedildi')}]});
+}
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — İzinler + ETKİ ANALİZİ
+   ========================================================================== */
+function izinEtki(iz){
+  const plan = ed().atamalar.length?{atamalar:ed().atamalar}:PLANLAR[S.secili||'DENGELI'];
+  const d=kapsamaHesap(plan.atamalar);
+  const gunler=[];
+  for(let g=0;g<7;g++){
+    const t=gunEkle(HAFTA_BAS,g);
+    if(t<iz.bas||t>iz.bit) continue;
+    const ats=plan.atamalar.filter(a=>a.calisan===iz.calisan&&a.gun===g);
+    ats.forEach(a=>{
+      const kaps=[];
+      for(let s=a.bas;s<a.bit;s++){
+        const q=talepAl(a.ekip,g,s), once=d[`${a.ekip}|${g}|${s}`]||0, sonra=once-1;
+        kaps.push({saat:s,once,sonra,asgari:q.asgari,hedef:q.hedef,duser:sonra<q.asgari});
+      }
+      gunler.push({gun:g,tarih:t,atama:a,kaps,rolEtki:byId[iz.calisan].lider?'takım lideri çıkıyor — kontrol edin':'etkilenmiyor'});
+    });
+  }
+  const duser=gunler.some(x=>x.kaps.some(k=>k.duser));
+  let ads=[];
+  if(duser){
+    const gs=gunler.find(x=>x.kaps.some(k=>k.duser));
+    const gunluk=new Set(plan.atamalar.filter(a=>a.gun===gs.gun).map(a=>a.calisan));
+    const havuz=AKTIF.filter(c=>c.ekip===gs.atama.ekip&&c.id!==iz.calisan&&!izinliMi(c.id,gs.gun));
+    ads=havuz.slice(0,6).map(c=>{
+      const sure=gs.atama.bit-gs.atama.bas-gs.atama.mola/60;
+      const once=plan.atamalar.filter(a=>a.calisan===c.id).reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0);
+      const tavan=c.sozlesme==='yari_zamanli'?c.haftalik:c.haftalik+10;
+      const meşgul=gunluk.has(c.id);
+      const engel = meşgul?'O gün zaten vardiyası var':((once+sure>tavan)?'Haftalık saat sınırı aşılır ('+dec(once+sure,0)+'>'+tavan+')':
+        (sure>c.gunlukAzami?'Günlük azami süreyi aşar':null));
+      return {c,once,sonra:once+sure,tavan,engel};
+    }).sort((a,b)=>(a.engel?1:0)-(b.engel?1:0)).slice(0,4);
+  }
+  return {durum: !gunler.length?'etkilemez':(duser?(ads.some(a=>!a.engel)?'etkiler':'kritik'):'etkilemez'), gunler, adaylar:ads};
+}
+const ETK_ROZET={etkilemez:['tag ok','✓ Planı etkilemez'],etkiler:['tag warn','⚠ Planı etkiler'],kritik:['tag crit','✗ Kritik']};
+
+EKRANLAR.izinler=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni izin'); b.onclick=yeniIzinModal; top.appendChild(b);
+  const list=[...IZINLER].sort((a,b)=>(a.durum==='talep'?-1:1)-(b.durum==='talep'?-1:1)||a.bas-b.bas);
+  v.innerHTML=`<div class="wrap">
+    <div class="note"><b>Etki rozeti</b> her satırda hazır durur. Bir izin onaylanmadan önce hangi planı, hangi vardiyayı
+      ve hangi saatin kapsamasını etkileyeceği hesaplanır. Sahadaki en sık problem buydu: çalışan izin ister, yönetici
+      "olur" der, sonra planın o gün delik olduğu ortaya çıkar.</div>
+    <div class="row" style="margin:14px 0">
+      <select style="max-width:170px"><option>Tüm durumlar</option><option>Onay bekleyen</option><option>Onaylı</option></select>
+      <select style="max-width:190px"><option>Tüm ekipler</option>${EKIPLER.map(e=>`<option>${e.ad}</option>`).join('')}</select>
+      <div style="flex:1"></div>
+      <span style="font-size:.8rem;color:var(--muted)">${IZINLER.filter(i=>i.durum==='talep').length} talep onay bekliyor</span>
+    </div>
+    <div class="tbl-w"><table class="t"><thead><tr>
+      <th>Çalışan</th><th>Tip</th><th>Tarih</th><th>Gün</th><th>Durum</th><th>Plana etkisi</th><th></th>
+    </tr></thead><tbody>${list.map(i=>{const c=byId[i.calisan]; const e=izinEtki(i); const rz=ETK_ROZET[e.durum];
+      return `<tr><td class="s">${c.tam}<div style="font-size:.72rem;color:var(--muted)">${ekipAd(c.ekip)}</div></td>
+      <td>${{yillik:'Yıllık',mazeret:'Mazeret',rapor:'Rapor',ucretsiz:'Ücretsiz'}[i.tip]}</td>
+      <td class="mono" style="font-size:.78rem">${tarihKisa(i.bas)} – ${tarihKisa(i.bit)}</td>
+      <td class="n">${i.gun}</td>
+      <td><span class="tag ${i.durum==='onayli'?'ok':(i.durum==='talep'?'warn':'')}">${i.durum==='talep'?'onay bekliyor':i.durum}</span></td>
+      <td><span class="${rz[0]}">${rz[1]}</span>${e.gunler.length?`<div style="font-size:.7rem;color:var(--muted);margin-top:2px">${e.gunler.length} planlı vardiya</div>`:''}</td>
+      <td style="text-align:right;white-space:nowrap">
+        ${e.gunler.length?`<button class="btn sm etk" data-i="${i.id}">Etkileri gör</button>`:''}
+        ${i.durum==='talep'?`<button class="btn sm p ony" data-i="${i.id}">Onayla</button>`:''}</td></tr>`;}).join('')}
+    </tbody></table></div></div>`;
+  $$('.etk',v).forEach(b=>b.onclick=()=>etkiModal(IZINLER.find(i=>i.id===b.dataset.i)));
+  $$('.ony',v).forEach(b=>b.onclick=()=>{
+    const iz=IZINLER.find(i=>i.id===b.dataset.i); const e=izinEtki(iz);
+    if(e.gunler.length) etkiModal(iz);
+    else { iz.durum='onayli'; toast('İzin <b>onaylandı</b> — planı etkilemiyor'); git('izinler'); }
+  });
+};
+
+function etkiModal(iz){
+  const c=byId[iz.calisan], e=izinEtki(iz);
+  const rz=ETK_ROZET[e.durum];
+  let govde=`<div class="row" style="margin-bottom:14px">
+    <span class="${rz[0]}" style="font-size:.75rem;padding:4px 9px">${rz[1]}</span>
+    <span style="font-size:.82rem;color:var(--muted)">${e.gunler.length} planlı vardiya etkileniyor</span></div>`;
+  e.gunler.forEach(x=>{
+    const dusenler=x.kaps.filter(k=>k.duser);
+    govde+=`<div class="card" style="margin-bottom:12px"><div class="hd">
+      <h3>${GUNLER[x.gun]} · ${tarihStr(x.tarih)}</h3>
+      <span class="tag">${ekipAd(x.atama.ekip)}</span></div><div class="bd" style="padding:12px 16px">
+      <div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:10px">
+        <div><div style="font-size:.7rem;color:var(--muted)">Vardiya</div>
+          <div class="mono" style="font-weight:600">${pad(x.atama.bas)}:00–${pad(x.atama.bit)}:00</div></div>
+        <div><div style="font-size:.7rem;color:var(--muted)">Rol etkisi</div>
+          <div style="font-weight:600;font-size:.85rem;color:${byId[iz.calisan].lider?'var(--warn)':'var(--ok)'}">${x.rolEtki}</div></div>
+        <div><div style="font-size:.7rem;color:var(--muted)">Asgarinin altına düşen saat</div>
+          <div class="mono" style="font-weight:600;color:${dusenler.length?'var(--crit)':'var(--ok)'}">${dusenler.length}</div></div>
+      </div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap">${x.kaps.map(k=>`
+        <div style="border:1px solid ${k.duser?'var(--crit)':'var(--line)'};background:${k.duser?'var(--crit-soft)':'var(--surface-3)'};
+          border-radius:4px;padding:4px 7px;min-width:60px">
+          <div class="mono" style="font-size:.66rem;color:var(--muted)">${pad(k.saat)}:00</div>
+          <div class="mono" style="font-size:.76rem;font-weight:600;color:${k.duser?'var(--crit)':'var(--ink-2)'}">
+            ${k.once} → ${k.sonra}</div>
+          <div class="mono" style="font-size:.62rem;color:var(--muted)">asg ${k.asgari}${k.duser?' ⚠':' ✓'}</div></div>`).join('')}</div>
+      </div></div>`;
+  });
+  if(e.adaylar.length){
+    govde+=`<h3 style="margin:18px 0 8px">Boşluğu kapatabilecekler</h3>
+      <div class="tbl-w"><table class="t"><thead><tr><th>Çalışan</th><th>Haftalık saat</th><th>Durum</th></tr></thead>
+      <tbody>${e.adaylar.map(a=>`<tr><td class="s">${a.c.tam}<div style="font-size:.72rem;color:var(--muted)">${ekipAd(a.c.ekip)}</div></td>
+        <td class="mono">${dec(a.once,0)} → ${a.engel?'—':`<b>${dec(a.sonra,0)}</b>`} <span style="color:var(--muted)">(sınır ${a.tavan})</span></td>
+        <td>${a.engel?`<span class="tag crit">✗ ${a.engel}</span>`:'<span class="tag ok">✓ uygun</span>'}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  if(e.durum==='kritik') govde+=`<div class="note crit" style="margin-top:14px"><b>Kritik.</b>
+    Kapsama asgarinin altına düşüyor ve kural ihlal etmeden bu boşluğu kapatabilecek kimse yok.
+    İzni onaylarsanız o saatte açık kalacak.</div>`;
+
+  const uygun=e.adaylar.find(a=>!a.engel);
+  const aks=[{ad:'Reddet',tur:'dg',fn:()=>{iz.durum='reddedildi';toast('İzin reddedildi',{warn:true});git('izinler');}},
+    {ad:'İzni onayla ve boşluğu bırak',fn:()=>{iz.durum='onayli';
+      toast('İzin onaylandı — <b>boşluk asistanda açık nokta olarak görünecek</b>',{warn:true});git('izinler');}}];
+  if(uygun) aks.push({ad:`Onayla ve ${uygun.c.ad}'ı ata`,tur:'p',fn:()=>{iz.durum='onayli';
+    toast(`İzin onaylandı ve <b>${uygun.c.tam}</b> boşluğa atandı`);git('izinler');}});
+  modal({baslik:`${c.tam} · izin etkisi`,alt:`${{yillik:'Yıllık izin',mazeret:'Mazeret izni',rapor:'Rapor',ucretsiz:'Ücretsiz izin'}[iz.tip]} · ${tarihStr(iz.bas)} – ${tarihStr(iz.bit)}`,
+    govde,genis:'xwide',aksiyon:aks});
+}
+
+function yeniIzinModal(){
+  modal({baslik:'Yeni izin',alt:'Kaydetmeden önce plana etkisi hesaplanır',govde:`
+    <label class="f"><span class="lb">Çalışan *</span><select>${AKTIF.slice(0,40).map(c=>`<option>${c.tam} — ${c.sicil}</option>`).join('')}</select></label>
+    <div class="f2">
+      <label class="f"><span class="lb">Tip *</span><select><option>Yıllık izin</option><option>Mazeret</option><option>Rapor</option><option>Ücretsiz</option></select></label>
+      <label class="f"><span class="lb">Tüm gün mü</span><select><option>Evet</option><option>Hayır — saat aralığı</option></select></label>
+      <label class="f"><span class="lb">Başlangıç *</span><input type="date" value="2026-10-16"></label>
+      <label class="f"><span class="lb">Bitiş *</span><input type="date" value="2026-10-17"></label>
+    </div>
+    <label class="f"><span class="lb">Açıklama</span><textarea placeholder="İsteğe bağlı"></textarea></label>
+    <div class="note warn"><b>⚠ Planı etkiler</b><div style="margin-top:3px">2 planlı vardiya · 16 Ekim 09:00–12:00 arası
+      Ön Büro kapsaması 4/4 → 3/4 düşer. Kaydettikten sonra "Etkileri gör" ile ayrıntıya bakabilirsiniz.</div></div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet',tur:'p',fn:()=>toast('İzin kaydedildi — <b>onay bekliyor</b>')}]});
+}
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Tanımlar: ekipler, yetkinlik, şablon, kural, talep
+   ========================================================================== */
+EKRANLAR.ekipler=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni ekip');
+  b.onclick=()=>modal({baslik:'Yeni ekip',govde:`
+    <label class="f"><span class="lb">Departman / Şube *</span><select><option>Çağrı Merkezi Operasyon</option></select></label>
+    <div class="f2"><label class="f"><span class="lb">Ekip adı *</span><input type="text" placeholder="Ör. Kurumsal Destek"></label>
+      <label class="f"><span class="lb">Kod *</span><input type="text" placeholder="KD"></label></div>
+    <label class="f"><span class="lb">Açıklama</span><textarea></textarea></label>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet',tur:'p',fn:()=>toast('Ekip oluşturuldu')}]});
+  top.appendChild(b);
+  v.innerHTML=`<div class="wrap">
+    <div class="card"><div class="hd"><h3>${DEPARTMAN.ad}</h3>
+      <span class="tag">${DEPARTMAN.acilis}:00 – ${DEPARTMAN.kapanis}:00</span>
+      <span class="tag">${AKTIF.length} çalışan</span><button class="btn sm">Düzenle</button></div>
+      <div class="bd" style="padding:0">
+      ${EKIPLER.map(t=>{const n=AKTIF.filter(c=>c.ekip===t.id).length;
+        return `<div style="display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line)">
+        <span style="width:10px;height:10px;border-radius:2px;background:${t.renk}"></span>
+        <div style="flex:1"><div style="font-weight:600;font-size:.88rem">${t.ad}</div>
+          <div style="font-size:.75rem;color:var(--muted)">Kod: ${t.kod} · ${n} çalışan · ${AKTIF.filter(c=>c.ekip===t.id&&c.lider).length} takım lideri</div></div>
+        <button class="btn sm">Düzenle</button></div>`;}).join('')}
+      </div></div>
+    <div class="note" style="margin-top:14px"><b>Çok lokasyonlu müşteri:</b> perakende zincirinde şube = departman.
+      Ayrı bir kavram eklenmiyor; arayüzde hangi kelimenin kullanılacağı firma ayarından geliyor
+      (<span class="mono">Departman</span> / <span class="mono">Şube</span> / <span class="mono">Birim</span>).</div></div>`;
+};
+
+EKRANLAR.yetkinlik=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni yetkinlik');
+  b.onclick=()=>modal({baslik:'Yeni yetkinlik',govde:`
+    <div class="f2"><label class="f"><span class="lb">Ad *</span><input type="text" placeholder="Ör. Almanca"></label>
+    <label class="f"><span class="lb">Kod *</span><input type="text" placeholder="ALM"></label></div>
+    <label class="f"><span class="lb">Açıklama</span><textarea></textarea></label>
+    <label class="f"><span class="lb">Sertifika gerekli mi</span><select><option>Hayır</option><option>Evet — geçerlilik tarihi tutulur</option></select></label>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet',tur:'p',fn:()=>toast('Yetkinlik oluşturuldu')}]});
+  top.appendChild(b);
+  v.innerHTML=`<div class="wrap"><div class="tbl-w"><table class="t"><thead><tr>
+    <th>Yetkinlik</th><th>Kod</th><th>Sahip çalışan</th><th>Kapsama kuralı</th><th></th></tr></thead>
+    <tbody>${YETKINLIKLER.map(y=>{const n=AKTIF.filter(c=>c.yetkinlikler.includes(y.id)).length;
+      return `<tr><td class="s">${y.ad}</td><td class="mono">${y.kod}</td><td class="n">${n}</td>
+      <td>${y.id==='y1'?'<span class="tag brand">08:00–20:00 · en az 2</span>':(y.id==='y4'?'<span class="tag brand">tüm saatler · en az 1</span>':'—')}</td>
+      <td style="text-align:right"><button class="btn gh sm">Düzenle</button></td></tr>`;}).join('')}
+    </tbody></table></div>
+    <div class="note" style="margin-top:14px">Yetkinlik kapsaması ve rol kapsaması motorda <b>aynı mekanizmadır</b>;
+      tek fark çalışanın hangi niteliğine bakıldığı. Kullanıcıya iki ayrı satır olarak görünür.</div></div>`;
+};
+
+EKRANLAR.sablonlar=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni şablon');
+  b.onclick=()=>modal({baslik:'Yeni vardiya şablonu',govde:`
+    <div class="f2"><label class="f"><span class="lb">Ad *</span><input type="text" placeholder="Ör. Gece"></label>
+      <label class="f"><span class="lb">Kod *</span><input type="text" placeholder="GEC"></label>
+      <label class="f"><span class="lb">Başlangıç *</span><input type="time" value="23:00"></label>
+      <label class="f"><span class="lb">Bitiş *</span><input type="time" value="07:00"></label>
+      <label class="f"><span class="lb">Mola (dk) *</span><input type="number" value="60"></label>
+      <label class="f"><span class="lb">Renk</span><input type="text" value="#4A4488"></label></div>
+    <div class="note warn"><b>Bu vardiya ertesi güne taşıyor</b> (23:00 → 07:00).
+      Sistem bunu genişletilmiş saat olarak tutar: <span class="mono">23:00–31:00</span>.
+      Gece kuralları (İş Kanunu md. 69, ardışık gece limiti) bu vardiyaya otomatik uygulanır.</div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet',tur:'p',fn:()=>toast('Vardiya şablonu oluşturuldu')}]});
+  top.appendChild(b);
+  v.innerHTML=`<div class="wrap">${SABLONLAR.map(s=>{
+    const sol=(s.bas)/24*100, gen=(s.bit-s.bas)/24*100;
+    return `<div class="card" style="margin-bottom:10px"><div class="bd" style="padding:13px 16px">
+      <div class="row" style="margin-bottom:9px"><span style="width:10px;height:10px;border-radius:2px;background:${s.renk}"></span>
+        <b style="font-size:.9rem">${s.ad}</b><span class="tag mono">${s.kod}</span>
+        <span class="mono" style="font-size:.8rem;color:var(--muted)">${pad(s.bas)}:00 – ${pad(s.bit)}:00 · mola ${s.mola} dk · net ${dec(s.bit-s.bas-s.mola/60,1)} sa</span>
+        <div style="flex:1"></div><button class="btn sm">Düzenle</button></div>
+      <div style="position:relative;height:20px;background:var(--surface-3);border-radius:4px">
+        <div style="position:absolute;left:${sol}%;width:${gen}%;top:0;bottom:0;background:${s.renk};opacity:.8;border-radius:4px"></div>
+        ${Array.from({length:5},(_,i)=>`<div style="position:absolute;left:${i*25}%;top:-14px;font-size:.62rem;color:var(--muted)" class="mono">${pad(i*6)}:00</div>`).join('')}
+      </div></div></div>`;}).join('')}</div>`;
+};
+
+let KURAL_KAT='hepsi';
+EKRANLAR.kurallar=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn','⊕ Kural havuzu');
+  b.onclick=()=>modal({baslik:'Kural havuzu',alt:'Henüz devrede olmayan kural tipleri',genis:'wide',govde:`
+    <div class="grid g2">${[['ASGARI_KIDEM_KARISIMI','Her vardiyada en az N kıdemli. Rol kapsamasının kıdem versiyonu.'],
+      ['PES_PESE_AYNI_VARDIYA','Aynı kişinin üst üste aynı vardiyayı almasını sınırlar ya da tersine teşvik eder.'],
+      ['SABIT_TATIL_GUNU_YASAGI','Aynı kişinin haftalarca aynı günü tatil yapmasını engeller.'],
+      ['MOLA_ESIT_DAGILIM','Mola saatlerinin kişiler arasında dengeli dağıtılması.']]
+      .map(([k,a])=>`<div class="card"><div class="bd"><div class="mono" style="font-size:.78rem;color:var(--brand-ink);font-weight:600">${k}</div>
+        <div style="font-size:.79rem;color:var(--muted);margin:5px 0 9px">${a}</div>
+        <button class="btn sm p" style="width:100%">Kural setine ekle</button></div></div>`).join('')}</div>`,
+    aksiyon:[{ad:'Kapat'}]});
+  top.appendChild(b);
+  const kats=['hepsi',...Object.keys(KAT_AD)];
+  const list=KURALLAR.filter(k=>KURAL_KAT==='hepsi'||k.kat===KURAL_KAT);
+  v.innerHTML=`<div class="wrap">
+    <div class="row" style="margin-bottom:14px">
+      <div class="seg" id="katSeg">${kats.map(k=>`<button data-k="${k}" class="${KURAL_KAT===k?'on':''}">${k==='hepsi'?'Hepsi':KAT_AD[k]}</button>`).join('')}</div>
+      <div style="flex:1"></div><span style="font-size:.8rem;color:var(--muted)">${KURALLAR.length} kural · ${KURALLAR.filter(k=>k.yeni).length} yeni eklendi</span></div>
+    ${list.map(k=>`<div class="card" style="margin-bottom:9px"><div class="bd" style="padding:13px 16px">
+      <div class="row" style="gap:7px;margin-bottom:5px">
+        <span class="mono" style="font-size:.82rem;font-weight:600;color:var(--brand-ink)">${k.kod}</span>
+        <span class="tag ${k.tur==='SERT'?'crit':'warn'}">${k.tur}</span>
+        ${k.yasal?'<span class="tag">yasal</span>':''}${k.yeni?'<span class="tag brand">yeni</span>':''}
+        <div style="flex:1"></div>
+        ${k.par!==null?`<span style="font-size:.78rem;color:var(--muted)">Değer</span>
+          <input type="text" value="${k.par}" style="width:64px;text-align:center;padding:4px 6px;font-size:.8rem" class="mono">
+          <span style="font-size:.78rem;color:var(--muted)">${k.birim}</span>`:'<span style="font-size:.78rem;color:var(--muted)">parametresiz</span>'}
+        <button class="btn sm ist">İstisnalar${k.kod==='GUNLUK_AZAMI'?' (3)':''}</button></div>
+      <div style="font-size:.81rem;color:var(--ink-2);max-width:76ch">${k.aciklama}</div>
+      ${k.yasal?'<div style="font-size:.74rem;color:var(--muted);margin-top:4px">Yasal dayanağı var — sertlikten çıkarılamaz, kapatılamaz.</div>':''}
+    </div></div>`).join('')}</div>`;
+  $$('#katSeg button',v).forEach(b2=>b2.onclick=()=>{KURAL_KAT=b2.dataset.k;git('kurallar');});
+  $$('.ist',v).forEach(b2=>b2.onclick=()=>modal({baslik:'Kural istisnaları',alt:'Dar kapsam geniş kapsamı ezer',genis:'wide',govde:`
+    <div class="tbl-w"><table class="t"><thead><tr><th>Hedef</th><th>Kapsam</th><th>Değer</th><th>Sebep</th><th>Geçerlilik</th></tr></thead>
+    <tbody><tr><td class="s">Yarı zamanlı</td><td>Sözleşme tipi</td><td class="mono">5 saat</td><td>Part-time şablonu</td><td>süresiz</td></tr>
+    <tr><td class="s">Teknik Destek</td><td>Ekip</td><td class="mono">10 saat</td><td>Nöbet düzeni</td><td>süresiz</td></tr>
+    <tr><td class="s">Ayşe Yılmaz</td><td>Çalışan</td><td class="mono">6 saat</td><td>Kişisel talep</td><td>31.12.2026</td></tr></tbody></table></div>
+    <div class="note" style="margin-top:12px">Motor bir çalışan için kural değerini ararken <b>en dardan</b> başlar:
+      çalışan istisnası → sözleşme tipi → ekip/departman → kiracı ayarı → sistem varsayılanı. İlk bulunan kazanır.</div>
+    <button class="btn sm" style="margin-top:10px">+ İstisna ekle</button>`,aksiyon:[{ad:'Kapat'}]}));
+};
+
+EKRANLAR.talep=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','Yeniden hesapla');
+  b.onclick=()=>toast('Erlang C ile yeniden hesaplandı — elle düzeltilen 4 hücre korundu');
+  top.appendChild(b);
+  const t=EKIPLER[0];
+  v.innerHTML=`<div class="wrap">
+    <div class="card" style="margin-bottom:16px"><div class="hd"><h3>Talebi nasıl belirleyeceksiniz?</h3></div>
+      <div class="bd">${[
+        ['hacim','İşlem hacminden hesapla','Saatlik çağrı adedi ve ortalama görüşme süresini verirsiniz, sistem gereken kişiyi hesaplar. Çağrı merkezi için uygundur.',true],
+        ['dogrudan','Doğrudan kişi sayısı','En basit yol. Her ekip, gün ve saat için kaç kişi gerektiğini siz yazarsınız. <b>Talep veriniz yoksa bunu seçin.</b>',false],
+        ['gecmis','Geçmiş veriden öğren','Son 8+ haftanın gerçekleşen verisinden tahmin üretir.',false]]
+        .map(([k,a,d,on])=>`<label style="display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer">
+          <input type="radio" name="tk" ${on?'checked':''} style="width:auto;margin-top:3px">
+          <div><div style="font-weight:600;font-size:.87rem">${a}</div>
+            <div style="font-size:.79rem;color:var(--muted);margin-top:2px">${d}</div></div></label>`).join('')}
+      </div></div>
+
+    <div class="grid g4" style="margin-bottom:16px">
+      <label class="f"><span class="lb">Hedef servis seviyesi</span><input type="text" value="%80 / 20 saniye"></label>
+      <label class="f"><span class="lb">Ortalama görüşme süresi</span><input type="text" value="245 saniye"></label>
+      <label class="f"><span class="lb">Kapanma payı ${Q('KAPANMA')}</span><input type="text" value="%25"></label>
+      <label class="f"><span class="lb">Talep profili</span><select><option>Normal hafta</option><option>Kampanya dönemi</option></select></label>
+    </div>
+
+    <div class="card"><div class="hd"><h3>${t.ad} — hesaplanan kişi ihtiyacı</h3>
+      <span style="font-size:.75rem;color:var(--muted)">hücreye tıklayıp elle düzeltebilirsiniz</span></div>
+      <div class="bd" style="overflow-x:auto"><table class="t" style="font-size:.75rem">
+      <thead><tr><th>Gün</th>${Array.from({length:16},(_,i)=>`<th style="text-align:center;padding:6px 4px">${pad(i+8)}</th>`).join('')}</tr></thead>
+      <tbody>${GUNK.map((g,gi)=>`<tr><td class="s">${g}</td>${Array.from({length:16},(_,i)=>{
+        const q=talepAl(t.id,gi,i+8);
+        return `<td class="mono" style="text-align:center;padding:5px 3px" title="asgari ${q.asgari} · hedef ${q.hedef}">
+          <b>${q.hedef}</b><div style="font-size:.62rem;color:var(--muted)">${q.asgari}</div></td>`;}).join('')}</tr>`).join('')}
+      </tbody></table></div></div>
+    <div class="note" style="margin-top:14px">Üstteki sayı <b>hedef</b> (yumuşak), alttaki <b>asgari</b> (sert).
+      Kapanma payı: mola, izin, eğitim ve devamsızlık nedeniyle sahada olunamayan süre.
+      %25 girdiğinizde 4 kişi gerekiyorsa çizelgeye 5 kişi yazılır.</div></div>`;
+};
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Veri & raporlar
+   ========================================================================== */
+let AKT_ADIM=0;
+EKRANLAR.aktarma=(v,top)=>{
+  top.innerHTML='';
+  const adimlar=['Dosya seç','Kolon eşleme','Doğrulama','Onay'];
+  v.innerHTML=`<div class="wrap">
+    <div class="note"><b>Bu akışta yapay zekâ yoktur.</b> Kolon eşleme, doğrulama ve yazma işlerinin tamamını
+      hâlihazırda yazılmış olan içe aktarma aracı yapar — kural tabanlı çalışır, sıfırdan yazılmayacak.</div>
+    <div class="row" style="margin:16px 0 18px">
+      ${adimlar.map((a,i)=>`<div style="display:flex;align-items:center;gap:8px">
+        <span style="width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;
+          background:${i<=AKT_ADIM?'var(--brand)':'var(--surface-4)'};color:${i<=AKT_ADIM?'#fff':'var(--muted)'}">${i+1}</span>
+        <span style="font-size:.83rem;font-weight:${i===AKT_ADIM?'600':'400'};color:${i<=AKT_ADIM?'var(--ink)':'var(--muted)'}">${a}</span>
+        ${i<3?'<span style="color:var(--muted-2);margin:0 6px">→</span>':''}</div>`).join('')}
+    </div>
+    <div class="card"><div class="bd" id="aktIc"></div></div>
+    <div class="card" style="margin-top:16px"><div class="hd"><h3>İçe aktarma geçmişi</h3></div>
+      <div class="bd" style="padding:0"><table class="t"><thead><tr><th>Tarih</th><th>Dosya</th><th>Tip</th><th>Satır</th><th>Başarılı</th><th>Hatalı</th><th>Yükleyen</th></tr></thead>
+      <tbody>${[['05.10.2026','pdks_eylul_h4.xlsx','Gerçekleşen',1240,1228,12,'Murat Kaya'],
+        ['28.09.2026','pdks_eylul_h3.xlsx','Gerçekleşen',1236,1236,0,'Murat Kaya'],
+        ['21.09.2026','kadro_guncel.xlsx','Çalışan',214,211,3,'İK Sistemi (API)']]
+        .map(r=>`<tr><td class="mono" style="font-size:.78rem">${r[0]}</td><td class="s">${r[1]}</td><td>${r[2]}</td>
+        <td class="n">${r[3]}</td><td class="n" style="color:var(--ok)">${r[4]}</td>
+        <td class="n" style="color:${r[5]?'var(--crit)':'var(--muted)'}">${r[5]}</td><td>${r[6]}</td></tr>`).join('')}
+      </tbody></table></div></div></div>`;
+  const I=$('#aktIc',v);
+  const ileri=(n)=>{AKT_ADIM=n;git('aktarma');};
+  if(AKT_ADIM===0){
+    I.innerHTML=`<div style="border:2px dashed var(--line-2);border-radius:var(--r);padding:36px;text-align:center">
+      <div style="font-size:1.8rem;opacity:.4;margin-bottom:8px">⇪</div>
+      <div style="font-weight:600;margin-bottom:4px">Dosyayı sürükleyin ya da seçin</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:14px">.xlsx · .csv — ham hâliyle yükleyin, düzeltmeye uğraşmayın</div>
+      <button class="btn p" id="a0">Dosya seç</button></div>`;
+    $('#a0',I).onclick=()=>ileri(1);
+  } else if(AKT_ADIM===1){
+    I.innerHTML=`<div class="row" style="margin-bottom:14px"><b style="font-size:.88rem">pdks_ekim_h2.xlsx</b>
+      <span class="tag">1.240 satır</span><span class="tag ok">5 kolon eşlendi</span></div>
+      <div class="tbl-w"><table class="t"><thead><tr><th>Dosyadaki kolon</th><th>Örnek değer</th><th>Sistem alanı</th><th></th></tr></thead>
+      <tbody>${[['Sicil','A4137','personel_no','ok'],['Tarih','12.10.2026','tarih','ok'],
+        ['Giriş Sa.','08:04','giris','ok'],['Çıkış Sa.','16:02','cikis','ok'],
+        ['Departman','Müşteri Hizmetleri','ekip','ok'],['Notlar','—','(eşlenmedi)','no']]
+        .map(([a,b,c,k])=>`<tr><td class="s">${a}</td><td class="mono" style="font-size:.78rem;color:var(--muted)">${b}</td>
+        <td><select style="max-width:180px"><option>${c}</option><option>(eşlenmedi)</option></select></td>
+        <td>${k==='ok'?'<span class="tag ok">✓</span>':'<span class="tag">atlanacak</span>'}</td></tr>`).join('')}
+      </tbody></table></div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="ag">← Geri</button><button class="btn p" id="ai">Doğrula →</button></div>`;
+    $('#ag',I).onclick=()=>ileri(0); $('#ai',I).onclick=()=>ileri(2);
+  } else if(AKT_ADIM===2){
+    I.innerHTML=`<div class="grid g3" style="margin-bottom:14px">
+      <div class="stat ok"><div class="k">Okunan satır</div><div class="v">1.240</div></div>
+      <div class="stat ok"><div class="k">Geçerli</div><div class="v">1.228</div></div>
+      <div class="stat crit"><div class="k">Hatalı</div><div class="v">12</div></div></div>
+      <div class="tbl-w"><table class="t"><thead><tr><th>Satır</th><th>Alan</th><th>Değer</th><th>Hata</th></tr></thead>
+      <tbody>${[[45,'personel_no','8891','Bu sicil sistemde kayıtlı değil'],
+        [102,'cikis','07:20','Çıkış saati girişten önce'],
+        [233,'tarih','12/10/26','Tarih biçimi anlaşılamadı'],
+        [418,'personel_no','','Boş bırakılamaz'],
+        [677,'giris','25:10','Geçersiz saat']]
+        .map(r=>`<tr><td class="n">${r[0]}</td><td class="mono">${r[1]}</td>
+        <td class="mono" style="color:var(--crit)">${r[2]||'—'}</td><td>${r[3]}</td></tr>`).join('')}
+      <tr><td colspan="4" style="color:var(--muted);font-size:.78rem">+7 hata daha</td></tr></tbody></table></div>
+      <div class="row" style="margin-top:14px"><button class="btn">Hataları indir</button>
+        <div style="flex:1"></div><button class="btn" id="ag">← Geri</button>
+        <button class="btn p" id="ai">Hatalı satırları atla ve işle →</button></div>`;
+    $('#ag',I).onclick=()=>ileri(1); $('#ai',I).onclick=()=>ileri(3);
+  } else {
+    I.innerHTML=`<div style="text-align:center;padding:26px">
+      <div style="font-size:2rem;color:var(--ok);margin-bottom:8px">✓</div>
+      <h2>1.228 kayıt işlendi</h2>
+      <div style="color:var(--muted);font-size:.86rem;margin:6px 0 16px">12 satır atlandı · Plan realizasyon raporu güncellendi</div>
+      <div class="row" style="justify-content:center"><button class="btn" id="ay">Yeni yükleme</button>
+        <button class="btn p" id="ar">Realizasyon raporuna git</button></div></div>`;
+    $('#ay',I).onclick=()=>ileri(0); $('#ar',I).onclick=()=>{AKT_ADIM=0;git('realizasyon');};
+  }
+};
+
+EKRANLAR.realizasyon=(v,top)=>{
+  top.innerHTML=`<input type="date" value="2026-10-09" style="max-width:160px">`;
+  const g=4;
+  const gerc=GERCEKLESEN.filter(x=>x.gun===g);
+  const devam=gerc.filter(x=>x.devamsiz).length;
+  const planKisi=new Set(gerc.map(x=>x.calisan)).size;
+  const planSaat=gerc.reduce((s,x)=>s+(x.plan.bit-x.plan.bas-x.plan.mola/60),0);
+  const gercSaat=gerc.reduce((s,x)=>s+(x.devamsiz?0:(x.plan.bit-x.plan.bas-x.plan.mola/60)-(x.gec+x.erken)/60),0);
+  const uyum=gercSaat/planSaat*100;
+  v.innerHTML=`<div class="wrap">
+    <div class="row" style="margin-bottom:14px"><h2>Plan realizasyon raporu</h2>
+      <span class="tag">Cuma · 9 Ekim 2026</span><div style="flex:1"></div>
+      <select style="max-width:190px"><option>Tüm ekipler</option>${EKIPLER.map(e=>`<option>${e.ad}</option>`).join('')}</select>
+      <button class="btn sm">Excel'e aktar</button></div>
+    <div class="grid g4" style="margin-bottom:18px">
+      <div class="stat"><div class="k">Planlanan kişi</div><div class="v">${planKisi}</div></div>
+      <div class="stat ${devam>6?'warn':''}"><div class="k">Gelmeyen</div><div class="v">${devam}</div><div class="s">%${dec(devam/planKisi*100)}</div></div>
+      <div class="stat"><div class="k">Planlanan / gerçekleşen saat</div><div class="v" style="font-size:1.15rem">${dec(planSaat,0)} / ${dec(gercSaat,0)}</div></div>
+      <div class="stat ${uyum>93?'ok':'warn'}"><div class="k">Uyum skoru ${Q('UYUM')}</div><div class="v">%${dec(uyum)}</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px"><div class="hd"><h3>Saatlik kapsama — planlanan vs fiilen sahada</h3></div>
+      <div class="bd">${realGrafik(g,gerc)}</div></div>
+    <div class="card" style="margin-bottom:16px"><div class="hd"><h3>Günün özeti</h3><span class="tag brand">yapay zekâ</span></div>
+      <div class="bd"><p style="font-size:.88rem;margin:0">Cuma günü <b>Müşteri Hizmetleri</b> ekibinde sabah vardiyasında
+      ${Math.max(2,Math.round(devam*0.4))} kişi gelmedi; 09:00–11:00 arası kapsama hedefin altında kaldı.
+      Devamsızlıkların çoğu aynı ekipten ve aynı vardiyadan — geçen üç haftadır Cuma sabahları benzer bir eğilim var.
+      Öğleden sonra kapsama normale döndü. Geç girişlerin ortalaması ${Math.round(gerc.reduce((s,x)=>s+(x.gec||0),0)/gerc.length)} dakika.</p></div></div>
+    <div class="tbl-w"><table class="t"><thead><tr><th>Çalışan</th><th>Ekip</th><th>Planlanan</th><th>Gerçekleşen</th><th>Fark</th><th>Durum</th></tr></thead>
+      <tbody>${gerc.slice(0,25).map(x=>{const c=byId[x.calisan],a=x.plan;
+        const g1=`${pad(a.bas)}:00–${pad(a.bit)}:00`;
+        const g2=x.devamsiz?'—':`${pad(a.bas)}:${pad(x.gec)}–${pad(a.bit-(x.erken?1:0))}:${pad(x.erken?60-x.erken:5)}`;
+        const fark=x.devamsiz?-(a.bit-a.bas-a.mola/60)*60:-(x.gec+x.erken);
+        return `<tr><td class="s">${c.tam}</td><td>${ekipAd(a.ekip)}</td><td class="mono">${g1}</td>
+        <td class="mono" style="${x.devamsiz?'color:var(--crit)':''}">${g2}</td>
+        <td class="n" style="color:${fark<-30?'var(--crit)':(fark<0?'var(--warn)':'var(--muted)')}">${fark?dec(fark,0)+' dk':'0'}</td>
+        <td>${x.devamsiz?'<span class="tag crit">devamsız</span>':(x.gec>10?`<span class="tag warn">geç giriş ${x.gec} dk</span>`:
+          (x.erken>5?`<span class="tag warn">erken çıkış ${x.erken} dk</span>`:'<span class="tag ok">tam</span>'))}</td></tr>`;}).join('')}
+      </tbody></table></div>
+    <div class="note">"Bugün gerçekleşenler" diye bir rapor yok — veri en erken ertesi gün gelir, API ile bile gece yarısından sonra düşer.
+      Bu rapor <b>tarih seçmelidir</b> ve geçmişe dönüktür.</div></div>`;
+};
+function realGrafik(g,gerc){
+  const plan={},real={};
+  for(let s=8;s<24;s++){plan[s]=0;real[s]=0;}
+  gerc.forEach(x=>{const a=x.plan; for(let s=a.bas;s<a.bit;s++){plan[s]++; if(!x.devamsiz) real[s]++;}});
+  const max=Math.max(...Object.values(plan))||1;
+  let out='<div style="display:flex;gap:4px;align-items:flex-end;height:120px">';
+  for(let s=8;s<24;s++){
+    const hp=plan[s]/max*100, hr=real[s]/max*100;
+    out+=`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%"
+      title="${pad(s)}:00 — planlanan ${plan[s]}, sahada ${real[s]}">
+      <div style="width:100%;position:relative;height:${hp}%;background:var(--surface-4);border-radius:2px 2px 0 0">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:${plan[s]?real[s]/plan[s]*100:0}%;background:var(--brand);border-radius:2px 2px 0 0"></div></div>
+      <div class="mono" style="font-size:.6rem;color:var(--muted);margin-top:4px">${pad(s)}</div></div>`;
+  }
+  out+='</div><div class="row" style="margin-top:8px;font-size:.73rem;color:var(--muted)">'+
+    '<span><span style="display:inline-block;width:9px;height:9px;background:var(--brand);border-radius:2px"></span> fiilen sahada</span>'+
+    '<span><span style="display:inline-block;width:9px;height:9px;background:var(--surface-4);border-radius:2px"></span> planlanan</span></div>';
+  return out;
+}
+
+EKRANLAR.haftalik=(v,top)=>{
+  top.innerHTML=`<select style="max-width:200px"><option>5 – 11 Ekim 2026</option><option>12 – 18 Ekim 2026</option></select>`;
+  const pl=PLANLAR.DENGELI;
+  const rows=AKTIF.slice(0,30).map(c=>{
+    const ats=pl.atamalar.filter(a=>a.calisan===c.id);
+    const pg=ats.length, ps=pl.saatler[c.id]||0;
+    const dv=GERCEKLESEN.filter(x=>x.calisan===c.id&&x.devamsiz).length;
+    const kayip=GERCEKLESEN.filter(x=>x.calisan===c.id).reduce((s,x)=>s+(x.devamsiz?0:(x.gec+x.erken)/60),0);
+    const gs=Math.max(0,ps-kayip-dv*7.5), uyum=ps?gs/ps*100:100;
+    return {c,pg,gg:pg-dv,ps,gs,uyum};
+  });
+  v.innerHTML=`<div class="wrap">
+    <div class="row" style="margin-bottom:14px"><h2>Haftalık takip raporu</h2>
+      <div style="flex:1"></div><button class="btn sm">Excel'e aktar</button></div>
+    <div class="grid g4" style="margin-bottom:16px">
+      <div class="stat"><div class="k">Planlanan saat</div><div class="v">${num(Math.round(rows.reduce((s,r)=>s+r.ps,0)))}</div></div>
+      <div class="stat"><div class="k">Gerçekleşen saat</div><div class="v">${num(Math.round(rows.reduce((s,r)=>s+r.gs,0)))}</div></div>
+      <div class="stat ok"><div class="k">Ortalama uyum ${Q('UYUM')}</div><div class="v">%${dec(rows.reduce((s,r)=>s+r.uyum,0)/rows.length)}</div></div>
+      <div class="stat"><div class="k">Fazla mesai ${Q('FM')}</div><div class="v">${pl.metrik.fm}</div><div class="s">saat</div></div>
+    </div>
+    <div class="tbl-w"><table class="t"><thead><tr><th>Çalışan</th><th>Ekip</th><th>Plan gün</th><th>Gerçek gün</th>
+      <th>Plan saat</th><th>Gerçek saat</th><th>Fark</th><th>Uyum skoru</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr><td class="s">${r.c.tam}</td><td>${ekipAd(r.c.ekip)}</td>
+        <td class="n">${r.pg}</td><td class="n" style="${r.gg<r.pg?'color:var(--warn)':''}">${r.gg}</td>
+        <td class="n">${dec(r.ps,0)}</td><td class="n">${dec(r.gs,0)}</td>
+        <td class="n" style="color:${r.gs-r.ps<-4?'var(--crit)':'var(--muted)'}">${dec(r.gs-r.ps,1)}</td>
+        <td class="n" style="color:${r.uyum>93?'var(--ok)':(r.uyum>85?'var(--warn)':'var(--crit)')}">%${dec(r.uyum)}</td></tr>`).join('')}
+      </tbody></table></div>
+    <div style="font-size:.76rem;color:var(--muted);margin-top:8px">İlk 30 kişi · toplam ${AKTIF.length}</div></div>`;
+};
+</script>
+<script>
+/* ==========================================================================
+   EKRAN — Geçmiş planlar · Çalışan takvimi · Analiz · Yönetim
+   ========================================================================== */
+EKRANLAR.gecmis=(v,top)=>{
+  top.innerHTML=`<select style="max-width:170px"><option>Ekim 2026</option><option>Eylül 2026</option></select>`;
+  const ilkGun=new Date(2026,9,1);
+  const bosluk=(ilkGun.getDay()+6)%7;
+  let hucreler='';
+  for(let i=0;i<bosluk;i++) hucreler+='<div></div>';
+  for(let d=1;d<=31;d++){
+    const t=new Date(2026,9,d);
+    const gecmisMi=d<=11;
+    const planli=42+Math.round(R()*8), gerc=gecmisMi?planli-Math.round(R()*4):null;
+    const uyum=gerc?Math.round(gerc/planli*100):null;
+    hucreler+=`<div class="gh" data-d="${d}" style="border:1px solid var(--line);border-radius:6px;padding:7px 8px;min-height:78px;
+      background:${gecmisMi?'var(--surface)':'var(--surface-3)'};cursor:${gecmisMi?'pointer':'default'}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <span class="mono" style="font-size:.78rem;font-weight:600">${d}</span>
+        ${gecmisMi?`<span class="tag ${uyum>93?'ok':'warn'}" style="font-size:.55rem">%${uyum}</span>`:'<span class="tag" style="font-size:.55rem">plan</span>'}</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:4px;line-height:1.35">
+        Plan: ${planli} kişi${gecmisMi?`<br>Gerçek: ${gerc} kişi`:''}</div></div>`;
+  }
+  v.innerHTML=`<div class="wrap">
+    <div class="note">Editör dışında, geçmişe bakmak için. Yetki kapsamınızdaki ekipleri görürsünüz.
+      Geçmiş günlerde <b>gerçekleşen veri ve plan uyumu</b> de gösterilir.</div>
+    <div class="row" style="margin:14px 0">
+      <select style="max-width:190px"><option>Tüm ekipler</option>${EKIPLER.map(e=>`<option>${e.ad}</option>`).join('')}</select>
+      <div style="flex:1"></div><button class="btn sm" id="grap">Realizasyon raporuna git</button></div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px">
+      ${GUNK.map(g=>`<div style="text-align:center;font-size:.72rem;font-weight:600;color:var(--muted)">${g}</div>`).join('')}</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">${hucreler}</div></div>`;
+  $('#grap',v).onclick=()=>git('realizasyon');
+  $$('.gh',v).forEach(n=>n.onclick=()=>{ if(+n.dataset.d<=11) gecmisGunModal(+n.dataset.d); });
+};
+function gecmisGunModal(d){
+  const g=(d-1)%7;
+  const ats=PLANLAR.DENGELI.atamalar.filter(a=>a.gun===g).slice(0,18);
+  modal({baslik:`${d} Ekim 2026`,alt:'Salt-okunur · plan ve gerçekleşen',genis:'wide',govde:`
+    <div class="grid g4" style="margin-bottom:14px">
+      <div class="stat"><div class="k">Planlanan</div><div class="v" style="font-size:1.2rem">44 kişi</div></div>
+      <div class="stat"><div class="k">Sahada</div><div class="v" style="font-size:1.2rem">41 kişi</div></div>
+      <div class="stat ok"><div class="k">Uyum ${Q('UYUM')}</div><div class="v" style="font-size:1.2rem">%94</div></div>
+      <div class="stat warn"><div class="k">Devamsız</div><div class="v" style="font-size:1.2rem">3</div></div></div>
+    <div class="tbl-w"><table class="t"><thead><tr><th>Çalışan</th><th>Ekip</th><th>Planlanan</th><th>Gerçekleşen</th></tr></thead>
+    <tbody>${ats.map((a,i)=>{const c=byId[a.calisan];const dv=i%9===4;
+      return `<tr><td class="s">${c.tam}</td><td>${ekipAd(a.ekip)}</td>
+      <td class="mono">${pad(a.bas)}:00–${pad(a.bit)}:00</td>
+      <td class="mono" style="${dv?'color:var(--crit)':''}">${dv?'devamsız':`${pad(a.bas)}:0${i%6}–${pad(a.bit)}:0${i%4}`}</td></tr>`;}).join('')}
+    </tbody></table></div>`,aksiyon:[{ad:'Kapat'}]});
+}
+
+EKRANLAR.benim=(v,top)=>{
+  top.innerHTML=`<div class="seg"><button class="on">Hafta</button><button>Ay</button></div>`;
+  const cid=S.benCalisan, c=byId[cid];
+  const ats=PLANLAR[S.secili||'DENGELI'].atamalar.filter(a=>a.calisan===cid).sort((a,b)=>a.gun-b.gun);
+  const toplam=ats.reduce((s,a)=>s+(a.bit-a.bas-a.mola/60),0);
+  v.innerHTML=`<div class="wrap" style="max-width:760px">
+    <div class="row" style="margin-bottom:14px"><div class="av" style="width:38px;height:38px">${c.ad[0]}${c.soyad[0]}</div>
+      <div><div style="font-weight:600">${c.tam}</div><div style="font-size:.78rem;color:var(--muted)">${ekipAd(c.ekip)} · ${c.sicil}</div></div>
+      <div style="flex:1"></div><span class="tag ok">plan yayında</span></div>
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="stat"><div class="k">Bu hafta</div><div class="v">${dec(toplam,0)}</div><div class="s">saat · ${ats.length} gün</div></div>
+      <div class="stat"><div class="k">Bu ay</div><div class="v">${dec(toplam*4.1,0)}</div><div class="s">saat</div></div>
+      <div class="stat"><div class="k">Kalan izin</div><div class="v">9</div><div class="s">gün</div></div></div>
+    <div style="display:grid;gap:8px">${GUNLER.map((g,i)=>{
+      const a=ats.find(x=>x.gun===i);
+      const t=gunEkle(HAFTA_BAS,i);
+      return `<div class="card"><div class="bd" style="padding:12px 15px;display:flex;gap:14px;align-items:center">
+        <div style="width:56px;text-align:center">
+          <div style="font-size:.72rem;color:var(--muted)">${GUNK[i]}</div>
+          <div class="mono" style="font-size:1.15rem;font-weight:600">${t.getDate()}</div></div>
+        ${a?`<div style="flex:1"><div style="font-weight:600;font-size:.9rem" class="mono">${pad(a.bas)}:00 – ${pad(a.bit)}:00</div>
+          <div style="font-size:.78rem;color:var(--muted)">${ekipAd(a.ekip)} · ${sablonObj(a.sablon).ad} · mola ${a.mola} dk</div></div>
+          <span class="tag" style="background:${ekipObj(a.ekip).renk};color:#fff">${dec(a.bit-a.bas-a.mola/60,1)} sa</span>`
+        :`<div style="flex:1;color:var(--muted);font-size:.86rem">İzin günü</div><span class="tag ok">tatil</span>`}
+      </div></div>`;}).join('')}</div>
+    <div class="row" style="margin-top:16px"><button class="btn" id="bi">İzin talep et</button>
+      <button class="btn" id="bu">Uygunluk bildir</button></div>
+    <div class="note" style="margin-top:14px">Bu ekran <b>salt-okunur</b>. Çalışan kendi planını görür,
+      düzenleyemez. Kapsama bilgisi burada gösterilmez — o yönetim bilgisidir.</div></div>`;
+  $('#bi',v).onclick=()=>modal({baslik:'İzin talebi',govde:`
+    <div class="f2"><label class="f"><span class="lb">Tip *</span><select><option>Yıllık izin</option><option>Mazeret</option></select></label>
+      <label class="f"><span class="lb">Gün sayısı</span><input type="text" value="2" disabled></label>
+      <label class="f"><span class="lb">Başlangıç *</span><input type="date" value="2026-10-22"></label>
+      <label class="f"><span class="lb">Bitiş *</span><input type="date" value="2026-10-23"></label></div>
+    <label class="f"><span class="lb">Açıklama</span><textarea placeholder="İsteğe bağlı"></textarea></label>
+    <div class="note">Talebiniz yöneticinize iletilecek. <b>Kalan izin hakkınız: 9 gün.</b></div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Talebi gönder',tur:'p',fn:()=>toast('İzin talebiniz <b>yöneticinize iletildi</b>')}]});
+  $('#bu',v).onclick=()=>modal({baslik:'Uygunluk bildir',govde:`
+    <label class="f"><span class="lb">Tip *</span><select><option>Uygun değilim (kesin)</option><option>Tercih ederim</option><option>Tercih etmem</option></select>
+      <span class="hint">"Uygun değilim" sert kuraldır — o saate atama yapılmaz. "Tercih" yumuşaktır.</span></label>
+    <div class="f2"><label class="f"><span class="lb">Gün</span><select>${GUNLER.map(g=>`<option>${g}</option>`).join('')}</select></label>
+      <label class="f"><span class="lb">Tekrar</span><select><option>Her hafta</option><option>Tek seferlik</option></select></label>
+      <label class="f"><span class="lb">Başlangıç</span><input type="time" value="08:00"></label>
+      <label class="f"><span class="lb">Bitiş</span><input type="time" value="14:00"></label></div>
+    <label class="f"><span class="lb">Açıklama</span><input type="text" placeholder="Ör. Üniversite dersi"></label>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Kaydet',tur:'p',fn:()=>toast('Uygunluk bildiriminiz kaydedildi')}]});
+};
+
+EKRANLAR.analiz=(v,top)=>{
+  top.innerHTML=`<select style="max-width:150px"><option>Son 3 ay</option><option>Bu çeyrek</option></select>`;
+  const hf=['H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12'];
+  const kaps=hf.map((_,i)=>96+Math.round(R()*40)/10);
+  const fm=hf.map(()=>Math.round(R()*40));
+  v.innerHTML=`<div class="wrap">
+    <div class="grid g2">
+      <div class="card"><div class="hd"><h3>Kapsama trendi ${Q('HEDEF_KAPSAMA')}</h3></div><div class="bd">
+        ${cizgiGrafik(kaps,hf,'%',94,100)}</div></div>
+      <div class="card"><div class="hd"><h3>Fazla mesai trendi ${Q('FM')}</h3></div><div class="bd">
+        ${cizgiGrafik(fm,hf,' sa',0,45)}</div></div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="hd"><h3>Adalet dağılımı — kişi başına gece vardiyası ${Q('ADALET')}</h3></div>
+      <div class="bd">${dagilimGrafik()}</div></div>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="stat ok"><div class="k">Tercih karşılama ${Q('TERCIH')}</div><div class="v">%87</div><div class="s">son 3 ay ortalaması</div></div>
+      <div class="stat ok"><div class="k">Plan kararlılığı ${Q('KARARLILIK')}</div><div class="v">%91</div><div class="s">gereksiz değişim önlendi</div></div>
+      <div class="stat warn"><div class="k">Devamsızlık</div><div class="v">%3,4</div><div class="s">en yoğun: Cuma sabah</div></div>
+    </div></div>`;
+};
+function cizgiGrafik(vals,etiket,birim,min,max){
+  const w=100,hgt=54;
+  const pts=vals.map((val,i)=>[i/(vals.length-1)*w,hgt-(val-min)/(max-min)*hgt]);
+  const f=x=>x.toFixed(1);
+  const d=pts.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join(' ');
+  const alan=d+` L ${w} ${hgt} L 0 ${hgt} Z`;
+  return `<svg viewBox="-2 -6 ${w+4} ${hgt+22}" style="width:100%;height:120px" role="img" aria-label="trend">
+    <path d="${alan}" fill="var(--brand-soft)"/>
+    <path d="${d}" fill="none" stroke="var(--brand)" stroke-width="1.4" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${f(p[0])}" cy="${f(p[1])}" r="${i===pts.length-1?1.9:1.1}"
+      fill="${i===pts.length-1?'var(--brand)':'var(--surface)'}" stroke="var(--brand)" stroke-width="1"/>`).join('')}
+    <text x="0" y="${hgt+12}" font-size="4.4" fill="var(--muted)">${etiket[0]}</text>
+    <text x="${w}" y="${hgt+12}" font-size="4.4" fill="var(--muted)" text-anchor="end">${etiket[etiket.length-1]}</text>
+    <text x="${w}" y="-1" font-size="5" fill="var(--brand)" text-anchor="end" font-weight="600">${dec(vals[vals.length-1],1)}${birim}</text>
+  </svg>`;
+}
+function dagilimGrafik(){
+  const kova=[0,0,0,0,0,0];
+  AKTIF.forEach(c=>{const g=Math.min(5,PLANLAR.DENGELI.geceSay[c.id]||0); kova[g]++;});
+  const max=Math.max(...kova);
+  return `<div style="display:flex;gap:8px;align-items:flex-end;height:110px">
+    ${kova.map((n,i)=>`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%">
+      <div class="mono" style="font-size:.7rem;color:var(--muted);margin-bottom:3px">${n}</div>
+      <div style="width:100%;height:${n/max*100}%;background:var(--brand);opacity:${.45+i*.11};border-radius:3px 3px 0 0"></div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:5px">${i===5?'5+':i} gece</div></div>`).join('')}
+  </div><div style="font-size:.76rem;color:var(--muted);margin-top:8px">Sağa doğru kayan bir dağılım dengesizlik demektir.
+    Aylık pencerede devir yükü bu dağılımı düzeltir.</div>`;
+}
+
+EKRANLAR.kullanicilar=(v,top)=>{
+  top.innerHTML=''; const b=el('button','btn p','+ Yeni kullanıcı');
+  b.onclick=()=>modal({baslik:'Yeni kullanıcı',govde:`
+    <div class="f2"><label class="f"><span class="lb">Ad *</span><input type="text"></label>
+      <label class="f"><span class="lb">Soyad *</span><input type="text"></label></div>
+    <label class="f"><span class="lb">E-posta *</span><input type="email" placeholder="ad.soyad@anadolucm.com">
+      <span class="hint">Giriş kimliği budur. Davet e-postası gönderilir.</span></label>
+    <label class="f"><span class="lb">Rol *</span><select><option>Departman müdürü</option><option>Şef / takım lideri</option>
+      <option>Çalışan</option><option>İzleyici</option></select></label>
+    <label class="f"><span class="lb">Kapsam</span><select><option>Tüm departman</option>${EKIPLER.map(e=>`<option>${e.ad} ekibi</option>`).join('')}</select>
+      <span class="hint">Kapsamı olan kullanıcı yalnız o kapsamı görür.</span></label>
+    <label class="f"><span class="lb">Çalışan kaydıyla eşleştir</span><select><option>—</option>${AKTIF.slice(0,20).map(c=>`<option>${c.tam}</option>`).join('')}</select></label>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Oluştur ve davet gönder',tur:'p',fn:()=>toast('Kullanıcı oluşturuldu — davet e-postası gönderildi')}]});
+  top.appendChild(b);
+  const users=[['Murat Kaya','murat.kaya@anadolucm.com','Departman müdürü','Tüm departman','2 saat önce'],
+    ['Selin Arslan','selin.arslan@anadolucm.com','Şef / takım lideri','Müşteri Hizmetleri','dün'],
+    ['Emre Doğan','emre.dogan@anadolucm.com','Şef / takım lideri','Teknik Destek','3 gün önce'],
+    ['Zeynep Çelik','zeynep.celik@anadolucm.com','İzleyici','Tüm departman','1 hafta önce'],
+    ['Ayşe Yıldız','ayse.yildiz@anadolucm.com','Kiracı yöneticisi','Tüm departman','5 saat önce']];
+  v.innerHTML=`<div class="wrap">
+    <div class="tbl-w"><table class="t"><thead><tr><th>Ad Soyad</th><th>E-posta</th><th>Rol</th><th>Kapsam</th><th>Son giriş</th><th></th></tr></thead>
+    <tbody>${users.map(u=>`<tr><td class="s">${u[0]}</td><td class="mono" style="font-size:.76rem">${u[1]}</td>
+      <td><span class="tag ${u[2].includes('müdür')||u[2].includes('yönetici')?'brand':''}">${u[2]}</span></td>
+      <td>${u[3]}</td><td style="color:var(--muted)">${u[4]}</td>
+      <td style="text-align:right"><button class="btn gh sm dev">Yetki devret</button></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="note" style="margin-top:14px"><b>Kimlik katmanı kendi kodumuzda.</b> Parolalar Argon2id ile saklanır,
+      erişim jetonu 15 dakika, yenileme jetonu döner. Kullanılmış bir yenileme jetonu tekrar gelirse o kullanıcının
+      tüm oturumları iptal edilir.</div></div>`;
+  $$('.dev',v).forEach(b2=>b2.onclick=()=>modal({baslik:'Yetki devret',alt:'Süreli yetki — bitiş tarihinde kendiliğinden kalkar',govde:`
+    <label class="f"><span class="lb">Devredilecek rol</span><select><option>Departman müdürü</option></select></label>
+    <div class="f2"><label class="f"><span class="lb">Başlangıç</span><input type="date" value="2026-10-14"></label>
+      <label class="f"><span class="lb">Bitiş *</span><input type="date" value="2026-10-28"></label></div>
+    <div class="note">İzin ve rapor dönemlerinde şefe geçici müdür yetkisi vermek için kullanılır.
+      Devreden kişi denetim kaydında görünür.</div>`,
+    aksiyon:[{ad:'Vazgeç'},{ad:'Devret',tur:'p',fn:()=>toast('Yetki devredildi — 28 Ekim\'e kadar geçerli')}]}));
+};
+
+EKRANLAR.bildirim=(v,top)=>{
+  top.innerHTML='';
+  const olaylar=[['Plan yayınlandı',1,1,0,0],['Vardiyam değişti',1,1,1,0],['Onay bekliyor',1,1,0,0],
+    ['Plan üretimi bitti',1,0,0,0],['İzin talebi geldi',1,1,0,0],['İzin onaylandı',1,1,0,0],['Plan revizyonu',1,1,1,0]];
+  v.innerHTML=`<div class="wrap">
+    <div class="tbl-w"><table class="t"><thead><tr><th>Olay</th><th style="text-align:center">Uygulama içi</th>
+      <th style="text-align:center">E-posta</th><th style="text-align:center">WhatsApp</th><th style="text-align:center">SMS</th></tr></thead>
+    <tbody>${olaylar.map(o=>`<tr><td class="s">${o[0]}</td>
+      ${[1,2,3,4].map(i=>`<td style="text-align:center"><input type="checkbox" ${o[i]?'checked':''}
+        ${i>2?'disabled':''} style="width:auto"></td>`).join('')}</tr>`).join('')}
+    </tbody></table></div>
+    <div class="note warn" style="margin-top:14px"><b>WhatsApp ve SMS faz 2'de.</b>
+      WhatsApp Business API başvurusu 2–6 hafta sürüyor ve mesaj başı maliyeti var. Faz 1'de uygulama içi + e-posta yeterli.</div></div>`;
+};
+</script>
+<script>
+/* ---------- başlat ---------- */
+EKRANLAR.editor && (function(){})();
+editorHazirla();
+S.secili='DENGELI';
+ciz();
+setTimeout(()=>toast('Demo hazır — <b>Kontrol merkezi</b>. Sol menüden gezinebilirsiniz.',{uzun:true}),400);
+</script>
+</body></html>

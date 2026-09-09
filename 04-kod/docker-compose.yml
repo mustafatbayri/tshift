@@ -1,0 +1,36 @@
+# TShift — yerel gelistirme altyapisi
+#
+#   Baslat : docker compose up -d
+#   Durdur : docker compose down
+#   SIFIRLA: docker compose down -v      (veritabanini tamamen siler, bastan kurar)
+#
+# Veritabani bilgisayara kurulmuyor; kutu (container) icinde calisiyor.
+# Bozulursa "down -v" ile tertemiz bastan baslarsin, Windows'ta iz kalmaz.
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: tshift-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tshift
+      POSTGRES_USER: tshift
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tshift_dev_2026}
+      TZ: Europe/Istanbul
+      PGTZ: Europe/Istanbul
+    ports:
+      # Sol taraf senin bilgisayarindaki numara. 5433 sectik ki daha once
+      # kurulmus bir PostgreSQL varsa cakismasin.
+      - "5433:5432"
+    volumes:
+      - tshift-db-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tshift -d tshift"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  tshift-db-data:
+    name: tshift-db-data
