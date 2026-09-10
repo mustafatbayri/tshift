@@ -36,8 +36,9 @@ Tutmadığın geçmişi sonradan üretemezsin. Denetim kaydı (audit log) olmada
 canlıya çıkıp altı ay sonra "bu planı kim değiştirdi, hangi kural sürümüyle
 üretildi" diye sorarsan, cevap yoktur ve hiçbir zaman olmayacaktır.
 
-Bu, spec'te tanımlı ama **henüz yazılmadı.** Pilot öncesi yazılması gerekir;
-pilot sonrası yazılırsa aradaki dönem kalıcı olarak karanlıkta kalır.
+Bu yüzden denetim kaydı, ilk müşteri verisi girmeden **önce** yazıldı
+(11 Eylül). Sonraya bırakılsaydı aradaki dönem kalıcı olarak karanlıkta
+kalırdı — sonradan doldurulabilecek bir boşluk değil.
 
 ### 1.3 Güven
 
@@ -76,7 +77,7 @@ Yılmaz'ın tarif ettiği "bağlam kopması" bunlardan yalnız biri.
 | 3 | **Anlamsal kayma** — aynı kavramın iki yerde farklı uygulanması | Hiçbir şey; bir gün rakamlar tutmaz | Tip sistemi, değişmez testler |
 | 4 | **Kopyalanmış mantık** — mevcut yardımcıyı görmeyip yenisini yazma | İkisi zamanla ayrışır | İnceleme, küçük kod tabanı |
 | 5 | **Testin aynı yanlışı paylaşması** | Test yeşil, davranış yanlış | Spec'ten türetilen test, bağımsız denetleyici |
-| 6 | **Testi düzeltip kodu bırakma** | Yeşil ama yanlış | Kural: iddia değişmez, önce spec değişir |
+| 6 | **Testi düzeltip kodu bırakma** | Yeşil ama yanlış | Kural: iddia gevşetilmez (bkz. §6) |
 | 7 | **Fazla mühendislik** | Gereksiz soyutlama, kayan takvim | Kapsam sözleşmesi (spec) |
 | 8 | **Onaylayıcılık** — kötü fikre itiraz etmemek | Fark edilmez | Karşıt inceleme, açık talep |
 | 9 | **Gerekçenin kaybolması** | Biri "sadeleştirir", açık açılır | Yorum + bekçi test |
@@ -166,13 +167,14 @@ pahalılaşır. Bugün karar vermek bir saat, canlıdayken bir ay sürer.
 | Kimlik şeması (UUIDv7) | ✅ Karar verildi | Tüm yabancı anahtarlar |
 | Zaman modeli (UTC + genişletilmiş saat) | ✅ Karar verildi | Her plan yeniden yorumlanır |
 | Kural motoru (kurallar veride) | ✅ Karar verildi | Motorun tamamı |
-| **Denetim kaydı (audit log)** | ⚠️ **Yazılmadı** | **Geçmiş kalıcı olarak kaybolur** |
+| Denetim kaydı (audit log) | ✅ Yazıldı, sadece-eklenir | Geçmiş kalıcı olarak kaybolurdu |
 | Eşzamanlılık (satır sürümü, idempotency) | ⚠️ Yazılmadı | Bozulan veriyi tespit etmek zor |
 | Para ve yuvarlama kuralları | Henüz gündemde değil | Geçmiş hesaplamalar yeniden yapılır |
 | Motor sınırı (ayrı servis, sözleşme) | ✅ Karar verildi | Yeniden yazım |
 
-**Denetim kaydı pilot öncesi yazılmalı.** Diğerlerinin hepsi sonradan
-eklenebilir; bu eklenemez, çünkü geçmişi geriye dönük üretemezsin.
+Denetim kaydı **11 Eylül'de yazıldı** — listedeki tek gerçekten ertelenemez
+madde oydu. Geriye kalan açık madde eşzamanlılık: bozulan veriyi sonradan
+tespit etmek zordur, ama en azından mümkündür.
 
 ---
 
@@ -223,8 +225,13 @@ duruyor.
 **Kod**
 
 - `main` her zaman yeşil. Test kırmızıyken birleştirilmez.
-- Kırılan bir test, iddia değiştirilerek düzeltilmez. Önce spec değişir,
-  değişiklik günlüğe yazılır, sonra test güncellenir.
+- Kırılan bir test, **kodu doğru sanıp iddiayı zayıflatarak** düzeltilmez.
+  Önce spec değişir, değişiklik günlüğe yazılır, sonra test güncellenir.
+  Tek istisna: iddianın, sınanmak istenen şeyi yanlış ifade ettiği durum.
+  O zaman iddia **düzeltilir** — ve düzeltilmiş hali eskisinden daha keskin
+  olmalıdır, daha gevşek değil. Ayrım şu soruyla yapılır: *"bu değişiklikten
+  sonra test, eskiden yakalayacağı bir hatayı kaçırır mı?"* Cevap evetse,
+  yapılan şey düzeltme değil örtbastır. (Örnek: 11 Eylül, D6 testi.)
 - Sıra dışı her karar yanındaki yorumda gerekçesiyle durur.
 - Anlaşılmayan komut çalıştırılmaz — özellikle `rm`, `del`, `format`,
   `Remove-Item`, `--force` içerenler.

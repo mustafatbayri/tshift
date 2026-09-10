@@ -87,42 +87,11 @@ public class KimlikTestleri
         return (slug, kiraci.Id, eposta);
     }
 
-    private static async Task Temizle(params Guid[] kiraciler)
-    {
-        foreach (var k in kiraciler)
-        {
-            var bk = new KiraciBaglami();
-            bk.Ayarla(k);
-            await using var dbk = Baglam(bk);
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_scopes WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_roles WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM role_permissions WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM roles WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM refresh_tokens WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_credentials WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM employee_contracts WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM employees WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM teams WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM departments WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM users WHERE tenant_id = {k}");
-        }
+    private static Task Temizle(params Guid[] kiraciler)
+        => TestTemizlik.KiraciSilAsync(kiraciler);
 
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-        foreach (var k in kiraciler)
-            await db.Database.ExecuteSqlAsync($"DELETE FROM tenants WHERE id = {k}");
-    }
-
-    /// <summary>Giriş denemesi kayıtlarını siler — kaba kuvvet sayacı testler arasında taşmasın.</summary>
-    private static async Task DenemeleriTemizle(params string[] epostalar)
-    {
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-        foreach (var e in epostalar)
-            await db.Database.ExecuteSqlAsync($"DELETE FROM login_attempts WHERE eposta = {e}");
-    }
+    private static Task DenemeleriTemizle(params string[] epostalar)
+        => TestTemizlik.GirisDenemeleriniSilAsync(epostalar);
 
     // ------------------------------------------------------------------ 1
     [Fact(DisplayName = "K1 - Dogru parola ile giris yapilir ve jeton verilir")]

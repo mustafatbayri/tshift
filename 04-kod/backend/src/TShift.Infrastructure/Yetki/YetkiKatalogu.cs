@@ -35,6 +35,7 @@ public static class YetkiKatalogu
     public const string GerceklesenYukle  = "gerceklesen.yukle";
     public const string RaporGor          = "rapor.gor";
     public const string KullaniciYonet    = "kullanici.yonet";
+    public const string DenetimGor        = "denetim.gor";
 
     public sealed record IzinTanimi(string Kod, string Aciklama, string Kategori);
 
@@ -57,7 +58,8 @@ public static class YetkiKatalogu
         new(PlanYayinla,      "Planı yayınlar",                          "Plan"),
         new(GerceklesenYukle, "Gerçekleşen veri yükler",                 "Rapor"),
         new(RaporGor,         "Raporları görüntüler",                    "Rapor"),
-        new(KullaniciYonet,   "Kullanıcı ve yetki yönetir",              "Yönetim")
+        new(KullaniciYonet,   "Kullanıcı ve yetki yönetir",              "Yönetim"),
+        new(DenetimGor,       "Denetim kaydını görüntüler",              "Yönetim")
     ];
 
     // ---- Sistem rolleri -----------------------------------------------------
@@ -78,7 +80,7 @@ public static class YetkiKatalogu
             IzinGir, IzinTalep, UygunlukGir,
             KuralParametre, KuralIstisna, VardiyaSablon, TalepGir,
             PlanUret, PlanDuzenle, PlanOnayla, PlanYayinla,
-            GerceklesenYukle, RaporGor, KullaniciYonet
+            GerceklesenYukle, RaporGor, KullaniciYonet, DenetimGor
         ]),
 
         new(DepartmanMuduru, "Departman müdürü", KapsamSeviyesi.Kapsam,
@@ -108,8 +110,9 @@ public static class YetkiKatalogu
 
         new(Izleyici, "İzleyici", KapsamSeviyesi.Kiraci,
         [
-            CalisanGor, RaporGor
+            CalisanGor, RaporGor, DenetimGor
             // Her şeyi görür, hiçbir şeyi değiştiremez. Yazma izni YOK.
+            // Denetim kaydını görebilir: denetçi rolünün varlık sebebi bu.
         ])
     ];
 }

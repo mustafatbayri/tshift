@@ -4,6 +4,35 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-11 · Denetim kaydı (audit_log) — risk listesindeki kırmızı madde kapandı**
+Her oluşturma, güncelleme ve silme otomatik olarak kaydediliyor: kim, ne zaman,
+hangi kayıt, hangi alanlar, önceki ve yeni değer, IP.
+Üç kasıtlı özellik:
+1. **Otomatik** — uçlarda tek tek çağrılmıyor, EF'in kaydetme akışına bağlı.
+   Yeni tablo ya da yeni uç kendiliğinden kapsanıyor.
+2. **Aynı işlemde** — değişiklikle denetim satırı tek `SaveChanges`'te gidiyor;
+   biri yazılıp diğeri yazılamıyor. (İstemci tarafında üretilen UUIDv7
+   kimlikler sayesinde mümkün.)
+3. **Sadece eklenir** — `tshift_app` rolünün `audit_log` üzerinde UPDATE ve
+   DELETE yetkisi YOK. Kısıt uygulamada değil veritabanında, çünkü uygulama
+   katmanı açığın bulunacağı katmandır.
+Parola ve jeton özetleri kayda girmez: alanın **değiştiği** kaydedilir,
+**değeri** kaydedilmez. Yeni izin: `denetim.gor` (kiracı yöneticisi + izleyici).
+Yeni uç: `GET /api/v1/audit`. 7 denetim testi + M6 mimari testi; toplam 38/38.
+→ `04-kod/backend/src/TShift.Infrastructure/Denetim/`, `04-kod/db/rls/05-denetim-kaydi.sql`
+
+**2026-09-11 · Test temizliği tek yere alındı**
+Dört test dosyasında dört ayrı tablo listesi vardı — yeni tablo eklendiğinde
+üçünü güncelleyip birini unutmak an meselesiydi. `TestTemizlik` sınıfına
+taşındı. Temizlik artık **sahibi rolle** yapılıyor; uygulama rolü denetim
+kaydını silemediği için (kasıtlı) başka türlü mümkün de değil.
+
+**2026-09-11 · D6 testi düzeltildi — iddia yanlış kurulmuştu**
+"B kiracısı hiçbir denetim kaydı görmemeli" diye yazmıştım; yanlış bir iddia,
+çünkü B kendi işlemlerinin kaydını görmeli. Sınanmak istenen şey "B, **A'nın**
+kayıtlarını göremez" idi. İddia zayıflatılmadı, gerçekte sınanan şeye çevrildi
+ve kimlik karşılaştırmasıyla daha keskin hale geldi. Kod değişmedi.
+
 **2026-09-10 · Mimari testleri ve risk dokümanı**
 Özellik değil **yasa** sınayan bir test katmanı eklendi: kiracıya ait her
 tabloda RLS açık mı, RLS dışı tablolar bilinen istisnalar mı, korumasız uç

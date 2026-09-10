@@ -11,6 +11,8 @@ using TShift.Infrastructure.Kimlik;
 using TShift.Infrastructure.Persistence;
 using TShift.Domain.Yetki;
 using TShift.Infrastructure.Yetki;
+using TShift.Infrastructure.Denetim;
+using TShift.Domain.Denetim;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,7 @@ builder.Services.AddScoped<IYetkiCozucu, YetkiCozucu>();
 builder.Services.AddScoped<IKiraciKurulumServisi, KiraciKurulumServisi>();
 
 builder.Services.AddScoped<IKiraciBaglami, KiraciBaglami>();
+builder.Services.AddScoped<IDenetimBaglami, DenetimBaglami>();
 builder.Services.AddScoped<KiraciBaglantiKesici>();
 
 builder.Services.AddDbContext<TShiftDbContext>((sp, opt) =>
@@ -110,9 +113,22 @@ app.UseAuthorization();
 // bir jetondan geliyor.
 app.Use(async (ctx, next) =>
 {
-    var ham = ctx.User.FindFirstValue(JetonServisi.KiraciTalebi);
-    if (ctx.User.Identity?.IsAuthenticated == true && Guid.TryParse(ham, out var kid))
-        ctx.RequestServices.GetRequiredService<IKiraciBaglami>().Ayarla(kid);
+    if (ctx.User.Identity?.IsAuthenticated == true)
+    {
+        var hamKiraci = ctx.User.FindFirstValue(JetonServisi.KiraciTalebi);
+        if (Guid.TryParse(hamKiraci, out var kid))
+            ctx.RequestServices.GetRequiredService<IKiraciBaglami>().Ayarla(kid);
+
+        // "Bu işi kim yaptı" bilgisi de aynı jetondan gelir. Denetim kaydına
+        // yazılacak; istemcinin söylediğine değil, imzalı jetona güveniyoruz.
+        var hamKullanici = ctx.User.FindFirstValue(
+            System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        if (Guid.TryParse(hamKullanici, out var uid))
+            ctx.RequestServices.GetRequiredService<IDenetimBaglami>().Ayarla(
+                uid,
+                ctx.Connection.RemoteIpAddress?.ToString(),
+                ctx.Request.Headers.UserAgent.ToString());
+    }
 
     await next();
 });
@@ -310,6 +326,35 @@ app.MapGet("/dev/tenants", async (TShiftDbContext db) =>
     await db.Kiracilar.OrderBy(k => k.Ad)
         .Select(k => new { k.Id, k.Ad, k.Slug, k.SektorPaketi, k.BirimAdi })
         .ToListAsync());
+
+// ---- Denetim kaydı ---------------------------------------------------------
+// Salt okunur. Bu uçtan hiçbir şey silinemez ya da değiştirilemez — zaten
+// veritabanı seviyesinde de uygulama rolünün böyle bir yetkisi yok.
+app.MapGet("/api/v1/audit", async (TShiftDbContext db,
+    string? varlik, Guid? varlikId, Guid? kullaniciId, int sayfa = 1, int boyut = 50) =>
+{
+    boyut = Math.Clamp(boyut, 1, 200);
+    sayfa = Math.Max(sayfa, 1);
+
+    var sorgu = db.DenetimKayitlari.AsNoTracking().AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(varlik)) sorgu = sorgu.Where(k => k.Varlik == varlik);
+    if (varlikId is { } vid)                sorgu = sorgu.Where(k => k.VarlikId == vid);
+    if (kullaniciId is { } uid)             sorgu = sorgu.Where(k => k.KullaniciId == uid);
+
+    var toplam = await sorgu.CountAsync();
+    var kayitlar = await sorgu
+        .OrderByDescending(k => k.Zaman)
+        .Skip((sayfa - 1) * boyut).Take(boyut)
+        .Select(k => new
+        {
+            k.Id, k.Zaman, k.KullaniciId, k.Varlik, k.VarlikId,
+            islem = k.Islem.ToString(), k.Oncesi, k.Sonrasi, k.Ip
+        })
+        .ToListAsync();
+
+    return Results.Ok(new { toplam, sayfa, boyut, kayitlar });
+}).RequireAuthorization(YetkiKatalogu.DenetimGor);
 
 // ---- Çalışanlar ------------------------------------------------------------
 app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam,
