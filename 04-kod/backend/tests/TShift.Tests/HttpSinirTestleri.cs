@@ -115,30 +115,11 @@ public class HttpSinirTestleri : IClassFixture<TestUygulamasi>
             $"rolsuz@{slug}.test", c1.Id, c2.Id);
     }
 
-    private static async Task Temizle(Guid kiraciId)
-    {
-        var bk = new KiraciBaglami();
-        bk.Ayarla(kiraciId);
-        await using var dbk = Baglam(bk);
-        foreach (var tablo in new[]
-        {
-            "user_scopes", "user_roles", "role_permissions", "roles",
-            "refresh_tokens", "user_credentials",
-            "employee_contracts", "employees", "teams", "departments", "users"
-        })
-        {
-#pragma warning disable EF1003 // Tablo adlari sabit listeden geliyor.
-            await dbk.Database.ExecuteSqlRawAsync(
-                "DELETE FROM " + tablo + " WHERE tenant_id = {0}", kiraciId);
-#pragma warning restore EF1003
-        }
-
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-        await db.Database.ExecuteSqlAsync($"DELETE FROM tenants WHERE id = {kiraciId}");
-        await db.Database.ExecuteSqlAsync($"DELETE FROM login_attempts WHERE firma_slug LIKE 'http-%'");
-    }
+    // Bu sinifta yalnizca BASARILI girisler var; kaba kuvvet sayaci
+    // yalnizca basarisiz denemeleri sayar, o yuzden login_attempts temizligi
+    // gerekmiyor.
+    private static Task Temizle(Guid kiraciId)
+        => TestTemizlik.KiraciSilAsync(kiraciId);
 
     private async Task<(HttpStatusCode Kod, JsonElement Govde)> Cagir(
         HttpClient istemci, string yol, string? jeton = null, string? sahteKiraci = null)
@@ -188,7 +169,9 @@ public class HttpSinirTestleri : IClassFixture<TestUygulamasi>
             Assert.Equal(HttpStatusCode.OK, kod);
             Assert.Equal(s.MudurEposta, govde.GetProperty("eposta").GetString());
             Assert.Equal("Kiraci", govde.GetProperty("kapsam").GetString());
-            Assert.Equal(18, govde.GetProperty("izinler").GetArrayLength());
+            // Sayiyi elle yazmiyoruz: katalog degisince test de kendiliginden guncellenir.
+            var beklenen = YetkiKatalogu.Roller.First(r => r.Kod == YetkiKatalogu.KiraciYonetici).Izinler.Length;
+            Assert.Equal(beklenen, govde.GetProperty("izinler").GetArrayLength());
         }
         finally { await Temizle(s.KiraciId); }
     }

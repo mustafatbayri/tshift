@@ -43,7 +43,8 @@ docker compose down -v      # SIFIRLA — veritabanını tamamen siler
 ```
 
 `down -v` sonrası kurulum sırası: `dotnet ef database update` → `01-rls.sql` →
-`02-uygulama-rolu.sql` → `03-kimlik-tablolari.sql` → `04-yetki-tablolari.sql`.
+`02-uygulama-rolu.sql` → `03-kimlik-tablolari.sql` → `04-yetki-tablolari.sql` →
+`05-denetim-kaydi.sql`.
 
 ## İki veritabanı rolü — dikkat
 
@@ -92,6 +93,7 @@ Açılışta yazılan `Now listening on: http://localhost:XXXX` satırındaki po
 | `POST /api/v1/auth/logout` | Bu oturumu kapatır | — |
 | `GET /api/v1/me` | Oturum sahibinin profili | gerekli |
 | `GET /api/v1/employees` | Çalışanlar — kapsama göre filtreli | `calisan.gor` |
+| `GET /api/v1/audit` | Denetim kaydı — salt okunur | `denetim.gor` |
 | `POST /dev/seed` | İki örnek firma + kullanıcı + 5 çalışan | — |
 | `GET /dev/tenants` | Kiracı listesi | — |
 
@@ -147,6 +149,23 @@ süresi dolana kadar (en fazla 15 dakika) etkili kalır. Acil iptalde o
 kullanıcının yenileme jetonları da düşürülmeli. Kapsam jetona konmaz, her
 istekte veritabanından okunur — kapsam değişikliği anında etkilidir.
 
+### Denetim kaydı
+
+Her oluşturma, güncelleme ve silme otomatik olarak `audit_log` tablosuna
+yazılır. Uçlarda tek tek çağrılmaz — EF'in kaydetme akışına bağlıdır, bu
+yüzden yeni bir tablo ya da uç eklendiğinde kendiliğinden kapsanır.
+
+**Bu tablo sadece eklenir.** Uygulama rolünün UPDATE ve DELETE yetkisi yoktur;
+kısıt uygulamada değil veritabanındadır, çünkü uygulama katmanı açığın
+bulunacağı katmandır. Saklama süresi dolduğunda temizliği sahibi rol
+(`tshift`) bilinçli bir bakım işiyle yapar.
+
+Parola ve jeton özetleri kayda **girmez**: alanın değiştiği kaydedilir,
+değeri kaydedilmez. Aksi halde denetim kaydı, hiç temizlenemeyen bir parola
+özeti arşivine dönüşürdü.
+
+Kapsam dışı üç tablo ve gerekçeleri `DenetimToplayici` içinde yazılı.
+
 ## Testler
 
 ```powershell
@@ -162,7 +181,9 @@ kullanmaz. Yalıtımın gerçekten çalıştığını ancak gerçek veritabanı 
 | `CokKiracilikTestleri` | Başka firmanın satırı hiç gelmiyor mu (RLS) |
 | `KimlikTestleri` | Parola, jeton, kilit, jeton hırsızlığı |
 | `YetkiTestleri` | İzin ve kapsam mantığı |
+| `DenetimTestleri` | Kayıt tutuluyor mu, sır sızıyor mu, silinebiliyor mu |
 | `HttpSinirTestleri` | Uygulamayı ayağa kaldırıp **gerçek istek** atar |
+| `MimariTestleri` | Değişmez kurallar: RLS, korumasız uç, sadece-eklenir |
 
 Sonuncusu ayrı duruyor çünkü ayrı bir şey sınıyor: diğerleri servisleri
 doğrudan çağırıp katmanın **içini** doğrular; bu, katmanların **arasını**.
@@ -204,6 +225,7 @@ parametreler kullanılamaz.
 - [x] Satır seviyesi güvenlik (RLS) ve çok kiracılık testleri — 5/5 yeşil
 - [x] Kimlik katmanı: giriş, jeton, döner yenileme, kaba kuvvet kilidi — 12/12 yeşil
 - [x] Roller ve izinler: izin politikaları, departman/ekip kapsamı — 26/26 yeşil
+- [x] Denetim kaydı: otomatik, aynı işlemde, sadece-eklenir — 38/38 yeşil
 - [ ] Kullanıcı ve rol yönetimi uçları (`/users`, `/users/{id}/roles`)
 - [ ] Çalışan API'si (yetkilendirme ile)
 - [ ] Çalışan ekranı (Next.js)

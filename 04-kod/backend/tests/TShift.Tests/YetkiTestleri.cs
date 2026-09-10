@@ -94,37 +94,8 @@ public class YetkiTestleri
             mudurId, sefId, calisanId, izleyiciId, c1.Id, c2.Id);
     }
 
-    private static async Task Temizle(Guid kiraciId)
-    {
-        var bk = new KiraciBaglami();
-        bk.Ayarla(kiraciId);
-        await using var dbk = Baglam(bk);
-        // Tablo adi SQL'e dize olarak giriyor. EF bunu hakli olarak enjeksiyon
-        // riski sayar (EF1003) cunku genel durumda oyle. Burada guvenli olmasinin
-        // sebebi asagidaki listenin SABIT ve KAPALI olmasi: degerler kodda yazili,
-        // disaridan hicbir girdi buraya ulasamaz. Kiraci kimligi zaten parametre
-        // olarak gidiyor ({0}), dizeye gomulmuyor.
-        //
-        // Uyariyi bilerek ve DAR bir kapsamda susturuyoruz. Genis kapsamli
-        // susturma (proje ayari) yasak: bir gun gercek bir enjeksiyonu gizler.
-        foreach (var tablo in new[]
-        {
-            "user_scopes", "user_roles", "role_permissions", "roles",
-            "refresh_tokens", "user_credentials",
-            "employee_contracts", "employees", "teams", "departments", "users"
-        })
-        {
-#pragma warning disable EF1003 // Tablo adlari sabit listeden geliyor; bkz. yukaridaki not.
-            await dbk.Database.ExecuteSqlRawAsync(
-                "DELETE FROM " + tablo + " WHERE tenant_id = {0}", kiraciId);
-#pragma warning restore EF1003
-        }
-
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-        await db.Database.ExecuteSqlAsync($"DELETE FROM tenants WHERE id = {kiraciId}");
-    }
+    private static Task Temizle(Guid kiraciId)
+        => TestTemizlik.KiraciSilAsync(kiraciId);
 
     private static async Task<(KullaniciYetkisi Yetki, List<Calisan> Gorunen)> Bak(Guid kiraciId, Guid kullaniciId)
     {

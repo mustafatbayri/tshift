@@ -238,6 +238,32 @@ public class MimariTestleri : IClassFixture<TestUygulamasi>
             "\nYer tutucu kullan ({DB_PASSWORD} gibi) ve degeri ortam degiskeninden oku.");
     }
 
+    // ------------------------------------------------------------------ M6
+    /// <summary>
+    /// Denetim kaydı SADECE EKLENİR olmalı.
+    ///
+    /// Uygulama rolünün `audit_log` üzerinde UPDATE ve DELETE yetkisi olmamalı.
+    /// Biri ileride "temizlik lazım" diye bu yetkiyi verirse, denetim kaydı
+    /// sessizce anlamını kaybeder — ve kimse fark etmez, çünkü her şey
+    /// çalışmaya devam eder. Bu test o anı yakalar.
+    /// </summary>
+    [Fact(DisplayName = "M6 - Denetim kaydi sadece eklenir (UPDATE/DELETE yok)")]
+    public async Task Denetim_kaydi_sadece_eklenir()
+    {
+        await using var db = Baglam();
+
+        var yetkiler = await db.Database.SqlQuery<string>($"""
+            SELECT privilege_type AS "Value"
+            FROM   information_schema.table_privileges
+            WHERE  grantee = 'tshift_app' AND table_name = 'audit_log'
+            """).ToListAsync();
+
+        Assert.Contains("SELECT", yetkiler);
+        Assert.Contains("INSERT", yetkiler);
+        Assert.DoesNotContain("UPDATE", yetkiler);
+        Assert.DoesNotContain("DELETE", yetkiler);
+    }
+
     // ------------------------------------------------------------------
     /// <summary>Depo kökünü bulur: TShift.slnx dosyasını yukarı doğru arar.</summary>
     private static string KaynakKoku()

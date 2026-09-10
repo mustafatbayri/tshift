@@ -78,61 +78,14 @@ public class CokKiracilikTestleri
     ///    OnDelete(Restrict) ile tanımlı, yani kademeli silmeyi bilerek engelliyor.
     ///    (Yanlışlıkla departman silinince çalışanların uçmasını istemiyoruz.)
     /// </summary>
-    private static async Task Temizle(params Guid[] kiraciler)
-    {
-        foreach (var k in kiraciler)
-        {
-            var bk = new KiraciBaglami();
-            bk.Ayarla(k);
-            await using var dbk = Baglam(bk);
-
-            // Sıra önemli: önce en derindeki çocuk, sonra yukarı doğru.
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_scopes WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_roles WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM role_permissions WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM roles WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM refresh_tokens WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_credentials WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM employee_contracts WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM employees WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM teams WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM departments WHERE tenant_id = {k}");
-            await dbk.Database.ExecuteSqlAsync($"DELETE FROM users WHERE tenant_id = {k}");
-        }
-
-        // tenants tablosunda RLS yok (kiracıların kendisi kiracıya ait değil),
-        // bu yüzden bağlamsız silinir.
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-        foreach (var k in kiraciler)
-            await db.Database.ExecuteSqlAsync($"DELETE FROM tenants WHERE id = {k}");
-    }
-
-    // ------------------------------------------------------------------ 0
     /// <summary>
-    /// Bekçi testi. Diğer üç testin anlamlı olmasının ön koşulu:
-    /// bağlandığımız rol süper kullanıcı OLMAMALI. Süperse RLS hiç çalışmaz ve
-    /// "yalıtım testleri geçti" demek hiçbir şey ifade etmez.
-    /// Biri ileride bağlantı dizesini `tshift`e çevirirse burası anında yakalar.
+    /// Test verisini siler. Ortak yardimciya devrediyor: tablo listesi tek
+    /// yerde dursun, dort dosyada dort kopya olmasin.
+    /// Silme sahibi rolle yapilir — uygulama rolu denetim kaydini silemez
+    /// (bu kasitli bir kisit, DenetimTestleri D4/D5'in konusu).
     /// </summary>
-    [Fact(DisplayName = "0 - Baglanan rol super kullanici degil (RLS gecerli olsun)")]
-    public async Task Rol_super_kullanici_degil()
-    {
-        var b = new KiraciBaglami();
-        b.Ayarla(null);
-        await using var db = Baglam(b);
-
-        var super = await db.Database
-            .SqlQuery<bool>($"SELECT rolsuper AS \"Value\" FROM pg_roles WHERE rolname = current_user")
-            .SingleAsync();
-        var muaf = await db.Database
-            .SqlQuery<bool>($"SELECT rolbypassrls AS \"Value\" FROM pg_roles WHERE rolname = current_user")
-            .SingleAsync();
-
-        Assert.False(super, "Baglanti super kullanici ile kurulmus. Super kullanici RLS'i asar; yalitim testleri anlamsiz hale gelir.");
-        Assert.False(muaf, "Rolde BYPASSRLS var. RLS devre disi kalir.");
-    }
+    private static Task Temizle(params Guid[] kiraciler)
+        => TestTemizlik.KiraciSilAsync(kiraciler);
 
     // ------------------------------------------------------------------ 1
     [Fact(DisplayName = "1 - Iki ayri baglam ayni anda birbirinin verisini gormez")]

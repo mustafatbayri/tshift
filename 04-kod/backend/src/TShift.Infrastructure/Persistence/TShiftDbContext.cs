@@ -1,15 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using TShift.Domain.Calisanlar;
 using TShift.Domain.Common;
+using TShift.Domain.Denetim;
 using TShift.Domain.Kimlik;
 using TShift.Domain.Kiracilar;
 using TShift.Domain.Organizasyon;
+using TShift.Infrastructure.Denetim;
 using TShift.Domain.Yetki;
 
 namespace TShift.Infrastructure.Persistence;
 
-public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciBaglami baglam)
-    : DbContext(options)
+public class TShiftDbContext(
+    DbContextOptions<TShiftDbContext> options,
+    IKiraciBaglami baglam,
+    IDenetimBaglami? denetim = null) : DbContext(options)
 {
     public DbSet<Kiraci> Kiracilar => Set<Kiraci>();
     public DbSet<Kullanici> Kullanicilar => Set<Kullanici>();
@@ -29,6 +33,9 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
     public DbSet<RolIzni> RolIzinleri => Set<RolIzni>();
     public DbSet<KullaniciRolu> KullaniciRolleri => Set<KullaniciRolu>();
     public DbSet<KullaniciKapsami> KullaniciKapsamlari => Set<KullaniciKapsami>();
+
+    // Denetim
+    public DbSet<DenetimKaydi> DenetimKayitlari => Set<DenetimKaydi>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -62,14 +69,44 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
 
     public override int SaveChanges()
     {
-        KiraciIdDoldur(); ZamanDamgala();
+        Hazirla();
         return base.SaveChanges();
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
-        KiraciIdDoldur(); ZamanDamgala();
+        Hazirla();
         return base.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Her kaydetmeden önce çalışan üç adım. Sıra önemli.
+    /// </summary>
+    private void Hazirla()
+    {
+        KiraciIdDoldur();   // 1) eksik kiracı kimlikleri
+        ZamanDamgala();     // 2) güncelleme zamanı
+        DenetimYaz();       // 3) ne değiştiğinin kaydı — en sonda, ilk ikisi bittikten sonra
+    }
+
+    /// <summary>
+    /// Denetim satırlarını üretip AYNI kaydetme işlemine ekler.
+    ///
+    /// Uçların içinde tek tek çağrılmıyor olması kasıtlı: elle hatırlanması
+    /// gereken bir kayıt, er ya da geç unutulur ve o işlem sonsuza kadar
+    /// görünmez kalır. Buraya bağlı olduğu için yeni bir tablo ya da yeni bir
+    /// uç eklendiğinde kendiliğinden kapsanıyor.
+    ///
+    /// Aynı işlemde olması da kasıtlı: değişiklik yazılıp kaydı yazılamazsa
+    /// geçmiş yalan söylemeye başlar.
+    /// </summary>
+    private void DenetimYaz()
+    {
+        var kayitlar = DenetimToplayici.Topla(ChangeTracker, denetim);
+        if (kayitlar.Count == 0) return;
+
+        // Kiracısı belirlenemeyen kayıt yazılmaz — RLS zaten reddederdi.
+        DenetimKayitlari.AddRange(kayitlar.Where(k => k.KiraciId != Guid.Empty));
     }
 
     /// <summary>Yeni kayıtlarda KiraciId'yi elle yazmayı unutmak mümkün olmasın.</summary>
