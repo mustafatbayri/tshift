@@ -4,6 +4,23 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-10 · Dikey dilim 1: çok kiracılık yalıtımı ayakta**
+Veritabanı, alan modeli, EF katmanı, RLS, API ve testler uçtan uca bağlandı.
+7 tablo, ilk migration (`20260910002040_Ilk`), 5 test yeşil.
+İki firma aynı API adresinden birbirinin verisini göremiyor — betikle kanıtlandı.
+→ `04-kod/`, `04-kod/YALITIM-KANITI.ps1`
+
+**2026-09-10 · Bulunan açık: süper kullanıcı RLS'i aşıyordu** ⚠
+Satır seviyesi güvenlik doğru yazılmış, açılmış ve `t/t` diye doğrulanmıştı;
+ama uygulama veritabanına Docker'ın süper kullanıcısıyla (`tshift`) bağlanıyordu.
+PostgreSQL'de süper kullanıcı RLS'i tamamen aşar — `FORCE` bile durdurmaz.
+Güvenlik kâğıt üstünde vardı, çalışmada yoktu.
+Çözüm: iki rol. `tshift` migration çalıştırır, `tshift_app` uygulamayı taşır
+(süper değil, `NOBYPASSRLS`). Ayrıca 0 numaralı **bekçi test** eklendi:
+bağlanan rol süper kullanıcıysa test paketi kırmızı yanıyor.
+Açığı bulan şey inceleme değil, testin kendisi oldu.
+→ `04-kod/db/rls/02-uygulama-rolu.sql`
+
 **2026-09-09 · Master Spec v1.1**
 Spec'in gözden geçirilmesinden 9 değişiklik: kimlik katmanı kendi kodumuza alındı
 (Keycloak çıktı), izin etki analizi yeni özellik olarak eklendi, uygulanan

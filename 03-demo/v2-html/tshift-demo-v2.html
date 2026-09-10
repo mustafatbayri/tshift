@@ -9,32 +9,32 @@
 <style>
 /* ============ tokens ============ */
 :root{
-  --ground:#EEF2F1; --surface:#FFFFFF; --surface-2:#E6EDEB; --surface-3:#F6F9F8; --surface-4:#DCE6E4;
-  --ink:#101A19; --ink-2:#3C4F4C; --muted:#6C817D; --muted-2:#8A9C99;
-  --line:#D5E0DD; --line-2:#B9C9C5;
-  --brand:#17605B; --brand-2:#1F8C84; --brand-ink:#0E4340; --brand-soft:#DCECEA;
-  --ok:#2E7D52; --ok-soft:#DEEFE4; --warn:#9C6510; --warn-soft:#F7EBD5; --crit:#A93A25; --crit-soft:#F7E1DC;
-  --sh-1:0 1px 2px rgba(16,26,25,.06);
-  --sh-2:0 2px 4px rgba(16,26,25,.05), 0 12px 28px -18px rgba(16,26,25,.5);
-  --sh-3:0 8px 24px -8px rgba(16,26,25,.22), 0 30px 60px -30px rgba(16,26,25,.5);
+  --ground:#F2F4F7; --surface:#FFFFFF; --surface-2:#E6E8EB; --surface-3:#F7F8FA; --surface-4:#DDE1E8;
+  --ink:#0A1D3D; --ink-2:#35455F; --muted:#6B7280; --muted-2:#8C95A4;
+  --line:#DCE0E6; --line-2:#BFC5CE;
+  --brand:#154DFF; --brand-2:#4571FF; --brand-ink:#0E38C4; --brand-soft:#E4EAFF;
+  --ok:#1E7A46; --ok-soft:#DFEFE6; --warn:#8F5E06; --warn-soft:#F8EDD8; --crit:#B3261E; --crit-soft:#F9E2DF;
+  --sh-1:0 1px 2px rgba(10,29,61,.06);
+  --sh-2:0 2px 4px rgba(10,29,61,.05), 0 12px 28px -18px rgba(10,29,61,.5);
+  --sh-3:0 8px 24px -8px rgba(10,29,61,.22), 0 30px 60px -30px rgba(10,29,61,.5);
   --r:8px; --r-sm:5px; --r-lg:12px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --ground:#0D1413; --surface:#141D1C; --surface-2:#1C2827; --surface-3:#111A19; --surface-4:#243230;
-  --ink:#E3EBE9; --ink-2:#AEC0BC; --muted:#7E918D; --muted-2:#647873;
-  --line:#243230; --line-2:#33453F;
-  --brand:#4FBDB2; --brand-2:#6ED0C5; --brand-ink:#8EDDD4; --brand-soft:#10312E;
-  --ok:#63C48D; --ok-soft:#112A1D; --warn:#D5A24E; --warn-soft:#2B2312; --crit:#E08A72; --crit-soft:#2E1712;
+  --ground:#0A1220; --surface:#111A2C; --surface-2:#1A2439; --surface-3:#0D1524; --surface-4:#25314A;
+  --ink:#E7EBF2; --ink-2:#B2BCCD; --muted:#8391A8; --muted-2:#68758C;
+  --line:#212C41; --line-2:#33405B;
+  --brand:#5B85FF; --brand-2:#84A3FF; --brand-ink:#A9C0FF; --brand-soft:#152341;
+  --ok:#55C185; --ok-soft:#0F2A1B; --warn:#D5A24E; --warn-soft:#2A2412; --crit:#E08A72; --crit-soft:#2D1613;
   --sh-1:0 1px 2px rgba(0,0,0,.4);
   --sh-2:0 2px 4px rgba(0,0,0,.4), 0 12px 28px -18px rgba(0,0,0,.9);
   --sh-3:0 8px 24px -8px rgba(0,0,0,.6), 0 30px 60px -30px rgba(0,0,0,1);
 }}
 :root[data-theme="dark"]{
-  --ground:#0D1413; --surface:#141D1C; --surface-2:#1C2827; --surface-3:#111A19; --surface-4:#243230;
-  --ink:#E3EBE9; --ink-2:#AEC0BC; --muted:#7E918D; --muted-2:#647873;
-  --line:#243230; --line-2:#33453F;
-  --brand:#4FBDB2; --brand-2:#6ED0C5; --brand-ink:#8EDDD4; --brand-soft:#10312E;
-  --ok:#63C48D; --ok-soft:#112A1D; --warn:#D5A24E; --warn-soft:#2B2312; --crit:#E08A72; --crit-soft:#2E1712;
+  --ground:#0A1220; --surface:#111A2C; --surface-2:#1A2439; --surface-3:#0D1524; --surface-4:#25314A;
+  --ink:#E7EBF2; --ink-2:#B2BCCD; --muted:#8391A8; --muted-2:#68758C;
+  --line:#212C41; --line-2:#33405B;
+  --brand:#5B85FF; --brand-2:#84A3FF; --brand-ink:#A9C0FF; --brand-soft:#152341;
+  --ok:#55C185; --ok-soft:#0F2A1B; --warn:#D5A24E; --warn-soft:#2A2412; --crit:#E08A72; --crit-soft:#2D1613;
   --sh-1:0 1px 2px rgba(0,0,0,.4);
   --sh-2:0 2px 4px rgba(0,0,0,.4), 0 12px 28px -18px rgba(0,0,0,.9);
   --sh-3:0 8px 24px -8px rgba(0,0,0,.6), 0 30px 60px -30px rgba(0,0,0,1);
@@ -60,12 +60,13 @@ a{color:var(--brand);text-decoration:none}
 .app{display:grid;grid-template-columns:236px 1fr;height:100vh;overflow:hidden}
 .side{background:var(--surface-3);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
 .logo{padding:16px 18px 12px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line)}
-.logo .m{width:26px;height:26px;border-radius:6px;background:var(--brand);display:grid;place-items:center;flex:none}
+.logo .m{width:26px;height:26px;border-radius:6px;background:var(--ink);display:grid;place-items:center;flex:none}
 .logo .m span{color:#fff;font-weight:700;font-size:.8rem;letter-spacing:-.03em}
-:root[data-theme="dark"] .logo .m span,:root:not([data-theme="light"]) .logo .m span{color:#08201E}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .logo .m span{color:#fff}}
+:root[data-theme="dark"] .logo .m{background:var(--brand)}
+:root:not([data-theme="light"]) .logo .m{background:var(--brand)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .logo .m{background:var(--ink)}}
 .logo .t{font-weight:700;font-size:.98rem;letter-spacing:-.02em}
-.logo .t small{display:block;font-weight:500;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.logo .t small{display:block;font-weight:500;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
 .nav{flex:1;overflow-y:auto;padding:10px 10px 24px}
 .nav .grp{font-size:.62rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-2);padding:14px 8px 5px}
 .nav a{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:var(--r-sm);color:var(--ink-2);font-size:.86rem;font-weight:500;cursor:pointer}
@@ -93,7 +94,7 @@ a{color:var(--brand);text-decoration:none}
   background:var(--surface);color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .btn:hover{border-color:var(--brand);color:var(--brand-ink)}
 .btn.p{background:var(--brand);border-color:var(--brand);color:#fff}
-:root[data-theme="dark"] .btn.p,:root:not([data-theme="light"]) .btn.p{color:#08201E}
+:root[data-theme="dark"] .btn.p,:root:not([data-theme="light"]) .btn.p{color:#08122B}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn.p{color:#fff}}
 .btn.p:hover{background:var(--brand-2);border-color:var(--brand-2)}
 .btn.sm{font-size:.76rem;padding:4px 9px}
@@ -172,7 +173,7 @@ table.t tr.clk{cursor:pointer}
 .tip .tx{font-size:.74rem;color:var(--muted);margin-top:5px;border-top:1px solid var(--line);padding-top:5px}
 
 /* modal */
-.scrim{position:fixed;inset:0;background:rgba(16,26,25,.45);z-index:300;display:grid;place-items:center;padding:24px}
+.scrim{position:fixed;inset:0;background:rgba(10,29,61,.45);z-index:300;display:grid;place-items:center;padding:24px}
 .modal{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh-3);width:100%;max-width:560px;
   max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
 .modal.wide{max-width:860px} .modal.xwide{max-width:1080px}
@@ -197,7 +198,7 @@ table.t tr.clk{cursor:pointer}
 .note.crit{border-left-color:var(--crit);background:var(--crit-soft)}
 .note b{color:var(--ink)}
 
-.demo-bar{background:var(--warn-soft);color:var(--warn);font-size:.75rem;font-weight:600;padding:5px 20px;
+.demo-bar{background:var(--ink);color:var(--surface);font-size:.75rem;font-weight:600;padding:5px 20px;
   border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex:none}
 
 @media (max-width:900px){
@@ -252,18 +253,18 @@ const AD_K=['Selin','Ayşe','Zeynep','Elif','Merve','Ceren','Buse','Gizem','Ece'
 const SOYAD=['Kaya','Arslan','Demir','Yılmaz','Çelik','Şahin','Yıldız','Aydın','Öztürk','Doğan','Kurt','Koç','Aksoy','Polat','Erdoğan','Tekin','Güneş','Bulut','Ateş','Korkmaz','Şen','Ünal','Turan','Avcı','Kılıç','Sarı','Duman','Taş','Aslan','Çakır'];
 
 const EKIPLER=[
-  {id:'t1',ad:'Müşteri Hizmetleri',kod:'MH',renk:'#17605B'},
-  {id:'t2',ad:'Teknik Destek',kod:'TD',renk:'#8A5A1E'},
-  {id:'t3',ad:'Satış & Kurtarma',kod:'SK',renk:'#4A4488'},
+  {id:'t1',ad:'Müşteri Hizmetleri',kod:'MH',renk:'#154DFF'},
+  {id:'t2',ad:'Teknik Destek',kod:'TD',renk:'#0A1D3D'},
+  {id:'t3',ad:'Satış & Kurtarma',kod:'SK',renk:'#5B7C9E'},
 ];
 const DEPARTMAN={id:'d1',ad:'Çağrı Merkezi Operasyon',calisma:'saatli',acilis:8,kapanis:24};
 
 const SABLONLAR=[
-  {id:'s1',ad:'Sabah',kod:'SAB',bas:8,bit:16,mola:60,renk:'#2E7D52'},
-  {id:'s2',ad:'Ara',kod:'ARA',bas:10,bit:18,mola:60,renk:'#17605B'},
-  {id:'s3',ad:'Akşam',kod:'AKS',bas:16,bit:24,mola:60,renk:'#8A5A1E'},
-  {id:'s4',ad:'Yarım gün sabah',kod:'YS',bas:9,bit:13,mola:15,renk:'#4A4488'},
-  {id:'s5',ad:'Yarım gün akşam',kod:'YA',bas:18,bit:22,mola:15,renk:'#7A3A63'},
+  {id:'s1',ad:'Sabah',kod:'SAB',bas:8,bit:16,mola:60,renk:'#154DFF'},
+  {id:'s2',ad:'Ara',kod:'ARA',bas:10,bit:18,mola:60,renk:'#2F6BD8'},
+  {id:'s3',ad:'Akşam',kod:'AKS',bas:16,bit:24,mola:60,renk:'#0A1D3D'},
+  {id:'s4',ad:'Yarım gün sabah',kod:'YS',bas:9,bit:13,mola:15,renk:'#6B7280'},
+  {id:'s5',ad:'Yarım gün akşam',kod:'YA',bas:18,bit:22,mola:15,renk:'#5B7C9E'},
 ];
 
 const YETKINLIKLER=[
@@ -654,7 +655,7 @@ function ciz(){
   root.innerHTML=`<div class="app">
     <aside class="side" id="side">
       <div class="logo"><div class="m"><span>TS</span></div>
-        <div class="t">TShift<small>Anadolu ÇM</small></div></div>
+        <div class="t">TShift<small>Teknovisor</small></div></div>
       <nav class="nav" id="nav"></nav>
       <div class="whoami">
         <div class="av">${S.rol==='calisan'?'SA':'MK'}</div>

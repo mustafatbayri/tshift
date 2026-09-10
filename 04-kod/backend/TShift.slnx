@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TShift.Api/TShift.Api.csproj" />
+    <Project Path="src/TShift.Domain/TShift.Domain.csproj" />
+    <Project Path="src/TShift.Infrastructure/TShift.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TShift.Tests/TShift.Tests.csproj" />
+  </Folder>
+</Solution>
