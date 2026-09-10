@@ -1,8 +1,13 @@
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TShift.Domain.Calisanlar;
 using TShift.Domain.Kimlik;
 using TShift.Domain.Kiracilar;
 using TShift.Domain.Organizasyon;
+using TShift.Infrastructure.Kimlik;
 using TShift.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +23,20 @@ var builder = WebApplication.CreateBuilder(args);
 var parola = Environment.GetEnvironmentVariable("APP_DB_PASSWORD") ?? "tshift_app_dev_2026";
 var baglantiDizesi = builder.Configuration.GetConnectionString("TShift")!.Replace("{APP_DB_PASSWORD}", parola);
 
+// ---- Kimlik ayarları -------------------------------------------------------
+// JWT imza anahtarı da bir sırdır ve aynı kurala tabidir.
+// Canlıda JWT_SECRET mutlaka verilir; aşağıdaki değer yalnız yerel geliştirme içindir.
+var imzaAnahtari = Environment.GetEnvironmentVariable("JWT_SECRET")
+    ?? "yerel-gelistirme-imza-anahtari-en-az-32-bayt-olmali!";
+
+var kimlikAyarlari = new KimlikAyarlari { ImzaAnahtari = imzaAnahtari };
+
+builder.Services.AddSingleton(kimlikAyarlari);
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<IParolaServisi, ParolaServisi>();
+builder.Services.AddSingleton<IJetonServisi, JetonServisi>();
+builder.Services.AddScoped<IKimlikServisi, KimlikServisi>();
+
 builder.Services.AddScoped<IKiraciBaglami, KiraciBaglami>();
 builder.Services.AddScoped<KiraciBaglantiKesici>();
 
@@ -28,20 +47,48 @@ builder.Services.AddDbContext<TShiftDbContext>((sp, opt) =>
     if (builder.Environment.IsDevelopment()) opt.EnableSensitiveDataLogging();
 });
 
+// ---- JWT doğrulama ---------------------------------------------------------
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = kimlikAyarlari.Yayinci,
+            ValidateAudience = true,
+            ValidAudience = kimlikAyarlari.Hedef,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(imzaAnahtari)),
+            ValidateLifetime = true,
+            // Varsayılan 5 dakikalık tolerans, 15 dakikalık jetonu 20 dakika
+            // yaşatır. Süre gerçekten süre olsun.
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
 builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // ---- Kiracı bağlamı --------------------------------------------------------
-// GEÇİCİ: kiracı şimdilik X-Tenant-Id başlığından okunuyor.
-// Kimlik katmanı devreye girince JWT'den okunacak ve bu ara katman silinecek.
-// Spec §10: "tenant_id token'dan okunur, istekten değil."
+// Kiracı kimliği İMZALI JETONDAN okunur. Spec §10: "tenant_id token'dan okunur,
+// istekten değil."
+//
+// Eskiden burada X-Tenant-Id başlığı okunuyordu ve bu, kimlik katmanı gelene
+// kadar bilerek kabul edilmiş geçici bir açıktı: başlığı isteyen istediği gibi
+// yazabilir. Artık kiracı, sunucunun imzaladığı ve kullanıcının değiştiremediği
+// bir jetondan geliyor.
 app.Use(async (ctx, next) =>
 {
-    if (ctx.Request.Headers.TryGetValue("X-Tenant-Id", out var ham)
-        && Guid.TryParse(ham.ToString(), out var kid))
-    {
+    var ham = ctx.User.FindFirstValue(JetonServisi.KiraciTalebi);
+    if (ctx.User.Identity?.IsAuthenticated == true && Guid.TryParse(ham, out var kid))
         ctx.RequestServices.GetRequiredService<IKiraciBaglami>().Ayarla(kid);
-    }
+
     await next();
 });
 
@@ -55,13 +102,60 @@ app.MapGet("/health/db", async (TShiftDbContext db) =>
     return Results.Ok(new { veritabani = acilabilir ? "bagli" : "baglanamadi", kiraciSayisi });
 });
 
+// ---- Kimlik ---------------------------------------------------------------
+// Not: giriş isteği firma kısa adını da taşır. Sebebi veri modeli: e-posta
+// (kiraci_id, eposta) çifti içinde benzersiz, tek başına değil. Aynı kişi iki
+// ayrı firmada kullanıcı olabilir. Canlıda bu değer alt alan adından
+// (anadolu-cm.tshift.com) gelecek ve kullanıcı hiç yazmayacak.
+app.MapPost("/api/v1/auth/login", async (GirisIstegi istek, IKimlikServisi kimlik, HttpContext ctx) =>
+{
+    var sonuc = await kimlik.GirisAsync(
+        istek.Firma, istek.Eposta, istek.Parola,
+        ctx.Connection.RemoteIpAddress?.ToString(),
+        ctx.Request.Headers.UserAgent.ToString());
+
+    return sonuc.Basarili ? Results.Ok(Cevap(sonuc)) : Hata(sonuc.Hata);
+});
+
+app.MapPost("/api/v1/auth/refresh", async (YenilemeIstegi istek, IKimlikServisi kimlik, HttpContext ctx) =>
+{
+    var sonuc = await kimlik.YenileAsync(
+        istek.YenilemeJetonu,
+        ctx.Connection.RemoteIpAddress?.ToString(),
+        ctx.Request.Headers.UserAgent.ToString());
+
+    return sonuc.Basarili ? Results.Ok(Cevap(sonuc)) : Hata(sonuc.Hata);
+});
+
+app.MapPost("/api/v1/auth/logout", async (YenilemeIstegi istek, IKimlikServisi kimlik) =>
+{
+    await kimlik.CikisAsync(istek.YenilemeJetonu);
+    // Çıkış her zaman başarılı görünür: "bu jeton geçerli miydi" bilgisi
+    // dışarıya verilmez.
+    return Results.Ok(new { mesaj = "Cikis yapildi." });
+});
+
+app.MapGet("/api/v1/me", async (TShiftDbContext db, HttpContext ctx) =>
+{
+    var kid = ctx.User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+    if (!Guid.TryParse(kid, out var kullaniciId)) return Results.Unauthorized();
+
+    var k = await db.Kullanicilar
+        .Where(x => x.Id == kullaniciId)
+        .Select(x => new { x.Id, x.Ad, x.Soyad, x.Eposta, x.KiraciId, x.SonGiris, x.Durum })
+        .FirstOrDefaultAsync();
+
+    return k is null ? Results.Unauthorized() : Results.Ok(k);
+}).RequireAuthorization();
+
 // ---- Geliştirme: örnek veri ------------------------------------------------
 // İKİ kiracı oluşturur. Amaç: çok kiracılık yalıtımını gözle görebilmek.
-app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam) =>
+app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam, IParolaServisi parolalar) =>
 {
     if (await db.Kiracilar.AnyAsync())
         return Results.Conflict(new { mesaj = "Örnek veri zaten var. Sıfırlamak için: docker compose down -v" });
 
+    const string ornekParola = "TShift2026!Deneme";
     var sonuc = new List<object>();
 
     foreach (var (ad, slug, sektor, birim, kisiler) in new[]
@@ -88,10 +182,19 @@ app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam) =>
         var ekip = new Ekip { DepartmanId = dep.Id, Ad = "Müşteri Hizmetleri", Kod = "MH" };
         db.Ekipler.Add(ekip);
 
-        db.Kullanicilar.Add(new Kullanici
+        var yonetici = new Kullanici
         {
             Ad = "Murat", Soyad = "Kaya", Eposta = $"mudur@{slug}.test",
             EpostaDogrulandi = true, Durum = KullaniciDurumu.Aktif
+        };
+        db.Kullanicilar.Add(yonetici);
+        await db.SaveChangesAsync();
+
+        // Parola ayrı tabloda ve özetlenmiş olarak durur.
+        db.KullaniciKimlikBilgileri.Add(new KullaniciKimlikBilgisi
+        {
+            KullaniciId = yonetici.Id,
+            SifreHash = parolalar.Ozetle(ornekParola)
         });
         await db.SaveChangesAsync();
 
@@ -114,14 +217,14 @@ app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam) =>
         }
         await db.SaveChangesAsync();
 
-        sonuc.Add(new { kiraci = ad, id = kiraci.Id, calisan = kisiler.Length });
+        sonuc.Add(new { kiraci = ad, firma = slug, id = kiraci.Id, eposta = yonetici.Eposta, calisan = kisiler.Length });
     }
 
     baglam.Ayarla(null);
-    return Results.Ok(new { mesaj = "Örnek veri oluşturuldu", kiracilar = sonuc });
+    return Results.Ok(new { mesaj = "Örnek veri oluşturuldu", parola = ornekParola, kiracilar = sonuc });
 });
 
-// Kiracı listesi — kiracı tablosu filtreye tabi değil (kimlik katmanına kadar açık).
+// Kiracı listesi — kiracı tablosu filtreye tabi değil (yönetim ucu, sürüm öncesi silinecek).
 app.MapGet("/dev/tenants", async (TShiftDbContext db) =>
     await db.Kiracilar.OrderBy(k => k.Ad)
         .Select(k => new { k.Id, k.Ad, k.Slug, k.SektorPaketi, k.BirimAdi })
@@ -130,9 +233,6 @@ app.MapGet("/dev/tenants", async (TShiftDbContext db) =>
 // ---- Çalışanlar ------------------------------------------------------------
 app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam) =>
 {
-    if (baglam.KiraciId is null)
-        return Results.BadRequest(new { mesaj = "X-Tenant-Id başlığı gerekli." });
-
     var liste = await db.Calisanlar
         .OrderBy(c => c.Ad).ThenBy(c => c.Soyad)
         .Select(c => new
@@ -144,6 +244,41 @@ app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam
         .ToListAsync();
 
     return Results.Ok(new { kiraciId = baglam.KiraciId, adet = liste.Count, kayitlar = liste });
-});
+}).RequireAuthorization();
 
 app.Run();
+
+// ---- Yardımcılar -----------------------------------------------------------
+static object Cevap(OturumSonucu s) => new
+{
+    erisimJetonu = s.ErisimJetonu,
+    yenilemeJetonu = s.YenilemeJetonu,
+    bitis = s.ErisimBitis,
+    kullaniciId = s.KullaniciId,
+    kiraciId = s.KiraciId,
+    zorunluParolaDegisimi = s.ZorunluParolaDegisimi
+};
+
+// Hata kodları kasten kaba: "e-posta yok" ile "parola yanlış" ayrımı dışarı
+// verilmez, yoksa saldırgan hangi e-postaların kayıtlı olduğunu öğrenir.
+static IResult Hata(KimlikHatasi h) => h switch
+{
+    KimlikHatasi.Kilitli => Results.Json(
+        new { kod = "COK_FAZLA_DENEME", mesaj = "Cok fazla basarisiz deneme. Bir sure sonra tekrar deneyin." },
+        statusCode: StatusCodes.Status429TooManyRequests),
+
+    KimlikHatasi.JetonYenidenKullanildi => Results.Json(
+        new { kod = "OTURUM_GUVENLIGI", mesaj = "Oturum guvenligi nedeniyle tum oturumlar kapatildi. Tekrar giris yapin." },
+        statusCode: StatusCodes.Status401Unauthorized),
+
+    KimlikHatasi.HesapPasif => Results.Json(
+        new { kod = "HESAP_PASIF", mesaj = "Hesap aktif degil." },
+        statusCode: StatusCodes.Status403Forbidden),
+
+    _ => Results.Json(
+        new { kod = "KIMLIK_GECERSIZ", mesaj = "Firma, e-posta veya parola hatali." },
+        statusCode: StatusCodes.Status401Unauthorized)
+};
+
+public sealed record GirisIstegi(string Firma, string Eposta, string Parola);
+public sealed record YenilemeIstegi(string YenilemeJetonu);

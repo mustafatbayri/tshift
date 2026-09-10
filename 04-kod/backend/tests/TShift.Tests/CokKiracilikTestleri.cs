@@ -87,6 +87,8 @@ public class CokKiracilikTestleri
             await using var dbk = Baglam(bk);
 
             // Sıra önemli: önce en derindeki çocuk, sonra yukarı doğru.
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM refresh_tokens WHERE tenant_id = {k}");
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_credentials WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM employee_contracts WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM employees WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM teams WHERE tenant_id = {k}");

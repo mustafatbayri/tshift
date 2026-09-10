@@ -4,6 +4,34 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-10 · Kimlik katmanı — `X-Tenant-Id` başlığı kaldırıldı**
+Kiracı kimliği artık sunucunun imzaladığı JWT'den okunuyor; istemcinin
+yazdığı başlıktan değil (spec §10). Önceki hali bilerek kabul edilmiş geçici
+bir açıktı — isteyen istediği firmanın kimliğini yazabiliyordu.
+Eklenenler: Argon2id parola saklama (64 MB/3/4), 15 dakikalık erişim jetonu,
+30 günlük **döner** yenileme jetonu, jeton yeniden kullanım tespiti
+(çalınırsa o kullanıcının tüm oturumları düşer), 5 deneme / 15 dakika kaba
+kuvvet kilidi. Uçlar: `/auth/login`, `/auth/refresh`, `/auth/logout`, `/me`.
+7 yeni test; toplam 12/12 yeşil.
+→ `04-kod/backend/src/TShift.Infrastructure/Kimlik/`, `04-kod/db/rls/03-kimlik-tablolari.sql`
+
+**2026-09-10 · Karar: `login_attempts` bilerek RLS dışında**
+Kaba kuvvet sayacı, kiracının kim olduğu bilinmeden yazılmak zorunda — aksi
+halde saldırgan var olmayan bir firma adı yazarak kilidi tamamen atlar.
+Tablo hiçbir API ucundan dışarı açılmaz; parola ya da jeton içermez.
+Gerekçe hem koda hem SQL betiğine yazıldı ki ileride "RLS unutulmuş" diye
+düzeltilmesin.
+
+**2026-09-10 · Karar: giriş isteği firma kısa adını taşır**
+`users` benzersizliği `(tenant_id, eposta)` olduğu için e-posta tek başına
+kimlik değil; aynı kişi iki firmada kullanıcı olabilir. Canlıda firma alt
+alan adından gelecek (`anadolu-cm.tshift.com`), kullanıcı yazmayacak.
+
+**2026-09-10 · Not: makinede Windows PowerShell 5.1 var, 7 değil**
+Betikler 5.1 uyumlu yazılacak (`-SkipHttpErrorCheck` gibi 7'ye özgü
+parametreler kullanılmayacak) ve `.ps1` dosyaları saf ASCII olacak — 5.1
+betikleri ANSI okuyor, UTF-8 türkçe karakterler ayrıştırıcıyı bozuyor.
+
 **2026-09-10 · Dikey dilim 1: çok kiracılık yalıtımı ayakta**
 Veritabanı, alan modeli, EF katmanı, RLS, API ve testler uçtan uca bağlandı.
 7 tablo, ilk migration (`20260910002040_Ilk`), 5 test yeşil.
