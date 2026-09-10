@@ -179,9 +179,14 @@ Kapsam dışı üç tablo ve gerekçeleri `DenetimToplayici` içinde yazılı.
 ## Testler
 
 ```powershell
-cd backend
-dotnet test
+.\TEST.ps1
 ```
+
+Betik önce çalışan API'yi durdurur, veritabanı kapalıysa açar, sonra testleri
+koşar. Doğrudan `cd backend; dotnet test` de çalışır — ama API açıksa
+derleyici DLL'leri değiştiremez ve "dosya başka bir süreç tarafından
+kullanılıyor" hatası alırsın. Hata kodla ilgili değildir; yalnız zaman
+kaybettirir.
 
 Veritabanı ayakta olmalı — testler gerçek PostgreSQL'e bağlanır, taklit
 kullanmaz. Yalıtımın gerçekten çalıştığını ancak gerçek veritabanı gösterebilir.
