@@ -17,6 +17,11 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
     public DbSet<Calisan> Calisanlar => Set<Calisan>();
     public DbSet<CalisanSozlesmesi> CalisanSozlesmeleri => Set<CalisanSozlesmesi>();
 
+    // Kimlik katmanı
+    public DbSet<KullaniciKimlikBilgisi> KullaniciKimlikBilgileri => Set<KullaniciKimlikBilgisi>();
+    public DbSet<YenilemeJetonu> YenilemeJetonlari => Set<YenilemeJetonu>();
+    public DbSet<GirisDenemesi> GirisDenemeleri => Set<GirisDenemesi>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.HasDefaultSchema("public");
@@ -25,6 +30,10 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
         // SAVUNMANIN BİRİNCİ KATMANI: küresel sorgu filtresi.
         // IKiraciVarligi uygulayan her varlık otomatik olarak kiracıyla filtrelenir.
         // Yeni tablo eklendiğinde arayüzü uygulamak yeterli; filtre yazmayı unutmak diye bir şey olmaz.
+        //
+        // Not: GirisDenemesi (login_attempts) bilerek bu arayüzü uygulamaz — giriş
+        // denemesi, kiracının kim olduğu bilinmeden kaydedilmek zorunda. Ayrıntı
+        // için o sınıfın açıklamasına bak.
         foreach (var et in b.Model.GetEntityTypes())
         {
             if (!typeof(IKiraciVarligi).IsAssignableFrom(et.ClrType)) continue;
