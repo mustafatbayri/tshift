@@ -4,6 +4,7 @@ using TShift.Domain.Common;
 using TShift.Domain.Kimlik;
 using TShift.Domain.Kiracilar;
 using TShift.Domain.Organizasyon;
+using TShift.Domain.Yetki;
 
 namespace TShift.Infrastructure.Persistence;
 
@@ -22,6 +23,13 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
     public DbSet<YenilemeJetonu> YenilemeJetonlari => Set<YenilemeJetonu>();
     public DbSet<GirisDenemesi> GirisDenemeleri => Set<GirisDenemesi>();
 
+    // Yetki katmanı
+    public DbSet<Rol> Roller => Set<Rol>();
+    public DbSet<Izin> Izinler => Set<Izin>();
+    public DbSet<RolIzni> RolIzinleri => Set<RolIzni>();
+    public DbSet<KullaniciRolu> KullaniciRolleri => Set<KullaniciRolu>();
+    public DbSet<KullaniciKapsami> KullaniciKapsamlari => Set<KullaniciKapsami>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.HasDefaultSchema("public");
@@ -31,9 +39,10 @@ public class TShiftDbContext(DbContextOptions<TShiftDbContext> options, IKiraciB
         // IKiraciVarligi uygulayan her varlık otomatik olarak kiracıyla filtrelenir.
         // Yeni tablo eklendiğinde arayüzü uygulamak yeterli; filtre yazmayı unutmak diye bir şey olmaz.
         //
-        // Not: GirisDenemesi (login_attempts) bilerek bu arayüzü uygulamaz — giriş
-        // denemesi, kiracının kim olduğu bilinmeden kaydedilmek zorunda. Ayrıntı
-        // için o sınıfın açıklamasına bak.
+        // Bu arayüzü BİLEREK uygulamayan iki tablo var:
+        //   GirisDenemesi (login_attempts) — kiracı bilinmeden yazılır
+        //   Izin (permissions)             — müşteri verisi değil, sistem sözlüğü
+        // Gerekçeler ilgili sınıfların açıklamalarında.
         foreach (var et in b.Model.GetEntityTypes())
         {
             if (!typeof(IKiraciVarligi).IsAssignableFrom(et.ClrType)) continue;
