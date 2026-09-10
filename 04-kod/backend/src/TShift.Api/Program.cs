@@ -9,6 +9,8 @@ using TShift.Domain.Kiracilar;
 using TShift.Domain.Organizasyon;
 using TShift.Infrastructure.Kimlik;
 using TShift.Infrastructure.Persistence;
+using TShift.Domain.Yetki;
+using TShift.Infrastructure.Yetki;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,8 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IParolaServisi, ParolaServisi>();
 builder.Services.AddSingleton<IJetonServisi, JetonServisi>();
 builder.Services.AddScoped<IKimlikServisi, KimlikServisi>();
+builder.Services.AddScoped<IYetkiCozucu, YetkiCozucu>();
+builder.Services.AddScoped<IKiraciKurulumServisi, KiraciKurulumServisi>();
 
 builder.Services.AddScoped<IKiraciBaglami, KiraciBaglami>();
 builder.Services.AddScoped<KiraciBaglantiKesici>();
@@ -52,6 +56,19 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
+        // Jetondaki talep adlarına DOKUNMA.
+        //
+        // Varsayılan davranış, gelen jetonun standart taleplerini eski
+        // Microsoft/WS-Federation şemalarına çevirir: `sub` talebi
+        // `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier`
+        // adını alır. Sonuç: jeton geçerlidir, kullanıcı doğrulanmıştır, ama
+        // kodda `FindFirstValue("sub")` diye arayınca null gelir ve uç sessizce
+        // "yetkisiz" der. Hata mesajı da yanıltıcıdır — sorun kimlikte değil,
+        // isimlendirmede.
+        //
+        // Kapatıyoruz: jetona ne yazdıysak onu okuyoruz.
+        o.MapInboundClaims = false;
+
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -61,13 +78,21 @@ builder.Services
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(imzaAnahtari)),
             ValidateLifetime = true,
+            NameClaimType = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub,
             // Varsayılan 5 dakikalık tolerans, 15 dakikalık jetonu 20 dakika
             // yaşatır. Süre gerçekten süre olsun.
             ClockSkew = TimeSpan.Zero
         };
     });
 
-builder.Services.AddAuthorization();
+// Her izin kodu için bir politika. Uçlar `.RequireAuthorization("plan.uret")`
+// diyerek korunur; yetki kontrolü tek yerde, uç kodunun içinde dağınık
+// `if (yetkisi var mi)` kontrolleri olmadan yapılır.
+builder.Services.AddAuthorization(o =>
+{
+    foreach (var izin in YetkiKatalogu.Izinler)
+        o.AddPolicy(izin.Kod, p => p.RequireClaim(JetonServisi.IzinTalebi, izin.Kod));
+});
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
@@ -135,7 +160,7 @@ app.MapPost("/api/v1/auth/logout", async (YenilemeIstegi istek, IKimlikServisi k
     return Results.Ok(new { mesaj = "Cikis yapildi." });
 });
 
-app.MapGet("/api/v1/me", async (TShiftDbContext db, HttpContext ctx) =>
+app.MapGet("/api/v1/me", async (TShiftDbContext db, IYetkiCozucu yetkiler, HttpContext ctx) =>
 {
     var kid = ctx.User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
     if (!Guid.TryParse(kid, out var kullaniciId)) return Results.Unauthorized();
@@ -145,12 +170,27 @@ app.MapGet("/api/v1/me", async (TShiftDbContext db, HttpContext ctx) =>
         .Select(x => new { x.Id, x.Ad, x.Soyad, x.Eposta, x.KiraciId, x.SonGiris, x.Durum })
         .FirstOrDefaultAsync();
 
-    return k is null ? Results.Unauthorized() : Results.Ok(k);
+    if (k is null) return Results.Unauthorized();
+
+    // Arayüz hangi menüyü göstereceğini buradan öğrenir. Gizleme bir güvenlik
+    // önlemi değildir — asıl kontrol sunucuda; bu yalnız kullanıcıya
+    // yapamayacağı düğmeleri göstermemek için.
+    var y = await yetkiler.CozAsync(kullaniciId);
+
+    return Results.Ok(new
+    {
+        k.Id, k.Ad, k.Soyad, k.Eposta, k.KiraciId, k.SonGiris, k.Durum,
+        kapsam = y.Seviye.ToString(),
+        izinler = y.Izinler.OrderBy(i => i).ToArray(),
+        departmanSayisi = y.DepartmanIds.Count,
+        ekipSayisi = y.EkipIds.Count
+    });
 }).RequireAuthorization();
 
 // ---- Geliştirme: örnek veri ------------------------------------------------
 // İKİ kiracı oluşturur. Amaç: çok kiracılık yalıtımını gözle görebilmek.
-app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam, IParolaServisi parolalar) =>
+app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam,
+    IParolaServisi parolalar, IKiraciKurulumServisi kurulum) =>
 {
     if (await db.Kiracilar.AnyAsync())
         return Results.Conflict(new { mesaj = "Örnek veri zaten var. Sıfırlamak için: docker compose down -v" });
@@ -158,12 +198,10 @@ app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam, IParo
     const string ornekParola = "TShift2026!Deneme";
     var sonuc = new List<object>();
 
-    foreach (var (ad, slug, sektor, birim, kisiler) in new[]
+    foreach (var (ad, slug, sektor, birim) in new[]
     {
-        ("Anadolu Çağrı Merkezi", "anadolu-cm", "cagri_merkezi", "Departman",
-            new[] { ("A4101", "Mert", "Kaya"), ("A4102", "Selin", "Arslan"), ("A4103", "Burak", "Demir") }),
-        ("Marmara Perakende", "marmara-perakende", "perakende", "Şube",
-            new[] { ("P7001", "Ayşe", "Yıldız"), ("P7002", "Emre", "Doğan") }),
+        ("Anadolu Çağrı Merkezi", "anadolu-cm", "cagri_merkezi", "Departman"),
+        ("Marmara Perakende", "marmara-perakende", "perakende", "Şube"),
     })
     {
         // Kiracı kaydının kendisi kiracıya ait değildir; bağlamı boşaltarak yazıyoruz.
@@ -175,39 +213,40 @@ app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam, IParo
         // Bundan sonrası o kiracının bağlamında.
         baglam.Ayarla(kiraci.Id);
 
-        var dep = new Departman { Ad = birim == "Şube" ? "Kadıköy Şubesi" : "Çağrı Merkezi Operasyon", Kod = "OPS", CalismaTipi = CalismaTipi.Saatli, AcilisSaat = 8m, KapanisSaat = 24m };
+        // Sistem rolleri her yeni kiracıya kurulur.
+        await kurulum.SistemRolleriniKurAsync(kiraci.Id);
+
+        var dep = new Departman
+        {
+            Ad = birim == "Şube" ? "Kadıköy Şubesi" : "Çağrı Merkezi Operasyon",
+            Kod = "OPS", CalismaTipi = CalismaTipi.Saatli, AcilisSaat = 8m, KapanisSaat = 24m
+        };
         db.Departmanlar.Add(dep);
         await db.SaveChangesAsync();
 
-        var ekip = new Ekip { DepartmanId = dep.Id, Ad = "Müşteri Hizmetleri", Kod = "MH" };
-        db.Ekipler.Add(ekip);
-
-        var yonetici = new Kullanici
-        {
-            Ad = "Murat", Soyad = "Kaya", Eposta = $"mudur@{slug}.test",
-            EpostaDogrulandi = true, Durum = KullaniciDurumu.Aktif
-        };
-        db.Kullanicilar.Add(yonetici);
+        // İKİ ekip: kapsam sınırının gerçekten iş gördüğünü görebilmek için.
+        var gunduz = new Ekip { DepartmanId = dep.Id, Ad = "Gündüz Ekibi", Kod = "GND" };
+        var gece   = new Ekip { DepartmanId = dep.Id, Ad = "Akşam Ekibi",  Kod = "AKS" };
+        db.Ekipler.AddRange(gunduz, gece);
         await db.SaveChangesAsync();
 
-        // Parola ayrı tabloda ve özetlenmiş olarak durur.
-        db.KullaniciKimlikBilgileri.Add(new KullaniciKimlikBilgisi
-        {
-            KullaniciId = yonetici.Id,
-            SifreHash = parolalar.Ozetle(ornekParola)
-        });
-        await db.SaveChangesAsync();
+        var kisiler = slug == "anadolu-cm"
+            ? new[] { ("A4101", "Mert", "Kaya", gunduz.Id), ("A4102", "Selin", "Arslan", gunduz.Id),
+                      ("A4103", "Burak", "Demir", gece.Id) }
+            : new[] { ("P7001", "Ayşe", "Yıldız", gunduz.Id), ("P7002", "Emre", "Doğan", gece.Id) };
 
-        foreach (var (no, cad, csoyad) in kisiler)
+        var calisanlar = new List<Calisan>();
+        foreach (var (no, cad, csoyad, ekipId) in kisiler)
         {
             var c = new Calisan
             {
                 PersonelNo = no, Ad = cad, Soyad = csoyad,
-                DepartmanId = dep.Id, BirincilEkipId = ekip.Id,
+                DepartmanId = dep.Id, BirincilEkipId = ekipId,
                 IseGiris = new DateOnly(2024, 1, 15), Durum = CalisanDurumu.Aktif
             };
             db.Calisanlar.Add(c);
             await db.SaveChangesAsync();
+            calisanlar.Add(c);
 
             db.CalisanSozlesmeleri.Add(new CalisanSozlesmesi
             {
@@ -217,7 +256,49 @@ app.MapPost("/dev/seed", async (TShiftDbContext db, IKiraciBaglami baglam, IParo
         }
         await db.SaveChangesAsync();
 
-        sonuc.Add(new { kiraci = ad, firma = slug, id = kiraci.Id, eposta = yonetici.Eposta, calisan = kisiler.Length });
+        // Dört farklı roldeki kullanıcı — yetki farkını gözle görmek için.
+        async Task<Kullanici> KullaniciKur(string kad, string ksoyad, string onek,
+                                            string rolKodu, Guid? calisanId = null)
+        {
+            var u = new Kullanici
+            {
+                Ad = kad, Soyad = ksoyad, Eposta = $"{onek}@{slug}.test",
+                EpostaDogrulandi = true, Durum = KullaniciDurumu.Aktif,
+                CalisanId = calisanId
+            };
+            db.Kullanicilar.Add(u);
+            await db.SaveChangesAsync();
+
+            db.KullaniciKimlikBilgileri.Add(new KullaniciKimlikBilgisi
+            {
+                KullaniciId = u.Id,
+                SifreHash = parolalar.Ozetle(ornekParola)
+            });
+            await db.SaveChangesAsync();
+
+            await kurulum.RolAtaAsync(u.Id, rolKodu);
+            return u;
+        }
+
+        await KullaniciKur("Murat", "Kaya", "mudur", YetkiKatalogu.KiraciYonetici);
+
+        // Şefin kapsamı YALNIZ gündüz ekibi.
+        var sef = await KullaniciKur("Sema", "Toprak", "sef", YetkiKatalogu.Sef);
+        await kurulum.KapsamEkleAsync(sef.Id, KapsamTipi.Ekip, gunduz.Id);
+
+        // Çalışan kullanıcısı ilk çalışan kaydına bağlı.
+        await KullaniciKur(calisanlar[0].Ad, calisanlar[0].Soyad, "calisan",
+                           YetkiKatalogu.Calisan, calisanlar[0].Id);
+
+        await KullaniciKur("Deniz", "Ak", "izleyici", YetkiKatalogu.Izleyici);
+
+        sonuc.Add(new
+        {
+            kiraci = ad, firma = slug, id = kiraci.Id,
+            calisan = kisiler.Length,
+            kullanicilar = new[] { $"mudur@{slug}.test", $"sef@{slug}.test",
+                                   $"calisan@{slug}.test", $"izleyici@{slug}.test" }
+        });
     }
 
     baglam.Ayarla(null);
@@ -231,9 +312,18 @@ app.MapGet("/dev/tenants", async (TShiftDbContext db) =>
         .ToListAsync());
 
 // ---- Çalışanlar ------------------------------------------------------------
-app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam) =>
+app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam,
+    IYetkiCozucu yetkiler, HttpContext ctx) =>
 {
+    var kid = ctx.User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+    if (!Guid.TryParse(kid, out var kullaniciId)) return Results.Unauthorized();
+
+    // İzin kontrolünü politika yaptı ("bu kişi çalışan görebilir mi").
+    // Burada kapsam uygulanıyor ("hangi çalışanları görebilir").
+    var yetki = await yetkiler.CozAsync(kullaniciId);
+
     var liste = await db.Calisanlar
+        .KapsamUygula(yetki)
         .OrderBy(c => c.Ad).ThenBy(c => c.Soyad)
         .Select(c => new
         {
@@ -243,8 +333,14 @@ app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam
         })
         .ToListAsync();
 
-    return Results.Ok(new { kiraciId = baglam.KiraciId, adet = liste.Count, kayitlar = liste });
-}).RequireAuthorization();
+    return Results.Ok(new
+    {
+        kiraciId = baglam.KiraciId,
+        kapsam = yetki.Seviye.ToString(),
+        adet = liste.Count,
+        kayitlar = liste
+    });
+}).RequireAuthorization(YetkiKatalogu.CalisanGor);
 
 app.Run();
 
@@ -282,3 +378,12 @@ static IResult Hata(KimlikHatasi h) => h switch
 
 public sealed record GirisIstegi(string Firma, string Eposta, string Parola);
 public sealed record YenilemeIstegi(string YenilemeJetonu);
+
+/// <summary>
+/// Testlerin uygulamayı bellek içinde ayağa kaldırabilmesi için.
+///
+/// Üst düzey deyimlerle yazılan bir Program sınıfı varsayılan olarak
+/// `internal`dir; WebApplicationFactory ona ulaşamaz. Bu boş kısmi sınıf
+/// yalnızca görünürlüğü açar, başka hiçbir şey yapmaz.
+/// </summary>
+public partial class Program { }

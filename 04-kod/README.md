@@ -43,7 +43,7 @@ docker compose down -v      # SIFIRLA — veritabanını tamamen siler
 ```
 
 `down -v` sonrası kurulum sırası: `dotnet ef database update` → `01-rls.sql` →
-`02-uygulama-rolu.sql` → `03-kimlik-tablolari.sql`.
+`02-uygulama-rolu.sql` → `03-kimlik-tablolari.sql` → `04-yetki-tablolari.sql`.
 
 ## İki veritabanı rolü — dikkat
 
@@ -91,7 +91,7 @@ Açılışta yazılan `Now listening on: http://localhost:XXXX` satırındaki po
 | `POST /api/v1/auth/refresh` | Yenileme jetonu → yeni çift | — |
 | `POST /api/v1/auth/logout` | Bu oturumu kapatır | — |
 | `GET /api/v1/me` | Oturum sahibinin profili | gerekli |
-| `GET /api/v1/employees` | Çalışanlar | gerekli |
+| `GET /api/v1/employees` | Çalışanlar — kapsama göre filtreli | `calisan.gor` |
 | `POST /dev/seed` | İki örnek firma + kullanıcı + 5 çalışan | — |
 | `GET /dev/tenants` | Kiracı listesi | — |
 
@@ -120,6 +120,33 @@ gövdesinde duruyor.
 | Kaba kuvvet | Aynı e-posta veya IP için 5 başarısız denemede 15 dakika kilit |
 | İmza anahtarı | Ortam değişkeni `JWT_SECRET` — koda yazılmaz |
 
+### Roller ve kapsam (spec §3.2)
+
+İzin "neyi yapabilir", kapsam "nerede yapabilir" sorusunu cevaplar. İkisi ayrı.
+
+| Rol | Kapsam | İzin sayısı |
+|---|---|---|
+| `kiraci_yonetici` | Tüm kiracı | 18 |
+| `departman_muduru` | Kendi departman/ekipleri | 15 |
+| `sef` | Kendi ekipleri | 8 |
+| `calisan` | Yalnız kendi kaydı | 4 |
+| `izleyici` | Tüm kiracı, salt okunur | 2 |
+
+Sistem rolleri **her kiracıya ayrı ayrı kurulur** (`KiraciKurulumServisi`).
+İzin kataloğu (`permissions`) ise geneldir ve RLS dışındadır — içinde müşteri
+verisi yok, yalnız sistemin tanıdığı işlem kodları var.
+
+**Spec'ten bilinçli sapma:** spec §3.2 "kapsamı olmayan kullanıcı tüm kiracıyı
+görür" diyor. Uygulama tersini yapar: kapsam seviyesi `Kapsam` olup hiç kapsam
+satırı olmayan kullanıcı **hiçbir şey görmez**. Sebep, kapsamı atanmayı
+unutulan bir müdürün sessizce tüm firmayı görmesini engellemek. Y8 testi
+bunu sabitliyor.
+
+**İzinler jetonda taşınır.** Geri alınan bir yetki, kullanıcının elindeki jeton
+süresi dolana kadar (en fazla 15 dakika) etkili kalır. Acil iptalde o
+kullanıcının yenileme jetonları da düşürülmeli. Kapsam jetona konmaz, her
+istekte veritabanından okunur — kapsam değişikliği anında etkilidir.
+
 ## Testler
 
 ```powershell
@@ -129,6 +156,18 @@ dotnet test
 
 Veritabanı ayakta olmalı — testler gerçek PostgreSQL'e bağlanır, taklit
 kullanmaz. Yalıtımın gerçekten çalıştığını ancak gerçek veritabanı gösterebilir.
+
+| Sınıf | Ne sınar |
+|---|---|
+| `CokKiracilikTestleri` | Başka firmanın satırı hiç gelmiyor mu (RLS) |
+| `KimlikTestleri` | Parola, jeton, kilit, jeton hırsızlığı |
+| `YetkiTestleri` | İzin ve kapsam mantığı |
+| `HttpSinirTestleri` | Uygulamayı ayağa kaldırıp **gerçek istek** atar |
+
+Sonuncusu ayrı duruyor çünkü ayrı bir şey sınıyor: diğerleri servisleri
+doğrudan çağırıp katmanın **içini** doğrular; bu, katmanların **arasını**.
+10 Eylül'de 21 test yeşilken bütün korumalı uçlar 401 dönüyordu — hata
+mantıkta değil, JWT talep adlarındaydı ve hiçbir birim testi oraya bakmıyordu.
 
 ## Yalıtımı gözle görme
 
@@ -164,7 +203,8 @@ parametreler kullanılamaz.
 - [x] İlk migration: `tenants`, `users`, `departments`, `teams`, `employees`, `employee_contracts`
 - [x] Satır seviyesi güvenlik (RLS) ve çok kiracılık testleri — 5/5 yeşil
 - [x] Kimlik katmanı: giriş, jeton, döner yenileme, kaba kuvvet kilidi — 12/12 yeşil
-- [ ] Roller ve izinler: uçların izin koduyla korunması, departman/ekip kapsamı
+- [x] Roller ve izinler: izin politikaları, departman/ekip kapsamı — 26/26 yeşil
+- [ ] Kullanıcı ve rol yönetimi uçları (`/users`, `/users/{id}/roles`)
 - [ ] Çalışan API'si (yetkilendirme ile)
 - [ ] Çalışan ekranı (Next.js)
 - [ ] Yılmaz inceleme paketi

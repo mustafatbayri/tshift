@@ -4,12 +4,14 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TShift.Domain.Kimlik;
+using TShift.Domain.Yetki;
+using TShift.Infrastructure.Yetki;
 
 namespace TShift.Infrastructure.Kimlik;
 
 public interface IJetonServisi
 {
-    string ErisimJetonuUret(Kullanici kullanici);
+    string ErisimJetonuUret(Kullanici kullanici, KullaniciYetkisi yetki);
     (string HamJeton, string Ozet) YenilemeJetonuUret(Guid kiraciId);
     string Ozetle(string hamJeton);
     bool KiraciCoz(string hamJeton, out Guid kiraciId);
@@ -32,11 +34,13 @@ public interface IJetonServisi
 public sealed class JetonServisi(KimlikAyarlari ayarlar, TimeProvider saat) : IJetonServisi
 {
     public const string KiraciTalebi = "kiraci";
+    public const string IzinTalebi   = "izin";
+    public const string KapsamTalebi = "kapsam";
 
     private readonly SymmetricSecurityKey _anahtar =
         new(Encoding.UTF8.GetBytes(ayarlar.ImzaAnahtari));
 
-    public string ErisimJetonuUret(Kullanici kullanici)
+    public string ErisimJetonuUret(Kullanici kullanici, KullaniciYetkisi yetki)
     {
         var simdi = saat.GetUtcNow().UtcDateTime;
 
@@ -47,8 +51,22 @@ public sealed class JetonServisi(KimlikAyarlari ayarlar, TimeProvider saat) : IJ
             new(JwtRegisteredClaimNames.Email, kullanici.Eposta),
             new("ad", $"{kullanici.Ad} {kullanici.Soyad}"),
             // KRİTİK: kiracı kimliği burada. İstekten değil, imzalı jetondan okunur.
-            new(KiraciTalebi, kullanici.KiraciId.ToString())
+            new(KiraciTalebi, kullanici.KiraciId.ToString()),
+            new(KapsamTalebi, yetki.Seviye.ToString())
         };
+
+        // İzin kodları jetonun içinde taşınır (spec §7.4). Böylece her istekte
+        // yetki tablolarına gitmeye gerek kalmaz.
+        //
+        // BEDELİ: bir yetki geri alındığında, kullanıcının elindeki jeton
+        // süresi dolana kadar (en fazla 15 dakika) o yetkiyi taşımaya devam
+        // eder. Acil bir yetki iptalinde jeton süresini beklememek için o
+        // kullanıcının yenileme jetonlarını da düşürmek gerekir.
+        //
+        // Kapsam (hangi departman/ekip) jetona KONMAZ; her istekte
+        // veritabanından okunur. Sebep: kapsam listesi uzayabilir ve jetonu
+        // şişirir — ayrıca kapsam değişikliğinin anında etkili olması iyidir.
+        talepler.AddRange(yetki.Izinler.Select(i => new Claim(IzinTalebi, i)));
 
         var jeton = new JwtSecurityToken(
             issuer: ayarlar.Yayinci,

@@ -3,6 +3,7 @@ using TShift.Domain.Kimlik;
 using TShift.Domain.Kiracilar;
 using TShift.Infrastructure.Kimlik;
 using TShift.Infrastructure.Persistence;
+using TShift.Infrastructure.Yetki;
 using Xunit;
 
 namespace TShift.Tests;
@@ -50,7 +51,8 @@ public class KimlikTestleri
         var db = Baglam(baglam);
         var parolalar = new ParolaServisi();
         var jetonlar = new JetonServisi(Ayarlar, TimeProvider.System);
-        return (new KimlikServisi(db, baglam, parolalar, jetonlar, Ayarlar, TimeProvider.System), db, baglam);
+        var yetkiler = new YetkiCozucu(db, TimeProvider.System);
+        return (new KimlikServisi(db, baglam, parolalar, jetonlar, yetkiler, Ayarlar, TimeProvider.System), db, baglam);
     }
 
     /// <summary>Bir firma + bir kullanıcı + parola oluşturur. Slug'ı döner.</summary>
@@ -92,6 +94,10 @@ public class KimlikTestleri
             var bk = new KiraciBaglami();
             bk.Ayarla(k);
             await using var dbk = Baglam(bk);
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_scopes WHERE tenant_id = {k}");
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_roles WHERE tenant_id = {k}");
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM role_permissions WHERE tenant_id = {k}");
+            await dbk.Database.ExecuteSqlAsync($"DELETE FROM roles WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM refresh_tokens WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM user_credentials WHERE tenant_id = {k}");
             await dbk.Database.ExecuteSqlAsync($"DELETE FROM employee_contracts WHERE tenant_id = {k}");

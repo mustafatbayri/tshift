@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TShift.Domain.Kimlik;
 using TShift.Infrastructure.Persistence;
+using TShift.Infrastructure.Yetki;
 
 namespace TShift.Infrastructure.Kimlik;
 
@@ -55,6 +56,7 @@ public sealed class KimlikServisi(
     IKiraciBaglami baglam,
     IParolaServisi parolalar,
     IJetonServisi jetonlar,
+    IYetkiCozucu yetkiler,
     KimlikAyarlari ayarlar,
     TimeProvider saat) : IKimlikServisi
 {
@@ -142,7 +144,7 @@ public sealed class KimlikServisi(
         kullanici.SonGiris = simdi;
 
         await DenemeKaydet(firmaSlug, eposta, ip, tarayici, true, simdi, ct);
-        var sonuc = OturumAc(kullanici, null, ip, tarayici, simdi, kimlik.ZorunluDegisim);
+        var sonuc = await OturumAc(kullanici, null, ip, tarayici, simdi, kimlik.ZorunluDegisim, ct);
         await db.SaveChangesAsync(ct);
         return sonuc;
     }
@@ -190,7 +192,7 @@ public sealed class KimlikServisi(
         kayit.IptalSebebi = TShift.Domain.Kimlik.IptalSebebi.Kullanildi;
         kayit.SonKullanim = simdi;
 
-        var sonuc = OturumAc(kullanici, kayit.JetonOzeti, ip, tarayici, simdi, false);
+        var sonuc = await OturumAc(kullanici, kayit.JetonOzeti, ip, tarayici, simdi, false, ct);
         await db.SaveChangesAsync(ct);
         return sonuc;
     }
@@ -232,9 +234,12 @@ public sealed class KimlikServisi(
     }
 
     // ------------------------------------------------------------- yardımcı
-    private OturumSonucu OturumAc(Kullanici kullanici, string? oncekiOzet,
-        string? ip, string? tarayici, DateTimeOffset simdi, bool zorunluDegisim)
+    private async Task<OturumSonucu> OturumAc(Kullanici kullanici, string? oncekiOzet,
+        string? ip, string? tarayici, DateTimeOffset simdi, bool zorunluDegisim, CancellationToken ct)
     {
+        // İzinler jetona yazılacağı için giriş anında çözülür.
+        var yetki = await yetkiler.CozAsync(kullanici.Id, ct);
+
         var (ham, ozet) = jetonlar.YenilemeJetonuUret(kullanici.KiraciId);
 
         db.YenilemeJetonlari.Add(new YenilemeJetonu
@@ -251,7 +256,7 @@ public sealed class KimlikServisi(
 
         return new OturumSonucu(
             KimlikHatasi.Yok,
-            jetonlar.ErisimJetonuUret(kullanici),
+            jetonlar.ErisimJetonuUret(kullanici, yetki),
             ham,
             simdi.Add(ayarlar.ErisimOmru),
             kullanici.Id,

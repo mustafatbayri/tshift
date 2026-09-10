@@ -4,6 +4,54 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-10 · Mimari testleri ve risk dokümanı**
+Özellik değil **yasa** sınayan bir test katmanı eklendi: kiracıya ait her
+tabloda RLS açık mı, RLS dışı tablolar bilinen istisnalar mı, korumasız uç
+var mı, kültüre bağımlı `ToLower()` kullanılmış mı, ayar dosyasında sır var mı.
+Bunlar gelecekteki hatalara önceden konmuş bekçiler — bugün bir şey yakalamak
+için değil, altı ay sonra unutulacak bir kuralı hatırlatmak için varlar.
+`RISKLER-VE-ONLEMLER.md`: yapay zekâyla geliştirmede 15 hata sınıfı, hangisinin
+sessiz hangisinin gürültülü olduğu, gerçekten geri dönülmez dört şey, ve
+kırmızı çizgiler. **Açık madde: denetim kaydı (audit log) pilot öncesi
+yazılmalı — tutulmayan geçmiş sonradan üretilemez.**
+→ `RISKLER-VE-ONLEMLER.md`, `04-kod/backend/tests/TShift.Tests/MimariTestleri.cs`
+
+**2026-09-10 · Roller ve izinler — kapsam devrede**
+Spec §3.2 yetki matrisi koda geçti. 5 sistem rolü, 18 izin kodu, departman/ekip
+kapsamı, süreli yetki devri. Uçlar izin politikalarıyla korunuyor; çalışan
+listesi kapsama göre filtreleniyor. Aynı firmada müdür 3, şef 2, çalışan 1,
+izleyici 3 kayıt görüyor — izleyicide hiçbir yazma izni yok.
+9 yetki testi + 5 HTTP sınırı testi; toplam 26/26 yeşil.
+→ `04-kod/backend/src/TShift.Infrastructure/Yetki/`, `04-kod/db/rls/04-yetki-tablolari.sql`
+
+**2026-09-10 · SPEC'TEN BİLİNÇLİ SAPMA: kapsamsız kullanıcı hiçbir şey görmez** ⚑
+Spec §3.2: *"Kapsamı olmayan kullanıcı tüm kiracıyı görür."*
+Uygulama: kapsam seviyesi `Kapsam` olup hiç kapsam satırı olmayan kullanıcı
+**hiçbir şey görmez.**
+Gerekçe: kapsamı atanmayı unutulan bir departman müdürü, spec'teki davranışla
+sessizce tüm firmayı görürdü — yapılandırma eksikliğinin yetki genişlemesine
+dönüşmesi. Kiracı yöneticisi zaten `Kiraci` seviyesinde olduğu için spec'in
+asıl kastettiği durum bozulmuyor. Eksik yapılandırma artık "göremiyorum"
+şikâyeti üretir, sızıntı değil. Y8 testi bunu sabitliyor.
+
+**2026-09-10 · Karar: izin kodları jetonda, kapsam veritabanında**
+İzinler JWT'ye yazılıyor (spec §7.4) — bedeli: geri alınan bir yetki, jeton
+süresi dolana kadar (≤15 dk) taşınmaya devam eder; acil iptalde yenileme
+jetonları da düşürülmeli. Kapsam jetona konmadı, her istekte okunuyor:
+liste uzayabilir ve kapsam değişikliğinin anında etkili olması iyidir.
+
+**2026-09-10 · Bulunan hata: JWT `sub` talebi yeniden adlandırılıyordu** ⚠
+21 test yeşilken korumalı bütün uçlar 401 dönüyordu. JwtBearer, gelen jetonun
+`sub` talebini eski Microsoft şemasına çeviriyor; kod `sub` diye aradığı için
+kullanıcı kimliği null geliyor ve uç "yetkisiz" diyordu. Yetki mantığı
+doğruydu; kırılan yer iki katmanın buluştuğu sınırdı.
+Çözüm: `MapInboundClaims = false`.
+**Testler bunu yakalamadı** — hepsi servisleri doğrudan çağırıyordu, HTTP
+katmanından geçmiyordu. Yakalayan şey kanıt betiği oldu.
+Bu yüzden `HttpSinirTestleri` eklendi: uygulamayı bellek içinde ayağa kaldırıp
+gerçek istek atar. Ders: birim testi katmanın İÇİNİ, uçtan uca test
+katmanların ARASINI doğrular; biri diğerinin yerine geçmez.
+
 **2026-09-10 · Kimlik katmanı — `X-Tenant-Id` başlığı kaldırıldı**
 Kiracı kimliği artık sunucunun imzaladığı JWT'den okunuyor; istemcinin
 yazdığı başlıktan değil (spec §10). Önceki hali bilerek kabul edilmiş geçici

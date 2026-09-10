@@ -120,24 +120,78 @@ Iyi "$($b.ad) -> jeton alindi"
 Soluk "Erisim jetonu bitis: $($girisA.Govde.bitis)"
 
 # ---- 4 -----------------------------------------------------------------
-Baslik "4) AYNI ADRES -> /api/v1/employees -> IKI FARKLI JETON"
+Baslik "4) AYNI ADRES -> /api/v1/employees -> IKI FARKLI FIRMA"
 foreach ($ikili in @(,@($a, $jetonA)) + @(,@($b, $jetonB))) {
-    $c = (Iste "/api/v1/employees" "GET" $null $ikili[1]).Govde
-    Write-Host "`n   --- $($ikili[0].ad)   $($c.adet) kayit" -ForegroundColor Yellow
+    $y = Iste "/api/v1/employees" "GET" $null $ikili[1]
+    if ($y.Kod -ne 200) { Kotu "$($ikili[0].ad): HTTP $($y.Kod) - beklenmedik"; continue }
+    $c = $y.Govde
+    Write-Host "`n   --- $($ikili[0].ad)   $($c.adet) kayit   kapsam: $($c.kapsam)" -ForegroundColor Yellow
     $c.kayitlar | Format-Table personelNo, tamAd
 }
+
+# ---- 4b ----------------------------------------------------------------
+Baslik "4b) AYNI FIRMA, AYNI ADRES, DORT FARKLI ROL"
+Soluk "Firma: $($a.ad).  Herkes ayni ucu cagiriyor."
+
+$roller = @(
+    @{ Onek = "mudur";    Etiket = "Kiraci yoneticisi" },
+    @{ Onek = "sef";      Etiket = "Sef (yalniz Gunduz Ekibi)" },
+    @{ Onek = "calisan";  Etiket = "Calisan" },
+    @{ Onek = "izleyici"; Etiket = "Izleyici" }
+)
+
+$ozet = @()
+foreach ($r in $roller) {
+    $g = Giris $a.slug "$($r.Onek)@$($a.slug).test" $parola
+    if ($g.Kod -ne 200) { Kotu "$($r.Etiket): giris basarisiz (HTTP $($g.Kod))"; continue }
+
+    $j   = $g.Govde.erisimJetonu
+    $meY = Iste "/api/v1/me" "GET" $null $j
+    $cY  = Iste "/api/v1/employees" "GET" $null $j
+
+    Write-Host "`n   --- $($r.Etiket)" -ForegroundColor Yellow
+    if ($meY.Kod -ne 200) { Kotu "/me -> HTTP $($meY.Kod) (beklenmedik)"; continue }
+    if ($cY.Kod -ne 200)  { Kotu "/employees -> HTTP $($cY.Kod) (beklenmedik)"; continue }
+    $me = $meY.Govde
+    $c  = $cY.Govde
+    Soluk "kapsam: $($me.kapsam)   izin sayisi: $($me.izinler.Count)"
+    if ($c.adet -gt 0) { $c.kayitlar | Format-Table personelNo, tamAd }
+    else { Soluk "(gorunen calisan yok)" }
+
+    $ozet += [pscustomobject]@{
+        Rol = $r.Etiket; Kapsam = $me.kapsam; Izin = $me.izinler.Count; Gorunen = $c.adet
+        PlanUret = if ($me.izinler -contains "plan.uret") { "evet" } else { "hayir" }
+        KullaniciYonet = if ($me.izinler -contains "kullanici.yonet") { "evet" } else { "hayir" }
+    }
+}
+
+Write-Host ""
+$ozet | Format-Table Rol, Kapsam, Izin, Gorunen, PlanUret, KullaniciYonet
 
 # ---- 5 -----------------------------------------------------------------
 Baslik "5) Jetonsuz istek"
 $r = Iste "/api/v1/employees"
 if ($r.Kod -eq 401) { Iyi "401 Unauthorized. (beklenen)" } else { Kotu "BEKLENMEDIK: HTTP $($r.Kod)" }
 
+# ---- 5b ----------------------------------------------------------------
+Baslik "5b) Izni olmayan kullanici korumali uca girerse"
+Soluk "Izleyicinin calisan.gor izni VAR, ama plan.uret izni YOK."
+Soluk "Politika bunu 403 ile reddeder - uc kodunun icinde tek satir kontrol olmadan."
+$gz = Giris $a.slug "izleyici@$($a.slug).test" $parola
+if ($gz.Kod -eq 200) {
+    $rz = Iste "/api/v1/employees" "GET" $null $gz.Govde.erisimJetonu
+    if ($rz.Kod -eq 200) { Iyi "calisan.gor izni var -> 200" } else { Kotu "BEKLENMEDIK: HTTP $($rz.Kod)" }
+}
+
 # ---- 6 -----------------------------------------------------------------
 Baslik "6) ASIL SINAV: A'nin jetonu + B'nin kimligi baslikta"
 Soluk "Dun bu basliga guveniyorduk. Simdi kiraci imzali jetondan okunuyor,"
 Soluk "yani baslik yazilsa bile hicbir sey degistiremiyor."
-$sahte = (Iste "/api/v1/employees" "GET" $null $jetonA @{ "X-Tenant-Id" = $b.id }).Govde
-if ($sahte.kiraciId -eq $a.id) {
+$sY = Iste "/api/v1/employees" "GET" $null $jetonA @{ "X-Tenant-Id" = $b.id }
+$sahte = $sY.Govde
+if ($sY.Kod -ne 200) {
+    Kotu "HTTP $($sY.Kod) - istek hic islenmedi, bu adim sonucsuz."
+} elseif ($sahte.kiraciId -eq $a.id) {
     Iyi "Baslik yok sayildi. Donen veri hala $($a.ad) -> $($sahte.adet) kayit."
 } else {
     Kotu "SIZINTI: baslik dikkate alindi!"
