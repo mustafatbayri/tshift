@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using TShift.Domain.Calisanlar;
 using TShift.Domain.Yetki;
 
@@ -19,10 +20,18 @@ namespace TShift.Infrastructure.Yetki;
 /// </summary>
 public static class KapsamFiltresi
 {
-    public static IQueryable<Calisan> KapsamUygula(this IQueryable<Calisan> q, KullaniciYetkisi y)
+    /// <summary>
+    /// Sorgu için de tek kayıt kontrolü için de kullanılan TEK kural.
+    ///
+    /// İkisini ayrı ayrı yazmak, bu projenin risk dokümanındaki 4 numaralı
+    /// hata sınıfıdır: iki kopya zamanla ayrışır ve bir gün "listede
+    /// göremediğim ama oluşturabildiğim kayıt" ortaya çıkar. Tek ifade
+    /// yazıp birini derleyerek kullanıyoruz — ayrışma imkânsız.
+    /// </summary>
+    public static Expression<Func<Calisan, bool>> KapsamKurali(KullaniciYetkisi y)
         => y.Seviye switch
         {
-            KapsamSeviyesi.Kiraci => q,
+            KapsamSeviyesi.Kiraci => _ => true,
 
             // DİKKAT — SPEC'TEN BİLİNÇLİ SAPMA (spec §3.2 son notu).
             //
@@ -39,13 +48,27 @@ public static class KapsamFiltresi
             //
             // Sonuç: eksik yapılandırma "göremiyorum" diye şikâyete yol açar,
             // "her şeyi gördüm" diye sızıntıya değil.
-            KapsamSeviyesi.Kapsam => q.Where(c =>
+            KapsamSeviyesi.Kapsam => c =>
                 y.DepartmanIds.Contains(c.DepartmanId) ||
-                (c.BirincilEkipId != null && y.EkipIds.Contains(c.BirincilEkipId.Value))),
+                (c.BirincilEkipId != null && y.EkipIds.Contains(c.BirincilEkipId.Value)),
 
             // Kendi kaydı. Kullanıcı bir çalışana bağlı değilse hiçbir şey görmez.
-            KapsamSeviyesi.Kendi => q.Where(c => y.CalisanId != null && c.Id == y.CalisanId),
+            KapsamSeviyesi.Kendi => c => y.CalisanId != null && c.Id == y.CalisanId,
 
-            _ => q.Where(c => false)
+            _ => _ => false
         };
+
+    /// <summary>Listeleme: kapsam dışındaki satırlar hiç gelmez.</summary>
+    public static IQueryable<Calisan> KapsamUygula(this IQueryable<Calisan> q, KullaniciYetkisi y)
+        => q.Where(KapsamKurali(y));
+
+    /// <summary>
+    /// Yazma: "göremeyeceğin kaydı oluşturamazsın."
+    ///
+    /// Bir şef kendi kapsamı dışına çalışan eklerse, eklediği kaydı bir daha
+    /// göremez — kullanıcı için anlamsız, veri için kirlilik, yetki için açık.
+    /// Aynı kural hem okumayı hem yazmayı sınırlıyor.
+    /// </summary>
+    public static bool Kapsamda(this Calisan c, KullaniciYetkisi y)
+        => KapsamKurali(y).Compile()(c);
 }

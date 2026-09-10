@@ -27,7 +27,7 @@ kurulur. Frontend desteği buraya harcanacak.
 | `db/init/` | Container ilk açılışta çalışan betikler (eklentiler) |
 | `db/rls/` | Satır seviyesi güvenlik ve uygulama rolü |
 | `backend/` | .NET çözümü — Domain · Infrastructure · Api · Tests |
-| `frontend/` | Next.js arayüz — henüz kurulmadı |
+| `frontend/` | Next.js arayüz — giriş ve çalışan listesi |
 | `motor/` | Python planlama servisi — henüz kurulmadı |
 
 ## Veritabanını çalıştırma
@@ -93,6 +93,9 @@ Açılışta yazılan `Now listening on: http://localhost:XXXX` satırındaki po
 | `POST /api/v1/auth/logout` | Bu oturumu kapatır | — |
 | `GET /api/v1/me` | Oturum sahibinin profili | gerekli |
 | `GET /api/v1/employees` | Çalışanlar — kapsama göre filtreli | `calisan.gor` |
+| `POST /api/v1/employees` | Yeni çalışan | `calisan.duzenle` |
+| `GET /api/v1/departments` | Departmanlar — kapsama göre | `calisan.gor` |
+| `GET /api/v1/teams` | Ekipler — `?departmanId=` | `calisan.gor` |
 | `GET /api/v1/audit` | Denetim kaydı — salt okunur | `denetim.gor` |
 | `POST /dev/seed` | İki örnek firma + kullanıcı + 5 çalışan | — |
 | `GET /dev/tenants` | Kiracı listesi | — |
@@ -148,6 +151,13 @@ bunu sabitliyor.
 süresi dolana kadar (en fazla 15 dakika) etkili kalır. Acil iptalde o
 kullanıcının yenileme jetonları da düşürülmeli. Kapsam jetona konmaz, her
 istekte veritabanından okunur — kapsam değişikliği anında etkilidir.
+
+### Göremeyeceğin kaydı oluşturamazsın
+
+Listeyi filtreleyen kural ile "bu kaydı oluşturabilir misin" kontrolü tek bir
+ifadeden (`KapsamKurali`) türüyor. Biri sorguya, diğeri derlenip tek kayda
+uygulanıyor. İki ayrı yerde yazılsaydı zamanla ayrışır ve "listede göremediğim
+ama oluşturabildiğim kayıt" ortaya çıkardı.
 
 ### Denetim kaydı
 
@@ -208,6 +218,45 @@ jeton ve çalınmış jeton senaryoları. Kaba kuvvet kilidini de görmek için
 karakterler ayrıştırıcıyı bozar. `-SkipHttpErrorCheck` gibi 7'ye özgü
 parametreler kullanılamaz.
 
+## Arayüzü çalıştırma
+
+Üç pencere gerekiyor: veritabanı (docker), API (`dotnet run`), arayüz.
+
+```powershell
+cd frontend
+npm run dev
+```
+
+`http://localhost:3000` &middot; giriş: `anadolu-cm` / `mudur@anadolu-cm.test` /
+`TShift2026!Deneme`
+
+`frontend/.env.local` dosyası API adresini taşır ve **git'e gitmez**:
+
+```
+TSHIFT_API=http://localhost:5146
+```
+
+### Jetonlar neden `localStorage`'da değil
+
+`httpOnly` çerezde duruyorlar. `localStorage`'a konsaydı sayfada çalışan
+herhangi bir betik okuyabilirdi — sızmış bir bağımlılık, bir XSS açığı, bir
+tarayıcı eklentisi. Çerezde tarayıcı jetonu isteğe ekler ama sayfa kodu
+göremez.
+
+Sonuç olarak API çağrıları tarayıcıdan değil **Next.js sunucusundan** gidiyor.
+İkinci fayda: tarayıcı hiç doğrudan API'ye gitmediği için CORS ayarı gerekmiyor.
+
+Erişim jetonu 15 dakikada ölünce sayfa `/api/yenile` adresine uğrayıp geri
+dönüyor; kullanıcı fark etmiyor. Sayfa bileşenleri çerez yazamadığı için bu
+işin ayrı bir adreste yapılması gerekiyor.
+
+### Arayüzdeki gizleme güvenlik değildir
+
+`proxy.ts` (eski adıyla `middleware.ts`) yalnız çerezin VAR OLUP OLMADIĞINA
+bakar; içeriğini doğrulamaz, imza anahtarı orada yok. Yetkisi olmayana
+gösterilmeyen düğmeler de aynı: kullanıcıyı yapamayacağı işle uğraştırmamak
+için. Asıl kontrol her zaman sunucuda — jeton imzası, izin politikası ve RLS.
+
 ## Kurallar
 
 - `.env` dosyası **asla** git'e gitmez. Sırlar depoda durmaz.
@@ -228,5 +277,5 @@ parametreler kullanılamaz.
 - [x] Denetim kaydı: otomatik, aynı işlemde, sadece-eklenir — 38/38 yeşil
 - [ ] Kullanıcı ve rol yönetimi uçları (`/users`, `/users/{id}/roles`)
 - [ ] Çalışan API'si (yetkilendirme ile)
-- [ ] Çalışan ekranı (Next.js)
+- [x] Çalışan ekranı (Next.js) — giriş, liste, rol farkı görünür
 - [ ] Yılmaz inceleme paketi

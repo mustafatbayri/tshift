@@ -327,6 +327,63 @@ app.MapGet("/dev/tenants", async (TShiftDbContext db) =>
         .Select(k => new { k.Id, k.Ad, k.Slug, k.SektorPaketi, k.BirimAdi })
         .ToListAsync());
 
+// ---- Organizasyon ----------------------------------------------------------
+// Yeni çalışan formunun ihtiyaç duyduğu seçenekler. Kapsama göre filtreli:
+// kullanıcı, göremeyeceği bir departmanı seçenek olarak da görmemeli.
+app.MapGet("/api/v1/departments", async (TShiftDbContext db, IYetkiCozucu yetkiler, HttpContext ctx) =>
+{
+    var yetki = await ctx.YetkiAl(yetkiler);
+    if (yetki is null) return Results.Unauthorized();
+
+    var sorgu = db.Departmanlar.AsNoTracking().AsQueryable();
+
+    if (yetki.Seviye == KapsamSeviyesi.Kapsam)
+    {
+        // Doğrudan kapsamdaki departmanlar + kapsamdaki ekiplerin departmanları.
+        var ekipDepartmanlari = db.Ekipler
+            .Where(e => yetki.EkipIds.Contains(e.Id))
+            .Select(e => e.DepartmanId);
+
+        sorgu = sorgu.Where(d => yetki.DepartmanIds.Contains(d.Id)
+                              || ekipDepartmanlari.Contains(d.Id));
+    }
+    else if (yetki.Seviye == KapsamSeviyesi.Kendi)
+    {
+        var kendiDepartman = db.Calisanlar
+            .Where(c => c.Id == yetki.CalisanId)
+            .Select(c => c.DepartmanId);
+        sorgu = sorgu.Where(d => kendiDepartman.Contains(d.Id));
+    }
+
+    var liste = await sorgu.OrderBy(d => d.Ad)
+        .Select(d => new { d.Id, d.Ad, d.Kod })
+        .ToListAsync();
+
+    return Results.Ok(liste);
+}).RequireAuthorization(YetkiKatalogu.CalisanGor);
+
+app.MapGet("/api/v1/teams", async (TShiftDbContext db, IYetkiCozucu yetkiler, HttpContext ctx,
+    Guid? departmanId) =>
+{
+    var yetki = await ctx.YetkiAl(yetkiler);
+    if (yetki is null) return Results.Unauthorized();
+
+    var sorgu = db.Ekipler.AsNoTracking().AsQueryable();
+    if (departmanId is { } d) sorgu = sorgu.Where(e => e.DepartmanId == d);
+
+    if (yetki.Seviye == KapsamSeviyesi.Kapsam)
+        sorgu = sorgu.Where(e => yetki.EkipIds.Contains(e.Id)
+                              || yetki.DepartmanIds.Contains(e.DepartmanId));
+    else if (yetki.Seviye == KapsamSeviyesi.Kendi)
+        sorgu = sorgu.Where(e => false);
+
+    var liste = await sorgu.OrderBy(e => e.Ad)
+        .Select(e => new { e.Id, e.Ad, e.Kod, e.DepartmanId })
+        .ToListAsync();
+
+    return Results.Ok(liste);
+}).RequireAuthorization(YetkiKatalogu.CalisanGor);
+
 // ---- Denetim kaydı ---------------------------------------------------------
 // Salt okunur. Bu uçtan hiçbir şey silinemez ya da değiştirilemez — zaten
 // veritabanı seviyesinde de uygulama rolünün böyle bir yetkisi yok.
@@ -360,12 +417,10 @@ app.MapGet("/api/v1/audit", async (TShiftDbContext db,
 app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam,
     IYetkiCozucu yetkiler, HttpContext ctx) =>
 {
-    var kid = ctx.User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
-    if (!Guid.TryParse(kid, out var kullaniciId)) return Results.Unauthorized();
-
     // İzin kontrolünü politika yaptı ("bu kişi çalışan görebilir mi").
     // Burada kapsam uygulanıyor ("hangi çalışanları görebilir").
-    var yetki = await yetkiler.CozAsync(kullaniciId);
+    var yetki = await ctx.YetkiAl(yetkiler);
+    if (yetki is null) return Results.Unauthorized();
 
     var liste = await db.Calisanlar
         .KapsamUygula(yetki)
@@ -386,6 +441,76 @@ app.MapGet("/api/v1/employees", async (TShiftDbContext db, IKiraciBaglami baglam
         kayitlar = liste
     });
 }).RequireAuthorization(YetkiKatalogu.CalisanGor);
+
+app.MapPost("/api/v1/employees", async (YeniCalisan istek, TShiftDbContext db,
+    IYetkiCozucu yetkiler, HttpContext ctx) =>
+{
+    var yetki = await ctx.YetkiAl(yetkiler);
+    if (yetki is null) return Results.Unauthorized();
+
+    var personelNo = istek.PersonelNo?.Trim() ?? "";
+    var ad = istek.Ad?.Trim() ?? "";
+    var soyad = istek.Soyad?.Trim() ?? "";
+
+    if (personelNo.Length == 0 || ad.Length == 0 || soyad.Length == 0)
+        return Hata422("EKSIK_ALAN", "Personel no, ad ve soyad zorunlu.");
+
+    // Departman gerçekten bu kiracıya ait mi? Sorgu filtresi + RLS zaten
+    // başka kiracının departmanını getirmez; burada VARLIĞINI doğruluyoruz.
+    var departmanVar = await db.Departmanlar.AnyAsync(d => d.Id == istek.DepartmanId);
+    if (!departmanVar)
+        return Hata422("DEPARTMAN_YOK", "Secilen departman bulunamadi.");
+
+    if (istek.BirincilEkipId is { } ekipId)
+    {
+        var ekipUygun = await db.Ekipler.AnyAsync(e => e.Id == ekipId && e.DepartmanId == istek.DepartmanId);
+        if (!ekipUygun)
+            return Hata422("EKIP_UYUMSUZ", "Secilen ekip bu departmana ait degil.");
+    }
+
+    var calisan = new Calisan
+    {
+        PersonelNo = personelNo,
+        Ad = ad,
+        Soyad = soyad,
+        Eposta = string.IsNullOrWhiteSpace(istek.Eposta) ? null : istek.Eposta.Trim(),
+        Telefon = string.IsNullOrWhiteSpace(istek.Telefon) ? null : istek.Telefon.Trim(),
+        DepartmanId = istek.DepartmanId,
+        BirincilEkipId = istek.BirincilEkipId,
+        IseGiris = istek.IseGiris ?? DateOnly.FromDateTime(DateTime.UtcNow),
+        Durum = CalisanDurumu.Aktif
+    };
+
+    // "Goremeyecegin kaydi olusturamazsin." Listeyi filtreleyen kuralin AYNISI
+    // burada tek kayda uygulaniyor — ikisi tek ifadeden turuyor, ayrisamazlar.
+    if (!calisan.Kapsamda(yetki))
+        return Results.Json(
+            new { kod = "KAPSAM_DISI", mesaj = "Bu departman/ekip senin kapsaminin disinda." },
+            statusCode: StatusCodes.Status403Forbidden);
+
+    db.Calisanlar.Add(calisan);
+
+    try
+    {
+        await db.SaveChangesAsync();
+    }
+    catch (DbUpdateException e) when (e.InnerException is Npgsql.PostgresException { SqlState: "23505" })
+    {
+        // Benzersizlik kisiti veritabaninda. Once sorgulayip sonra yazmak
+        // yeterli degil: iki istek ayni anda gelirse ikisi de "yok" gorur.
+        // Asil koruma burada, kontrol degil kisit.
+        return Results.Json(
+            new { kod = "PERSONEL_NO_TEKRAR", mesaj = $"'{personelNo}' zaten kayitli." },
+            statusCode: StatusCodes.Status409Conflict);
+    }
+
+    return Results.Created($"/api/v1/employees/{calisan.Id}", new
+    {
+        calisan.Id, calisan.PersonelNo, calisan.Ad, calisan.Soyad,
+        TamAd = calisan.TamAd, calisan.Eposta,
+        calisan.DepartmanId, calisan.BirincilEkipId, calisan.Durum
+    });
+}).RequireAuthorization(YetkiKatalogu.CalisanDuzenle);
 
 app.Run();
 
@@ -421,7 +546,28 @@ static IResult Hata(KimlikHatasi h) => h switch
         statusCode: StatusCodes.Status401Unauthorized)
 };
 
+static IResult Hata422(string kod, string mesaj) =>
+    Results.Json(new { kod, mesaj }, statusCode: StatusCodes.Status422UnprocessableEntity);
+
+/// <summary>
+/// Jetondaki kullanıcı kimliğinden yetkiyi çözer. Dört uçta aynı üç satırı
+/// tekrarlamak yerine tek yerde.
+/// </summary>
+internal static class YetkiUzantisi
+{
+    public static async Task<KullaniciYetkisi?> YetkiAl(this HttpContext ctx, IYetkiCozucu yetkiler)
+    {
+        var ham = ctx.User.FindFirstValue(
+            System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        return Guid.TryParse(ham, out var id) ? await yetkiler.CozAsync(id) : null;
+    }
+}
+
 public sealed record GirisIstegi(string Firma, string Eposta, string Parola);
+public sealed record YeniCalisan(
+    string? PersonelNo, string? Ad, string? Soyad,
+    string? Eposta, string? Telefon,
+    Guid DepartmanId, Guid? BirincilEkipId, DateOnly? IseGiris);
 public sealed record YenilemeIstegi(string YenilemeJetonu);
 
 /// <summary>
