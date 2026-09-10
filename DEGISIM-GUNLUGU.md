@@ -4,6 +4,44 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-11 · İlk ekran (Next.js) — dikey dilim tamamlandı**
+Giriş ekranı ve çalışan listesi. Veritabanından ekrana kadar bütün katmanlar
+bağlı: PostgreSQL + RLS → EF → kimlik → yetki → denetim → API → arayüz.
+Aynı ekran dört farklı kullanıcıda farklı davranıyor — müdür tüm listeyi ve
+"Yeni çalışan" butonunu görüyor, şef yalnız kendi ekibini, çalışan yalnız
+kendini, izleyici hepsini ama hiçbir eylem düğmesi olmadan.
+
+**Karar: jetonlar `httpOnly` çerezde, tarayıcı koduna hiç girmiyor.**
+Yaygın yöntem `localStorage`'dır; kolaydır ama sayfadaki HERHANGİ bir betik
+jetonu okuyabilir (sızmış bağımlılık, XSS, tarayıcı eklentisi). Çerez
+yönteminde tarayıcı jetonu isteğe ekler ama sayfa kodu göremez.
+Yan fayda: API çağrıları Next.js sunucusundan gittiği için CORS ayarı
+gerekmiyor — tarayıcı hiçbir zaman doğrudan API'ye gitmiyor.
+
+**Yeni çalışan kaydı.** `POST /api/v1/employees` (`calisan.duzenle` izni) ve
+form için `GET /api/v1/departments` · `GET /api/v1/teams` — ikisi de kapsama
+göre filtreli, çünkü kullanıcı göremeyeceği bir departmanı seçenek olarak da
+görmemeli.
+
+**İlke: göremeyeceğin kaydı oluşturamazsın.** Listeyi filtreleyen ifade ile
+"bu kaydı oluşturabilir misin" kontrolü tek bir `KapsamKurali` fonksiyonundan
+geliyor; biri `IQueryable`'a uygulanıyor, diğeri derlenip tek kayda. İki ayrı
+yerde yazılsaydı zamanla ayrışır ve bir gün "listede göremediğim ama
+oluşturabildiğim kayıt" ortaya çıkardı — risk dokümanındaki 4 numaralı hata
+sınıfı.
+
+**Benzersizlik kontrolü kodda değil, kısıtta.** Önce "bu personel no var mı"
+diye sorup sonra yazmak yetmez: iki istek aynı anda gelirse ikisi de "yok"
+görür. Veritabanı kısıtı yapısal olarak engelliyor; kod yalnızca hatayı
+anlaşılır mesaja çeviriyor (`PERSONEL_NO_TEKRAR`).
+
+**Not:** `middleware.ts` içindeki kontrol bir güvenlik sınırı DEĞİL, kullanıcı
+deneyimi düzenlemesi. Yalnız çerezin varlığına bakar, içeriğini doğrulamaz
+(imza anahtarı orada yok). Asıl kontrol API'de. Aynı şey gizlenen düğmeler
+için de geçerli: yetkisi olmayan butonu görmez, ama zorla çağırsa sunucu
+403 döner.
+→ `04-kod/frontend/`
+
 **2026-09-11 · Denetim kaydı (audit_log) — risk listesindeki kırmızı madde kapandı**
 Her oluşturma, güncelleme ve silme otomatik olarak kaydediliyor: kim, ne zaman,
 hangi kayıt, hangi alanlar, önceki ve yeni değer, IP.
