@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 const ACIK_YOLLAR = ["/giris"];
 
-export function middleware(istek: NextRequest) {
+export function proxy(istek: NextRequest) {
   const yol = istek.nextUrl.pathname;
 
   if (ACIK_YOLLAR.some((a) => yol.startsWith(a))) return NextResponse.next();
