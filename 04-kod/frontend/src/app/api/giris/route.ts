@@ -11,12 +11,23 @@ import { apiAdresi, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
 export async function POST(istek: NextRequest) {
   const { firma, eposta, parola } = await istek.json();
 
-  const cevap = await fetch(`${apiAdresi()}/api/v1/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ firma, eposta, parola }),
-    cache: "no-store",
-  });
+  let cevap: Response;
+  try {
+    cevap = await fetch(`${apiAdresi()}/api/v1/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firma, eposta, parola }),
+      cache: "no-store",
+    });
+  } catch {
+    // Arka uca hic ulasilamadi. 502 = "ben ayaktayim ama arkamdaki sunucu yok".
+    // Kimlik hatasiyla (401) karistirilmamali: kullanicinin duzeltebilecegi
+    // bir sey degil.
+    return NextResponse.json(
+      { kod: "ARKA_UC_YOK", mesaj: "Arka uca ulasilamadi." },
+      { status: 502 }
+    );
+  }
 
   if (!cevap.ok) {
     // Hata mesajını olduğu gibi geçiriyoruz. API zaten bilerek belirsiz
