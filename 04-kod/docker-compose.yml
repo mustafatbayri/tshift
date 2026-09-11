@@ -1,11 +1,16 @@
-# TShift — yerel gelistirme altyapisi
+# TShift — altyapi
 #
-#   Baslat : docker compose up -d
-#   Durdur : docker compose down
-#   SIFIRLA: docker compose down -v      (veritabanini tamamen siler, bastan kurar)
+# GELISTIRME (gunluk kullanim, degismedi):
+#   docker compose up -d          Yalniz veritabani. API ve arayuz makinede calisir.
+#   docker compose down           Durdur, veri kalir
+#   docker compose down -v        SIFIRLA, veritabanini tamamen siler
 #
-# Veritabani bilgisayara kurulmuyor; kutu (container) icinde calisiyor.
-# Bozulursa "down -v" ile tertemiz bastan baslarsin, Windows'ta iz kalmaz.
+# INCELEME (her sey kutuda, tek komut):
+#   docker compose --profile tam up --build
+#   -> http://localhost:3000     firma: anadolu-cm  parola: TShift2026!Deneme
+#
+# Ikinci kip .NET SDK ve Node kurulumu gerektirmez; yalniz Docker yeter.
+# Ilk acilista sema, guvenlik betikleri ve ornek veri kendiliginden kurulur.
 
 services:
   db:
@@ -30,6 +35,68 @@ services:
       interval: 5s
       timeout: 3s
       retries: 12
+
+  # ---- Asagidakiler yalniz "--profile tam" ile calisir ----------------------
+  # Gunluk gelistirmede API ve arayuz makinede calisiyor: derleme daha hizli,
+  # hata ayiklama mumkun. Kutular inceleme ve ilerde yayina cikis icin.
+
+  api:
+    profiles: ["tam"]
+    build:
+      # Baglam 04-kod: kutu icine hem backend hem db/rls giriyor.
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: tshift-api
+    restart: unless-stopped
+    environment:
+      # Uygulama KISITLI rolle baglanir. Super kullaniciyla baglanmak
+      # RLS'i tamamen devre disi birakir - bkz. db/rls/02-uygulama-rolu.sql
+      ConnectionStrings__TShift: "Host=db;Port=5432;Database=tshift;Username=tshift_app;Password={APP_DB_PASSWORD}"
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:-tshift_app_dev_2026}
+
+      # Kurulum SAHIBI rolle calisir: migration ve yetki betikleri icin gerekli.
+      # AYRI bir degisken olmasi kasitli - ikisi karisirsa uygulama super
+      # kullaniciyla baglanir ve guvenlik sessizce kaybolur.
+      TSHIFT_SAHIP_BAGLANTI: "Host=db;Port=5432;Database=tshift;Username=tshift;Password={DB_PASSWORD}"
+      DB_PASSWORD: ${DB_PASSWORD:-tshift_dev_2026}
+
+      # DIKKAT: acilista migration + guvenlik betikleri + ornek veri calistirir.
+      # CANLIDA ASLA "true" OLMAZ. Bkz. KurulumHizmeti.cs
+      TSHIFT_KURULUM: "true"
+
+      # Yerel gelistirme anahtari. Canlida mutlaka disaridan verilir.
+      JWT_SECRET: ${JWT_SECRET:-inceleme-ortami-imza-anahtari-en-az-32-bayt!}
+
+      # Development DEGIL. Sebep: gelistirme kipinde EF "sensitive data logging"
+      # aciliyor ve sorgu parametreleri kayda yaziliyor - iclerinde e-posta,
+      # jeton ozeti, parola ozeti gecebilir. Inceleme kutusu yerelde calissa da
+      # bu kotu bir varsayilan. Uygulama Production kipinde calisir; gelistirme
+      # uclari TSHIFT_KURULUM bayragiyla ayrica aciliyor.
+      ASPNETCORE_ENVIRONMENT: Production
+
+      # SQL cumlelerini kayda basma. Gurultulu bir kayit okunmayan kayittir;
+      # okunmayan kayit da olmayan kayitla aynidir.
+      Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command: Warning
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5146:8080"
+
+  web:
+    profiles: ["tam"]
+    build:
+      context: ./frontend
+    container_name: tshift-web
+    restart: unless-stopped
+    environment:
+      # Kutular arasi adres: tarayicinin gordugu localhost degil, ag icindeki ad.
+      # Zaten tarayici API'ye hic gitmiyor; istekleri Next sunucusu tasiyor.
+      TSHIFT_API: "http://api:8080"
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
 
 volumes:
   tshift-db-data:
