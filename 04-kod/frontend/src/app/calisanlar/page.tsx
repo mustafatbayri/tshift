@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { apiGet } from "@/lib/api";
 import type { Ben, CalisanListesi, Secenek } from "@/lib/tipler";
 import CikisDugmesi from "./cikis-dugmesi";
@@ -115,11 +116,15 @@ function Kabuk({ ben, children }: { ben: Ben | null; children: React.ReactNode }
     <div className="min-h-screen">
       <header className="border-b border-[var(--cizgi)] bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand)] text-xs font-bold text-white">
-              TS
-            </div>
-            <span className="font-semibold tracking-tight">TShift</span>
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/tshift.png"
+              alt=""
+              width={30}
+              height={34}
+              className="rounded-lg"
+            />
+            <span className="font-semibold tracking-tight">T-Shift</span>
           </div>
 
           {ben && (

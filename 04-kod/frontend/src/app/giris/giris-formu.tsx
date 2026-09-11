@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export default function GirisFormu() {
   const yonlendir = useRouter();
@@ -46,13 +47,16 @@ export default function GirisFormu() {
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--brand)] text-lg font-bold text-white">
-            TS
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-[var(--ink)]">
-            TShift
-          </h1>
-          <p className="mt-1 text-sm text-[var(--gri)]">
+          <Image
+            src="/tshift.png"
+            alt="T-Shift by Teknovisor"
+            width={72}
+            height={82}
+            priority
+            className="mx-auto mb-4 rounded-2xl shadow-sm"
+          />
+          <h1 className="sr-only">T-Shift</h1>
+          <p className="text-sm text-[var(--gri)]">
             Vardiya planlama ve optimizasyon
           </p>
         </div>
