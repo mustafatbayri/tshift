@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 
 export default function GirisFormu() {
   const yonlendir = useRouter();
@@ -23,13 +22,27 @@ export default function GirisFormu() {
     setHata(null);
     setBekliyor(true);
 
-    const cevap = await fetch("/api/giris", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firma, eposta, parola }),
-    });
+    let cevap: Response;
+    try {
+      cevap = await fetch("/api/giris", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firma, eposta, parola }),
+      });
+    } catch {
+      setBekliyor(false);
+      setHata("Sunucuya ulasilamadi. Baglantini kontrol et.");
+      return;
+    }
 
     setBekliyor(false);
+
+    // 502: Next sunucusu ayakta ama arka uca ulasamadi.
+    // Kullaniciya "parolan yanlis" demek yanlis olurdu - sorun onda degil.
+    if (cevap.status === 502) {
+      setHata("Arka uc calismiyor gorunuyor. API'yi baslatip tekrar dene.");
+      return;
+    }
 
     if (!cevap.ok) {
       const g = await cevap.json().catch(() => null);
@@ -47,13 +60,18 @@ export default function GirisFormu() {
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <Image
+          {/* Sade <img>. next/image, gorseli kendi optimize etme hattindan
+              gecirir (/_next/image); bir logo icin bunun getirisi yok ama bir
+              hata kaynagi var - Next 16 + Turbopack'te o hat takilip gorseli
+              hic servis etmiyor. Statik bir logo dogrudan public/ altindan
+              servis edilsin. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/tshift.png"
             alt="T-Shift by Teknovisor"
-            width={72}
-            height={82}
-            priority
-            className="mx-auto mb-4 rounded-2xl shadow-sm"
+            width={180}
+            height={205}
+            className="mx-auto mb-6 rounded-[28px] shadow-lg"
           />
           <h1 className="sr-only">T-Shift</h1>
           <p className="text-sm text-[var(--gri)]">

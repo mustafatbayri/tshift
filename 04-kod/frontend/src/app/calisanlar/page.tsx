@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import { apiGet } from "@/lib/api";
+import { apiGet, ULASILAMADI } from "@/lib/api";
 import type { Ben, CalisanListesi, Secenek } from "@/lib/tipler";
 import CikisDugmesi from "./cikis-dugmesi";
 import YeniCalisan from "./yeni-calisan";
@@ -18,6 +17,19 @@ export default async function CalisanlarSayfasi() {
     apiGet<Secenek[]>("/api/v1/departments"),
     apiGet<Secenek[]>("/api/v1/teams"),
   ]);
+
+  // Arka uca hiç ulaşılamadı. Bu bir yetki sorunu değil, bir çalıştırma sorunu —
+  // kullanıcıya da öyle anlatmak gerekir.
+  if (ben.durum === ULASILAMADI || liste.durum === ULASILAMADI) {
+    return (
+      <Kabuk ben={null}>
+        <Uyari
+          baslik="Arka uca ulasilamiyor"
+          metin="API calismiyor gorunuyor. Ayri bir pencerede `dotnet run` ile baslat, ya da `docker compose --profile tam up` ile tum yigini ayaga kaldir."
+        />
+      </Kabuk>
+    );
+  }
 
   // Erişim jetonunun süresi dolmuş. Yenileme adresine uğrayıp geri dönüyoruz;
   // kullanıcı bunu fark etmiyor. Yenileme de başarısızsa oradan giriş
@@ -115,17 +127,17 @@ function Kabuk({ ben, children }: { ben: Ben | null; children: React.ReactNode }
   return (
     <div className="min-h-screen">
       <header className="border-b border-[var(--cizgi)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <Image
-              src="/tshift.png"
-              alt=""
-              width={30}
-              height={34}
-              className="rounded-lg"
-            />
-            <span className="font-semibold tracking-tight">T-Shift</span>
-          </div>
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+          {/* Rozetin icinde zaten "T-Shift by TEKNOVISOR" yaziyor.
+              Yanina bir daha yazmak tekrar olurdu. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/tshift.png"
+            alt="T-Shift"
+            width={72}
+            height={82}
+            className="rounded-2xl shadow-sm"
+          />
 
           {ben && (
             <div className="flex items-center gap-4">

@@ -20,15 +20,33 @@ export const YENILEME_CEREZ = "tshift_yenileme";
 
 export type Cevap<T> = { durum: number; veri: T | null };
 
+/**
+ * `durum: 0` = API'ye HİÇ ulaşılamadı (kapalı, yanlış port, ağ yok).
+ * HTTP durum kodlarıyla karışmaz, çünkü 0 diye bir HTTP kodu yoktur.
+ *
+ * Bunu ayrı tutmak önemli: 401 "kimliğini bilmiyorum", 403 "yetkin yok",
+ * 0 ise "sunucu orada değil". Üçü farklı sorun, üçünün çözümü farklı.
+ */
+export const ULASILAMADI = 0;
+
 export async function apiGet<T>(yol: string): Promise<Cevap<T>> {
   const kavanoz = await cookies();
   const jeton = kavanoz.get(ERISIM_CEREZ)?.value;
 
-  const cevap = await fetch(`${API}${yol}`, {
-    headers: jeton ? { Authorization: `Bearer ${jeton}` } : {},
-    // Her istek taze: vardiya verisi önbellekten servis edilmemeli.
-    cache: "no-store",
-  });
+  let cevap: Response;
+  try {
+    cevap = await fetch(`${API}${yol}`, {
+      headers: jeton ? { Authorization: `Bearer ${jeton}` } : {},
+      // Her istek taze: vardiya verisi önbellekten servis edilmemeli.
+      cache: "no-store",
+    });
+  } catch {
+    // Ağ hatasını yukarı fırlatmıyoruz. Fırlatsaydık kullanıcı
+    // "Runtime TypeError: fetch failed" görürdü — hiçbir şey anlatmayan,
+    // üstelik uygulamada bir çökme varmış izlenimi veren bir mesaj.
+    // Oysa olan şey basit: arka uç çalışmıyor.
+    return { durum: ULASILAMADI, veri: null };
+  }
 
   if (!cevap.ok) return { durum: cevap.status, veri: null };
   return { durum: cevap.status, veri: (await cevap.json()) as T };

@@ -1,6 +1,6 @@
 # TShift — mimari inceleme paketi
 
-**Tarih:** 11 Eylül 2026 · **Sürüm:** `v0.5-arayuz` · **Depo:** github.com/mustafatbayri/tshift
+**Tarih:** 11 Eylül 2026 · **Sürüm:** `v0.6-kutu` · **Depo:** github.com/mustafatbayri/tshift
 
 Yılmaz, iki hafta önce konuştuğumuz şeyin sonucu bu. Uzun okuma değil; asıl
 istediğim şey en sondaki sorulara cevabın.
@@ -15,7 +15,7 @@ istediğim şey en sondaki sorulara cevabın.
 4. [Tartışmaya açık kararlar](#4-tartışmaya-açık-kararlar)
 5. [Çıkan hatalar ve şimdi onları tutan şey](#5-çıkan-hatalar-ve-şimdi-onları-tutan-şey)
 6. [Bilinen boşluklar](#6-bilinen-boşluklar)
-7. [Sana sorularım](#7-sana-sorularım)
+7. [Sana sekiz sorum](#7-sana-sekiz-sorum)
 8. [10 dakikada kendin çalıştır](#8-10-dakikada-kendin-çalıştır)
 
 ---
@@ -154,14 +154,22 @@ Bunları savunmaya değil, sınamaya açıyorum.
 | 6 | Testler gerçek veritabanına bağlanıyor | Taklit (mock) | RLS taklitle sınanamaz |
 | 7 | Türkçe alan adları, İngilizce kolon adları | Tek dil | Kod ürün diliyle, şema sektör standardıyla konuşsun |
 
-**Spec'ten bilinçli bir sapma var** ve senin görüşünü özellikle istiyorum:
+**Spec bir noktada uygulamayı takip etti.** Kayda değer, çünkü sürecin nasıl
+işlediğini gösteriyor:
 
-Spec §3.2 "kapsamı olmayan kullanıcı tüm kiracıyı görür" diyor. Uygulama
-tersini yapıyor: kapsam seviyesi `Kapsam` olup hiç kapsam satırı olmayan
-kullanıcı **hiçbir şey** görmüyor. Gerekçe: kapsamı atanmayı unutulan bir
-departman müdürü, spec'teki davranışla sessizce tüm firmayı görürdü —
-yapılandırma eksikliğinin yetki genişlemesine dönüşmesi. Eksik yapılandırma
-artık "göremiyorum" şikâyeti üretiyor, sızıntı değil.
+Spec v1.1 §3.2 "kapsamı olmayan kullanıcı tüm kiracıyı görür" diyordu. Dikey
+dilim yazılırken bu kuralın bir **yetki genişlemesi** ürettiği fark edildi:
+kapsamı atanmayı unutulan bir departman müdürü, sessizce tüm firmanın verisini
+görmeye başlardı. Hiçbir hata, hiçbir uyarı olmadan.
+
+Kod bilinçli olarak farklı yazıldı — kapsam seviyesindeki bir rol, kapsam satırı
+yoksa **hiçbir şey** görmüyor. Kiracı yöneticisi etkilenmiyor, çünkü onun kapsam
+seviyesi zaten `Kiraci`. Eksik yapılandırma artık "göremiyorum" şikâyeti
+üretiyor, sızıntı değil.
+
+Karar `YetkiTestleri.Y8` ile sabitlendi ve **spec v1.2'ye işlendi**. İkisi
+çelişik bırakılsaydı, altı ay sonra biri spec'e bakıp kodu "düzeltir" ve açığı
+geri açardı.
 
 ---
 
@@ -263,7 +271,7 @@ seçeceğimizi bilmiyorum; senin görüşün burada değerli.
 
 ---
 
-## 7. Sana sorularım
+## 7. Sana sekiz sorum
 
 Genel yorum yerine bunlara cevap versen benim için çok daha kıymetli.
 
@@ -282,18 +290,17 @@ Genel yorum yerine bunlara cevap versen benim için çok daha kıymetli.
    dayandığında bunun bedelini nasıl öderiz?
 5. İzin kodlarını jetona koymanın 15 dakikalık gecikmesi kabul edilebilir mi,
    yoksa her istekte veritabanına gitmek mi doğru?
-6. Spec'ten yaptığım sapma (kapsamsız kullanıcı hiçbir şey görmez) doğru mu?
 
 **Süreç hakkında**
 
-7. Yakaladığımız dört hatayı görünce ilk itirazın hakkında ne düşünüyorsun?
+6. Yakaladığımız dört hatayı görünce ilk itirazın hakkında ne düşünüyorsun?
    Değişen bir şey var mı, yoksa "bunlar kolay olanlardı" mı diyorsun?
-8. **En çok merak ettiğim:** senin gözünle, bu yaklaşımın sessizce
+7. **En çok merak ettiğim:** senin gözünle, bu yaklaşımın sessizce
    kaybedeceği yer neresi? Hangi hata sınıfı buradaki kontrollerin hiçbirine
    takılmaz?
-9. İlk üç ayda sen olsan neyi farklı yapardın?
+8. İlk üç ayda sen olsan neyi farklı yapardın?
 
-Sekizinci soru en önemlisi. Yakaladığımız hataları biliyorum; bilmediğim,
+Yedinci soru en önemlisi. Yakaladığımız hataları biliyorum; bilmediğim,
 **hangi hataların hiç yakalanmadığı.**
 
 ---
