@@ -1,0 +1,29 @@
+# Docker derleme baglamina NELERIN GIRMEYECEGI.
+#
+# Bu dosya olmadan Windows'taki bin/ ve obj/ klasorleri kutuya kopyalanir.
+# Iclerindeki project.assets.json makinedeki NuGet yollarini gosterir
+# (C:\Users\...\.nuget\...) ve kutunun kendi restore ciktisinin uzerine yazar.
+# Sonuc: "Package ... was not found" - paket aslinda orada olmasina ragmen.
+#
+# Yan fayda: derleme baglami 75 MB'tan birkac yuz KB'a duser, derleme hizlanir.
+
+# .NET derleme ciktilari
+**/bin/
+**/obj/
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Sirlar - kutuya ASLA girmez, degerler ortam degiskeniyle verilir
+**/.env
+**/.env.*
+!**/.env.example
+
+# Gereksizler
+.git/
+.vs/
+.idea/
+*.ps1
+**/*.user
