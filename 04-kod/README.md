@@ -262,6 +262,18 @@ bakar; içeriğini doğrulamaz, imza anahtarı orada yok. Yetkisi olmayana
 gösterilmeyen düğmeler de aynı: kullanıcıyı yapamayacağı işle uğraştırmamak
 için. Asıl kontrol her zaman sunucuda — jeton imzası, izin politikası ve RLS.
 
+## Adlandırma
+
+| Nerede | Yazım | Neden |
+|---|---|---|
+| Ürün adı — ekran, belge, müşteri yazışması | **T-Shift** | Marka bu |
+| Kod — ad alanı, sınıf, proje | `TShift` | C# ad alanında tire kullanılamaz |
+| Altyapı — veritabanı, kutu, rol, depo | `tshift` | Küçük harf, tiresiz; kabuk ve URL dostu |
+
+Bu bir taviz değil, üç ayrı alanın kendi kuralı. Ürün adını koda taşımaya
+çalışmak (ya da tersi) her seferinde bir kaçış karakteri ya da bir istisna
+üretir.
+
 ## Kurallar
 
 - `.env` dosyası **asla** git'e gitmez. Sırlar depoda durmaz.

@@ -1,4 +1,4 @@
-# TShift — mimari inceleme paketi
+# T-Shift — mimari inceleme paketi
 
 **Tarih:** 11 Eylül 2026 · **Sürüm:** `v0.6-kutu` · **Depo:** github.com/mustafatbayri/tshift
 
