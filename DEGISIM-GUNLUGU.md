@@ -4,6 +4,38 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-12 · Devir paketi kuruldu — ve kurulurken bir açık buldu** ⚠
+Uzun sohbetlerde bağlam kaybını önlemek için projenin hafızası sohbetten
+depoya taşındı: `00-DEVIR/` altında 8 dosya. Sohbet özeti değil **devir
+paketi** — fark şu ki buradaki her iddia bir test adına, dosya yoluna ya da
+çalıştırılabilir komuta bağlı. *Sohbet özeti yanlış bir varsayımı sessizce
+taşıyabilir; test yeşil yanar ya da yanmaz.*
+
+**Kurulurken bir açık çıktı.** `RISKLER-VE-ONLEMLER.md`, projedeki en ciddi
+hatanın (süper kullanıcı RLS'i aşıyordu) bekçisi olarak bir test gösteriyordu
+— **o test hiç var olmamıştı.** Doküman iki gün boyunca, en çok güvenilen
+satırında yanlıştı. Bulan şey, her iddiayı bir teste bağlama kuralı oldu:
+bağlanacak test yoktu.
+
+**`M0` eklendi** — `M1`'in önünde duruyor, çünkü M1 *"RLS tanımlı mı"*, M0
+*"RLS beni gerçekten durduruyor mu"* diye sorar. Rol **adına** değil,
+`current_user`'ın **yetkisine** bakıyor (`rolsuper`, `rolbypassrls`); böylece
+bağlantı dizesi sahibi role çevrilse de, role sonradan yetki verilse de
+yakalıyor. Kanıt: `tshift` → `t/t`, `tshift_app` → `f/f`.
+**39/39 yeşil.** Değişmez tablosu 39/45 → 41/45 bekçili.
+
+**Karar: kabul ölçütü kod yazılmadan önce yazılır** ve Mustafa onaylar; test
+o cümlenin çevirisi olur. Her cümle kaynağına göre `[spec]` / `[karar]` /
+`[çıkarım]` diye işaretleniyor — `[çıkarım]` olanlar yapay zekânın türettiği,
+onaylanmamış varsayımlar. Sebebi D6 (11 Eylül): kodu yazan testi de yazarsa
+aynı yanlış varsayım iki yere birden geçebilir.
+
+Ayrıca GPT'nin ürettiği kalite araştırması değerlendirildi (kaynakları
+denetlendi: gerçek, bir künye hatası hariç). Test kapsamımız sahanın 20
+senaryo sınıfına oturtuldu: **4'ünde derin, 2'sinde kısmi, 14'ünde hiç yok.**
+Derinlik iyi, sorun genişlik.
+→ `00-DEVIR/`, `KALITE-ARASTIRMASI-DEGERLENDIRME.md`
+
 **2026-09-11 · İlk ekran (Next.js) — dikey dilim tamamlandı**
 Giriş ekranı ve çalışan listesi. Veritabanından ekrana kadar bütün katmanlar
 bağlı: PostgreSQL + RLS → EF → kimlik → yetki → denetim → API → arayüz.

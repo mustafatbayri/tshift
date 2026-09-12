@@ -248,6 +248,27 @@ Son madde bu projenin işleyiş biçimi. Şimdiye kadar üç ciddi hata çıktı
 
 | Hata | Bekçi |
 |---|---|
-| Süper kullanıcı RLS'i aşıyordu | `0 - Baglanan rol super kullanici degil` |
+| Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil` |
 | EF sürümleri uyuşmuyordu | Sabitlenmiş paket sürümleri |
 | JWT `sub` talebi yeniden adlandırılıyordu | `H1 - Jetonla /me calisir` |
+
+> **Bu satırın hikâyesi — 12 Eylül 2026.** Bu tablo 10 Eylül'den beri süper
+> kullanıcı hatasının bekçisi olarak `0 - Baglanan rol super kullanici degil`
+> adlı bir testi gösteriyordu. Devir paketi hazırlanırken doküman ile kod
+> karşılaştırıldı ve **böyle bir testin hiç var olmadığı** görüldü: ne test
+> dosyalarında, ne `YALITIM-KANITI.ps1` betiğinde.
+>
+> Yani projedeki **en ciddi hatanın bekçisi iki gün boyunca yalnızca kâğıt
+> üstünde vardı** — tam da hatanın kendisi gibi. Bu, yukarıdaki 9 numaralı
+> hata sınıfının ("gerekçenin kaybolması") doküman üzerinde gerçekleşmiş
+> hâlidir.
+>
+> Aynı gün `M0 - Baglanan rol super kullanici degil (RLS gercekten
+> yururlukte)` testi yazıldı; test paketi 38 → 39, hepsi yeşil. Test rol
+> adına değil `current_user`'ın yetkisine bakıyor. Ayrıntı:
+> `00-DEVIR/05-HATA-OTOPSILERI.md` O-1.
+>
+> **Çıkarılan kural:** Doküman koda bağlanmazsa sessizce yalan söylemeye
+> başlar — üstelik en çok güvenilen satırda. `00-DEVIR/` altındaki her iddia
+> bu yüzden bir test adına, dosya yoluna ya da çalıştırılabilir komuta
+> bağlıdır.

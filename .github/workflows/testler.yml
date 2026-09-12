@@ -1,0 +1,85 @@
+# =============================================================================
+# TShift - otomatik test kapisi
+#
+# NE ISE YARAR
+# Bu dosyadan once 39 test ve 7 mimari kurali YALNIZ elle ".\TEST.ps1"
+# calistirildiginda kosuyordu. Yani kurallar oneri seviyesindeydi: unutuldugu
+# bir gun kirik kod depoya girer ve kimse gormezdi.
+#
+# Bu dosyayla her "git push" sonrasi testler GitHub'da kendiliginden kosar.
+# Kirmizi yanarsa depo sayfasinda kirmizi carpi gorunur.
+#
+# NEDEN ONEMLI
+# Talimat yonlendirir, otomatik kapi zorlar. Bir kural yazidaysa unutulur;
+# kapidaysa unutulamaz. 12 Eylul'de tam bunun ornegini yasadik: dokumanda
+# "bekci eklendi" yaziyordu, bekci yoktu.
+#
+# NASIL CALISIR
+# 1. Veritabani kutusu ayaga kalkar (db/init betikleri kendiliginden kosar)
+# 2. API kutusu TSHIFT_KURULUM=true ile acilir: migration + RLS betikleri +
+#    ornek veri. Bu, yerel makinede calisan yolun AYNISI - CI ile yerel
+#    arasinda fark olmasin diye bilerek boyle secildi.
+# 3. Kurulum bitince API durdurulur (testler kendi uygulamasini ayaga kaldirir)
+# 4. dotnet test kosar
+# =============================================================================
+
+name: Testler
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:      # GitHub arayuzunden elle de calistirilabilir
+
+jobs:
+  test:
+    name: Testler ve mimari kurallari
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Depoyu al
+        uses: actions/checkout@v4
+
+      - name: .NET kur
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # Yerel makinedeki ile AYNI yol: docker compose "tam" profili.
+      # Yalniz db ve api servisleri; arayuz (web) testler icin gereksiz.
+      - name: Veritabani ve kurulum
+        working-directory: 04-kod
+        run: docker compose --profile tam up -d --build db api
+
+      # Kurulum (migration + RLS + ornek veri) API acilmadan ONCE kosar.
+      # Yani API porta cevap veriyorsa kurulum bitmis demektir.
+      - name: Kurulumun bitmesini bekle
+        working-directory: 04-kod
+        run: |
+          for i in $(seq 1 80); do
+            if curl -s -o /dev/null http://localhost:5146/; then
+              echo "API ayakta - kurulum tamamlandi."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::API 4 dakikada ayaga kalkmadi. Kurulum kaydi asagida."
+          docker compose --profile tam logs api
+          exit 1
+
+      # API'yi durduruyoruz: testler kendi uygulamalarini bellek icinde ayaga
+      # kaldiriyor, ayrica acik kalan baglantilar test temizligini zorlastirir.
+      - name: API'yi durdur
+        working-directory: 04-kod
+        run: docker compose --profile tam stop api
+
+      - name: Testler
+        working-directory: 04-kod/backend
+        run: dotnet test --logger "console;verbosity=normal"
+
+      # Kirmizi yandiginda sebebi gormek icin. Yalniz hata halinde calisir.
+      - name: Hata halinde kayitlar
+        if: failure()
+        working-directory: 04-kod
+        run: docker compose --profile tam logs

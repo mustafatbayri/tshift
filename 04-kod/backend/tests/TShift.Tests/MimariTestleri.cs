@@ -46,6 +46,59 @@ public class MimariTestleri : IClassFixture<TestUygulamasi>
 
     private sealed record RlsSatiri(string Tablo, bool Acik, bool Zorunlu);
 
+    private sealed record RolYetkisi(string Rol, bool Super, bool RlsAtlar);
+
+    // ------------------------------------------------------------------ M0
+    /// <summary>
+    /// UYGULAMANIN BAĞLANDIĞI ROL SÜPER KULLANICI OLMAMALI.
+    ///
+    /// Bu test 10 Eylül'de yaşanan hatanın kalıcı bekçisidir. O gün RLS
+    /// doğru yazılmış, açılmış ve "t/t" diye doğrulanmıştı — ama uygulama
+    /// Docker'ın süper kullanıcısıyla (tshift) bağlanıyordu. PostgreSQL'de
+    /// süper kullanıcı RLS'i TAMAMEN aşar; FORCE bile durduramaz.
+    /// Güvenlik kâğıt üstünde vardı, çalışmada yoktu.
+    ///
+    /// M0 ile M1 arasındaki fark kritik:
+    ///   M1 "RLS TANIMLI mı?" diye sorar.
+    ///   M0 "RLS beni GERÇEKTEN durduruyor mu?" diye sorar.
+    /// M1 yeşilken M0 kırmızı olabilir — ve o durumda M1'in yeşilliği,
+    /// 1-4 numaralı kiracılık testlerinin yeşilliği ve D6'nın yeşilliği
+    /// hiçbir şey ifade etmez. Hepsi bu tek noktaya bağlıdır.
+    ///
+    /// Genel ders: "koruma tanımlı mı" YANLIŞ sorudur. Doğru soru
+    /// "koruma şu anda beni durduruyor mu" sorusudur. Her koruma için,
+    /// korumanın YÜRÜRLÜKTE olduğunu kanıtlayan ayrı bir kontrol gerekir.
+    ///
+    /// Rol ADINA bakmıyoruz — current_user'ın YETKİSİNE bakıyoruz. Böylece
+    /// bağlantı dizesi bir gün sahibi role (tshift) çevrilirse de yakalanır.
+    /// </summary>
+    [Fact(DisplayName = "M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)")]
+    public async Task Baglanan_rol_super_kullanici_degil()
+    {
+        await using var db = Baglam();
+
+        var roller = await db.Database.SqlQuery<RolYetkisi>($"""
+            SELECT rolname      AS "Rol",
+                   rolsuper     AS "Super",
+                   rolbypassrls AS "RlsAtlar"
+            FROM   pg_roles
+            WHERE  rolname = current_user
+            """).ToListAsync();
+
+        var rol = Assert.Single(roller);
+
+        Assert.False(rol.Super,
+            $"Uygulama '{rol.Rol}' rolüyle baglaniyor ve bu rol SUPERUSER.\n" +
+            "PostgreSQL'de super kullanici RLS'i TAMAMEN asar - FORCE dahil.\n" +
+            "Butun kiraci yalitimi su anda sessizce devre disi.\n" +
+            "Bkz. db/rls/02-uygulama-rolu.sql: uygulama tshift_app ile baglanmali, tshift ile degil.");
+
+        Assert.False(rol.RlsAtlar,
+            $"'{rol.Rol}' rolunde BYPASSRLS yetkisi var.\n" +
+            "Satir seviyesi guvenlik bu rol icin islemez; kiraci yalitimi yok demektir.\n" +
+            "Cozum: ALTER ROLE " + rol.Rol + " NOBYPASSRLS;");
+    }
+
     private static async Task<List<RlsSatiri>> RlsDurumu(TShiftDbContext db)
         => await db.Database.SqlQuery<RlsSatiri>($"""
             SELECT c.relname             AS "Tablo",

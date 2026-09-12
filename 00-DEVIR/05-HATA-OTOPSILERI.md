@@ -1,0 +1,258 @@
+# HATA OTOPSİLERİ
+
+Bu projede **gerçekten olmuş** hatalar. Her biri için: ne oldu, nasıl
+görünüyordu, ne yakaladı, **ve bir daha sessizce geri gelmesini ne engelliyor.**
+
+> **Bu projenin işleyiş kuralı:** Bir hata bulunduğunda düzeltmek işin
+> yarısıdır. Diğer yarısı, o hatanın bir daha **sessizce** geri gelmesini
+> engelleyen kalıcı bir kontrol eklemektir. Kontrolü eklenmemiş bir düzeltme
+> tamamlanmamış sayılır.
+
+Genel hata sınıfları ve savunma hatları için: `RISKLER-VE-ONLEMLER.md` §2–§3.
+Burası **yaşanmış** olanların kaydı — genel doğrulardan daha öğretici.
+
+---
+
+## O-1 · Süper kullanıcı RLS'i aşıyordu ⚠ **en ciddi**
+
+**Tarih:** 10 Eylül 2026
+
+**Ne oldu:** Satır seviyesi güvenlik (RLS) doğru yazılmıştı, açılmıştı ve
+veritabanında `t/t` diye doğrulanmıştı. Ama uygulama veritabanına Docker'ın
+**süper kullanıcısıyla** (`tshift`) bağlanıyordu. PostgreSQL'de süper
+kullanıcı RLS'i **tamamen** aşar — `FORCE` bile durduramaz.
+
+**Nasıl görünüyordu:** Hiçbir hata yok. Kod derleniyor, uygulama çalışıyor,
+"RLS açık mı" sorgusu `t` dönüyor. **Güvenlik kâğıt üstünde vardı, çalışmada
+yoktu.**
+
+**Ne yakaladı:** İnceleme değil, **testin kendisi** — iki firma kurup
+"birbirini görüyor mu" diye sorunca görüldü.
+
+**Düzeltme:** İki rol. `tshift` migration çalıştırır, `tshift_app` uygulamayı
+taşır (`NOSUPERUSER`, `NOBYPASSRLS`).
+→ `04-kod/db/rls/02-uygulama-rolu.sql`
+
+**Kalıcı bekçi:** `M0 - Baglanan rol super kullanici degil (RLS gercekten
+yururlukte)` — **12 Eylül 2026'da eklendi.**
+
+> **Bu bekçinin kendi hikâyesi var.** 10 Eylül'de eklendiği kaydedilmişti ve
+> `RISKLER-VE-ONLEMLER.md` onu bekçi olarak gösteriyordu — **ama test hiç var
+> olmamıştı.** Bu, 12 Eylül'de devir paketi hazırlanırken, dokümandaki her
+> iddia bir test adına bağlanmaya çalışılınca ortaya çıktı: bağlanacak test
+> yoktu.
+>
+> Yani projedeki en ciddi hatanın bekçisi iki gün boyunca **yalnızca kâğıt
+> üstünde** vardı — tam da hatanın kendisi gibi. Bu, `RISKLER-VE-ONLEMLER.md`
+> §2'deki 9 numaralı hata sınıfının ("gerekçenin kaybolması") doküman
+> üzerinde gerçekleşmiş hâlidir.
+
+**Testin tasarımı:** Rol **adına** bakmaz, `current_user`'ın **yetkisine**
+bakar (`pg_roles.rolsuper`, `rolbypassrls`). Böylece bağlantı dizesi sahibi
+role çevrilirse de, `tshift_app` rolüne sonradan yetki verilirse de yakalar.
+
+**Kırmızı kanıt (12 Eylül):**
+
+```
+  rolname   | rolsuper | rolbypassrls
+------------+----------+--------------
+ tshift     | t        | t
+ tshift_app | f        | f
+```
+
+Uygulama `tshift` ile bağlansaydı M0 **iki ayrı iddiadan birden** kırılırdı.
+
+### Çıkarılan genel ders
+
+> **"Koruma tanımlı mı" yanlış sorudur. Doğru soru: "koruma şu anda beni
+> durduruyor mu?"**
+>
+> Her koruma için, korumanın **yürürlükte olduğunu** kanıtlayan ayrı bir
+> kontrol gerekir.
+
+Bu ders sahanın standart kalite listelerinde **yok**. Oradaki risk
+taksonomilerinde "güvenliği örtük varsayma" maddesi var ama **"koruma tanımlı
+ama etkisiz"** diye bir satır yok. Bu bize ait bir bulgu.
+
+---
+
+## O-2 · JWT `sub` talebi sessizce yeniden adlandırılıyordu ⚠
+
+**Tarih:** 10 Eylül 2026
+**Yılmaz'ın tarif ettiği "bağlam kopması" sınıfının tam örneği.**
+
+**Ne oldu:** `JwtBearer`, gelen jetonun `sub` talebini eski WS-Federation
+şemasına çeviriyor. Kod `sub` diye aradığı için kullanıcı kimliği `null`
+geliyor ve uç "yetkisiz" diyordu.
+
+**Nasıl görünüyordu:** **21 test yeşilken bütün korumalı uçlar 401
+dönüyordu.** Yetki mantığı doğruydu, kimlik mantığı doğruydu — kırılan yer
+**ikisinin buluştuğu sınırdı.**
+
+**Ne yakaladı:** Testler **kaçırdı**. Yakalayan şey uçtan uca kanıt betiği
+oldu — çünkü testlerin hepsi servisleri doğrudan çağırıyor, HTTP katmanından
+geçmiyordu.
+
+**Düzeltme:** `MapInboundClaims = false`
+
+**Kalıcı bekçi:** `HttpSinirTestleri` sınıfı — uygulamayı bellek içinde ayağa
+kaldırıp **gerçek HTTP isteği** atar. Özellikle `H1 - Jetonla /me calisir ve
+dogru kullaniciyi doner`.
+
+### Çıkarılan genel ders
+
+> **Birim testi katmanın İÇİNİ, uçtan uca test katmanların ARASINI doğrular.
+> Biri diğerinin yerine geçmez.**
+
+Yılmaz'ın itirazına verilecek cevap "daha iyi bir yapay zekâ" değil,
+**katman aralarını sınayan bir test katmanıdır.**
+
+---
+
+## O-3 · D6 testinin iddiası yanlış kurulmuştu
+
+**Tarih:** 11 Eylül 2026
+**Bu, "kodu yazan testi de yazıyor" riskinin gerçekleşmiş hali.**
+
+**Ne oldu:** *"B kiracısı hiçbir denetim kaydı görmemeli"* diye yazılmıştı.
+Yanlış bir iddia — B kendi işlemlerinin kaydını **görmeli**. Sınanmak istenen
+şey *"B, **A'nın** kayıtlarını göremez"* idi.
+
+**Nasıl görünüyordu:** Test kırmızı yandı. İlk tepki "kod bozuk" oldu.
+**Kod doğruydu, test yanlıştı.**
+
+**Düzeltme:** İddia **zayıflatılmadı**, gerçekte sınanan şeye çevrildi ve
+kimlik karşılaştırmasıyla **daha keskin** hale getirildi. Kod değişmedi.
+
+**Kalıcı bekçi:** Kod değil, bir **kural**:
+
+> Kırılan bir test, kodu doğru sanıp iddiayı zayıflatarak düzeltilmez.
+> Tek istisna: iddianın, sınanmak istenen şeyi yanlış ifade ettiği durum.
+> O zaman iddia **düzeltilir** — ve düzeltilmiş hali eskisinden **daha
+> keskin** olmalıdır.
+>
+> **Ayrım şu soruyla yapılır:** *"Bu değişiklikten sonra test, eskiden
+> yakalayacağı bir hatayı kaçırır mı?"* Cevap evetse, yapılan şey düzeltme
+> değil **örtbastır.**
+
+### Neden bu en öğretici hata
+
+Bu sefer şanslıydık: yanlış varsayım yalnız **teste** yazılmıştı, koda
+yazılmamıştı. Bu yüzden test kırmızı yandı ve yakalandı.
+
+**Eğer aynı yanlış varsayım hem koda hem teste yazılsaydı, test yeşil yanardı
+ve hiçbir şey fark edilmezdi.**
+
+Bu yüzden 12 Eylül'de şu kural konuldu: **kabul ölçütü, kod yazılmadan önce,
+Türkçe, Mustafa tarafından onaylanır.** Test o cümlenin çevirisi olur —
+yapay zekânın varsayımının değil.
+
+---
+
+## O-4 · Docker bağlamına Windows `bin/`/`obj/` giriyordu
+
+**Tarih:** 11 Eylül 2026
+
+**Ne oldu:** Windows'ta derlenmiş `bin/` ve `obj/` klasörleri (75 MB) Docker
+imajına kopyalanıp kutu içindeki restore'u eziyordu. Hata: `NETSDK1064`.
+
+**Nasıl görünüyordu:** Yerelde her şey çalışıyor, kutuda derleme patlıyor.
+Hata mesajı sebebi göstermiyordu.
+
+**Düzeltme:** `04-kod/.dockerignore`
+
+**Kalıcı bekçi:** `.dockerignore` dosyasının kendisi.
+
+---
+
+## O-5 · PowerShell 5.1 / UTF-8 tuzağı
+
+**Tarih:** 10 Eylül 2026
+
+**Ne oldu:** İki ayrı sorun aynı anda. (a) `-SkipHttpErrorCheck` parametresi
+yalnız PowerShell 7'de var, makinede **Windows PowerShell 5.1** kurulu.
+(b) 5.1 `.ps1` dosyalarını **ANSI** okuyor; UTF-8 Türkçe karakterler
+ayrıştırıcıyı bozuyordu.
+
+**Kalıcı kural:** Bütün `.ps1` dosyaları **saf ASCII** ve **PowerShell 5.1
+uyumlu** yazılır. → `00-BURADAN-BASLA.md` §7
+
+---
+
+## O-6 · `dotnet test` sırasında DLL kilidi
+
+**Tarih:** 11 Eylül 2026 (üç kez tekrarladı)
+
+**Ne oldu:** API çalışırken `dotnet test` çağrılınca DLL kilitli kalıyor,
+derleme `MSB3026`/`MSB3027` ile patlıyordu.
+
+**Düzeltme ve kalıcı bekçi:** `04-kod/TEST.ps1` — testten önce API'yi
+durduruyor. **Doğrudan `dotnet test` çağrılmaz.**
+
+---
+
+## O-7 · M4 testi kendi doküman satırını hata sanıyordu
+
+**Tarih:** 10 Eylül 2026
+
+**Ne oldu:** "Kültüre bağımlı `ToLower()` kullanma" testi, kendi açıklama
+yorumundaki örnek metni gerçek kullanım sanıp kırmızı yandı.
+
+**Düzeltme:** Yorum satırları atlanıyor.
+
+### Çıkarılan genel ders
+
+> **Yanlış alarm veren bir kontrol, bir süre sonra ciddiye alınmayan bir
+> kontrole dönüşür.** Gereksiz uyaran bir kapı, olmayan kapıdan daha kötüdür
+> — çünkü var sanırsın.
+
+Bu ders de sahanın standart kalite listelerinde **yok**. Kapı kurmayı uzun
+uzun anlatan kaynaklar **kapı bakımını** hiç konuşmuyor.
+
+---
+
+## O-8 · EF Core sürüm uyuşmazlığı ve analizör uyarıları
+
+**Tarih:** 10 Eylül 2026
+
+**Ne oldu:** EF paket sürümleri birbiriyle uyuşmuyordu; ayrıca EF1002/EF1003
+analizör uyarıları çıktı.
+
+**Düzeltme:** Sürümler sabitlendi. EF1003 için **dar kapsamlı** bir
+`#pragma warning disable` ve yanına **yazılı gerekçe**.
+
+**Kalıcı bekçi:** Sabitlenmiş paket sürümleri. *(Merkezî paket yönetimi —
+`Directory.Packages.props` — henüz yapılmadı, açık madde.)*
+
+---
+
+## Özet: hata → bekçi tablosu
+
+| # | Hata | Kalıcı bekçi | Durum |
+|---|---|---|---|
+| O-1 | Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil` | ✅ *(12 Eylül'de eklendi; iki gün boyunca yalnız kâğıt üstündeydi)* |
+| O-2 | JWT `sub` yeniden adlandırılıyordu | `HttpSinirTestleri` (özellikle H1) | ✅ |
+| O-3 | D6 iddiası yanlış kurulmuştu | Kırmızı çizgi kuralı + kabul ölçütü önce | ✅ |
+| O-4 | Docker bağlamı şişiyordu | `04-kod/.dockerignore` | ✅ |
+| O-5 | PowerShell 5.1 / UTF-8 | Saf ASCII + PS5.1 kuralı | ✅ |
+| O-6 | `dotnet test` DLL kilidi | `TEST.ps1` | ✅ |
+| O-7 | M4 yanlış alarm veriyordu | Yorum satırları atlanıyor | ✅ |
+| O-8 | EF sürüm uyuşmazlığı | Sabitlenmiş paket sürümleri | 🟡 Kısmi |
+
+---
+
+## Bu tablodan çıkan üç şey
+
+**1. Yılmaz haklı çıktı — ama sonuç değiştirilebilir.**
+O-2 tam olarak onun tarif ettiği hata. Fark şu ki artık kalıcı bir bekçisi
+var ve aynı şekilde geri gelemez.
+
+**2. Zaman kaybımızın çoğu yapay zekâdan değil, alet çantasından geldi.**
+O-4, O-5, O-6 — üçü de ortam, sürüm ve platform farkı. Hiçbiri "yapay zekâ
+gereksinimi yanlış anladı" değil. Sahanın kalite literatürü bu sınıfı hiç
+görmüyor çünkü idealize edilmiş bir Linux/CI dünyası için yazılmış.
+
+**3. En tehlikeli hata, hata gibi görünmeyendi.**
+O-1'de hiçbir şey kırmızı yanmadı, hiçbir şey uyarı vermedi, doğrulama
+sorgusu bile "her şey yolunda" dedi. Diğerlerinin hepsi gürültülüydü —
+gürültülü hata ucuzdur.
