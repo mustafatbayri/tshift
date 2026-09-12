@@ -173,6 +173,54 @@ kontrolü eklemek ve `05-HATA-OTOPSILERI.md`'ye yazmaktır.
 
 ## 4. Plan ve zamanlama
 
+### KARAR: MVP yapılmayacak — satılabilir sürüm spec'in fonksiyonel bütünüdür
+
+**Karar tarihi:** 12 Eylül 2026 (Mustafa) · **Tartışmaya kapalı**
+
+> *"Sahada ret yiyip arkada yazılım geliştirme döngüsüne girebilecek bir
+> lüksüm yok, spec'im net. Bu spec tamamlandığında satış yapabileceğim."*
+
+**Bu, kapsam disiplinsizliği değil, ürünün yapısından gelen bir zorunluluk.
+Gerekçeler kayda geçiriliyor ki altı ay sonra "neden MVP yapmadık" sorusu
+yeniden açılmasın:**
+
+1. **Vardiya planlaması kısmi değer üretmez.** Kuralların %80'ine uyan bir
+   plan, müdürün elle düzelteceği bir plandır — yani müşterinin zaten yaptığı
+   iş. Eksik *özellik* ertelenebilir; eksik *kural* planı kullanılamaz yapar.
+2. **Referans müşteri yok.** Bu pazarda bir ret kalıcı olarak kapı kapatır.
+   "Önce küçük sat, sonra büyüt" stratejisi referansı olanların lüksüdür.
+3. **Satış sonrası plan ekip kurmak.** Bütçeyle mimar/yazılım ekibi kurulup
+   devam edilecek (yapay zekâ desteği sürerek). Yani ilk satış, geliştirmenin
+   sonu değil finansmanı.
+
+**Bunun bu depo için sonucu:** kapsam kesme önerileri, Mustafa açıkça
+istemedikçe gündeme getirilmez. Kapsam sabit; oynayabilen değişkenler takvim
+ve sıralamadır.
+
+### İki ayrı "bitti" çizgisi
+
+MVP yapılmaması, her şeyin aynı anda bitmesi gerektiği anlamına gelmez.
+İki farklı eşik var:
+
+| | **Satış çizgisi** | **Müşteri verisi çizgisi** |
+|---|---|---|
+| Ne zaman | İlk demo yapılırken | İlk gerçek veri girmeden önce |
+| İçerik | Tüm ekranlar, tüm kurallar, motor, içe aktarma — **çalışır hâlde** | KVKK (A-9), eşzamanlılık (A-7), PgBouncer (A-8), 2000 kişide performans, yedekleme, denetim kaydı hacim yönetimi, WhatsApp/SMS altyapısı |
+| Müşteri görür mü | Evet | Hayır — ama eksikliği projeyi bitirir |
+
+İkinci listedeki maddeler **gölge pilot penceresinde** tamamlanır. Bunları
+satış çizgisinden ayırmak spec'ten feragat değil, sıralama.
+
+*Örnek: WhatsApp Business API'nin onay süreci ve maliyeti haftalar alabilir.
+Satışta "WhatsApp'tan da bildirim gider" demek ile Ocak'ta çalışır teslim
+etmek farklı işlerdir.*
+
+### Ocak'ı tehdit eden şey
+
+**Motor değil.** Motor spike'ta kanıtlandı, backend kalıpları oturdu.
+Tehdit **24 ekran ve CRUD/yönetim kuyruğu** — yavaş, sıkıcı, çok sayıda ve
+takvimlerin öldüğü yer. Bkz. `06-ACIK-RISKLER.md` A-13 (kapsam envanteri).
+
 - **Hedef:** Ocak sonunda ürünü sahaya çıkarmak.
 - **Pilot yöntemi: gölge pilot.** Pilot müşteri beklenmeyecek; bir çağrı
   merkezi operasyonundan gerçek veri alınıp, gerçek kullanıcı olmadan uçtan

@@ -336,6 +336,42 @@ açık sayısı ölçülür.
 
 ---
 
+## 🔴 A-13 · Kapsam envanteri yapılmadı — Ocak hedefi ölçülmedi
+
+**Ne:** Spec'te 44 tablo, 24 ekran, 27 kural, motor, içe aktarma ve 4 kanallı
+bildirim var. **MVP yapılmayacak** (karar: `01-PROJE-KIMLIGI.md` §4) — yani
+kapsam sabit. Ama bu kapsamın Ocak sonuna sığıp sığmadığı **hiç
+hesaplanmadı**.
+
+**Neden 🔴:** Sığmıyorsa bunu Eylül'de öğrenmek ile Aralık'ta öğrenmek
+arasında dağlar kadar fark var. Eylül'de öğrenilirse karar planlı verilir
+(takvim uzatma, ilk sektörü daraltma, ekran sadeleştirme — hepsi Mustafa'nın
+kararı). Aralık'ta öğrenilirse panikle kesilir.
+
+**Ne yapılacak:** Spec'teki her ekran ve özelliği çıkarıp haftalara yayan bir
+envanter. **Amacı kesmek değil görmek.** Kapsam kesme önerisi, Mustafa açıkça
+istemedikçe yapılmaz.
+
+**Dikkat edilecek:** Riskin ağırlığı motorda değil, **24 ekran ve
+CRUD/yönetim kuyruğunda.**
+
+---
+
+## 🔴 A-14 · Çağrı merkezi veri örneği hâlâ gelmedi
+
+**Ne:** Mustafa'nın eski işvereninden alınacak gerçek (anonimleştirilmiş)
+çağrı merkezi verisi bekleniyor. Gölge pilotun girdisi bu.
+
+**Neden 🔴 — ve neden kod işi değil:** Bu pazarda ret sebebinin bir numarası
+eksik özellik değil, **ürünün operasyonun gerçek işleyişine oturmaması**.
+Spec eksiksiz uygulansa bile, tek bir gerçek operasyonun verisi görülmeden
+bu risk kapanmaz. Kodla telafi edilemeyen tek açık madde budur.
+
+**Sahibi:** Mustafa. Geliştirmeden bağımsız ilerleyebilir — ve ne kadar erken
+gelirse o kadar çok karar etkiler.
+
+---
+
 ## 🟢 A-11 · Diğer bilinen borçlar
 
 | Ne | Not |
