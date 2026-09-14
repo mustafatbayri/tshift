@@ -100,10 +100,10 @@ Tek dosya, ~1 saat.
 
 ## 🔴 A-6 · Testlerin gerçek gücü ölçülmedi
 
-**Ne:** 38 test yeşil. Ama bu testlerin kodu **kasten bozsak** fark edip
+**Ne:** 39 test yeşil. Ama bu testlerin kodu **kasten bozsak** fark edip
 etmeyeceğini bilmiyoruz.
 
-**Neden kritik:** "38 test var" ile "38 test bir şeyi koruyor" aynı şey değil.
+**Neden kritik:** "39 test var" ile "39 test bir şeyi koruyor" aynı şey değil.
 Zayıf bir iddia (örn. yalnız "hata fırlatmadı" kontrolü) yeşil yanar ama
 hiçbir şey garanti etmez.
 
@@ -451,6 +451,6 @@ düzensizlikti.
 
 | Madde | Kapanış | Neyle |
 |---|---|---|
-| A-1 K-9'un bekçisi yok | 12 Eylül 2026 | `M0 - Baglanan rol super kullanici degil` testi |
+| A-1 K-9'un bekçisi yok | 12 Eylül 2026 | `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` |
 | A-14 gerçek veri yok | 13–14 Eylül 2026 | 3,5 aylık PDKS + plan analiz edildi, 529 ihlal bulundu |
 | **A-4 CI yok** | **14 Eylül 2026** | **GitHub Actions koştu ve yeşil yandı** |

@@ -230,7 +230,7 @@ analizör uyarıları çıktı.
 
 | # | Hata | Kalıcı bekçi | Durum |
 |---|---|---|---|
-| O-1 | Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil` | ✅ *(12 Eylül'de eklendi; iki gün boyunca yalnız kâğıt üstündeydi)* |
+| O-1 | Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` | ✅ *(12 Eylül'de eklendi; iki gün boyunca yalnız kâğıt üstündeydi)* |
 | O-2 | JWT `sub` yeniden adlandırılıyordu | `HttpSinirTestleri` (özellikle H1) | ✅ |
 | O-3 | D6 iddiası yanlış kurulmuştu | Kırmızı çizgi kuralı + kabul ölçütü önce | ✅ |
 | O-4 | Docker bağlamı şişiyordu | `04-kod/.dockerignore` | ✅ |

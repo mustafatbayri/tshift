@@ -255,6 +255,6 @@ saniyede %98,9 kapsama. Ölçek ürün riski değil.
 | Master Spec v1.2 | `02-spec/` | Güncel referans |
 | Motor fizibilite spike'ları | `01-spike/` | Donduruldu, kronoloji README'de |
 | Demo (15 ekran, 2 operasyon) | `03-demo/v2-html/` | Yayınlandı, telefonda açılabiliyor |
-| Çalışan dikey dilim | `04-kod/` | 38 test yeşil, kutuda çalışıyor |
+| Çalışan dikey dilim | `04-kod/` | 39 test yeşil, CI'da koşuyor |
 | Yılmaz inceleme paketi | `05-inceleme/v1-2026-09-11/` | Gönderildi |
 | Excel okuyup UI'da doğrulayan mevcut araç | Mustafa'da | Sıfırdan yazılmayacak, entegre edilecek |

@@ -20,7 +20,7 @@ operasyona oturmamasıdır."* Aşağıdaki bulgular tam olarak o riski ölçüyo
 | Dosya | 48 CSV, ~100 MB | ~70 Excel (xlsx/xlsm) |
 | Dönem | Haziran–Eylül 2026 | 2026-06-01 → 2026-09-13 (105 gün, ~15 hafta) |
 | Biçim | UTF-8 BOM, `;` ayraçlı, 29 kolon | 4 sayfalı çalışma kitabı |
-| İncelenen | 4 dosya | 43 dosya |
+| İncelenen | 4 dosya | **69 dosya (tamamı)** |
 
 **Kritik bağlam:** Bu bir çağrı merkezi *firması* değil, **bir seyahat
 acentesinin tamamı**. İçinde hem çağrı merkezi hem otel operasyonu var:
@@ -95,18 +95,18 @@ FESİH, R.TATİL, OFF, D.GÖREV, İSTİFA, RAPORLU, TŞ.İZNİ, Ü.Lİ.İZİN,
 
 ## 4. Bulgular — bunlar spec'i ve testleri değiştiriyor
 
-### 🔴 B-1 · Kapsama hesabı 43 dosyanın 28'inde BOZUK
+### 🔴 B-1 · Kapsama hesabı 69 dosyanın 42'sinde BOZUK
 
 HC sayfası — *"şu saatte kaç kişi var"* sorusunun cevabı — çoğu dosyada
 Excel formül hatası veriyor:
 
 | HC sayfasının durumu | Dosya |
 |---|---|
-| **`#REF!` — kırık formül** | **28** |
-| Sayfa hiç yok | 9 |
-| Gerçek sayı var | **6** |
+| **`#REF!` — kırık formül** | **42** |
+| Sayfa hiç yok | 18 |
+| Gerçek sayı var | **9** |
 
-**İncelenen 43 planın yalnız 6'sında kapsama hesabı çalışıyor.**
+**69 planın yalnız 9'unda kapsama hesabı çalışıyor.** (%13)
 
 Yani ekip, vardiya planlarını *"bu planla saat 14:00'te kaç kişi sahada
 olacak"* sorusunu **cevaplayamadan** yayınlıyor. Çalışan 6 dosyada kapsama
@@ -115,41 +115,41 @@ dilim başına 1–9 kişi, ortalama 4.
 **Bu, bu veri kümesindeki en güçlü satış argümanı** — ve iddia değil, kanıt.
 Ürünümüzün *doğrulayıcısı* tam olarak bu boşluğu kapatıyor.
 
-### 🔴 B-2 · Gece yarısını aşan 175 vardiya — varsayım değil, gerçek
+### 🔴 B-2 · Gece yarısını aşan 182 vardiya — varsayım değil, gerçek
 
 | Desen | Sayı |
 |---|---|
-| `16:00-01:00` | 84 |
-| `15:00-00:00` | 66 |
+| `16:00-01:00` | 82 |
+| `15:00-00:00` | 73 |
 | `18:00-00:00` | 11 |
-| `18:00-01:00` | 7 |
-| `17:00-01:00` | 6 |
+| `18:00-01:00` | 8 |
+| `17:00-01:00` | 7 |
 | `17:00-00:00` | 1 |
-| **Toplam** | **175** |
+| **Toplam** | **182** |
 
 `02-DEGISMEZLER.md` **G-6** (zaman modeli) ve `04-TEST-HARITASI.md` **G12**
 (saat dilimi) bekçisiz açıklardı ve *"vardiya ürünü için kritik"* diye
 işaretlenmişti. **Artık varsayım değil:** operasyonun kendisi gece yarısını
 aşan vardiya kullanıyor. Çakışma, günlük saat toplamı ve minimum dinlenme
-hesapları bu 175 atamada yanlış çıkarsa plan yanlış olur.
+hesapları bu 182 atamada yanlış çıkarsa plan yanlış olur.
 
 **A-5'in önceliği yükseldi.**
 
-### 🟡 B-3 · 17 farklı vardiya deseni — beklediğimizden çok daha fazla
+### 🟡 B-3 · 18 farklı vardiya deseni — beklediğimizden çok daha fazla
 
-4.795 atama, **17 farklı** başlangıç-bitiş deseni:
+4.625 atama, **18 farklı** başlangıç-bitiş deseni:
 
 | Desen | Sayı | | Desen | Sayı |
 |---|---|---|---|---|
-| `09:00-18:00` | 3.170 | | `12:00-18:00` | 31 |
-| `14:00-23:00` | 601 | | `18:00-00:00` | 11 |
-| `09:00-15:00` | 404 | | `15:00-21:00` | 8 |
-| `11:00-20:00` | 291 | | `18:00-01:00` | 7 |
-| `16:00-01:00` | 84 | | `17:00-01:00` | 6 |
-| `15:00-00:00` | 66 | | `14:00-20:00` | 6 |
-| `12:00-21:00` | 53 | | `10:00-19:00` | 3 |
-| `17:00-23:00` | 51 | | `13:30-21:00` | 2 |
-| | | | `17:00-00:00` | 1 |
+| `09:00-18:00` | 2.993 | | `18:00-00:00` | 11 |
+| `14:00-23:00` | 635 | | `15:00-21:00` | 8 |
+| `11:00-20:00` | 368 | | `18:00-01:00` | 8 |
+| `09:00-15:00` | 333 | | `17:00-01:00` | 7 |
+| `16:00-01:00` | 82 | | `14:00-20:00` | 3 |
+| `15:00-00:00` | 73 | | `10:00-19:00` | 3 |
+| `12:00-21:00` | 37 | | `13:30-21:00` | 2 |
+| `17:00-23:00` | 32 | | `13:00-22:00` | 1 |
+| `12:00-18:00` | 28 | | `17:00-00:00` | 1 |
 
 Uzunluklar 6 ile 9 saat arasında değişiyor; `13:30-21:00` gibi yarım saatlik
 başlangıçlar var. **Vardiya kataloğu sabit bir liste değil** — ürün, müşterinin
@@ -214,9 +214,13 @@ sonucu bize girecek. Bu bir engel değil ama **sürtünme** — ve rakip ürünl
 
 ## 4b. Gerçek planlarda bulunan kural ihlalleri
 
-43 dosya tek bir kanonik tabloya indirildi (aynı gün için birden çok revizyon
-varsa **en son dosya** esas alındı): **3.955 vardiya ataması, 86 kişi,
-2026-06-01 → 2026-09-13.**
+**69 dosyanın tamamı** tek bir kanonik tabloya indirildi (aynı gün için birden
+çok revizyon varsa **en son dosya** esas alındı): **4.625 vardiya ataması,
+96 kişi, 2026-06-01 → 2026-09-13.**
+
+Bu iş `07-motor/donusturucu.py` ile yapıldı; denetim
+`07-motor/dogrulayici.py` ile. ⚠ O klasörde **motor yok** — bkz.
+`07-motor/OKU-BENI.md`.
 
 ### ⚠ Önce dürüst uyarı: bunlar BRÜT aralık
 
@@ -239,12 +243,32 @@ bulguları molalardan etkilenmez, saat toplamı bulguları etkilenir.
 
 Fiilen iki vardiya uzunluğu var: tam gün (9 sa) ve yarım gün (6 sa).
 
+### Doğrulama özeti: **529 kural ihlali**
+
+`07-motor/dogrulayici.py` çıktısı (69 dosya, kurallar `kurallar.json` v1.0):
+
+| Kural | Vaka | Kişi |
+|---|---|---|
+| `V04_HAFTALIK` — haftalık net 45 saat aşımı | 274 | 50 |
+| `V_ARDISIK` — 6 günden fazla ardışık çalışma | 167 | 37 |
+| `V03_DINLENME` — ardışık vardiya arası < 11 saat | 88 | 27 |
+| **TOPLAM** | **529** | |
+
+⚠ **Bu bir ALT SINIR.** Veri kısmi: kişi başına dönemin ~%58'i kayıtlı,
+çünkü plan dosyaları ekip ekip ve her gün herkesi kapsamıyor. Eksik gün
+ihlalleri **gizler, uydurmaz** — dolayısıyla gerçek sayı bundan yüksektir.
+Doğrulayıcı bu tamlık oranını kendisi raporlar.
+
+⚠ **`V04_HAFTALIK` varsayıma duyarlı:** mola `kurallar.json` içinde
+vardiya başına −1 saat kabul edildi (plan dosyalarında mola bilgisi yok).
+Mola 1,5 saat olsaydı bu ihlallerin çoğu kaybolurdu. Eşiği değiştirip tekrar
+koşmak, kararın varsayıma ne kadar bağlı olduğunu görmenin en hızlı yolu.
+
 ### Bulgu B-7 · Ardışık vardiyalar arası dinlenme 8 saate kadar düşüyor
 
 | Kontrol | Sonuç |
 |---|---|
-| Ardışık vardiyalar arası **< 11 saat** | **62 vaka / 25 kişi** |
-| Ardışık vardiyalar arası < 12 saat | 65 vaka / 27 kişi |
+| Ardışık vardiyalar arası **< 11 saat** | **88 vaka / 27 kişi** |
 | **En kısa dinlenme aralığı** | **8 saat** |
 
 Örüntü açık: gece vardiyası `16:00-01:00` biten kişi, ertesi gün `09:00-18:00`
@@ -256,12 +280,13 @@ olmadığı ayrıca teyit edilmeli — ama **operasyonel olarak** 8 saatlik ara
 **Bu, ürünümüzün V03 değişmezinin (minimum dinlenme) gerçek karşılığıdır ve
 mevcut süreç onu yakalamıyor.**
 
-### Bulgu B-8 · Haftalık süre: 553 kişi-hafta 45 saatin üstünde (brüt)
+### Bulgu B-8 · Haftalık süre ve ardışık gün
 
 | Kontrol | Sonuç |
 |---|---|
-| Haftalık brüt 45 saat aşımı | 553 kişi-hafta / 84 kişi (en yüksek 54 sa) |
-| Haftada 6 çalışma günü | 553 kişi-hafta / 84 kişi |
+| Haftalık **net** 45 saat aşımı (mola −1 sa varsayımıyla) | **274 kişi-hafta / 50 kişi** |
+| **6 günden fazla** ardışık çalışma | **167 vaka / 37 kişi** |
+| Haftada 6 çalışma günü (ihlal değil, ölçüm) | 651 kişi-hafta / 91 kişi |
 | Haftada 7 çalışma günü (hiç OFF yok) | **0** — haftalık tatil hep verilmiş |
 
 6 gün × 9 saat = 54 saat brüt. Ücretsiz 1 saat mola varsa net 48 saat — yine
@@ -297,25 +322,90 @@ PDKS'te `Firma` kolonu 7 farklı değer taşıyor ama gerçekte 3 şirket:
 | 45 + 2 + 1 + 1 | Kurumsal hizmetler A.Ş. — **aynı şirket, dört farklı yazım** |
 | 7 | `- - - - - - -` (boş) |
 
-**Bu doğrudan çok kiracılık modelimizi ilgilendiriyor:** bir müşteri = bir
-tüzel kişilik mi, yoksa bir grup içinde birden çok şirket mi? Veride
-`AltFirma` kolonu da var. **Mustafa'nın kararı gereken bir spec sorusu.**
+**Bu çok kiracılık modelimizi ilgilendiriyordu** — bir müşteri = bir tüzel
+kişilik mi, yoksa bir grup içinde birden çok şirket mi?
+
+✅ **Karar verildi (14 Eylül):** *"Buraya takılma. Şu an tek şirket
+mantığıyla ilerleyeceğiz."* Grup yapısı ürün kapsamına girmiyor.
 
 ---
 
-## 4c. Alınan kararlar (13 Eylül, Mustafa)
+## 4c. Alınan kararlar (13–14 Eylül, Mustafa)
+
+> **Bu bölüm bulgulardan daha bağlayıcıdır.** Aşağıdaki her satır, bir
+> bulgunun ürüne nasıl (ya da hiç) yansıyacağını belirler. Yeni bir pencere
+> bu tabloyu okumadan bulgulara göre iş yapmamalı.
+
+### Kapsam kararları
 
 | Konu | Karar |
 |---|---|
-| **Erlang-C hesabı** | **Kapsam DIŞI.** Erlang hesabı yapan bir ekran planlanmıyor; müşteriler bunu 3. parti ortamlarda veya kendi trafik verileriyle yapar. |
+| **Erlang-C hesabı** | **Kapsam DIŞI.** Erlang ekranı planlanmıyor; müşteri bunu 3. parti ortamda veya kendi trafik verisiyle yapar. |
 | **Geçmiş veriden yoğunluk tahmini** | **Kapsam İÇİ ve önemli.** Talep tahmini geçmiş veriden türetilecek. |
-| **"Uzaktan Çalışma" (B-5)** | **Evden çalışma demek** — kişi PC ile bağlanıp çalışıyor. İzin değil, **çalışma biçimi**. Kapsama sayısına dahil edilmeli. |
-| **Gerçekleşen verinin kaynağı** | PDKS değil, büyük ihtimalle **çağrı merkezi santral sistemi**. Çağrının ilk açılış ve son kapanış saati alınabiliyor; mola bilgisi olmasa da realizasyon için yeterli. |
+| **Analiz kapsamı** | **Otel tarafı analiz edilmeyecek.** Bizim için asıl veri **çağrı merkezi + plan**. PDKS'in grup geneli gelmesi ihracat hatası. |
+| **Çok tüzel kişilik (B-11)** | **Takılma.** Şu an **tek şirket mantığıyla** ilerlenecek. |
+| **Evden çalışma (B-5)** | **Önemli bulgu değil.** Takılma. |
+| **Anonimleştirme** | **Yapılmayacak.** Veri bu hâliyle kullanılacak; git'e girmemesi yeterli koruma. |
 
-**Santral kararının sonucu:** P-1'deki "%18 dolu Giriş/Çıkış" sorunu
-büyük ölçüde çözülüyor — santral verisi PDKS'ten çok daha eksiksiz olacak.
-Ama santral verisi de **mola taşımıyor**, yani B-7/B-8'deki brüt/net sorunu
-devam ediyor. Mola ya planda tanımlanmalı ya da parametre olarak girilmeli.
+### Veri kalitesi kararları — "düzeltmeyi ürün değil kullanıcı yapar"
+
+| Konu | Karar |
+|---|---|
+| **Yükleme formatı** | Gerçekleşen veri ve izinlerin **doğru formatta yüklenmesi müşterinin sorumluluğu.** |
+| **Tutarsız kodlar (B-4)** | **Takılma.** Ağır normalleştirme katmanı yazılmayacak; **editör ekranında kullanıcı kolayca düzeltir.** Bu, mevcut analizden çıkarım yapılacak bir konu değil. |
+| **Gerçekleşen kaynağı (P-1)** | **Santral veya PDKS — ikisiyle de devam.** Tek kaynağa bağlanılmayacak. |
+
+**Mimari sonucu:** Veri temizliği yükü **içe aktarma katmanından editör
+ekranına** kaydı. Editör, hatalı/eksik veriyi görünür kılıp hızlı düzeltmeye
+izin vermek zorunda — yani editör bir "rahatlık" değil, **veri kalitesi
+mekanizması**.
+
+### ⛔ REDDEDİLEN öneri: değişken planlama ufku (B-9)
+
+Claude "plan ufku 7–35 gün arası değişiyor, modelimiz bunu desteklemeli"
+demişti. **Mustafa reddetti ve gerekçesi daha güçlü:**
+
+> *"Biz ayın 1'inden itibaren ilgili ay içerisinde adalet kurallarını
+> uygulayacağız. Kullanıcı '35 günlük plan yapıyorum' diyemez. İsterse 35 günü
+> 5'e böler veya 30 ve 5 olarak planlar. Planlar genelde 1 veya 2 haftalık
+> yapılır, en zoru aylık. 2 aylık plan izin vb. durumlar zaten realist değil."*
+
+**Kural:** Planlama ufku **takvim ayını aşamaz.** Adalet penceresi = takvim
+ayı, ayın 1'inde başlar. Veride görülen 35 günlük plan, ürünümüzde iki plana
+bölünür.
+
+*Neden bu daha iyi:* Adalet ölçümü (OFF dağılımı, gece nöbeti dağılımı, fazla
+mesai) sabit bir pencereye ihtiyaç duyar. Kayan/değişken ufuk, adaleti
+ölçülemez hâle getirir. Veriden gelen "esneklik" aslında bir düzensizlikti.
+
+### ⭐ SATIŞ NOKTALARI — bulgular ürün argümanına dönüştü
+
+| # | Satış noktası | Kanıt |
+|---|---|---|
+| **1** | **Devir hızından dolayı yönetilemeyen operasyon.** Çağrı merkezinde kadro sürekli değişiyor; mevcut süreç bunu yönetemiyor. **Ürünün kritik özelliği.** | **B-10**: 89 kişinin yalnız 46'sı dört ayda da var; 27 kişi iki ay sonra kayboluyor |
+| **2** | **Mola planlama ve adil dağıtım.** *"Bununla uğraşanı görmedim planlamada. Bu hep gün içinde yönetilir."* | **B-8**: plan dosyası mola bilgisi taşımıyor, dolayısıyla net çalışma süresi hesaplanamıyor |
+| **3** | **Kapsama hesabı çalışmıyor.** Ekip planı, *"saat 14:00'te kaç kişi olacak"* sorusunu cevaplayamadan yayınlıyor. | **B-1**: 43 planın 28'inde HC sayfası `#REF!` |
+| 4 | Kural ihlalleri sessiz kalıyor (satış argümanı, mühendislik sorunu değil) | **B-7**: 62 vakada ardışık vardiya arası 8 saate düşüyor |
+
+**B-7 hakkında Mustafa'nın notu:** *"Bu zaten bizim satarken ortaya
+koyabileceğimiz bir müşteri hatası. Doğrusu bu değil, mevzuat da insanlık da
+bunu desteklemez."* — Yani bu bulgu **düzeltilecek bir teknik sorun değil**,
+gösterilecek bir kanıt.
+
+### 🔴 Yeni kapsam maddesi: MOLA MODELİ
+
+Satış noktası 2'nin doğrudan sonucu. Mola artık bir "detay" değil, **ürünün
+ayırt edici özelliği.** Gerektirdikleri:
+
+1. Mola, vardiya içinde **planlanan bir blok** olarak modellenmeli
+2. **Adil dağıtılmalı** — kimse sürekli kötü saatte mola almamalı
+3. **Kapsamadan düşülmeli** — molada olan kişi çağrı açmıyor
+4. Ücretli/ücretsiz ayrımı, net çalışma süresi hesabı için gerekli
+
+**Motor üzerindeki etkisi dürüstçe:** Bu, çözücüyü zorlaştırır. Vardiya
+atama + vardiya içi mola yerleştirme iki ayrı optimizasyon katmanıdır ve
+sektörde genelde iki fazda çözülür (önce vardiya, sonra mola). Motor
+sözleşmesi (A-10) bunu baştan hesaba katmalı.
 
 ---
 
@@ -334,14 +424,14 @@ devam ediyor. Mola ya planda tanımlanmalı ya da parametre olarak girilmeli.
 | **B-8 haftalık 45+ saat** | Mola modellenmeden net süre hesaplanamaz | **Spec: mola modeli** |
 | **B-9 ufuk 7–35 gün** | Sabit ufuk varsayımı yanlış | Spec §plan |
 | **B-10 kadro değişiyor** | Dönem ortası giriş/çıkış birinci sınıf durum | Spec §çalışan |
-| **B-11 üç tüzel kişilik** | Bir müşteri = bir şirket mi, grup mu? | **Mustafa'nın kararı** |
+| B-11 üç tüzel kişilik | ✅ Karar verildi: tek şirket mantığı, grup yapısı kapsam dışı | — |
 
 ### Artık gerçek veriye dayandırılabilecek testler
 
 Bu veri, `04-TEST-HARITASI.md`'deki boş senaryo sınıflarından üçünü
 **gerçek örneklerle** doldurmamızı sağlıyor:
 
-- **G12 saat dilimi** → 175 gerçek gece-yarısı ataması
+- **G12 saat dilimi** → 182 gerçek gece-yarısı ataması
 - **G02 sınır değerler** → kapsama 1–9 kişi arasında; 1 kişilik dilimler var
 - **G03/G04 boş ve bozuk girdi** → `#REF!`, `-`, tutarsız kodlar, %18 dolu
   Giriş/Çıkış
@@ -353,13 +443,16 @@ otel CC ekibi ile 97 kişilik çağrı merkezi aynı veri kümesinde.
 
 ## 6. Sonraki adım
 
-1. **Anonimleştirme betiği** — `06-veri/anonim` altına sicil→takma kimlik
-   eşlemesiyle türetilmiş veri. Testlerde bu kullanılacak, ham veri hiç
-   kullanılmayacak.
-2. **Plan → kanonik model dönüştürücü** — 43 dosyanın tamamını tek bir
-   normalleştirilmiş yapıya çevir; tutarsız kodları eşle, eşlenemeyeni raporla.
-3. **Doğrulayıcı prototipi** — gerçek planları V01–V12'ye karşı denetle.
-   **Beklenti: gerçek planlarda ihlal bulacağız.** Bulursak bu kötü haber
-   değil, ürünün varlık sebebinin kanıtı olur.
-4. Mustafa'nın iki kararı: B-5 (uzaktan çalışma kapsama sayılır mı) ve
-   B-6 (Erlang-C kapsamda mı).
+| # | İş | Durum |
+|---|---|---|
+| 1 | ~~Anonimleştirme betiği~~ | ⛔ **İptal** — veri bu hâliyle kullanılacak |
+| 2 | Plan → kanonik model dönüştürücü | ✅ **Yapıldı** → `07-motor/donusturucu.py` |
+| 3 | Doğrulayıcı prototipi | ✅ **Yapıldı** → `07-motor/dogrulayici.py`, **529 ihlal** bulundu |
+| 4 | Bekleyen kararlar | ✅ Hepsi §4c'de cevaplandı |
+| 5 | **Motor sözleşmesi (A-10)** | ⏭ **SIRADAKİ İŞ** — V01–V12 + mola modeli + UNSAT biçimi |
+
+**2 ve 3 neden şimdi ve neden bu sırayla:** M-09'da karar verilmişti —
+*doğrulayıcı önce, çözücü sonra.* Elimizde artık gerçek plan var, yani
+doğrulayıcı daha yazıldığı gün gerçek veriyle sınanabilir. Bu, motorun ilk
+gerçek parçasıdır; bu yüzden `06-veri` altında değil **`07-motor/`** altında
+duruyor: kod git'e girer, veri girmez.

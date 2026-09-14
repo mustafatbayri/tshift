@@ -227,3 +227,86 @@ tamamını kapsayacak şekilde yeniden yazıldı.
 M0 olayıydı. İkisi de aynı yöntemle bulundu: dokümandaki iddiayı gerçekle
 karşılaştırmak.*
 
+
+
+---
+
+## 10. DEVİR DENETİMİ — ve bulunan ciddi hata
+
+Mustafa: *"Önce şu devir için oluşturduğun dosyalarda her şey tamam mı onu
+bir netleştirir misin? Çok hızlı karar aldın."*
+
+Haklıydı. Devir paketi "tamam" diye ilan edilmeden önce **denetlendi** ve
+dört sorun çıktı.
+
+### 🔴 D-1 · Kararların yazıldığı bölüm makineye HİÇ GİTMEMİŞ
+
+`07-GERCEK-VERI-BULGULARI.md` dosyasının §4c bölümü — **Mustafa'nın 14 Eylül
+kapsam kararlarının tamamının yazılı olduğu yer** — yerel kopyada güncellenmiş
+ama makineye gönderilmemişti. Makinedeki sürüm 1.006 bayt, olması gereken
+4.389 bayt.
+
+**Kaybolacak olanlar:** analiz kapsamı kararı, çok tüzel kişilik kararı,
+anonimleştirme kararı, yükleme formatı kararı, **REDDEDİLEN değişken ufuk
+önerisi**, **SATIŞ NOKTALARI tablosu**, **MOLA MODELİ kapsam maddesi**.
+
+**Kök neden:** Claude dosyayı yerelde düzenledi, sonra tekrar düzenledi, ama
+yalnız bazı sürümleri gönderip commit etti. *Yerel kopya = makine kopyası*
+varsayımı yanlıştı ve bunu hiç kontrol etmedi.
+
+**Bu, R6'nın (devir dokümanının kendisi yanlış olur) üçüncü yakalanışı.**
+Öncekiler: M0 (doküman olmayan bir testi gösteriyordu), depo haritası
+(demo ve spike hiç yazılmamıştı).
+
+### 🟡 D-2 · Bayat rakamlar
+
+`07-GERCEK-VERI-BULGULARI.md` ilk analizin (43 dosya) rakamlarıyla kalmıştı;
+oysa sonradan 69 dosyanın tamamı işlendi. Düzeltilenler:
+
+| Ne | Eski (43 dosya) | Doğru (69 dosya) |
+|---|---|---|
+| İncelenen dosya | 43 | **69** |
+| Kanonik vardiya ataması | 3.955 | **4.625** |
+| Kişi | 86 | **96** |
+| Kırık HC sayfası | 28 | **42** |
+| HC hiç yok | 9 | **18** |
+| Çalışan HC | 6 | **9** |
+| Gece yarısını aşan | 175 | **182** |
+| Farklı vardiya deseni | 17 | **18** |
+| Kısa dinlenme vakası | 62 / 25 kişi | **88 / 27 kişi** |
+| **Toplam ihlal** | — *(dosyada hiç yoktu)* | **529** |
+
+**529 rakamı `00-BURADAN-BASLA.md` ve `06-ACIK-RISKLER.md`'de geçiyordu ama
+kaynak dokümanda hiç yoktu.** Yani dokümanlar birbiriyle çelişiyordu.
+
+### 🟡 D-3 · Test adı kısaltılmış
+
+İki yerde `M0 - Baglanan rol super kullanici degil` yazıyordu; koddaki tam ad
+`M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)`.
+Tam metin araması bulamaz — **M0 olayının aynı tuzağı.** Düzeltildi.
+
+**Kural:** Dokümanda geçen test adı, koddaki `DisplayName` ile **birebir**
+aynı olmalı.
+
+### 🟡 D-4 · Eski günlük adlandırması
+
+`oturumlar/2026-09-12.md` yeni adlandırma kuralına uymuyordu
+(`YYYY-AA-GG-<is-parcasi>.md`). `2026-09-12-devir-paketi.md` olarak
+kopyalandı; eskisi silinecek.
+
+### Denetim nasıl yapıldı — tekrarlanabilir olsun diye
+
+1. Makinedeki dosyalar **geri alındı** (yerel kopyaya güvenilmedi)
+2. Dokümanlardaki her test adı, koddaki `DisplayName` listesiyle karşılaştırıldı
+3. Sayılar dosyalar arası tarandı (39/38, 529/343, 43/69 …)
+4. Yerel ve makine kopyaları **bayt bayt karşılaştırıldı** → D-1 böyle bulundu
+5. Değişen ölçümler **tahmin edilmedi, yeniden koşuldu** (HC durumu 69 dosyada)
+
+### 📌 YENİ SÜREÇ KURALI
+
+> **Devir "tamam" denmeden önce, dosyalar makineden GERİ OKUNUR ve
+> karşılaştırılır.** Yerel kopyanın makineye gittiği varsayılmaz.
+>
+> Yazdım ≠ gönderdim ≠ commit ettim. Üçü ayrı adımdır ve üçü de doğrulanır.
+
+Bu kural `00-BURADAN-BASLA.md` §5 güncelleme ritüeline eklenecek.

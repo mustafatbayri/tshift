@@ -144,6 +144,19 @@ Mustafa **"aktarım dosyasını güncelle"** dediğinde şunlar yapılır:
    yenilenir. Bu iki bölüm her zaman güncel olmak zorundadır — devir
    paketinin geri kalanı bu ikisi yanlışsa işe yaramaz.
 4. `DEGISIM-GUNLUGU.md`'ye kilometre taşıysa satır eklenir, etiket atılır.
+5. **DENETİM — atlanmaz.** Devir "tamam" denmeden önce dosyalar makineden
+   **geri okunur** ve kontrol edilir:
+   - Dokümanda geçen her **test adı**, koddaki `DisplayName` ile **birebir**
+     eşleşiyor mu? (kısaltılmış ad, tam metin aramasında bulunamaz)
+   - **Sayılar** dosyalar arasında tutarlı mı? (test sayısı, ihlal sayısı,
+     dosya sayısı — biri güncellenip diğeri unutulmuş olabilir)
+   - İşaret edilen **dosya yolları** gerçekten var mı?
+   - Ölçüm değiştiyse **tahmin edilmez, yeniden koşulur.**
+
+> ⚠ **Yazdım ≠ gönderdim ≠ commit ettim.** Üçü ayrı adımdır ve üçü de
+> doğrulanır. 14 Eylül'de Mustafa'nın kapsam kararlarının tamamı yerel kopyada
+> güncellenmiş ama makineye hiç gitmemişti; denetim olmasa sessizce
+> kaybolacaktı. Bkz. `oturumlar/2026-09-14-veri-analizi.md` §10.
 
 ---
 
