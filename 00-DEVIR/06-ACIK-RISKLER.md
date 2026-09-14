@@ -33,7 +33,7 @@ birden kırılır.
 
 **Ne:** `02-DEGISMEZLER.md` K-9 diyor ki *"uygulama `tshift_app` ile bağlanır,
 `tshift` ile asla"*. `RISKLER-VE-ONLEMLER.md` ise bunun bekçisinin
-`0 - Baglanan rol super kullanici degil` adlı bir test olduğunu yazıyor.
+`M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` adlı bir test olduğunu yazıyor.
 
 **Bulgu (12 Eylül):** **Böyle bir test yok.** Ne `MimariTestleri` içinde, ne
 `CokKiracilikTestleri` içinde, ne `YALITIM-KANITI.ps1` betiğinde. Test

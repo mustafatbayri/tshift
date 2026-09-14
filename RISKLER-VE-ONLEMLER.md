@@ -248,12 +248,12 @@ Son madde bu projenin işleyiş biçimi. Şimdiye kadar üç ciddi hata çıktı
 
 | Hata | Bekçi |
 |---|---|
-| Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil` |
+| Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` |
 | EF sürümleri uyuşmuyordu | Sabitlenmiş paket sürümleri |
-| JWT `sub` talebi yeniden adlandırılıyordu | `H1 - Jetonla /me calisir` |
+| JWT `sub` talebi yeniden adlandırılıyordu | `H1 - Jetonla /me calisir ve dogru kullaniciyi doner` |
 
 > **Bu satırın hikâyesi — 12 Eylül 2026.** Bu tablo 10 Eylül'den beri süper
-> kullanıcı hatasının bekçisi olarak `0 - Baglanan rol super kullanici degil`
+> kullanıcı hatasının bekçisi olarak `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)`
 > adlı bir testi gösteriyordu. Devir paketi hazırlanırken doküman ile kod
 > karşılaştırıldı ve **böyle bir testin hiç var olmadığı** görüldü: ne test
 > dosyalarında, ne `YALITIM-KANITI.ps1` betiğinde.

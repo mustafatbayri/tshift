@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-14
+**Son güncelleme:** 2026-09-14 (ikinci oturum — altın senaryolar)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -55,31 +55,41 @@ Bulgular ve Mustafa'nın kapsam kararları: **`07-GERCEK-VERI-BULGULARI.md`**
 ⚠ `07-motor/` klasöründe **motor yok**, analiz araçları var. Bkz.
 `07-motor/OKU-BENI.md`.
 
+**Altın senaryolar tanımlandı (14 Eylül, ikinci oturum).** Spec §16.3'teki
+A1–A12'nin beklenen sonuçları Türkçe kabul cümlelerine çevrildi ve yedi ürün
+kararı (K-1…K-7) alındı: `08-motor-testleri/v2/KABUL-OLCUTLERI.md`.
+**Cümleler henüz onaylanmadı**, fikstürler yazılmadı, hiçbir test koşmuyor.
+
+**Devir denetimi artık betik (14 Eylül).** `DENETIM.py` — bu paketteki test
+adlarını, sayıları, dosya yollarını ve commit durumunu makineye kontrol
+ettirir. İlk koşusunda elle bulunmamış **altı gerçek tutarsızlık** buldu —
+üç dokümanda yanlış yazılmış test adı, özet tablosunda bayat rakam, eksik
+değişim günlüğü satırı. **Beşi düzeltildi**, biri (tarihsel günlükteki eski
+dosya adı) bilerek bırakıldı.
+
 ## 3. Sıradaki tek adım
 
-> **Motor — ama önce spec §11 ve §6 okunacak.**
+> **Mustafa A1–A12 kabul cümlelerini onaylayacak. Onaya kadar fikstür
+> yazılmaz.**
 >
-> ⚠ **Düzeltme (14 Eylül):** Bu satır daha önce *"motor sözleşmesi yazılmadı"*
-> diyordu. **Yanlıştı.** Spec §11'de 138 satırlık bir sözleşme taslağı zaten
-> var (`/solve` girdi-çıktı, `/evaluate`, `/suggest`, sürümleme), ve §6'da
-> 35 kural kodu parametreleriyle tanımlı. Sıfırdan yazılacak bir şey değil,
-> **tamamlanacak** bir şey var.
+> 1. **Oku:** `08-motor-testleri/v2/KABUL-OLCUTLERI.md`. §3'te 12 senaryonun
+>    "doğru çalışıyorsa ne görmeliyiz" cümleleri, §5'te alınan kararlar,
+>    §7'de veto edilebilir dört varsayım (V-1…V-4).
+> 2. **Onayla ya da düzelt.** `[çıkarım]` etiketli maddeler yapay zekânın
+>    yorumu — dikkat oraya.
+> 3. Onaydan sonra: kalan 11 fikstür (`08-motor-testleri/v2/fikstur/` altına A01–A12) ve pytest
+>    iskeleti. Motor olmadığı için hepsi **kırmızı** başlar; istenen budur.
+> 4. Sonra ürünün doğrulayıcısı, sonra çözücü (M-09).
 >
-> 1. **Spec §6 ve §11'i oku.** Kurallar, parametreler ve motor uçları orada.
-> 2. **Gerçek veriyle karşılaştır** (`07-GERCEK-VERI-BULGULARI.md`): 182
->    gece-yarısı ataması, 88 kısa dinlenme vakası, 529 ihlal.
-> 3. **§16'daki 12 altın senaryoyu (A1–A12) çalıştırılabilir teste çevir.**
->    Beklenen sonuçları şartname tanımlıyor; motorun ürettiğine bakarak
->    yazılmayacak.
-> 4. Ürünün doğrulayıcısı (önce), sonra çözücü (M-09).
+> **Paralelde açık kalanlar:**
 >
-> *Not: "UNSAT spec'te tanımsız" diye bir madde vardı — **yanlıştı.** §11.3
-> çözümsüzlüğü teşhisiyle birlikte tanımlıyor: hangi hücre, kaç kişi gerekli,
-> hangi kural engelliyor, hangi gevşetme çözer.*
->
-> **Paralelde açık kalan:** A-4 CI dosyası yazıldı ama **bir kez bile
-> koşmadı** — `git push` sonrası Actions sekmesine bakılmalı. Sonrasında
-> CsCheck (A-6 öncesi), Stryker, zaman modeli testleri (A-5).
+> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — bu pencerede
+>   Mustafa'nın makinesinde kabuk çalıştırılamadı. **İlk kez Mustafa
+>   koşacak:** `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`.
+> - **K-4 uzman teyidi bekliyor** — İş Kanunu md. 68 mola yorumu.
+> - Spec **v1.4** yazılmadı: sekiz tutarsızlık (T-1…T-8) ve yedi karar
+>   (K-1…K-7) v1.3'e işlenmedi. v1.3'e dokunulmayacak, yeni sürüm açılacak.
+> - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
 
@@ -99,7 +109,8 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | 5 | `04-TEST-HARITASI.md` | Test yazacak ya da mevcut bir testi değiştireceksen |
 | 6 | `05-HATA-OTOPSILERI.md` | Yeni bir savunma/kontrol tasarlayacaksan |
 | 7 | `06-ACIK-RISKLER.md` | Yayına çıkma, ölçek ya da güvenlik konuşulacaksa |
-| 8 | `oturumlar/` | Belirli bir değişikliğin ne zaman ve neden yapıldığını arıyorsan |
+| 8 | `08-URUN-KARARLARI.md` | **Bir ürün davranışının neden böyle olduğunu soruyorsan.** K-serisi: verilmiş kararlar, gerekçeleriyle |
+| 9 | `oturumlar/` | Belirli bir değişikliğin ne zaman ve neden yapıldığını arıyorsan |
 
 ### Deponun tamamı — nerede ne var
 
@@ -117,6 +128,8 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
+| **`08-motor-testleri/`** | ⚠ **Motor YOK, test de koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. `08-motor-testleri/v1/` dondurulmuş, `08-motor-testleri/v2/` güncel. Bkz. `08-motor-testleri/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
 | `RISKLER-VE-ONLEMLER.md` | 15 hata sınıfı, savunma hatları, **kırmızı çizgiler §6** | Veri/sır/migration'a dokunmadan önce |
@@ -154,14 +167,23 @@ Mustafa **"aktarım dosyasını güncelle"** dediğinde şunlar yapılır:
    yenilenir. Bu iki bölüm her zaman güncel olmak zorundadır — devir
    paketinin geri kalanı bu ikisi yanlışsa işe yaramaz.
 4. `DEGISIM-GUNLUGU.md`'ye kilometre taşıysa satır eklenir, etiket atılır.
-5. **DENETİM — atlanmaz.** Devir "tamam" denmeden önce dosyalar makineden
-   **geri okunur** ve kontrol edilir:
-   - Dokümanda geçen her **test adı**, koddaki `DisplayName` ile **birebir**
-     eşleşiyor mu? (kısaltılmış ad, tam metin aramasında bulunamaz)
-   - **Sayılar** dosyalar arasında tutarlı mı? (test sayısı, ihlal sayısı,
-     dosya sayısı — biri güncellenip diğeri unutulmuş olabilir)
-   - İşaret edilen **dosya yolları** gerçekten var mı?
-   - Ölçüm değiştiyse **tahmin edilmez, yeniden koşulur.**
+5. **DENETİM — atlanmaz, ve artık elle yapılmıyor:**
+
+   ```
+   cd C:\Users\PC\Desktop\Tshift
+   py DENETIM.py
+   ```
+
+   Yedi kontrolü makine yapar: test adlarının `DisplayName` ile birebir
+   eşleşmesi, sayı tutarlılığı, dosya yollarının varlığı, değişmez özet
+   tablosu, günlük adlandırması, değişim günlüğünün tazeliği ve **commit
+   edilmemiş devir dosyası** olup olmadığı. Çıkış kodu 0 değilse devir
+   "tamam" değildir.
+
+   Betiğin yapamadığı iki şey elde kalır:
+   - **Ölçüm değiştiyse tahmin edilmez, yeniden koşulur.**
+   - Betik *tutarlılığa* bakar, *doğruluğa* değil. Tutarlı bir yanlış yine
+     yakalanmaz; onu ancak iddiayı kaynağıyla karşılaştırmak yakalar.
 
 > ⚠ **Yazdım ≠ gönderdim ≠ commit ettim.** Üçü ayrı adımdır ve üçü de
 > doğrulanır. 14 Eylül'de Mustafa'nın kapsam kararlarının tamamı yerel kopyada
@@ -187,6 +209,20 @@ ama **hepsi sırayla.** Aynı anda **tek aktif pencere** olur.
 | Sohbet uzadı / yavaşladı | Günlüğü yaz, yeni pencere |
 | **Aynı hata iki kez düzeltildi** | **Dur.** Bağlamın kirlendiğinin en net işareti. |
 | Doküman ile kod çelişiyor | Kod yazma; hangisinin doğru olduğunu Mustafa'ya sor |
+
+### Açılış beyanı — yeni pencere işe başlamadan önce
+
+> **Yeni pencere, dosya yazmadan önce şunu söyler:** hangi dosyaları okudum,
+> sıradaki adımı nasıl anladım, hangi varsayımla başlıyorum.
+
+**Neden (karar: 14 Eylül 2026):** Aşağıdaki tablo *"doküman yanlış başlarsa
+yakalamaz"* diyor ve bu açık kapalı değildi. Testler başlangıcı yönlendirmez,
+doküman da yanlış anlaşılmayı göremez. Açılış beyanı **Mustafa'nın**
+görebileceği tek an: iş yapılmadan önce.
+
+Bedeli bir mesaj, getirisi yanlış yöne gidilmiş bir oturum. 14 Eylül'de
+kendiliğinden yapıldı ve işe yaradı — şartnamedeki bir çelişki daha ilk
+mesajda görüldü.
 
 ### Yazma hakkı
 
@@ -223,6 +259,8 @@ yaparsın.**
 | Ne | Ne işe yarar | Neyi yaramaz |
 |---|---|---|
 | **Doküman** (`00-DEVIR/`) | Yeni pencerenin **doğru başlamasını** sağlar | Yanlış başlarsa yakalamaz |
+| **Açılış beyanı** | Yanlış başlangıcı **iş yapılmadan** yakalar | Sessiz kalan varsayımı göremez |
+| **`DENETIM.py`** | Dokümanın **kendi içinde tutarsızlığını** yakalar | Tutarlı bir yanlışı göremez |
 | **Testler** (39 + M0–M6) | Bir ilişki bozulursa **kırmızı yanar** | Başlangıcı yönlendirmez |
 
 **Asıl güvence testlerdir, doküman değil.** Doküman iyi niyeti taşır; test
@@ -239,12 +277,17 @@ ve tam o anda otomatik kapıya en çok ihtiyaç duyulur.
 | R3 | Bozuk bir şey sağlam sanılır | 06'da açık durum işaretleri | ✅ |
 | R4 | Mevcut kod bozulur | Testler | ⚠️ **CI koşana kadar zayıf** |
 | R5 | İki pencere yazar, sürüklenme | Tek aktif pencere kuralı | ✅ |
-| R6 | Devir dokümanının kendisi yanlış olur | Her iddia bir teste/dosyaya/komuta bağlı | ✅ *(M0'da işe yaradı)* |
-| R7 | **Dokümanlar büyür, okumak kendisi bağlam sorunu olur** | Giriş 1 sayfa; derin dosyalar talep üzerine; **düzenli sadeleştirme** | 🟡 Sınanmadı |
+| R6 | Devir dokümanının kendisi yanlış olur | Her iddia bir teste/dosyaya/komuta bağlı **+ `DENETIM.py`** | ✅ *(M0'da, sonra 14 Eylül'de betikle)* |
+| R7 | **Dokümanlar büyür, okumak kendisi bağlam sorunu olur** | Giriş 1 sayfa; derin dosyalar talep üzerine; **düzenli sadeleştirme** | 🔴 **Eşikte** — 9 dosya |
 
 **R7 için kural:** Yeni bir devir dosyası açmadan önce sor — *bu, var olan bir
 dosyanın bölümü olabilir mi?* `00-DEVIR/` dokuz dosyayı geçerse sadeleştirme
 zamanı gelmiştir.
+
+⚠ **14 Eylül: dokuzuncu dosya açıldı** (`08-URUN-KARARLARI.md`). Soru soruldu
+ve cevabı "hayır" çıktı — ürün kararı mimari karar değil, ve adı içeriğine
+uymayan dosya bu projede zaten bir kez pahalıya mal oldu. **Onuncu dosyadan
+önce sadeleştirme yapılmalı.** `DENETIM.py` bunu otomatik uyarıyor.
 
 ---
 

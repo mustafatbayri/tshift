@@ -215,7 +215,7 @@ katmandır.** Uygulamada "silmeyin" demek yeterli değil.
 | G-3 | `appsettings.json` içinde gerçek parola/sır yok | ✅ | `M5 - appsettings icinde gercek parola yok` |
 | G-4 | Kimlikler **UUIDv7**, istemci tarafında üretilir | 🔒 | (şema; değiştirilmesi tüm yabancı anahtarları etkiler) |
 | **G-5** | **Benzersizlik kontrolü kodda değil, veritabanı kısıtında** (önce sor sonra yaz = iki eşzamanlı istekte ikisi de "yok" görür) | ⚠️ | **BEKÇİSİ YOK — bkz. A-3** |
-| **G-6** | **Zaman UTC + gece yarısını aşan vardiya modeli** (spec §6.3, Z-1…Z-6). Kiracı saat dilimi IANA adıyla saklanır, sabit ofsetle değil | ⚠️ | **Tanım v1.3'te yazıldı, BEKÇİ hâlâ yok — spec §16 A4/A5 teste çevrilecek** |
+| **G-6** | **Zaman UTC + gece yarısını aşan vardiya modeli** (spec §6.3, Z-1…Z-6). Kiracı saat dilimi IANA adıyla saklanır, sabit ofsetle değil | ⚠️ | **BEKÇİ hâlâ yok.** Kabul ölçütü 14 Eylül'de yazıldı: `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A4 ve A5. Fikstür ve test yok |
 | G-7 | `login_attempts` bilerek RLS dışında (kiracı bilinmeden yazılmak zorunda; aksi halde saldırgan olmayan firma adı yazarak kilidi atlar) | ✅ | `M2` bu istisnayı tanır |
 | G-8 | Sıra dışı her karar, yanındaki yorumda gerekçesiyle durur | — | İnsan incelemesi |
 
@@ -268,17 +268,29 @@ Tam liste `RISKLER-VE-ONLEMLER.md` §6'da. Özeti:
 
 ## Özet: kaç değişmez korunuyor?
 
-| Grup | Toplam | ✅ Bekçili | ⚠️ Açık |
-|---|---|---|---|
-| Çok kiracılık | 9 | **9** | 0 |
-| Yetki ve kapsam | 12 | 11 | **1** (Y-12) |
-| Kimlik ve oturum | 8 | 7 | **1** (I-8) |
-| Denetim kaydı | 8 | 8 | 0 |
-| Genel | 8 | 5 | **2** (G-5, G-6) |
-| **TOPLAM** | **45** | **41** | **4** |
+| Grup | Toplam | ✅ Bekçili | ⚠️ Açık | ⏳ Uygulanmadı |
+|---|---|---|---|---|
+| Çok kiracılık | 9 | **9** | 0 | 0 |
+| Yetki ve kapsam | 14 | 11 | **1** (Y-12) | **2** (Y-13, Y-14) |
+| Kimlik ve oturum | 8 | 7 | **1** (I-8) | 0 |
+| Denetim kaydı | 8 | 8 | 0 | 0 |
+| Genel | 8 | 5 | **2** (G-5, G-6) | 0 |
+| **TOPLAM** | **47** | **39** | **4** | **2** |
+
+> ⚠️ **Düzeltme (14 Eylül, ikinci oturum).** Bu tablo **45 / 41 / 4** diyordu
+> ve yanlıştı. Y-13 ve Y-14, 12 Eylül'de karar verilip satır olarak eklendi
+> ama özet güncellenmedi; Yetki grubu 12 değil **14** satır. Bekçili sayısı da
+> 41 değil **39** — ⏳ satırları bekçili sayılamaz, çünkü henüz kod yok.
+>
+> **Nasıl bulundu:** `DENETIM.py` tablonun kendi satırlarını sayıp yazılı
+> toplamla karşılaştırıyor. Elle üç denetimden geçmişti ve hiçbirinde
+> yakalanmamıştı. D-2 sınıfı (bayat rakam) bir hata.
+>
+> **Kural:** ⏳ satırları toplama girer, bekçiliye girmez. Karar verilmiş ama
+> uygulanmamış bir değişmez, korunuyor sayılmaz.
 
 Dört açığın hepsi `06-ACIK-RISKLER.md` altında izleniyor: A-2 (Y-12),
-A-3 (G-5), A-5 (G-6), ve I-8.
+A-3 (G-5), A-5 (G-6), ve I-8. İki ⏳ madde A-12'de.
 
 **Değişim günlüğü — bu tablo:**
 
@@ -286,3 +298,4 @@ A-3 (G-5), A-5 (G-6), ve I-8.
 |---|---|
 | 12 Eylül 2026 | Paket kuruldu: 39/45 bekçili, 5 açık |
 | 12 Eylül 2026 | **K-9 kapandı** (M0 eklendi) → 41/45, 4 açık. En kritik açıktı: bozulduğunda diğer 8 kiracılık değişmezi de anlamsızlaşıyordu. |
+| 14 Eylül 2026 | **Tablo düzeltildi** → 47 toplam, 39 bekçili, 4 açık, 2 uygulanmadı. Sayım hatası `DENETIM.py` ile bulundu. |

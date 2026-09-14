@@ -135,7 +135,7 @@ mi, senin kararın.
 
 ---
 
-## Şartnamedeki kabul senaryoları — henüz yazılmadı
+## Şartnamedeki kabul senaryoları — tanımlandı, hiçbiri koşmuyor
 
 **Master Spec v1.3 §16** on iki altın senaryo tanımlıyor (A1–A12): basit
 uygulanabilir, çelişkili sert kural → `cozumsuz`, yetkinlik açığı, **gece
@@ -143,11 +143,25 @@ yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak 
 çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
 plan kopyalama.
 
-**Hiçbiri henüz teste çevrilmedi** — motor yazılmadığı için çoğu şu an
-koşturulamaz zaten. Ama beklenen sonuçları **şartname tanımlıyor**, yani
-motorun ürettiğine bakarak yazılmayacaklar. Bu, bu projedeki en önemli test
-ilkesinin (uygulama ile doğrulayıcı aynı varsayımdan beslenmez) şartname
-seviyesindeki karşılığı.
+**Durum (14 Eylül, ikinci oturum):** On ikisinin de *"doğru çalışıyorsa ne
+görmeliyiz"* cümleleri ve somut veri setleri yazıldı —
+`08-motor-testleri/v2/KABUL-OLCUTLERI.md`. Beklenen sonuçlar **şartnameden
+türetildi**, motora bakılmadı; motor zaten yok.
+
+| Adım | Durum |
+|---|---|
+| Kabul cümleleri yazıldı | ✅ `v2/KABUL-OLCUTLERI.md` §3 |
+| Mustafa onayladı | ❌ **bekliyor** |
+| Fikstürler yazıldı | 🟡 yalnız örnek (`v2/fikstur/A04.json`) |
+| Testler koşuyor | ❌ motor yok |
+
+**Hiçbir test koşmuyor.** Bu tablonun ilk satırı yeşil diye kapsama
+büyümedi — kabul ölçütü bir taahhüttür, bekçi değil. Bekçi, fikstür pytest'e
+bağlandığında doğar.
+
+A1–A9 motor testi olacak (Python + pytest), A10–A12 backend testi (bu
+projedeki xUnit). Bu, projedeki en önemli test ilkesinin (uygulama ile
+doğrulayıcı aynı varsayımdan beslenmez) şartname seviyesindeki karşılığı.
 
 ---
 
@@ -187,7 +201,7 @@ hiçbiri testlerin gücünü ölçmüyor.
 
 ### Korunmayan değişmezler
 
-`02-DEGISMEZLER.md`'deki 45 değişmezin **4'ünün bekçisi yok**:
+`02-DEGISMEZLER.md`'deki değişmezlerin **4'ünün bekçisi yok**:
 
 | Değişmez | Neden önemli |
 |---|---|
@@ -197,4 +211,14 @@ hiçbiri testlerin gücünü ölçmüyor.
 | G-6 Zaman UTC + genişletilmiş saat | Yaz saatinde dinlenme kuralı yanlış hesaplanır |
 
 *~~K-9 Uygulama süper kullanıcıyla bağlanmaz~~ — **12 Eylül'de kapandı**,
-bekçisi `M0`.*
+bekçisi `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)`.*
+
+⚠ **14 Eylül: `DENETIM.py` bu sayıda bir tutarsızlık buldu.**
+`02-DEGISMEZLER.md` özet tablosu **45** diyor, satırları sayınca **47** çıkıyor
+(Yetki grubunda 14 satır var, tablo 12 diyor — Y-13 ve Y-14 sonradan eklendi
+ama özet güncellenmedi). Bekçili sayısı da 41 yazıyor, 39 sayılıyor.
+**Düzeltilmedi**; ayrı bir iş parçası olarak bırakıldı. Betiği koşarak
+güncel hâlini gör.
+
+G-6'nın bekçisi hâlâ yok, ama artık **ne olması gerektiği yazılı**:
+`08-motor-testleri/v2/KABUL-OLCUTLERI.md` A4 ve A5. Kabul ölçütü var, test yok.

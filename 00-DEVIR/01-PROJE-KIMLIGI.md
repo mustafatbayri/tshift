@@ -159,7 +159,7 @@ geri gelemeyeceği bir kontrola bağlandı:
 
 | Hata | Kalıcı bekçi |
 |---|---|
-| Süper kullanıcı RLS'i aşıyordu | `0 - Baglanan rol super kullanici degil` |
+| Süper kullanıcı RLS'i aşıyordu | `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` |
 | JWT `sub` yeniden adlandırılıyordu | `H1 - Jetonla /me calisir ve dogru kullaniciyi doner` |
 | EF sürümleri uyuşmuyordu | Sabitlenmiş paket sürümleri |
 | `dotnet test` DLL kilidi | `TEST.ps1` |

@@ -4,6 +4,63 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-14 · Altın senaryolar tanımlandı, devir denetimi betiğe çevrildi**
+Spec §16.3'teki A1–A12'nin beklenen sonuçları Türkçe kabul cümlelerine
+çevrildi — motor yazılmadan, motora bakmadan, şartnameden türetilerek.
+`08-motor-testleri/` açıldı: `v1/` taslak (donduruldu), `v2/` kararlar
+işlenmiş hâli, bir örnek fikstür ve fikstürün kendi içinde tutarlılığını
+kontrol eden bir betik. **Cümleler onay bekliyor; hiçbir test koşmuyor.**
+
+**Yedi ürün kararı** alındı ve yeni bir sicile geçti (`00-DEVIR/08-URUN-KARARLARI.md`,
+K-1…K-7). En çok şeyi değiştiren K-1: **sınır değerler ihlal sayılır** — tam
+11 saat dinlenme, tam 9 saat günlük çalışma. Firma ayarı olarak esnek
+bırakılıyor (`sinir_dahil` parametresi). K-7 doğrudan yeni bir test doğurdu:
+hafta toplamında yetersiz kapasite, hücre bazlı teşhisin göremediği durum.
+
+**`DENETIM.py` yazıldı** — `00-BURADAN-BASLA.md` §5'teki denetim ritüeli artık
+elle değil makineyle yapılıyor: test adları `DisplayName` ile birebir eşleşiyor
+mu, sayılar tutuyor mu, dosya yolları var mı, commit edilmemiş devir dosyası
+kaldı mı. *Gerekçe: §5b "asıl güvence testlerdir, doküman değil" diyor ama
+`00-DEVIR/` bu ilkenin dışında kalan tek parçaydı.*
+
+**İlk koşusunda elle bulunmamış altı tutarsızlık çıktı, dördü düzeltildi:**
+üç dokümanda `M0` test adı eksik ya da kısaltılmış yazılmıştı (biri
+`0 - Baglanan...` diye, baştaki M düşmüş), `H1` kısaltılmıştı, ve
+`02-DEGISMEZLER.md` özet tablosu **45/41** diyordu — doğrusu **47/39**.
+Y-13 ve Y-14 satır olarak eklenmiş ama özet güncellenmemişti. D-3 hatası
+14 Eylül'de iki yerde düzeltilmişti; **üçüncü yer gözden kaçmıştı.**
+
+Pencere protokolüne **açılış beyanı** eklendi: yeni pencere iş yapmadan önce
+ne okuduğunu ve sıradaki adımı nasıl anladığını söyler. Risk tablosundaki
+*"doküman yanlış başlarsa yakalamaz"* açığını kapatıyor.
+⚠ `00-DEVIR/` dokuz dosyaya ulaştı — **R7 eşiği.**
+→ `08-motor-testleri/`, `00-DEVIR/08-URUN-KARARLARI.md`, `DENETIM.py`
+
+**2026-09-14 · Gerçek müşteri verisi analiz edildi · CI yeşil yandı** ⚠
+*(Bu satır 14 Eylül'de yazılmamıştı; `DENETIM.py`'nin "değişim günlüğü geride"
+kontrolü ortaya çıkardı ve geriye dönük eklendi.)*
+
+Bir seyahat acentesinin 3,5 aylık PDKS (48 CSV) ve vardiya planı (71 Excel)
+dosyaları analiz edildi — **4.625 vardiya, 98 kişi, 105 gün**. Sonuç:
+**529 kural ihlali** ve kimse fark etmemiş. 274 haftalık saat aşımı, 167
+altı günden uzun ardışık çalışma, 88 kısa dinlenme. **A-14 kapandı:** ürünün
+gerçek operasyonda işe yarayıp yaramayacağı artık tahmin değil, ölçüm.
+
+**182 atama gece yarısını aşıyor** — kenar durum değil, olağan işleyiş. Müşteri
+Excel'inde gece yarısını yazabilmek için `00:00` yerine **`23:59` kullanmış
+(137 kez)**; içe aktarma bunu çevirmezse 1 dakikalık sistematik hata girer.
+
+**CI yeşil yandı — A-4 kapandı.** GitHub Actions koştu, 39 test + 7 mimari
+kuralı geçti. Kurallar artık öneri değil **kapı**. Pencere protokolü
+kararlaştırıldı ve `00-BURADAN-BASLA.md` §5b'ye yazıldı.
+
+**Master Spec v1.3** yazıldı (v1.2'ye dokunulmadı): gece yarısı zaman modeli
+Z-1…Z-6, DST taşınabilir-pasif, lookback 14 gün, onarım döngüsü, idempotency,
+**tekrarlanabilirlik garanti edilmiyor** (yerine plan kopyalama), ve **§16 test
+stratejisi + 12 altın senaryo**. Köken dokümanı depoya alındı — beş "yeni
+bulgu" orada zaten yazılıydı.
+→ `02-spec/v1.3-master-spec.md`, `00-DEVIR/07-GERCEK-VERI-BULGULARI.md`, `07-motor/`
+
 **2026-09-12 · Devir paketi kuruldu — ve kurulurken bir açık buldu** ⚠
 Uzun sohbetlerde bağlam kaybını önlemek için projenin hafızası sohbetten
 depoya taşındı: `00-DEVIR/` altında 8 dosya. Sohbet özeti değil **devir
