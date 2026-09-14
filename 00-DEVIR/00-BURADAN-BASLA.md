@@ -37,6 +37,8 @@ PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → 
 ```
 
 - **39/39 test yeşil.** Hepsi gerçek PostgreSQL'e karşı koşuyor, hiç mock yok.
+- **CI çalışıyor (14 Eylül).** Her `git push` sonrası testler GitHub Actions'ta
+  kendiliğinden koşuyor — kurallar artık öneri değil **kapı**.
 - **Tek komutla ayağa kalkıyor:** `docker compose --profile tam up --build`
 - **Çalışan ekranlar:** giriş, çalışan listesi (rol bazlı farklı davranıyor),
   yeni çalışan kaydı.
@@ -90,16 +92,29 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | 7 | `06-ACIK-RISKLER.md` | Yayına çıkma, ölçek ya da güvenlik konuşulacaksa |
 | 8 | `oturumlar/` | Belirli bir değişikliğin ne zaman ve neden yapıldığını arıyorsan |
 
-Depodaki diğer önemli dosyalar:
+### Deponun tamamı — nerede ne var
 
-| Dosya | İçerik |
-|---|---|
-| `02-spec/v1.2-master-spec.md` | **Ürünün şartnamesi.** Kabul ölçütlerinin birincil kaynağı. |
-| `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte |
-| `RISKLER-VE-ONLEMLER.md` | 15 hata sınıfı, savunma hatları, kırmızı çizgiler |
-| `SURUMLEME.md` | Hata yapılırsa nasıl geri dönülür |
-| `KALITE-ARASTIRMASI-DEGERLENDIRME.md` | Sahanın kalite pratiklerinin bizim projeye göre değerlendirmesi |
-| `05-inceleme/` | Dış inceleme paketleri |
+> **Bu klasör (`00-DEVIR/`) şartnameyi, demoyu ya da kodu İÇERMEZ; onlara
+> İŞARET EDER.** Devir paketi bir harita, arşiv değil. Aşağıdaki tablo o
+> haritanın tamamıdır.
+
+| Yol | İçerik | Ne zaman aç |
+|---|---|---|
+| **`02-spec/v1.2-master-spec.md`** | **Ürünün şartnamesi** — 15 bölüm, 44 tablo, 24 ekran, 27 kural, motor sözleşmesi taslağı, yetki matrisi §3.2. **Kabul ölçütlerinin birincil kaynağı.** | Ürün davranışı sorusu varsa. v1.0 ve v1.1 de aynı klasörde (geçmiş korunuyor). |
+| `03-demo/v2-html/tshift-demo-v2.html` | **Çalışan demo** — 15 ekran, iki operasyon (çağrı merkezi + otel), sürükle-bırak takvim. Tek HTML dosyası, tarayıcıda açılır. | Ekran tasarımı ya da akış konuşulacaksa. Ürünün görsel dili burada. |
+| `01-spike/` | **Motor fizibilite testleri** (7–8 Eylül) — CP-SAT vs greedy karşılaştırması, ölçek testleri (200→2000 kişi), otel senaryosu. Kronoloji ve ölçülen sayılar `01-spike/README.md`'de. | Motor yazılmadan **önce mutlaka.** Teknoloji kararının dayanağı burada. |
+| `04-kod/` | **Çalışan uygulama** — backend (.NET 10), frontend (Next.js 16), veritabanı betikleri, testler, Docker | Kod yazılacaksa |
+| `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
+| `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
+| `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
+| `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
+| `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
+| `RISKLER-VE-ONLEMLER.md` | 15 hata sınıfı, savunma hatları, **kırmızı çizgiler §6** | Veri/sır/migration'a dokunmadan önce |
+| `SURUMLEME.md` | Hata yapılırsa nasıl geri dönülür | Bir şey bozulduğunda |
+| `KALITE-ARASTIRMASI-DEGERLENDIRME.md` | Sahanın kalite pratiklerinin bu projeye göre değerlendirmesi | Test/süreç tasarımı yapılacaksa |
+
+**Git etiketleri** `v0.1-kiracilik` … `v0.8-devir` — her kilometre taşı
+işaretli, geri dönülebilir.
 
 ---
 
@@ -121,14 +136,92 @@ hiçbir cümle yazılmaz. Kanıtı olmayan bilgi `06-ACIK-RISKLER.md` altına,
 
 Mustafa **"aktarım dosyasını güncelle"** dediğinde şunlar yapılır:
 
-1. `oturumlar/YYYY-AA-GG.md` dosyası oluşturulur ya da eklenir — o oturumda
-   **hangi dosya neden değişti, hangi test eklendi, hangi karar verildi.**
-   Bu dosyalar **asla yeniden yazılmaz**, yalnız eklenir.
-2. Değişen şeye göre `02`–`06` arası ilgili dosyalar güncellenir.
+1. `oturumlar/YYYY-AA-GG-<is-parcasi>.md` dosyası yazılır — o oturumda
+   **hangi dosya neden değişti, hangi test eklendi, hangi karar verildi,
+   hangi öneri REDDEDİLDİ.** Bu dosyalar **asla yeniden yazılmaz.**
+2. Değişen şeye göre `02`–`07` arası ilgili dosyalar güncellenir.
 3. Bu sayfadaki **"Şu anda neredeyiz"** ve **"Sıradaki tek adım"** bölümleri
    yenilenir. Bu iki bölüm her zaman güncel olmak zorundadır — devir
    paketinin geri kalanı bu ikisi yanlışsa işe yaramaz.
 4. `DEGISIM-GUNLUGU.md`'ye kilometre taşıysa satır eklenir, etiket atılır.
+
+---
+
+## 5b. PENCERE PROTOKOLÜ
+
+**Karar: 14 Eylül 2026.** Uzun sohbetlerde bağlam kaybını önlemek için iş,
+pencereler arasında devredilir. Kurallar:
+
+### Ritim: iş parçası başına bir pencere, SIRALI
+
+Motor sözleşmesi bir pencere, CI+testler bir pencere, ekranlar bir pencere —
+ama **hepsi sırayla.** Aynı anda **tek aktif pencere** olur.
+
+| Durum | Ne yapılır |
+|---|---|
+| Yeni ve ilgisiz iş parçası | **Yeni pencere.** Bu sayfayı oku, devam et. |
+| Aynı işin küçük devamı | Aynı pencerede kal |
+| Sohbet uzadı / yavaşladı | Günlüğü yaz, yeni pencere |
+| **Aynı hata iki kez düzeltildi** | **Dur.** Bağlamın kirlendiğinin en net işareti. |
+| Doküman ile kod çelişiyor | Kod yazma; hangisinin doğru olduğunu Mustafa'ya sor |
+
+### Yazma hakkı
+
+> **Aynı anda yalnız bir pencere dosya yazar ve commit eder.**
+> Devredilen pencere **salt-okunur** olur: soru cevaplayabilir, dosya yazamaz.
+
+Devredilen pencere hemen kapatılmaz — **geri dönüş yoludur.** Yeni pencere
+devir paketini okuyup işe başladığını gösterene kadar açık kalır. Devir eksik
+çıkarsa oraya dönülüp tamamlanır.
+
+### Günlük dosyası adlandırma
+
+Aynı gün birden çok oturum olabilir. **İki pencere asla aynı dosyaya
+yazmaz:**
+
+```
+oturumlar/2026-09-14-veri-analizi.md
+oturumlar/2026-09-15-motor-sozlesmesi.md
+oturumlar/2026-09-15-ci-ve-testler.md     ← aynı gün, ayrı iş, ayrı dosya
+```
+
+İndeks dosyası **bilerek yok** — olsaydı çakışan dosya o olurdu. Kronolojik
+sıra dosya adından çıkar.
+
+**Paylaşımlı tek dosya bu sayfadır** (`00-BURADAN-BASLA.md`), çünkü "şu an
+neredeyiz" tek yerde olmak zorunda. Onu yalnız **aktif** pencere günceller.
+
+### Pencereler arası kopukluk — asıl güvence ne
+
+Yılmaz'ın *"bloklar arası ilişki kopar"* itirazının pencere seviyesindeki
+hâli. Cevap da aynı yerden gelir: **kopmayı engelleyemezsin, gürültülü
+yaparsın.**
+
+| Ne | Ne işe yarar | Neyi yaramaz |
+|---|---|---|
+| **Doküman** (`00-DEVIR/`) | Yeni pencerenin **doğru başlamasını** sağlar | Yanlış başlarsa yakalamaz |
+| **Testler** (39 + M0–M6) | Bir ilişki bozulursa **kırmızı yanar** | Başlangıcı yönlendirmez |
+
+**Asıl güvence testlerdir, doküman değil.** Doküman iyi niyeti taşır; test
+yanlışı yakalar. Bu yüzden **CI (A-4) pencere protokolünün önkoşuludur:**
+pencere değişince "testleri çalıştırmayı hatırlayan bağlam" ortadan kalkar,
+ve tam o anda otomatik kapıya en çok ihtiyaç duyulur.
+
+### Devirde bilinen riskler
+
+| # | Risk | Önlem | Kapalı mı |
+|---|---|---|---|
+| R1 | Yazıya dökülmemiş sezgi kaybolur | Oturum günlüğü | 🟡 Tanım gereği tam kapanamaz |
+| R2 | Verilmiş karar yeniden verilir | 02/03/06 + **reddedilenler kaydı** | ✅ |
+| R3 | Bozuk bir şey sağlam sanılır | 06'da açık durum işaretleri | ✅ |
+| R4 | Mevcut kod bozulur | Testler | ⚠️ **CI koşana kadar zayıf** |
+| R5 | İki pencere yazar, sürüklenme | Tek aktif pencere kuralı | ✅ |
+| R6 | Devir dokümanının kendisi yanlış olur | Her iddia bir teste/dosyaya/komuta bağlı | ✅ *(M0'da işe yaradı)* |
+| R7 | **Dokümanlar büyür, okumak kendisi bağlam sorunu olur** | Giriş 1 sayfa; derin dosyalar talep üzerine; **düzenli sadeleştirme** | 🟡 Sınanmadı |
+
+**R7 için kural:** Yeni bir devir dosyası açmadan önce sor — *bu, var olan bir
+dosyanın bölümü olabilir mi?* `00-DEVIR/` dokuz dosyayı geçerse sadeleştirme
+zamanı gelmiştir.
 
 ---
 

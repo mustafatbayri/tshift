@@ -67,11 +67,20 @@ ortaya çıktı.
 
 ---
 
-## 🟡 A-4 · CI — dosya yazıldı, henüz doğrulanmadı
+## ✅ A-4 · KAPANDI (14 Eylül 2026) — CI yeşil
 
-**Durum (12 Eylül):** `.github/workflows/testler.yml` yazıldı. **Henüz bir
-kez bile koşmadı** — ilk `git push` ile koşacak. Yeşil yanana kadar bu madde
-açık sayılır.
+`.github/workflows/testler.yml` GitHub Actions'ta **koştu ve yeşil yandı.**
+Artık her `git push` sonrası 39 test ve 7 mimari kuralı kendiliğinden koşuyor.
+
+**Neden bu madde kritikti:** Kurallar artık öneri değil **kapı**. Ve pencere
+protokolünün (bkz. `00-BURADAN-BASLA.md` §5b) önkoşulu buydu — pencere
+değişince "testleri çalıştırmayı hatırlayan bağlam" ortadan kalkar; otomatik
+kapı o boşluğu doldurur.
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-4 · Hiçbir kapı zorlayıcı değil: CI yok
 
 **Ne:** 39 test ve 7 mimari kuralı yalnız `TEST.ps1` elle çalıştırıldığında
 koşuyor. `git push` sırasında hiçbir şey çalışmıyor.
@@ -84,6 +93,8 @@ alışkanlık.
 **Çözüm:** GitHub Actions — her `push`'ta PostgreSQL servisi ayağa kalkar,
 migration + RLS betikleri çalışır, `dotnet test` koşar. Repo zaten GitHub'da.
 Tek dosya, ~1 saat.
+
+</details>
 
 ---
 
@@ -426,19 +437,20 @@ düzensizlikti.
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| ~~1~~ | ~~**A-1** süper kullanıcı bekçisi~~ | ✅ **12 Eylül'de kapandı** |
-| 1 | **A-4** CI | Kapıları öneri olmaktan çıkarır |
-| 2 | **A-6** mutasyon raporu | Mevcut 39 testin gerçek değerini söyler |
-| 3 | **A-5** zaman modeli testleri | Motor yazılmadan kapatmak ucuz |
+| **1** | **A-10 motor sözleşmesi** | Gerçek veri geldi; motorun neye göre yazılacağı artık biliniyor. V01–V12 + mola modeli + UNSAT biçimi. |
+| 2 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; motor yazılmadan kapatmak ucuz |
+| 3 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
 | 4 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
 | 5 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 6 | **A-10** motor sözleşmesi | Motorun önkoşulu |
+| 6 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
 | 7 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
 | 8 | **A-9** KVKK | Gerçek veriden önce |
 | 9 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
 ### Kapanan maddeler
 
-| Madde | Kapanış | Bekçi |
+| Madde | Kapanış | Neyle |
 |---|---|---|
-| A-1 K-9'un bekçisi yok | 12 Eylül 2026 | `M0 - Baglanan rol super kullanici degil` |
+| A-1 K-9'un bekçisi yok | 12 Eylül 2026 | `M0 - Baglanan rol super kullanici degil` testi |
+| A-14 gerçek veri yok | 13–14 Eylül 2026 | 3,5 aylık PDKS + plan analiz edildi, 529 ihlal bulundu |
+| **A-4 CI yok** | **14 Eylül 2026** | **GitHub Actions koştu ve yeşil yandı** |

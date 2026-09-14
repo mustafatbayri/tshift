@@ -1,8 +1,8 @@
-# Oturum · 13–14 Eylül 2026
+# Oturum · 13–14 Eylül 2026 · veri analizi
 
 **Başlangıç:** `v0.8-devir` · 39/39 test yeşil · A-14 açık (🔴)
-**Bitiş:** kod değişmedi · **A-14 kapandı** · gerçek veri analiz edildi ·
-analiz araçları yazıldı
+**Bitiş:** kod değişmedi · **A-14 ve A-4 kapandı** · gerçek veri analiz edildi ·
+analiz araçları yazıldı · **pencere protokolü kuruldu**
 
 > Bu dosya **append-only**. Yeniden yazılmaz, yalnız eklenir.
 
@@ -174,3 +174,56 @@ yanlış.
 
 **Alınan önlem:** Bundan sonra her çıktı için iki soru ayrı ayrı cevaplanacak:
 *"Bu ne yapıyor?"* ve *"Bu ne DEĞİL?"*
+
+---
+
+## 9. Gün sonu: A-4 kapandı, pencere protokolü kuruldu
+
+**CI yeşil yandı (14 Eylül).** GitHub Actions koştu, 39 test + 7 mimari kuralı
+geçti. **A-4 kapandı.** Kurallar artık öneri değil kapı.
+
+### Pencere protokolü kararlaştırıldı
+
+Mustafa'nın sorusu uzerine devir prosedürü netleştirildi ve
+`00-BURADAN-BASLA.md` §5b'ye yazıldı. Özet:
+
+| Konu | Karar |
+|---|---|
+| Ritim | **İş parçası başına bir pencere, SIRALI.** Aynı anda tek aktif pencere. |
+| Yazma hakkı | Yalnız aktif pencere yazar/commit eder. Devredilen **salt-okunur**. |
+| Devredilen pencere | Hemen kapanmaz — **geri dönüş yolu.** Yeni pencere işe başladığını gösterene kadar açık kalır. |
+| Günlük adlandırma | `YYYY-AA-GG-<is-parcasi>.md`. İki pencere asla aynı dosyaya yazmaz. İndeks dosyası **bilerek yok** (çakışan o olurdu). |
+| Paylaşımlı tek dosya | `00-BURADAN-BASLA.md` — yalnız aktif pencere günceller. |
+
+### Claude'un geri aldığı tavsiye
+
+Claude önce "hemen yeni pencereye geçelim" demişti. **Geri aldı:** pencereler
+arası asıl güvence testlerdir, ve testleri zorla koşturan mekanizma (CI) o an
+hiç çalışmamıştı. Pencere değişince "testleri çalıştırmayı hatırlayan bağlam"
+ortadan kalkar — tam o anda otomatik kapıya en çok ihtiyaç duyulur.
+Sıra ters kurulmuştu; önce CI, sonra devir.
+
+*Mustafa'nın uyarısı: "Çok hızlı karar aldın." Haklıydı.*
+
+### Devir riskleri yazıya döküldü
+
+R1–R7 tablosu `00-BURADAN-BASLA.md` §5b'de. İkisi açık kaldı:
+- **R1** yazıya dökülmemiş sezgi kaybı — tanım gereği tam kapanamaz
+- **R7** dokümanların büyümesi — `00-DEVIR/` dokuz dosyayı geçerse
+  sadeleştirme zamanı. *Bu oturumda R7 disiplini uygulandı: pencere protokolü
+  için yeni dosya açılmadı, giriş sayfasının bölümü yapıldı.*
+
+### Devir paketinin haritası tamamlandı
+
+Mustafa sordu: *"Bu devir dosyasında projenin analiz dokümanı, demo
+dokümanları falan da var değil mi?"*
+
+**Cevap: devir paketi onları içermez, onlara işaret eder** — ve işaret listesi
+eksikti. `03-demo/` (15 ekranlık çalışan demo) ve `01-spike/` (motor fizibilite
+testleri) haritada hiç yoktu. `00-BURADAN-BASLA.md` §4'teki tablo deponun
+tamamını kapsayacak şekilde yeniden yazıldı.
+
+*Bu, R6'nın (devir dokümanının kendisi yanlış olur) ikinci yakalanışı — ilki
+M0 olayıydı. İkisi de aynı yöntemle bulundu: dokümandaki iddiayı gerçekle
+karşılaştırmak.*
+
