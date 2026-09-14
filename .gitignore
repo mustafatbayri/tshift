@@ -43,3 +43,12 @@ desktop.ini
 01-spike/**/girdi_1000.json
 01-spike/**/girdi_2000.json
 *.zip
+
+# ---- GERÇEK MÜŞTERİ VERİSİ — ASLA GIT'E GİRMEZ ----
+# Çalışan verisi kişisel veridir (KVKK). Özel bir depo bile olsa gerçek
+# operasyon verisi sürüm kontrolüne girmez: git geçmişi silinmez, bir kez
+# yazıldıktan sonra geri almak "commit'i sil" ile bitmez.
+# Ham dosyalar 06-veri/ham altında kalır, git görmez.
+# Türetilmiş ANONİMLEŞTİRİLMİŞ örnekler 06-veri/anonim altına konur ve
+# ancak bilinçli bir kararla (bu satır değiştirilerek) git'e alınır.
+06-veri/

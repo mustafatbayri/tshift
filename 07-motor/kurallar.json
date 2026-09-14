@@ -1,0 +1,89 @@
+{
+  "_aciklama": [
+    "TShift kural parametreleri. KOD DEGIL VERI (bkz. 00-DEVIR/03-MIMARI-KARARLAR.md M-10).",
+    "Yanlis bir kural kod degisikligi degil parametre degisikligi gerektirir.",
+    "Dogrulayici bu dosyayi okur; icinde mantik yoktur, yalniz esik degerleri vardir."
+  ],
+  "surum": "1.0",
+  "tarih": "2026-09-14",
+
+  "zaman": {
+    "_not": "Vardiya gece yarisini asabilir. Asan vardiya BASLADIGI gune sayilir.",
+    "gun_baslangici": "00:00",
+    "gece_vardiyasi_esigi": "22:00"
+  },
+
+  "sert_kisitlar": {
+    "_not": "Bunlar hicbir amac agirligiyla cignenemez. Ihlal = plan gecersiz.",
+
+    "cakisma_yasak": {
+      "aktif": true,
+      "aciklama": "Ayni calisan ayni anda iki vardiyada olamaz."
+    },
+
+    "asgari_dinlenme_saat": {
+      "aktif": true,
+      "deger": 11,
+      "aciklama": "Ardisik iki vardiya arasinda birakilmasi gereken en az sure.",
+      "kaynak": "Yaygin asgari gunluk dinlenme esigi. Musteri sozlesmesine gore degisebilir."
+    },
+
+    "azami_gunluk_saat": {
+      "aktif": true,
+      "deger": 11,
+      "aciklama": "Bir gunde calisilabilecek en fazla BRUT sure.",
+      "uyari": "Plan verisinde mola yok; bu deger brut araliga uygulanir."
+    },
+
+    "azami_haftalik_saat": {
+      "aktif": true,
+      "deger": 45,
+      "aciklama": "Haftalik azami NET calisma suresi.",
+      "uyari": "Mola bilgisi olmadan net sure hesaplanamaz. Bkz. mola.varsayilan_dusum_saat"
+    },
+
+    "haftalik_tatil_zorunlu": {
+      "aktif": true,
+      "asgari_off_gun": 1,
+      "aciklama": "Her 7 gunluk pencerede en az bir tam tatil gunu."
+    },
+
+    "azami_ardisik_calisma_gunu": {
+      "aktif": true,
+      "deger": 6,
+      "aciklama": "Arka arkaya calisilabilecek en fazla gun sayisi."
+    }
+  },
+
+  "mola": {
+    "_not": "URUNUN 2. SATIS NOKTASI. Plan dosyalarinda mola bilgisi YOK; bu yuzden simdilik varsayimla dusuluyor.",
+    "planlanacak": true,
+    "varsayilan_dusum_saat": 1.0,
+    "ucretli_mi": false,
+    "aciklama": "Vardiya icinde planlanan mola blogu. Kapsamadan dusulur."
+  },
+
+  "adalet": {
+    "_not": "Bunlar IHLAL degil OLCUM. Pencere = takvim ayi, ayin 1'inde baslar.",
+    "pencere": "takvim_ayi",
+    "olculenler": [
+      "off_gun_sayisi",
+      "hafta_sonu_calisma_sayisi",
+      "gece_vardiyasi_sayisi",
+      "toplam_calisma_saati"
+    ],
+    "uyari_esigi_std_sapma": 1.5,
+    "aciklama": "Bir kisi ortalamadan bu kadar standart sapma uzaksa dikkat cekilir."
+  },
+
+  "calisma_disi_kodlar": {
+    "_not": "Bu kodlar 'calismadi' sayilir; kapsamaya katilmaz.",
+    "tam_gun_yok": ["OFF", "G-OFF", "Y.İZİN", "YILLIK İZİN", "Y.İzin",
+                    "R.TATİL", "R.Tatil", "RAPORLU", "Raporlu", "T.İZNİ",
+                    "C.İZNİ", "D.İZNİ", "E.İZNİ", "S.İZNİ", "TŞ.İZNİ",
+                    "MAZERET", "Ü.Lİ.İZİN", "Ü.SİZ.İZİN", "DEVAMSIZ",
+                    "İSTİFA", "FESİH", "Telafi İzni", "TÇİ"],
+    "musait_ama_burada_degil": ["EĞİTİM", "D.GÖREV", "İnfo"],
+    "calisiyor_uzaktan": ["Uzaktan Çalışma"]
+  }
+}

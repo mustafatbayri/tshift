@@ -357,7 +357,20 @@ CRUD/yönetim kuyruğunda.**
 
 ---
 
-## 🔴 A-14 · Çağrı merkezi veri örneği hâlâ gelmedi
+## ✅ A-14 · KAPANDI (13–14 Eylül 2026) — gerçek veri geldi ve analiz edildi
+
+Bir seyahat acentesinin 3,5 aylık PDKS + vardiya planı alındı, analiz edildi.
+**529 kural ihlali** bulundu (274 haftalık saat, 167 ardışık gün, 88 dinlenme).
+Bulgular, Mustafa'nın kapsam kararları ve süreç kuralı:
+**`07-GERCEK-VERI-BULGULARI.md`**.
+
+Veri `06-veri/ham` altında, **git'e girmiyor** (`.gitignore`).
+Analiz araçları `07-motor/` altında (⚠ orada motor yok — `OKU-BENI.md`).
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-14 · Çağrı merkezi veri örneği hâlâ gelmedi
 
 **Ne:** Mustafa'nın eski işvereninden alınacak gerçek (anonimleştirilmiş)
 çağrı merkezi verisi bekleniyor. Gölge pilotun girdisi bu.
@@ -369,6 +382,25 @@ bu risk kapanmaz. Kodla telafi edilemeyen tek açık madde budur.
 
 **Sahibi:** Mustafa. Geliştirmeden bağımsız ilerleyebilir — ve ne kadar erken
 gelirse o kadar çok karar etkiler.
+
+</details>
+
+---
+
+## 📌 SÜREÇ KURALI (14 Eylül) · Veri kapsam kararı vermez
+
+**Mustafa'nın uyarısı:** *"Bu dataları analiz amaçlı attım, bu datalardan bir
+varsayım çıkarıp kapsamı değiştirmen için değil."*
+
+**Kural:** Veriden **bulgu** çıkarılır, **kapsam kararı** çıkarılmaz. İkisi
+ayrı ayrı işaretlenir:
+- **Bulgu** = "veride şu var" (ölçüm, tartışmasız)
+- **Öneri** = "buna göre şunu yapabiliriz, **karar senin**"
+
+*Neden yazıldı:* Claude "plan ufku 7–35 gün arası değişiyor, modelimiz bunu
+desteklemeli" önerisini bulgu gibi sundu. Mustafa reddetti; gerekçesi daha
+güçlüydü (adalet penceresi sabit olmalı). Veride görülen esneklik aslında
+düzensizlikti.
 
 ---
 

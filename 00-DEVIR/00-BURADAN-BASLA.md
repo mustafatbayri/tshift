@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-12
+**Son güncelleme:** 2026-09-14
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -43,23 +43,32 @@ PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → 
 - **Yılmaz'a inceleme paketi gönderildi** (`05-inceleme/v1-2026-09-11/`).
 
 **Henüz yazılmadı:** vardiya optimizasyon motoru, plan editörü, kural yönetimi,
-kullanıcı/rol yönetim ekranları, CI.
+kullanıcı/rol yönetim ekranları.
+
+**Gerçek müşteri verisi elimizde (13–14 Eylül).** Bir seyahat acentesinin 3,5
+aylık PDKS ve vardiya planı. Analiz edildi, **529 kural ihlali** bulundu.
+Bulgular ve Mustafa'nın kapsam kararları: **`07-GERCEK-VERI-BULGULARI.md`**
+— motor yazılmadan önce okunmalı.
+
+⚠ `07-motor/` klasöründe **motor yok**, analiz araçları var. Bkz.
+`07-motor/OKU-BENI.md`.
 
 ## 3. Sıradaki tek adım
 
-> **CI'ı yeşile almak.** `.github/workflows/testler.yml` yazıldı ama **henüz
-> bir kez bile koşmadı.** İlk `git push` ile koşacak. İlk denemede kırmızı
-> yanabilir (CI ortamı burada denenemedi) — logu okuyup düzeltmek işin
-> parçası, kötü işaret değil.
+> **Motor sözleşmesi (A-10).** Gerçek veri geldi ve analiz edildi; artık
+> motorun neye göre yazılacağı biliniyor. Sıra:
 >
-> **CI yeşile döner dönmez sıradaki:** CsCheck ile property-based testler —
-> 14 boş senaryo sınıfının çoğunu kapatır ve motorun metamorfik testleri de
-> aynı araçla yazılır. Araç kararının tamamı: `06-ACIK-RISKLER.md` içindeki
-> "Araç kararı" bölümü.
+> 1. **V01–V12 değişmez listesini Mustafa ile kesinleştir.**
+>    `07-GERCEK-VERI-BULGULARI.md` bunların gerçek karşılığını gösteriyor
+>    (182 gece-yarısı ataması, 88 kısa dinlenme vakası).
+> 2. Girdi şeması, çıktı şeması, **UNSAT biçimi** (çözümsüzlükte hangi kuralın
+>    çakıştığını söylemek), zaman aşımı davranışı, tekrarlanabilirlik.
+> 3. **Mola modeli** — yeni kapsam maddesi, ürünün 2. satış noktası.
+> 4. Ürünün doğrulayıcısı (önce), sonra çözücü (M-09).
 >
-> Sonra sırasıyla: Bruno koleksiyonu (Mustafa'nın kendi koşacağı API
-> senaryoları) → Stryker mutasyon raporu (A-6) → zaman modeli testleri (A-5)
-> → motor sözleşmesi (A-10, doğrulayıcı önce).
+> **Paralelde açık kalan:** A-4 CI dosyası yazıldı ama **bir kez bile
+> koşmadı** — `git push` sonrası Actions sekmesine bakılmalı. Sonrasında
+> CsCheck (A-6 öncesi), Stryker, zaman modeli testleri (A-5).
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
 
