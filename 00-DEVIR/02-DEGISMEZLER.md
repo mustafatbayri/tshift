@@ -215,7 +215,7 @@ katmandır.** Uygulamada "silmeyin" demek yeterli değil.
 | G-3 | `appsettings.json` içinde gerçek parola/sır yok | ✅ | `M5 - appsettings icinde gercek parola yok` |
 | G-4 | Kimlikler **UUIDv7**, istemci tarafında üretilir | 🔒 | (şema; değiştirilmesi tüm yabancı anahtarları etkiler) |
 | **G-5** | **Benzersizlik kontrolü kodda değil, veritabanı kısıtında** (önce sor sonra yaz = iki eşzamanlı istekte ikisi de "yok" görür) | ⚠️ | **BEKÇİSİ YOK — bkz. A-3** |
-| **G-6** | **Zaman UTC + genişletilmiş saat modeli; naive datetime kullanılmaz** | ⚠️ | **BEKÇİSİ YOK — vardiya ürünü için kritik** |
+| **G-6** | **Zaman UTC + gece yarısını aşan vardiya modeli** (spec §6.3, Z-1…Z-6). Kiracı saat dilimi IANA adıyla saklanır, sabit ofsetle değil | ⚠️ | **Tanım v1.3'te yazıldı, BEKÇİ hâlâ yok — spec §16 A4/A5 teste çevrilecek** |
 | G-7 | `login_attempts` bilerek RLS dışında (kiracı bilinmeden yazılmak zorunda; aksi halde saldırgan olmayan firma adı yazarak kilidi atlar) | ✅ | `M2` bu istisnayı tanır |
 | G-8 | Sıra dışı her karar, yanındaki yorumda gerekçesiyle durur | — | İnsan incelemesi |
 

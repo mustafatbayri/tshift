@@ -310,3 +310,108 @@ kopyalandı; eskisi silinecek.
 > Yazdım ≠ gönderdim ≠ commit ettim. Üçü ayrı adımdır ve üçü de doğrulanır.
 
 Bu kural `00-BURADAN-BASLA.md` §5 güncelleme ritüeline eklenecek.
+
+
+---
+
+## 11. KÖKEN DOKÜMANI ORTAYA ÇIKTI — ve beş yanlış iddia düzeltildi
+
+Mustafa: *"Analiz dokümanından kastım projenin en başında başladığımız
+doküman."* — `Vardiya_Otomasyonu_Urun_Teknik_Analiz_v2.docx`, 27 bölüm,
+~61.000 karakter.
+
+**Bu doküman depoda hiç yoktu.** Ne `02-spec/`, ne `00-arsiv/` (boş, ama
+README'si *"önceki dokümanlar buraya taşınacak"* diyor — hiç taşınmamış).
+
+### Son iki günde "keşfedilen" şeylerin çoğu orada zaten yazılıydı
+
+| Claude ne dedi | Köken dokümanında ne var |
+|---|---|
+| *"Spec'te UNSAT hiç geçmiyor, gerçek boşluk bu"* | §18.1: *"Çelişkili hard kural → INFEASIBLE beklenir"* — **üstelik Master Spec §11.3'te de vardı**, teşhisiyle birlikte |
+| *"Mola modeli yeni kapsam maddesi"* | §18.1: *"Mola kapsaması: mola hakkı sağlanırken min role coverage altına düşülmez"* |
+| *"Property-based test ekleyelim"* | §18 test katmanları tablosunda ayrı satır |
+| *"G12 saat dilimi testimiz yok"* | §18.1: *"Gece yarısı ve DST"* golden senaryosu |
+| *"A-13: kapsam envanteri hiç hesaplanmadı"* | §3 MVP/P1/P2 + §25 12 haftalık yol haritası — **ve Master Spec §14** |
+
+**Beş madde. Hepsi yeniden icat edildi ve bir kısmı "yeni bulgu" diye sunuldu.**
+
+### En utandırıcı olanı: arama hatası
+
+*"Spec'te çözümsüzlük hiç geçmiyor"* iddiası, `grep "çözümsüz"` sonucu 0
+döndüğü için kuruldu. Spec'te `Çözümsüzse` (büyük Ç) ve `cozumsuz` (Türkçe
+karaktersiz) yazıyordu. **M4 testinin koruduğu Türkçe karakter tuzağına
+Claude'un kendisi düştü.**
+
+Doğru arama (büyük/küçük harf + Türkçe karakter normalize) yapılınca gerçek
+boşluk listesi yediden beşe indi.
+
+### Alınan kararlar (Mustafa)
+
+| Konu | Karar |
+|---|---|
+| **Doküman otoritesi** | **Master Spec son karardır.** Köken dokümanı yürürlükte kalır, Master Spec'in sessiz kaldığı yerde kaynak. Çeliştiğinde Master Spec kazanır. |
+| **MVP 3 alternatif** | **Net: 3 alternatif.** Köken §24'teki *"MVP tek öneri"* geçersiz. |
+| Gece yarısı / DST | Gece yarısı tam yazılsın; DST **taşınabilir ama pasif** (IANA bölge adı, sabit ofset değil) |
+| Lookback | Eklensin |
+| Outbox | Kabul — bildirim katmanının teknik gereksinimi |
+| **Tekrarlanabilirlik** | **Garanti verilmeyecek.** *"Bir kullanıcının pasife düşmüş olması bile her şeyi değiştirir; bunu açıklamakla vakit kaybedemez uygulama."* Yerine **plan kopyalama.** |
+| Bildirim kanalları | uygulama içi + e-posta (v1) → SMS (gerçek müşteri) → WhatsApp (en son, belki hiç) |
+| AI sağlayıcı bağımsızlığı | **Kapsam dışı** — model değiştirme düşünülmüyor |
+
+### Mustafa'nın tekrarlanabilirlik kararı neden iyi
+
+Motoru deterministik yapmaya çalışmak yanlış hedefti. Kullanıcının istediği
+*"aynı planı tekrar uygula"* — bunun cevabı determinizm değil **kopyalama.**
+Karar hem ürünü sadeleştirdi hem motordan gerçekçi olmayan bir söz kaldırdı.
+Spec §11.7 bunu gerekçesiyle yazıyor.
+
+---
+
+## 12. Master Spec v1.3 yazıldı
+
+`02-spec/v1.3-master-spec.md` — v1.2'ye dokunulmadı, yeni sürüm açıldı.
+Bölüm numarası ve içindekiler tutarlılığı doğrulandı (1–17, birebir).
+
+| # | Eklenen | Nereye |
+|---|---|---|
+| 1 | `GECE_YARISI_ASAN` + zaman modeli Z-1…Z-6 | §6.3 |
+| 2 | DST taşınabilir-pasif, IANA bölge adı | §6.3 |
+| 3 | Lookback 14 gün; eksikse motor çalışmaz | §11.2 |
+| 4 | Onarım döngüsü: +2 deneme, sonra `cozumsuz` | §11.7 |
+| 5 | İdempotency: `istek_anahtari` | §11.7 |
+| 6 | **Tekrarlanabilirlik garanti EDİLMEZ** + gerekçe | §11.7 |
+| 7 | **Plan kopyalama** | §9.7 |
+| 8 | Bildirim kanal önceliği + outbox | §8.8 |
+| 9 | **§16 Test stratejisi — 9 katman + 12 altın senaryo (A1–A12)** | §16 (yeni) |
+| 10 | Doküman otoritesi kararı | §17 |
+
+Veriden gelen bir uyarı da spec'e girdi: müşteri Excel'inde gece yarısını
+yazabilmek için **`23:59` kullanmış (137 kez)**; içe aktarma bunu `00:00`'a
+çevirmezse 1 dakikalık sistematik hata girer.
+
+**Köken dokümanı depoya alındı:**
+`02-spec/v0-koken-Vardiya_Otomasyonu_Urun_Teknik_Analiz_v2.docx`
+
+### Devir paketinde düzeltilenler
+
+| Yanlış iddia | Düzeltme |
+|---|---|
+| Birincil kaynak `v1.2` | → `v1.3`, ve köken dokümanı haritaya eklendi |
+| *"UNSAT spec'te tanımsız"* | → §11.3'te teşhisiyle tanımlı |
+| *"Mola yeni kapsam maddesi"* | → §6.2/§6.4'te zaten vardı |
+| A-13 *"kapsam envanteri yok"* | → §14 + köken §3/§25 var; eksik olan **güncellenmesi** |
+| A-10 *"motor sözleşmesi yazılmadı"* | → §11'de vardı, v1.3'te tamamlandı |
+| A-5 *"zaman modeli tanımsız"* | → §6.3'te tanımlandı; **test hâlâ yok** |
+
+## 13. Bu bölümün dersi
+
+Beşinci "tamam" hatası ve kök neden her seferinde aynı: **kaynağı okumadan
+konuşmak.** Bu sefer kaynağın var olduğu bile bilinmiyordu, çünkü depoda
+değildi.
+
+**Alınan önlem:** Devir paketindeki depo haritası artık köken dokümanını da
+içeriyor, ve `00-BURADAN-BASLA.md` şartname satırında *"motor, kural ya da
+ekran işine başlamadan ÖNCE"* uyarısı var.
+
+**Genelleştirilebilir hâli:** *"Depoda yok"* ile *"yok"* aynı şey değil.
+Bir şeyin var olmadığını iddia etmeden önce, nerede olabileceği de sorulmalı.

@@ -119,7 +119,20 @@ kodun %X'ini yakalıyor"* demek bambaşka bir iddiadır.
 
 ---
 
-## 🔴 A-5 · Zaman modeli hiç sınanmıyor (G-6)
+## 🟡 A-5 · Zaman modeli — v1.3'te TANIMLANDI, test hâlâ yok
+
+**14 Eylül:** Master Spec **§6.3**'e gece yarısını aşan vardiya kuralı tam
+olarak yazıldı (Z-1…Z-6) ve DST taşınabilir-pasif olarak modellendi. Ayrıca
+§16'da **A4** (gece yarısı → 8 saat dinlenme ihlali) ve **A5** (DST geçişi)
+altın senaryoları tanımlandı.
+
+**Kalan iş:** tanım var, **test yok.** A4 ve A5 çalıştırılabilir teste
+çevrilmeli.
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-5 · Zaman modeli hiç sınanmıyor (G-6)
 
 **Ne:** UTC + genişletilmiş saat modeli karar verildi (M-11) ama **tek bir
 test bile yok**.
@@ -137,6 +150,8 @@ test bile yok**.
 **Neden şimdi ucuz:** Motor henüz yazılmadı. Zaman modelini sonradan
 düzeltmenin bedeli: **her plan yeniden yorumlanır** (🔴 en yüksek geri alma
 maliyetlerinden biri).
+
+</details>
 
 ---
 
@@ -218,7 +233,29 @@ Pilot verisi anonimleştirilmiş gelecek — kırmızı çizgi.
 
 ---
 
-## 🟡 A-10 · Motor sözleşmesi yazılmadı
+## 🟡 A-10 · Motor sözleşmesi — DÜZELTME: spec §11'de var, v1.3'te tamamlandı
+
+⚠ **Bu madde yanlış açılmıştı (14 Eylül).** *"Motor sözleşmesi yazılmadı"*
+deniyordu; Master Spec §11'de 138 satırlık sözleşme zaten vardı.
+
+**v1.3'te eklenenlerle sözleşme tamamlandı:**
+
+| Eksikti | v1.3'te |
+|---|---|
+| Geçmiş penceresi | **§11.2** — en az 14 gün atama, yıllık fazla mesai, aylık adalet sayacı. Eksikse motor çalışmaz. |
+| Onarım döngüsü | **§11.7** — ilk üretim + en fazla 2 onarım, sonra `cozumsuz` |
+| İdempotency | **§11.7** — `istek_anahtari`; çift tıklama iki plan üretmez |
+| Tekrarlanabilirlik | **§11.7** — garanti **edilmiyor**, gerekçesiyle. Yerine plan kopyalama (§9.7) |
+| Gece yarısı zaman modeli | **§6.3** — altı maddelik kural seti |
+| Kabul senaryoları | **§16** — A1–A12 |
+
+**Geriye kalan iş sözleşme yazmak değil, uygulamak:** §16'daki 12 altın
+senaryoyu çalıştırılabilir teste çevirmek, sonra doğrulayıcı, sonra çözücü.
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-10 · Motor sözleşmesi yazılmadı
 
 **Ne:** M-09'da mimari kararlaştırıldı (dört parça, doğrulayıcı önce) ama
 sözleşme yazılmadı: girdi şeması, çıktı şeması, hata/UNSAT biçimi, zaman
@@ -238,6 +275,8 @@ aşımı davranışı, tekrarlanabilirlik garantisi.
 
 **Kritik sıra:** Doğrulayıcı **önce** yazılır. Önce "neyin yanlış olduğunu
 bilen" parça, sonra "çözmeye çalışan" parça.
+
+</details>
 
 ### Ölçek matrisi — alt uç dahil (karar: 12 Eylül)
 
@@ -347,7 +386,24 @@ açık sayısı ölçülür.
 
 ---
 
-## 🔴 A-13 · Kapsam envanteri yapılmadı — Ocak hedefi ölçülmedi
+## 🟡 A-13 · Kapsam envanteri — DÜZELTME: kısmen var
+
+⚠ **Bu madde yanlış açılmıştı (14 Eylül'de düzeltildi).** *"Kapsam envanteri
+hiç hesaplanmadı"* deniyordu. Gerçekte iki yerde var:
+
+- **Master Spec §14** — fazlama ve teslim planı
+- **Köken dokümanı §3** (MVP / P1 / P2 ayrımı) ve **§25** (12 haftalık yol
+  haritası, her hafta için gösterilebilir kabul ölçütüyle)
+
+**Gerçekten eksik olan:** bu planların **bugünkü duruma göre güncellenmesi.**
+12 haftalık yol haritası projenin başında yazıldı; o zamandan beri dikey dilim
+tamamlandı, gerçek veri geldi, kapsam kararları değişti (mola, 3 alternatif,
+bildirim kanalları). Yol haritasının neresindeyiz — bu ölçülmedi.
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-13 · Kapsam envanteri yapılmadı — Ocak hedefi ölçülmedi
 
 **Ne:** Spec'te 44 tablo, 24 ekran, 27 kural, motor, içe aktarma ve 4 kanallı
 bildirim var. **MVP yapılmayacak** (karar: `01-PROJE-KIMLIGI.md` §4) — yani
@@ -365,6 +421,8 @@ istemedikçe yapılmaz.
 
 **Dikkat edilecek:** Riskin ağırlığı motorda değil, **24 ekran ve
 CRUD/yönetim kuyruğunda.**
+
+</details>
 
 ---
 

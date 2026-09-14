@@ -135,6 +135,22 @@ mi, senin kararın.
 
 ---
 
+## Şartnamedeki kabul senaryoları — henüz yazılmadı
+
+**Master Spec v1.3 §16** on iki altın senaryo tanımlıyor (A1–A12): basit
+uygulanabilir, çelişkili sert kural → `cozumsuz`, yetkinlik açığı, **gece
+yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak hedef
+çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
+plan kopyalama.
+
+**Hiçbiri henüz teste çevrilmedi** — motor yazılmadığı için çoğu şu an
+koşturulamaz zaten. Ama beklenen sonuçları **şartname tanımlıyor**, yani
+motorun ürettiğine bakarak yazılmayacaklar. Bu, bu projedeki en önemli test
+ilkesinin (uygulama ile doğrulayıcı aynı varsayımdan beslenmez) şartname
+seviyesindeki karşılığı.
+
+---
+
 ## Kapsama özeti — dürüst tablo
 
 Sahanın standart senaryo matrisi 20 sınıf tanımlıyor

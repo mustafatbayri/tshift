@@ -57,16 +57,25 @@ Bulgular ve Mustafa'nın kapsam kararları: **`07-GERCEK-VERI-BULGULARI.md`**
 
 ## 3. Sıradaki tek adım
 
-> **Motor sözleşmesi (A-10).** Gerçek veri geldi ve analiz edildi; artık
-> motorun neye göre yazılacağı biliniyor. Sıra:
+> **Motor — ama önce spec §11 ve §6 okunacak.**
 >
-> 1. **V01–V12 değişmez listesini Mustafa ile kesinleştir.**
->    `07-GERCEK-VERI-BULGULARI.md` bunların gerçek karşılığını gösteriyor
->    (182 gece-yarısı ataması, 88 kısa dinlenme vakası).
-> 2. Girdi şeması, çıktı şeması, **UNSAT biçimi** (çözümsüzlükte hangi kuralın
->    çakıştığını söylemek), zaman aşımı davranışı, tekrarlanabilirlik.
-> 3. **Mola modeli** — yeni kapsam maddesi, ürünün 2. satış noktası.
+> ⚠ **Düzeltme (14 Eylül):** Bu satır daha önce *"motor sözleşmesi yazılmadı"*
+> diyordu. **Yanlıştı.** Spec §11'de 138 satırlık bir sözleşme taslağı zaten
+> var (`/solve` girdi-çıktı, `/evaluate`, `/suggest`, sürümleme), ve §6'da
+> 35 kural kodu parametreleriyle tanımlı. Sıfırdan yazılacak bir şey değil,
+> **tamamlanacak** bir şey var.
+>
+> 1. **Spec §6 ve §11'i oku.** Kurallar, parametreler ve motor uçları orada.
+> 2. **Gerçek veriyle karşılaştır** (`07-GERCEK-VERI-BULGULARI.md`): 182
+>    gece-yarısı ataması, 88 kısa dinlenme vakası, 529 ihlal.
+> 3. **§16'daki 12 altın senaryoyu (A1–A12) çalıştırılabilir teste çevir.**
+>    Beklenen sonuçları şartname tanımlıyor; motorun ürettiğine bakarak
+>    yazılmayacak.
 > 4. Ürünün doğrulayıcısı (önce), sonra çözücü (M-09).
+>
+> *Not: "UNSAT spec'te tanımsız" diye bir madde vardı — **yanlıştı.** §11.3
+> çözümsüzlüğü teşhisiyle birlikte tanımlıyor: hangi hücre, kaç kişi gerekli,
+> hangi kural engelliyor, hangi gevşetme çözer.*
 >
 > **Paralelde açık kalan:** A-4 CI dosyası yazıldı ama **bir kez bile
 > koşmadı** — `git push` sonrası Actions sekmesine bakılmalı. Sonrasında
@@ -100,7 +109,8 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 
 | Yol | İçerik | Ne zaman aç |
 |---|---|---|
-| **`02-spec/v1.2-master-spec.md`** | **Ürünün şartnamesi** — 15 bölüm, 44 tablo, 24 ekran, 27 kural, motor sözleşmesi taslağı, yetki matrisi §3.2. **Kabul ölçütlerinin birincil kaynağı.** | Ürün davranışı sorusu varsa. v1.0 ve v1.1 de aynı klasörde (geçmiş korunuyor). |
+| **`02-spec/v1.3-master-spec.md`** | **YÜRÜRLÜKTEKİ ŞARTNAME — 17 bölüm, son karar.** §3 roller ve yetki matrisi · §6 kural kataloğu (36 kural kodu, parametreleriyle) · **§6.3 gece yarısını aşan vardiya + DST modeli** · §8 veri modeli (50 tablo) · §9 ekranlar · **§11 motor sözleşmesi** (`/solve`, çözümsüzlük teşhisi, **§11.2 lookback**, **§11.7 idempotency + onarım**) · **§16 test stratejisi ve 12 altın senaryo** · §17 sürüm notları. | **Motor, kural ya da ekran işine başlamadan ÖNCE.** v1.0–v1.2 aynı klasörde (geçmiş korunuyor). |
+| **`02-spec/v0-koken-...Analiz_v2.docx`** | **KÖKEN DOKÜMANI — 27 bölüm.** Projenin doğduğu analiz. Master Spec'in kapsamadığı yerde **hâlâ kaynak**: §8 sektörel kural paketleri (çağrı merkezi/perakende/üretim) · §23 Faz 0–10 geliştirme planı · §25 12 haftalık yol haritası · §20 riskler. | Gerekçe, fazlama ya da sektör paketi sorusu varsa. **Çeliştiğinde Master Spec kazanır** (§17). |
 | `03-demo/v2-html/tshift-demo-v2.html` | **Çalışan demo** — 15 ekran, iki operasyon (çağrı merkezi + otel), sürükle-bırak takvim. Tek HTML dosyası, tarayıcıda açılır. | Ekran tasarımı ya da akış konuşulacaksa. Ürünün görsel dili burada. |
 | `01-spike/` | **Motor fizibilite testleri** (7–8 Eylül) — CP-SAT vs greedy karşılaştırması, ölçek testleri (200→2000 kişi), otel senaryosu. Kronoloji ve ölçülen sayılar `01-spike/README.md`'de. | Motor yazılmadan **önce mutlaka.** Teknoloji kararının dayanağı burada. |
 | `04-kod/` | **Çalışan uygulama** — backend (.NET 10), frontend (Next.js 16), veritabanı betikleri, testler, Docker | Kod yazılacaksa |
