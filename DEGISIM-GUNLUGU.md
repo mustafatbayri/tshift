@@ -4,6 +4,34 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-15 · Çalışma biçimi: geri bildirim yüzeyleri · paralel ajan reddedildi**
+**Ürün kodu değişmedi, test eklenmedi, ölçüm yapılmadı** — bu satır bir karar
+satırıdır, kilometre taşı değil. Etiket atılmadı.
+
+Mustafa bir videoda gördüğü dört pencereli modeli sordu (kod Claude'da, hata
+ayıklama opencode'da paralel, ayrı pencerelerde testler ve sunucu günlükleri).
+Model ayrıştırıldı: **işe yarayan yarısı ajanla ilgili değil**, kırmızının ne
+kadar geç fark edildiğiyle ilgili.
+
+**Alınan:** Aktif pencerenin yanına **yazmayan** bir gösterge penceresi —
+günlükler sürekli (`docker compose logs -f`), testler **talep üzerine**
+(`.\TEST.ps1`). Testler sürekli koşamıyor çünkü `TEST.ps1` API'yi önce
+durduruyor (`00-BURADAN-BASLA.md` §7). *Bu ortam gerçeği olmasa, sürekli
+koşan bir test penceresi kurulur ve API'nin neden sürekli düştüğü saatlerce
+aranırdı.* Doğurduğu asıl kural: **ajan "bitti" demeden önce testleri kendisi
+koşar.**
+
+**Reddedilen:** Paralel ikinci **yazıcı** ajan. Gerekçe depodan geldi — R5
+(*iki pencere yazar, sürüklenme*) 14 Eylül'de kapatılmıştı; yeniden açacak
+ölçülmüş bir gerekçe yok. opencode `06-ACIK-RISKLER.md`'deki *"şimdilik
+kullanılmayacak"* tablosuna girdi; **salt-okunur inceleyici** olarak M-09
+doğrulayıcısından sonra yeniden bakılacak, iki haftalık ölçüm şartıyla.
+
+**Yeni devir dosyası açılmadı** — R7 sorusu soruldu, cevabı "evet, var olan
+bir dosyanın bölümü olabilir" çıktı. `00-DEVIR/` kökü **dokuz dosyada kaldı.**
+→ `00-DEVIR/00-BURADAN-BASLA.md` §5b, `00-DEVIR/06-ACIK-RISKLER.md`,
+`00-DEVIR/oturumlar/2026-09-15-calisma-bicimi-opencode.md`
+
 **2026-09-14 · Altın senaryolar tanımlandı, devir denetimi betiğe çevrildi**
 Spec §16.3'teki A1–A12'nin beklenen sonuçları Türkçe kabul cümlelerine
 çevrildi — motor yazılmadan, motora bakmadan, şartnameden türetilerek.

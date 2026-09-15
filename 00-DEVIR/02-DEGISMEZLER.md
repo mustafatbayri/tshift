@@ -105,8 +105,8 @@ Bunlar **aynı sorunun iki farklı katmanı**, biri diğerinin yerine geçmez:
 oluşturmadan da doğabilir:**
 
 1. **Arayüz güvenlik sınırı değildir.** Formu atlayıp API'ye doğrudan istek
-   atılabilir. (Aynı ilke: `middleware.ts` ve gizlenen düğmeler de sınır
-   değil.)
+   atılabilir. (Aynı ilke: istek yolundaki ara katman ve gizlenen düğmeler
+   de sınır değil.)
 2. **İçe aktarma bilerek izin veriyor** — kararın gereği.
 3. **Rol yükseltmesi.** `Kendi` seviyesindeki bir kullanıcı `Kapsam`
    seviyesine çıkarıldığı anda kapsamı boştur.
@@ -177,7 +177,10 @@ gerekmiyor — tarayıcı hiçbir zaman doğrudan API'ye gitmiyor.
 
 ### Güvenlik sınırı NEREDE değil
 
-- `middleware.ts` / `proxy.ts` içindeki kontrol **güvenlik sınırı DEĞİLDİR.**
+- `04-kod/frontend/src/proxy.ts` içindeki kontrol **güvenlik sınırı
+  DEĞİLDİR.** *(Bu depoda Next.js'in `middleware.ts` dosyası **yok**; aynı işi
+  `proxy.ts` yapıyor. Doküman 15 Eylül'e kadar var olmayan bir dosyayı
+  gösteriyordu; `DENETIM.py` yakaladı.)*
   Yalnız çerezin varlığına bakar, içeriğini doğrulamaz (imza anahtarı orada
   yok). Kullanıcı deneyimi düzenlemesidir.
 - **Gizlenen düğmeler güvenlik değildir.** Yetkisi olmayan butonu görmez, ama
@@ -268,26 +271,39 @@ Tam liste `RISKLER-VE-ONLEMLER.md` §6'da. Özeti:
 
 ## Özet: kaç değişmez korunuyor?
 
-| Grup | Toplam | ✅ Bekçili | ⚠️ Açık | ⏳ Uygulanmadı |
-|---|---|---|---|---|
-| Çok kiracılık | 9 | **9** | 0 | 0 |
-| Yetki ve kapsam | 14 | 11 | **1** (Y-12) | **2** (Y-13, Y-14) |
-| Kimlik ve oturum | 8 | 7 | **1** (I-8) | 0 |
-| Denetim kaydı | 8 | 8 | 0 | 0 |
-| Genel | 8 | 5 | **2** (G-5, G-6) | 0 |
-| **TOPLAM** | **47** | **39** | **4** | **2** |
+| Grup | Toplam | Korunuyor (✅/🔒) | ⚠️ Açık | ⏳ Uygulanmadı | — Bekçisiz |
+|---|---|---|---|---|---|
+| Çok kiracılık | 9 | **9** | 0 | 0 | 0 |
+| Yetki ve kapsam | 14 | 11 | **1** (Y-12) | **2** (Y-13, Y-14) | 0 |
+| Kimlik ve oturum | 8 | 7 | **1** (I-8) | 0 | 0 |
+| Denetim kaydı | 8 | 8 | 0 | 0 | 0 |
+| Genel | 8 | 5 | **2** (G-5, G-6) | 0 | **1** (G-8) |
+| **TOPLAM** | **47** | **40** | **4** | **2** | **1** |
 
-> ⚠️ **Düzeltme (14 Eylül, ikinci oturum).** Bu tablo **45 / 41 / 4** diyordu
-> ve yanlıştı. Y-13 ve Y-14, 12 Eylül'de karar verilip satır olarak eklendi
-> ama özet güncellenmedi; Yetki grubu 12 değil **14** satır. Bekçili sayısı da
-> 41 değil **39** — ⏳ satırları bekçili sayılamaz, çünkü henüz kod yok.
+Satırlar toplanır: 40 + 4 + 2 + 1 = 47. **Bu tablonun her sütunu
+`DENETIM.py` tarafından sayılıyor**; elle güncellenip unutulamaz.
+
+> ⚠️ **Düzeltme (14–15 Eylül, iki adımda).** Bu tablo önce **45 / 41 / 4**
+> diyordu ve yanlıştı: Y-13 ve Y-14, 12 Eylül'de karar verilip satır olarak
+> eklenmiş ama özet güncellenmemişti; Yetki grubu 12 değil **14** satır.
 >
-> **Nasıl bulundu:** `DENETIM.py` tablonun kendi satırlarını sayıp yazılı
-> toplamla karşılaştırıyor. Elle üç denetimden geçmişti ve hiçbirinde
-> yakalanmamıştı. D-2 sınıfı (bayat rakam) bir hata.
+> 14 Eylül'de toplam ve bekçili düzeltildi — **ama sütunlar hâlâ toplamıyordu**
+> (39 + 4 + 2 = 45, toplam 47). İki satır aradan düşüyordu: **G-4** yalnız 🔒
+> işaretli (veritabanı zorluyor, testi yok) ve **G-8** insan incelemesine
+> bırakılmış. 15 Eylül'de `Korunuyor` sütunu 🔒'yi de kapsayacak şekilde
+> tanımlandı ve `— Bekçisiz` sütunu eklendi; tablo artık toplanıyor.
 >
-> **Kural:** ⏳ satırları toplama girer, bekçiliye girmez. Karar verilmiş ama
-> uygulanmamış bir değişmez, korunuyor sayılmaz.
+> **Nasıl bulundu:** İkisini de `DENETIM.py` yakaladı — ikincisini, birinci
+> düzeltmeyi yaptıktan **sonra**. Elle üç denetimden geçmiş bir tabloydu.
+> D-2 sınıfı (bayat rakam) hata.
+>
+> **Kurallar:**
+> - ⏳ satırları toplama girer, **bekçiliye girmez.** Karar verilmiş ama
+>   uygulanmamış bir değişmez korunuyor sayılmaz.
+> - 🔒 bir bekçidir. Testle değil, veritabanı/şema kısıtıyla zorlanıyor;
+>   koruma koruma olarak sayılır.
+> - **Sütunlar toplanmak zorundadır.** Toplamayan bir özet tablo, bir
+>   değişmezin sessizce sınıflandırılmadığını söyler.
 
 Dört açığın hepsi `06-ACIK-RISKLER.md` altında izleniyor: A-2 (Y-12),
 A-3 (G-5), A-5 (G-6), ve I-8. İki ⏳ madde A-12'de.
@@ -298,4 +314,5 @@ A-3 (G-5), A-5 (G-6), ve I-8. İki ⏳ madde A-12'de.
 |---|---|
 | 12 Eylül 2026 | Paket kuruldu: 39/45 bekçili, 5 açık |
 | 12 Eylül 2026 | **K-9 kapandı** (M0 eklendi) → 41/45, 4 açık. En kritik açıktı: bozulduğunda diğer 8 kiracılık değişmezi de anlamsızlaşıyordu. |
-| 14 Eylül 2026 | **Tablo düzeltildi** → 47 toplam, 39 bekçili, 4 açık, 2 uygulanmadı. Sayım hatası `DENETIM.py` ile bulundu. |
+| 14 Eylül 2026 | **Tablo düzeltildi** → 47 toplam. Sayım hatası `DENETIM.py` ile bulundu. |
+| 15 Eylül 2026 | **Düzeltme eksik çıktı:** sütunlar toplamıyordu (G-4 🔒 ve G-8 dışarıda kalmıştı). `Korunuyor` 🔒'yi kapsadı, `— Bekçisiz` sütunu eklendi → **47 = 40 + 4 + 2 + 1.** Yine `DENETIM.py` buldu. |

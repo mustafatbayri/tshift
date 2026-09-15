@@ -11,6 +11,9 @@ NE YAPAR
                       aramasinda bulunamaz -- 14 Eylul D-3 hatasi.)
     2. Test sayisi    "39/39" gibi iddialar koddaki gercek test sayisini
                       tutuyor mu. (14 Eylul D-2 hatasi.)
+
+  1-3 arasi kontroller ``` kod bloklarini ATLAR: blok icindekiler ornektir,
+  iddia degil.
     3. Dosya yollari  Dokumanlarin isaret ettigi yollar gercekten var mi.
     4. Degismez sayisi 02-DEGISMEZLER.md ozet tablosu, kendi satirlarini
                       tutuyor mu.
@@ -63,6 +66,21 @@ UZANTILAR = (".md", ".cs", ".py", ".json", ".sql", ".ps1", ".ts", ".tsx",
 # Yol kontrolunde atlanacaklar: uretilen klasorler ve genel kalip adlari.
 YOL_ATLA = ("bin/", "obj/", "node_modules/", ".next/", "dist/")
 
+# BILEREK YOK. Dokumanlar bunlara *olmadiklari icin* atif yapar: teklif
+# edilmis ama yapilmamis, ya da depo disi kaynak. Hata degil, kayitli durum.
+# Yeni satir eklerken GEREKCE yazilir; gerekcesiz satir bu listeyi cope cevirir.
+YOK_AMA_KASITLI = {
+    "Directory.Packages.props": "merkezi paket surum yonetimi yok -- A-11'de borc olarak yazili",
+    "08-analiz/": "07-motor/ icin onerilen yeni ad; Mustafa henuz karar vermedi",
+    "DEVIR.md": "kalite arastirmasinda onerilen dosya; biz 00-DEVIR/ klasorunu sectik",
+    "ai_yazilim_kalite_arastirmasi.docx": "depo disi kaynak, git'e alinmadi",
+    "Vardiya_Otomasyonu_Urun_Teknik_Analiz_v2.docx":
+        "koken dokumaninin kisa adi; depoda 02-spec/v0-koken-... onekiyle duruyor",
+    "middleware.ts":
+        "Next.js sozlesme dosyasi; BU DEPODA YOK, ayni isi frontend/src/proxy.ts "
+        "yapiyor. 02-DEGISMEZLER.md ondan 'yok' demek icin soz ediyor",
+}
+
 # TARIHSEL dosyalar: append-only, yeniden yazilmaz (00-BURADAN-BASLA #5b).
 # Icindeki sayilar o gunun dogrusudur; bugunku sayiyla karsilastirilmaz.
 # Test adi sorunlari burada HATA degil UYARI uretir -- duzeltilemez, cunku
@@ -108,6 +126,20 @@ def oku(yol):
         return f.read()
 
 
+KOD_BLOGU = re.compile(r"^```.*?^```", re.S | re.M)
+
+
+def govde(yol):
+    """Dosyanin metni, ``` kod bloklari CIKARILMIS halde.
+
+    Kod bloklari ORNEKTIR, iddia degildir: sablon, komut ya da numune JSON
+    icerirler. Icindeki "38/38" bir sayi iddiasi degil, o gunku ornegin
+    parcasidir. (15 Eylul: KALITE-ARASTIRMASI-DEGERLENDIRME.md icindeki
+    ornek DEVIR.md sablonu yanlis yere hata uretiyordu.)
+    """
+    return KOD_BLOGU.sub("", oku(yol))
+
+
 def koddaki_test_adlari():
     """DisplayName = "..." -> {ad: dosya}"""
     bulunan = {}
@@ -148,7 +180,7 @@ def kontrol_test_adlari(kod_adlari):
     gecen = defaultdict(set)          # ad -> {dokuman}
     for yol in dokumanlar():
         ad_dosya = os.path.relpath(yol, KOK)
-        for parca in ters_tirnakli(oku(yol)):
+        for parca in ters_tirnakli(govde(yol)):
             if TEST_ADI_KALIBI.match(parca.strip()):
                 gecen[parca.strip()].add(ad_dosya)
 
@@ -193,7 +225,7 @@ def kontrol_test_sayisi(kod_adlari):
         if tarihsel_mi(yol):
             continue              # gecmis kayit: o gunun sayisi dogrudur
         ad_dosya = os.path.relpath(yol, KOK)
-        for satir_no, satir in enumerate(oku(yol).splitlines(), 1):
+        for satir_no, satir in enumerate(govde(yol).splitlines(), 1):
             for a, b in kalip.findall(satir):
                 a, b = int(a), int(b)
                 if a != b or a < 20:
@@ -237,10 +269,11 @@ def kontrol_dosya_yollari():
 
     bakilan = 0
     kirik = 0
+    kasitli = 0
     for yol in dokumanlar():
         ad_dosya = os.path.relpath(yol, KOK)
         klasor = os.path.dirname(yol)
-        for parca in set(ters_tirnakli(oku(yol))):
+        for parca in set(ters_tirnakli(govde(yol))):
             p = parca.strip()
             if "\\" in p or "://" in p or " " in p:
                 continue
@@ -250,6 +283,9 @@ def kontrol_dosya_yollari():
                 continue                      # ".ps1", ".gitignore" gibi tur adlari
             if p in YOL_ATLA:
                 continue                      # uretilen klasorler
+            if p in YOK_AMA_KASITLI:
+                kasitli += 1
+                continue                      # bilerek yok, gerekcesi yukarida
             if not (p.endswith(UZANTILAR) or p.endswith("/")):
                 continue
             bakilan += 1
@@ -259,7 +295,8 @@ def kontrol_dosya_yollari():
                 bildir = uyari if tarihsel_mi(yol) else hata
                 bildir("Bulunamayan yol: `%s`" % p, "gectigi yer: %s" % ad_dosya)
 
-    print("   denetlenen yol: %d  |  bulunamayan: %d" % (bakilan, kirik))
+    print("   denetlenen yol: %d  |  bulunamayan: %d  |  bilerek yok: %d"
+          % (bakilan, kirik, kasitli))
 
 
 # ----------------------------------------------------------------------
@@ -267,6 +304,17 @@ def kontrol_dosya_yollari():
 # ----------------------------------------------------------------------
 
 def kontrol_degismezler():
+    """02-DEGISMEZLER.md ozet tablosu kendi satirlarini tutuyor mu.
+
+    Satirlari dort kovaya ayirir:
+      korunuyor  test bekcisi (\u2705) YA DA altyapi zorlamasi (\U0001f512)
+      acik       bekcisi yok, izleniyor (\u26a0)
+      bekleyen   karar verildi, uygulanmadi (\u23f3)
+      diger      hicbiri -- insan incelemesine kalmis
+    Sonra TOPLAM satirini okur ve HEM sayimla HEM kendi icinde toplamiyor mu
+    diye bakar. (14 Eylul'de toplam duzeltilirken satirlar toplamamaya
+    baslamisti; bu kontrol onu yakaladi.)
+    """
     baslik_yaz("4. Degismez ozet tablosu")
     yol = os.path.join(DEVIR, "02-DEGISMEZLER.md")
     if not os.path.exists(yol):
@@ -274,43 +322,70 @@ def kontrol_degismezler():
         return
     metin = oku(yol)
 
-    satir_kalibi = re.compile(r"^\|\s*\*{0,2}([KYIDG])-(\d+)\*{0,2}\s*\|(.*)$")
-    gorulen = {}                       # "K-1" -> bekcili mi
-    grup = defaultdict(int)
+    OK, KILIT = "\u2705", "\U0001f512"
+    ACIK, BEKLEYEN = "\u26a0", "\u23f3"
+
+    satir_kalibi = re.compile(r"^\|\s*\*{0,2}([KYIDG])-(\d+)\*{0,2}\s*\|([^|]*)\|([^|]*)\|")
+    gorulen = {}
     for satir in metin.splitlines():
         m = satir_kalibi.match(satir)
         if not m:
             continue
         kimlik = "%s-%s" % (m.group(1), m.group(2))
         if kimlik in gorulen:
-            continue                   # ayni degismez birden cok tabloda anilabilir
-        gorulen[kimlik] = "\u2705" in m.group(3)
-        grup[m.group(1)] += 1
-    toplam = len(gorulen)
-    bekcili = sum(1 for v in gorulen.values() if v)
-    print("   gruplar: " + "  ".join("%s=%d" % (g, grup[g]) for g in sorted(grup)))
+            continue               # ayni degismez birden cok tabloda anilabilir
+        d = m.group(4)
+        if OK in d or KILIT in d:
+            kova = "korunuyor"
+        elif ACIK in d:
+            kova = "acik"
+        elif BEKLEYEN in d:
+            kova = "bekleyen"
+        else:
+            kova = "diger"
+        gorulen[kimlik] = (m.group(1), kova)
 
-    m = re.search(r"\|\s*\*{0,2}TOPLAM\*{0,2}\s*\|\s*\*{0,2}(\d+)\*{0,2}\s*\|"
-                  r"\s*\*{0,2}(\d+)\*{0,2}\s*\|\s*\*{0,2}(\d+)\*{0,2}\s*\|", metin)
+    say = defaultdict(lambda: defaultdict(int))
+    for g, kova in gorulen.values():
+        say[g][kova] += 1
+        say[g]["toplam"] += 1
+    sayim = defaultdict(int)
+    for g in say:
+        for k, v in say[g].items():
+            sayim[k] += v
+
+    print("   sayilan: %d degismez  |  korunuyor %d  acik %d  bekleyen %d  diger %d"
+          % (sayim["toplam"], sayim["korunuyor"], sayim["acik"],
+             sayim["bekleyen"], sayim["diger"]))
+    for g in sorted(say):
+        r = say[g]
+        print("      %s: toplam %-3d korunuyor %-3d acik %-3d bekleyen %-3d diger %d"
+              % (g, r["toplam"], r["korunuyor"], r["acik"], r["bekleyen"], r["diger"]))
+
+    m = re.search(r"^\|\s*\*{0,2}TOPLAM\*{0,2}\s*\|(.+)\|\s*$", metin, re.M)
     if not m:
         uyari("02-DEGISMEZLER.md TOPLAM satiri okunamadi")
-        print("   sayilan: %d degismez, %d bekcili (TOPLAM satiri okunamadi)"
-              % (toplam, bekcili))
+        return
+    sayilar = [int(x) for x in re.findall(r"\d+", m.group(1))]
+    if len(sayilar) < 2:
+        uyari("02-DEGISMEZLER.md TOPLAM satirinda sayi okunamadi")
         return
 
-    y_toplam, y_bekcili, y_acik = int(m.group(1)), int(m.group(2)), int(m.group(3))
-    print("   sayilan: %d degismez, %d bekcili  |  yazili: %d / %d / %d acik"
-          % (toplam, bekcili, y_toplam, y_bekcili, y_acik))
-    if toplam != y_toplam:
-        hata("Degismez sayisi tutmuyor",
-             "tabloda %d yaziyor, satir sayisi %d" % (y_toplam, toplam))
-    if bekcili != y_bekcili:
-        hata("Bekcili degismez sayisi tutmuyor",
-             "tabloda %d yaziyor, sayilan %d" % (y_bekcili, bekcili))
-    if y_toplam - y_bekcili != y_acik:
-        hata("Ozet tablosu kendi icinde tutarsiz",
-             "%d - %d = %d, ama acik sutununda %d yaziyor"
-             % (y_toplam, y_bekcili, y_toplam - y_bekcili, y_acik))
+    y_toplam, y_kalan = sayilar[0], sayilar[1:]
+    print("   yazili : toplam %d  |  kalan sutunlar %s (toplami %d)"
+          % (y_toplam, y_kalan, sum(y_kalan)))
+
+    if y_toplam != sayim["toplam"]:
+        hata("Degismez toplami tutmuyor",
+             "tabloda %d yaziyor, satir sayisi %d" % (y_toplam, sayim["toplam"]))
+    if sum(y_kalan) != y_toplam:
+        hata("TOPLAM satiri kendi icinde toplamiyor",
+             "%s = %d, ama toplam sutunu %d"
+             % (" + ".join(str(x) for x in y_kalan), sum(y_kalan), y_toplam))
+    if y_kalan and y_kalan[0] != sayim["korunuyor"]:
+        hata("Korunan degismez sayisi tutmuyor",
+             "tabloda %d yaziyor, sayilan %d (\u2705 ya da \U0001f512)"
+             % (y_kalan[0], sayim["korunuyor"]))
 
 
 # ----------------------------------------------------------------------

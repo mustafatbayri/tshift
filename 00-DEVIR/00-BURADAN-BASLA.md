@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-14 (ikinci oturum — altın senaryolar)
+**Son güncelleme:** 2026-09-15 (çalışma biçimi — geri bildirim yüzeyleri)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -67,6 +67,13 @@ ettirir. İlk koşusunda elle bulunmamış **altı gerçek tutarsızlık** buldu
 değişim günlüğü satırı. **Beşi düzeltildi**, biri (tarihsel günlükteki eski
 dosya adı) bilerek bırakıldı.
 
+**Çalışma biçimi kararı (15 Eylül).** Yazan pencerenin yanına **yazmayan** bir
+gösterge penceresi açılıyor: günlükler sürekli, testler talep üzerine — §5b.
+Paralel ikinci **yazıcı** ajan (opencode vb.) **reddedildi**; R5'i yeniden
+açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
+**Ürün kodu değişmedi, test eklenmedi.** Gerekçe:
+`oturumlar/2026-09-15-calisma-bicimi-opencode.md`.
+
 ## 3. Sıradaki tek adım
 
 > **Mustafa A1–A12 kabul cümlelerini onaylayacak. Onaya kadar fikstür
@@ -90,6 +97,8 @@ dosya adı) bilerek bırakıldı.
 > - Spec **v1.4** yazılmadı: sekiz tutarsızlık (T-1…T-8) ve yedi karar
 >   (K-1…K-7) v1.3'e işlenmedi. v1.3'e dokunulmayacak, yeni sürüm açılacak.
 > - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
+> - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar
+>   §5b'de. Mustafa'nın makinesinde bir kez kurulacak.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
 
@@ -233,6 +242,41 @@ Devredilen pencere hemen kapatılmaz — **geri dönüş yoludur.** Yeni pencere
 devir paketini okuyup işe başladığını gösterene kadar açık kalır. Devir eksik
 çıkarsa oraya dönülüp tamamlanır.
 
+### Geri bildirim yüzeyleri — iki pencere, biri yazmaz
+
+**Karar: 15 Eylül 2026.** Gerekçe, elenen alternatif ve kanıt durumu:
+`oturumlar/2026-09-15-calisma-bicimi-opencode.md`.
+
+Aktif pencerenin yanında **ikinci bir pencere** açılır. Bu pencere ajan
+değildir: dosya yazmaz, komut almaz, soru cevaplamaz. Yalnız **göstergedir.**
+Amacı tek: kırmızıyı saatler sonra değil dakikalar içinde fark etmek.
+
+| Yüzey | Komut (`04-kod` içinde) | Sürekli mi |
+|---|---|---|
+| **Sunucu günlükleri** | `docker compose logs -f` | ✅ Sürekli açık |
+| **Testler** | `.\TEST.ps1` | ❌ **Talep üzerine** |
+
+⚠ **Testler neden sürekli koşmaz:** §7'ye göre `TEST.ps1` API'yi **önce
+durdurur.** Sürekli koşan bir test izleyicisi geliştirme kipindeki API'yi
+sürekli düşürür. Başka depolarda gördüğünüz "sürekli koşan test penceresi"
+kurgusu bu depoda **olduğu gibi kurulamaz.**
+
+**Bunun doğurduğu kural — asıl madde budur:**
+
+> **Ajan "bitti" demeden önce `.\TEST.ps1`'i kendisi koşar ve çıktısını
+> rapor eder.** Test çıktısını pencereler arasında elle taşıyan insan,
+> zincirin en zayıf halkasıdır.
+
+**Ne DEĞİLDİR:** ikinci bir *yazıcı* ajan değildir. Paralel ajan modeli
+(kod bir ajanda, hata ayıklama başka bir ajanda) 15 Eylül'de değerlendirildi
+ve **reddedildi** — aşağıdaki tabloda R5 kapalıdır ve onu yeniden açacak
+ölçülmüş bir gerekçe yoktur. Araç tarafı: `06-ACIK-RISKLER.md` ·
+📌 Araç kararı.
+
+**Kapı değil, hız.** CI (A-4) zaten kapıdır ve 14 Eylül'de yeşil yandı. Bu
+karar yeni bir kapı eklemez; **kırmızının fark edilme süresini** kısaltır.
+İkisi farklı şeylerdir, biri diğerinin yerine geçmez.
+
 ### Günlük dosyası adlandırma
 
 Aynı gün birden çok oturum olabilir. **İki pencere asla aynı dosyaya
@@ -276,7 +320,7 @@ ve tam o anda otomatik kapıya en çok ihtiyaç duyulur.
 | R2 | Verilmiş karar yeniden verilir | 02/03/06 + **reddedilenler kaydı** | ✅ |
 | R3 | Bozuk bir şey sağlam sanılır | 06'da açık durum işaretleri | ✅ |
 | R4 | Mevcut kod bozulur | Testler | ⚠️ **CI koşana kadar zayıf** |
-| R5 | İki pencere yazar, sürüklenme | Tek aktif pencere kuralı | ✅ |
+| R5 | İki pencere yazar, sürüklenme | Tek aktif pencere kuralı | ✅ *(15 Eylül: paralel ajan modeli değerlendirildi, reddedildi — teyit)* |
 | R6 | Devir dokümanının kendisi yanlış olur | Her iddia bir teste/dosyaya/komuta bağlı **+ `DENETIM.py`** | ✅ *(M0'da, sonra 14 Eylül'de betikle)* |
 | R7 | **Dokümanlar büyür, okumak kendisi bağlam sorunu olur** | Giriş 1 sayfa; derin dosyalar talep üzerine; **düzenli sadeleştirme** | 🔴 **Eşikte** — 9 dosya |
 

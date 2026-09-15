@@ -150,9 +150,9 @@ türetildi**, motora bakılmadı; motor zaten yok.
 
 | Adım | Durum |
 |---|---|
-| Kabul cümleleri yazıldı | ✅ `v2/KABUL-OLCUTLERI.md` §3 |
+| Kabul cümleleri yazıldı | ✅ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` §3 |
 | Mustafa onayladı | ❌ **bekliyor** |
-| Fikstürler yazıldı | 🟡 yalnız örnek (`v2/fikstur/A04.json`) |
+| Fikstürler yazıldı | 🟡 yalnız örnek (`08-motor-testleri/v2/fikstur/A04.json`) |
 | Testler koşuyor | ❌ motor yok |
 
 **Hiçbir test koşmuyor.** Bu tablonun ilk satırı yeşil diye kapsama

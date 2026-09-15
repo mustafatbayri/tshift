@@ -41,7 +41,7 @@ dosyaları bağlantı dizesinde `tshift_app` **kullanıyor** — ama o rolün
 gerçekten `NOSUPERUSER`/`NOBYPASSRLS` olduğunu **kimse doğrulamıyor**.
 
 **Neden kritik:** Bu, projedeki **en ciddi hatanın** (O-1) tekrar etme
-yoludur. Biri `db/rls/02-uygulama-rolu.sql` betiğini değiştirse, ya da yeni
+yoludur. Biri `04-kod/db/rls/02-uygulama-rolu.sql` betiğini değiştirse, ya da yeni
 bir ortamda `tshift_app` yanlışlıkla süper yetkiyle kurulsa:
 
 - Bütün RLS korumaları sessizce devre dışı kalır
@@ -353,7 +353,7 @@ güncellenmeli.**
 
 ---
 
-## 📌 Araç kararı (12 Eylül) — ne kullanılacak, ne kullanılmayacak
+## 📌 Araç kararı (12 Eylül · 15 Eylül'de eklendi) — ne kullanılacak, ne kullanılmayacak
 
 Mustafa: *"Kaptan sensin, yönlendir."* Karar ve gerekçeleri:
 
@@ -379,10 +379,17 @@ mantık içeren yerlerde (`Yetki/KapsamFiltresi`).
 | **SBOM, bağımlılık allowlist, lisans tarama** | Bir avuç paket var, hepsi Microsoft. Kurulum maliyeti bugünkü riskten büyük. |
 | **k6 / NBomber** (yük testi) | Motor yokken yük testi anlamsız. Motor sözleşmesiyle birlikte. |
 | **SonarQube / CodeQL** | `MimariTestleri` zaten kritik kuralları tutuyor. Ek gürültü, ek bakım. |
+| **opencode** — paralel ikinci ajan *(15 Eylül)* | İkinci **yazıcı** ajan R5'i (*iki pencere yazar, sürüklenme*) yeniden açar; R5 kapalı ve açacak ölçülmüş gerekçe yok. **Salt-okunur inceleyici** olarak değerli — ama bugün inceletilecek bitmiş iş yok: motor yazılmadı, A1–A12 onaylanmadı, fikstürler yazılmadı. Motorun bağımsız doğrulayıcısı (M-09) yazıldığında yeniden bakılacak, **iki haftalık ölçüm şartıyla**: on incelemede kayda değer bulgu yoksa bırakılır. Tam gerekçe: `oturumlar/2026-09-15-calisma-bicimi-opencode.md` |
 
 **İlke:** Her araç bir bakım yüküdür. Yanlış alarm veren araç, bir süre sonra
 bakılmayan araca dönüşür (bkz. O-7). Kullanılan araç sayısı değil, kapatılan
 açık sayısı ölçülür.
+
+⚠ **Araç olmayan karar — karıştırılmasın (15 Eylül).** Aynı gün alınan
+"iki pencere / geri bildirim yüzeyleri" kararı bir **araç** kararı değildir:
+yeni bir şey kurulmuyor, var olan `.\TEST.ps1` ve `docker compose logs -f`
+komutlarının nerede durduğu belirleniyor. Yeri `00-BURADAN-BASLA.md` §5b
+(pencere protokolü), burası değil.
 
 ---
 

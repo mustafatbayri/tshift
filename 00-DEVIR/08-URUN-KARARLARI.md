@@ -18,7 +18,7 @@ kapsam kararları, "bu davranış neden böyle" sorusunun cevabı.
 
 Numaralar **kayda giriş sırasıdır, kronoloji değil.** Tarih sütunu kronolojiyi
 verir. Sebebi: bir numara verildikten sonra başka dosyalardan ona atıf yapılır
-(`v2/KABUL-OLCUTLERI.md` K-1…K-7'ye atıf yapıyor); geriye dönük ekleme yüzünden
+(`08-motor-testleri/v2/KABUL-OLCUTLERI.md` K-1…K-7'ye atıf yapıyor); geriye dönük ekleme yüzünden
 numaralar kayarsa o atıflar sessizce yanlış olur.
 
 Yani geçmişteki bir karar sonradan kayda alınırsa **sıradaki boş numarayı**
