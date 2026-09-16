@@ -181,21 +181,28 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **CI kapısının ilk koşusunu görmek.**
+> **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.**
 >
-> `.github/workflows/testler.yml` içine `motor` adlı ikinci bir iş eklendi:
+> Sayı boyutları (`gece`, `hafta_sonu`, `cumartesi`) K-27 eşiğiyle çalışıyor.
+> `saat` boyutu sayılabilir bir şey değil, **süre** — *"ortalamadan 2 saat
+> fazla"* bambaşka bir büyüklük ve karara bağlanmadı. Ayrıca `SAAT_DENGESI`
+> zaten saat dengesine bakıyor (tolerans ±2); ikisinin aynı şeyi ölçüp
+> ölçmediği açık.
+>
+> Sessizce atlanmıyor: `/evaluate` cevabı `eksik_boyutlar` alanında bildiriyor.
+>
+> ### ✅ CI kapısı bağlandı ve **ilk koşusu yeşil** (`47c7050`)
+>
+> `.github/workflows/testler.yml` içinde `motor` adlı ikinci bir iş:
 > 60 birim testi + 12 altın senaryo + fikstür denetleyicisi. Docker
 > gerektirmiyor, Python 3.14'e sabitli (Mustafa'nın makinesiyle aynı sürüm).
->
-> **Ama henüz koşmadı.** Bu cümlelerin kanıtı, GitHub'da yeşil yanan bir
-> `motor` işidir. İlk push'tan önce yazılan her şey niyet, kanıt değil (§5).
->
-> İlk koşudan sonra: `04-TEST-HARITASI.md`'deki *"henüz koşmadı"* uyarısı
-> kaldırılacak.
 >
 > **Kapının kendi kırmızı kanıtı yapıldı** — adres verilmezse `exit=1`,
 > servis kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım
 > `::error::` ile duruyor. Motor yokken kapı sessizce geçmiyor.
+>
+> İlk koşuda iki uyarı çıktı, ikisi de bugünden değil: eylemler Node 20
+> hedefliyor, GitHub Node 24'e zorluyor. **T-17** olarak kaydedildi.
 >
 > ### ⛔ Bozulmaması gereken kural
 >

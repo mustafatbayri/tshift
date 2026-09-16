@@ -210,7 +210,7 @@ test). İkinci turda **12 bozmanın 12'si yakalandı.**
 > yanarken duruyordu. "Testler geçiyor" ile "testler bir şeyi koruyor" aynı
 > şey değildir.
 
-### Paket CI'ya bağlandı 🆕 *(16 Eylül)* — ama henüz koşmadı
+### Paket CI'ya bağlandı 🆕 *(16 Eylül)* — **ilk koşu yeşil**
 
 Bugüne kadarki gerekçe basitti: motor yokken paket bilerek kırmızıydı, kırmızı
 bir paketi kapıya bağlamak *"main her zaman yeşil"* kuralını bozardı. Motor
@@ -245,10 +245,15 @@ Bir kapının en tehlikeli hâli, koruduğu şey yokken de yeşil yanmasıdır.
 
 Yani motor ayağa kalkmazsa kapı **sessizce geçmiyor**.
 
-> ⚠ **Henüz koşmadı.** Bu satırların kanıtı, GitHub'da yeşil yanan bir
-> `motor` işidir. İlk push'tan önce burada yazan her şey **niyet**, kanıt
-> değil — `00-BURADAN-BASLA.md` §5'teki kural gereği bu ayrım açıkça
-> yazılıyor. İlk koşudan sonra bu uyarı kaldırılacak.
+#### İlk koşu ✅ *(16 Eylül, `47c7050`)*
+
+Her iki iş de **yeşil** yandı. Artık bu satırların kanıtı var: kapı gerçekten
+koştu, gerçekten geçti.
+
+Tek çıktı iki **uyarı**, ikisi de aynı ve bugünden değil: `actions/checkout@v4`
+ve `actions/setup-python@v5` Node 20 hedefliyor, GitHub onları Node 24'e
+zorluyor. `.NET` işi de aynı uyarıyı veriyor. Kapıyı kırmıyor ama zamanla
+kıracak — **T-17** olarak kaydedildi.
 
 C# taslakları `.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez,
 CI kırılmaz.

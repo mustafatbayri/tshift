@@ -108,7 +108,8 @@ Docker gerektirmiyor, Python 3.14'e sabitli.
 Kapının kendi kırmızı kanıtı yapıldı: adres verilmezse `exit=1`, servis
 kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım durur.
 
-> ⚠ **Henüz koşmadı.** Kanıt, GitHub'da yeşil yanan bir `motor` işidir.
+**İlk koşu yeşil** (16 Eylül, `47c7050`). Tek çıktı bir uyarı: eylemler Node
+20 hedefliyor, GitHub Node 24'e zorluyor — T-17.
 
 ## 4. Şu an hangi kurallar yazıldı
 

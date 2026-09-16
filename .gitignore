@@ -52,3 +52,8 @@ desktop.ini
 # Türetilmiş ANONİMLEŞTİRİLMİŞ örnekler 06-veri/anonim altına konur ve
 # ancak bilinçli bir kararla (bu satır değiştirilerek) git'e alınır.
 06-veri/
+
+# ---- Sohbetten inen dosyalar ----
+# Claude'un gonderdigi dosyalar buraya iniyor; depo icerigi degil.
+Claude outputs/
+

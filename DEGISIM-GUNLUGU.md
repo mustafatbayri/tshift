@@ -4,7 +4,7 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
-**2026-09-16 · MOTOR CI KAPISINA BAĞLANDI — henüz koşmadı**
+**2026-09-16 · MOTOR CI KAPISINA BAĞLANDI — ilk koşu YEŞİL**
 
 `.github/workflows/testler.yml` içine **`motor`** adlı ikinci bir iş eklendi:
 60 birim testi + 12 altın senaryo + fikstür denetleyicisi. Docker
@@ -24,8 +24,13 @@ cevap alamazsa adım `::error::` ile duruyor.
 `09-motor/requirements.txt` eklendi, sürümler sabitlendi (O-8 gerekçesi).
 Doğrulayıcının dış bağımlılığı yok ve bu bilerek korunuyor.
 
-> ⚠ **Henüz koşmadı.** Bu satırların kanıtı GitHub'da yeşil yanan bir `motor`
-> işidir. O görülene kadar yazılanlar **niyet**, kanıt değil.
+**İlk koşu yeşil** (`47c7050`). Uyarı yazısı yazıldığı gün konulmuş, ancak
+yeşil koşu görüldükten sonra kaldırılmıştı — 12 Eylül'de tersi yaşandığı için
+(dokümanda *"bekçi eklendi"* yazıyordu, bekçi yoktu; O-1).
+
+Tek çıktı iki uyarı, ikisi de bugünden değil: eylemler (`actions/checkout@v4`,
+`actions/setup-python@v5`, `actions/setup-dotnet@v4`) Node 20 hedefliyor,
+GitHub Node 24'e zorluyor. Kapıyı kırmıyor ama zamanla kıracak — **T-17**.
 
 → `.github/workflows/testler.yml` · `09-motor/requirements.txt`
 

@@ -730,12 +730,48 @@ yeniden bakılır.
 
 ---
 
+## 🟢 T-17 · GitHub Actions eylemleri Node 20 hedefliyor
+
+**Bulundu:** 16 Eylül 2026, CI kapısının ilk koşusunda · **Durum:** kapı
+**yeşil**, uyarı seviyesinde
+
+**Ne.** Her iki iş de aynı uyarıyı veriyor:
+
+> *Node.js 20 is deprecated. The following actions target Node.js 20 but are
+> being forced to run on Node.js 24: `actions/checkout@v4`,
+> `actions/setup-python@v5`, `actions/setup-dotnet@v4`.*
+
+GitHub şimdilik onları Node 24'te **zorla** koşturuyor, yani kapı çalışıyor.
+Zorlama kaldırıldığında çalışmayacak.
+
+**Hedef sürümler** *(16 Eylül'de bakıldı)*:
+
+| Eylem | Şu an | Node 24'e geçen ilk sürüm | En güncel |
+|---|---|---|---|
+| `actions/checkout` | v4 | — | **v7** |
+| `actions/setup-python` | v5 | **v6** | v7 |
+| `actions/setup-dotnet` | v4 | **v6** | v6 |
+
+**Neden hemen yapılmadı.** Ana sürüm atlamak kırıcı değişiklik demektir ve
+bunu *"kapı yeni yeşil yandı"* anının hemen ardından, yorgun bir günün
+sonunda yapmak yanlış sıra olurdu. Kapının bir kez temiz yeşil yandığı
+görüldü; bir sonraki değişiklik onun üstüne konur.
+
+**Neden 🟢:** Hiçbir şeyi yanlış göstermiyor, kapı çalışıyor. Ama **kendi
+kendine kırmızıya dönecek** bir madde — unutulursa bir sabah CI kırık
+bulunur ve sebebi bu değişiklik sanılmaz.
+
+**Ne gerek:** Üç eylemi sürüm atlatıp koşturmak. Tek commit, tek push, sonuç
+Actions sekmesinde hemen görünür.
+
+---
+
 ## Öncelik sırası — önerilen
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **CI kapısının ilk koşusunu görmek** | `motor` işi eklendi ama **henüz koşmadı**. Yeşil yanana kadar kanıt yok |
-| 2 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
+| **1** | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
+| 2 | **T-17 · Actions eylemlerini sürüm atlatmak** | Kendi kendine kırmızıya dönecek bir madde. Tek commit |
 | 3 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu; bilerek 501 dönüyor |
 | 4 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
 | 5 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
@@ -768,3 +804,4 @@ yeniden bakılır.
 | **T-14 şablonun günü yok** | **16 Eylül 2026** | `shift_templates.gunler` — A9'u kırmızı tutan şeydi, deneyle kanıtlandı |
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. On iki altın senaryonun tamamı yeşil |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
+| **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
