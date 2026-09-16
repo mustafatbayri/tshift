@@ -4,6 +4,34 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · `DENETIM.py` İLK KEZ koştu · 17 hata buldu, hepsi düzeltildi**
+**Ürün kodu değişmedi.** Betik 14 Eylül'de yazılmıştı ama üç oturumdur
+koşturulamıyordu (uzaktan kabuk çalışmıyor). Mustafa bugün ilk kez kendi
+makinesinde koşturdu.
+
+**17 HATA, 14 uyarı.** Hepsi tek sebepten: `02-DEGISMEZLER.md` ve
+`08-URUN-KARARLARI.md` içindeki 17 atıf hâlâ dondurulmuş **v2** ve **v4**
+sürümlerini gösteriyordu, güncel **v5**'i değil. 14 uyarının tamamı tarihsel
+dosyalarda — aksiyon gerekmiyor.
+
+**Asıl bulgu, ve D-1 kuralını genişletiyor:** O iki dosya aslında
+düzeltilmişti, ama düzeltme makineye hiç gönderilmemişti. Yakalanmama sebebi:
+`v2` → `v5` değişimi **dosya boyutunu değiştirmiyor.** İki dosya da her iki
+tarafta birebir aynı byte sayısındaydı (19 023 ve 29 883).
+*"Yerel kopya = makine kopyası" varsayımının yanlış olduğunu biliyorduk;
+yeni olan, **boyut karşılaştırmasının bu varsayımı doğrulamadığı.** Aynı
+uzunluktaki bir düzeltme sessizce kaybolur.*
+
+**Betiğin kendi hatası da çıktı:** `govde()` kod bloklarını silerek
+çıkarıyor, bu yüzden sonraki satır numaraları kayıyordu. Bugün doğru satırı
+göstermesi şanstı (o iki dosyada kod bloğu yok). Düzeltildi — blok yerine
+aynı sayıda boş satır konuyor.
+
+*Öğrenilen: bir denetim aracının kendi çıktısı da denetlenmeli. Yanlış satır
+numarası veren hata mesajı insanı yanlış yere bakmaya gönderir.*
+→ `DENETIM.py`, `00-DEVIR/02-DEGISMEZLER.md`, `00-DEVIR/08-URUN-KARARLARI.md`,
+`00-DEVIR/oturumlar/2026-09-16-fikstur-ve-test-iskeleti.md` (EK bölümü)
+
 **2026-09-16 · Fikstürler + test iskeleti yazıldı · yedi test BİLEREK kırmızı**
 **Ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.** Yeni paket CI'ya
 **bağlanmadı** — kırmızı bir paketi kapıya bağlamak "main her zaman yeşil"

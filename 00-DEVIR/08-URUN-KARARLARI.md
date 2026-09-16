@@ -18,7 +18,7 @@ kapsam kararları, "bu davranış neden böyle" sorusunun cevabı.
 
 Numaralar **kayda giriş sırasıdır, kronoloji değil.** Tarih sütunu kronolojiyi
 verir. Sebebi: bir numara verildikten sonra başka dosyalardan ona atıf yapılır
-(`08-motor-testleri/v2/KABUL-OLCUTLERI.md` K-1…K-7'ye atıf yapıyor); geriye dönük ekleme yüzünden
+(`08-motor-testleri/v5/KABUL-OLCUTLERI.md` K-1…K-7'ye atıf yapıyor); geriye dönük ekleme yüzünden
 numaralar kayarsa o atıflar sessizce yanlış olur.
 
 Yani geçmişteki bir karar sonradan kayda alınırsa **sıradaki boş numarayı**
@@ -94,7 +94,7 @@ başka bir şey dememeli.
 **Elenen alternatif:** Sınırı dâhil saymak (yasal okuma). Reddedildi; çalışan
 lehine daha temkinli olan seçildi.
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A4 (iki ayarla da koşulur) ·
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A4 (iki ayarla da koşulur) ·
 spec v1.4 §5–§6'ya girecek (T-6)
 
 ---
@@ -108,7 +108,7 @@ verilirse girdi **reddedilir** — şema hatası döner. Uyarı verip devam edil
 ihlalinde ne olacağını yazmıyordu. Uyarı sessizce geçilir; zaman modelini
 sonradan değiştirmenin bedeli *"her plan yeniden yorumlanır"* seviyesindedir.
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A5 madde 5 · spec v1.4 (T-7)
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A5 madde 5 · spec v1.4 (T-7)
 
 ---
 
@@ -159,7 +159,7 @@ verilir — bu bir ihlal değil.
 **Yan sonuç:** Spec §11.2'deki örnekte 08–16 vardiyası için `mola_dk 30`
 yazıyor; §6.2 tablosuna göre 60 olmalı. v1.4'te düzeltilecek (T-3).
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A8 · §7 V-4
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A8 · §7 V-4
 
 ---
 
@@ -178,7 +178,7 @@ O çalıştırmanın `plan_runs` kaydına *"geçmişsiz başlangıç"* notu dü�
 plan yapmaya başlamış olabilir; o durumda geçmiş gerçekten yoktur ama kiracı
 yeni değildir. Ölçüt yayınlanmış plan olmalı. *(Bu ölçüt `[çıkarım]`.)*
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A11 madde 5 · spec v1.4 (T-8)
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A11 madde 5 · spec v1.4 (T-8)
 
 ---
 
@@ -191,7 +191,7 @@ v1 fikstürlerine girmez.
 dinlenmenin gerçekte 10 saat olması. Sonbaharda gün uzar, kural gevşer; sessiz
 ihlal üretmez.
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A5 sonu
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A5 sonu
 
 ---
 
@@ -210,7 +210,7 @@ gün çalıştıran bir plan üretir.
 (`06-ACIK-RISKLER.md` ölçek matrisi) — bu yüzden teşhisin eksiksiz olması
 ürün özelliğidir, hata mesajı değil.
 
-→ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` A9(c) · spec v1.4 §11.3 (T-5)
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A9(c) · spec v1.4 §11.3 (T-5)
 
 ---
 
@@ -229,7 +229,7 @@ de kabul görür kanaatindeyim. Özellikle daha kompleks problemler çözdüğü
 **Ayrım korunur:** **Asgari** kapsama hâlâ %100'dür ve serttir — o tutmazsa plan
 geçersizdir (K-5 ayrımı). Gevşeyen yalnız **hedef** kapsamadır.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A1 madde 4
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A1 madde 4
 
 ---
 
@@ -265,7 +265,7 @@ kişiye sabit atama içeren girdi gelirse motor da plan üretmez.
 (`02-DEGISMEZLER.md`: *"Engellemenin delikleri vardır; güvenli varsayılanın
 yoktur."*)
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A2
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A2
 
 ---
 
@@ -313,7 +313,7 @@ doğru, ama gerçek onu bozdu"*.
 Gerekçe: denetimde *"sistem izin verdi"* savunması yoktur. Firma kendi koyduğu
 kuralı kendi gevşetebilir; kanunu gevşetemez.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A3, A6, A9
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A3, A6, A9
 
 ---
 
@@ -336,7 +336,7 @@ mesai konduğunu biliyorsun, buna bakarak 11 saat farkla planlama yapabilirsin;
 kullanıcı bu farkı manuel olarak 8 saate indirirse de uyarı verirsin ve karar
 kullanıcının olur."*
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A4 madde 2 ve 7
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A4 madde 2 ve 7
 
 ---
 
@@ -355,7 +355,7 @@ korunuyor.
 
 K-6 (sonbahar geçişi) bu kararın içinde eriyor.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A5
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A5
 
 ---
 
@@ -375,7 +375,7 @@ kural geçerlidir."*
 değerlendirilmeli — bugünkü tanımıyla karşılığı yok. Yumuşak kural tarafındaki
 asıl gerilim **adalet ile kapsama** arasında (§6.5 `ADALET_DENGESI`).
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` §3 sahne, A1 madde 6–7, A7
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §3 sahne, A1 madde 6–7, A7
 
 ---
 
@@ -422,7 +422,7 @@ molaları üst üste yığar ve plan müşteriye saçma görünür.
 **Şartname sonucu:** §6.4'te `MOLA_KAPSAMASI` **SERT → YUMUŞAK**, ve §5.4
 ağırlık tablosuna yeni satır. v1.4.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A8
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A8
 
 ---
 
@@ -444,7 +444,7 @@ yapabildiği ekranına taşımalı."*
 çalışmasıdır (kontrol), çözücünün yeniden plan üretmesi değil. Boşluklar
 sessizce doldurulmaz; kullanıcı editörde görür ve kendisi doldurur.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A12
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A12
 
 ---
 
@@ -489,7 +489,7 @@ etmeye izin vereceğini bilemez. v1.4'te §6'ya `yasal` sütunu eklenmeli
 Bu tablo **V-4 ile aynı sepette**: Claude avukat değil, teyit gelene kadar
 `[çıkarım]`.
 
-→ `08-motor-testleri/v4/KABUL-OLCUTLERI.md` A4 (Cem), A3 (Zeynep karşıtlığı)
+→ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` A4 (Cem), A3 (Zeynep karşıtlığı)
 
 ---
 

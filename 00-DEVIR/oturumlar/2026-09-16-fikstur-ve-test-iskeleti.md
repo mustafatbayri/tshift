@@ -152,3 +152,53 @@ Karara bağlanacak açık tasarım sorusu: `yasal` bayrağı **kuralın mı eşi
 mi** özelliği? `GUNLUK_AZAMI` için kanunî tavan 11, bizim varsayılanımız 9 —
 9'u aşmak firma kuralı ihlali, 11'i aşmak yasal ihlal. Tek bayrak bu ikisini
 ayıramıyor.
+
+---
+
+## EK — `DENETIM.py` ilk kez koştu ve 17 hata buldu
+
+Betik 14 Eylül'de yazıldı, üç oturumdur koşturulamıyordu (uzaktan kabuk
+çalışmıyor). Mustafa bugün ilk kez kendi makinesinde koşturdu.
+
+**Sonuç: 17 HATA, 14 uyarı.** Hepsi tek bir sebepten: `02-DEGISMEZLER.md` ve
+`08-URUN-KARARLARI.md` içindeki 17 atıf hâlâ **dondurulmuş** sürümleri
+gösteriyordu (**v2**, **v4**), güncel **v5**'i değil.
+
+### Asıl bulgu: aynı boyut, farklı içerik
+
+Bu iki dosya **düzeltilmişti** — ama düzeltme yalnız çalışma kopyasındaydı,
+Mustafa'nın makinesine hiç gönderilmemişti.
+
+Ve yakalanmamasının sebebi kayda değer: `v2` → `v5` değişimi **dosya boyutunu
+değiştirmiyor** (ikisi de iki karakter). İki dosya da hem makinede hem çalışma
+kopyasında **birebir aynı byte sayısındaydı** — 19 023 ve 29 883.
+
+> **D-1 kuralının eksik yarısı:** "yerel kopya = makine kopyası" varsayımı
+> yanlış — bunu biliyorduk. Yeni olan şu: **boyut karşılaştırması bu varsayımı
+> doğrulamaz.** Aynı uzunlukta bir düzeltme boyutu değiştirmez ve sessizce
+> kaybolur. Tek güvenilir kontrol içerik karşılaştırmasıdır.
+
+Bu tam olarak `DENETIM.py`'nin var olma sebebi: göz bu 17 satırı üç oturumdur
+görmedi, betik ilk koşuşunda gördü.
+
+### Yan bulgu: betiğin kendi satır numaraları yanlış olabilirdi
+
+`govde()` kod bloklarını **silerek** çıkarıyordu; bir kod bloğu N satırdan tek
+satıra iniyor ve **sonraki bütün satır numaraları kayıyordu.** Bugünkü 17 hata
+doğru satırı gösterdi çünkü o iki dosyada hiç kod bloğu yok — şans. Ama
+`00-BURADAN-BASLA.md`'de yedi blok var; orada çıkacak bir hata yanlış satırı
+gösterecekti.
+
+Düzeltildi: blok siliniyor ama yerine **aynı sayıda boş satır** konuyor.
+Doğrulandı — `00-BURADAN-BASLA.md` 447 satır, işlenmiş hâli de 447 satır.
+
+*Öğrenilen: bir denetim aracının kendi çıktısı da denetlenmeli. Yanlış satır
+numarası gösteren bir hata mesajı, insanı yanlış yere bakmaya gönderir —
+hiç mesaj vermemekten daha pahalıya gelebilir.*
+
+### Kalan 14 uyarının durumu
+
+Hepsi **tarihsel** dosyalarda (`oturumlar/`, `DEGISIM-GUNLUGU.md`): o gün
+var olan ama sonradan silinmiş dosya adları ve kısaltılmış test adları.
+Bu dosyalar tanım gereği yeniden yazılmaz, bu yüzden betik onları HATA değil
+UYARI sayıyor. **Aksiyon gerekmiyor.**

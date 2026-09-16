@@ -89,12 +89,18 @@ fikstür → test) tamam ama ucu boşta: motor yok, bu yüzden 7 senaryo kırmı
 Kabul ölçütü bir taahhüttür, bekçi değil; bekçi ancak test **yeşile
 döndüğünde** doğar.
 
-**Devir denetimi artık betik (14 Eylül).** `DENETIM.py` — bu paketteki test
-adlarını, sayıları, dosya yollarını ve commit durumunu makineye kontrol
-ettirir. İlk koşusunda elle bulunmamış **altı gerçek tutarsızlık** buldu —
-üç dokümanda yanlış yazılmış test adı, özet tablosunda bayat rakam, eksik
-değişim günlüğü satırı. **Beşi düzeltildi**, biri (tarihsel günlükteki eski
-dosya adı) bilerek bırakıldı.
+**Devir denetimi artık betik (14 Eylül) ve 16 Eylül'de İLK KEZ gerçekten
+koştu.** `DENETIM.py` — bu paketteki test adlarını, sayıları, dosya yollarını,
+sürüm atıflarını ve commit durumunu makineye kontrol ettirir.
+
+İlk gerçek koşusunda **17 hata** buldu: iki dokümandaki 17 atıf hâlâ
+dondurulmuş **v2** ve **v4** sürümlerini gösteriyordu. O düzeltmeler aslında
+yapılmıştı ama makineye hiç gönderilmemişti — ve **dosya boyutu değişmediği
+için** (`v2` ile `v5` aynı uzunlukta) hiçbir boyut kontrolü bunu yakalayamazdı.
+Hepsi düzeltildi. Kalan 14 uyarı tarihsel dosyalarda, aksiyon gerektirmiyor.
+
+⚠ **Her oturumun sonunda koşturulmalı.** Göz bu 17 satırı üç oturumdur
+görmedi; betik ilk koşuşunda gördü.
 
 **Çalışma biçimi kararı (15 Eylül).** Yazan pencerenin yanına **yazmayan** bir
 gösterge penceresi açılıyor: günlükler sürekli, testler talep üzerine — §5b.
@@ -131,11 +137,10 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 >
 > - **İki hukuki yorum uzman gözü bekliyor** (K-4 mola eşiği, K-17 yasal
 >   sınıflandırma). v1.4'ü bloke etmiyor; sahaya çıkmadan önce şart.
-> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — dört oturumdur bu
->   pencerelerde Mustafa'nın makinesinde kabuk çalıştırılamadı (8 Eylül
->   Windows güncellemesi, §7).
->   **İlk kez Mustafa koşacak:** `cd C:\Users\PC\Desktop\Tshift` sonra
->   `py DENETIM.py`.
+> - ✅ **`DENETIM.py` 16 Eylül'de ilk kez gerçekten koştu** ve 17 hata buldu
+>   (hepsi düzeltildi). Her oturumun sonunda koşturulmalı:
+>   `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`. Kalan 14 uyarı
+>   tarihsel dosyalarda, aksiyon gerektirmiyor.
 > - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
 > - **pytest paketi CI'a bağlanmadı** — motor yeşile çevirene kadar bağlanmayacak.
 > - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.

@@ -151,8 +151,15 @@ def govde(yol):
     icerirler. Icindeki "38/38" bir sayi iddiasi degil, o gunku ornegin
     parcasidir. (15 Eylul: KALITE-ARASTIRMASI-DEGERLENDIRME.md icindeki
     ornek DEVIR.md sablonu yanlis yere hata uretiyordu.)
+
+    SATIR SAYISI KORUNUR. Blok silinmez, yerine ayni sayida BOS SATIR
+    konur. Yoksa bu fonksiyondan sonra sayilan satir numaralari gercek
+    dosyayla tutmaz ve hata mesajinda yanlis satir gosteririz.
+    (16 Eylul: 02-DEGISMEZLER.md ve 08-URUN-KARARLARI.md'de kod blogu
+    olmadigi icin numaralar sansa dogru cikti; 00-BURADAN-BASLA.md'de
+    yedi blok var, orada cikacak bir hata yanlis satiri gosterecekti.)
     """
-    return KOD_BLOGU.sub("", oku(yol))
+    return KOD_BLOGU.sub(lambda m: "\n" * m.group(0).count("\n"), oku(yol))
 
 
 def koddaki_test_adlari():
