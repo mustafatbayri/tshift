@@ -287,6 +287,46 @@ ucuzdur; sessiz olan pahalıdır.
 
 ---
 
+## O-10 · "Doğrulayamam" dedim; denememiştim ⚠
+
+**Tarih:** 16 Eylül 2026
+
+**Ne oldu.** Dış incelemenin üçüncü turunda üç bulgu `04-kod/` tarafındaydı
+(T-34, T-35, T-36). Cevabımda *"bu üçünü doğrulayamıyorum"* dedim ve
+gerekçesini de yazdım: o dosyalar bende yok.
+
+**Doğru değildi.** Mustafa'nın makinesine açılan köprü **bütün gün
+elimdeydi** ve o gün onunla defalarca dosya okumuştum. `04-kod/` dosyalarını
+**hiç istememiştim.** Mustafa itiraz etti — *"neden doğrulayamıyorsun, GPT
+nasıl doğruluyor"* — dosyaları çektim ve **üçü de doğru çıktı.**
+
+**Neden hiçbir yerde kırmızı yanmadı.** Çünkü kendi cümlem, kendi
+davranışımın denetimiydi. Denemediğim bir şeyin başarısızlık kaydı yoktur;
+ortada log da, hata da, eksik dosya uyarısı da yok. Tek kanıt, olmayan bir
+tool çağrısı.
+
+| | O-9 | O-10 |
+|---|---|---|
+| Ne atlandı | Gönderme | **Bakma** |
+| Görünen kanıt | `git status` temiz | *"erişimim yok"* cümlesi |
+| Gerçek | Dosya gitmemişti | **Erişim vardı, denenmemişti** |
+
+**Bu T-18'in bende çalışan hâli.** T-18'de motor *"bu kuralı kontrol
+edemedim"* ile *"yayınlanabilir"* diyor. Burada ben *"doğrulayamadım"* ile
+*"bulgu kaydedildi"* dedim. İkisinde de **bilinmeyen, olumsuz cevapla
+karıştırıldı** — kontrol edilmemiş bir şey, kontrol edilmiş gibi raporlandı.
+
+### Kalıcı bekçi
+
+> **"Erişimim yok" demeden önce erişim denenir.** Denenmemiş bir erişimin
+> raporu, bulgu değil tahmindir; ve tahmin kaydedilirken bulgu gibi görünür.
+
+Bu, D-1 zincirinin beşinci halkasıyla aynı aileden: *"göndermem gerektiğini
+fark ettim."* İkisinde de eksik olan **işlem** değil, **işlemi yapma
+fikri**.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -300,6 +340,7 @@ ucuzdur; sessiz olan pahalıdır.
 | O-7 | M4 yanlış alarm veriyordu | Yorum satırları atlanıyor | ✅ |
 | O-8 | EF sürüm uyuşmazlığı | Sabitlenmiş paket sürümleri | 🟡 Kısmi |
 | O-9 | Gönderilmeyen dosya iki tarafta da temiz görünüyordu | Commit öncesi içerik karşılaştırması (`cmp`), hafıza değil | ✅ |
+| O-10 | *"Doğrulayamam"* denildi, denenmemişti | "Erişimim yok" demeden önce erişimi dene | ✅ *(kural; otomatik bekçisi yok)* |
 
 ---
 
@@ -324,3 +365,10 @@ sınıfın ortak özelliği *kontrolün yokluğu* değil, **kontrolün yanlış 
 bakması**. O-1'de RLS tanımlıydı ama etkisizdi; O-9'da git temizdi ama
 karşılaştırdığı iki şey de aynı taraftaydı. Her ikisinde de kapı vardı,
 sadece başka bir kapıydı.
+
+**O-10 sınıfa beşincisini ekledi ve sınırı gösterdi:** O-1'den O-9'a kadar
+her hatanın bir bekçisi yazılabildi, çünkü hepsi **kodun** ya da **deponun**
+durumuydu. O-10 ise bir **cevabın** durumu: *"doğrulayamadım"* cümlesini
+sınayacak otomatik bir kapı yok. Bu yüzden 16 Eylül'de kayda geçen kural —
+*bir iş parçası bitince şartnameden türetilmiş girdilerle başka bir modelle
+inceleme* — bir öneri değil, bu sınıfın tek bekçisi.

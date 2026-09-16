@@ -4,6 +4,115 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · DIŞ İNCELEME, 3. tur — on bulgu daha, beşi 🔴**
+
+Üçüncü tur şartnameyi kural kural kodla karşılaştırdı. **On bulgunun onu da**
+ölçülerek doğrulandı; hiçbiri tahmin değil, her biri koşturularak görüldü.
+
+**T-27 🔴 — olmayan mola yasal sınırı deviriyor.** `zaman.mola_saat()` mola
+süresini vardiyanın **içinde olup olmadığına bakmadan** topluyor. Ölçüm:
+`vardiya 08:00–20:00, mola 22:00–23:00 → brüt 12, mola 1, net 11,
+GUNLUK_AZAMI (11 saat) ihlali: 0`. Devrilen kural `yasal: true,
+kabul_edilebilir: false` sınıfında — K-20'ye göre asla göz yumulamaz olan.
+
+**T-28 🔴 — geçmiş vardiyalar hiç okunmuyor.** `gecmis_vardiyalar` ifadesi
+`09-motor/` içinde **hiçbir dosyada geçmiyor**. Haftalar arası dinlenme
+kuralı önceki haftaya kör: pazar gecesini çalışmış biri pazartesi sabahına
+yazılabilir.
+
+**T-29 🔴 — `DONMUS_GUN` hiç ateşlenemez.** Kural yalnız `_yeni` işaretli
+atamalarda çalışıyor, o işareti **hiçbir yer üretmiyor**. Ölçüm: işaretsiz
+girdide 0 ihlal, elle işaretlenince 1. *"Geçmiş yeniden planlanamaz"*
+sözünün tek bekçisi bu.
+
+**T-34 🔴 — sırlar kodda varsayılana düşüyor.** `Program.cs`:
+`APP_DB_PASSWORD ?? "tshift_app_dev_2026"` ve
+`JWT_SECRET ?? "yerel-gelistirme-imza-anahtari-..."`. Ortam değişkeni
+unutulursa uygulama **hata vermiyor**, bilinen anahtarla açılıyor.
+
+**T-35 🔴 — bir kullanıcının hatalı girişi bütün kiracıyı kilitliyor.**
+`giris/route.ts` `X-Forwarded-For` iletmiyor, backend
+`ctx.Connection.RemoteIpAddress` okuyor, `ForwardedHeaders` ara katmanı
+hiçbir yerde yok. Sonuç: bütün istekler tek IP'den geliyor gibi görünüyor —
+beş yanlış parola **herkesi** kilitliyor, denetim kaydındaki her IP kurgusal.
+
+**Dört 🟡 daha.** T-30 `HAFTA_TATILI` kesintisiz 24 saati ölçmüyor (kodun
+kendi yorumu bunu söylüyor) · T-31 adalet penceresi takvim ayında
+sıfırlanmıyor · T-33 `_dilimler(0, 8.5, 12.5) -> [8, 9, 10, 11]`, yarım
+saatler kayboluyor · T-36 `YenileAsync` oku-kontrol-işaretle-kaydet yapıyor,
+`RowVersion` / işlem / seviye yok.
+
+**T-32 🟡 — bunu bugün ben açtım.** K-30'u yazarken fazla mesai tavanını
+çözücüde **profil tablosundan**, doğrulayıcıda **kural parametresinden**
+okur hâle getirdim. Bugün aynı sayıyı veriyorlar; kiracı parametreyi
+değiştirdiği gün sessizce ayrışırlar. §7.6'nın bağımsızlığı kural mantığını
+ayırıyor, **ortak gerçeğin tek kaynağını** garanti etmiyor.
+
+**Öncelik tablosu yeniden sıralandı** — ölçüt *yanlış karar riski*:
+T-27 · T-35 · T-34 · T-28 · T-29 · T-19 · T-21 · T-18 · T-22.
+
+**Düzeltme yine yapılmadı, bilerek.** Beş bulgu ürün kararı içeriyor.
+Kaydedildi, uydurulmadı.
+
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-27 … T-36
+
+**2026-09-16 · DIŞ İNCELEME, 1. ve 2. tur — dokuz bulgu, iki yanlış iddia**
+
+Motor bittikten sonra proje **başka bir modele** (GPT) şartnameyle birlikte
+incelettirildi. **Dokuz bulgunun tamamı** bizim tarafımızda doğrulandı.
+*(Üçüncü tur ayrı girdide, yukarıda.)*
+
+**T-18 🔴 — yayın kapısı.** Gövdesi yazılmamış ama aktif ve SERT bir kural
+varken doğrulayıcı aynı cevapta *"bu kuralı kontrol edemedim"* ve
+*"yayınlanabilir"* diyor. `denetle.py` içinde kendi yazdığımız cümle
+*"'ihlal bulamadım' ile 'bakmadım' aynı şey değildir"* — ilkeyi yazmışız,
+kapıya bağlamamışız. O-1'in tam şekli.
+
+**T-19 🔴 — talep biçimi.** Şartname §11.2 `{ekip, gun, saat}` diyor, motor
+`{gunler:[], saatler:[]}` okuyor. Şartname biçimi verildiğinde **sıfır
+atamalı plan** üretiliyor ve %100 kapsama ile yayına açılıyor.
+
+> **Bağımsızlık tek başına yetmiyor.** §7.6 çözücü ile doğrulayıcıyı kural
+> mantığında ayırıyor, ama ikisi de girdiyi aynı fikstür geleneğiyle okuyor.
+> Birbirleriyle tutarlılar, ikisi de şartnameyle tutarsız. D-6'ya karşı
+> kurulan savunma, ortak yanlış bir **girdi yorumuna** karşı boş.
+
+**Yanlış iddia düzeltildi.** *"On iki altın senaryonun tamamı yeşil"*
+cümlesi **yanlıştı**. `12 passed` = 7 altın senaryo + paketin kendi 5 sağlık
+testi. A2, A10, A11, A12 backend tarafında ve **hiç sınanmadı** — çift
+tıklama, geçmiş veri ve plan kopyalama tamamlanmış güvence değil. Cümle
+dokümanlara ve commit mesajlarına girmişti; hepsi düzeltildi.
+
+**Yanlış sayı düzeltildi.** Doğrulayıcıda **19** kural var, doküman 17
+diyordu — üstelik aynı dosyanın tablosu 19 satır listeliyordu. `DENETIM.py`
+yakalayamaz: tutarlılığa bakar, doğruluğa değil.
+
+**İkinci turda beş bulgu daha.** **T-21** 🔴 çok ekipli çalışan iki ekibin
+ihtiyacına birden sayılıyor — modelin `x` değişkeninde ekip boyutu yok; tek
+kişiyle yapılan deneyde motor *"çözüldü"* derken asgari kapsama %50 çıktı.
+**T-22** 🔴 çözümsüzlükte sunulan `en_iyi_plan` bağımsız denetimden geçmeden
+dönüyor, üstelik sıfır atamalı plan `var: True` diyor. **T-23** zaman aşımı
+ile gerçek çözümsüzlük aynı cevabı alıyor. **T-24** K-28'in *"2 dakika
+durgunluk"* koşulu **hiç yazılmamış**, ayrıca süre bütçesi isteğin tamamını
+kapsamıyor — 0,05 saniyelik bütçeyle yapılan çağrı **57,4 saniye** sürdü.
+**T-25** servis tek iş parçacıklı.
+
+**T-26 açıldı: kayıt ile yürürlük arasında kontrol yok.** K-28 kayda geçti,
+şartnameye işlendi, kodun başında anlatıldı, "kapandı" sayıldı — ve ikinci
+koşulu hiç yazılmadı. Ne kırmızı kanıt, ne `DENETIM.py`, ne CI yakaladı;
+hiçbiri *"her K-kararının onu çiviyen bir testi var mı"* diye sormuyor.
+O-1'in genel hali: O-1'de RLS tanımlıydı ama etkisizdi, burada karar kayıtlı
+ama yürürlükte değil.
+
+**Yöntem kayda geçti:** iç kırmızı kanıt *"varsayımlarımız korunuyor mu"*
+sorar; dış inceleme *"varsayımlarımız doğru mu"* sorar. İkincisi olmadan
+birincisi kendi dünyasında kusursuz kalır. Bir iş parçası bittiğinde,
+şartnameden türetilmiş girdilerle **başka bir modelle** inceleme yapılır.
+
+Düzeltme yapılmadı — T-18 ve T-19'un ikisi de ürün kararı içeriyor.
+
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-18 … T-26
+
 **2026-09-16 · T-17 kapandı · Actions eylemleri Node 24'e çıkarıldı**
 
 CI kapısının ilk koşusunda iki uyarı çıkmıştı: eylemler Node 20 hedefliyordu,

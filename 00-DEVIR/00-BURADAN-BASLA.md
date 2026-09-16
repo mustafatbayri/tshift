@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (motor bitti, CI kapısına bağlandı; **12 altın senaryo + 60 birim test YEŞİL, CI'da da yeşil**)
+**Son güncelleme:** 2026-09-16 (motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 60 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -45,9 +45,23 @@ PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → 
   yeni çalışan kaydı.
 - **Yılmaz'a inceleme paketi gönderildi** (`05-inceleme/v1-2026-09-11/`).
 
-**Motor tamamlandı (16 Eylül).** Doğrulayıcı, çözücü ve onarım döngüsü —
-üçü de yazıldı, on iki altın senaryonun tamamı ve 60 birim testi yeşil,
-CI'da da yeşil. Ayrıntı aşağıda ve `09-motor/OKU-BENI.md`'de.
+**Motor çekirdeği çalışıyor (16 Eylül).** Doğrulayıcı, çözücü ve onarım
+döngüsü yazıldı; **yedi altın senaryo** (A1, A3, A4, A6, A7, A8, A9) ve 60
+birim testi yeşil, CI'da da yeşil.
+
+⚠ **"Motor tamamlandı" demiyoruz, bilerek.** Kataloğun 35 kuralının 19'u
+yazılı; A2/A10/A11/A12 backend tarafında ve hiç sınanmadı; aynı gün yapılan
+**dış inceleme üç turda 19 bulgu** buldu, dokuzu 🔴 (T-18…T-36). Doğru
+ifade: *belirli senaryoları çalışan bir motor çekirdeği var.*
+
+**Dokuz 🔴'nın hepsi sessiz:** hiçbiri kırmızı yanmıyor, hepsi planı temiz
+gösteriyor. Hiç yaşanmamış mola yasal günlük sınırı deviriyor (T-27),
+geçmiş hafta hiç okunmuyor (T-28), *"geçmiş yeniden planlanamaz"* sözünün
+tek bekçisi ateşlenemiyor (T-29), şartname biçimindeki talep sessizce
+atlanıyor (T-19), çok ekipli çalışan iki ekibi aynı anda dolduruyor (T-21),
+denetlenmemiş kural yayını engellemiyor (T-18), çözümsüzlükte sunulan taslak
+hiç denetlenmiyor (T-22). İkisi motor dışında: sırlar kodda varsayılana
+düşüyor (T-34), bir kişinin hatalı girişi bütün kiracıyı kilitliyor (T-35).
 
 **Henüz yazılmadı:** `/suggest` ucu (öneri üretimi, §11.5), plan editörü,
 kural yönetimi, kullanıcı/rol yönetim ekranları.
@@ -86,7 +100,7 @@ tek satırı değişmedi.
 kuralını bozardı. C# taslakları da bu yüzden `.cs.taslak` uzantılı —
 derleyici görmez, CI kırılmaz. Ayrıntı: `08-motor-testleri/v5/testler/OKU-BENI.md`.
 
-**MOTOR TAMAMLANDI (16 Eylül) — on iki altın senaryonun tamamı yeşil.**
+**MOTOR ÇEKİRDEĞİ ÇALIŞIYOR (16 Eylül) — yedi altın senaryo yeşil.**
 `09-motor/` üç parçadan oluşuyor ve **üçü ayrı ayrı durur**:
 
 | Parça | Ne yapar | Ne yapmaz |
@@ -185,78 +199,81 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.**
+> **Dış incelemenin 🔴 bulguları — yeni özellikten önce.**
 >
-> Sayı boyutları (`gece`, `hafta_sonu`, `cumartesi`) K-27 eşiğiyle çalışıyor.
-> `saat` boyutu sayılabilir bir şey değil, **süre** — *"ortalamadan 2 saat
-> fazla"* bambaşka bir büyüklük ve karara bağlanmadı. Ayrıca `SAAT_DENGESI`
-> zaten saat dengesine bakıyor (tolerans ±2); ikisinin aynı şeyi ölçüp
-> ölçmediği açık.
+> 16 Eylül'de proje başka bir modele (GPT) şartnameyle birlikte **üç turda**
+> incelettirildi. **19 bulgu** çıktı, hepsi bizim tarafımızda **ölçülerek**
+> doğrulandı; ayrıca iki yanlış iddiamız düzeltildi. Dokuzu 🔴 ve **yeni iş
+> bunların önüne geçmemeli.**
 >
-> Sessizce atlanmıyor: `/evaluate` cevabı `eksik_boyutlar` alanında bildiriyor.
+> **Sıralama ölçütü: yanlış karar riski.**
 >
-> ### ✅ CI kapısı bağlandı ve **ilk koşusu yeşil** (`47c7050`)
+> | Sıra | Ne oluyor | Karar gerekiyor mu |
+> |---|---|---|
+> | **T-27** | `mola_saat()` molanın vardiya içinde olup olmadığına bakmıyor. `08:00–20:00` vardiyaya `22:00–23:00` molası → net 11 saat, **yasal** günlük sınır ihlali **0** | ❌ mekanik |
+> | **T-35** | Giriş isteği `X-Forwarded-For` taşımıyor, backend `RemoteIpAddress` okuyor → bir kişinin beş yanlış parolası **bütün kiracıyı** kilitliyor, denetim kaydındaki IP kurgusal | ❌ mekanik *(`04-kod`)* |
+> | **T-34** | `Program.cs` içinde veritabanı parolası ve JWT imza anahtarı **kodda varsayılan**, ortam kontrolü yok | ❌ mekanik *(`04-kod`)* |
+> | **T-28** | `gecmis_vardiyalar` `09-motor/` içinde **hiç geçmiyor** — yasal dinlenme kuralı önceki haftaya kör | ✅ veri nereden gelecek |
+> | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
+> | **T-19** | Şartname biçimindeki talep sessizce atlanıyor → sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* | ✅ şartname mi kod mu kazanacak |
+> | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
+> | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor | ✅ kapı ne yapmalı |
+> | **T-22** | Çözümsüzlükte sunulan taslak hiç denetlenmiyor; boş plan *"var"* diyor | ❌ mekanik |
 >
-> `.github/workflows/testler.yml` içinde `motor` adlı ikinci bir iş:
-> 60 birim testi + 12 altın senaryo + fikstür denetleyicisi. Docker
-> gerektirmiyor, Python 3.14'e sabitli (Mustafa'nın makinesiyle aynı sürüm).
+> **Karar beklemeyen dörtle başlanabilir** (T-27, T-35, T-34, T-22). Beşi
+> Mustafa'nın cevabını bekliyor.
 >
-> **Kapının kendi kırmızı kanıtı yapıldı** — adres verilmezse `exit=1`,
-> servis kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım
-> `::error::` ile duruyor. Motor yokken kapı sessizce geçmiyor.
+> ### Neden bunlar önce
 >
-> İlk koşuda çıkan Node 20 uyarısı aynı gün kapatıldı (T-17): checkout v7,
-> setup-python v7, setup-dotnet v6. Değişiklik **önce `ci/node24` dalında**
-> denendi, yeşil görülünce `main`'e alındı — *"`main` her zaman yeşildir"*
-> bir CI değişikliği için bedava riske atılmaz.
+> Dış incelemenin sözü: *"önce yanlış yayın izni ve sessiz veri atlama
+> sorunları, sonra tamamlanma tablosu."* Katılıyoruz. Dokuzu da **sessiz**
+> hatalar: hiçbiri kırmızı yanmıyor, hepsi planı temiz gösteriyor.
 >
 > ### ⛔ Bozulmaması gereken kural
 >
 > Şartname §7.6 ve §16.1: **doğrulayıcı çözücüyle mantık paylaşmaz.**
 > `09-motor/cozucu/` ve `09-motor/dogrulayici/` birbirini **import etmez**;
-> aynı aritmetik iki kez, bağımsız olarak yazılıdır. `09-motor/orkestra.py`
-> ikisini de import eder ve bu doğrudur — yasak olan, ikisinin birbirini
-> çağırmasıdır.
+> `09-motor/orkestra.py` ikisini de import eder ve bu doğrudur.
+> `09-motor/testler/test_bagimsizlik.py` bunu koruyor.
 >
-> Bunu artık bir test koruyor: `09-motor/testler/test_bagimsizlik.py`.
-> *"Aynı hesabı iki kez yazmayalım"* deyip ortak modül çıkarmak yasaktır;
-> tekrar burada maliyet değil, güvencedir.
+> ⚠ **Ama T-19 bu kuralın sınırını gösterdi:** bağımsızlık kural
+> *mantığını* ayırıyor, **girdi yorumunu** ayırmıyor. İkisi de aynı fikstür
+> geleneğiyle okuyor ve o gelenek şartnameyle uyuşmuyor.
+>
+> ⚠ **T-32 aynı sınırın ikinci örneği ve onu bugün ben açtım:** K-30'u
+> yazarken fazla mesai tavanını çözücüde **profil tablosundan**, doğrulayıcıda
+> **kural parametresinden** okur hâle getirdim. İkisi bugün aynı sayıyı
+> veriyor; kiracı parametreyi değiştirdiği gün sessizce ayrışırlar.
 >
 > ### ⛔ Commit öncesi içerik karşılaştırması (O-9)
 >
-> 16 Eylül'de bir düzeltme ve 4 testi **hiç gönderilmemiş**, iki tarafta da
-> hiçbir şey kırmızı yanmamıştı: git temiz, `DENETIM.py` *"commit bekleyen
-> 0"*, testler yeşil — çünkü her iki taraf **kendi içinde** tutarlıydı.
->
-> Bekçi: commit öncesi dosyalar karşı taraftan çekilip **içerikçe**
-> karşılaştırılır. Hafızaya değil `cmp`'ye güvenilir. Ayrıntı:
-> `00-DEVIR/05-HATA-OTOPSILERI.md` O-9.
+> Dosyalar karşı taraftan çekilip **içerikçe** karşılaştırılır. Hafızaya
+> değil `cmp`'ye güvenilir. Boyut eşitliği de yetmez.
 >
 > ✅ **Tamamlananlar:** fikstürler · test iskeleti · şartname v1.4 · kural
-> sınıflandırması · mevzuat araştırması · bağımsız doğrulayıcı · **çözücü**
-> · **onarım döngüsü** · **plan profilleri**.
-> A-15, A-17, A-18, T-12, T-14, T-15 kapandı.
-> K-27, K-28, K-29, K-30 karara bağlandı.
+> sınıflandırması · mevzuat araştırması · bağımsız doğrulayıcı · çözücü ·
+> onarım döngüsü · plan profilleri · **CI kapısı (yeşil)**.
+> A-15, A-17, A-18, T-12, T-14, T-15, T-17 kapandı.
+> K-27, K-28, K-29, K-30 karara bağlandı — **ama K-28 kodda eksik (T-24a).**
 >
 > **Paralelde açık kalanlar:**
 >
-> - **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.** Sayı boyutları çalışıyor;
->   süre boyutu karara bağlanmadı, `eksik_boyutlar` ile açıkça bildiriliyor.
-> - **`/suggest` (§11.5)** — motorun yazılmamış tek ucu, bilerek 501 dönüyor.
->   ⚠ **Kabul ölçütü yok, fikstürü yok.** On iki altın senaryonun hiçbiri onu
->   sınamıyor. Kod yazmadan önce *"doğru çalışıyorsa ne görmeliyiz"* cümleleri
->   yazılıp onaylanmalı — A7'de bu adımın atlanmasının bedeli görüldü.
-> - **`09-motor/requirements.txt`** — sürümler sabitlendi (O-8 gerekçesi).
->   Doğrulayıcının **hiçbir** dış bağımlılığı yok ve bu bilerek korunuyor.
+> - **T-23, T-24, T-25, T-26** — ikinci turun kalan bulguları
+> - **T-30, T-31, T-32, T-33, T-36** 🟡 — üçüncü turun kalan bulguları
+> - **T-20** — M0 testinin kapsamı; A-1'i kapatan test, doğrulanmalı
+> - **T-13** — `ADALET_DENGESI`'nin `saat` boyutu
+> - **`/suggest` (§11.5)** — ⚠ **kabul ölçütü yok, fikstürü yok.** Kod
+>   yazmadan önce *"doğru çalışıyorsa ne görmeliyiz"* cümleleri yazılıp
+>   onaylanmalı — A7'de bu adımın atlanmasının bedeli görüldü.
 > - **A-16 hukuk teyidi** — madde numaralı tablo hazır, uzman bakacak.
-> - **`07-motor/` yeniden adlandırma** — önerilen `08-analiz/` adı
->   `08-motor-testleri/` ile çakışır. Karar verilirken göz önüne alınmalı.
+> - **A-13 kapsam envanteri** — Ocak hedefi ölçülmedi. Ayrı pencere işi.
+> - **`07-motor/` yeniden adlandırma** — `08-analiz/` adı `08-motor-testleri/`
+>   ile çakışır; örneğin `10-analiz/`.
 > - ✅ **`DENETIM.py` her oturum sonunda koşturulmalı:**
 >   `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`.
-> - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
-> - **A-6 mutasyon raporu.** 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama
->   yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok.
-> - **R7 eşiği:** `00-DEVIR` kökünde 9 dosya. Onuncusu uyarı üretir.
+> - **A-6 mutasyon raporu** — kırmızı kanıt turu elle seçilen kırılmalarda
+>   12/12 yakaladı ama **dış inceleme 19 bulgu buldu**; otomatik mutasyon
+>   hâlâ yok ve iç kanıtın sınırı görüldü.
 > - A-2 ve A-3 eksik bekçiler.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
@@ -296,8 +313,8 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
-| **`08-motor-testleri/`** | ✅ **Motor var, 12 altın senaryonun tamamı yeşil.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, 17 kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). 60 birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). 60 birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

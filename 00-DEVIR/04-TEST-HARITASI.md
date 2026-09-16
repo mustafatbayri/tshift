@@ -152,11 +152,20 @@ fikstür → test → motor.
 | Mustafa onayladı | ✅ **12/12 senaryo, 6/6 varsayım** (A5 ertelendi) |
 | Fikstürler yazıldı | ✅ **11 dosya** (A5 hariç) + ortak sahne, hepsi denetleyiciden geçiyor |
 | Test iskeleti | ✅ `08-motor-testleri/v5/testler/` — pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` |
-| Bağımsız doğrulayıcı | ✅ `09-motor/dogrulayici/` — `/evaluate`, 17 kural gövdesi |
+| Bağımsız doğrulayıcı | ✅ `09-motor/dogrulayici/` — `/evaluate`, **19** kural gövdesi |
 | Çözücü | ✅ `09-motor/cozucu/` — CP-SAT, `/solve` |
 | Onarım döngüsü | ✅ `09-motor/orkestra.py` — §11.7, en fazla 2 deneme |
-| **Altın senaryolar** | ✅ **12 passed, 4 skipped** (atlananlar backend tarafında) |
+| **Altın senaryolar** | ⚠ **7 tanesi koşuyor ve yeşil** — A1, A3, A4, A6, A7, A8, A9 |
+| Koşmayanlar | A2, A10, A11, A12 **backend tarafında**, `.cs.taslak` — hiç sınanmadı · A5 ertelendi (K-12) |
 | Birim testi | ✅ **60 passed** |
+
+> ⚠ **`12 passed` sayısı yanıltıcıdır ve 16 Eylül'e kadar yanlış
+> aktarıldı.** O sayı **7 altın senaryo + paketin kendi 5 sağlık testi**
+> demek; *"12 altın senaryo yeşil"* demek **değil**. Dış inceleme yakaladı.
+>
+> Sınanmayan üç senaryonun konusu önemsiz de değil: **çift tıklama iki plan
+> üretmesin** (A10), **geçmiş veri eksikliği** (A11), **plan kopyalama**
+> (A12). Bunlar tamamlanmış güvence olarak sunulmamalı.
 
 ```
 py servis.py   (ayri pencerede)
@@ -169,10 +178,12 @@ py -m pytest -q   →   12 passed, 4 skipped
 | | Motorsuz | Doğrulayıcıyla | Çözücüyle |
 |---|---|---|---|
 | Kırmızı | 7 | 5 | **0** |
-| Yeşil | 4 | 7 | **12** |
+| Yeşil (senaryo + paket sağlığı) | 4 | 7 | **12** |
 | Atlanan | 5 | 4 | 4 |
 
-Atlanan dördü backend senaryosu (A2, A10, A11, A12); xUnit tarafında koşacak.
+Son sütundaki 12'nin **7'si altın senaryo**, 5'i paketin kendi sağlık testi.
+Atlanan dördü backend senaryosu (A2, A10, A11, A12); xUnit tarafında koşacak
+ama o taraf henüz **taslak**.
 
 ### Son üç senaryo neyi ortaya çıkardı
 
@@ -221,7 +232,7 @@ bitti, kırmızı kalmadı, gerekçe de ortadan kalktı.
 | İş | Ne koşar | Docker |
 |---|---|---|
 | `test` | .NET backend — 39 test + mimari kuralları | gerekli |
-| `motor` 🆕 | 60 birim + 12 altın senaryo + fikstür denetleyicisi | **gerekmez** |
+| `motor` 🆕 | 60 birim + 7 altın senaryo + fikstür denetleyicisi | **gerekmez** |
 
 **Neden ayrı iş, aynı işe ek adım değil:** aynı işte olsalardı ilkinin
 kırmızısı ikincinin sonucunu **gizlerdi** — bir adım patlayınca sonrakiler hiç
@@ -258,6 +269,36 @@ bir değişmez, bir CI değişikliği için bedava riske atılmaz.
 
 C# taslakları `.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez,
 CI kırılmaz.
+
+## ⚠ Dış inceleme — 16 Eylül, iki 🔴 bulgu
+
+Motor bittikten sonra proje **başka bir modele** (GPT) şartnameyle birlikte
+incelettirildi. İki sessiz hata çıktı ve **ikisini de kendi kırmızı kanıt
+turumuz bulamamıştı.**
+
+| Bulgu | Ne oluyor |
+|---|---|
+| **T-18** 🔴 | Gövdesi yazılmamış aktif SERT kural varken plan **"yayınlanabilir"** çıkıyor. *"Kontrol edemedim"* ile *"yayınla"* aynı cevapta |
+| **T-19** 🔴 | Şartname §11.2 biçimindeki talep sessizce atlanıyor: **sıfır kişilik plan**, %100 kapsama, yayınlanabilir |
+
+### Neden iç kırmızı kanıt bunları bulamadı
+
+| | İç kırmızı kanıt | Dış inceleme |
+|---|---|---|
+| Yöntem | Kodu bozar, test yakalıyor mu bakar | Şartnameden girdi verir, motor doğru mu bakar |
+| Bulduğu | Varsayımlarımız korunuyor mu | **Varsayımlarımız doğru mu** |
+| Sonuç | 12/12 yakalandı | 2 sessiz hata |
+
+Kırmızı kanıt **kendi kurduğumuz dünyanın içinde** kusursuzdu. T-19 özellikle
+öğretici: §7.6 bağımsızlığı çözücü ile doğrulayıcıyı kural mantığında
+ayırıyor ama ikisi de girdiyi aynı **fikstür geleneğiyle** okuyor — ve o
+gelenek şartnameyle uyuşmuyor.
+
+> **Yöntem olarak kayda geçti:** bir iş parçası bittiğinde, şartnameden
+> türetilmiş girdilerle dışarıdan inceleme yapılır. Tercihen **başka bir
+> modelle** — aynı model aynı kör noktayı iki kez taşır.
+
+Ayrıntı: `00-DEVIR/06-ACIK-RISKLER.md` T-18, T-19, T-20.
 
 ## Kapsama özeti — dürüst tablo
 

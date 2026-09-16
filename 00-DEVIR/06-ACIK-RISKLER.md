@@ -761,30 +761,575 @@ görüldü**, sonra `main`'e alındı.
 
 ---
 
+## 🔴 T-18 · Denetlenmeyen kural yayın kapısını kapatmıyor
+
+**Bulundu:** 16 Eylül 2026, **dış inceleme** (GPT) · **Yeniden üretildi:** evet
+
+**Ne.** Doğrulayıcıya gövdesi yazılmamış ama **aktif ve SERT** bir kural
+verildiğinde cevap aynı anda şunları söylüyor:
+
+```
+uygulanmayan_kurallar : ['GECE_VARDIYASI_AZAMI']
+sert_ihlal            : 0
+YAYINLANABILIR        : True
+```
+
+*"Bu kuralı kontrol edemedim"* ile *"yayınlayabilirsin"* **aynı cevapta**.
+
+**Neden bu kadar ciddi.** `09-motor/dogrulayici/denetle.py` içinde, kendi
+elimizle yazdığımız cümle şu:
+
+> *"'İhlal bulamadım' ile 'bakmadım' aynı şey değildir. İkisini karıştıran
+> bir doğrulayıcı, yeşil yanan ama hiçbir şey sınamayan testten daha
+> tehlikelidir — çünkü planı temiz gösterir."*
+
+İlke **yazılmış**, kapıya **bağlanmamış**. `yayin_kapisi()` yalnız `ihlaller`
+listesine bakıyor; `uygulanmayan_kurallar` dolu olsa bile umursamıyor.
+**O-1'in tam şekli:** koruma tanımlı, etkisiz.
+
+Şu an kataloğun 35 kuralının 19'u yazılı. Kalan 16'sı bir kiracıda aktif
+edilirse, plan o kurallara **hiç bakılmadan** yayınlanabilir görünür.
+
+**Ürün kararı gerekiyor:** gövdesi olmayan aktif bir kural varken kapı ne
+yapmalı? Seçenekler: (a) yayını engelle, (b) `kabul_bekleyen` gibi davran —
+yetkili gerekçeyle onaylasın, (c) yalnız SERT olanlarda engelle. Uydurulmadı.
+
+---
+
+## 🔴 T-19 · Şartnamedeki talep biçimi sessizce gözden kaçıyor
+
+**Bulundu:** 16 Eylül 2026, **dış inceleme** (GPT) · **Yeniden üretildi:** evet
+
+**Ne.** Şartname §11.2 talebi şöyle tarif ediyor:
+
+```json
+"talep": [ { "ekip": "uuid", "gun": 0, "saat": 8, "asgari": 3, "hedef": 5 } ]
+```
+
+Motor ise `gunler: []` ve `saatler: []` (çoğul, liste) okuyor. Şartname
+biçimindeki girdi verildiğinde:
+
+| Girdi biçimi | Atama | Asgari kapsama | Yayın |
+|---|---|---|---|
+| Şartnamedeki (`gun`, `saat`) | **0** | **%100** | ✅ yayınlanabilir |
+| Motorun beklediği (`gunler`, `saatler`) | 3 | %100 | ✅ yayınlanabilir |
+
+*"Pazartesi 08:00'de üç kişi gerekiyor"* dendi, motor **sıfır kişilik plan**
+üretti ve *"%100 kapsama, yayınlanabilir"* dedi.
+
+### Bu, bağımsızlık kuralının sınırını gösteriyor
+
+§7.6 çözücü ile doğrulayıcıyı **kural mantığında** ayırıyor ve bu işe
+yarıyor. Ama ikisi de girdiyi **aynı fikstür geleneğiyle** okuyor —
+fikstürleri de aynı kişi yazdı. Birbirleriyle tutarlılar, ikisi de
+**şartnameyle** tutarsız.
+
+> **Ders:** D-6'ya karşı kurulan bağımsızlık, ortak yanlış bir **girdi
+> yorumuna** karşı hiçbir şey yapmıyor. Mantığı iki kez yazmak yetmiyor;
+> sözleşmenin kendisinin sınanması gerekiyor.
+
+**Kök sebep aynı aileden:** `kapsama_yuzdeleri()` *"talep yoksa %100 döner"*
+diyor ve bunu bilinçli bir karar olarak belgeliyor. Ama **"talep yok"** ile
+**"talebi okuyamadım"** ayrımı yok. T-18 ile birebir aynı sınıf.
+
+**Ürün kararı gerekiyor:** hangi biçim kazanacak — şartname mi, kod mu?
+Şartname kazanırsa motor ve 11 fikstür dönüştürülecek. Kod kazanırsa §11.2
+düzeltilecek. Hangisi olursa olsun **tanınmayan talep satırı sessizce
+atlanmamalı**.
+
+---
+
+## 🟡 T-20 · M0 testinin kapsamı, anlatılan güvenceden dar olabilir
+
+**Bulundu:** 16 Eylül 2026, dış inceleme (GPT) · **Doğrulanmadı** — kod
+incelemesi bulgusu, veritabanında denenmedi
+
+**İddia.** `M0 - Baglanan rol super kullanici degil` testi, uygulamanın
+kullandığı bağlantıyı almak yerine **kendi sabit bağlantısını** kuruyor.
+Doğruysa test kendi bağlantısının yetkisini ölçüyor demektir; uygulamanın
+bağlantı ayarı değiştiğinde bunu M0'ın tek başına yakalayacağı söylenemez.
+
+**Neden önemli.** M0, **A-1'i kapatan test.** O-1 (projenin en ciddi hatası)
+tekrar etmesin diye 12 Eylül'de eklendi. Kapsamı sanıldığından darsa, A-1
+düşündüğümüz kadar kapalı değil.
+
+**Ne gerek:** testi okumak ve deneyerek doğrulamak. Doğruysa test,
+uygulamanın **gerçekten kullandığı** bağlantı dizesini alacak şekilde
+düzeltilmeli.
+
+---
+
+## 🔴 T-21 · Çok ekipli çalışan iki ekibi aynı anda dolduruyor
+
+**Bulundu:** 16 Eylül 2026, dış inceleme · **Yeniden üretildi:** evet
+
+**Ne.** Model `x[calisan, gun, sablon]` tutuyor — **ekip boyutu yok.** Bir
+çalışan birden çok ekibe bağlıysa, aynı vardiya değişkeni **her ekibin**
+kapsama toplamına giriyor. Çıktı hazırlanırken ise kişi yalnızca listesindeki
+**ilk** ekibe yazılıyor.
+
+Tek kişi, iki ekip, aynı saat, her ekip 1 kişi istiyor:
+
+```
+durum          : cozuldu     <- motorun kendi modeli "oldu" diyor
+atama sayisi   : 1
+atamalar       : [('C1', 'E1', 0)]
+asgari_kapsama : 50.0        <- gercekte yarisi bos
+```
+
+**Neden ciddi.** Bu bir raporlama hatası değil, **modelin kendi inancı yanlış.**
+Motor bir kişinin aynı anda iki yerde olabileceğini varsayıyor. Sonuçları:
+
+- Gerçekte eksik kadrolu bir planı SERT kısıt açısından geçerli sayabilir
+- Bağımsız doğrulayıcı açığı yakalar (yakaladı), ama bu sefer de **gerçekte
+  mümkün olan** bir plan gereksiz yere onarıma ya da çözümsüzlüğe gidebilir
+- Otel/çağrı merkezi gibi çok ekipli operasyonlarda kural değil **istisna**
+  değil, olağan durum
+
+**Ürün kararı gerekiyor:** bir çalışan bir vardiyada **tek bir ekibe** mi
+sayılır (o zaman değişken `x[calisan, gun, sablon, ekip]` olur), yoksa ekipler
+iç içe geçebilir mi? Şartname §8'de `ekipler` çoğul; anlamı tanımlı değil.
+
+---
+
+## 🔴 T-22 · Çözümsüzlükte sunulan plan denetlenmeden dönüyor
+
+**Bulundu:** 16 Eylül 2026, dış inceleme · **Yeniden üretildi:** evet
+
+**Ne.** `orkestra.py` sonuç `cozuldu` değilse **erken dönüyor** ve bağımsız
+doğrulayıcıyı hiç çağırmıyor. Oysa `en_iyi_plan`ın kendi notu şunu diyor:
+
+> *"K-10: bu bir TASLAKTIR… İçindeki her ihlal bağımsız doğrulayıcıdan
+> geçirilmeli."*
+
+Geçiren yok.
+
+```
+durum                    : cozumsuz
+en_iyi_plan var mi       : True
+en_iyi_plan atama sayisi : 0        <- "var" diyor, ici bos
+bagimsiz_denetim VAR MI  : False
+```
+
+**İki ayrı sorun var.**
+
+1. **En çok açıklama gereken plan, en az denetlenen plan.** Başarılı plan
+   doğrulayıcıdan geçiyor; yöneticinin *gerekçeyle kabul edeceği* taslak
+   geçmiyor. K-10 *"yöneticilere onay ile en iyi planı sunmalıyız"* diyor —
+   yönetici neyi onayladığını göremiyor.
+2. **Boş plan "var" diye sunuluyor.** K-10'un sözü *"eller boş dönülmez"*ti.
+   Sıfır atamalı bir planı `var: True` ile döndürmek o sözü boşa çıkarıyor.
+
+**Düzeltme yönü açık** (ürün kararı gerektirmiyor): `en_iyi_plan` üretildikten
+sonra kullanıcının **özgün** girdisiyle `degerlendir()` çağrılmalı, sonuç
+`bagimsiz_denetim` olarak eklenmeli; atama sayısı sıfırsa `var: False`.
+
+---
+
+## 🟡 T-23 · "Süre yetmedi" ile "imkânsız" aynı cevabı alıyor
+
+**Bulundu:** 16 Eylül 2026, dış inceleme · **Kod okumasıyla kesin**,
+deneyle üretilemedi (iki denemede de CP-SAT gerçekten çözümsüzlüğü kanıtladı)
+
+**Ne.** `coz.py` yalnız `OPTIMAL` ve `FEASIBLE` durumlarını "çözüldü" sayıyor;
+geri kalan **her şey** — `INFEASIBLE` de, süre dolduğu için çözüm bulunamayan
+`UNKNOWN` de — aynı `teshis_koy()` çağrısına gidiyor. O da `"durum":
+"cozumsuz"` sabitliyor.
+
+**Operasyon açısından fark büyük:**
+
+| Gerçek durum | Yöneticinin yapması gereken |
+|---|---|
+| Bu kadroyla imkânsız | Personel al ya da kuralı gevşet |
+| Verilen sürede bulamadım | **Süreyi uzat, tekrar dene** |
+
+Yanlış açıklama, yöneticiyi gereksiz personel alımına ya da kural
+değiştirmeye yönlendirebilir.
+
+**Not:** bilgi aslında çıktıda **var** — `cozum_istatistikleri.durma_sebebi`
+`butce_doldu` diyebiliyor. Ama `durum` alanı `cozumsuz` diyor ve ekranda
+okunacak olan o.
+
+---
+
+## 🟡 T-24 · K-28'in ikinci durma koşulu yazılmadı; süre bütçesi istek bütçesi değil
+
+**Bulundu:** 16 Eylül 2026, dış inceleme · **İkisi de doğrulandı**
+
+### 24a — durgunluk koşulu kodda yok
+
+K-28 iki koşul verdi: *"optimuma %2'den yakın"* **veya** *"2 dakikadır
+iyileşmiyor"*. `coz.py` `durgunluk_saniye: 120` tanımlıyor, `son_iyilesme`
+alanını her çözümde güncelliyor — ama **hiçbir yerde karşılaştırmıyor.**
+İkinci koşul **hiç uygulanmadı.**
+
+Üstelik yapısal bir engel de var: geri çağrı yalnız **yeni çözüm
+bulununca** tetikleniyor. İyileşme olmadığında zaten çağrılmıyor, dolayısıyla
+durgunluğu o noktadan ölçmek mümkün değil.
+
+> Bu, kayda geçmiş ama yürürlüğe girmemiş bir karar. Ürün kararları sicili
+> "K-28 kapandı" diyor; `coz.py`'nin başındaki açıklama *"iki koşuldan biri
+> olunca biter"* diyor. İkincisi yok. Bkz. **T-26**.
+
+### 24b — `azami_saniye` bir istek bütçesi değil
+
+Ölçüldü:
+
+```
+butce 0.05 saniye  ->  cagri 57.4 saniye surdu
+```
+
+**Bin kat aşım.** `azami_saniye` tek bir `Solve()` çağrısına uygulanıyor.
+Çözüm bulunamayınca teşhis devreye giriyor ve **kendi süresini** harcıyor:
+her SERT kural için ayrı bir çözüm denemesi (10'ar saniye) + `en_iyi_plan`
+(30 saniye). Onarım döngüsü de `coz()`'u üç kez çağırabiliyor.
+
+Yani §11.2'deki *"süre bütçesi (varsayılan 15 dk)"* ifadesi **isteğin
+tamamını kapsamıyor** ve kullanıcıya verilen süre sözü tutulmuyor.
+
+**Ne gerek:** tek bir istek bütçesi ve onu paylaşan bir sayaç — çözücü,
+onarım ve teşhis aynı bütçeden harcamalı.
+
+---
+
+## 🟡 T-25 · Servis tek iş parçacıklı: plan üretimi editörü bekletir
+
+**Bulundu:** 16 Eylül 2026, dış inceleme · **Kod okumasıyla kesin**,
+bekleme süresi ölçülmedi
+
+**Ne.** `servis.py` `HTTPServer` kullanıyor — istekleri **sırayla** işler.
+Plan üretimi isteğin içinde tamamlanıyor. O sırada aynı servise gelen
+`/evaluate` ve `/health` **bekler**.
+
+Şartnamenin akışı *"plan üretimi uzun sürebilir"* diyor ve editörün ayrı
+çalışmasını varsayıyor. Mevcut kurulum bunu karşılamıyor.
+
+**Şu an neden acil değil:** tek kiracı, tek kullanıcı, pilot öncesi.
+`servis.py`'nin kendi açıklaması zaten *"yük altında koşacak sürüm için
+ASGI'ye taşınabilir; sözleşme değişmez"* diyor. Ama `/health`'in de
+bloklanması CI ve izleme açısından ayrı bir sorun.
+
+**En küçük adım:** `ThreadingHTTPServer`. Tek satır, sözleşme değişmez.
+
+---
+
+## 🔴 T-27 · Olmayan mola yasal sınırı deviriyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Yeniden üretildi:** evet
+
+`zaman.mola_saat()` mola sürelerini **toplarken** vardiyanın içinde olup
+olmadıklarına, birbirleriyle çakışıp çakışmadıklarına bakmıyor.
+`net_saat = brut − mola`.
+
+```
+vardiya 08:00-20:00, mola 22:00-23:00 (vardiyanin DISINDA)
+brut_saat 12 · mola_saat 1 · net_saat 11
+GUNLUK_AZAMI (11 saat) ihlali: 0
+```
+
+**12 saat çalışıldı, hiç yaşanmamış bir mola sayesinde 11 göründü.**
+
+`GUNLUK_AZAMI` bizim sınıflandırmamızda `yasal: true, kabul_edilebilir:
+false` — K-20'ye göre ihlali **hiçbir koşulda kabul edilemeyen** kategori.
+Sessizce deviriliyor.
+
+**Kabul cümlesi:** *"Olmayan mola çalışma süresini azaltmaz."* Vardiya
+dışındaki, üst üste binen ve vardiyadan uzun molalar reddedilmeli.
+
+---
+
+## 🔴 T-28 · Geçmiş vardiyalar hiç okunmuyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Doğrulandı:** `09-motor/`
+altında `gecmis_vardiyalar` **hiçbir dosyada geçmiyor**
+
+Şartname §11.2 geçmiş vardiyaları ayrı bir alanla gönderiyor. Ne çözücü ne
+doğrulayıcı okuyor. `VARDIYA_ARASI_DINLENME` yalnız kendisine verilen haftanın
+atamalarını karşılaştırıyor.
+
+Pazar gecesi başlayıp pazartesi 07:00'de biten vardiyadan sonra pazartesi
+09:00 ataması — **iki saatlik dinlenme** — görünmüyor. Bu da yasal bir kural.
+
+**A11'den farkı:** o *"geçmiş veri eksikse engelle"* işi. Bu ise **veri
+gönderilse bile kullanılmıyor**.
+
+**Kabul cümlesi:** *"Geçmiş vardiya sonucu değiştirir."* Aynı pazartesi planı,
+önceki pazar vardiyası eklenmeden ve eklenerek değerlendirilmeli; sonuç
+değişmeli.
+
+---
+
+## 🔴 T-29 · `DONMUS_GUN` hiç ateşlenemez
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Yeniden üretildi:** evet
+
+```
+donmus gune atama (isaretsiz) -> ihlal: 0
+ayni atama '_yeni' isaretli   -> ihlal: 1
+'_yeni' isaretini ureten kod  : YOK
+```
+
+Kural yalnız `_yeni` bayrağı taşıyan atamayı ihlal sayıyor; o bayrağı
+**hiçbir şey üretmiyor**. Eski planla yeni planı karşılaştırmak gibi bir şey
+de yapmıyor. Çözücü donmuş günleri ayrıca korumuyor.
+
+Katalogda var, dokümanda "yazıldı", **pratikte ölü**. `DONMUS_GUN` ürünün
+*"geçmiş yeniden planlanamaz — olan oldu"* sözünün tek bekçisiydi.
+
+**Kabul cümlesi:** *"Donmuş gün değişmez."* Donmuş gündeki atamayı
+değiştirmek, silmek ve yeni atama eklemek — üçü de özel bayrak gerektirmeden
+yakalanmalı.
+
+---
+
+## 🟡 T-30 · `HAFTA_TATILI` kesintisiz 24 saati ölçmüyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod bunu zaten itiraf ediyor**
+
+`hafta_tatili()` gün bazında *"çalışıldı/çalışılmadı"* bakıyor; kesintisiz
+dinlenme aralığını hesaplamıyor. Fonksiyonun kendi açıklaması:
+
+> *"Basitleştirme — BİLEREK: gün bazında çalışıldı/çalışılmadı bakılır.
+> Gerçek 24 saatlik kesintisiz blok hesabı lookback penceresi gerektiriyor."*
+
+**Kod dürüst, doküman değil.** Devir paketi kuralı "yazılanlar" listesinde
+koşulsuz sayıyor. Gece vardiyası pazar sabahına taşmışsa, pazarda yeni
+vardiya başlamaması pazartesiye kadar 24 saat dinlenildiği anlamına gelmez.
+
+T-28 çözülmeden bu da tam çözülemez — ikisi aynı eksiğe bağlı.
+
+---
+
+## 🟡 T-31 · Adalet penceresi takvim ayında sıfırlanmıyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur)
+
+§6.5 *"pencere takvim ayıdır, ayın 1'inde sıfırlanır"* diyor. `adalet_dengesi`
+devir yükünü **haftanın tamamına** ekliyor; haftanın iki aya dağılıp
+dağılmadığına bakmıyor. Ayın 1'ini içeren haftada önceki ayın yükü yeni ayın
+dağılımını etkiliyor.
+
+Mevcut test devir yükünün **hesaba katılmasını** çiviliyor; **doğru ayda
+bırakılmasını** çivilemiyor.
+
+---
+
+## 🟡 T-32 · Fazla mesai tavanını çözücü ve doğrulayıcı farklı yerden okuyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **16 Eylül'de bu oturumda
+oluşturuldu**
+
+K-30 uygulanırken çözücü `FAZLA_MESAI_PROFIL[profil]` okuyacak şekilde
+değiştirildi ve kuralın kendi `azami_saat_hafta` parametresini **tamamen
+görmezden gelir** oldu. Doğrulayıcı hâlâ parametreyi okuyor (varsayılan 10).
+
+Kiracı 10 yazıp KAPSAMA profili seçerse: çözücü 15'e kadar izin veriyor,
+doğrulayıcı 10'un üstünü reddediyor → gereksiz onarım, gereksiz *"çözümsüz"*.
+
+Bağımsızlık bunu **görünür** kılıyor (faydası bu) ama kullanıcıya yanlış
+sonuç gitmeden çözülmeli.
+
+---
+
+## 🟡 T-33 · Zaman hassasiyeti: yarım saatler kayboluyor
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Doğrulandı**
+
+```
+_dilimler(0, 8.5, 12.5) -> [8, 9, 10, 11]
+```
+
+Çözücü kapsama hesabında saatleri tam sayıya indiriyor; 08:30 ile 08:00
+arasındaki fark kayboluyor. Ayrıca doğrulayıcının izin kontrolünde ondalıklı
+bitişten üretilen değer tam sayı isteyen gün döngüsüne veriliyor.
+
+Şartname §8.4 `baslangic_saat`/`bitis_saat` alanlarını `numeric` tanımlıyor —
+yarım saat **veri modelinde mümkün**, motorda değil.
+
+---
+
+## 🔴 T-34 · Sırlar kodda varsayılan değere düşüyor *(`04-kod`)*
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod okumasıyla doğrulandı**
+
+`04-kod/backend/src/TShift.Api/Program.cs` iki sır için **koda gömülü
+varsayılan** taşıyor ve **hiçbiri ortama bağlı değil**:
+
+| Değişken | Verilmezse |
+|---|---|
+| `APP_DB_PASSWORD` | `"tshift_app_dev_2026"` — uygulamanın **veritabanı parolası** |
+| `JWT_SECRET` | `"yerel-gelistirme-imza-anahtari-..."` — oturum **imza anahtarı** |
+
+Yanındaki yorum *"Canlıda JWT_SECRET mutlaka verilir"* diyor — **zorlayan
+kod yok.** Kurulum hatası sessizce bilinen bir sırla devam ediyor.
+
+`02-DEGISMEZLER.md` *"sırlar `appsettings.json`'a yazılmaz"* diyor. Yazılmamış,
+`Program.cs`'e yazılmış — **git geçmişinde**. Kuralın harfi tutulmuş, amacı
+tutulmamış.
+
+**Ne gerek:** canlı kipte bu değişkenler yoksa uygulama **başlamayı
+reddetmeli**.
+
+---
+
+## 🔴 T-35 · Bir kullanıcının hatalı girişi bütün kiracıyı kilitliyor *(`04-kod`)*
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod okumasıyla doğrulandı**
+
+`frontend/.../api/giris/route.ts` arka uca yalnız `{firma, eposta, parola}`
+gönderiyor — `X-Forwarded-For` **yok**. Arka uç `ctx.Connection.
+RemoteIpAddress` okuyor ve depoda `ForwardedHeaders` ara yazılımı **hiç yok**.
+
+Yani her kullanıcı arka uca **arayüz sunucusunun IP'si** olarak görünüyor.
+`KimlikServisi.KilitliMi` o IP'nin başarısız denemelerini sayıp eşiği aşınca
+kilitliyor.
+
+**Sonuç: bir kişinin beş yanlış parolası bütün kiracıyı kilitler.** Kötü
+niyetle yapmak bedava — kimlik doğrulaması gerektirmeyen bir hizmet reddi.
+
+**İkinci etkisi:** denetim kaydına yazılan IP herkeste aynı. D-serisi
+değişmezi *"her işlem iz bırakır"* diyor; iz var ama içindeki IP **kurgusal**.
+
+**Kabul cümlesi:** *"Bir kişinin yanlış parolası diğerlerini kilitlemez."*
+
+---
+
+## 🟡 T-36 · Eşzamanlı oturum yenilemesi için koruma yok *(`04-kod`)*
+
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod okumasıyla doğrulandı**,
+eşzamanlı deney yapılmadı
+
+`KimlikServisi.YenileAsync` oku → kontrol et → işaretle → kaydet yapıyor.
+Dosyada `RowVersion`, `BeginTransaction`, `Serializable` — **hiçbiri yok**.
+
+İki sekme aynı anda yenilerse iki sonuç mümkün: ya iki geçerli jeton üretilir,
+ya da meşru tekrar **hırsızlık sayılıp bütün oturumlar kapatılır**
+(`TumOturumlariKapatAsync`). İkincisi kullanıcıyı sebepsiz dışarı atar.
+
+Mevcut testler işlemleri **sırayla** yapıyor; bu yolu sınamıyor.
+
+---
+
+## 📌 T-26 · Kayıt ile yürürlük arasında kontrol yok
+
+**Bulundu:** 16 Eylül 2026, dış incelemenin **yöntem önerisinden**
+
+**Ne.** Bir ürün kararı verildiğinde sicile yazılıyor, şartnameye işleniyor,
+koda yorum olarak giriyor ve devir paketinde "kapandı" deniyor. **Hiçbir
+kontrol, o kararın gerçekten uygulandığını sormuyor.**
+
+K-28 bunun canlı örneği (T-24a): karar kayıtlı, şartnamede yazılı, kodun
+başında anlatılmış — ikinci koşulu **hiç yazılmamış**. Kırmızı kanıt turu,
+`DENETIM.py` ve CI'nın üçü de kaçırdı, çünkü hiçbiri *"her K-kararının onu
+çiviyen bir testi var mı"* diye sormuyor.
+
+> **Bu O-1'in genel hali.** O-1'de RLS tanımlıydı ama etkisizdi. Burada karar
+> kayıtlı ama yürürlükte değil. İkisinde de belge doğru, gerçek farklı.
+
+**Öneri (dış incelemeden):** her kritik ürün kararı bir **karşı örnekle**
+eşleştirilsin — kararın çiğnendiği durumda kırmızı yanan bir test. Bugün
+K-27, K-29 ve K-30'un böyle testleri **var**; K-28'in **yok**.
+
+**Ne gerek:** ürün kararları sicilinde her K maddesine *"bekçi"* sütunu, ve
+`DENETIM.py`'ye bekçisi olmayan K maddelerini **uyarı** olarak listeleyen bir
+kontrol. Uyarı seviyesinde kalmalı — hata yaparsa O-7'ye düşer.
+
+---
+
+## 📌 Dış inceleme — yöntem olarak kayda geçiyor *(16 Eylül)*
+
+T-18 ve T-19'u **bizim kırmızı kanıt turumuz bulamadı** ve bulamaması
+tesadüf değil.
+
+| | İç kırmızı kanıt | Dış inceleme |
+|---|---|---|
+| Ne yapar | Kodu bozar, test yakalıyor mu bakar | Şartnameden girdi verir, motor doğru mu bakar |
+| Neyi bulur | Kendi varsayımlarımızın korunup korunmadığını | **Varsayımlarımızın kendisinin yanlış olduğunu** |
+| 16 Eylül sonucu | 12/12 yakalandı | **19 sessiz hata** (üç tur), 9'u 🔴 |
+
+Kırmızı kanıt turu **kendi kurduğumuz dünyanın içinde** kusursuzdu. Dışarıdan
+şartnameyle gelen bir göz, o dünyanın şartnameyle uyuşmadığını gördü.
+
+> **Kural:** bir iş parçası bittiğinde, **şartnameden türetilmiş** girdilerle
+> dışarıdan bir inceleme yapılır. Tercihen başka bir modelle — aynı model,
+> aynı kör noktayı iki kez taşır.
+
+**Üçüncü tur bu kuralın ikinci gerekçesini verdi.** T-34, T-35 ve T-36'yı
+önce *"doğrulayamıyorum, o dosyalar bende yok"* diye geçiştirdim. Köprü
+bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
+çektim, üçü de doğru çıktı. Otopsisi **O-10**.
+
+> Denenmemiş bir erişimin raporu bulgu değil **tahmindir** — ve tahmin,
+> kaydedilirken bulgu gibi görünür. Bu T-18'in insan tarafındaki hâli:
+> *"kontrol edemedim"* ile *"sorun yok"* aynı cümlede.
+
+---
+
 ## Öncelik sırası — önerilen
+
+**Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
+*"çözümsüz"* açıklaması ve yanlış personel sayımı; sonra hız ve kolaylık.
+
+### Önce bunlar — yanlış karar ürettirenler
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
-| 2 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ **Kabul ölçütü yok, fikstürü yok** — önce cümleler yazılıp onaylanmalı |
-| 3 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
-| 4 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
-| 5 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
-| 6 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
-| 7 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
-| 8 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 9 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
-| 10 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
-| 11 | **A-9** KVKK | Gerçek veriden önce |
-| 12 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| **1** | **T-27 · olmayan mola** 🔴 | Hiç yaşanmamış mola **yasal** günlük sınırı deviriyor. K-20'ye göre kabul edilemez kategori |
+| **2** | **T-35 · kiracı çapında kilitlenme** 🔴 | Bir kişinin beş yanlış parolası herkesi kilitliyor; denetim kaydındaki IP kurgusal *(`04-kod`)* |
+| **3** | **T-34 · sırlar varsayılana düşüyor** 🔴 | Veritabanı parolası ve imza anahtarı kodda, ortam kontrolü yok *(`04-kod`)* |
+| **4** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
+| **5** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
+| **6** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
+| **7** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
+| **8** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
+| **9** | **T-22 · denetlenmeyen taslak** 🔴 | Yöneticinin onaylayacağı plan, denetimden geçmeyen tek plan. **Karar gerektirmiyor** |
+
+### Sonra — doğruluğu değil, güveni bozanlar
+
+| Sıra | Madde | Gerekçe |
+|---|---|---|
+| 10 | **T-23 · "süre yetmedi" ≠ "imkânsız"** | Yanlış açıklama yöneticiyi gereksiz personel alımına iter |
+| 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
+| 12 | **T-30 · T-31 · T-32 · T-33** 🟡 | Hafta tatili · adalet penceresi · tavan uyuşmazlığı · yarım saatler. **T-32'yi bugün ben açtım** (K-30) |
+| 13 | **T-36** 🟡 | Eşzamanlı oturum yenilemesi yarışı *(`04-kod`)* |
+| 14 | **T-26 · kayıt ≠ yürürlük** | K-28'i kimse yakalamadı. Bekçisi olmayan kararlar için kontrol yok |
+| 15 | **T-20 · M0 kapsamı** | A-1'i kapatan test. Doğrulanmalı |
+| 16 | **T-25 · tek iş parçacıklı servis** | Tek satırlık düzeltme; pilot öncesi. **Karar gerektirmiyor** |
+| 17 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık |
+
+### Ondan sonra — yeni iş
+
+| Sıra | Madde | Gerekçe |
+|---|---|---|
+| 18 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ Kabul ölçütü yok, fikstürü yok — önce cümleler yazılıp onaylanmalı |
+| 19 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
+| 20 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
+| 21 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| 22 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
+| 23 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
+| 24 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
+| 25 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
+| 26 | **A-9** KVKK | Gerçek veriden önce |
+| 27 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+
+> **Yeni özellikten önce bu liste.** Dış incelemenin sözü: *"önce yanlış yayın
+> izni ve sessiz veri atlama sorunları değerlendirilsin, ardından tamamlanma
+> tablosu gerçek test kapsamıyla eşleştirilsin."* Katılıyoruz.
+
 
 > **16 Eylül'de kapanan beş iş:** fikstürler · test iskeleti · **şartname v1.4**
 > (A-15) · **bağımsız doğrulayıcı** · **çözücü + onarım döngüsü** (`09-motor/`).
 >
-> **On iki altın senaryonun tamamı yeşil** (A5 ertelendi, dört backend
-> senaryosu xUnit tarafında). Birim testi 60. Kırmızı kanıt turunda 12
-> kırılmanın 12'si yakalandı — ilk turda 8'de 4'ü kaçmıştı, eksik testler
-> o yüzden yazıldı (`09-motor/testler/test_profiller.py`).
+> **Yedi altın senaryo koşuyor ve yeşil** (A1, A3, A4, A6, A7, A8, A9).
+> Dört tanesi (A2, A10, A11, A12) backend tarafında ve **bu pakette
+> koşmuyor** — `.cs.taslak`, çalıştırılabilir test değil. A5 ertelendi
+> (K-12). `12 passed` sayısı bu yedi senaryo + paketin kendi beş sağlık
+> testidir.
+>
+> ⚠ **Düzeltme (16 Eylül, dış inceleme):** daha önce burada *"on iki altın
+> senaryonun tamamı yeşil"* yazıyordu. **Yanlıştı.** `12 passed` ile
+> "12 senaryo yeşil" karıştırılmıştı. Çift tıklama (A10), geçmiş veri (A11)
+> ve plan kopyalama (A12) **hiç sınanmadı**.
 
 ### Kapanan maddeler
 
@@ -797,7 +1342,7 @@ görüldü**, sonra `main`'e alındı.
 | **A-17 adalet eşiği** | **16 Eylül 2026** | **K-27: eşik 2, ortalamadan sapma. Doğrulayıcıda yazıldı, 8 testle sabitlendi** |
 | **T-12 adalet kuralı yazılmadı** | **16 Eylül 2026** | K-27 geldi, doğrulayıcıda yazıldı |
 | **T-14 şablonun günü yok** | **16 Eylül 2026** | `shift_templates.gunler` — A9'u kırmızı tutan şeydi, deneyle kanıtlandı |
-| **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. On iki altın senaryonun tamamı yeşil |
+| **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. Yedi altın senaryo koşuyor ve yeşil; dördü backend tarafında |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |

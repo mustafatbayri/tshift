@@ -1,7 +1,9 @@
 # 09-motor — Planlama motoru servisi
 
 **Ne var:** Bağımsız doğrulayıcı (`/evaluate`), çözücü (`/solve`) ve §11.7
-onarım döngüsü.
+onarım döngüsü. **Çekirdek çalışıyor — "tamamlandı" değil:** kataloğun 35
+kuralının 19'u yazılı, `/suggest` yok, ve **iki 🔴 açık bulgu var**
+(T-18 yayın kapısı · T-19 talep biçimi — `00-DEVIR/06-ACIK-RISKLER.md`).
 **Ne yok:** Öneri üretimi — `/suggest` bilerek 501 dönüyor.
 **Yazıldı:** 16 Eylül 2026 · **Şartname:** `02-spec/v1.4-master-spec.md`
 §7.6, §11.2, §11.3, §11.4, §11.7, §16.1
@@ -89,7 +91,7 @@ py -m pytest testler -v
 | `09-motor/servis.py` | HTTP ucları. `/health`, `/evaluate`, `/solve`; `/suggest` → 501 |
 | `09-motor/orkestra.py` | §11.7 onarım döngüsü: üret → bağımsız denetle → en fazla 2 onarım |
 | `09-motor/dogrulayici/zaman.py` | Zaman modeli (Z-1…Z-6), doğrulayıcı tarafı |
-| `09-motor/dogrulayici/kurallar.py` | 17 kural gövdesi. Her biri ihlal listesi döndürür |
+| `09-motor/dogrulayici/kurallar.py` | **19** kural gövdesi. Her biri ihlal listesi döndürür |
 | `09-motor/dogrulayici/denetle.py` | Denetim + metrikler + yayın kapısı |
 | `09-motor/cozucu/model.py` | CP-SAT modeli, ağırlık tablosu (§5.4), zaman aritmetiğinin **ikinci** yazımı |
 | `09-motor/cozucu/coz.py` | `/solve` gövdesi, K-28 erken durma |
@@ -113,7 +115,12 @@ kapatıldı (T-17): checkout v7, setup-python v7, setup-dotnet v6.
 
 ## 4. Şu an hangi kurallar yazıldı
 
-**17 kural.** Katalogdaki 35'in hepsi değil — şu an gereken alt küme.
+**19 kural.** Katalogdaki 35'in hepsi değil — şu an gereken alt küme.
+
+> ⚠ 16 Eylül'e kadar burada **17** yazıyordu; aşağıdaki tablo ise 19 satır
+> listeliyordu. Başlık kendi tablosuyla çelişiyordu ve `DENETIM.py` bunu
+> yakalayamaz — betik *tutarlılığa* bakar, *doğruluğa* değil. Dış inceleme
+> buldu.
 
 | Bölüm | Yazılanlar |
 |---|---|
