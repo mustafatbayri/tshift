@@ -1,0 +1,92 @@
+{
+  "senaryo": "A6",
+  "ad": "Elle sabitlenmis atamalar",
+  "tip": "solve",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a6--elle-sabitlenmiş-atamalar",
+  "_aciklama": [
+    "Mudur uc atamayi sabitlemis, bir kisiye de yasak koymus.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A6."
+  ],
+  "fark": {
+    "sabit_atamalar": [
+      {
+        "calisan": "C01",
+        "ekip": "E1",
+        "sablon": "V-TAM",
+        "gun": 0,
+        "bas": 9,
+        "bit": 18
+      },
+      {
+        "calisan": "C02",
+        "ekip": "E1",
+        "sablon": "V-TAM",
+        "gun": 3,
+        "bas": 9,
+        "bit": 18
+      },
+      {
+        "calisan": "C03",
+        "ekip": "E1",
+        "sablon": "V-CMT",
+        "gun": 5,
+        "bas": 9,
+        "bit": 13
+      }
+    ],
+    "kilitler": [
+      {
+        "calisan": "C04",
+        "gun": 2,
+        "tip": "yasak"
+      }
+    ]
+  },
+  "beklenen": {
+    "durum": "cozuldu",
+    "metrikler": {
+      "sert_ihlal": {
+        "esit": 0
+      }
+    },
+    "degismezler": [
+      {
+        "ad": "Uc sabit atama ciktida birebir durur",
+        "kural": "KILIT_UYUMU",
+        "kontrol": "sabit_atamalar_birebir_var"
+      },
+      {
+        "ad": "C04'e gun 2'de hicbir atama yok",
+        "kural": "KILIT_UYUMU",
+        "kontrol": "calisan_gun_atamasi_yok",
+        "calisan": "C04",
+        "gun": 2
+      },
+      {
+        "ad": "Sabit atamalar baska kurali bozmaz",
+        "kural": "-",
+        "kontrol": "evaluate_ile_sifir_sert_ihlal"
+      },
+      {
+        "ad": "KILIT_UYUMU kural listesinde olmasa da gecerli",
+        "kural": "KILIT_UYUMU",
+        "kontrol": "kural_listesiz_de_ayni_sonuc",
+        "_not": "Kapsami S (sistem), kiraci kapatamaz"
+      }
+    ]
+  },
+  "cozumsuzluk_hali": {
+    "_not": "K-10/A3. Sabit atamalar yuzunden plan cozumsuzlesirse:",
+    "beklenen": {
+      "neden_cozumsuz_anlatilir": true,
+      "en_iyi_plan_sunulur": true,
+      "yonetici_kabul_edebilir": true,
+      "asistan_oneri_sunar": {
+        "hangi_sabitlemeyi_kaldir": true,
+        "hangi_kurali_gevset": true,
+        "kendisi_uygulamaz": true
+      }
+    }
+  }
+}

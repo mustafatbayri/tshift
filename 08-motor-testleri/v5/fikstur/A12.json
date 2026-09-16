@@ -1,0 +1,93 @@
+{
+  "senaryo": "A12",
+  "ad": "Gecen haftanin planini kopyala",
+  "tip": "backend",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a12--geçen-haftanın-planını-kopyala",
+  "_aciklama": [
+    "BACKEND testi. K-15: DOGRULAYICI kosar, cozucu degil.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A12."
+  ],
+  "fark": {},
+  "kurgu": {
+    "kaynak_plan": {
+      "hafta": "2026-10-12",
+      "durum": "yayinlandi",
+      "_not": "S-10'un 10 calisaninin her birinin en az bir atamasi var"
+    },
+    "arada_olanlar": [
+      {
+        "calisan": "C03",
+        "olay": "pasife alindi"
+      },
+      {
+        "calisan": "C10",
+        "olay": "sozlesmesi bitti"
+      }
+    ],
+    "hedef_hafta": "2026-10-26"
+  },
+  "eylem": "kullanici 'Bu plani kopyala' der",
+  "beklenen": {
+    "dogrulayici_kosar": true,
+    "cozucu_kosmaz": true,
+    "_k15_notu": "'Motor tekrar calisip' ifadesi DOGRULAYICI olarak onaylandi (15 Eylul)",
+    "kontrol_edilenler": [
+      "pasife dusen calisan",
+      "suresi biten sozlesme",
+      "yeni onaylanmis izinler",
+      "degismis kural surumu"
+    ],
+    "yeni_plan": {
+      "durum": "taslak",
+      "yayinlanmaz": true,
+      "C03_atamasi_yok": true,
+      "C10_atamasi_yok": true,
+      "diger_8_kisinin_atamalari_ayni": {
+        "gun": true,
+        "saat": true,
+        "_not": "tarih 14 gun kaymis"
+      }
+    },
+    "dusen_atamalar": {
+      "tek_tek_listelenir": true,
+      "alanlar": [
+        "calisan",
+        "gun",
+        "saat",
+        "sebep"
+      ],
+      "sebep_degerleri": [
+        "ayrildi",
+        "sozlesme_bitti",
+        "izin_aldi"
+      ],
+      "ozet_yetmez": true,
+      "_not": "'1 atama dustu' gibi ozet kabul edilmez"
+    },
+    "kapsama_bozulursa": {
+      "ihlal_olarak_gosterilir": true,
+      "motor_cagrilip_sessizce_doldurulmaz": true
+    },
+    "kullanici_nereye_duser": {
+      "ekran": "plan editoru",
+      "_not": "Motordan yeni cikmis planla AYNI ekran, ayni duzenleme yetkileri. Kopyalama ayri ekran degildir."
+    },
+    "kaynak_plan_degismez": true,
+    "denetim_kaydi": {
+      "alanlar": [
+        "kaynak_plan",
+        "hedef_aralik",
+        "dusen_atama_sayisi"
+      ]
+    }
+  },
+  "yayin_kapisi": {
+    "_not": "K-16. Taslak ihlal tasiyabilir; yayinlanmadan once her sert ihlal duzeltilmeli ya da kabul edilmeli.",
+    "taslak_ihlal_tasiyabilir": true,
+    "yayin_icin": [
+      "sifir yasal ihlal",
+      "kalan sert ihlaller acikca kabul edilmis"
+    ]
+  }
+}

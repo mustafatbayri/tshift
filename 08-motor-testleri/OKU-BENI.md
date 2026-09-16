@@ -3,13 +3,14 @@
 **Ne var:** Şartnameden türetilmiş kabul senaryoları. Motorun ne yapması
 gerektiğini, motor yazılmadan **önce** ve motora bakmadan tanımlar.
 
-**Ne YOK:** Motor yok. Ürünün doğrulayıcısı da yok. **Hiçbir test koşmuyor.**
+**Ne YOK:** Motor yok. Ürünün doğrulayıcısı da yok. **Testler koşuyor ama
+yedisi bilerek kırmızı** — motor olmadığı için (§16.4 kırmızı kanıt).
 Analiz betikleri de burada değil (onlar `07-motor/`'da ve onlar da motor
 değil — bkz. `07-motor/OKU-BENI.md`).
 
 **Neden ayrı klasör (karar: 14 Eylül 2026):** `07-motor/` adı yanıltıcı ve
-yeniden adlandırma kararı bekliyor; senaryolar oraya karışmasın. Motor gelince
-fikstürleri koşacak test iskeleti de buraya gelir.
+yeniden adlandırma kararı bekliyor; senaryolar oraya karışmasın. Fikstürleri
+koşan test iskeleti de 16 Eylül'de buraya geldi: `v5/testler/`.
 
 ## Buradan başla
 
@@ -36,25 +37,26 @@ klasör açar. Her sürüm klasörü kendi kendine yeter.
 | Dosya | Ne |
 |---|---|
 | `ONAY-DURUMU.md` | 15 Eylül onay turunun **özeti.** Tur kapandı, ekler v5'e işlendi. Bir sonraki tur bu dosyayı baştan doldurur |
-| `v5/KABUL-OLCUTLERI.md` | **Ana doküman.** §1 onayın ne olduğu · §3 sahne (S-10) · §4 on iki senaryo · §5 veto edilebilir varsayımlar · §6 kararlar K-1…K-15 · §7 onay nasıl verilir |
+| `v5/KABUL-OLCUTLERI.md` | **Ana doküman.** §1 onayın ne olduğu · §3 sahne (S-10) · §4 on iki senaryo · §5 veto edilebilir varsayımlar · §6 kararlar K-1…K-17 · §7 onay nasıl verilir |
+| `v5/fikstur/` | ✅ **11 fikstür + ortak sahne.** Biçim ve gerekçeler `v5/fikstur/OKU-BENI.md`'de |
+| `v5/testler/` | ✅ **Test iskeleti.** pytest çatısı + `v5/testler/backend-taslak/` C# taslakları. Kırmızı; sebebi `v5/testler/OKU-BENI.md`'de |
+| `v5/fikstur-denetleyici.py` | Fikstürlerin kendi içinde tutarlı olduğunu kontrol eder (6 kontrol). **Ürünün doğrulayıcısı değildir** |
+| `v5/fikstur_yukleyici.py` | Sahne + `fark` birleştirme. Denetleyici ile testler **aynı** mantığı kullansın diye ortak modül |
 
-⚠ **v4'te fikstür yok.** `v3/fikstur/A04.json` **geçersiz** oldu: eski sahneye
-(T-10) dayanıyor ve geri alınan K-1'e göre yazılmıştı. Biçim örneği olarak
-duruyor, beklenen sonuçları kullanılmayacak. Yeni fikstürler onaydan sonra
-yazılacak.
-
-`v3/fikstur-denetleyici.py` kullanılabilir durumda: fikstürün girdisi ile
-beklenen bloğunun birbirinden kaymadığını kontrol eder. **Ürünün doğrulayıcısı
-değildir** — dosya başındaki uyarıya bak.
+⚠ **v2/v3'teki `A04.json` geçersiz** — eski T-10 sahnesine dayanıyor ve geri
+alınan K-1'e göre yazılmıştı. Yalnız tarihsel kayıt; kullanılmaz. Geçerli
+fikstürler `v5/fikstur/` altında.
 
 ## Sıradaki adım
 
-> **Fikstürler.** `v5/fikstur/A01.json … A12.json` (A5 hariç, 11 dosya),
-> sonra pytest iskeleti (A1–A9) ve xUnit testleri (A10–A12). Motor olmadığı
-> için hepsi **kırmızı** başlar; istenen durum bu (§16.4 kırmızı kanıt).
+> ✅ **Fikstürler yazıldı** (16 Eylül) — 11 dosya + ortak sahne, hepsi
+> denetleyiciden geçiyor.
 >
-> Paralelde: şartname **v1.4** (liste `v5/KABUL-OLCUTLERI.md` §8'de) ve
-> iki maddenin **hukuk teyidi**.
+> **Sıradaki: test iskeleti.** pytest (A1–A9) ve xUnit (A10–A12). Motor
+> olmadığı için hepsi **kırmızı** başlar; istenen durum bu (§16.4 kırmızı
+> kanıt). `degismezler` bloklarındaki `kontrol` adlarının gövdesi orada yazılır.
+>
+> Paralelde: şartname **v1.4** (A-15) ve iki maddenin **hukuk teyidi** (A-16).
 >
 > Onaydan sonra kalan 11 fikstür ve pytest iskeleti yazılır. Motor yazılana
 > kadar testler **kırmızı** kalır; istenen durum bu (§16.4 kırmızı kanıt).

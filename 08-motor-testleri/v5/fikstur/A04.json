@@ -1,0 +1,192 @@
+{
+  "senaryo": "A4",
+  "ad": "Gece yarisini asan vardiya",
+  "tip": "evaluate",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a4--gece-yarısını-aşan-vardiya",
+  "_aciklama": [
+    "Motor cozmez, ELLE verilen plan denetlenir.",
+    "YALITIM: talep yok, kapsama kurallari kural listesinden cikarildi.",
+    "K-11 sonrasi: tam 11 saat dinlenme IHLAL DEGIL.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A4."
+  ],
+  "fark": {
+    "vardiya_sablonlari_ekle": [
+      {
+        "id": "V-GECE",
+        "bas": 16,
+        "bit": 25,
+        "mola_dk": 60,
+        "mola_penceresi": {
+          "en_erken": 20,
+          "en_gec_bitis": 21
+        },
+        "_not": "16:00-01:00. 9 saat sahada, 8 saat net. Gercek musteri verisinde 182 ornegi var."
+      }
+    ],
+    "talep": [],
+    "kurallar_cikar": [
+      "ASGARI_KAPSAMA",
+      "HEDEF_KAPSAMA",
+      "MOLA_KAPSAMASI",
+      "ADALET_DENGESI"
+    ]
+  },
+  "atamalar": [
+    {
+      "calisan": "C01",
+      "ekip": "E1",
+      "sablon": "V-GECE",
+      "gun": 1,
+      "bas": 16,
+      "bit": 25,
+      "molalar": [
+        {
+          "bas": 20,
+          "bit": 21
+        }
+      ]
+    },
+    {
+      "calisan": "C01",
+      "ekip": "E1",
+      "sablon": "V-TAM",
+      "gun": 2,
+      "bas": 9,
+      "bit": 18,
+      "molalar": [
+        {
+          "bas": 13,
+          "bit": 14
+        }
+      ]
+    },
+    {
+      "calisan": "C02",
+      "ekip": "E1",
+      "sablon": "V-GECE",
+      "gun": 1,
+      "bas": 16,
+      "bit": 25,
+      "molalar": [
+        {
+          "bas": 20,
+          "bit": 21
+        }
+      ]
+    },
+    {
+      "calisan": "C02",
+      "ekip": "E1",
+      "sablon": null,
+      "gun": 2,
+      "bas": 12,
+      "bit": 21,
+      "molalar": [
+        {
+          "bas": 16,
+          "bit": 17
+        }
+      ]
+    },
+    {
+      "calisan": "C03",
+      "ekip": "E1",
+      "sablon": "V-GECE",
+      "gun": 1,
+      "bas": 16,
+      "bit": 25,
+      "molalar": [
+        {
+          "bas": 20,
+          "bit": 21
+        }
+      ]
+    },
+    {
+      "calisan": "C03",
+      "ekip": "E1",
+      "sablon": null,
+      "gun": 2,
+      "bas": 0,
+      "bit": 8,
+      "molalar": [
+        {
+          "bas": 4,
+          "bit": 5
+        }
+      ]
+    },
+    {
+      "calisan": "C04",
+      "ekip": "E1",
+      "sablon": "V-GECE",
+      "gun": 5,
+      "bas": 16,
+      "bit": 25,
+      "molalar": [
+        {
+          "bas": 20,
+          "bit": 21
+        }
+      ]
+    }
+  ],
+  "turetilmis_degerler": {
+    "_not": "Testin girdiyi dogru okudugunu ayrica sinar; yanlis sebeple yesil yanmayi engeller.",
+    "C01_dinlenme_saat": 8,
+    "C02_dinlenme_saat": 11,
+    "C03_ortusme_saat": 1,
+    "C01_gun1_brut_saat": 9,
+    "C01_gun1_net_saat": 8,
+    "C04_tasma_gunu_yazilan_gun": 5
+  },
+  "beklenen": {
+    "sert_ihlal_sayisi": 2,
+    "ihlaller": [
+      {
+        "kural": "VARDIYA_ARASI_DINLENME",
+        "calisan": "C01",
+        "gun": 2,
+        "olculen": 8,
+        "gereken": 11
+      },
+      {
+        "kural": "CAKISMA_YOK",
+        "calisan": "C03",
+        "gun": 2
+      }
+    ],
+    "_C02_notu": "Tam 11 saat dinlendi -> IHLAL DEGIL (K-11). 'Asgari 11 saat' 11'i kapsar.",
+    "_C04_notu": "Cumartesi 16:00-01:00 Pazar'a tasar ama CUMARTESI'ye sayilir (Z-2). Gun 6'ya bir sey yazilmaz."
+  },
+  "olmamasi_gerekenler": {
+    "C02_icin_VARDIYA_ARASI_DINLENME_ihlali": false,
+    "C03_icin_VARDIYA_ARASI_DINLENME_ihlali": false,
+    "_C03_notu": "V-1: ortusmede YALNIZ cakisma yazilir",
+    "C04_icin_hicbir_ihlal": true,
+    "gun_6_ya_yazilmis_atama": false,
+    "MOLA_HAKKI_ihlali": false,
+    "GUNLUK_AZAMI_ihlali": false,
+    "HAFTALIK_AZAMI_ihlali": false
+  },
+  "yayin_kapisi": {
+    "_not": "K-16. Bu plan yayinlanamaz ve CAKISMA_YOK icin kabul secenegi SUNULMAZ.",
+    "yayinlanabilir": false,
+    "engelleyen_ihlal": {
+      "kural": "CAKISMA_YOK",
+      "yasal": true
+    },
+    "kabul_secenegi_sunulur": false
+  },
+  "elle_mudahale": {
+    "_not": "K-11 madde 7. Backend/UI tarafinda sinanir, bu fiksturde degil.",
+    "eylem": "yonetici C01'in gun 2 vardiyasini 09:00'a ceker",
+    "beklenen": {
+      "uyari_verilir": true,
+      "uyari_metni_icerir": "8 saat",
+      "karar_kullanicinin": true,
+      "devam_edilirse": "kabul edilmis ihlal olarak kaydedilir"
+    }
+  }
+}

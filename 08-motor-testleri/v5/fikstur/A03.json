@@ -1,0 +1,118 @@
+{
+  "senaryo": "A3",
+  "ad": "Imkansiz durum ve yoneticinin karari",
+  "tip": "solve",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a3--imkânsız-durum-ve-yöneticinin-kararı",
+  "_aciklama": [
+    "Zeynep = C07. Ilk yardim sertifikasi yalniz onda, Cuma (gun 4) izinli.",
+    "YETKINLIK_KAPSAMASI firma kuralidir -> ihlali KABUL EDILEBILIR (K-10).",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A3."
+  ],
+  "fark": {
+    "calisanlar": {
+      "C07": {
+        "yetkinlikler": [
+          "ilkyardim"
+        ],
+        "izinler": [
+          {
+            "gun": 4,
+            "tum_gun": true,
+            "durum": "onayli"
+          }
+        ]
+      }
+    },
+    "kurallar_ekle": [
+      {
+        "kod": "YETKINLIK_KAPSAMASI",
+        "tur": "SERT",
+        "yasal": false,
+        "parametreler": {
+          "ekip": "E1",
+          "gun": 4,
+          "saatler": [
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "yetkinlik": "ilkyardim",
+          "asgari": 1
+        }
+      }
+    ]
+  },
+  "beklenen": {
+    "durum": "cozumsuz",
+    "en_iyi_plan": {
+      "var": true,
+      "_not": "K-10: eller bos donmez, en iyi plan da gelir"
+    },
+    "teshis": {
+      "engelleyen_kurallar_icerir": [
+        "YETKINLIK_KAPSAMASI"
+      ],
+      "kapsam": "hucre",
+      "hucre": {
+        "gun": 4
+      },
+      "gereken": 1,
+      "mumkun": 0
+    },
+    "kullaniciya_sorulur": {
+      "metin_icerir": [
+        "gun 4",
+        "YETKINLIK_KAPSAMASI"
+      ],
+      "secenek": [
+        "devam et",
+        "devam etme"
+      ]
+    },
+    "kabul_edilebilir": {
+      "deger": true,
+      "gerekce": "YETKINLIK_KAPSAMASI yasal=false, firma kuralidir (K-10)"
+    },
+    "kabul_edilirse": {
+      "plan_durumu": "taslak",
+      "ihlal_kaydi": {
+        "durum": "kabul_edildi",
+        "alanlar": [
+          "kural",
+          "hucre",
+          "kabul_eden_kullanici",
+          "kabul_zamani",
+          "gerekce"
+        ]
+      },
+      "plan_ekraninda_gorunur": true,
+      "kapsam": "yalniz o hucre",
+      "_not": "Sali'da ayni kural bozulursa ayrica ihlal cikar"
+    },
+    "kabul_edilmezse": {
+      "plan_olusmaz": true
+    }
+  },
+  "kontrol_cifti": {
+    "ad": "Izin kaldirilirsa cozulur",
+    "fark": {
+      "calisanlar": {
+        "C07": {
+          "izinler": []
+        }
+      }
+    },
+    "beklenen": {
+      "durum": "cozuldu",
+      "gun_4_te_atanan_icerir": "C07"
+    },
+    "_not": "spec #16.4 kirmizi kanit: senaryo gercekten yetkinlikten mi takildi"
+  }
+}

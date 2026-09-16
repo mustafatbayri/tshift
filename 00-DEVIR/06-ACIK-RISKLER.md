@@ -557,17 +557,20 @@ kadar ikisi de `[çıkarım]` etiketini koruyor.
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **Fikstürler** (A01–A12, A5 hariç) | Kabul cümleleri 15 Eylül'de onaylandı; sıradaki adım onları çalıştırılabilir veriye çevirmek |
-| **2** | **A-15 şartname v1.4** | v1.3 artık alınmış kararları yansıtmıyor. `yasal` sütunu olmadan K-10 ve K-16 uygulanamaz |
-| 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürüyle birlikte kapanacak |
+| **1** | **A-15 şartname v1.4** | v1.3 artık alınmış kararları yansıtmıyor. `yasal` sütunu olmadan K-10 ve K-16 uygulanamaz; **motor bundan önce yazılamaz** |
+| 2 | **Motor** (M-09: Python + OR-Tools, ayrı servis) | v1.4 bittikten sonra. 7 kırmızı test onu bekliyor |
+| 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürü yazıldı, motor gelince koşacak |
 | 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
 | 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
-| 6 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; fikstürleri bloke etmiyor |
-| 5 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 6 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
-| 7 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
-| 8 | **A-9** KVKK | Gerçek veriden önce |
-| 9 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| 6 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
+| 7 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
+| 8 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
+| 9 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
+| 10 | **A-9** KVKK | Gerçek veriden önce |
+| 11 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+
+> Not: 15 Eylül'de 1. sırada duran **fikstürler** 16 Eylül'de yazıldı, test
+> iskeleti de arkasından geldi. İkisi de `08-motor-testleri/v5/` altında.
 
 ### Kapanan maddeler
 

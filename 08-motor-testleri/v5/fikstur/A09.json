@@ -1,0 +1,166 @@
+{
+  "senaryo": "A9",
+  "ad": "Kadro yetmiyor",
+  "tip": "solve",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a9--kadro-yetmiyor",
+  "_aciklama": [
+    "Uc alt durum, ucu de 'kadro az' ama sonuclari farkli.",
+    "Talep 09:00-12:00 ile sinirli (mola penceresi disinda) -> atanan = sahadaki.",
+    "Hafta ici kapasite: 7 tam zamanli x 5 gun + part-time 7 = 42 atama.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A9."
+  ],
+  "fark": {},
+  "alt_durumlar": [
+    {
+      "ad": "a-hedef-yetmiyor",
+      "fark": {
+        "talep": [
+          {
+            "ekip": "E1",
+            "gunler": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "saatler": [
+              9,
+              10,
+              11
+            ],
+            "asgari": 3,
+            "hedef": 9,
+            "_not": "09:00-12:00 ile sinirli: ogle arasi matematigi kapasite hesabini bulandirmasin"
+          }
+        ]
+      },
+      "_hesap": "hedef 9x5=45 > 42 kapasite; asgari 3x5=15 rahat",
+      "beklenen": {
+        "durum": "cozuldu",
+        "metrikler": {
+          "sert_ihlal": {
+            "esit": 0
+          },
+          "asgari_kapsama_yuzde": {
+            "esit": 100
+          },
+          "hedef_kapsama_yuzde": {
+            "en_fazla": 99.9
+          },
+          "eksik_hedef_dakika": {
+            "en_az": 1
+          }
+        },
+        "eksik_hucreler_listelenir": true,
+        "degismezler": [
+          {
+            "ad": "Fazla mesai tavani asilmaz",
+            "kural": "FAZLA_MESAI_TAVANI",
+            "kontrol": "haftalik_fazla_mesai_en_fazla",
+            "deger": 10
+          },
+          {
+            "ad": "Kimseye 7 gun ust uste yazilmaz",
+            "kural": "ARDISIK_CALISMA_GUNU",
+            "kontrol": "ardisik_gun_en_fazla",
+            "deger": 6
+          }
+        ],
+        "_ilke": "Eksik kapsama, kural ihlalinden iyidir"
+      }
+    },
+    {
+      "ad": "b-hucre-imkansiz",
+      "fark": {
+        "talep": [
+          {
+            "ekip": "E1",
+            "gunler": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "saatler": [
+              9,
+              10,
+              11
+            ],
+            "asgari": 11,
+            "hedef": 11,
+            "_not": "09:00-12:00 ile sinirli: ogle arasi matematigi kapasite hesabini bulandirmasin"
+          }
+        ]
+      },
+      "_hesap": "kadro 10; hicbir gun 11 kisi cikamaz -> tek hucrede gorulur",
+      "beklenen": {
+        "durum": "cozumsuz",
+        "teshis": {
+          "kapsam": "hucre",
+          "gereken": 11,
+          "mumkun": {
+            "en_fazla": 10
+          }
+        },
+        "gevsetme_denemeleri_icerir": [
+          "ASGARI_KAPSAMA"
+        ],
+        "en_iyi_plan": {
+          "var": true
+        },
+        "_not": "K-10: cozumsuz demek 'hicbir sey gosterme' demek degil"
+      }
+    },
+    {
+      "ad": "c-hafta-toplami",
+      "fark": {
+        "talep": [
+          {
+            "ekip": "E1",
+            "gunler": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "saatler": [
+              9,
+              10,
+              11
+            ],
+            "asgari": 9,
+            "hedef": 9,
+            "_not": "09:00-12:00 ile sinirli: ogle arasi matematigi kapasite hesabini bulandirmasin"
+          }
+        ]
+      },
+      "_hesap": "9<=10 -> her hucre TEK BASINA mumkun; ama hafta 9x5=45 > 42 kapasite",
+      "beklenen": {
+        "durum": "cozumsuz",
+        "teshis": {
+          "kapsam": "hafta",
+          "gereken": 45,
+          "mumkun": 42
+        },
+        "engelleyen_kurallar_icerir_en_az_biri": [
+          "HAFTA_TATILI",
+          "ARDISIK_CALISMA_GUNU",
+          "PART_TIME_LIMIT"
+        ],
+        "_kirmizi_kanit": "Motor hafta toplamini gormezse her hucre mumkun gorunur ve birine 7 gun ust uste calistiran plan uretir. Test o planin URETILMEDIGINI sinar."
+      }
+    }
+  ],
+  "turetilmis_degerler": {
+    "hafta_ici_kapasite_atama": 42,
+    "_kapasite_notu": "7 tam zamanli x 5 gun = 35, part-time C08 2 + C09 3 + C10 2 = 7",
+    "a_hedef_haftalik": 45,
+    "b_asgari_gunluk": 11,
+    "c_asgari_haftalik": 45,
+    "_sali_notu": "C08 Sali calisamaz -> o gun en fazla 9 kisi; c'de asgari 9 tam sinirda, hucre yine mumkun"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "senaryo": "A1",
+  "ad": "Normal hafta",
+  "tip": "solve",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a1--normal-hafta",
+  "_aciklama": [
+    "Sahne degismeden kosar, fark yok.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A1 (onaylandi 15 Eylul)."
+  ],
+  "fark": {},
+  "beklenen": {
+    "durum": "cozuldu",
+    "metrikler": {
+      "sert_ihlal": {
+        "esit": 0
+      },
+      "asgari_kapsama_yuzde": {
+        "esit": 100
+      },
+      "hedef_kapsama_yuzde": {
+        "en_az": 95,
+        "_not": "K-8: %100 sozu verilmiyor"
+      },
+      "fazla_mesai_saat": {
+        "esit": 0
+      }
+    },
+    "cozum_istatistikleri": {
+      "onarim_denemesi": {
+        "esit": 0
+      },
+      "degisken_sayisi": {
+        "en_az": 1
+      },
+      "kisit_sayisi": {
+        "en_az": 1
+      },
+      "_not": "K-3: musteriye gosterilecek, dolu gelmeli"
+    },
+    "degismezler": [
+      {
+        "ad": "C08 hicbir Sali calismaz",
+        "kural": "UYGUNLUK_TAKVIMI",
+        "kontrol": "calisan_gun_atamasi_yok",
+        "calisan": "C08",
+        "gun": 1
+      },
+      {
+        "ad": "C09'a 16:00 sonrasi biten vardiya verilmez",
+        "kural": "UYGUNLUK_TAKVIMI",
+        "kontrol": "calisan_vardiya_bitisi_en_fazla",
+        "calisan": "C09",
+        "bit": 16
+      },
+      {
+        "ad": "Haftalik saat sozlesmeyi asmaz",
+        "kural": "PART_TIME_LIMIT",
+        "kontrol": "haftalik_net_saat_sozlesme_alti"
+      },
+      {
+        "ad": "Kimse 7 gun ust uste calismaz",
+        "kural": "ARDISIK_CALISMA_GUNU",
+        "kontrol": "ardisik_gun_en_fazla",
+        "deger": 6
+      },
+      {
+        "ad": "Kimseye ayni gun iki vardiya verilmez",
+        "kural": "CAKISMA_YOK",
+        "kontrol": "gunde_tek_vardiya"
+      },
+      {
+        "ad": "Bagimsiz dogrulayici da 0 sert ihlal bulur",
+        "kural": "-",
+        "kontrol": "evaluate_ile_sifir_sert_ihlal",
+        "_not": "spec #16.1: motorun kendi bayragina bakilmaz"
+      }
+    ]
+  }
+}

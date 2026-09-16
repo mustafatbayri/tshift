@@ -1,0 +1,294 @@
+{
+  "senaryo": "A8",
+  "ad": "Ogle arasi planlamasi",
+  "tip": "evaluate",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a8--öğle-arası-planlaması",
+  "_aciklama": [
+    "Iki elle plan (kotu/iyi) denetlenir, ucuncu alt durumda motor kendisi yerlestirir.",
+    "K-14: MOLA_KAPSAMASI YUMUSAK. MOLA_HAKKI sert kalir (yasal).",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A8."
+  ],
+  "fark": {
+    "talep": [
+      {
+        "ekip": "E1",
+        "gunler": [
+          0
+        ],
+        "saatler": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "asgari": 3,
+        "hedef": 6,
+        "_not": "Tek gun, ogle arasini yalitmak icin"
+      }
+    ]
+  },
+  "alt_durumlar": [
+    {
+      "ad": "a-kotu",
+      "tip": "evaluate",
+      "_not": "Alti kisinin altisi da 12:00-13:00'te molada",
+      "atamalar": [
+        {
+          "calisan": "C01",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C02",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C03",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C04",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C05",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C06",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        }
+      ],
+      "beklenen": {
+        "sert_ihlal_sayisi": 0,
+        "_sert_notu": "MOLA_KAPSAMASI artik YUMUSAK -> plan GECERSIZ DEGIL",
+        "yumusak_ihlaller": [
+          {
+            "kural": "MOLA_KAPSAMASI",
+            "gun": 0,
+            "saat": 12,
+            "sahada": 0,
+            "asgari": 3
+          }
+        ],
+        "puan_duser": true
+      }
+    },
+    {
+      "ad": "b-iyi",
+      "tip": "evaluate",
+      "_not": "Molalar 12-13 ve 13-14 diye ikiye bolunmus (kisiler arasi)",
+      "atamalar": [
+        {
+          "calisan": "C01",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C02",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C03",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 12,
+              "bit": 13
+            }
+          ]
+        },
+        {
+          "calisan": "C04",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 13,
+              "bit": 14
+            }
+          ]
+        },
+        {
+          "calisan": "C05",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 13,
+              "bit": 14
+            }
+          ]
+        },
+        {
+          "calisan": "C06",
+          "ekip": "E1",
+          "sablon": "V-TAM",
+          "gun": 0,
+          "bas": 9,
+          "bit": 18,
+          "molalar": [
+            {
+              "bas": 13,
+              "bit": 14
+            }
+          ]
+        }
+      ],
+      "beklenen": {
+        "sert_ihlal_sayisi": 0,
+        "yumusak_ihlaller": [],
+        "her_saatte_sahada_en_az": 3,
+        "her_atamada_mola_dk": 60,
+        "_mola_notu": "9 saat sahada -> MOLA_HAKKI 60 dk (K-4: brut sureye gore)"
+      }
+    },
+    {
+      "ad": "c-motor",
+      "tip": "solve",
+      "_not": "Motor molalari kendisi yerlestirir",
+      "beklenen": {
+        "durum": "cozuldu",
+        "metrikler": {
+          "sert_ihlal": {
+            "esit": 0
+          }
+        },
+        "degismezler": [
+          {
+            "ad": "Her atamanin molalar alani dolu",
+            "kontrol": "her_atamada_mola_var"
+          },
+          {
+            "ad": "Mola penceresi disina cikilmaz",
+            "kontrol": "mola_penceresi_icinde",
+            "en_erken": 12,
+            "en_gec_bitis": 14
+          },
+          {
+            "ad": "Mola tek blok, bolunmez",
+            "kontrol": "mola_tek_blok",
+            "_not": "K-14 / mevzuat"
+          },
+          {
+            "ad": "Mola dusuldukten sonra sahadaki kisi 3'un altina inmez",
+            "kontrol": "mola_sonrasi_kapsama_en_az",
+            "deger": 3,
+            "_not": "Yumusak kural ama motor agirlik yuzunden buna uymali"
+          },
+          {
+            "ad": "Bagimsiz dogrulayici ayrica sayar",
+            "kontrol": "evaluate_ile_dogrula",
+            "_not": "Motorun kendi metrigine guvenilmez"
+          }
+        ]
+      }
+    }
+  ],
+  "degismezler_ortak": [
+    {
+      "ad": "Mola calisma suresinden dusulur",
+      "kontrol": "gunluk_net_saat",
+      "beklenen": "6 kisi x 8 saat net = 48 saat, 54 degil"
+    }
+  ],
+  "ciktinin_niteligi": {
+    "_not": "K-14 madde 4: mola ciktisi ONERIDIR.",
+    "plan_ekraninda": "onerilen mola saati olarak gosterilir",
+    "sahada_kaydirilmasi": "sistemi bozmaz, gerceklesen veri ayri tutulur"
+  }
+}

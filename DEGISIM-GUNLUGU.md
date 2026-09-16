@@ -4,6 +4,48 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · Fikstürler + test iskeleti yazıldı · yedi test BİLEREK kırmızı**
+**Ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.** Yeni paket CI'ya
+**bağlanmadı** — kırmızı bir paketi kapıya bağlamak "main her zaman yeşil"
+kuralını bozardı.
+
+Onaylı kabul cümleleri (15 Eylül) önce **veriye**, sonra **koşan teste**
+çevrildi. Zincir kapandı: kabul ölçütü → fikstür → test → (motor).
+
+**Fikstürler:** 11 JSON + ortak sahne `_sahne-S10.json`. A5 yok — yaz saati
+ertelendi (K-12). Fikstür kod değil veri; motor hangi dille yazılırsa yazılsın
+aynı dosyalar koşar. Sahne 11 dosyadan ortaklaştırıldı; her senaryo yalnız
+kendi `fark`ını taşıyor.
+
+**Test iskeleti:** pytest çatısı (A1, A3, A4, A6, A7, A8, A9) ve `.cs.taslak`
+uzantılı xUnit taslakları (A2, A10, A11, A12 + yayın kapısı, 20 test adı).
+Sonuç: **7 kırmızı / 3 yeşil / 4 atlanan.** Kırmızı istenen durumdur —
+spec §16.4 "kırmızı kanıt" kuralı, bir testin yeşile dönmeden önce kırmızı
+yanmasını şart koşar.
+
+**İki şey bilerek bozuk bırakıldı, ikisi de CI'ı korumak için:** C# taslakları
+`.cs` değil (derlenirse CI kırılır, dayandıkları tablolar yok) ve pytest paketi
+`dotnet test` kapısına bağlanmadı.
+
+**Üç test motorsuz da yeşil** ve asıl işi onlar yapıyor: fikstürler
+yükleniyor mu, fikstürde geçen her `kontrol` adının kodda gövdesi var mı,
+motor yokluğu sessizce mi geçiliyor. Üçüncüsü yazılırken bir eksik yakalandı —
+A07 fikstüründe kullanılan bir kontrolün gövdesi yoktu.
+
+**Anti-kopya kararı:** `fikstur_yukleyici.py` ortak modüle çıkarıldı.
+Denetleyici ile test aynı `fark` birleştirme mantığını kullanmasaydı,
+denetleyici "tutarlı" derken test başka bir şey sınıyor olurdu.
+
+**`DENETIM.py` yol kontrolü için düzeltme:** belgelerdeki `v5/...` biçimindeki
+kısa yollar depo kökünden yazıldı (`08-motor-testleri/v5/...`), yoksa 3.
+kontrol hepsini "bulunamayan yol" sayacaktı. Yazılmamış `02-spec/v1.4-master-spec.md`
+bilerek-yok listesine gerekçesiyle eklendi.
+
+*Öğrenilen: bir denetleyici yazmak, denetlediği şeyi yazmaktan daha çok
+düzeltme doğuruyor. Yolları kısaltmak okurken rahattı, makine için yanlıştı.*
+→ `08-motor-testleri/v5/fikstur/`, `08-motor-testleri/v5/testler/`,
+`00-DEVIR/oturumlar/2026-09-16-fikstur-ve-test-iskeleti.md`
+
 **2026-09-15 · Altın senaryolar A1–A12 ONAYLANDI · on yeni ürün kararı**
 **Ürün kodu değişmedi, test eklenmedi, hiçbir test koşmuyor.** Bu bir karar
 satırıdır, kilometre taşı değil — etiket atılmadı.

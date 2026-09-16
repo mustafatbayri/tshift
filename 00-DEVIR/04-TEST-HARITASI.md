@@ -135,7 +135,7 @@ mi, senin kararın.
 
 ---
 
-## Şartnamedeki kabul senaryoları — tanımlandı, hiçbiri koşmuyor
+## Şartnamedeki kabul senaryoları — iskelet hazır, bilerek kırmızı
 
 **Master Spec v1.3 §16** on iki altın senaryo tanımlıyor (A1–A12): basit
 uygulanabilir, çelişkili sert kural → `cozumsuz`, yetkinlik açığı, **gece
@@ -143,27 +143,73 @@ yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak 
 çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
 plan kopyalama.
 
-**Durum (15 Eylül):** On ikisinin de *"doğru çalışıyorsa ne görmeliyiz"*
+**Durum (16 Eylül):** On ikisinin de *"doğru çalışıyorsa ne görmeliyiz"*
 cümleleri yazıldı ve **Mustafa tarafından tek tek onaylandı** —
 `08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş). Beklenen sonuçlar
-**şartnameden türetildi**, motora bakılmadı; motor zaten yok.
+**şartnameden türetildi**, motora bakılmadı; motor zaten yok. Cümleler
+fikstüre, fikstürler koşan bir pytest paketine bağlandı.
 
 | Adım | Durum |
 |---|---|
 | Kabul cümleleri yazıldı | ✅ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §4 |
 | Mustafa onayladı | ✅ **12/12 senaryo, 6/6 varsayım** (A5 ertelendi) |
-| Fikstürler yazıldı | ❌ **sıradaki iş** — 11 dosya (A5 hariç) |
-| Testler koşuyor | ❌ motor yok |
+| Fikstürler yazıldı | ✅ **11 dosya** (A5 hariç) + ortak sahne, hepsi denetleyiciden geçiyor |
+| Test iskeleti | ✅ `08-motor-testleri/v5/testler/` — pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` |
+| Testler koşuyor | 🔴 **7 kırmızı / 3 yeşil / 4 atlanan** — motor yok, istenen budur |
 
-**Hiçbir test koşmuyor ve kapsama büyümedi.** İlk iki satır yeşil diye bu
-tablo değişmez — kabul ölçütü bir **taahhüttür**, bekçi değil. Bekçi, fikstür
-pytest'e bağlandığında doğar. Onay turunda on ürün kararı çıktı (K-8…K-17,
-`08-URUN-KARARLARI.md`) ve bunların çoğu **şartname değişikliği** gerektiriyor —
-yani fikstür yazımı v1.4 ile birlikte yürüyecek.
+**Zincir tamam, ucu boşta.** Kabul ölçütü → fikstür → test bağlandı ama motor
+olmadığı için yedi senaryo kırmızı yanıyor. Bu **bir eksiklik değil**:
+Master Spec §16.4 "kırmızı kanıt" kuralı, bir testin yeşile dönmeden önce
+kırmızı yanmasını şart koşar. Önce kırmızı yanmayan test, aslında hiçbir şeyi
+sınamıyor olabilir ve bunu asla anlayamayız.
 
-A1–A9 motor testi olacak (Python + pytest), A10–A12 backend testi (bu
-projedeki xUnit). Bu, projedeki en önemli test ilkesinin (uygulama ile
-doğrulayıcı aynı varsayımdan beslenmez) şartname seviyesindeki karşılığı.
+**Kapsama yine de büyümedi.** Bekçi, test **yeşile döndüğünde** doğar — kırmızı
+bir test taahhüdün kanıtı, korumanın kendisi değil. Onay turunda on ürün
+kararı çıktı (K-8…K-17, `08-URUN-KARARLARI.md`) ve bunların çoğu **şartname
+değişikliği** gerektiriyor; motor v1.4 yazılmadan başlayamaz (A-15).
+
+```
+py -m pytest -q   →   7 failed, 3 passed, 4 skipped
+```
+
+| Sonuç | Kaç | Hangileri | Neden |
+|---|---|---|---|
+| 🔴 failed | 7 | A1, A3, A4, A6, A7, A8, A9 | Motor yok — `MotorYok` fırlatılıyor, mesaj bunu açıkça söylüyor |
+| 🟢 passed | 3 | Paketin kendi sağlığı | Fikstürler yükleniyor mu, her `kontrol` adının gövdesi var mı, motor yokluğu sessizce mi geçiliyor |
+| ⏭ skipped | 4 | A2, A10, A11, A12 | Backend senaryosu; xUnit tarafında koşacak |
+
+### ⚠ Bu paket CI'da koşmuyor — bilerek
+
+CI şu an yalnız `dotnet test` çalıştırıyor (A-4 kapısı). Kırmızı bir paketi
+şimdi kapıya bağlamak **"main her zaman yeşil"** kuralını bozar ve kapıyı
+sürekli kırmızı tutardı. Motor var olduğunda CI'a eklenecek.
+
+Aynı sebeple C# taslakları `.cs.taslak` uzantılı: dayandıkları tablolar
+(`plans`, `plan_runs`, `plan_violations`, `leaves.durum`, `rules.yasal`) henüz
+yok, `.cs` olsalardı **derleme hatası** verip CI'ı kırarlardı. 20 test adı ve
+ne bekledikleri yazılı — yalnız koşamıyorlar. Bkz.
+`08-motor-testleri/v5/testler/backend-taslak/OKU-BENI.md`.
+
+### İskeletin yapısı
+
+A1–A9 motor testi (Python + pytest), A10–A12 backend testi (bu projedeki
+xUnit). Bu, projedeki en önemli test ilkesinin (uygulama ile doğrulayıcı aynı
+varsayımdan beslenmez) şartname seviyesindeki karşılığı.
+
+| Dosya | Görevi | Motor gelince değişir mi |
+|---|---|---|
+| `08-motor-testleri/v5/testler/test_altin_senaryolar.py` | Testlerin kendisi | Hayır |
+| `08-motor-testleri/v5/testler/motor_istemci.py` | Motorla **tek temas noktası** (`/solve`, `/evaluate`, `/health`) | **Evet — yalnız bu** |
+| `08-motor-testleri/v5/testler/kontroller.py` | Fikstürdeki `degismezler` adlarının gövdesi | Hayır |
+| `08-motor-testleri/v5/testler/conftest.py` | pytest ayarları, karşılaştırma sözdizimi | Hayır |
+| `08-motor-testleri/v5/fikstur_yukleyici.py` | Sahne + `fark` birleştirme; **denetleyici ile test aynı mantığı kullansın diye ortak** | Hayır |
+
+Motor yazıldığında **tek dosya** değişecek: `motor_istemci.py` içindeki
+`_cagir`. Fikstürlerin, kabul ölçütünün ve kontrollerin tek satırı değişmez.
+
+`kontroller.py` **ürünün doğrulayıcısı değildir** — §16.1 bağımsız
+doğrulayıcının çözücüyle hiçbir mantık paylaşmamasını şart koşuyor. Oradaki
+kontroller kaba, dar ve testin yardımcısı.
 
 **Onay turunun yan faydası:** Kabul ölçütü yazmak şartnameyi de denetledi.
 İki eksik senaryolar yazılırken çıktı, şartname okunurken değil —

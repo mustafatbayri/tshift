@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (altın senaryolar onaylandı — 15/16 Eylül gecesi)
+**Son güncelleme:** 2026-09-16 (fikstürler + test iskeleti yazıldı; 7 test bilerek kırmızı)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -55,14 +55,39 @@ Bulgular ve Mustafa'nın kapsam kararları: **`07-GERCEK-VERI-BULGULARI.md`**
 ⚠ `07-motor/` klasöründe **motor yok**, analiz araçları var. Bkz.
 `07-motor/OKU-BENI.md`.
 
+**Fikstürler yazıldı (16 Eylül).** `08-motor-testleri/v5/fikstur/` — 11 JSON
+dosyası + ortak sahne. Kod değil veri; motor hangi dille yazılırsa yazılsın
+aynı dosyalar koşar. Biçim: `08-motor-testleri/v5/fikstur/OKU-BENI.md`.
+
+**Test iskeleti yazıldı (16 Eylül).** `08-motor-testleri/v5/testler/` —
+pytest çatısı (A1, A3, A4, A6, A7, A8, A9) ve xUnit taslakları (A2, A10, A11,
+A12). Koşuyor ve **bilerek kırmızı**:
+
+```
+py -m pytest -q   →   7 failed, 3 passed, 4 skipped
+```
+
+7 kırmızı = motor yok (§16.4 kırmızı kanıt). 3 yeşil = paketin **kendi**
+sağlık kontrolü, motorsuz da geçmeli: fikstürler yükleniyor mu, fikstürde
+geçen her `kontrol` adının gövdesi var mı, motor yokluğu sessizce değil
+açıkça söyleniyor mu. 4 atlanan = backend senaryoları, xUnit tarafında
+koşacak. Motor gelince **tek dosya** değişecek: `motor_istemci.py`.
+
+⚠ **Bu paket CI'da koşmuyor — bilerek.** CI şu an yalnız `dotnet test`
+çalıştırıyor (A-4). Kırmızı bir paketi kapıya bağlamak "main her zaman yeşil"
+kuralını bozardı. C# taslakları da bu yüzden `.cs.taslak` uzantılı —
+derleyici görmez, CI kırılmaz. Ayrıntı: `08-motor-testleri/v5/testler/OKU-BENI.md`.
+
 **Altın senaryolar ONAYLANDI (15 Eylül).** Spec §16.3'teki A1–A12'nin beklenen
 sonuçları Türkçe kabul cümlelerine çevrildi ve Mustafa tarafından **tek tek
 onaylandı**: `08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş).
 Onay turunda **on ürün kararı** doğdu (K-8…K-17), **bir karar geri alındı**
 (K-1), dört senaryo ve ortak sahne **baştan yazıldı**.
 
-⚠ **Hâlâ hiçbir test koşmuyor.** Fikstürler yazılmadı, motor yok. Kabul ölçütü
-bir taahhüttür, bekçi değil.
+⚠ **Motorun hiçbir davranışı hâlâ korunmuyor.** Zincir (kabul ölçütü →
+fikstür → test) tamam ama ucu boşta: motor yok, bu yüzden 7 senaryo kırmızı.
+Kabul ölçütü bir taahhüttür, bekçi değil; bekçi ancak test **yeşile
+döndüğünde** doğar.
 
 **Devir denetimi artık betik (14 Eylül).** `DENETIM.py` — bu paketteki test
 adlarını, sayıları, dosya yollarını ve commit durumunu makineye kontrol
@@ -80,34 +105,39 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **Fikstürler.** Onaylanmış cümleler makine tarafından okunabilir veriye
-> çevrilecek.
+> **Şartname v1.4 (A-15).** Test iskeleti hazır ve kırmızı; sıradaki iş,
+> motorun yazılabilmesi için şartnamedeki eksik alanları kapatmak.
 >
-> 1. **Oku:** `08-motor-testleri/v5/KABUL-OLCUTLERI.md` — onaylanmış ve
->    dondurulmuş. §3 ortak sahne (S-10), §4 on iki senaryo, §6 kararlar.
-> 2. `08-motor-testleri/v5/fikstur/A01.json … A12.json` yazılır — **A5 hariç,
->    11 dosya** (A5 ertelendi, K-12). Biçim örneği `08-motor-testleri/v3/fikstur/A04.json`;
->    ⚠ **o dosyanın beklenen sonuçları geçersiz** (eski sahne, geri alınan K-1).
-> 3. Her fikstür `fikstur-denetleyici.py`'den geçirilir — yazılı beklenen
->    liste girdiden gerçekten çıkıyor mu.
-> 4. pytest iskeleti (A1–A9) + xUnit testleri (A10–A12). Motor olmadığı için
->    **hepsi kırmızı** başlar; istenen budur (§16.4 kırmızı kanıt).
+> 1. **Oku:** `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §8 (on maddelik liste,
+>    dondurulmuş) ve `06-ACIK-RISKLER.md` A-15.
+> 2. **Yaz:** `02-spec/v1.4-master-spec.md`. **v1.3'e dokunulmaz** — sürümleme
+>    kuralı: üzerine yazma, yanına yaz (`SURUMLEME.md`).
+> 3. **Kapatılacak eksikler:** `leaves` durum alanı (K-9), kabul edilmiş ihlal
+>    (K-10/K-16), `en_iyi_plan`, mola penceresi, `MOLA_KAPSAMASI` sert→yumuşak
+>    (K-14), **§6 kural kataloğuna `yasal` sütunu** (K-17), yayın kapısı,
+>    `TERCIH_KARSILAMA` yeniden değerlendirmesi (K-13), %95 eşiği (K-8),
+>    artı T-1…T-8 iç tutarsızlıkları.
+> 4. **Karara bağlanacak açık tasarım sorusu:** `yasal` bayrağı **kuralın mı
+>    eşiğin mi** özelliği? `GUNLUK_AZAMI` için kanunî tavan 11, bizim
+>    varsayılanımız 9 — 9'u aşmak firma kuralı ihlali, 11'i aşmak yasal ihlal.
+>    Tek bayrak bu ikisini ayıramıyor.
 > 5. Sonra ürünün doğrulayıcısı, sonra çözücü (M-09).
+>
+> ✅ **Tamamlananlar:** fikstürler (11 dosya + ortak sahne, 16 Eylül) ve test
+> iskeleti (pytest + xUnit taslakları, 16 Eylül). Her ikisi de kendi
+> denetleyicisinden geçiyor.
 >
 > **Paralelde açık kalanlar:**
 >
-> - **Şartname v1.4 — artık küçük bir düzeltme değil.** On maddelik liste
->   `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §8'de: `leaves` durum alanı,
->   kabul edilmiş ihlal, `en_iyi_plan`, mola penceresi, `MOLA_KAPSAMASI`
->   sert→yumuşak, **§6'ya `yasal` sütunu**, yayın kapısı, `TERCIH_KARSILAMA`
->   yeniden değerlendirmesi, %95 eşiği, artı T-1…T-8.
 > - **İki hukuki yorum uzman gözü bekliyor** (K-4 mola eşiği, K-17 yasal
->   sınıflandırma). Fikstürleri bloke etmiyor; sahaya çıkmadan önce şart.
-> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — üç oturumdur bu
->   pencerelerde Mustafa'nın makinesinde kabuk çalıştırılamadı.
+>   sınıflandırma). v1.4'ü bloke etmiyor; sahaya çıkmadan önce şart.
+> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — dört oturumdur bu
+>   pencerelerde Mustafa'nın makinesinde kabuk çalıştırılamadı (8 Eylül
+>   Windows güncellemesi, §7).
 >   **İlk kez Mustafa koşacak:** `cd C:\Users\PC\Desktop\Tshift` sonra
 >   `py DENETIM.py`.
 > - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
+> - **pytest paketi CI'a bağlanmadı** — motor yeşile çevirene kadar bağlanmayacak.
 > - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
@@ -147,7 +177,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
-| **`08-motor-testleri/`** | ⚠ **Motor YOK, test de koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`08-motor-testleri/`** | ⚠ **Motor YOK; testler koşuyor ama bilerek kırmızı.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

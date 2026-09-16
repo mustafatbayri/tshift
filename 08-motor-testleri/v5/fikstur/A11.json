@@ -1,0 +1,59 @@
+{
+  "senaryo": "A11",
+  "ad": "Gecmis veri eksik",
+  "tip": "backend",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a11--geçmiş-veri-eksik",
+  "_aciklama": [
+    "BACKEND hazirlik kontrolu. Motor cagrilmadan once calisir.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A11 + K-5."
+  ],
+  "fark": {},
+  "alt_durumlar": [
+    {
+      "ad": "a-var-olan-firma-eksik-hafta",
+      "kurgu": "firma iki aydir sistemde; 28 Eylul-4 Ekim plani var, 5-11 Ekim plani YOK",
+      "eylem": "12 Ekim haftasi icin plan istenir",
+      "beklenen": {
+        "motor_cagri_sayisi": 0,
+        "eksik_veri": [
+          {
+            "tip": "lookback_atamalar",
+            "aralik": "2026-10-05..2026-10-11"
+          }
+        ],
+        "kullaniciya_gunleriyle_soylenir": true,
+        "cozum_onerisi_sunulur": {
+          "metin_icerir": "gecen haftanin planini kopyala",
+          "_not": "A12'ye baglanir; kullanici kolayca cozer"
+        }
+      }
+    },
+    {
+      "ad": "b-eksik-hafta-girilince",
+      "kurgu": "5-11 Ekim plani yayinlanir",
+      "eylem": "12 Ekim haftasi icin plan istenir",
+      "beklenen": {
+        "hazirlik_gecer": true,
+        "motor_cagri_sayisi": 1
+      }
+    },
+    {
+      "ad": "c-yeni-firma",
+      "kurgu": "firmanin hic yayinlanmis plani yok",
+      "eylem": "ilk plan istenir",
+      "beklenen": {
+        "hazirlik_engellemez": true,
+        "motor_cagri_sayisi": 1,
+        "plan_runs_notu": "gecmissiz baslangic",
+        "adalet_olcumu_yapilmaz": true,
+        "_not": "K-5. Devir yuk sifir; adalet agirligini uygulamak anlamsiz, hatta yaniltici olur"
+      }
+    }
+  ],
+  "ayrim_olcutu": {
+    "kural": "lookback penceresi firmanin ILK YAYINLANMIS planindan oncesine dusuyorsa 'bos', yoksa 'eksik'",
+    "_onay": "V-3 onaylandi 15 Eylul",
+    "_elenen": "firma olusturma tarihi - yaniltici, firma uc ay once acilip yeni plan yapmaya baslamis olabilir"
+  }
+}

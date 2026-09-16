@@ -1,0 +1,164 @@
+{
+  "senaryo": "A7",
+  "ad": "Cumartesi adaleti mi, kapsama mi",
+  "tip": "solve",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a7--cumartesi-adaleti-mi-kapsama-mı",
+  "_aciklama": [
+    "AYNI girdi, IKI profil. Ekim ayinin ucuncu haftasi (17 Ekim Cumartesi).",
+    "Adalet penceresi takvim ayi (#6.5); ilk iki cumartesi devir yukunde.",
+    "Calisan TERCIHI yok (K-13) - gerilim adalet ile kapsama arasinda.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A7."
+  ],
+  "fark": {
+    "calisanlar": {
+      "C01": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 2,
+          "saat": 0,
+          "cumartesi": 2
+        }
+      },
+      "C02": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 2,
+          "saat": 0,
+          "cumartesi": 2
+        }
+      },
+      "C03": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 2,
+          "saat": 0,
+          "cumartesi": 2
+        }
+      },
+      "C07": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 1,
+          "saat": 0,
+          "cumartesi": 1
+        }
+      },
+      "C10": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 1,
+          "saat": 0,
+          "cumartesi": 1
+        }
+      },
+      "C04": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 0,
+          "saat": 0,
+          "cumartesi": 0
+        }
+      },
+      "C05": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 0,
+          "saat": 0,
+          "cumartesi": 0
+        }
+      },
+      "C06": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 0,
+          "saat": 0,
+          "cumartesi": 0
+        }
+      },
+      "C08": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 0,
+          "saat": 0,
+          "cumartesi": 0
+        }
+      },
+      "C09": {
+        "devir_yuk": {
+          "gece": 0,
+          "hafta_sonu": 0,
+          "saat": 0,
+          "cumartesi": 0
+        }
+      }
+    }
+  },
+  "cagrilar": [
+    {
+      "ad": "kapsama",
+      "profil": "KAPSAMA"
+    },
+    {
+      "ad": "calisan",
+      "profil": "CALISAN"
+    }
+  ],
+  "beklenen": {
+    "her_iki_cagri": {
+      "durum": "cozuldu",
+      "metrikler": {
+        "sert_ihlal": {
+          "esit": 0
+        },
+        "asgari_kapsama_yuzde": {
+          "esit": 100
+        }
+      }
+    },
+    "karsilastirma": [
+      {
+        "ad": "Calisan profili cumartesiyi daha adil dagitir",
+        "olcut": "adalet_sapmasi_cumartesi",
+        "yon": "calisan <= kapsama"
+      },
+      {
+        "ad": "Kapsama profili hedefi daha iyi tutturur",
+        "olcut": "hedef_kapsama_yuzde",
+        "yon": "kapsama >= calisan"
+      },
+      {
+        "ad": "En az biri KESIN fark gosterir",
+        "olcut": "-",
+        "yon": "en_az_biri_kesin_buyuk",
+        "_not": "Ikisi de esitse agirliklar calismiyor demektir -> test kirmizi"
+      }
+    ],
+    "degismezler": [
+      {
+        "ad": "Adalet YUMUSAK kuraldir",
+        "kural": "ADALET_DENGESI",
+        "kontrol": "adalet_ihlali_sert_sayilmaz",
+        "_not": "Kapsama profilinde C01'i ucuncu kez cumartesiye koymak ihlal degil, puan dusurur"
+      }
+    ]
+  },
+  "turetilmis_degerler": {
+    "_not": "Adalet sapmasi = secim sonrasi cumartesi sayilarinin standart sapmasi.",
+    "devir_cumartesi": {
+      "C01": 2,
+      "C02": 2,
+      "C03": 2,
+      "C07": 1,
+      "C10": 1,
+      "C04": 0,
+      "C05": 0,
+      "C06": 0,
+      "C08": 0,
+      "C09": 0
+    },
+    "secim_C01_C02_C03_sonrasi_sapma": 1.3,
+    "secim_C04_C05_C06_sonrasi_sapma": 0.7,
+    "_hesap_notu": "Programatik dogrulandi; iki secim olculebilir sekilde farkli."
+  }
+}

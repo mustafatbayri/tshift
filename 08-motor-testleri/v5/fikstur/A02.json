@@ -1,0 +1,88 @@
+{
+  "senaryo": "A2",
+  "ad": "Izin planlamayi ezer",
+  "tip": "backend",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a2--izin-planlamayı-ezer",
+  "_aciklama": [
+    "BACKEND senaryosu: motor girdi/cikti testi degil, davranis testi.",
+    "Uc ayri an + bir savunma katmani. Kaynak: A2 + karar K-9."
+  ],
+  "fark": {
+    "calisanlar": {
+      "C01": {
+        "izinler": [
+          {
+            "gun": 2,
+            "tum_gun": true,
+            "durum": "onayli"
+          }
+        ]
+      }
+    }
+  },
+  "adimlar": [
+    {
+      "alt_durum": "a",
+      "ad": "Izin once var, atama sonra deneniyor",
+      "kurgu": "C01'in gun 2 icin onayli ve iptal edilmemis izni var",
+      "eylem": "yonetici C01'i gun 2 09:00-18:00 icin plana sabitlemeye calisir",
+      "beklenen": {
+        "sonuc": "reddedilir",
+        "hata_gerekcesi_icerir": "onayli izin",
+        "_not": "Uyari verip devam ettirilmez (K-9 madde 1)"
+      }
+    },
+    {
+      "alt_durum": "b",
+      "ad": "Atama once var, izin sonradan onaylaniyor",
+      "kurgu": "yayinlanmis planda C01 gun 2 calisiyor; C01 o gune izin alir ve izin onaylanir",
+      "eylem": "izin onaylanir",
+      "beklenen": {
+        "calisan_plandan_dusurulur": true,
+        "yoneticinin_kontrolu_beklenmez": true,
+        "yoneticiye_bildirim_gider": true,
+        "plan_ekraninda_gorunur": {
+          "dusen_atama": true,
+          "sebep": "izin"
+        },
+        "asistan_oneri_sunar": true,
+        "kapsama_eksigi_ihlal_olarak_yazilir": true,
+        "motor_cagrilip_sessizce_doldurulmaz": true
+      }
+    },
+    {
+      "alt_durum": "c",
+      "ad": "Izin iptal ediliyor",
+      "kurgu": "C01 iznini iptal ettirir",
+      "eylem": "izin durumu 'iptal' yapilir",
+      "beklenen": {
+        "izin_kaydi_silinmez": true,
+        "izin_durumu": "iptal",
+        "calisan_yeniden_atanabilir": true
+      }
+    },
+    {
+      "alt_durum": "savunma",
+      "ad": "Motor katmani da guvenli davranir",
+      "kurgu": "arayuz atlanip motora izinli kisiye sabit atama iceren girdi gonderilir",
+      "eylem": "/solve cagrilir",
+      "beklenen": {
+        "plan_uretilmez": true,
+        "girdi_gecersiz_sayilir": true,
+        "_not": "02-DEGISMEZLER: engellemenin delikleri vardir, guvenli varsayilanin yoktur"
+      }
+    }
+  ],
+  "veri_modeli_gereksinimi": {
+    "tablo": "leaves",
+    "yeni_alan": "durum",
+    "degerler": [
+      "talep",
+      "onayli",
+      "iptal",
+      "reddedildi"
+    ],
+    "_not": "Sartname #8.3'te yok, v1.4'e girecek (A-15)."
+  }
+}

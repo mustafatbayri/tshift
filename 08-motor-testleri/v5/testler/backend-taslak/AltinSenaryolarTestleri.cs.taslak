@@ -1,0 +1,252 @@
+// -----------------------------------------------------------------------------
+// ALTIN SENARYOLAR -- BACKEND TARAFI (A10, A11, A12)
+//
+// ⚠ BU DOSYA DERLENMIYOR VE DERLENMEMELI.
+//    Uzantisi bilerek ".cs.taslak" -- proje agacina girse bile derleyici
+//    gormez. Sebebi: bu testlerin dayandigi tablolar (plans, plan_runs,
+//    plan_violations, leaves.durum) henuz YOK. Derlenen ama kirilan bir test
+//    "main her zaman yesil" kuralini ve CI kapisini (A-4) bozar.
+//
+// NE ZAMAN GERCEK OLACAK
+//    Plan tablolari ve hazirlik kontrolu yazildiginda:
+//      1. Bu dosya 04-kod/backend/tests/TShift.Tests/ altina tasinir
+//      2. Adi AltinSenaryolarTestleri.cs olur
+//      3. TODO'lar doldurulur, testler KIRMIZI yanar (spec #16.4)
+//      4. Backend onlari yesile cevirir
+//
+// KAYNAK
+//    ../../KABUL-OLCUTLERI.md  #4 A10, A11, A12
+//    ../../fikstur/A10.json, A11.json, A12.json  (beklenen davranis orada)
+//    00-DEVIR/08-URUN-KARARLARI.md  K-5, K-9, K-15, K-16
+//
+// TEST ADI KURALI
+//    DisplayName saf ASCII ve dokumandaki adla BIREBIR ayni olmali.
+//    DENETIM.py dokumanla kodu karsilastiriyor; kisaltilmis ad yakalanir.
+// -----------------------------------------------------------------------------
+
+using System;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace TShift.Tests;
+
+/// <summary>
+/// A10 -- Ayni istek iki kez gelirse tek plan uretilir (Master Spec #11.7).
+/// Motor yerine cagri sayan bir taklit kullanilir; gercek motor gerekmez.
+/// </summary>
+public class AltinSenaryoA10Testleri : IClassFixture<TestUygulamasi>
+{
+    private readonly TestUygulamasi _uygulama;
+
+    public AltinSenaryoA10Testleri(TestUygulamasi uygulama) => _uygulama = uygulama;
+
+    [Fact(DisplayName = "A10 - Ayni istek anahtariyla tekrar cagirinca yeni plan uretilmez")]
+    public async Task AyniAnahtarBitmisCalismaSaklananSonucuDoner()
+    {
+        // TODO: ilk istegi tamamla, ayni istek_anahtari ile ikinci istegi at.
+        // Beklenen: ayni plan_runs kimligi doner, motor taklidi 1 kez cagrilmis,
+        //           plan_runs'ta o kiraci icin tek satir var.
+        throw new NotImplementedException(
+            "Plan tablolari yazilmadi. Beklenen davranis: fikstur/A10.json alt_durum 'a-bitmis'.");
+    }
+
+    [Fact(DisplayName = "A10 - Calisma surerken gelen ayni anahtar ikinci calismayi baslatmaz")]
+    public async Task AyniAnahtarSurenCalismaMevcutKimligiDoner()
+    {
+        // TODO: ilk istek kuyrukta beklerken ikinci istegi at.
+        // Beklenen: mevcut calismanin kimligi doner, motor taklidi yine 1 kez.
+        throw new NotImplementedException("fikstur/A10.json alt_durum 'b-suruyor'.");
+    }
+
+    [Fact(DisplayName = "A10 - Farkli istek anahtari yeni calistirma baslatir")]
+    public async Task FarkliAnahtarYeniCalistirmaUretir()
+    {
+        // TODO: ayni girdi, farkli istek_anahtari.
+        // Beklenen: ikinci plan_runs satiri, motor taklidi 2 kez cagrilmis.
+        // Bu test, korumanin mesru ikinci plani ENGELLEMEDIGININ kanitidir.
+        throw new NotImplementedException("fikstur/A10.json alt_durum 'c-farkli-anahtar'.");
+    }
+
+    [Fact(DisplayName = "A10 - Istek anahtari kiraciya ozeldir, baska firmanin sonucu donmez")]
+    public async Task IstekAnahtariKiraciyaOzeldir()
+    {
+        // TODO: B kiracisi, A ile ayni istek_anahtari.
+        // Beklenen: A'nin sonucu DONMEZ, B kendi calistirmasini baslatir.
+        // Kiracilik korumasi -- bu uründe geri donulmez hata sinifi.
+        throw new NotImplementedException("fikstur/A10.json alt_durum 'd-kiraci-yalitimi'.");
+    }
+}
+
+/// <summary>
+/// A11 -- Gecmis veri eksikse motor cagrilmaz (Master Spec #11.2, karar K-5).
+/// </summary>
+public class AltinSenaryoA11Testleri : IClassFixture<TestUygulamasi>
+{
+    private readonly TestUygulamasi _uygulama;
+
+    public AltinSenaryoA11Testleri(TestUygulamasi uygulama) => _uygulama = uygulama;
+
+    [Fact(DisplayName = "A11 - Lookback penceresinde eksik hafta varsa motor cagrilmaz")]
+    public async Task EksikHaftaVarsaHazirlikEngeller()
+    {
+        // TODO: 28 Eylul-4 Ekim plani var, 5-11 Ekim YOK. 12 Ekim icin plan iste.
+        // Beklenen: motor taklidi 0 kez cagrilmis;
+        //           eksik_veri listesinde {tip: "lookback_atamalar",
+        //           aralik: "2026-10-05..2026-10-11"}.
+        throw new NotImplementedException("fikstur/A11.json alt_durum 'a-var-olan-firma-eksik-hafta'.");
+    }
+
+    [Fact(DisplayName = "A11 - Eksik hafta kullaniciya tarihleriyle soylenir ve kopyalama onerilir")]
+    public async Task EksikHaftaMesajiTarihVeCozumIcerir()
+    {
+        // TODO: mesajin icerigini sina.
+        // Beklenen: eksik araligi GUNLERIYLE soyler; "gecen haftanin planini
+        //           kopyala" onerisini icerir (A12'ye baglanir).
+        throw new NotImplementedException("fikstur/A11.json alt_durum 'a-var-olan-firma-eksik-hafta'.");
+    }
+
+    [Fact(DisplayName = "A11 - Eksik hafta girilince hazirlik gecer ve motor cagrilir")]
+    public async Task EksikHaftaGirilinceHazirlikGecer()
+    {
+        throw new NotImplementedException("fikstur/A11.json alt_durum 'b-eksik-hafta-girilince'.");
+    }
+
+    [Fact(DisplayName = "A11 - Hic yayinlanmis plani olmayan firmada motor calisir")]
+    public async Task YeniFirmadaGecmisEksikDegilBostur()
+    {
+        // TODO: firmanin hic yayinlanmis plani yok. Ilk plani iste.
+        // Beklenen: hazirlik ENGELLEMEZ, motor 1 kez cagrilir,
+        //           plan_runs kaydinda "gecmissiz baslangic" notu,
+        //           adalet olcumu yapilmaz (devir yuk sifir).
+        // Ayrim olcutu (V-3): lookback penceresi firmanin ILK YAYINLANMIS
+        // planindan oncesine dusuyorsa "bos", yoksa "eksik".
+        throw new NotImplementedException("fikstur/A11.json alt_durum 'c-yeni-firma'.");
+    }
+}
+
+/// <summary>
+/// A12 -- Plan kopyalama (Master Spec #9.7, karar K-15).
+/// Kopyalamada DOGRULAYICI kosar, cozucu KOSMAZ.
+/// </summary>
+public class AltinSenaryoA12Testleri : IClassFixture<TestUygulamasi>
+{
+    private readonly TestUygulamasi _uygulama;
+
+    public AltinSenaryoA12Testleri(TestUygulamasi uygulama) => _uygulama = uygulama;
+
+    [Fact(DisplayName = "A12 - Plan kopyalanirken dogrulayici kosar, cozucu kosmaz")]
+    public async Task KopyalamaDogrulayiciyiCalistirir()
+    {
+        // TODO: kaynak plan yayinlanmis; C03 pasife alinmis, C10'un sozlesmesi bitmis.
+        // Beklenen: dogrulayici cagrilir, cozucu taklidi 0 kez cagrilir.
+        throw new NotImplementedException("fikstur/A12.json 'dogrulayici_kosar'.");
+    }
+
+    [Fact(DisplayName = "A12 - Dusen atamalar sebebiyle birlikte tek tek listelenir")]
+    public async Task DusenAtamalarSebebiyleListelenir()
+    {
+        // TODO: dusen_atamalar listesini sina.
+        // Beklenen: her satirda calisan, gun, saat ve SEBEP
+        //           (ayrildi / sozlesme_bitti / izin_aldi).
+        //           "1 atama dustu" gibi ozet KABUL EDILMEZ.
+        throw new NotImplementedException("fikstur/A12.json 'dusen_atamalar'.");
+    }
+
+    [Fact(DisplayName = "A12 - Kopyada kapsama bozulursa ihlal gosterilir, sessizce doldurulmaz")]
+    public async Task KopyadaKapsamaBozulursaIhlalGosterilir()
+    {
+        throw new NotImplementedException("fikstur/A12.json 'kapsama_bozulursa'.");
+    }
+
+    [Fact(DisplayName = "A12 - Kopya taslak olur ve kaynak plan degismez")]
+    public async Task KopyaTaslakOlurKaynakDegismez()
+    {
+        throw new NotImplementedException("fikstur/A12.json 'yeni_plan', 'kaynak_plan_degismez'.");
+    }
+}
+
+/// <summary>
+/// A2 -- Izin planlamayi ezer (karar K-9).
+/// leaves.durum alani eklendiginde yazilacak.
+/// </summary>
+public class AltinSenaryoA02Testleri : IClassFixture<TestUygulamasi>
+{
+    private readonly TestUygulamasi _uygulama;
+
+    public AltinSenaryoA02Testleri(TestUygulamasi uygulama) => _uygulama = uygulama;
+
+    [Fact(DisplayName = "A2 - Onayli izni olan calisan plana sabitlenemez")]
+    public async Task IzinliCalisanSabitlenemez()
+    {
+        // TODO: C01'in gun 2 icin onayli ve iptal edilmemis izni var.
+        // Beklenen: sabitleme REDDEDILIR, gerekce "onayli izin" icerir.
+        //           Uyari verip devam ettirilmez.
+        throw new NotImplementedException("fikstur/A02.json adim 'a'.");
+    }
+
+    [Fact(DisplayName = "A2 - Sonradan onaylanan izin calisani plandan dusurur ve bildirim gider")]
+    public async Task SonradanOnaylananIzinPlandanDusurur()
+    {
+        // TODO: yayinlanmis planda C01 gun 2 calisiyor; izin onaylanir.
+        // Beklenen: calisan otomatik dusurulur (yonetici onayi BEKLENMEZ),
+        //           yoneticiye bildirim gider,
+        //           plan ekraninda dusen atama SEBEBIYLE gorunur,
+        //           asistan oneri sunar,
+        //           kapsama eksigi ihlal olarak yazilir,
+        //           motor cagrilip sessizce DOLDURULMAZ.
+        throw new NotImplementedException("fikstur/A02.json adim 'b'.");
+    }
+
+    [Fact(DisplayName = "A2 - Iptal edilen izin calisani yeniden atanabilir yapar")]
+    public async Task IptalEdilenIzinAtamayiSerbestBirakir()
+    {
+        // TODO: leaves.durum = "iptal". Kayit SILINMEZ, durumu degisir.
+        throw new NotImplementedException("fikstur/A02.json adim 'c'. leaves.durum alani gerekiyor.");
+    }
+
+    [Fact(DisplayName = "A2 - Izinli kisiye sabit atama iceren girdi motorda da plan uretmez")]
+    public async Task IzinliSabitAtamaMotordaDaReddedilir()
+    {
+        // TODO: arayuzu atlayip motora dogrudan girdi gonder.
+        // Beklenen: plan uretilmez, girdi gecersiz sayilir.
+        // Ilke: engellemenin delikleri vardir, guvenli varsayilanin yoktur.
+        throw new NotImplementedException("fikstur/A02.json adim 'savunma'.");
+    }
+}
+
+/// <summary>
+/// K-16 -- Yayin kapisi. Taslak ihlal tasiyabilir, yayinlanmis plan tasiyamaz.
+/// plan_violations tablosuna "kabul_edildi" durumu eklendiginde yazilacak.
+/// </summary>
+public class YayinKapisiTestleri : IClassFixture<TestUygulamasi>
+{
+    private readonly TestUygulamasi _uygulama;
+
+    public YayinKapisiTestleri(TestUygulamasi uygulama) => _uygulama = uygulama;
+
+    [Fact(DisplayName = "K16 - Yasal kural ihlali olan plan yayinlanamaz ve kabul secenegi sunulmaz")]
+    public async Task YasalIhlalVarsaYayinlanamaz()
+    {
+        // TODO: planda CAKISMA_YOK ihlali var (yasal = true).
+        // Beklenen: yayin REDDEDILIR, "kabul ediyorum" secenegi SUNULMAZ.
+        throw new NotImplementedException("KABUL-OLCUTLERI.md A4 madde 8, karar K-16.");
+    }
+
+    [Fact(DisplayName = "K16 - Firma kurali ihlali kabul edilirse plan yayinlanabilir")]
+    public async Task FirmaKuraliIhlaliKabulEdilirseYayinlanir()
+    {
+        // TODO: YETKINLIK_KAPSAMASI ihlali (yasal = false), yonetici kabul eder.
+        // Beklenen: kabul kaydi olusur (kural, hucre, kabul_eden_kullanici,
+        //           kabul_zamani, gerekce); plan yayinlanabilir;
+        //           ihlal plan ekraninda GORUNUR kalir.
+        throw new NotImplementedException("KABUL-OLCUTLERI.md A3, karar K-10/K-16.");
+    }
+
+    [Fact(DisplayName = "K16 - Yasal bayragi belirsiz olan kural yasal gibi davranir")]
+    public async Task BelirsizBayrakYasalGibiDavranir()
+    {
+        // TODO: yasal = "belirsiz" olan bir kuralin ihlali.
+        // Beklenen: kabul edilemez -- guvenli varsayilan (K-17).
+        throw new NotImplementedException("karar K-17.");
+    }
+}

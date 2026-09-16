@@ -1,0 +1,61 @@
+{
+  "senaryo": "A10",
+  "ad": "Cift tiklama",
+  "tip": "backend",
+  "sahne": "_sahne-S10.json",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a10--çift-tıklama",
+  "_aciklama": [
+    "BACKEND testi (xUnit). Motor yerine cagri sayan bir taklit kullanilir.",
+    "Kaynak: KABUL-OLCUTLERI.md #4 A10."
+  ],
+  "fark": {},
+  "adimlar": [
+    {
+      "alt_durum": "a-bitmis",
+      "kurgu": "ilk istek tamamlandi",
+      "eylem": "ayni istek_anahtari ('K1') ile ikinci istek gelir",
+      "beklenen": {
+        "ayni_plan_runs_kimligi_doner": true,
+        "motor_cagri_sayisi": 1,
+        "plan_runs_satir_sayisi": 1
+      }
+    },
+    {
+      "alt_durum": "b-suruyor",
+      "kurgu": "ilk istek kuyrukta/calisiyor",
+      "eylem": "ayni istek_anahtari ile ikinci istek gelir",
+      "beklenen": {
+        "mevcut_calismanin_kimligi_doner": true,
+        "ikinci_calisma_baslatilmaz": true,
+        "motor_cagri_sayisi": 1
+      }
+    },
+    {
+      "alt_durum": "c-farkli-anahtar",
+      "kurgu": "ayni girdi, istek_anahtari 'K2'",
+      "eylem": "/solve cagrilir",
+      "beklenen": {
+        "yeni_calistirma": true,
+        "plan_runs_satir_sayisi": 2,
+        "motor_cagri_sayisi": 2,
+        "_not": "Anahtarin gercekten anahtar oldugunun kaniti"
+      }
+    },
+    {
+      "alt_durum": "d-kiraci-yalitimi",
+      "kurgu": "B firmasi ayni 'K1' anahtariyla istek atar",
+      "eylem": "/solve cagrilir",
+      "beklenen": {
+        "A_firmasinin_sonucu_donmez": true,
+        "kendi_calistirmasi_baslar": true,
+        "_not": "[karar] 15 Eylul: kiracilik korumasi testi de olmali"
+      }
+    }
+  ],
+  "degismezler": [
+    {
+      "ad": "Yinelenen istek icin ayri denetim izi yok",
+      "kontrol": "denetim_kaydinda_tek_plan_uretildi_izi"
+    }
+  ]
+}

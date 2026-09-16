@@ -82,14 +82,18 @@ YOK_AMA_KASITLI = {
     "middleware.ts":
         "Next.js sozlesme dosyasi; BU DEPODA YOK, ayni isi frontend/src/proxy.ts "
         "yapiyor. 02-DEGISMEZLER.md ondan 'yok' demek icin soz ediyor",
+    "02-spec/v1.4-master-spec.md":
+        "A-15'in ciktisi; HENUZ YAZILMADI. 00-BURADAN-BASLA #3 onu 'yazilacak "
+        "dosya' olarak gosteriyor. v1.4 yazilinca BU SATIR SILINIR -- kalirsa "
+        "gercekten kaybolan bir dosyayi gizler",
 }
 
 # BAYAT AMA KASITLI. Donmus bir surume BILEREK yapilan atiflar: "eski surumde
 # soyleydi" demek icin. Gerekcesiz satir eklenmez -- yoksa 8. kontrol cope doner.
 BAYAT_AMA_KASITLI = {
-    "08-motor-testleri/v3/fikstur/A04.json":
-        "tek fikstur ornegi orada duruyor; beklenen sonuclari gecersiz ama "
-        "BICIM ornegi olarak gosteriliyor. v5 fiksturleri yazilinca kaldirilacak",
+    # 15 Eylul: v5 fiksturleri yazildi, v3'e isaret etmeye gerek kalmadi.
+    # Liste bos birakildi -- yeni satir eklenirken GEREKCE yazilir, yoksa
+    # bu liste 8. kontrolu cope cevirir.
 }
 
 # TARIHSEL dosyalar: append-only, yeniden yazilmaz (00-BURADAN-BASLA #5b).
