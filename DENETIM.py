@@ -82,10 +82,6 @@ YOK_AMA_KASITLI = {
     "middleware.ts":
         "Next.js sozlesme dosyasi; BU DEPODA YOK, ayni isi frontend/src/proxy.ts "
         "yapiyor. 02-DEGISMEZLER.md ondan 'yok' demek icin soz ediyor",
-    "02-spec/v1.4-master-spec.md":
-        "A-15'in ciktisi; HENUZ YAZILMADI. 00-BURADAN-BASLA #3 onu 'yazilacak "
-        "dosya' olarak gosteriyor. v1.4 yazilinca BU SATIR SILINIR -- kalirsa "
-        "gercekten kaybolan bir dosyayi gizler",
 }
 
 # BAYAT AMA KASITLI. Donmus bir surume BILEREK yapilan atiflar: "eski surumde

@@ -4,6 +4,56 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · ŞARTNAME v1.4 YAZILDI · A-15 kapandı · dokuz yeni karar**
+**Ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.** v1.3'e
+dokunulmadı — v1.4 tam dosya olarak yanına yazıldı.
+
+**Ana değişiklik:** kural kataloğu **`yasal` ve `kabul_edilebilir` sütunlarını**
+kazandı, 35 kuralın tamamı sınıflandırıldı. Bu olmadan iki onaylı karar
+(K-10 kabul edilmiş ihlal, K-16 yayın kapısı) **uygulanamıyordu** — sistem hangi
+ihlali kabul etmeye izin vereceğini bilemiyordu.
+
+**Dokuz yeni karar (K-18…K-26).** Öne çıkanlar: yasal kuralın değeri kanunun
+değeridir, firma değiştiremez (`GUNLUK_AZAMI` **9 → 11**) · firma için ayrı
+günlük azami kuralı açılmayacak · yasal ihlal hiçbir koşulda kabul edilemez ·
+sağlık raporu için ayrı kural · kabul yetkisi = yayın yetkisi.
+
+**Bir çelişki çıktı ve sessizce çözülmedi.** Mustafa K-18'i verirken *"firma
+esnetemez ama ihlali onaylayabilir"* dedi; bu K-16 ile çelişiyordu. Çelişki
+açıkça soruldu, üç seçenek sunuldu, **en katısı** seçildi. Yanlış dal seçilseydi
+A4 kabul ölçütü, fikstürü ve yayın kapısı testleri yeniden yazılacaktı.
+
+**Tablo doldurulurken iki tasarım sorunu çıktı.** `AKTIF_CALISAN` yasal bir
+kural değil ama ihlali de kabul edilemez — iki gruplu tabloda sistem
+*"ayrılmış çalışanı planda tutmayı kabul ediyorum"* seçeneği sunardı. Bayrak
+ikiye ayrıldı: `yasal` dürüst etiket, `kabul_edilebilir` yayın kapısının baktığı
+alan. İkincisi: `YETKINLIK_KAPSAMASI`'nda bayrak kuralın değil **satırın**
+özelliği — ilk yardımcı yasal, barista değil.
+
+**Mevzuat araştırması yapıldı** (Mustafa'nın isteğiyle, birincil kaynaklardan —
+forum kullanılmadı). İki belirsizlik çözüldü, **katalogda olmayan bir yasal
+kural** bulundu (`GECE_POSTASI_DEVRI`, Postalar Yön. md. 8) ve gece 7,5 saat
+sınırının **turizm istisnası** ortaya çıktı (6645 s. K.) — ilk müşteri verisi
+seyahat acentesine ait olduğu için bu teorik değil.
+
+**Şartnamede dört yanlış bulundu:** §5.2'de 9 saat *"İş Kanunu üst sınırı"*
+diye etiketlenmiş (kanun 11 diyor) · "27 kural" yazıyor, gerçek 33 · künye
+tablosunda sürüm hâlâ 1.1 · `employee_contracts.gunluk_azami_saat` olmayan bir
+yetkiyi gösteriyor.
+
+**Okuma bir maddeyi de gereksiz çıkardı:** *"`leaves` durum alanı eklenecek"*
+— v1.3 §8.3'te **zaten vardı.** K-9'un gerçek eksiği alan değil, yayınlanmış
+planı düşüren akıştı.
+
+**Fikstürler güncellendi, sonuç değişmedi:** 11/11 tutarlı, pytest yine
+7 kırmızı / 3 yeşil / 4 atlanan. Kontrol edildi, tahmin edilmedi.
+
+*Öğrenilen: "eksik" diye kaydedilen bir madde, kapatılmadan önce gerçekten
+eksik mi diye bakılmalı. On maddenin biri zaten yapılmıştı; iki madde de liste
+yazılırken hiç görülmemişti.*
+→ `02-spec/v1.4-master-spec.md`, `02-spec/v1.4-hazirlik/`,
+`00-DEVIR/08-URUN-KARARLARI.md`, `00-DEVIR/oturumlar/2026-09-16-sartname-v14.md`
+
 **2026-09-16 · `DENETIM.py` İLK KEZ koştu · 17 hata buldu, hepsi düzeltildi**
 **Ürün kodu değişmedi.** Betik 14 Eylül'de yazılmıştı ama üç oturumdur
 koşturulamıyordu (uzaktan kabuk çalışmıyor). Mustafa bugün ilk kez kendi

@@ -171,11 +171,13 @@
     "HAFTALIK_AZAMI_ihlali": false
   },
   "yayin_kapisi": {
-    "_not": "K-16. Bu plan yayinlanamaz ve CAKISMA_YOK icin kabul secenegi SUNULMAZ.",
+    "_not": "K-16 + K-24 (spec v1.4 #4.5). Bu plan yayinlanamaz ve CAKISMA_YOK icin kabul secenegi SUNULMAZ. Sebep artik 'yasal' degil 'imkansizlik': hicbir kanun cakismayi yasaklamiyor, mantik yasakliyor. Kapiya bakan alan kabul_edilebilir, yasal degil.",
     "yayinlanabilir": false,
     "engelleyen_ihlal": {
       "kural": "CAKISMA_YOK",
-      "yasal": true
+      "yasal": false,
+      "kabul_edilebilir": false,
+      "grup": "imkansizlik"
     },
     "kabul_secenegi_sunulur": false
   },

@@ -568,6 +568,213 @@ alan; yasal kurallara ayrıca "yasal sınır" değeri (T-9).
 
 ---
 
+## K-18 · Yasal kuralın değeri kanunun değeridir
+
+**Karar (16 Eylül 2026, Mustafa).** *"Kural yasal işaretlenir ve değer 11'dir.
+Firma bunu esnetemez… Firmalar kafasına göre kural bende 9 veya 10 diyemez."*
+
+`GUNLUK_AZAMI` **9 → 11** oldu, kapsamı `K,D,Z,C` → **`S`**.
+
+**Neden 9 yanlıştı:** v1.3 §5.2 tablosunda 9 saat için *"İş Kanunu üst sınırı"*
+yazıyordu. Kanunun tavanı **11** (İş K. md. 63/2: *"günde onbir saati aşmamak
+koşulu ile"*); 9 bizim koyduğumuz firma varsayılanıydı ve kanun diye
+etiketlenmişti. Şartnamedeki düpedüz yanlış bir cümleydi.
+
+**Kabul edilen sonuç:** firma artık *"bizde kimse 9 saatten fazla çalışmaz"*
+diyemez; 10 saatlik vardiya kurulabilir ve sistem itiraz etmez.
+
+**Fikstürlere etkisi ölçüldü: yok.** Hiçbir fikstürde 9 saatten uzun net çalışma
+yok, hiçbiri `GUNLUK_AZAMI` ihlali beklemiyor (A04 açıkça `false` diyor).
+Sınırı yükseltmek hiçbir beklenen sonucu değiştirmedi.
+
+→ `02-spec/v1.4-master-spec.md` §5.2, §6.2
+
+---
+
+## K-19 · Firma için ayrı günlük azami kuralı açılmayacak
+
+**Karar (16 Eylül 2026, Mustafa).** *"Firma günlük azami diye bir kuralımız
+olmayacak. Yasal mevzuat 11 diyorsa 11."*
+
+Teklif edilen `FIRMA_GUNLUK_AZAMI` (yasal kuralın yanında, daha sıkı firma
+tavanı) **reddedildi.** Günlük tavan tek ve yasaldır.
+
+**Sonucu:** `employee_contracts.gunluk_azami_saat` alanı kaldırıldı — olmayan
+bir yetkiyi varmış gibi gösteriyordu. Alan üretimde kullanılmamıştı, veri
+taşıma gerekmedi.
+
+→ `02-spec/v1.4-master-spec.md` §6.2, §8.3
+
+---
+
+## K-20 · Yasal kural ihlali hiçbir koşulda kabul edilemez
+
+**Karar (16 Eylül 2026, Mustafa).** K-16 **aynen geçerli.**
+
+Bu karar bir çelişkinin çözümüdür. Mustafa K-18'i verirken *"firma bunu
+esnetemez ama kural ihlalini onaylayabilir, kendi inisiyatifindedir"* demişti;
+bu, K-16'nın *"yasal ihlal kabul edilemez"* kuralıyla çelişiyordu. Çelişki
+açıkça soruldu, üç seçenek sunuldu ve **en katı olan** seçildi.
+
+| | Kabul edilebilir mi |
+|---|---|
+| Yasal kural ihlali | ❌ Hayır, hiçbir koşulda |
+| İmkânsızlık kuralı ihlali | ❌ Hayır (K-24) |
+| Firma kuralı ihlali | ✅ Evet, gerekçeyle |
+
+**Bedeli bilerek kabul edildi:** sahada gerçek bir imkânsızlıkta (personel yok,
+kapatılamıyor) yönetici planı hiç yayınlayamaz. Alternatifi — yasal ihlali
+kabul ettirmek — daha pahalı bulundu.
+
+→ `02-spec/v1.4-master-spec.md` §4.5, §6
+
+---
+
+## K-21 · Sağlık raporu için ayrı kural: `SAGLIK_KISITI`
+
+**Karar (16 Eylül 2026, Mustafa).** K-18 `GUNLUK_AZAMI`'yi sabitleyince,
+*"Ayşe'nin raporu var, günde en fazla 4 saat"* durumu yersiz kaldı. Ayrı bir
+kural açıldı.
+
+| Özellik | Değer |
+|---|---|
+| Kapsam | Yalnız `C` — çalışan |
+| Zorunlu | `belge_referansi`, `gecerlilik_bas`, `gecerlilik_bitis` |
+| Dayanak | 6331 sayılı İSG Kanunu — hekim raporu işvereni bağlar |
+| Yasal | ✅ · ihlali kabul edilemez |
+
+**Neden firma esnetmesi sayılmıyor:** bu, firmanın kanunu gevşetmesi değil;
+kanunun kendisinin koruduğu, tek kişiye ait, belgeli bir kısıt. Belge
+referansının zorunlu olması kötüye kullanımı engelliyor.
+
+→ `02-spec/v1.4-master-spec.md` §6.1, §8.3
+
+---
+
+## K-22 · `TERCIH_KARSILAMA` anlamı değişti, kod adı korundu
+
+**Karar (16 Eylül 2026, Mustafa).** İki ayrı soru soruldu, ikisi de cevaplandı:
+
+1. **Kural ne olacak?** → *"Anlamını değiştir."* Artık part-time çalışanların
+   sözleşmeden gelen uygunluk esnekliğinin kullanım oranını ölçüyor.
+2. **Adı değişsin mi?** → *"`TERCIH_KARSILAMA` kalsın."*
+
+**Neden gerekti:** K-13 ile çalışan tercihi diye bir şey kalmadı; kuralın
+besleneceği veri yoktu.
+
+**Bilinen risk, kayda geçirildi:** ad ile anlam artık birebir örtüşmüyor.
+`TERCIH_KARSILAMA` görüp *"çalışan tercihi özelliği var"* sanılabilir. Yeniden
+adlandırma teklif edildi (ağırlık tablosu ve profil kayıtları o anda henüz
+kullanılmadığı için bedava olurdu); Mustafa adın korunmasını seçti.
+
+→ `02-spec/v1.4-master-spec.md` §5.4, §6.8
+
+---
+
+## K-23 · Kabul yetkisi = yayın yetkisi
+
+**Karar (16 Eylül 2026, Mustafa).** *"Yayın yetkisi kimdeyse o."*
+
+Yetki matrisine (§3.2) ayrı bir satır **eklenmedi**. İhlali kabul etmek, planı
+yayınlama yetkisinin parçasıdır. Şef ihlali görür, gerekçe yazabilir, ama kabul
+edemez — onaya gönderir.
+
+**Bilinen sonuç:** ileride yayın yetkisi genişletilirse kabul yetkisi de
+sessizce genişler. Ayrı satır olmadığı için bu bir karar noktası olarak karşımıza
+çıkmaz.
+
+→ `02-spec/v1.4-master-spec.md` §4.5, §8.6
+
+---
+
+## K-24 · `yasal` ve `kabul_edilebilir` iki ayrı alan; bayrak bazen satır bazlı
+
+**Karar (16 Eylül 2026, Mustafa).** Sınıflandırma tablosu doldurulurken çıkan
+iki sorunun çözümü onaylandı.
+
+### Sorun 1 — iki grup yetmiyordu
+
+`AKTIF_CALISAN` yasal bir kural değil; hiçbir kanun *"ayrılmış kişiye vardiya
+yazma"* demiyor, çünkü gerek yok. İki gruplu tabloda bu "firma kuralı" olurdu
+ve sistem yöneticiye *"ayrılmış çalışanı planda tutmayı kabul ediyorum"*
+seçeneğini sunardı.
+
+| Alan | Ne söyler |
+|---|---|
+| `yasal` | Kural kanundan mı geliyor, hangi maddeden |
+| `kabul_edilebilir` | Yönetici bu ihlali kabul edip yayınlayabilir mi |
+
+Üç grup oldu: **kanundan gelen** (yasal ✅, kabul ❌) · **imkânsızlık**
+(yasal ❌, kabul ❌) · **firma kuralı** (yasal ❌, kabul ✅).
+
+**Yan faydası:** hukuk uzmanı `yasal` sütununu düzelttiğinde yayın kapısı
+bozulmaz.
+
+### Sorun 2 — bayrak bazen kuralın değil, satırın özelliği
+
+`YETKINLIK_KAPSAMASI` tek kural ama *"her vardiyada 1 ilk yardımcı"* ile
+*"kahvaltıda 1 barista"* farklı cevap verir. Bu iki kuralda
+(`ROL_KAPSAMASI`, `YETKINLIK_KAPSAMASI`) bayraklar **her gereklilik satırında**
+tutulur; diğer 33 kuralda tip seviyesinde kalır.
+
+→ `02-spec/v1.4-master-spec.md` §5.3, §6.4, §8.4
+
+---
+
+## K-25 · `GECE_POSTASI_DEVRI` — katalogda olmayan bir yasal kural
+
+**Karar (16 Eylül 2026, Mustafa).** Mevzuat araştırmasında bulundu, eklendi.
+
+Postalar Halinde İşçi Çalıştırılarak Yürütülen İşlerde Çalışmalara İlişkin Özel
+Usul ve Esaslar Hakkında Yönetmelik **md. 8**:
+
+> *"…en fazla bir iş haftası gece çalıştırılan işçilerin, ondan sonra gelen
+> ikinci iş haftasında gündüz çalıştırılmaları suretiyle…"*
+
+Katalogdaki üç gece kuralının hiçbiri bunu karşılamıyordu: `ARDISIK_GECE_LIMIT`
+firma kuralıdır ve kapatılabilir, `VARDIYA_ROTASYON_YONU` yumuşaktır,
+`GECE_VARDIYASI_AZAMI` süre kuralıdır.
+
+`ARDISIK_GECE_LIMIT`'in **yerine geçmez, yanında durur**: biri kanunun tavanı,
+diğeri firmanın daha sıkı uyku sağlığı politikası.
+
+**Aynı araştırmada çözülen iki belirsizlik:**
+
+| Kural | Sonuç | Dayanak |
+|---|---|---|
+| `PART_TIME_LIMIT` | ⚠️ → ✅ **yasal** | Fazla Çalışma Yön. md. 8 — *"kısmî süreli… işçilere fazla sürelerle çalışma da yaptırılamaz"* |
+| `ARDISIK_CALISMA_GUNU` | ⚠️ → ❌ **firma** | Kanunda "6 gün" yok; `HAFTA_TATILI` kayan penceresinin türevi |
+
+→ `02-spec/v1.4-master-spec.md` §6.2, §6.3 · `02-spec/v1.4-hazirlik/02-mevzuat-arastirmasi.md`
+
+---
+
+## K-26 · Gece sınırının sektör istisnası
+
+**Karar (16 Eylül 2026, Mustafa).** Araştırmada bulundu, eklendi.
+
+6645 sayılı Kanun (23 Nisan 2015) İş K. md. 69'a istisna getirdi: **turizm,
+özel güvenlik, sağlık hizmeti ve petrol arama/sondaj** işlerinde, çalışanın
+**yazılı onayıyla** gece 7,5 saat sınırı aşılabilir.
+
+**Neden acil:** elimizdeki tek gerçek müşteri verisi bir **seyahat acentesine**
+ait — turizm — ve o veride **182 atama gece yarısını aşıyor**. İstisna olmadan
+sistem o firmada gece 8 saatlik vardiyayı yasal ihlal sayar, K-20 gereği kabul
+seçeneği sunmaz ve plan yayınlanamaz. Oysa yazılı onay varsa tamamen yasaldır.
+
+**İki yeni alan:** `tenants.sektor` (yasal sektör — kurulum sihirbazında ayrı ve
+açık soru) ve `employees.gece_calisma_onayi` + tarih + belge.
+
+**Kural:** ikisinden biri eksikse 7,5 saat sınırı yürürlüktedir.
+
+**Bu, K-24'ün üçüncü biçimidir:** orada bayrak kural satırına bağlıydı, burada
+**çalışana** bağlı. Aynı ilke — bir kuralın yasal olup olmaması bağlama göre
+değişebiliyor.
+
+→ `02-spec/v1.4-master-spec.md` §6.3, §8.1, §8.3
+
+---
+
 ## Geriye dönük kayda alınacaklar
 
 Bu sicil 14 Eylül'de kuruldu. Daha önce verilmiş ürün kararları hâlâ

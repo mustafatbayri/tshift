@@ -498,7 +498,25 @@ düzensizlikti.
 
 ---
 
-## 🔴 A-15 · Şartname v1.4 yazılmadı — on maddelik birikmiş fark
+## ✅ A-15 · Şartname v1.4 yazılmadı — **KAPANDI (16 Eylül 2026)**
+
+> **Kapanış:** `02-spec/v1.4-master-spec.md` yazıldı. On maddelik listenin
+> tamamı işlendi, artı araştırmada çıkan iki madde daha. v1.3'e dokunulmadı.
+>
+> **Listeye sonradan eklenenler:** `GECE_POSTASI_DEVRI` (katalogda hiç
+> olmayan yasal kural) · gece sınırının sektör istisnası · `HAFTA_TATILI`
+> penceresinin kayan olması (T-11) · kural sayısının 27 değil 35 olması (T-10).
+>
+> **Listede olup gereksiz çıkan:** `leaves` durum alanı — v1.3 §8.3'te
+> **zaten vardı** (`talep | onayli | reddedildi | iptal`). K-9'un gerçek
+> eksiği alan değil, yayınlanmış planı düşüren akıştı; o da §4.6'ya yazıldı.
+>
+> *Ders: "eksik" diye kaydedilen bir madde, kapatılmadan önce gerçekten
+> eksik mi diye bakılmalı. Bu maddede on maddenin biri zaten yapılmıştı.*
+
+*Özgün metin, kayıt için:*
+
+### ~~Şartname v1.4 yazılmadı — on maddelik birikmiş fark~~
 
 **Ne:** Altın senaryo onay turu (15 Eylül) on ürün kararı doğurdu ve bunların
 çoğu **şartnamede karşılığı olmayan** şeyler. Yürürlükteki şartname v1.3, artık
@@ -551,14 +569,48 @@ davranılıyor (K-17 güvenli varsayılanı) — yani hata yönü "kabul edemedi
 **Fikstürleri bloke etmiyor.** Sahaya çıkmadan önce hukukçu bakmalı; o zamana
 kadar ikisi de `[çıkarım]` etiketini koruyor.
 
+### 16 Eylül güncellemesi — araştırma yapıldı, madde daraldı
+
+Mustafa'nın isteğiyle (*"hukuki konuları benden daha iyi araştırabilirsin"*)
+birincil mevzuat kaynaklarından araştırma yapıldı:
+`02-spec/v1.4-hazirlik/02-mevzuat-arastirmasi.md`.
+
+**Çözülenler:**
+
+| Konu | Sonuç | Dayanak |
+|---|---|---|
+| `PART_TIME_LIMIT` yasal mı | ✅ **Evet** | Fazla Çalışma Yön. md. 8 |
+| `ARDISIK_CALISMA_GUNU` yasal mı | ❌ **Hayır**, türev | İş K. md. 46 + Y.22.HD 2019/1727 |
+| `VARDIYA_ARASI_DINLENME` 11 saat | ✅ Doğrulandı | Postalar Yön. md. 9 |
+| Eksik yasal kural | `GECE_POSTASI_DEVRI` bulundu | Postalar Yön. md. 8 |
+| Gece 7,5 saat mutlak mı | ❌ **Sektör istisnası var** | 6645 s. K. |
+
+**Hâlâ açık — bu madde bu ikisi için duruyor:**
+
+1. **Mola eşiği brüt süreye mi uygulanır (K-4).** İş K. md. 68 ara dinlenmesini
+   *"günlük çalışma süresi"*ne bağlıyor ama aynı madde *"ara dinlenmeleri
+   çalışma süresinden sayılmaz"* diyor — tanım kendine dönüyor. Kararımız
+   **brüt**; hata yönü tek taraflı (kanunun istediğinden asla az mola vermez).
+2. **Yazılı onayın fazla mesai ücretine etkisi.** Turizmde gece 7,5 saati aşan
+   kısım için onay alınmış olması, o sürenin fazla çalışma ücreti doğurup
+   doğurmadığını değiştirmiyor olabilir. Akademik kaynaklar bunu açık uygulama
+   sorunu sayıyor. **Bugün bizi bağlamıyor** — plan yapıyoruz, bordro
+   hesaplamıyoruz; ücret modülü gelirse ilk bakılacak yer.
+
+**Risk yönü değişmedi:** güvenli varsayılan yürürlükte (K-17) — emin
+olunamayan kural yasal gibi davranır, ihlali kabul edilemez.
+
+⚠ **Araştırma uzman görüşünün yerine geçmez.** Artık uzmana boş sayfayla değil,
+madde numaralı bir tabloyla gidilecek — görüşme kısalır, gerekliliği kalkmaz.
+
 ---
 
 ## Öncelik sırası — önerilen
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **A-15 şartname v1.4** | v1.3 artık alınmış kararları yansıtmıyor. `yasal` sütunu olmadan K-10 ve K-16 uygulanamaz; **motor bundan önce yazılamaz** |
-| 2 | **Motor** (M-09: Python + OR-Tools, ayrı servis) | v1.4 bittikten sonra. 7 kırmızı test onu bekliyor |
+| **1** | **Bağımsız doğrulayıcı** (`/evaluate`) | 7 kırmızı testin **ikisi** (A4, A8) çözücü olmadan yeşile döner. En küçük adım |
+| 2 | **Çözücü** (M-09: Python + OR-Tools, ayrı servis) | Kalan beş senaryo. Doğrulayıcı olmadan sınanamaz (§7.6, §16.1) |
 | 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürü yazıldı, motor gelince koşacak |
 | 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
 | 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
@@ -569,8 +621,9 @@ kadar ikisi de `[çıkarım]` etiketini koruyor.
 | 10 | **A-9** KVKK | Gerçek veriden önce |
 | 11 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
-> Not: 15 Eylül'de 1. sırada duran **fikstürler** 16 Eylül'de yazıldı, test
-> iskeleti de arkasından geldi. İkisi de `08-motor-testleri/v5/` altında.
+> **16 Eylül'de kapanan üç iş:** fikstürler · test iskeleti · **şartname v1.4**
+> (A-15). İlk ikisi `08-motor-testleri/v5/` altında, üçüncüsü
+> `02-spec/v1.4-master-spec.md`.
 
 ### Kapanan maddeler
 
@@ -579,3 +632,4 @@ kadar ikisi de `[çıkarım]` etiketini koruyor.
 | A-1 K-9'un bekçisi yok | 12 Eylül 2026 | `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` |
 | A-14 gerçek veri yok | 13–14 Eylül 2026 | 3,5 aylık PDKS + plan analiz edildi, 529 ihlal bulundu |
 | **A-4 CI yok** | **14 Eylül 2026** | **GitHub Actions koştu ve yeşil yandı** |
+| **A-15 şartname v1.4** | **16 Eylül 2026** | **`02-spec/v1.4-master-spec.md` — 35 kural sınıflandırıldı, 11 tutarsızlık düzeltildi** |

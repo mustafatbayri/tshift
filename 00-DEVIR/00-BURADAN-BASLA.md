@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (fikstürler + test iskeleti yazıldı; 7 test bilerek kırmızı)
+**Son güncelleme:** 2026-09-16 (şartname v1.4 yazıldı; A-15 kapandı)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -78,6 +78,30 @@ koşacak. Motor gelince **tek dosya** değişecek: `motor_istemci.py`.
 kuralını bozardı. C# taslakları da bu yüzden `.cs.taslak` uzantılı —
 derleyici görmez, CI kırılmaz. Ayrıntı: `08-motor-testleri/v5/testler/OKU-BENI.md`.
 
+**Şartname v1.4 yazıldı (16 Eylül).** `02-spec/v1.4-master-spec.md` —
+**v1.3'e dokunulmadı**, yanına yazıldı. Ana değişiklik: kural kataloğu
+`yasal` ve `kabul_edilebilir` sütunlarını kazandı. Bu olmadan iki onaylı karar
+(K-10 kabul edilmiş ihlal, K-16 yayın kapısı) **uygulanamıyordu** — sistem
+hangi ihlali kabul etmeye izin vereceğini bilemiyordu.
+
+| Ne | Sayı |
+|---|---|
+| Sınıflandırılan kural | **35** (v1.3 "27" diyordu, gerçek 33'tü) |
+| Yeni kural | 2 — `SAGLIK_KISITI`, `GECE_POSTASI_DEVRI` |
+| Türü/değeri/anlamı değişen | 3 — `MOLA_KAPSAMASI` yumuşadı · `GUNLUK_AZAMI` 9→11 · `TERCIH_KARSILAMA` |
+| Yeni veri alanı | 13 |
+| Düzeltilen tutarsızlık | 11 (T-1…T-11) |
+| Yeni ürün kararı | 9 (K-18…K-26) |
+
+**Mevzuat araştırması yapıldı** (`02-spec/v1.4-hazirlik/`): iki belirsizlik
+birincil kaynaklardan çözüldü, katalogda **olmayan bir yasal kural** bulundu
+(`GECE_POSTASI_DEVRI`), ve gece 7,5 saat sınırının **turizm istisnası** ortaya
+çıktı — ilk müşteri verisi bir seyahat acentesine ait olduğu için bu teorik
+değil, ilk gün karşımıza çıkacak bir konu.
+
+⚠ **Yasal sınıflandırma hukuk uzmanı tarafından teyit edilmedi** (A-16).
+Madde numaraları birincil mevzuattan okundu, yorumlar yapay zekâya ait.
+
 **Altın senaryolar ONAYLANDI (15 Eylül).** Spec §16.3'teki A1–A12'nin beklenen
 sonuçları Türkçe kabul cümlelerine çevrildi ve Mustafa tarafından **tek tek
 onaylandı**: `08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş).
@@ -111,38 +135,45 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **Şartname v1.4 (A-15).** Test iskeleti hazır ve kırmızı; sıradaki iş,
-> motorun yazılabilmesi için şartnamedeki eksik alanları kapatmak.
+> **Bağımsız doğrulayıcı.** Şartname hazır, fikstürler hazır, testler kırmızı
+> bekliyor. Sıradaki iş, kırmızıyı yeşile çevirmeye **en küçük adımla**
+> başlamak.
 >
-> 1. **Oku:** `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §8 (on maddelik liste,
->    dondurulmuş) ve `06-ACIK-RISKLER.md` A-15.
-> 2. **Yaz:** `02-spec/v1.4-master-spec.md`. **v1.3'e dokunulmaz** — sürümleme
->    kuralı: üzerine yazma, yanına yaz (`SURUMLEME.md`).
-> 3. **Kapatılacak eksikler:** `leaves` durum alanı (K-9), kabul edilmiş ihlal
->    (K-10/K-16), `en_iyi_plan`, mola penceresi, `MOLA_KAPSAMASI` sert→yumuşak
->    (K-14), **§6 kural kataloğuna `yasal` sütunu** (K-17), yayın kapısı,
->    `TERCIH_KARSILAMA` yeniden değerlendirmesi (K-13), %95 eşiği (K-8),
->    artı T-1…T-8 iç tutarsızlıkları.
-> 4. **Karara bağlanacak açık tasarım sorusu:** `yasal` bayrağı **kuralın mı
->    eşiğin mi** özelliği? `GUNLUK_AZAMI` için kanunî tavan 11, bizim
->    varsayılanımız 9 — 9'u aşmak firma kuralı ihlali, 11'i aşmak yasal ihlal.
->    Tek bayrak bu ikisini ayıramıyor.
-> 5. Sonra ürünün doğrulayıcısı, sonra çözücü (M-09).
+> **Neden çözücü değil doğrulayıcı:** yedi kırmızı testin **ikisi** (A4, A8)
+> `/evaluate` çağırıyor — yani plan üretmiyor, var olan planı **denetliyor**.
+> Doğrulayıcı yazıldığında bu ikisi çözücü olmadan yeşile döner. Çözücü çok
+> daha büyük bir iş ve doğrulayıcı olmadan zaten sınanamaz.
 >
-> ✅ **Tamamlananlar:** fikstürler (11 dosya + ortak sahne, 16 Eylül) ve test
-> iskeleti (pytest + xUnit taslakları, 16 Eylül). Her ikisi de kendi
-> denetleyicisinden geçiyor.
+> 1. **Oku:** `02-spec/v1.4-master-spec.md` §6 (35 kural, `yasal` ve `kabul`
+>    sütunlarıyla), §11.4 (`/evaluate` sözleşmesi), §7.6 (bağımsız denetleyici
+>    ilkesi).
+> 2. **Yaz:** `/evaluate` ucu — girdi + atamalar alır, ihlal listesi ve
+>    metrikler döner.
+> 3. **Koştur:** `08-motor-testleri/v5/testler/` altında
+>    `set TSHIFT_MOTOR_URL=http://localhost:8000` sonra `py -m pytest -v -k "A04 or A08"`.
+> 4. Sonra çözücü (M-09: Python + OR-Tools, ayrı servis) — kalan beş senaryo.
+>
+> ### ⚠ Doğrulayıcı çözücüyle mantık paylaşmaz
+>
+> Şartname §16.1 ve §7.6 bunu şart koşuyor. Sebebi D-6 sınıfı hata: kodu yazan
+> testi de yazarsa aynı yanlış varsayım iki yere birden geçer ve hiçbir test
+> yakalamaz. Doğrulayıcı kuralları **şartnameden** okuyarak yeniden yazar,
+> çözücünün kısıt kodunu çağırmaz.
+>
+> ✅ **Tamamlananlar:** fikstürler · test iskeleti · şartname v1.4 · kural
+> sınıflandırması · mevzuat araştırması. **A-15 kapandı.**
 >
 > **Paralelde açık kalanlar:**
 >
-> - **İki hukuki yorum uzman gözü bekliyor** (K-4 mola eşiği, K-17 yasal
->   sınıflandırma). v1.4'ü bloke etmiyor; sahaya çıkmadan önce şart.
+> - **A-16 hukuk teyidi** — artık boş sayfa değil, madde numaralı bir tabloyla
+>   gidilecek. İki soru açık: mola eşiğinin brüt/net yorumu (K-4) ve yazılı
+>   onayın fazla mesai ücretine etkisi.
 > - ✅ **`DENETIM.py` 16 Eylül'de ilk kez gerçekten koştu** ve 17 hata buldu
 >   (hepsi düzeltildi). Her oturumun sonunda koşturulmalı:
->   `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`. Kalan 14 uyarı
->   tarihsel dosyalarda, aksiyon gerektirmiyor.
+>   `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`.
 > - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
 > - **pytest paketi CI'a bağlanmadı** — motor yeşile çevirene kadar bağlanmayacak.
+> - **Fikstürler v1.4'e göre güncellendi** ama A5 hâlâ yok (K-12, yaz saati).
 > - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
@@ -174,7 +205,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 
 | Yol | İçerik | Ne zaman aç |
 |---|---|---|
-| **`02-spec/v1.3-master-spec.md`** | **YÜRÜRLÜKTEKİ ŞARTNAME — 17 bölüm, son karar.** §3 roller ve yetki matrisi · §6 kural kataloğu (36 kural kodu, parametreleriyle) · **§6.3 gece yarısını aşan vardiya + DST modeli** · §8 veri modeli (50 tablo) · §9 ekranlar · **§11 motor sözleşmesi** (`/solve`, çözümsüzlük teşhisi, **§11.2 lookback**, **§11.7 idempotency + onarım**) · **§16 test stratejisi ve 12 altın senaryo** · §17 sürüm notları. | **Motor, kural ya da ekran işine başlamadan ÖNCE.** v1.0–v1.2 aynı klasörde (geçmiş korunuyor). |
+| **`02-spec/v1.4-master-spec.md`** | **YÜRÜRLÜKTEKİ ŞARTNAME — 17 bölüm, son karar.** §3 roller ve yetki matrisi · **§5.3 `yasal` / `kabul_edilebilir` ayrımı** · §6 kural kataloğu (**35 kural**, yasal ve kabul sütunlarıyla, madde dayanaklarıyla) · §6.3 gece yarısını aşan vardiya + **sektör istisnası** + DST modeli · §8 veri modeli · §9 ekranlar · **§11 motor sözleşmesi** (`/solve`, `/evaluate`, çözümsüzlük teşhisi, **`en_iyi_plan`**, §11.2 lookback, §11.7 idempotency + onarım) · **§16 test stratejisi ve 12 altın senaryo** · §17 sürüm notları. | **Motor, kural ya da ekran işine başlamadan ÖNCE.** v1.0–v1.3 aynı klasörde, **dondurulmuş** (geçmiş korunuyor). Hazırlık notları `02-spec/v1.4-hazirlik/`. |
 | **`02-spec/v0-koken-...Analiz_v2.docx`** | **KÖKEN DOKÜMANI — 27 bölüm.** Projenin doğduğu analiz. Master Spec'in kapsamadığı yerde **hâlâ kaynak**: §8 sektörel kural paketleri (çağrı merkezi/perakende/üretim) · §23 Faz 0–10 geliştirme planı · §25 12 haftalık yol haritası · §20 riskler. | Gerekçe, fazlama ya da sektör paketi sorusu varsa. **Çeliştiğinde Master Spec kazanır** (§17). |
 | `03-demo/v2-html/tshift-demo-v2.html` | **Çalışan demo** — 15 ekran, iki operasyon (çağrı merkezi + otel), sürükle-bırak takvim. Tek HTML dosyası, tarayıcıda açılır. | Ekran tasarımı ya da akış konuşulacaksa. Ürünün görsel dili burada. |
 | `01-spike/` | **Motor fizibilite testleri** (7–8 Eylül) — CP-SAT vs greedy karşılaştırması, ölçek testleri (200→2000 kişi), otel senaryosu. Kronoloji ve ölçülen sayılar `01-spike/README.md`'de. | Motor yazılmadan **önce mutlaka.** Teknoloji kararının dayanağı burada. |
