@@ -874,7 +874,7 @@ ikinci birinciden pahalıdır.
    koymaya başladı (3 yerine 5). Ortalamayı yükseltmek herkesin sapmasını
    düşürüyordu; ceza, cezalandırdığı şeyi ödüllendiriyordu.
 2. *Eşik terimi amaç fonksiyonunda* → aynı açık: ihlali kaldırmanın ucuz yolu
-   **başkalarına gereksiz cumartesi vermek**. Çıkarıldığında 57 birim testinin
+   **başkalarına gereksiz cumartesi vermek**. Çıkarıldığında o anki 57 birim testinin
    ve 12 altın senaryonun hiçbiri değişmedi; terim zaten atıl duruyordu.
 
 **Onaylandı.** *"Adalet"* eşiğin altında da bir **tercihtir**: motor eşiği

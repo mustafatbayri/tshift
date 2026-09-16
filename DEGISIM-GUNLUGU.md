@@ -41,7 +41,7 @@ A9 — yeşile döndü. Birim testi 44 → **60**, altın senaryo **12/12**.
 sapma"* denendiğinde motor cumartesiye gerekenden fazla kişi koymaya başladı
 (3 yerine 5) — ortalamayı yükseltmek herkesin sapmasını düşürüyordu, yani
 ceza cezalandırdığı şeyi ödüllendiriyordu. Aynı açık eşik teriminde de vardı;
-çıkarıldı ve 57 birim + 12 altın testin **hiçbiri değişmedi** — terim zaten
+çıkarıldı ve o anki 57 birim + 12 altın testin **hiçbiri değişmedi** — terim zaten
 atıl duruyordu.
 
 **Kırmızı kanıt ilk turda 8'de 4'ünü KAÇIRDI.** Ağırlık tablosu yok sayılsa,
