@@ -4,16 +4,15 @@ DEVIR PAKETI DENETIMI
 
 NE YAPAR
   00-BURADAN-BASLA.md #5'teki "guncelleme ritueli"nin 5. maddesini -- yani
-  elle yapilan denetimi -- otomatik hale getirir. Yedi kontrol:
+  elle yapilan denetimi -- otomatik hale getirir. Sekiz kontrol
+  (1-3 arasi kontroller ``` kod bloklarini ATLAR: blok icindekiler ORNEKTIR,
+  iddia degil):
 
     1. Test adlari    Dokumanda gecen her test adi, koddaki DisplayName ile
                       BIREBIR eslesiyor mu. (Kisaltilmis ad tam metin
                       aramasinda bulunamaz -- 14 Eylul D-3 hatasi.)
     2. Test sayisi    "39/39" gibi iddialar koddaki gercek test sayisini
                       tutuyor mu. (14 Eylul D-2 hatasi.)
-
-  1-3 arasi kontroller ``` kod bloklarini ATLAR: blok icindekiler ornektir,
-  iddia degil.
     3. Dosya yollari  Dokumanlarin isaret ettigi yollar gercekten var mi.
     4. Degismez sayisi 02-DEGISMEZLER.md ozet tablosu, kendi satirlarini
                       tutuyor mu.
@@ -23,6 +22,10 @@ NE YAPAR
                       yeni tarihten yeniyse gunluge satir eklenmemis olabilir.
     7. Commit durumu  00-DEVIR/ altinda commit edilmemis degisiklik var mi.
                       ("Yazdim != gonderdim != commit ettim" -- D-1 hatasi.)
+    8. Bayat surum    Devir dosyalari 08-motor-testleri/ altindaki DONMUS bir
+                      surume mi isaret ediyor. (15 Eylul: 25 yerde v2 yaziyordu,
+                      guncel surum v5'ti. Yol VAR oldugu icin 3. kontrol
+                      gormuyor.)
 
   Ek olarak R7 kontrolu: 00-DEVIR dokuz dosyayi gecerse sadelestirme uyarisi.
 
@@ -79,6 +82,14 @@ YOK_AMA_KASITLI = {
     "middleware.ts":
         "Next.js sozlesme dosyasi; BU DEPODA YOK, ayni isi frontend/src/proxy.ts "
         "yapiyor. 02-DEGISMEZLER.md ondan 'yok' demek icin soz ediyor",
+}
+
+# BAYAT AMA KASITLI. Donmus bir surume BILEREK yapilan atiflar: "eski surumde
+# soyleydi" demek icin. Gerekcesiz satir eklenmez -- yoksa 8. kontrol cope doner.
+BAYAT_AMA_KASITLI = {
+    "08-motor-testleri/v3/fikstur/A04.json":
+        "tek fikstur ornegi orada duruyor; beklenen sonuclari gecersiz ama "
+        "BICIM ornegi olarak gosteriliyor. v5 fiksturleri yazilinca kaldirilacak",
 }
 
 # TARIHSEL dosyalar: append-only, yeniden yazilmaz (00-BURADAN-BASLA #5b).
@@ -467,6 +478,52 @@ def kontrol_commit():
     print("   commit bekleyen devir dosyasi: %d" % len(ilgili))
 
 
+def kontrol_bayat_surum():
+    """Devir dosyalari donmus bir surum klasorune mi isaret ediyor.
+
+    08-motor-testleri/ altinda v1, v2, ... klasorleri var ve en yuksek
+    numarali olan gunceldir. Daha dusuk bir surume yapilan atif, yolun kendisi
+    VAR oldugu icin 3. kontrolden gecer -- ama okuyucuyu eski icerige goturur.
+    Tarihsel dosyalar haric: onlar o gunku surumu anmak zorunda.
+    """
+    baslik_yaz("8. Bayat surum atiflari")
+    kok = os.path.join(KOK, "08-motor-testleri")
+    if not os.path.isdir(kok):
+        print("   ATLANDI - 08-motor-testleri/ yok")
+        return
+    surumler = []
+    for d in os.listdir(kok):
+        m = re.fullmatch(r"v(\d+)", d)
+        if m and os.path.isdir(os.path.join(kok, d)):
+            surumler.append(int(m.group(1)))
+    if not surumler:
+        print("   ATLANDI - surum klasoru yok")
+        return
+    guncel = max(surumler)
+    print("   surumler: %s  |  guncel: v%d"
+          % (", ".join("v%d" % v for v in sorted(surumler)), guncel))
+
+    bayat = 0
+    kasitli = 0
+    for yol in dokumanlar():
+        if tarihsel_mi(yol):
+            continue
+        ad_dosya = os.path.relpath(yol, KOK)
+        for satir_no, satir in enumerate(govde(yol).splitlines(), 1):
+            for yol_str in re.findall(r"08-motor-testleri/v\d+/[^\s`)]*", satir):
+                v = int(re.search(r"/v(\d+)/", yol_str).group(1))
+                if v >= guncel:
+                    continue
+                if any(yol_str.startswith(k) or k.startswith(yol_str)
+                       for k in BAYAT_AMA_KASITLI):
+                    kasitli += 1
+                    continue
+                bayat += 1
+                hata("Bayat surum atifi: v%d (guncel v%d)" % (v, guncel),
+                     "%s:%d  ->  %s" % (ad_dosya, satir_no, yol_str))
+    print("   bayat atif: %d  |  bilerek: %d" % (bayat, kasitli))
+
+
 def kontrol_r7():
     baslik_yaz("R7. Devir paketi buyuklugu")
     if not os.path.isdir(DEVIR):
@@ -498,6 +555,7 @@ def main():
     gunlukler = kontrol_gunlukler()
     kontrol_gunluk_tazeligi(gunlukler)
     kontrol_commit()
+    kontrol_bayat_surum()
     kontrol_r7()
 
     print("\n" + "=" * 62)

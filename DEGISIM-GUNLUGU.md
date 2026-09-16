@@ -4,6 +4,44 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-15 · Altın senaryolar A1–A12 ONAYLANDI · on yeni ürün kararı**
+**Ürün kodu değişmedi, test eklenmedi, hiçbir test koşmuyor.** Bu bir karar
+satırıdır, kilometre taşı değil — etiket atılmadı.
+
+Spec §16.3'teki on iki senaryonun *"doğru çalışıyorsa ne görmeliyiz"* cümleleri
+Mustafa tarafından **tek tek onaylandı**. Altı varsayımın (V-1…V-6) hepsi karara
+bağlandı. A5 (yaz saati) ertelendi, altyapısı korunuyor.
+
+**Üç sürüm gerekti.** v2 yazılım tarafına göre yazılmıştı; Mustafa *"ben tam
+olarak neye onay veriyorum"* diye sorunca v3'te anlatım iş diline çevrildi.
+Geri bildirimi v4'te içeriği değiştirdi — **sahne gerçekçi olmadığı için baştan
+kuruldu** (çoklu vardiya tipi, part-time, cumartesi nöbeti), A2/A3/A7/A8
+yeniden yazıldı. v5 onayın dondurulmuş hâli.
+
+**On karar (K-8…K-17)** ve **bir geri alma (K-1)**. Öne çıkanlar: izin
+planlamayı ezer · yönetici çözümsüz planı kabul edebilir (yasal kural hariç) ·
+yayın kapısı — taslak ihlal taşıyabilir, yayınlanmış plan taşıyamaz ·
+`MOLA_KAPSAMASI` yumuşadı · çalışan tercihi diye bir şey yok, uygunluk
+sözleşmeden gelir.
+
+**K-1 geri alındı ve sebebi kayda değer:** Claude 14 Eylül'de *"tam 11 saat
+dinlenme ihlal mi?"* diye sormuştu. Mustafa *"ben neye yanlış karar verdim
+anlamadım"* dedi ve haklıydı — yanlış karar vermemişti, **yanlış soru
+sorulmuştu.** Aritmetik bir kenar durumu ürün kararıymış gibi sunulmuştu.
+
+**İki şartname eksiği bulundu ve ikisi de senaryolar yazılırken çıktı, şartname
+okunurken değil:** `leaves` tablosunda izin durumu alanı yok, ve §6 kataloğunda
+**`yasal` sütunu yok** — ikincisi olmadan "hangi ihlal kabul edilebilir" sorusu
+cevaplanamıyor, yani iki yeni karar uygulanamaz durumda. Yeni açık maddeler:
+**A-15** (şartname v1.4, on maddelik fark) ve **A-16** (iki hukuki yorum uzman
+bekliyor).
+
+*Öğrenilen: kabul ölçütü yazmak, şartnameyi denetlemenin en ucuz yolu. Okurken
+"yazılmış mı" diye bakarsın; senaryo yazarken "bu davranışı ifade edebiliyor
+muyum" diye. İkinci soru eksiği bulur.*
+→ `08-motor-testleri/v5/`, `00-DEVIR/08-URUN-KARARLARI.md`,
+`00-DEVIR/oturumlar/2026-09-15-altin-senaryo-onayi.md`
+
 **2026-09-15 · Çalışma biçimi: geri bildirim yüzeyleri · paralel ajan reddedildi**
 **Ürün kodu değişmedi, test eklenmedi, ölçüm yapılmadı** — bu satır bir karar
 satırıdır, kilometre taşı değil. Etiket atılmadı.

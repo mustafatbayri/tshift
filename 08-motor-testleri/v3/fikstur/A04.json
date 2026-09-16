@@ -1,0 +1,141 @@
+{
+  "_aciklama": [
+    "A4 - Gece yarisini asan vardiya. ORNEK FIKSTUR (bicim gostermek icin).",
+    "Beklenen sonuclar sartnameden turetildi; motor yok, motora bakilmadi.",
+    "Kaynak: Master Spec v1.3 §6.3 Z-1…Z-4, §6.2, §16.3 + 14 Eylul karari K-1.",
+    "Bu dosya KOD DEGIL VERI. Motor hangi dille yazilirsa yazilsin ayni dosya kosar."
+  ],
+  "senaryo": "A4",
+  "ad": "Gece yarisini asan vardiya",
+  "uc": "/evaluate",
+  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a4--gece-yarısını-aşan-vardiya",
+
+  "_yalitim_notu": "Talep YOK ve kapsama kurallari listede YOK. Amac yalniz zaman modelini sinamak.",
+
+  "girdi": {
+    "istek_id": "a4-00000000-0000-0000-0000-000000000004",
+    "profil": "DENGELI",
+    "hafta_baslangic": "2026-10-12",
+    "kiraci_saat_dilimi": "Europe/Istanbul",
+    "donmus_gunler": [],
+
+    "calisanlar": [
+      { "id": "C01", "ekipler": ["E1"], "operasyonel_rol": "agent", "yetkinlikler": [],
+        "sozlesme": { "tip": "tam_zamanli", "haftalik_saat": 45 },
+        "izinler": [], "uygunluk": [], "tercihler": [],
+        "devir_yuk": { "gece": 0, "hafta_sonu": 0, "saat": 0 },
+        "gecmis_vardiyalar": [] },
+      { "id": "C02", "ekipler": ["E1"], "operasyonel_rol": "agent", "yetkinlikler": [],
+        "sozlesme": { "tip": "tam_zamanli", "haftalik_saat": 45 },
+        "izinler": [], "uygunluk": [], "tercihler": [],
+        "devir_yuk": { "gece": 0, "hafta_sonu": 0, "saat": 0 },
+        "gecmis_vardiyalar": [] },
+      { "id": "C03", "ekipler": ["E1"], "operasyonel_rol": "agent", "yetkinlikler": [],
+        "sozlesme": { "tip": "tam_zamanli", "haftalik_saat": 45 },
+        "izinler": [], "uygunluk": [], "tercihler": [],
+        "devir_yuk": { "gece": 0, "hafta_sonu": 0, "saat": 0 },
+        "gecmis_vardiyalar": [] },
+      { "id": "C04", "ekipler": ["E1"], "operasyonel_rol": "agent", "yetkinlikler": [],
+        "sozlesme": { "tip": "tam_zamanli", "haftalik_saat": 45 },
+        "izinler": [], "uygunluk": [], "tercihler": [],
+        "devir_yuk": { "gece": 0, "hafta_sonu": 0, "saat": 0 },
+        "gecmis_vardiyalar": [] },
+      { "id": "C05", "ekipler": ["E1"], "operasyonel_rol": "agent", "yetkinlikler": [],
+        "sozlesme": { "tip": "tam_zamanli", "haftalik_saat": 45 },
+        "izinler": [], "uygunluk": [], "tercihler": [],
+        "devir_yuk": { "gece": 0, "hafta_sonu": 0, "saat": 0 },
+        "gecmis_vardiyalar": [] }
+    ],
+
+    "vardiya_sablonlari": [
+      { "id": "V-G",     "bas": 8,  "bit": 16, "mola_dk": 60, "_not": "8 saat brut" },
+      { "id": "V-AKSAM", "bas": 16, "bit": 25, "mola_dk": 60, "_not": "16:00-01:00, 9 saat brut, ertesi gune tasar" },
+      { "id": "V-UZUN",  "bas": 8,  "bit": 18, "mola_dk": 60, "_not": "10 saat brut, 9 saat NET - gunluk azami tam sinir" }
+    ],
+
+    "talep": [],
+
+    "kurallar": [
+      { "kod": "GECE_YARISI_ASAN",       "tur": "SERT" },
+      { "kod": "CAKISMA_YOK",            "tur": "SERT" },
+      { "kod": "VARDIYA_ARASI_DINLENME", "tur": "SERT", "parametreler": { "asgari_saat": 11 } },
+      { "kod": "GUNLUK_AZAMI",           "tur": "SERT", "parametreler": { "azami_saat": 9 } },
+      { "kod": "HAFTALIK_AZAMI",         "tur": "SERT", "parametreler": { "azami_saat": 45 } },
+      { "kod": "MOLA_HAKKI",             "tur": "SERT" },
+      { "kod": "ARDISIK_CALISMA_GUNU",   "tur": "SERT", "parametreler": { "azami_gun": 6 } },
+      { "kod": "HAFTA_TATILI",           "tur": "SERT", "parametreler": { "asgari_saat": 24, "pencere_gun": 7 } }
+    ],
+
+    "atamalar": [
+      { "calisan": "C01", "ekip": "E1", "sablon": "V-AKSAM", "gun": 1, "bas": 16, "bit": 25,
+        "molalar": [{ "bas": 20, "bit": 21 }] },
+      { "calisan": "C01", "ekip": "E1", "sablon": null, "gun": 2, "bas": 9, "bit": 17,
+        "molalar": [{ "bas": 13, "bit": 14 }] },
+
+      { "calisan": "C02", "ekip": "E1", "sablon": "V-AKSAM", "gun": 1, "bas": 16, "bit": 25,
+        "molalar": [{ "bas": 20, "bit": 21 }] },
+      { "calisan": "C02", "ekip": "E1", "sablon": null, "gun": 2, "bas": 12, "bit": 20,
+        "molalar": [{ "bas": 16, "bit": 17 }] },
+
+      { "calisan": "C03", "ekip": "E1", "sablon": "V-AKSAM", "gun": 1, "bas": 16, "bit": 25,
+        "molalar": [{ "bas": 20, "bit": 21 }] },
+      { "calisan": "C03", "ekip": "E1", "sablon": null, "gun": 2, "bas": 0, "bit": 8,
+        "molalar": [{ "bas": 4, "bit": 5 }] },
+
+      { "calisan": "C04", "ekip": "E1", "sablon": "V-AKSAM", "gun": 6, "bas": 16, "bit": 25,
+        "molalar": [{ "bas": 20, "bit": 21 }] },
+
+      { "calisan": "C05", "ekip": "E1", "sablon": "V-UZUN", "gun": 3, "bas": 8, "bit": 18,
+        "molalar": [{ "bas": 13, "bit": 14 }] }
+    ]
+  },
+
+  "turetilmis_degerler": {
+    "_not": "Testin girdiyi dogru okudugunu ayrica sinar. Yanlis sebeple yesil yanmayi engeller.",
+    "C01_dinlenme_saat": 8,
+    "C02_dinlenme_saat": 11,
+    "C03_ortusme_saat": 1,
+    "C01_gun1_brut_saat": 9,
+    "C01_gun1_net_saat": 8,
+    "C05_gun3_net_saat": 9,
+    "C04_tasma_gunu_yazilan_gun": 6
+  },
+
+  "varyantlar": [
+    {
+      "ad": "sinir_dahil_false",
+      "_not": "K-1 VARSAYILANI. Sinir degerler ihlal sayilir.",
+      "kural_ayari": { "sinir_dahil": false },
+      "beklenen": {
+        "sert_ihlal_sayisi": 4,
+        "ihlaller": [
+          { "kural": "VARDIYA_ARASI_DINLENME", "calisan": "C01", "gun": 2, "olculen": 8,  "gereken": 11 },
+          { "kural": "VARDIYA_ARASI_DINLENME", "calisan": "C02", "gun": 2, "olculen": 11, "gereken": 11 },
+          { "kural": "CAKISMA_YOK",            "calisan": "C03", "gun": 2 },
+          { "kural": "GUNLUK_AZAMI",           "calisan": "C05", "gun": 3, "olculen": 9,  "gereken": 9 }
+        ]
+      }
+    },
+    {
+      "ad": "sinir_dahil_true",
+      "_not": "Esnek ayar. Sinir degerler ihlal degil (yasal okuma).",
+      "kural_ayari": { "sinir_dahil": true },
+      "beklenen": {
+        "sert_ihlal_sayisi": 2,
+        "ihlaller": [
+          { "kural": "VARDIYA_ARASI_DINLENME", "calisan": "C01", "gun": 2, "olculen": 8, "gereken": 11 },
+          { "kural": "CAKISMA_YOK",            "calisan": "C03", "gun": 2 }
+        ]
+      }
+    }
+  ],
+
+  "olmamasi_gerekenler": {
+    "_not": "Bunlardan biri cikarsa test kirmizi. Fazla ihlal de hatadir.",
+    "C04_icin_hicbir_ihlal": true,
+    "gun_7_ye_yazilmis_atama": false,
+    "MOLA_HAKKI_ihlali": false,
+    "HAFTALIK_AZAMI_ihlali": false,
+    "C03_icin_VARDIYA_ARASI_DINLENME_ihlali": false
+  }
+}

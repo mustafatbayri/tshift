@@ -143,25 +143,33 @@ yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak 
 çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
 plan kopyalama.
 
-**Durum (14 Eylül, ikinci oturum):** On ikisinin de *"doğru çalışıyorsa ne
-görmeliyiz"* cümleleri ve somut veri setleri yazıldı —
-`08-motor-testleri/v2/KABUL-OLCUTLERI.md`. Beklenen sonuçlar **şartnameden
-türetildi**, motora bakılmadı; motor zaten yok.
+**Durum (15 Eylül):** On ikisinin de *"doğru çalışıyorsa ne görmeliyiz"*
+cümleleri yazıldı ve **Mustafa tarafından tek tek onaylandı** —
+`08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş). Beklenen sonuçlar
+**şartnameden türetildi**, motora bakılmadı; motor zaten yok.
 
 | Adım | Durum |
 |---|---|
-| Kabul cümleleri yazıldı | ✅ `08-motor-testleri/v2/KABUL-OLCUTLERI.md` §3 |
-| Mustafa onayladı | ❌ **bekliyor** |
-| Fikstürler yazıldı | 🟡 yalnız örnek (`08-motor-testleri/v2/fikstur/A04.json`) |
+| Kabul cümleleri yazıldı | ✅ `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §4 |
+| Mustafa onayladı | ✅ **12/12 senaryo, 6/6 varsayım** (A5 ertelendi) |
+| Fikstürler yazıldı | ❌ **sıradaki iş** — 11 dosya (A5 hariç) |
 | Testler koşuyor | ❌ motor yok |
 
-**Hiçbir test koşmuyor.** Bu tablonun ilk satırı yeşil diye kapsama
-büyümedi — kabul ölçütü bir taahhüttür, bekçi değil. Bekçi, fikstür pytest'e
-bağlandığında doğar.
+**Hiçbir test koşmuyor ve kapsama büyümedi.** İlk iki satır yeşil diye bu
+tablo değişmez — kabul ölçütü bir **taahhüttür**, bekçi değil. Bekçi, fikstür
+pytest'e bağlandığında doğar. Onay turunda on ürün kararı çıktı (K-8…K-17,
+`08-URUN-KARARLARI.md`) ve bunların çoğu **şartname değişikliği** gerektiriyor —
+yani fikstür yazımı v1.4 ile birlikte yürüyecek.
 
 A1–A9 motor testi olacak (Python + pytest), A10–A12 backend testi (bu
 projedeki xUnit). Bu, projedeki en önemli test ilkesinin (uygulama ile
 doğrulayıcı aynı varsayımdan beslenmez) şartname seviyesindeki karşılığı.
+
+**Onay turunun yan faydası:** Kabul ölçütü yazmak şartnameyi de denetledi.
+İki eksik senaryolar yazılırken çıktı, şartname okunurken değil —
+`leaves` tablosunda izin durumu alanı yok (K-9) ve §6 kataloğunda `yasal`
+sütunu yok (K-16, K-17). İkincisi olmadan "hangi ihlal kabul edilebilir"
+sorusu cevaplanamıyor.
 
 ---
 
@@ -221,4 +229,4 @@ ama özet güncellenmedi). Bekçili sayısı da 41 yazıyor, 39 sayılıyor.
 güncel hâlini gör.
 
 G-6'nın bekçisi hâlâ yok, ama artık **ne olması gerektiği yazılı**:
-`08-motor-testleri/v2/KABUL-OLCUTLERI.md` A4 ve A5. Kabul ölçütü var, test yok.
+`08-motor-testleri/v5/KABUL-OLCUTLERI.md` A4 ve A5. Kabul ölçütü var, test yok.

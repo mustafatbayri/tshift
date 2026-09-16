@@ -498,14 +498,71 @@ düzensizlikti.
 
 ---
 
+## 🔴 A-15 · Şartname v1.4 yazılmadı — on maddelik birikmiş fark
+
+**Ne:** Altın senaryo onay turu (15 Eylül) on ürün kararı doğurdu ve bunların
+çoğu **şartnamede karşılığı olmayan** şeyler. Yürürlükteki şartname v1.3, artık
+alınmış kararları **yansıtmıyor.**
+
+**Neden kırmızı:** Şartname "son karar" olmaktan çıktı. Bir sonraki pencere
+v1.3'ü okuyup çalışmaya başlarsa, on karar boyunca yanlış yere gider.
+`08-URUN-KARARLARI.md` K-serisi şu an gerçeğin tek kaynağı, ama orası bir
+**sicil**, şartname değil.
+
+| Ne eklenecek | Nereye | Karar |
+|---|---|---|
+| `leaves` tablosuna durum alanı (talep/onaylı/iptal/reddedildi) | §8.3 | K-9 |
+| `plan_violations`'a kabul edilmiş ihlal + kabul eden + zaman + gerekçe | §8.6 | K-10 |
+| `/solve` çözümsüz çıktısına `en_iyi_plan` | §11.3 | K-10 |
+| Vardiya şablonuna mola penceresi (süre + min/max) | §8.4 | K-14 |
+| `MOLA_KAPSAMASI` **SERT → YUMUŞAK** + §5.4 ağırlık satırı (7/9/6) | §6.4, §5.4 | K-14 |
+| **§6 kataloğuna `yasal` sütunu** + yasal kurallara "yasal sınır" değeri | §6, §8.4 | K-16, K-17 |
+| Yayın kapısı kuralı | §4.5, §9.6 | K-16 |
+| `TERCIH_KARSILAMA` yeniden değerlendirmesi (çalışan tercihi yok) | §6.8 | K-13 |
+| Hedef kapsama kabul eşiği %95 | §13.4 | K-8 |
+| Önceki sekiz tutarsızlık | T-1…T-8 | v4 §4 |
+
+**En kritik satır `yasal` sütunu:** K-10 (ihlal kabulü) ve K-16 (yayın kapısı)
+tamamen ona dayanıyor. Bayrak olmadan **ikisi de uygulanamaz** — sistem hangi
+ihlalin kabul edilebileceğini bilemez.
+
+**Ayrıca çözülmemiş bir tasarım sorusu var:** bayrak kurala mı ait, eşiğe mi?
+`GUNLUK_AZAMI` örneği: kanunun tavanı 11 saat, bizim varsayılanımız 9. 9–11
+arası aşım firma politikasının ihlali, 11 üstü kanunun. Yani yasal kuralların
+ayrıca bir "yasal sınır" değeri olmalı. K-17'de açık bırakıldı.
+
+**v1.3'e dokunulmayacak** — yeni sürüm dosyası açılacak (versiyonlama kuralı).
+
+---
+
+## 🟡 A-16 · İki hukuki yorum uzman gözü bekliyor
+
+**Ne:** İki karar hukuki yoruma dayanıyor ve ikisini de yapay zekâ türetti.
+
+| # | Konu | Karar | Risk yönü |
+|---|---|---|---|
+| 1 | Mola hakkı eşiğinin **brüt** vardiya süresine uygulanması (K-4) | İş Kanunu md. 68 | **Düşük.** Hata yönü tek taraflı: brüt hesap kanunun istediğinden asla az mola vermez |
+| 2 | Hangi kuralların `yasal = true` olduğu (K-17) | İş Kanunu geneli | **Orta.** Yanlış sınıflandırılan bir yasal kuralın ihlali kabul edilebilir hâle gelir |
+
+**İkincisi için alınan önlem:** belirsiz bırakılan kurallar **yasal gibi**
+davranılıyor (K-17 güvenli varsayılanı) — yani hata yönü "kabul edemedim"
+şikâyeti, "sessizce kabul ettim" sızıntısı değil.
+
+**Fikstürleri bloke etmiyor.** Sahaya çıkmadan önce hukukçu bakmalı; o zamana
+kadar ikisi de `[çıkarım]` etiketini koruyor.
+
+---
+
 ## Öncelik sırası — önerilen
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **A-10 motor sözleşmesi** | Gerçek veri geldi; motorun neye göre yazılacağı artık biliniyor. V01–V12 + mola modeli + UNSAT biçimi. |
-| 2 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; motor yazılmadan kapatmak ucuz |
-| 3 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
-| 4 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| **1** | **Fikstürler** (A01–A12, A5 hariç) | Kabul cümleleri 15 Eylül'de onaylandı; sıradaki adım onları çalıştırılabilir veriye çevirmek |
+| **2** | **A-15 şartname v1.4** | v1.3 artık alınmış kararları yansıtmıyor. `yasal` sütunu olmadan K-10 ve K-16 uygulanamaz |
+| 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürüyle birlikte kapanacak |
+| 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
+| 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| 6 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; fikstürleri bloke etmiyor |
 | 5 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
 | 6 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
 | 7 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |

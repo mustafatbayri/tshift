@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-15 (çalışma biçimi — geri bildirim yüzeyleri)
+**Son güncelleme:** 2026-09-16 (altın senaryolar onaylandı — 15/16 Eylül gecesi)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -55,10 +55,14 @@ Bulgular ve Mustafa'nın kapsam kararları: **`07-GERCEK-VERI-BULGULARI.md`**
 ⚠ `07-motor/` klasöründe **motor yok**, analiz araçları var. Bkz.
 `07-motor/OKU-BENI.md`.
 
-**Altın senaryolar tanımlandı (14 Eylül, ikinci oturum).** Spec §16.3'teki
-A1–A12'nin beklenen sonuçları Türkçe kabul cümlelerine çevrildi ve yedi ürün
-kararı (K-1…K-7) alındı: `08-motor-testleri/v2/KABUL-OLCUTLERI.md`.
-**Cümleler henüz onaylanmadı**, fikstürler yazılmadı, hiçbir test koşmuyor.
+**Altın senaryolar ONAYLANDI (15 Eylül).** Spec §16.3'teki A1–A12'nin beklenen
+sonuçları Türkçe kabul cümlelerine çevrildi ve Mustafa tarafından **tek tek
+onaylandı**: `08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş).
+Onay turunda **on ürün kararı** doğdu (K-8…K-17), **bir karar geri alındı**
+(K-1), dört senaryo ve ortak sahne **baştan yazıldı**.
+
+⚠ **Hâlâ hiçbir test koşmuyor.** Fikstürler yazılmadı, motor yok. Kabul ölçütü
+bir taahhüttür, bekçi değil.
 
 **Devir denetimi artık betik (14 Eylül).** `DENETIM.py` — bu paketteki test
 adlarını, sayıları, dosya yollarını ve commit durumunu makineye kontrol
@@ -76,29 +80,35 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **Mustafa A1–A12 kabul cümlelerini onaylayacak. Onaya kadar fikstür
-> yazılmaz.**
+> **Fikstürler.** Onaylanmış cümleler makine tarafından okunabilir veriye
+> çevrilecek.
 >
-> 1. **Oku:** `08-motor-testleri/v2/KABUL-OLCUTLERI.md`. §3'te 12 senaryonun
->    "doğru çalışıyorsa ne görmeliyiz" cümleleri, §5'te alınan kararlar,
->    §7'de veto edilebilir dört varsayım (V-1…V-4).
-> 2. **Onayla ya da düzelt.** `[çıkarım]` etiketli maddeler yapay zekânın
->    yorumu — dikkat oraya.
-> 3. Onaydan sonra: kalan 11 fikstür (`08-motor-testleri/v2/fikstur/` altına A01–A12) ve pytest
->    iskeleti. Motor olmadığı için hepsi **kırmızı** başlar; istenen budur.
-> 4. Sonra ürünün doğrulayıcısı, sonra çözücü (M-09).
+> 1. **Oku:** `08-motor-testleri/v5/KABUL-OLCUTLERI.md` — onaylanmış ve
+>    dondurulmuş. §3 ortak sahne (S-10), §4 on iki senaryo, §6 kararlar.
+> 2. `08-motor-testleri/v5/fikstur/A01.json … A12.json` yazılır — **A5 hariç,
+>    11 dosya** (A5 ertelendi, K-12). Biçim örneği `08-motor-testleri/v3/fikstur/A04.json`;
+>    ⚠ **o dosyanın beklenen sonuçları geçersiz** (eski sahne, geri alınan K-1).
+> 3. Her fikstür `fikstur-denetleyici.py`'den geçirilir — yazılı beklenen
+>    liste girdiden gerçekten çıkıyor mu.
+> 4. pytest iskeleti (A1–A9) + xUnit testleri (A10–A12). Motor olmadığı için
+>    **hepsi kırmızı** başlar; istenen budur (§16.4 kırmızı kanıt).
+> 5. Sonra ürünün doğrulayıcısı, sonra çözücü (M-09).
 >
 > **Paralelde açık kalanlar:**
 >
-> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — bu pencerede
->   Mustafa'nın makinesinde kabuk çalıştırılamadı. **İlk kez Mustafa
->   koşacak:** `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`.
-> - **K-4 uzman teyidi bekliyor** — İş Kanunu md. 68 mola yorumu.
-> - Spec **v1.4** yazılmadı: sekiz tutarsızlık (T-1…T-8) ve yedi karar
->   (K-1…K-7) v1.3'e işlenmedi. v1.3'e dokunulmayacak, yeni sürüm açılacak.
+> - **Şartname v1.4 — artık küçük bir düzeltme değil.** On maddelik liste
+>   `08-motor-testleri/v5/KABUL-OLCUTLERI.md` §8'de: `leaves` durum alanı,
+>   kabul edilmiş ihlal, `en_iyi_plan`, mola penceresi, `MOLA_KAPSAMASI`
+>   sert→yumuşak, **§6'ya `yasal` sütunu**, yayın kapısı, `TERCIH_KARSILAMA`
+>   yeniden değerlendirmesi, %95 eşiği, artı T-1…T-8.
+> - **İki hukuki yorum uzman gözü bekliyor** (K-4 mola eşiği, K-17 yasal
+>   sınıflandırma). Fikstürleri bloke etmiyor; sahaya çıkmadan önce şart.
+> - **`DENETIM.py`'nin commit kontrolü hiç koşmadı** — üç oturumdur bu
+>   pencerelerde Mustafa'nın makinesinde kabuk çalıştırılamadı.
+>   **İlk kez Mustafa koşacak:** `cd C:\Users\PC\Desktop\Tshift` sonra
+>   `py DENETIM.py`.
+> - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
 > - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
-> - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar
->   §5b'de. Mustafa'nın makinesinde bir kez kurulacak.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
 
@@ -137,7 +147,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
-| **`08-motor-testleri/`** | ⚠ **Motor YOK, test de koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. `08-motor-testleri/v1/` dondurulmuş, `08-motor-testleri/v2/` güncel. Bkz. `08-motor-testleri/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`08-motor-testleri/`** | ⚠ **Motor YOK, test de koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
