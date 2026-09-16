@@ -4,6 +4,41 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · T-27 KAPANDI — olmayan mola artık yasal sınırı devirmiyor**
+
+Dış incelemenin **1 numaralı** bulgusu. `mola_araliklari()` molayı, vardiyanın
+içinde olup olmadığına bakmadan döndürüyordu.
+
+```
+vardiya 08:00-20:00, mola 22:00-23:00
+ESKI : net 11 saat, GUNLUK_AZAMI (11) ihlali 0
+YENI : net 12 saat, GUNLUK_AZAMI ihlali 1
+```
+
+Devrilen kural `yasal: true, kabul_edilebilir: false` sınıfında. Hata yönü
+tek taraflıydı ve **yanlış tarafa**: bozuk girdi motoru daha gevşek yapıyordu.
+
+**Üç işlem eklendi, sırası önemli.** *Kaydırma* — gece yarısını aşan
+vardiyada mola ham saatle yazılmış olabilir (`00:30`), 24 saat ileri alınır.
+*Kırpma* — kalan aralık vardiyayla kesiştirilir. *Birleştirme* — üst üste
+binen molalar tek aralığa iner.
+
+⚠ **Birleştirme ilk turda atlandı.** Kırpma yazıldı, sekiz testin altısı
+yeşil yandı, "kapandı" denecekti. Kabul cümlesi tekrar okununca üçüncü
+şartın yazılmadığı görüldü: `10:00–12:00` + `11:00–13:00` = **dört saat**
+sayılıyordu, üç değil. **T-26'nın tam örneği** — kayıt ile yürürlük ayrı
+şeyler; bu kez kaydın kendisi yakaladı.
+
+**Kapsam.** Çözücü molayı zaten vardiya içine zorluyordu (`model.py`), yani
+hata **üretilen planlarda** çıkmıyordu. Riski taşıyan yol içe aktarılan
+gerçek veri ve **plan editörü** — yani henüz yazılmamış olan yol.
+
+**Kırmızı kanıt:** düzeltmeden önce 6 kırmızı / 2 yeşil (ikisi gerileme
+koruması: gece yarısı molası ve ayrık molalar). Sonrasında 8/8.
+**68 birim testi** · **7 altın senaryo** · fikstür denetleyicisi 0.
+
+→ `09-motor/dogrulayici/zaman.py` · `09-motor/testler/test_kurallar.py`
+
 **2026-09-16 · DIŞ İNCELEME, 3. tur — on bulgu daha, beşi 🔴**
 
 Üçüncü tur şartnameyi kural kural kodla karşılaştırdı. **On bulgunun onu da**
@@ -31,7 +66,7 @@ sözünün tek bekçisi bu.
 unutulursa uygulama **hata vermiyor**, bilinen anahtarla açılıyor.
 
 **T-35 🔴 — bir kullanıcının hatalı girişi bütün kiracıyı kilitliyor.**
-`giris/route.ts` `X-Forwarded-For` iletmiyor, backend
+`04-kod/frontend/src/app/api/giris/route.ts` `X-Forwarded-For` iletmiyor, backend
 `ctx.Connection.RemoteIpAddress` okuyor, `ForwardedHeaders` ara katmanı
 hiçbir yerde yok. Sonuç: bütün istekler tek IP'den geliyor gibi görünüyor —
 beş yanlış parola **herkesi** kilitliyor, denetim kaydındaki her IP kurgusal.

@@ -99,6 +99,106 @@ def test_dinlenme_gercek_bitisten_olculur():
 
 
 # ----------------------------------------------------------------------
+# T-27 -- vardiya DISINDAKI mola
+#
+# 16 Eylul dis incelemesinin 1 numarali bulgusu. `mola_araliklari` molayi,
+# vardiyanin icinde olup olmadigina BAKMADAN donduruyordu. Sonucu:
+# calisilmayan bir saat net sureden dusuluyor ve YASAL gunluk sinir
+# (K-18, `yasal: true, kabul_edilebilir: false`) sessizce deviriliyordu.
+#
+# Hata yonu tek tarafli ve YANLIS tarafa: bozuk girdi, motoru daha
+# GEVSEK yapiyordu. K-20'ye gore bu sinifta goz yumulamaz.
+# ----------------------------------------------------------------------
+
+def test_vardiya_DISINDAKI_mola_net_sureden_dusulmez():
+    """T-27: 08:00-20:00 vardiyada 22:00-23:00 molasi yasanmamistir.
+
+    Brut 12 saat, mola 0, net 12 saat. Eski davranis net 11 diyordu.
+    """
+    a = atama("C1", 1, 8, 20, molalar=[(22, 23)])
+    assert zaman.brut_saat(a) == 12
+    assert zaman.mola_saat(a) == 0
+    assert zaman.net_saat(a) == 12
+
+
+def test_vardiya_DISINDAKI_mola_GUNLUK_AZAMI_ihlalini_GIZLEYEMEZ():
+    """T-27'nin urundeki sonucu -- bulgunun asil sebebi bu.
+
+    Ustteki test aritmetigi sinar; bu test o aritmetigin YASAL kurali
+    devirip devirmedigini sinar. Ikisi ayri: net_saat duzeltilip kural
+    baska sebeple susarsa ustteki yesil kalir, bu kirmizi yanar.
+    """
+    s = degerlendir(
+        sahne([kural("GUNLUK_AZAMI", yasal=True, azami_saat=11)]),
+        [atama("C1", 1, 8, 20, molalar=[(22, 23)])])
+    assert kodlar(s) == ["GUNLUK_AZAMI"]
+
+
+def test_KISMEN_disarida_kalan_mola_yalniz_ortusen_kadar_sayilir():
+    """Mola yarisi icerde yarisi disardaysa yalniz icerdeki kisim dusulur.
+
+    08:00-20:00 vardiya, 19:30-20:30 mola -> 30 dakika sayilir.
+    'Ya hep ya hic' uygulamasi burada kirmizi yanar.
+    """
+    a = atama("C1", 1, 8, 20, molalar=[(19.5, 20.5)])
+    assert zaman.mola_saat(a) == 0.5
+    assert zaman.net_saat(a) == 11.5
+
+
+def test_vardiya_DISINDAKI_mola_MOLA_HAKKININ_yerine_gecmez():
+    """Is K. md. 68: mola vardiya ICINDE kullandirilir.
+
+    Vardiya disina yazilmis 60 dakika, verilmis mola sayilmaz.
+    """
+    s = degerlendir(
+        sahne([kural("MOLA_HAKKI", yasal=True)]),
+        [atama("C1", 1, 8, 20, molalar=[(22, 23)])])
+    assert kodlar(s) == ["MOLA_HAKKI"]
+
+
+def test_UST_USTE_BINEN_molalar_iki_kez_sayilmaz():
+    """T-27 kabul cumlesinin ikinci sarti.
+
+    10:00-12:00 ve 11:00-13:00 molalari toplam UC saattir, dort degil.
+    Kirpma bunu tek basina cozmez: ikisi de vardiyanin icinde.
+    """
+    a = atama("C1", 1, 8, 20, molalar=[(10, 12), (11, 13)])
+    assert zaman.mola_saat(a) == 3
+    assert zaman.net_saat(a) == 9
+
+
+def test_ust_uste_binen_molalar_GUNLUK_AZAMIYI_gizleyemez():
+    """Urundeki sonucu: 12 saatlik vardiya, gercekte 9 saat net.
+
+    Cift sayilan mola ile 8 gorunurdu; sinirin altinda kalmak icin
+    uydurma bir saat kazanilmis olurdu. Burada sinir 8'e cekildi ki
+    fark IHLALE donussun ve test gercekten bir sey soylesin.
+    """
+    s = degerlendir(
+        sahne([kural("GUNLUK_AZAMI", yasal=True, azami_saat=8)]),
+        [atama("C1", 1, 8, 20, molalar=[(10, 12), (11, 13)])])
+    assert kodlar(s) == ["GUNLUK_AZAMI"]
+
+
+def test_AYRIK_molalar_toplanmaya_devam_eder():
+    """Birlestirme fazla ileri gitmemeli -- degmeyen iki mola ayri ayri sayilir."""
+    a = atama("C1", 1, 8, 20, molalar=[(10, 11), (14, 15)])
+    assert zaman.mola_saat(a) == 2
+
+
+def test_gece_yarisini_asan_vardiyada_mola_HALA_sayilir():
+    """T-27'nin duzeltmesi gercek isleyisi bozmamali -- 182 atama boyle.
+
+    16:00-01:00 vardiyada 00:00-00:30 molasi vardiyanin ICINDEDIR
+    (mutlak 24.0-24.5, vardiya 16-25). Naif bir 'bas >= vardiya.bas'
+    kontrolu bunu disarida sanar ve burada kirmizi yanar.
+    """
+    a = atama("C1", 1, 16, 25, molalar=[(0, 0.5)])
+    assert zaman.mola_saat(a) == 0.5
+    assert zaman.net_saat(a) == 8.5
+
+
+# ----------------------------------------------------------------------
 # K-11 -- sinir degeri
 # ----------------------------------------------------------------------
 

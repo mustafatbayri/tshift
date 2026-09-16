@@ -844,7 +844,7 @@ atlanmamalı**.
 **Bulundu:** 16 Eylül 2026, dış inceleme (GPT) · **Doğrulanmadı** — kod
 incelemesi bulgusu, veritabanında denenmedi
 
-**İddia.** `M0 - Baglanan rol super kullanici degil` testi, uygulamanın
+**İddia.** `M0 - Baglanan rol super kullanici degil (RLS gercekten yururlukte)` testi, uygulamanın
 kullandığı bağlantıyı almak yerine **kendi sabit bağlantısını** kuruyor.
 Doğruysa test kendi bağlantısının yetkisini ölçüyor demektir; uygulamanın
 bağlantı ayarı değiştiğinde bunu M0'ın tek başına yakalayacağı söylenemez.
@@ -1013,28 +1013,74 @@ bloklanması CI ve izleme açısından ayrı bir sorun.
 
 ---
 
-## 🔴 T-27 · Olmayan mola yasal sınırı deviriyor
+## ✅ T-27 · Olmayan mola yasal sınırı deviriyordu — **KAPANDI (16 Eylül 2026)**
 
-**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Yeniden üretildi:** evet
+**Bulundu:** 16 Eylül, dış inceleme (3. tur) · **Yeniden üretildi:** evet ·
+**Kapandı:** aynı gün
 
-`zaman.mola_saat()` mola sürelerini **toplarken** vardiyanın içinde olup
-olmadıklarına, birbirleriyle çakışıp çakışmadıklarına bakmıyor.
-`net_saat = brut − mola`.
+`zaman.mola_araliklari()` molayı, vardiyanın **içinde olup olmadığına
+bakmadan** döndürüyordu; `mola_saat()` hepsini topluyor, `net_saat = brüt −
+mola` bunu düşüyordu.
 
 ```
 vardiya 08:00-20:00, mola 22:00-23:00 (vardiyanin DISINDA)
-brut_saat 12 · mola_saat 1 · net_saat 11
-GUNLUK_AZAMI (11 saat) ihlali: 0
+ESKI : brut 12 · mola 1 · net 11 · GUNLUK_AZAMI (11 saat) ihlali: 0
+YENI : brut 12 · mola 0 · net 12 · GUNLUK_AZAMI ihlali: 1
 ```
 
-**12 saat çalışıldı, hiç yaşanmamış bir mola sayesinde 11 göründü.**
+**12 saat çalışıldı, hiç yaşanmamış bir mola sayesinde 11 görünüyordu.**
+`GUNLUK_AZAMI` sınıflandırmamızda `yasal: true, kabul_edilebilir: false` —
+K-20'ye göre ihlali **hiçbir koşulda kabul edilemeyen** kategori. Hata yönü
+tek taraflı ve yanlış tarafaydı: **bozuk girdi motoru daha gevşek yapıyordu.**
 
-`GUNLUK_AZAMI` bizim sınıflandırmamızda `yasal: true, kabul_edilebilir:
-false` — K-20'ye göre ihlali **hiçbir koşulda kabul edilemeyen** kategori.
-Sessizce deviriliyor.
+### Kabul cümlesi üç şart içeriyordu, üçü de yazıldı
 
-**Kabul cümlesi:** *"Olmayan mola çalışma süresini azaltmaz."* Vardiya
-dışındaki, üst üste binen ve vardiyadan uzun molalar reddedilmeli.
+| Şart | Nasıl karşılandı |
+|---|---|
+| Vardiya **dışındaki** mola sayılmaz | Aralık vardiyayla kesiştiriliyor (kırpma) |
+| Vardiyadan **uzun** mola sayılmaz | Aynı kırpma bunu da çözüyor |
+| **Üst üste binen** molalar iki kez sayılmaz | Kırpma bunu çözmüyordu — **birleştirme** eklendi |
+
+> ⚠ **Üçüncü şart ilk turda atlandı.** Kırpma yazıldı, testler yeşil yandı,
+> "T-27 kapandı" denecekti. Kabul cümlesi tekrar okununca üçüncü şartın
+> yazılmadığı görüldü: 10:00–12:00 ile 11:00–13:00 molaları **dört saat**
+> sayılıyordu, üç değil. T-26'nın tam örneği — *kayıt ile yürürlük ayrı
+> şeyler.* Bu kez kaydın kendisi yakaladı.
+
+### Kısmen dışarıda kalan mola yarı sayılır
+
+19:30–20:30 molasının 30 dakikası vardiyanın içindedir ve **gerçekten
+kullanılmıştır**. "Ya hep ya hiç" uygulaması bunu sıfırlardı; onun da bekçisi
+var.
+
+### Gece yarısını aşan vardiya bozulmadı
+
+Vardiya 16:00–01:00 ise mola ham saatle (`00:30`) yazılmış olabilir. Kırpma
+öncesi 24 saat ileri **kaydırma** eklendi — yoksa düzeltme, gerçek işleyişin
+en yaygın hâlini (182 atama) kırardı. Bekçisi bilerek **düzeltmeden önce**
+yazıldı ve o tek test kırmızı kanıt turunda **yeşil** yandı.
+
+### Kapsamı: üretilen planlar değil, içe aktarılanlar
+
+Çözücü molayı zaten vardiya içine zorluyordu (`09-motor/cozucu/model.py`, mola
+adaylarında `s >= sablon["bas"] and s + mola <= sablon["bit"]`). Yani hata
+**üretilen planlarda** pratikte çıkmıyordu. Riski taşıyan yol: **içe
+aktarılan gerçek veri ve elle düzenlenen planlar** — yani plan editörü
+yazıldığında tam da bu yol açılacaktı.
+
+### Kalıcı bekçi
+
+`09-motor/testler/test_kurallar.py` içinde **8 test**: aritmetik (3), ürün
+sonucu (3 — `GUNLUK_AZAMI` ve `MOLA_HAKKI` gerçekten ateşleniyor mu),
+gerileme koruması (2 — gece yarısı ve ayrık molalar).
+
+Aritmetik testleri ile kural testleri **bilerek ayrı**: `net_saat` düzeltilip
+kural başka sebeple susarsa aritmetik testi yeşil kalır, kural testi kırmızı
+yanar.
+
+**Kırmızı kanıt:** düzeltmeden önce 6 test kırmızı, 2 yeşil (koruma
+testleri). Düzeltmeden sonra 8/8 yeşil, toplam **68 birim testi** ve **7
+altın senaryo** yeşil, fikstür denetleyicisi 0 döndü.
 
 ---
 
@@ -1274,15 +1320,14 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **T-27 · olmayan mola** 🔴 | Hiç yaşanmamış mola **yasal** günlük sınırı deviriyor. K-20'ye göre kabul edilemez kategori |
-| **2** | **T-35 · kiracı çapında kilitlenme** 🔴 | Bir kişinin beş yanlış parolası herkesi kilitliyor; denetim kaydındaki IP kurgusal *(`04-kod`)* |
-| **3** | **T-34 · sırlar varsayılana düşüyor** 🔴 | Veritabanı parolası ve imza anahtarı kodda, ortam kontrolü yok *(`04-kod`)* |
-| **4** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
-| **5** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
-| **6** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
-| **7** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
-| **8** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
-| **9** | **T-22 · denetlenmeyen taslak** 🔴 | Yöneticinin onaylayacağı plan, denetimden geçmeyen tek plan. **Karar gerektirmiyor** |
+| **1** | **T-35 · kiracı çapında kilitlenme** 🔴 | Bir kişinin beş yanlış parolası herkesi kilitliyor; denetim kaydındaki IP kurgusal *(`04-kod`)* |
+| **2** | **T-34 · sırlar varsayılana düşüyor** 🔴 | Veritabanı parolası ve imza anahtarı kodda, ortam kontrolü yok *(`04-kod`)* |
+| **3** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
+| **4** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
+| **5** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
+| **6** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
+| **7** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
+| **8** | **T-22 · denetlenmeyen taslak** 🔴 | Yöneticinin onaylayacağı plan, denetimden geçmeyen tek plan. **Karar gerektirmiyor** |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -1345,4 +1390,5 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. Yedi altın senaryo koşuyor ve yeşil; dördü backend tarafında |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
+| **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |

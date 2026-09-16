@@ -76,7 +76,8 @@ YOL_ATLA = ("bin/", "obj/", "node_modules/", ".next/", "dist/")
 # Yeni satir eklerken GEREKCE yazilir; gerekcesiz satir bu listeyi cope cevirir.
 YOK_AMA_KASITLI = {
     "Directory.Packages.props": "merkezi paket surum yonetimi yok -- A-11'de borc olarak yazili",
-    "08-analiz/": "07-motor/ icin onerilen yeni ad; Mustafa henuz karar vermedi",
+    "08-analiz/": "07-motor/ icin ONERILEN ilk yeni ad; 08-motor-testleri/ ile\n                   cakistigi gorulunce birakildi. Mustafa karar vermedi",
+    "10-analiz/": "07-motor/ icin onerilen ikinci ad (16 Eylul). Henuz bir\n                   klasor degil, bir oneri; Mustafa karar vermedi",
     "DEVIR.md": "kalite arastirmasinda onerilen dosya; biz 00-DEVIR/ klasorunu sectik",
     "ai_yazilim_kalite_arastirmasi.docx": "depo disi kaynak, git'e alinmadi",
     "Vardiya_Otomasyonu_Urun_Teknik_Analiz_v2.docx":

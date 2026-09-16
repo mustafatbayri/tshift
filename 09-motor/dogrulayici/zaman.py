@@ -41,14 +41,57 @@ def aralik(atama):
 
 
 def mola_araliklari(atama):
-    """Molalarin mutlak araliklari. Mola vardiyanin gunune gore yazilir."""
-    cikan = []
+    """Molalarin mutlak araliklari -- VARDIYANIN ICINE KIRPILMIS.
+
+    T-27 (16 Eylul dis incelemesi): burasi eskiden molayi, vardiyanin
+    icinde olup olmadigina BAKMADAN donduruyordu. 08:00-20:00 vardiyaya
+    yazilmis 22:00-23:00 molasi net sureden dusuluyor, boylece YASAL
+    gunluk sinir (K-18) sessizce deviriliyordu. Hata yonu tek tarafli ve
+    yanlis tarafa: bozuk girdi motoru daha GEVSEK yapiyordu.
+
+    Iki islem var, sirasi onemli:
+
+      1. KAYDIRMA   -- gece yarisini asan vardiyada mola ham saatle
+         yazilmis olabilir ("00:30"). Vardiya 16->25 ise mola gun+1'e
+         aittir; 24 saat ileri kaydirilir. Z-1'in mola karsiligi.
+      2. KIRPMA     -- kalan aralik vardiyayla KESISTIRILIR. Disarida
+         kalan kisim molanin kendisi degil, veri hatasidir.
+      3. BIRLESTIRME -- ust uste binen molalar tek araliga indirilir.
+         Kirpma bunu cozmez: iki mola da vardiyanin icinde olabilir ve
+         ayni saat iki kez dusulur. 10-12 ile 11-13 UC saattir, dort degil.
+
+    Kismen disarida kalan mola YARI sayilir, sifir degil: 19:30-20:30
+    molasinin 30 dakikasi vardiya icindedir ve gercekten kullanilmistir.
+
+    DONEN DEGER ayrik ve sirali araliklardir. `sahada_mi` bundan
+    etkilenmez (nokta kumesi ayni), `mola_saat` ise artik dogru toplar.
+    """
+    v_bas, v_bit = aralik(atama)
+    ham = []
     for m in atama.get("molalar") or []:
         b = mutlak(atama["gun"], m["bas"])
         s = mutlak(atama["gun"], m["bit"])
         if s <= b:
             s += 24
-        cikan.append((b, s))
+        if b < v_bas and b + 24 < v_bit:
+            # 1. kaydirma
+            b += 24
+            s += 24
+        # 2. kirpma
+        b = max(b, v_bas)
+        s = min(s, v_bit)
+        if s > b:
+            ham.append((b, s))
+
+    # 3. birlestirme -- ucu uca degenler de birlesir (11'de biten ile
+    #    11'de baslayan tek bir mola blogudur; sure toplami degismez).
+    cikan = []
+    for b, s in sorted(ham):
+        if cikan and b <= cikan[-1][1]:
+            if s > cikan[-1][1]:
+                cikan[-1] = (cikan[-1][0], s)
+        else:
+            cikan.append((b, s))
     return cikan
 
 
@@ -59,6 +102,12 @@ def brut_saat(atama):
 
 
 def mola_saat(atama):
+    """Vardiya ICINDE gecen toplam mola suresi.
+
+    Vardiya disina yazilmis mola buraya girmez -- yasanmamis bir molanin
+    suresi dusulemez (T-27). Sonucu MOLA_HAKKI'nda da gorulur: disariya
+    yazilan mola 'verilmis mola' sayilmaz.
+    """
     return sum(s - b for b, s in mola_araliklari(atama))
 
 

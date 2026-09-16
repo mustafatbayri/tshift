@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 60 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36)
+**Son güncelleme:** 2026-09-16 (motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 68 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36. **T-27 kapandı**)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -55,7 +55,8 @@ yazılı; A2/A10/A11/A12 backend tarafında ve hiç sınanmadı; aynı gün yap�
 ifade: *belirli senaryoları çalışan bir motor çekirdeği var.*
 
 **Dokuz 🔴'nın hepsi sessiz:** hiçbiri kırmızı yanmıyor, hepsi planı temiz
-gösteriyor. Hiç yaşanmamış mola yasal günlük sınırı deviriyor (T-27),
+gösteriyor. ✅ *Hiç yaşanmamış molanın yasal günlük sınırı devirmesi —
+T-27 — 16 Eylül'de kapatıldı.* Kalanlar:
 geçmiş hafta hiç okunmuyor (T-28), *"geçmiş yeniden planlanamaz"* sözünün
 tek bekçisi ateşlenemiyor (T-29), şartname biçimindeki talep sessizce
 atlanıyor (T-19), çok ekipli çalışan iki ekibi aynı anda dolduruyor (T-21),
@@ -210,7 +211,7 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 >
 > | Sıra | Ne oluyor | Karar gerekiyor mu |
 > |---|---|---|
-> | **T-27** | `mola_saat()` molanın vardiya içinde olup olmadığına bakmıyor. `08:00–20:00` vardiyaya `22:00–23:00` molası → net 11 saat, **yasal** günlük sınır ihlali **0** | ❌ mekanik |
+> | ~~T-27~~ | ✅ **KAPANDI 16 Eylül** — mola artık vardiyaya kırpılıyor ve üst üste binenler birleştiriliyor. 8 test | — |
 > | **T-35** | Giriş isteği `X-Forwarded-For` taşımıyor, backend `RemoteIpAddress` okuyor → bir kişinin beş yanlış parolası **bütün kiracıyı** kilitliyor, denetim kaydındaki IP kurgusal | ❌ mekanik *(`04-kod`)* |
 > | **T-34** | `Program.cs` içinde veritabanı parolası ve JWT imza anahtarı **kodda varsayılan**, ortam kontrolü yok | ❌ mekanik *(`04-kod`)* |
 > | **T-28** | `gecmis_vardiyalar` `09-motor/` içinde **hiç geçmiyor** — yasal dinlenme kuralı önceki haftaya kör | ✅ veri nereden gelecek |
@@ -220,7 +221,7 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor | ✅ kapı ne yapmalı |
 > | **T-22** | Çözümsüzlükte sunulan taslak hiç denetlenmiyor; boş plan *"var"* diyor | ❌ mekanik |
 >
-> **Karar beklemeyen dörtle başlanabilir** (T-27, T-35, T-34, T-22). Beşi
+> **Karar beklemeyen üçle devam edilebilir** (T-35, T-34, T-22). Beşi
 > Mustafa'nın cevabını bekliyor.
 >
 > ### Neden bunlar önce
@@ -314,7 +315,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). 60 birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **68** birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
