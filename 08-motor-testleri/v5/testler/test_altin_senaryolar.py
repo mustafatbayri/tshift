@@ -19,6 +19,7 @@ KOSTURMA
   py -m pytest -v
 """
 
+import io
 import os
 import pytest
 
@@ -207,8 +208,54 @@ def test_her_kontrol_adinin_govdesi_var(fikstur_klasoru):
 
 
 def test_motor_yoksa_acikca_soylenir():
-    """Motor tanimli degilken istemci sessizce degil, ACIKCA hata vermeli."""
+    """Motor adresi yokken istemci sessizce degil, ACIKCA hata vermeli.
+
+    Mesaj yalniz 'olmadi' demez, NE YAPILACAGINI da yazar. Bu testin asil
+    korudugu sey o: belirsiz bir hata mesaji, insani yanlis yere bakmaya
+    gonderir.
+    """
     istemci = mi.MotorIstemci(adres="")
     with pytest.raises(mi.MotorYok) as e:
         istemci.solve({})
-    assert "MOTOR YAZILMADI" in str(e.value)
+    metin = str(e.value)
+    assert "TSHIFT_MOTOR_URL" in metin, "hangi ortam degiskeni gerektigi yazmali"
+    assert "servis.py" in metin, "servisin nasil baslatilacagi yazmali"
+
+
+def test_cozucu_yokken_sebep_acikca_ayirt_edilir():
+    """501 (cozucu yok) ile baglanti hatasi KARISTIRILMAMALI.
+
+    Ikisi de testi kirmizi yakar ama sebepleri bambaska: biri 'daha
+    yazilmadi', digeri 'servis cokmus'. Ayni mesaji verirlerse saatler
+    yanlis yerde aranir.
+    """
+    import urllib.error
+    istemci = mi.MotorIstemci(adres="http://ornek.gecersiz")
+
+    def sahte_501(*a, **k):
+        raise urllib.error.HTTPError(
+            "http://ornek.gecersiz/solve", 501, "Not Implemented", {},
+            io.BytesIO(b'{"hata":"cozucu yazilmadi"}'))
+
+    import io as _io, urllib.request
+    eski = urllib.request.urlopen
+    urllib.request.urlopen = sahte_501
+    try:
+        with pytest.raises(mi.MotorYok) as e:
+            istemci.solve({})
+        assert "COZUCU YAZILMADI" in str(e.value)
+    finally:
+        urllib.request.urlopen = eski
+
+
+def test_dogrulayici_ucu_gercekten_cagriliyor(motor):
+    """Motor adresliyken /health gercekten cevap vermeli.
+
+    Motor adresi tanimli DEGILSE bu test atlanir -- yoklugu kirmizi
+    yakmaz, cunku motorsuz kosu da gecerli bir kosudur.
+    """
+    if not mi.motor_var_mi():
+        pytest.skip("TSHIFT_MOTOR_URL tanimli degil")
+    saglik = motor.health()
+    assert saglik.get("durum") == "ayakta"
+    assert "evaluate" in saglik.get("ucler", {}), "saglik cevabi hangi uclerin var oldugunu soylemeli"

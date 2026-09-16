@@ -155,18 +155,32 @@ fikstüre, fikstürler koşan bir pytest paketine bağlandı.
 | Mustafa onayladı | ✅ **12/12 senaryo, 6/6 varsayım** (A5 ertelendi) |
 | Fikstürler yazıldı | ✅ **11 dosya** (A5 hariç) + ortak sahne, hepsi denetleyiciden geçiyor |
 | Test iskeleti | ✅ `08-motor-testleri/v5/testler/` — pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` |
-| Testler koşuyor | 🔴 **7 kırmızı / 3 yeşil / 4 atlanan** — motor yok, istenen budur |
+| Bağımsız doğrulayıcı | ✅ `09-motor/` — `/evaluate`, 17 kural gövdesi, 26 birim testi |
+| **A4 ve A8** | ✅ **YEŞİL** — motorun ilk korunan davranışları |
+| Kalan beş senaryo | 🔴 A1, A3, A6, A7, A9 — çözücü bekliyor (`/solve` → 501) |
 
-**Zincir tamam, ucu boşta.** Kabul ölçütü → fikstür → test bağlandı ama motor
-olmadığı için yedi senaryo kırmızı yanıyor. Bu **bir eksiklik değil**:
-Master Spec §16.4 "kırmızı kanıt" kuralı, bir testin yeşile dönmeden önce
-kırmızı yanmasını şart koşar. Önce kırmızı yanmayan test, aslında hiçbir şeyi
-sınamıyor olabilir ve bunu asla anlayamayız.
+### Kapsama İLK KEZ büyüdü (16 Eylül)
 
-**Kapsama yine de büyümedi.** Bekçi, test **yeşile döndüğünde** doğar — kırmızı
-bir test taahhüdün kanıtı, korumanın kendisi değil. Onay turunda on ürün
-kararı çıktı (K-8…K-17, `08-URUN-KARARLARI.md`) ve bunların çoğu **şartname
-değişikliği** gerektiriyor; motor v1.4 yazılmadan başlayamaz (A-15).
+Zincir (kabul ölçütü → fikstür → test) 16 Eylül sabahı tamamdı ama ucu boştaydı.
+Öğleden sonra **bağımsız doğrulayıcı** yazıldı ve **iki senaryo yeşile döndü**.
+
+| | Motorsuz | Doğrulayıcıyla |
+|---|---|---|
+| Kırmızı | 7 | **5** |
+| Yeşil | 4 | **7** |
+| Atlanan | 5 | 4 |
+
+**A4 ve A8 artık bekçi.** Bu iki senaryonun koruduğu davranışlar — gece
+yarısını aşan vardiyada dinlenme hesabı, çakışma tespiti, öğle arasında
+sahadaki kişi sayısı — bundan sonra sessizce bozulamaz.
+
+Kalan beş kırmızı **doğru sebeple** kırmızı: servis ayakta, `/solve` ucu yok
+(501). İstemci bunu *"COZUCU YAZILMADI"* diye ayırt ediyor; "motor çöktü" ile
+karıştırılmıyor.
+
+> **Neden önce doğrulayıcı:** yedi kırmızının ikisi plan üretmiyor, var olan
+> planı denetliyor. Çözücü olmadan yeşile dönebilecek tek iki senaryo onlardı.
+> En küçük adım seçildi.
 
 ```
 py -m pytest -q   →   7 failed, 3 passed, 4 skipped

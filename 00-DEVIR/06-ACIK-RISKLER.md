@@ -119,7 +119,33 @@ kodun %X'ini yakalıyor"* demek bambaşka bir iddiadır.
 
 ---
 
-## 🟡 A-5 · Zaman modeli — v1.3'te TANIMLANDI, test hâlâ yok
+## 🟢 A-5 · Zaman modeli — A4 KOŞUYOR ve YEŞİL (16 Eylül), A5 ertelendi
+
+**16 Eylül:** Gece yarısını aşan vardiya modeli artık **sınanıyor.**
+`09-motor/dogrulayici/zaman.py` Z-1…Z-6'yı uyguluyor ve **A4 altın senaryosu
+yeşil.** Ayrıca beş birim testi zaman modelinin kendisini sabitliyor:
+
+| Test | Ne koruyor |
+|---|---|
+| `test_gece_yarisini_asan_vardiya_dogru_uzunlukta` | Z-1: 16:00–01:00 dokuz saattir |
+| `test_gece_yarisini_asan_vardiya_BASLADIGI_gune_sayilir` | Z-2: Cumartesi nöbeti Pazar'a kaymaz |
+| `test_cakisma_mutlak_zamanda_olculur` | Z-3: gün sınırını aşan çakışma yakalanır |
+| `test_ucu_uca_degen_vardiyalar_cakismaz` | Sınır: 16'da biten ve 16'da başlayan örtüşmez |
+| `test_dinlenme_gercek_bitisten_olculur` | Z-4: 8 saatlik dinlenme ihlali görülür |
+
+**Kırmızı kanıt yapıldı:** zaman hesabı kasten bozulduğunda testler yakaladı.
+
+**Kalan:** **A5 (DST geçişi) ertelendi** — K-12, Türkiye'de yaz saati yok ve
+yurt dışı müşteri yok. Altyapı korunuyor (IANA bölge adı, mutlak zaman),
+kural katalogda pasif duruyor. Yurt dışında ilk müşteri açıldığında yazılacak.
+
+**Neden artık 🟢:** Asıl risk *"zaman modeli hiç sınanmıyor"*du. Sınanıyor.
+Kalan kısım bilinen ve kayıtlı bir erteleme.
+
+<details>
+<summary>Maddenin 14 Eylül hâli (kayıt için)</summary>
+
+### A-5 · Zaman modeli — v1.3'te TANIMLANDI, test hâlâ yok
 
 **14 Eylül:** Master Spec **§6.3**'e gece yarısını aşan vardiya kuralı tam
 olarak yazıldı (Z-1…Z-6) ve DST taşınabilir-pasif olarak modellendi. Ayrıca
@@ -153,6 +179,7 @@ maliyetlerinden biri).
 
 </details>
 
+</details>
 ---
 
 ## 🟡 A-2 · Y-12'nin bekçisi yok: "göremeyeceğin kaydı oluşturamazsın"
@@ -605,12 +632,38 @@ madde numaralı bir tabloyla gidilecek — görüşme kısalır, gerekliliği ka
 
 ---
 
+## 🟢 A-17 · `ADALET_DENGESI` ihlal eşiği tanımsız *(T-12)*
+
+**Ne:** Şartname §6.5 kuralı tanımlıyor — *"yük çalışanlar arasında dengeli
+dağılsın"*, pencere aylık, boyutlar gece + hafta sonu + saat. Ama **ihlal
+eşiğini** tanımlamıyor: dağılım ne kadar sapınca ihlal sayılır?
+
+| Kural | Eşik var mı |
+|---|---|
+| `SAAT_DENGESI` | ✅ `tolerans_saat`, varsayılan ±2 |
+| `ADALET_DENGESI` | ❌ yalnız ağırlık (5) |
+
+**Ne yapıldı:** Doğrulayıcıda bu kural **bilerek yazılmadı.** Eşiği koda gömüp
+uydurmak, bir ürün kararını kodun içine gizlemek olurdu. Kural
+`uygulanmayan_kurallar` listesinde açıkça görünüyor ve bir test
+(`test_adalet_dengesi_bilerek_yazilmadi`) birinin ileride sessizce eşik
+uydurmasını engelliyor.
+
+**Neden 🟢:** Yumuşak bir kural. Yazılmamış olması hiçbir planı yanlış yere
+**geçerli** göstermiyor; yalnız puan hesabı eksik kalıyor. A7 senaryosu
+(adalet karşılaştırması) çözücüyle birlikte bunu gerektirecek.
+
+**Ne gerek:** Mustafa'nın kararı — *"aynı kişi ayda kaç gece / kaç hafta sonu
+fazladan çalışırsa bu adaletsizliktir?"*
+
+---
+
 ## Öncelik sırası — önerilen
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **Bağımsız doğrulayıcı** (`/evaluate`) | 7 kırmızı testin **ikisi** (A4, A8) çözücü olmadan yeşile döner. En küçük adım |
-| 2 | **Çözücü** (M-09: Python + OR-Tools, ayrı servis) | Kalan beş senaryo. Doğrulayıcı olmadan sınanamaz (§7.6, §16.1) |
+| **1** | **Çözücü** (M-09: Python + OR-Tools, ayrı servis) | Kalan beş kırmızı senaryo (A1, A3, A6, A7, A9). ⛔ Doğrulayıcıyla mantık paylaşmayacak |
+| 2 | **A-17 · `ADALET_DENGESI` ihlal eşiği** (T-12) | Şartname kuralı tanımlıyor, eşiği tanımlamıyor. Yumuşak kural — aciliyeti düşük |
 | 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürü yazıldı, motor gelince koşacak |
 | 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
 | 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
@@ -621,9 +674,10 @@ madde numaralı bir tabloyla gidilecek — görüşme kısalır, gerekliliği ka
 | 10 | **A-9** KVKK | Gerçek veriden önce |
 | 11 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
-> **16 Eylül'de kapanan üç iş:** fikstürler · test iskeleti · **şartname v1.4**
-> (A-15). İlk ikisi `08-motor-testleri/v5/` altında, üçüncüsü
-> `02-spec/v1.4-master-spec.md`.
+> **16 Eylül'de kapanan dört iş:** fikstürler · test iskeleti · **şartname v1.4**
+> (A-15) · **bağımsız doğrulayıcı** (`09-motor/`). İlk ikisi
+> `08-motor-testleri/v5/` altında, üçüncüsü `02-spec/v1.4-master-spec.md`.
+> Dördüncüsüyle **A4 ve A8 yeşile döndü** — motorun ilk korunan davranışları.
 
 ### Kapanan maddeler
 

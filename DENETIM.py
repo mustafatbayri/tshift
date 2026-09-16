@@ -20,7 +20,9 @@ NE YAPAR
                       kurallina uyuyor mu.
     6. Gunluk tazeligi En yeni oturum gunlugu, DEGISIM-GUNLUGU.md'deki en
                       yeni tarihten yeniyse gunluge satir eklenmemis olabilir.
-    7. Commit durumu  00-DEVIR/ altinda commit edilmemis degisiklik var mi.
+    7. Commit durumu  Commit edilmemis degisiklik var mi. HICBIR klasor
+                      listeden dislanmaz -- 16 Eylul'de 09-motor/ tam da
+                      boyle gorunmez olmustu.
                       ("Yazdim != gonderdim != commit ettim" -- D-1 hatasi.)
     8. Bayat surum    Devir dosyalari 08-motor-testleri/ altindaki DONMUS bir
                       surume mi isaret ediyor. (15 Eylul: 25 yerde v2 yaziyordu,
@@ -472,17 +474,24 @@ def kontrol_commit():
         print("   ATLANDI")
         return
 
-    ilgili = []
-    for satir in cikti.stdout.splitlines():
-        yol = satir[3:].strip().strip('"')
-        if yol.startswith(("00-DEVIR/", "08-motor-testleri/", "02-spec/")) \
-           or yol in ("DEGISIM-GUNLUGU.md", "RISKLER-VE-ONLEMLER.md",
-                      "SURUMLEME.md", "DENETIM.py"):
-            ilgili.append(satir)
-    if ilgili:
-        uyari("Commit edilmemis devir dosyasi var (%d)" % len(ilgili),
-              "\n      ".join(ilgili))
-    print("   commit bekleyen devir dosyasi: %d" % len(ilgili))
+    # 16 EYLUL DUZELTMESI -- neden burada BEYAZ LISTE YOK
+    #
+    # Onceki surum yalniz su onekleri sayiyordu:
+    #     00-DEVIR/  08-motor-testleri/  02-spec/  + dort kok dosyasi
+    #
+    # 09-motor/ yazildiginda o listede olmadigi icin GORUNMEDI: betik
+    # "commit bekleyen 7" dedi, oysa motorun tamami commit edilmemisti.
+    # Yani kontrol, var olma sebebinin (yazdim != commit ettim) tam
+    # ortasindan kacirdi.
+    #
+    # Ders: elle bakimi gereken bir beyaz liste, her yeni klasorde sessizce
+    # bayatlar. Artik git'in gordugu HER SEY sayiliyor; git zaten .gitignore
+    # ile gurultuyu kendisi eliyor.
+    satirlar = [l for l in cikti.stdout.splitlines() if l.strip()]
+    if satirlar:
+        uyari("Commit edilmemis degisiklik var (%d)" % len(satirlar),
+              "\n      ".join(satirlar))
+    print("   commit bekleyen dosya: %d" % len(satirlar))
 
 
 def kontrol_bayat_surum():

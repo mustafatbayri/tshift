@@ -4,6 +4,53 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · BAĞIMSIZ DOĞRULAYICI YAZILDI · A4 ve A8 YEŞİL**
+**.NET ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.**
+Fikstürlerin tek satırı değişmedi.
+
+**Projede motorun İLK KORUNAN DAVRANIŞI.** `09-motor/` — `/evaluate` ucu,
+17 kural gövdesi, 26 birim testi. Kabul ölçütü bu iki senaryoda taahhüt
+olmaktan çıkıp **bekçiye** dönüştü.
+
+```
+py -m pytest -q   ->  5 failed, 7 passed, 4 skipped   (onceki: 7/4/5)
+```
+
+**Neden önce doğrulayıcı:** yedi kırmızının ikisi plan üretmiyor, var olan
+planı denetliyor — çözücü olmadan yeşile dönebilecek tek iki senaryo onlardı.
+Kalan beş kırmızı **doğru sebeple** kırmızı: servis ayakta, `/solve` 501
+dönüyor, istemci bunu *"COZUCU YAZILMADI"* diye ayırt ediyor.
+
+**Dışarıdan hiçbir paket yok.** Python standart kütüphanesi. Kurulum adımı
+olmayan bir servis, "bende çalışmadı" ile geçen saatleri de ortadan kaldırır.
+
+**Kırmızı kanıt: 7 kasten bozma, 7'si de yakalandı.** Her biri sessizce
+bozulabilecek bir ürün kararı — `GUNLUK_AZAMI` 11→9 (K-18), mola hakkı brüt
+yerine net (K-4), tam 11 saat ihlal sayılır (K-11), örtüşmede çift ihlal
+(V-1), yayın kapısı `yasal`a bakar (K-24), gövdesi olmayan kural sessizce
+geçilir, `ASGARI_KAPSAMA` molayı düşer.
+
+**`ADALET_DENGESI` bilerek yazılmadı.** Şartname kuralı tanımlıyor ama ihlal
+eşiğini tanımlamıyor. Eşiği koda gömmek, ürün kararını kodun içine gizlemek
+olurdu. Uygulanmayanlar listesinde görünüyor ve bir test birinin ileride
+sessizce eşik uydurmasını engelliyor. **T-12 / A-17.**
+
+**Testler iki kendi hatamı yakaladı:** (1) "motor çöktü" ile "çözücü yok"
+aynı mesajı veriyordu — ayrıldı; (2) istemcide `adres=""` ile `adres=None`
+aynı sayılıyordu, bu yüzden *adressiz davranış hiç sınanamıyordu*.
+
+**"Motor gelince tek dosya değişecek" sözü tutuldu** — yalnız
+`motor_istemci.py` değişti.
+
+⛔ **Çözücü için tek zorunlu kural:** doğrulayıcıyla mantık paylaşmayacak
+(§7.6, §16.1). *"Aynı hesabı iki kez yazmayalım"* deyip ortak modül çıkarmak
+yasak — tekrar burada maliyet değil, güvence.
+
+*Öğrenilen: "boş değer" ile "belirtilmemiş" aynı şey değil. `x or y` kalıbı
+bu ikisini sessizce birleştirir ve bir testi yanlışlıkla başka bir yolu
+denemeye gönderir.*
+→ `09-motor/`, `00-DEVIR/oturumlar/2026-09-16-bagimsiz-dogrulayici.md`
+
 **2026-09-16 · ŞARTNAME v1.4 YAZILDI · A-15 kapandı · dokuz yeni karar**
 **Ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.** v1.3'e
 dokunulmadı — v1.4 tam dosya olarak yanına yazıldı.
