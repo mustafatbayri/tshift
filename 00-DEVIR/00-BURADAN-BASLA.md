@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (çözücü + onarım döngüsü yazıldı; **12 altın senaryonun tamamı YEŞİL**)
+**Son güncelleme:** 2026-09-16 (motor bitti, CI kapısına bağlandı; **12 altın senaryo + 60 birim test YEŞİL, CI'da da yeşil**)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -37,16 +37,20 @@ PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → 
 ```
 
 - **39/39 test yeşil.** Hepsi gerçek PostgreSQL'e karşı koşuyor, hiç mock yok.
-- **CI çalışıyor (14 Eylül).** Her `git push` sonrası testler GitHub Actions'ta
-  kendiliğinden koşuyor — kurallar artık öneri değil **kapı**.
+- **CI çalışıyor (14 Eylül), 16 Eylül'de motor da bağlandı.** Her `git push`
+  sonrası **iki iş** koşuyor: `test` (.NET) ve `motor` (Python). Kurallar
+  artık öneri değil **kapı**.
 - **Tek komutla ayağa kalkıyor:** `docker compose --profile tam up --build`
 - **Çalışan ekranlar:** giriş, çalışan listesi (rol bazlı farklı davranıyor),
   yeni çalışan kaydı.
 - **Yılmaz'a inceleme paketi gönderildi** (`05-inceleme/v1-2026-09-11/`).
 
-**Henüz yazılmadı:** vardiya **çözücüsü** (plan üreten kısım), plan editörü,
-kural yönetimi, kullanıcı/rol yönetim ekranları. Motorun **doğrulayıcı** yarısı
-16 Eylül'de yazıldı — bkz. aşağısı.
+**Motor tamamlandı (16 Eylül).** Doğrulayıcı, çözücü ve onarım döngüsü —
+üçü de yazıldı, on iki altın senaryonun tamamı ve 60 birim testi yeşil,
+CI'da da yeşil. Ayrıntı aşağıda ve `09-motor/OKU-BENI.md`'de.
+
+**Henüz yazılmadı:** `/suggest` ucu (öneri üretimi, §11.5), plan editörü,
+kural yönetimi, kullanıcı/rol yönetim ekranları.
 
 **Gerçek müşteri verisi elimizde (13–14 Eylül).** Bir seyahat acentesinin 3,5
 aylık PDKS ve vardiya planı. Analiz edildi, **529 kural ihlali** bulundu.
@@ -317,7 +321,28 @@ hiçbir cümle yazılmaz. Kanıtı olmayan bilgi `06-ACIK-RISKLER.md` altına,
 
 ### Güncelleme ritüeli
 
-Mustafa **"aktarım dosyasını güncelle"** dediğinde şunlar yapılır:
+> **Tetikleyici değişti (16 Eylül).** Önceki kural şuydu: *"Mustafa 'aktarım
+> dosyasını güncelle' dediğinde."* Yani güncelleme **birinin hatırlamasına**
+> bağlıydı — ve hatırlamaya bağlı bir bekçi, bekçi değildir (O-1'in tam
+> tarifi). Yerine üç somut an kondu.
+
+| Ne zaman | Ne güncellenir |
+|---|---|
+| **Aynı commit'te** | Bir karar verildi, bir kural yazıldı, bir madde kapandı → `08-URUN-KARARLARI.md`, `06-ACIK-RISKLER.md` ve ilgili `02`–`07` dosyası. **Kod ile doküman aynı commit'te gider** |
+| **İş parçası bitince** | `oturumlar/YYYY-AA-GG-<is-parcasi>.md` |
+| **Oturum ya da pencere kapanırken** | Bu sayfadaki iki bölüm + `DEGISIM-GUNLUGU.md` + `DENETIM.py` |
+
+**Neden en önemlisi ilki.** Oturum **her an** bitebilir: bağlam dolar, makine
+uyur, insan yorulur. Doküman koddan geriden geliyorsa bir sonraki pencere
+**yanlış haritayla** başlar. §5'in kuralı *"kanıtı olmayan cümle yazılmaz"*
+diyor; aynanın öteki yüzü de geçerli: **kanıt değişti ama cümle değişmediyse
+doküman yalan söylüyor.**
+
+16 Eylül bunun küçük bir örneğini verdi: A7'nin onaylı kabul cümlesi
+(*"Ç01–Ç03 en müsait olanlar"*) fikstüre hiç çevrilmemişti. Cümle onaylıydı,
+fikstür ona uymuyordu ve boşluk **ancak motor yazılınca** göründü.
+
+Adım adım:
 
 1. `oturumlar/YYYY-AA-GG-<is-parcasi>.md` dosyası yazılır — o oturumda
    **hangi dosya neden değişti, hangi test eklendi, hangi karar verildi,
@@ -345,10 +370,20 @@ Mustafa **"aktarım dosyasını güncelle"** dediğinde şunlar yapılır:
    - Betik *tutarlılığa* bakar, *doğruluğa* değil. Tutarlı bir yanlış yine
      yakalanmaz; onu ancak iddiayı kaynağıyla karşılaştırmak yakalar.
 
-> ⚠ **Yazdım ≠ gönderdim ≠ commit ettim.** Üçü ayrı adımdır ve üçü de
-> doğrulanır. 14 Eylül'de Mustafa'nın kapsam kararlarının tamamı yerel kopyada
-> güncellenmiş ama makineye hiç gitmemişti; denetim olmasa sessizce
-> kaybolacaktı. Bkz. `oturumlar/2026-09-14-veri-analizi.md` §10.
+> ⚠ **Yazdım ≠ gönderdim ≠ commit ettim ≠ karşı tarafta değişti ≠ göndermem
+> gerektiğini fark ettim.** Beşi ayrı adımdır ve beşi de doğrulanır.
+>
+> 14 Eylül'de Mustafa'nın kapsam kararlarının tamamı yerel kopyada
+> güncellenmiş ama makineye hiç gitmemişti (`oturumlar/2026-09-14-veri-analizi.md`
+> §10). 16 Eylül'de son halka eklendi: bir düzeltme **hiç gönderilmemişti** ve
+> iki tarafta da hiçbir şey kırmızı yanmıyordu — git temiz, `DENETIM.py`
+> *"commit bekleyen 0"*, testler yeşil; çünkü her iki taraf **kendi içinde**
+> tutarlıydı ve tutarsızlık **aralarındaydı** (`05-HATA-OTOPSILERI.md` O-9).
+>
+> **Bekçi:** commit öncesi dosyalar karşı taraftan çekilip **içerikçe**
+> karşılaştırılır. Hafızaya değil `cmp`'ye güvenilir. Boyut eşitliği de
+> yetmez — 15 Eylül'de `v2`→`v5` 17 bayat atıf, dosya boyutları **birebir
+> aynıydı**.
 
 ---
 

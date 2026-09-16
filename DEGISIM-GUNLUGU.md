@@ -4,6 +4,23 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · Güncelleme ritüelinin tetikleyicisi değişti**
+
+Devir dosyalarının **ne zaman** güncelleneceği tek cümleye bağlıydı:
+*"Mustafa 'güncelle' dediğinde."* Yani birinin hatırlamasına bağlıydı —
+hatırlamaya bağlı bir bekçi bekçi değildir (O-1). Üç somut ana bağlandı:
+aynı commit'te (karar/kural/kapanan madde), iş parçası bitince (oturum
+günlüğü), oturum kapanırken (neredeyiz + sıradaki adım + DENETIM).
+
+En önemlisi ilki: oturum her an bitebilir, doküman koddan geriden geliyorsa
+bir sonraki pencere yanlış haritayla başlar.
+
+`DENETIM.py`'ye *"kod değişti ama devir dosyası değişmedi"* kontrolü
+**eklenmedi** — küçük düzeltmelerde sürekli öterdi, O-7'nin dersi tam bu.
+Bilinçli bir boşluk olarak kayda geçti.
+
+→ `00-DEVIR/00-BURADAN-BASLA.md` §5
+
 **2026-09-16 · MOTOR CI KAPISINA BAĞLANDI — ilk koşu YEŞİL**
 
 `.github/workflows/testler.yml` içine **`motor`** adlı ikinci bir iş eklendi:
