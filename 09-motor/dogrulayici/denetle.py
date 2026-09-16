@@ -45,8 +45,29 @@ def degerlendir(girdi, atamalar):
         "ihlaller": ihlaller,
         "metrikler": _metrikler(girdi, atamalar, ihlaller),
         "uygulanmayan_kurallar": uygulanmayan,
+        "eksik_boyutlar": _eksik_boyutlar(girdi),
         "yayin_kapisi": yayin_kapisi(ihlaller),
     }
+
+
+def _eksik_boyutlar(girdi):
+    """Aktif bir kuralin, govdesi olmayan boyutlari.
+
+    Kuralin KENDISI yazilmis ama bir PARCASI yazilmamis olabilir --
+    ADALET_DENGESI'nin 'saat' boyutu boyle (T-13). `uygulanmayan_kurallar`
+    bunu goremez, cunku kural listede var. Ayri bir alan gerekiyor:
+    yoksa kural 'yazilmis' gorunur, bir boyutu sessizce atlanir.
+    """
+    eksik = []
+    for tanim in _aktif_kurallar(girdi):
+        if tanim.get("kod") != "ADALET_DENGESI":
+            continue
+        for boyut in (tanim.get("parametreler") or {}).get(
+                "boyutlar", ["gece", "hafta_sonu", "saat"]):
+            if kurallar._boyut_sayaci(boyut) is None:
+                eksik.append({"kural": "ADALET_DENGESI", "boyut": boyut,
+                              "sebep": "sayilabilir boyut degil; T-13"})
+    return eksik
 
 
 # ----------------------------------------------------------------------

@@ -500,8 +500,10 @@
           "cumartesi",
           "hafta_sonu",
           "saat"
-        ]
-      }
+        ],
+        "adaletsizlik_esigi": 2
+      },
+      "_not": "K-27 (Mustafa, 16 Eylul): olcu ORTALAMADAN SAPMA. 1 fazla sorun degil, 2 fazla adaletsizliktir -> esik 2, karsilastirma >=. Tek yonlu (yalniz ustte kalan). 'saat' boyutu yazilmadi (T-13), eksik_boyutlar'da bildirilir."
     }
   ],
   "sabit_atamalar": [],

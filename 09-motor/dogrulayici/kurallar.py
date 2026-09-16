@@ -451,22 +451,101 @@ def fazla_mesai_tavani(girdi, atamalar, tanim):
 
 
 # ----------------------------------------------------------------------
-# 6.5 Adalet -- BILEREK YAZILMADI
+# 6.5 Adalet -- K-27 (16 Eylul 2026)
 # ----------------------------------------------------------------------
+
+# Hangi vardiya "gece" sayilir. #6.3 GECE_VARDIYASI_AZAMI penceresiyle AYNI
+# tanim kullanilir: genisletilmis saatle 20 -> 30 (20:00 - ertesi gun 06:00).
+GECE_PENCERESI = (20, 30)
+
+
+def _gece_mi(a, pencere=GECE_PENCERESI):
+    """Vardiyanin herhangi bir parcasi gece penceresine dusuyor mu."""
+    bas, bit = zaman.aralik(a)
+    gun = a["gun"]
+    for kaydirma in (-24, 0, 24):
+        p_bas = zaman.mutlak(gun, pencere[0]) + kaydirma
+        p_bit = zaman.mutlak(gun, pencere[1]) + kaydirma
+        if min(bit, p_bit) - max(bas, p_bas) > 0:
+            return True
+    return False
+
+
+def _boyut_sayaci(boyut):
+    """Bir boyutun 'bu atama sayilir mi' olcusu. Sayilamayan boyut -> None."""
+    if boyut == "gece":
+        return _gece_mi
+    if boyut == "hafta_sonu":
+        return lambda a: a["gun"] in (5, 6)
+    if boyut == "cumartesi":
+        return lambda a: a["gun"] == 5
+    return None          # 'saat' sayilabilir bir boyut degil -- asagiya bak
+
+
+@kural("ADALET_DENGESI")
+def adalet_dengesi(girdi, atamalar, tanim):
+    """Yuk calisanlar arasinda dengeli dagilsin. YUMUSAK.
+
+    K-27 (Mustafa, 16 Eylul): olcu ORTALAMADAN SAPMA'dir.
+
+      > "Bazi kisilerin zaman zaman digerlerinden 1 gun fazla calismasi
+      >  gerekebilir ama ortalamadan 2 gece fazla calisiyorsa bu
+      >  adaletsizliktir."
+
+    Bu yuzden esik 2 ve karsilastirma `>=`: sapma 1 SORUN DEGIL, 2 ihlaldir.
+
+    DIKKAT -- K-11 ile karistirmayin. Orada 'asgari 11 saat' 11'i KAPSAR (ihlal
+    degil), burada 'esik 2' 2'yi KAPSAMAZ (ihlaldir). Ikisi ayri cumleler:
+    biri bir TABAN, digeri bir SAPMA TAVANI. Mustafa'nin cumlesi acik --
+    "2 gece fazla calisiyorsa adaletsizliktir".
+
+    TEK YONLU: yalniz ortalamanin USTU sayilir. Altta kalan biri varsa, bu
+    zaten ustte kalan birini uretir (ortalama sabittir) ve o yakalanir.
+    Iki yonlu saymak ayni olayi iki kez raporlardi.
+
+    DEVIR YUKU dahildir: adalet penceresi takvim ayidir (#6.5), plan haftasi
+    degil. Ayin ilk haftasinda kimse gece calismamissa sapma sifirdir; ucuncu
+    haftada gecmis yuk belirleyicidir.
+    """
+    esik = _p(tanim, "adaletsizlik_esigi", 2)
+    boyutlar = _p(tanim, "boyutlar", ["gece", "hafta_sonu", "saat"])
+    kisiler = [c["id"] for c in girdi.get("calisanlar", [])]
+    if not kisiler:
+        return []
+
+    cikan = []
+    for boyut in boyutlar:
+        sayac = _boyut_sayaci(boyut)
+        if sayac is None:
+            continue          # 'saat' -- bkz. asagidaki not
+        yuk = {}
+        for kimlik in kisiler:
+            devir = (next((c for c in girdi["calisanlar"] if c["id"] == kimlik), {})
+                     .get("devir_yuk") or {}).get(boyut, 0)
+            bu_hafta = sum(1 for a in atamalar if a["calisan"] == kimlik and sayac(a))
+            yuk[kimlik] = devir + bu_hafta
+        ortalama = sum(yuk.values()) / float(len(yuk))
+        for kimlik in sorted(yuk):
+            sapma = yuk[kimlik] - ortalama
+            if sapma >= esik:
+                cikan.append(_ihlal("ADALET_DENGESI", tanim, calisan=kimlik,
+                                    boyut=boyut, olculen=round(sapma, 2),
+                                    gereken=esik,
+                                    mesaj="%s bu ay ortalamadan %.1f %s fazla calisiyor (esik %s)"
+                                          % (kimlik, sapma, boyut, esik)))
+    return cikan
+
+
+# 'saat' BOYUTU YAZILMADI -- ve bu ayri bir eksik, T-12 degil.
 #
-# ADALET_DENGESI (YUMUSAK) govdesi YOK ve bu bir unutma degil.
+# K-27 esigi SAYI olarak verdi: "ortalamadan 2 gece fazla". 'saat' boyutu
+# sayilabilir bir sey degil, suredir; "ortalamadan 2 saat fazla" bambaska
+# bir buyukluk ve Mustafa onu soylemedi.
 #
-# Sartname #6.5 kurali tanimliyor: "yuk calisanlar arasinda dengeli dagilsin",
-# pencere aylik, boyutlar gece + hafta sonu + saat. Ama IHLAL ESIGINI
-# tanimlamiyor: dagilim ne kadar sapinca ihlal sayilir?
+# Ayrica SAAT_DENGESI zaten saat dengesine bakiyor (tolerans +-2 saat).
+# Ikisinin ayni seyi mi olctugu, oluyorsa hangisinin kalacagi acik.
 #
-#   SAAT_DENGESI'nde esik var  -> tolerans_saat, varsayilan +-2
-#   ADALET_DENGESI'nde YOK     -> yalnizca agirlik (5)
+# Sayi boyutlari (gece, hafta_sonu, cumartesi) K-27 ile calisiyor.
+# 'saat' boyutu sessizce atlanmaz: denetle.py onu eksik_boyutlar'da bildirir.
 #
-# Esigi buradan uydurmak, urun kararini koda gizlemek olurdu. Bunun yerine
-# kural `uygulanmayan_kurallar` listesinde ACIKCA bildiriliyor.
-#
-# Sartname eksigi olarak kaydedildi: T-12.
-#
-# NOT: ADALET_DENGESI yumusak bir kuraldir; yazilmamis olmasi hicbir plani
-# yanlis yere GECERLI gostermez. Yalnizca puan hesabi eksik kalir.
+# Kaydedildi: T-13.

@@ -775,6 +775,50 @@ değişebiliyor.
 
 ---
 
+## K-27 · Adalet eşiği: ortalamadan 2 fazla
+
+**Karar (16 Eylül 2026, Mustafa).**
+
+> *"Eşik 2 diyebiliriz. Sayıdan ve geceden bazı kişilerin zaman zaman
+> diğerlerinden 1 gün fazla çalışması gerekebilir ama ortalamadan 2 gece
+> fazla çalışıyorsa bu adaletsizliktir."*
+
+**Neden soruldu:** `ADALET_DENGESI` şartnamede tanımlıydı ama **ihlal eşiği
+yoktu**. Doğrulayıcı yazılırken eşiği uydurmak, bir ürün kararını kodun içine
+gizlemek olurdu; kural bilerek yazılmadı ve T-12 / A-17 olarak kaydedildi.
+Bu karar ikisini de kapatıyor.
+
+| Özellik | Değer |
+|---|---|
+| Ölçü | Kişinin yükü ile **grup ortalaması** arasındaki fark |
+| Eşik | **2** (`adaletsizlik_esigi`, kiracı değiştirebilir) |
+| Karşılaştırma | `sapma >= esik` — **2 dâhildir** |
+| Yön | **Tek yönlü** — yalnız ortalamanın üstü |
+| Pencere | Takvim ayı; devir yükü hesaba katılır |
+| Boyutlar | `gece`, `hafta_sonu`, `cumartesi` — sayılabilir olanlar |
+
+### ⚠ K-11 ile ters yönde
+
+| Kural | Cümle | Sınır değeri |
+|---|---|---|
+| `VARDIYA_ARASI_DINLENME` | *"asgari 11 saat"* | 11 **ihlal değil** (K-11) |
+| `ADALET_DENGESI` | *"2 gece fazla ise adaletsizlik"* | 2 **ihlaldir** (K-27) |
+
+Biri bir **taban**, diğeri bir **sapma tavanı**. İkisi aynı yönde okunursa
+biri yanlış uygulanır. Doğrulayıcıda bu ayrım iki ayrı testle sabitlendi.
+
+**Tek yönlü olmasının gerekçesi:** ortalama sabittir — biri çok altındaysa bir
+başkası mutlaka üstündedir ve o zaten yakalanır. İki yönlü saymak aynı olayı
+iki kez yazar ve **az çalışan kişiyi adaletsizlikle suçlar**.
+
+**Açık kalan:** `saat` boyutu. K-27 eşiği **sayı** olarak verdi; *"ortalamadan
+2 saat fazla"* bambaşka bir büyüklük ve `SAAT_DENGESI` ile örtüşüyor olabilir.
+**T-13** olarak kaydedildi, sessizce atlanmıyor (`eksik_boyutlar`).
+
+→ `02-spec/v1.4-master-spec.md` §6.5 · `09-motor/dogrulayici/kurallar.py`
+
+---
+
 ## Geriye dönük kayda alınacaklar
 
 Bu sicil 14 Eylül'de kuruldu. Daha önce verilmiş ürün kararları hâlâ

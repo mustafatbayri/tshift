@@ -632,7 +632,22 @@ madde numaralı bir tabloyla gidilecek — görüşme kısalır, gerekliliği ka
 
 ---
 
-## 🟢 A-17 · `ADALET_DENGESI` ihlal eşiği tanımsız *(T-12)*
+## ✅ A-17 · `ADALET_DENGESI` ihlal eşiği — **KAPANDI (16 Eylül 2026)**
+
+**Karar K-27:** eşik **2**, ölçü ortalamadan sapma, tek yönlü, devir yükü
+dâhil. Kural doğrulayıcıda yazıldı, sekiz birim testiyle sabitlendi.
+
+**Kırmızı kanıtta üç test zayıf çıktı ve güçlendirildi** — ayrıntı
+`oturumlar/2026-09-16-bagimsiz-dogrulayici.md` EK bölümünde.
+
+**Devam eden dar parça → T-13:** `saat` boyutu. K-27 eşiği sayı olarak verdi;
+süre boyutu karara bağlanmadı ve `SAAT_DENGESI` ile örtüşme açık. Sessizce
+atlanmıyor — `/evaluate` cevabı `eksik_boyutlar` alanında bildiriyor.
+
+<details>
+<summary>Maddenin özgün hâli (kayıt için)</summary>
+
+### A-17 · `ADALET_DENGESI` ihlal eşiği tanımsız *(T-12)*
 
 **Ne:** Şartname §6.5 kuralı tanımlıyor — *"yük çalışanlar arasında dengeli
 dağılsın"*, pencere aylık, boyutlar gece + hafta sonu + saat. Ama **ihlal
@@ -656,6 +671,8 @@ uydurmasını engelliyor.
 **Ne gerek:** Mustafa'nın kararı — *"aynı kişi ayda kaç gece / kaç hafta sonu
 fazladan çalışırsa bu adaletsizliktir?"*
 
+</details>
+
 ---
 
 ## Öncelik sırası — önerilen
@@ -663,7 +680,7 @@ fazladan çalışırsa bu adaletsizliktir?"*
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | **1** | **Çözücü** (M-09: Python + OR-Tools, ayrı servis) | Kalan beş kırmızı senaryo (A1, A3, A6, A7, A9). ⛔ Doğrulayıcıyla mantık paylaşmayacak |
-| 2 | **A-17 · `ADALET_DENGESI` ihlal eşiği** (T-12) | Şartname kuralı tanımlıyor, eşiği tanımlamıyor. Yumuşak kural — aciliyeti düşük |
+| 2 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
 | 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürü yazıldı, motor gelince koşacak |
 | 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
 | 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
@@ -687,3 +704,4 @@ fazladan çalışırsa bu adaletsizliktir?"*
 | A-14 gerçek veri yok | 13–14 Eylül 2026 | 3,5 aylık PDKS + plan analiz edildi, 529 ihlal bulundu |
 | **A-4 CI yok** | **14 Eylül 2026** | **GitHub Actions koştu ve yeşil yandı** |
 | **A-15 şartname v1.4** | **16 Eylül 2026** | **`02-spec/v1.4-master-spec.md` — 35 kural sınıflandırıldı, 11 tutarsızlık düzeltildi** |
+| **A-17 adalet eşiği** | **16 Eylül 2026** | **K-27: eşik 2, ortalamadan sapma. Doğrulayıcıda yazıldı, 8 testle sabitlendi** |

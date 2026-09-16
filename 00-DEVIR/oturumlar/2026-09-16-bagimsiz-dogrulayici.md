@@ -190,3 +190,77 @@ numarayı paylaşır. Yeniden adlandırma kararı verilirken göz önüne alınm
 
 ⛔ **Tek zorunlu kural:** `09-motor/dogrulayici/` altındaki hiçbir modülü
 import etmeyecek. Aynı aritmetik ikinci kez, bağımsız olarak yazılacak.
+
+---
+
+## EK — `ADALET_DENGESI` yazıldı (K-27) ve kırmızı kanıt üç zayıf test buldu
+
+Mustafa T-12 sorusunu cevapladı:
+
+> *"Eşik 2 diyebiliriz. Sayıdan ve geceden bazı kişilerin zaman zaman
+> diğerlerinden 1 gün fazla çalışması gerekebilir ama ortalamadan 2 gece
+> fazla çalışıyorsa bu adaletsizliktir."*
+
+Kural yazıldı: ölçü **ortalamadan sapma**, eşik **2**, karşılaştırma `>=`
+(2 dâhil), **tek yönlü**, devir yükü hesaba katılıyor.
+
+### K-11 ile ters yönde — ve bu tuzak kayda değer
+
+| Kural | Cümle | Sınır değeri |
+|---|---|---|
+| `VARDIYA_ARASI_DINLENME` | *"asgari 11 saat"* | 11 **ihlal değil** |
+| `ADALET_DENGESI` | *"2 gece fazla ise adaletsizlik"* | 2 **ihlaldir** |
+
+Biri bir **taban**, diğeri bir **sapma tavanı**. K-11 alışkanlığıyla
+*"sınır değer ihlal değildir"* diye okunsaydı, kural tam sınırda sessizce
+kaçırırdı. İki ayrı test bu ayrımı çiviliyor.
+
+---
+
+## Kırmızı kanıt bu sefer BENİ yakaladı
+
+Yeni kuralı altı şekilde kasten bozdum. **Üçü kaçtı** — ve kabahat
+doğrulayıcıda değil, benim testlerimdeydi.
+
+| Bozma | Sonuç | Testteki hata |
+|---|---|---|
+| Varsayılan eşik 2 → 3 | ❌ kaçtı | Bütün testler eşiği **açıkça geçiriyordu**; varsayılan hiç koşmuyordu |
+| `>=` → `>` | ❌ kaçtı | Hiçbir vaka **tam sınıra** oturmuyordu (sapma hep 2,25) |
+| Tek yönlü → `abs()` | ❌ kaçtı | Vakada kimse ortalamanın **2 altında** değildi; `abs()` aynı sonucu veriyordu |
+| Devir yükü sayılmaz | ✅ yakalandı | |
+| Adalet SERT olur | ✅ yakalandı | |
+| `saat` sessizce atlanır | ✅ yakalandı | |
+
+Üç test yeniden yazıldı:
+
+- **Varsayılan eşik testi** — parametreyi hiç geçirmeyen bir vaka
+- **Tam 2 sapma testi** — C1 dört gece, C2 hiç → ortalama 2, sapma tam 2
+- **Ayırt edici tek yön testi** — C2/C3/C4 üçer gece, C1 hiç → C1'in sapması
+  −2,25; `abs()` kullanılsaydı **az çalıştığı için** suçlanırdı
+
+Sonra bir dördüncüsü daha çıktı: **gece penceresi** 20→22'ye kaydırıldığında
+hiçbir test kırılmadı, çünkü bütün gece vakalarım 20:00–01:00 kullanıyordu ve
+22'den sonra da örtüşüyordu. Sınırı çiviyen iki test eklendi (18:00–21:00 gece
+sayılır, 09:00–18:00 sayılmaz).
+
+**Son durum: 8 bozma, 8'i de yakalandı. 36 test yeşil.**
+
+> *Öğrenilen: bir eşiği sınayan test, o eşiği **açıkça geçiriyorsa**
+> varsayılanı hiç sınamaz. Ve bir sınır değerini sınayan test, vakası sınırın
+> tam üstünde değilse `>` ile `>=` arasındaki farkı göremez. İkisi de yeşil
+> yanar ve hiçbir şey korumaz.*
+
+---
+
+## Açık kalan dar parça — T-13
+
+`ADALET_DENGESI`'nin **`saat` boyutu** yazılmadı. K-27 eşiği **sayı** olarak
+verdi (*"2 gece fazla"*); `saat` süredir ve *"ortalamadan 2 saat fazla"*
+bambaşka bir büyüklük. Ayrıca `SAAT_DENGESI` zaten saat dengesine bakıyor
+(±2 saat) — ikisinin örtüşüp örtüşmediği açık.
+
+**Sessizce atlanmıyor:** kuralın *kendisi* yazılı olduğu için
+`uygulanmayan_kurallar` bunu göremezdi; ayrı bir alan eklendi —
+`/evaluate` cevabı `eksik_boyutlar` içinde bildiriyor. Bir test bunu koruyor.
+
+**A-17 kapandı, yerine dar bir T-13 kaldı.**

@@ -4,6 +4,43 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · ADALET KURALI YAZILDI (K-27) · kırmızı kanıt ÜÇ ZAYIF TEST buldu**
+**.NET ürün kodu değişmedi, 39/39 hâlâ yeşil. A4 ve A8 yeşil kalmaya devam.**
+
+**T-12 ve A-17 kapandı.** Mustafa eşiği verdi: *"ortalamadan 2 gece fazla
+çalışıyorsa bu adaletsizliktir; 1 gün fazla olabilir."* Kural yazıldı — ölçü
+ortalamadan sapma, eşik 2, karşılaştırma `>=`, tek yönlü, devir yükü dâhil.
+
+**K-11 ile ters yönde ve bu tuzak kayda değer:** *"asgari 11 saat"* 11'i
+kapsar (ihlal değil), *"eşik 2"* 2'yi kapsar (ihlaldir). Biri bir **taban**,
+diğeri bir **sapma tavanı**. K-11 alışkanlığıyla okunsaydı kural tam sınırda
+sessizce kaçırırdı.
+
+**Asıl olay: kırmızı kanıt bu sefer BENİ yakaladı.** Yeni kuralı altı şekilde
+kasten bozdum, **üçü kaçtı** — ve kabahat doğrulayıcıda değil testlerimdeydi:
+
+- Varsayılan eşik 2→3 **kaçtı**: bütün testler eşiği açıkça geçiriyordu,
+  varsayılan hiç koşmuyordu
+- `>=` → `>` **kaçtı**: hiçbir vaka tam sınıra oturmuyordu (sapma hep 2,25)
+- Tek yönlü → `abs()` **kaçtı**: kimse ortalamanın 2 altında değildi
+
+Üç test yeniden yazıldı, sonra dördüncü bir boşluk çıktı: gece penceresi
+20→22'ye kaydırılınca hiçbir test kırılmadı, çünkü bütün gece vakalarım
+20:00–01:00 kullanıyordu. Sınırı çiviyen iki test daha eklendi.
+
+**Son durum: 8 kasten bozma, 8'i de yakalandı. 36 test yeşil.**
+
+**T-13 açıldı:** `saat` boyutu yazılmadı — K-27 eşiği **sayı** olarak verdi,
+`saat` süredir ve `SAAT_DENGESI` ile örtüşüyor olabilir. Sessizce atlanmıyor:
+kuralın kendisi yazılı olduğu için `uygulanmayan_kurallar` göremezdi, ayrı bir
+`eksik_boyutlar` alanı eklendi ve bir test onu koruyor.
+
+*Öğrenilen: bir eşiği sınayan test, o eşiği açıkça geçiriyorsa varsayılanı hiç
+sınamaz. Bir sınır değerini sınayan test, vakası tam sınırda değilse `>` ile
+`>=` farkını göremez. İkisi de yeşil yanar ve hiçbir şey korumaz.*
+→ `09-motor/dogrulayici/kurallar.py`, `02-spec/v1.4-master-spec.md` §6.5,
+`00-DEVIR/08-URUN-KARARLARI.md` K-27
+
 **2026-09-16 · BAĞIMSIZ DOĞRULAYICI YAZILDI · A4 ve A8 YEŞİL**
 **.NET ürün kodu değişmedi, CI'ya dokunulmadı, 39/39 hâlâ yeşil.**
 Fikstürlerin tek satırı değişmedi.

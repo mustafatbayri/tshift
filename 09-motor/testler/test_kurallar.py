@@ -301,17 +301,168 @@ def test_pasif_kural_uygulanmayan_sayilmaz():
     assert s["uygulanmayan_kurallar"] == []
 
 
-def test_adalet_dengesi_bilerek_yazilmadi():
-    """ADALET_DENGESI'nin ihlal esigi sartnamede TANIMSIZ (T-12).
+# ----------------------------------------------------------------------
+# K-27 -- adalet esigi: ortalamadan 2 fazla
+# ----------------------------------------------------------------------
 
-    Esigi koda gomup uydurmak, urun kararini gizlemek olurdu. Kural
-    uygulanmayanlar listesinde gorunur. Bu test, birinin ilerde sessizce
-    bir esik uydurmasini engeller -- yazarsa bu test kirmizi yanar ve
-    T-12'nin kapatildigini kanitlamasi gerekir.
+def gece(kimlik, gun):
+    """20:00-01:00 -- gece penceresine dusen vardiya."""
+    return atama(kimlik, gun, 20, 25)
+
+
+def adalet_sahnesi(kisi_sayisi=4, esik=2, boyutlar=("gece",), devir=None):
+    k = kural("ADALET_DENGESI", tur="YUMUSAK",
+              adaletsizlik_esigi=esik, boyutlar=list(boyutlar))
+    cs = []
+    for i in range(1, kisi_sayisi + 1):
+        c = calisan("C%d" % i)
+        if devir and ("C%d" % i) in devir:
+            c["devir_yuk"] = devir["C%d" % i]
+        cs.append(c)
+    return sahne([k], calisanlar=cs)
+
+
+def test_bir_gece_fazla_ADALETSIZLIK_DEGIL():
+    """K-27: 'bazi kisilerin 1 gun fazla calismasi gerekebilir'.
+
+    C1 iki gece, digerleri birer gece -> ortalama 1,25 ; C1'in sapmasi 0,75.
     """
-    s = degerlendir(sahne([kural("ADALET_DENGESI", tur="YUMUSAK")]), [])
-    assert "ADALET_DENGESI" in s["uygulanmayan_kurallar"], (
-        "ADALET_DENGESI yazildiysa T-12 kapanmis olmali; bu testi guncelle")
+    at = [gece("C1", 0), gece("C1", 1), gece("C2", 2), gece("C3", 3)]
+    s = degerlendir(adalet_sahnesi(), at)
+    assert kodlar(s) == []
+
+
+def test_ortalamadan_2_fazla_ADALETSIZLIKTIR():
+    """K-27: 'ortalamadan 2 gece fazla calisiyorsa bu adaletsizliktir'.
+
+    C1 uc gece, digerleri hic -> ortalama 0,75 ; C1'in sapmasi 2,25 >= 2.
+    """
+    at = [gece("C1", g) for g in (0, 1, 2)]
+    s = degerlendir(adalet_sahnesi(), at)
+    assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"]
+    assert kodlar(s, "SERT") == [], "adalet YUMUSAKTIR, plani gecersiz kilmaz"
+
+
+def test_TAM_2_sapma_da_ADALETSIZLIKTIR():
+    """K-27'nin sinir degeri. Mustafa'nin cumlesi: '2 gece fazla
+    calisiyorsa bu adaletsizliktir' -- yani 2 DAHIL.
+
+    ⚠ K-11 ile ters yonde: orada 'asgari 11' 11'i kapsar (ihlal degil),
+    burada 'esik 2' 2'yi kapsar (ihlaldir). Ikisi ayri cumleler.
+
+    C1 dort gece, C2 hic -> ortalama 2 ; C1'in sapmasi TAM 2.
+    Karsilastirma `>` olsaydi bu vaka sessizce kacardi.
+    """
+    at = [gece("C1", g) for g in (0, 1, 2, 3)]
+    s = degerlendir(adalet_sahnesi(kisi_sayisi=2), at)
+    assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"]
+    assert s["ihlaller"][0]["olculen"] == 2.0
+
+
+def test_VARSAYILAN_esik_2():
+    """Esik parametresi VERILMEDIGINDE de 2 olmali.
+
+    Onceki testler esigi hep acikca gecirdigi icin varsayilan hic
+    sinanmiyordu: kodda 2 yerine 3 yazilsa hepsi yesil kalirdi.
+    Bu bosluk 16 Eylul kirmizi kanitinda yakalandi.
+    """
+    t = {"kod": "ADALET_DENGESI", "tur": "YUMUSAK", "yasal": False,
+         "kabul_edilebilir": False,
+         "parametreler": {"boyutlar": ["gece"]}}          # esik YOK
+    at = [gece("C1", g) for g in (0, 1, 2, 3)]
+    s = degerlendir(sahne([t], calisanlar=[calisan("C1"), calisan("C2")]), at)
+    assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"], (
+        "varsayilan esik 2 olmali; sapma tam 2 ve yakalanmali")
+
+
+def test_adalet_ihlali_yayini_engellemez():
+    """A7'nin dayandigi ayrim: adaletsizlik puan dusurur, plani durdurmaz."""
+    at = [gece("C1", g) for g in (0, 1, 2)]
+    s = degerlendir(adalet_sahnesi(), at)
+    assert s["yayin_kapisi"]["yayinlanabilir"] is True
+
+
+def test_adalet_TEK_YONLU_az_calisan_ihlal_uretmez():
+    """Ortalamanin ALTINDA kalan raporlanmaz -- AYIRT EDICI vaka.
+
+    C2, C3, C4 ucer gece; C1 hic. Ortalama 2,25.
+      C1'in sapmasi  -2,25  -> mutlak deger alinsaydi IHLAL sayilirdi
+      digerlerininki  +0,75 -> esigin altinda
+
+    Yani DOGRU cevap: hic ihlal yok. `abs()` kullanan bir uygulama burada
+    C1'i adaletsizlikle suclardi -- az calistigi icin.
+
+    Ilk yazimda bu test C1 uc gece / digerleri hic kurmustu; orada
+    abs() da ayni sonucu veriyordu, yani hicbir sey ayirt etmiyordu.
+    16 Eylul kirmizi kanitinda yakalandi.
+    """
+    at = [gece(k, g) for k in ("C2", "C3", "C4") for g in (0, 1, 2)]
+    s = degerlendir(adalet_sahnesi(), at)
+    assert kodlar(s) == [], "az calisan adaletsizlikle suclanmaz"
+
+
+def test_gece_penceresinin_SINIRI_civilenir():
+    """Hangi vardiya 'gece' sayilir -- pencere 20:00-06:00 (#6.3).
+
+    Ayirt edici vaka: 18:00-21:00. Pencereye yalniz son bir saati dusuyor.
+      Pencere 20 baslarsa -> GECE sayilir
+      Pencere 22 baslarsa -> sayilmaz
+
+    Ilk yazimda butun gece testleri 20:00-01:00 kullaniyordu; pencere 22'ye
+    kaysa bile hala ortusuyordu, yani sinir hic sinanmiyordu.
+    16 Eylul kirmizi kanitinda yakalandi.
+
+    C1 dort aksam vardiyasi, C2 hic -> ortalama 2, C1'in sapmasi tam 2.
+    Pencere bozulursa C1 hic gece calismamis sayilir ve ihlal kaybolur.
+    """
+    at = [atama("C1", g, 18, 21) for g in (0, 1, 2, 3)]
+    s = degerlendir(adalet_sahnesi(kisi_sayisi=2), at)
+    assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"], (
+        "18:00-21:00 gece penceresine (20:00 sonrasi) dokunuyor, gece sayilmali")
+
+
+def test_gunduz_vardiyasi_gece_SAYILMAZ():
+    """Ters yon: 09:00-18:00 hicbir sekilde gece degildir.
+
+    Ustteki test tek basina, 'her vardiyayi gece sayan' bir uygulamayla
+    da yesil yanardi. Ikisi birlikte sinirin iki tarafini da tutar.
+    """
+    at = [atama("C1", g, 9, 18) for g in (0, 1, 2, 3)]
+    s = degerlendir(adalet_sahnesi(kisi_sayisi=2), at)
+    assert kodlar(s) == []
+
+
+def test_devir_yuku_hesaba_KATILIR():
+    """Adalet penceresi takvim ayidir (#6.5), plan haftasi degil.
+
+    C1 bu hafta hic gece calismiyor ama ayin basinda 4 gece calismis.
+    Devir yuku sayilmazsa bu adaletsizlik GORUNMEZ.
+    """
+    at = [gece("C2", 0)]
+    s = degerlendir(adalet_sahnesi(devir={"C1": {"gece": 4}}), at)
+    assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"]
+    assert s["ihlaller"][0]["calisan"] == "C1"
+
+
+def test_esik_kiracidan_degistirilebilir():
+    """Esik bir DEGERDIR, kural tipi degil (#5.1). Firma gevsetebilir."""
+    at = [gece("C1", g) for g in (0, 1, 2)]
+    s = degerlendir(adalet_sahnesi(esik=5), at)
+    assert kodlar(s) == []
+
+
+def test_saat_boyutu_SESSIZCE_ATLANMAZ():
+    """T-13: 'saat' sayilabilir bir boyut degil, govdesi yazilmadi.
+
+    Kuralin KENDISI yazili oldugu icin `uygulanmayan_kurallar` bunu goremez.
+    Ayri bir alanda bildirilmeli -- yoksa kural 'yazilmis' gorunur ve bir
+    boyutu sessizce atlanir. Bu testin korudugu sey tam olarak budur.
+    """
+    s = degerlendir(adalet_sahnesi(boyutlar=("gece", "saat")), [])
+    eksik = [e["boyut"] for e in s["eksik_boyutlar"]]
+    assert eksik == ["saat"]
+    assert "ADALET_DENGESI" not in s["uygulanmayan_kurallar"], (
+        "kural yazildi; eksik olan yalniz bir boyutu")
 
 
 # ----------------------------------------------------------------------
