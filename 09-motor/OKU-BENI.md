@@ -56,11 +56,16 @@ py servis.py
 ```
 
 Doğrulayıcı ve servis **hiçbir dış paket gerektirmiyor** — yalnız Python
-standart kütüphanesi. Çözücü OR-Tools istiyor:
+standart kütüphanesi. Çözücü OR-Tools, testler pytest istiyor:
 
 ```powershell
-py -m pip install ortools
+py -m pip install -r requirements.txt
 ```
+
+`09-motor/requirements.txt` sürümleri **sabitliyor** (O-8 gerekçesi: serbest
+bırakılan sürümler CI ile yerel makineyi sessizce ayırıyor). Doğrulayıcının
+dış bağımlılığı yok ve bu bilerek korunuyor — o dosyaya eklenen her paket
+yalnız çözücüyü ya da testleri ilgilendirmeli.
 
 Testleri koşturmak için, **ayrı bir pencerede** servis açıkken:
 
@@ -92,6 +97,18 @@ py -m pytest testler -v
 | `09-motor/testler/test_kurallar.py` | 40 birim testi. Her biri bir K-kararını sabitler |
 | `09-motor/testler/test_profiller.py` | 16 birim testi. Plan profilleri, adalet gradyanı, onarım döngüsü, fazla mesai (K-30) |
 | `09-motor/testler/test_bagimsizlik.py` | 4 birim testi. §7.6 bağımsızlığını korur |
+| `09-motor/requirements.txt` | Sabitlenmiş bağımlılıklar. Doğrulayıcı hiçbirini kullanmaz |
+
+### CI 🆕 *(16 Eylül)*
+
+`.github/workflows/testler.yml` içinde **`motor`** adlı ayrı bir iş var:
+birim testleri → servisi başlat → altın senaryolar → fikstür denetleyicisi.
+Docker gerektirmiyor, Python 3.14'e sabitli.
+
+Kapının kendi kırmızı kanıtı yapıldı: adres verilmezse `exit=1`, servis
+kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım durur.
+
+> ⚠ **Henüz koşmadı.** Kanıt, GitHub'da yeşil yanan bir `motor` işidir.
 
 ## 4. Şu an hangi kurallar yazıldı
 
@@ -237,7 +254,7 @@ alınmalı — örneğin `10-analiz/`.
 
 | | Ne |
 |---|---|
-| **1** | **pytest paketini CI'a bağlamak** — artık kırmızı yok, gerekçe kalmadı. CI adımı motoru önce ayağa kaldırmalı |
+| **1** | **CI kapısının ilk koşusunu görmek** — `motor` işi eklendi, henüz koşmadı |
 | 2 | **T-13** `ADALET_DENGESI`'nin `saat` boyutu |
 | 3 | `/suggest` (§11.5) — öneri üretimi |
 

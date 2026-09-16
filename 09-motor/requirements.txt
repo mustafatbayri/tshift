@@ -1,0 +1,16 @@
+# TShift motor -- bagimliliklar (CI ve yerel kurulum)
+#
+# DOGRULAYICI HICBIRINI GEREKTIRMEZ.
+#   09-motor/dogrulayici/ ve 09-motor/servis.py yalniz Python standart
+#   kutuphanesini kullanir. Kurulum adimi olmayan bir dogrulayici, "bende
+#   calismadi" ile gecen saatleri ortadan kaldirir.
+#
+#   Bu ozellik BILEREK korunuyor: buraya eklenen her paket yalniz cozucuyu
+#   ya da testleri ilgilendirmeli. Dogrulayiciya dis bagimlilik girerse bu
+#   dosya degil, o karar tartisilmali.
+#
+# Surumler SABITLENDI. Gerekcesi O-8: paket surumleri birbirine gore serbest
+# birakildiginda CI ile yerel makine sessizce ayrisiyor.
+
+ortools==9.15.6755     # cozucu (CP-SAT). Yalniz 09-motor/cozucu/ kullanir.
+pytest==9.1.1          # testler. Urun kodu kullanmaz.

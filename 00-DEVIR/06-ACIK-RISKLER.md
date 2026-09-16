@@ -734,7 +734,7 @@ yeniden bakılır.
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **pytest paketini CI'ya bağlamak** | Artık **bütün** testler yeşil (60 birim + 12 altın). Kırmızı paketi kapıya bağlamama gerekçesi ortadan kalktı. Tek iş teknik: CI adımı motoru önce ayağa kaldırmalı |
+| **1** | **CI kapısının ilk koşusunu görmek** | `motor` işi eklendi ama **henüz koşmadı**. Yeşil yanana kadar kanıt yok |
 | 2 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
 | 3 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu; bilerek 501 dönüyor |
 | 4 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |

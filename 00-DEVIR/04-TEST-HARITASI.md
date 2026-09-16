@@ -210,16 +210,48 @@ test). İkinci turda **12 bozmanın 12'si yakalandı.**
 > yanarken duruyordu. "Testler geçiyor" ile "testler bir şeyi koruyor" aynı
 > şey değildir.
 
-### ⚠ Bu paket CI'da hâlâ koşmuyor — ama gerekçesi kalmadı
+### Paket CI'ya bağlandı 🆕 *(16 Eylül)* — ama henüz koşmadı
 
-CI şu an yalnız `dotnet test` çalıştırıyor (A-4 kapısı). Bugüne kadarki
-gerekçe basitti: kırmızı bir paketi kapıya bağlamak *"main her zaman yeşil"*
-kuralını bozardı.
+Bugüne kadarki gerekçe basitti: motor yokken paket bilerek kırmızıydı, kırmızı
+bir paketi kapıya bağlamak *"main her zaman yeşil"* kuralını bozardı. Motor
+bitti, kırmızı kalmadı, gerekçe de ortadan kalktı.
 
-**Artık kırmızı yok.** 60 birim + 12 altın senaryo, hepsi yeşil. Bağlamanın
-önündeki tek iş teknik: motor ayrı bir servis, CI adımının onu önce ayağa
-kaldırması gerekiyor (`py servis.py &` + sağlık beklemesi). C# taslakları
-`.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez, CI kırılmaz.
+`.github/workflows/testler.yml` içine **ikinci bir iş** eklendi:
+
+| İş | Ne koşar | Docker |
+|---|---|---|
+| `test` | .NET backend — 39 test + mimari kuralları | gerekli |
+| `motor` 🆕 | 60 birim + 12 altın senaryo + fikstür denetleyicisi | **gerekmez** |
+
+**Neden ayrı iş, aynı işe ek adım değil:** aynı işte olsalardı ilkinin
+kırmızısı ikincinin sonucunu **gizlerdi** — bir adım patlayınca sonrakiler hiç
+koşmaz. Ayrı işler paralel koşar ve depo sayfasında hangisinin kırıldığı tek
+bakışta görünür.
+
+Python sürümü **3.14**'e sabitlendi: Mustafa'nın makinesindeki sürümün
+aynısı. Gerekçe workflow'da docker için zaten yazılıydı — *"CI ile yerel
+arasında fark olmasın"*.
+
+#### Kapının kendi kırmızı kanıtı
+
+Bir kapının en tehlikeli hâli, koruduğu şey yokken de yeşil yanmasıdır.
+Ölçüldü:
+
+| Durum | Sonuç |
+|---|---|
+| `TSHIFT_MOTOR_URL` verilmemiş | `exit=1` — 7 failed |
+| Adres var, servis kapalı | `exit=1` — 8 failed |
+| Sağlık beklemesi 20 sn'de cevap alamazsa | adım `::error::` ile durur |
+
+Yani motor ayağa kalkmazsa kapı **sessizce geçmiyor**.
+
+> ⚠ **Henüz koşmadı.** Bu satırların kanıtı, GitHub'da yeşil yanan bir
+> `motor` işidir. İlk push'tan önce burada yazan her şey **niyet**, kanıt
+> değil — `00-BURADAN-BASLA.md` §5'teki kural gereği bu ayrım açıkça
+> yazılıyor. İlk koşudan sonra bu uyarı kaldırılacak.
+
+C# taslakları `.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez,
+CI kırılmaz.
 
 ## Kapsama özeti — dürüst tablo
 

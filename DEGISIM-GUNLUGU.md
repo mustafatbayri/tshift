@@ -4,6 +4,31 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · MOTOR CI KAPISINA BAĞLANDI — henüz koşmadı**
+
+`.github/workflows/testler.yml` içine **`motor`** adlı ikinci bir iş eklendi:
+60 birim testi + 12 altın senaryo + fikstür denetleyicisi. Docker
+gerektirmiyor. Python **3.14**'e sabitlendi — Mustafa'nın makinesindeki
+sürümün aynısı; gerekçe workflow'da docker için zaten yazılıydı: *"CI ile
+yerel arasında fark olmasın"*.
+
+**Neden ayrı iş, aynı işe ek adım değil:** aynı işte olsalardı .NET tarafının
+kırmızısı motorun sonucunu **gizlerdi** — bir adım patlayınca sonrakiler hiç
+koşmaz.
+
+**Kapının kendi kırmızı kanıtı yapıldı.** Bir kapının en tehlikeli hâli,
+koruduğu şey yokken de yeşil yanmasıdır. Ölçüldü: `TSHIFT_MOTOR_URL`
+verilmezse `exit=1`, servis kapalıysa `exit=1`, sağlık beklemesi 20 sn'de
+cevap alamazsa adım `::error::` ile duruyor.
+
+`09-motor/requirements.txt` eklendi, sürümler sabitlendi (O-8 gerekçesi).
+Doğrulayıcının dış bağımlılığı yok ve bu bilerek korunuyor.
+
+> ⚠ **Henüz koşmadı.** Bu satırların kanıtı GitHub'da yeşil yanan bir `motor`
+> işidir. O görülene kadar yazılanlar **niyet**, kanıt değil.
+
+→ `.github/workflows/testler.yml` · `09-motor/requirements.txt`
+
 **2026-09-16 · ÇÖZÜCÜ YAZILDI · ON İKİ ALTIN SENARYONUN TAMAMI YEŞİL**
 **.NET ürün kodu değişmedi, 39/39 hâlâ yeşil.**
 

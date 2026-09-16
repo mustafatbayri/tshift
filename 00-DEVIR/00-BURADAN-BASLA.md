@@ -181,15 +181,21 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **pytest paketini CI'ya bağlamak.**
+> **CI kapısının ilk koşusunu görmek.**
 >
-> Bugüne kadarki gerekçe basitti: kırmızı bir paketi kapıya bağlamak
-> *"main her zaman yeşil"* kuralını bozardı. **Artık kırmızı yok** — 60 birim
-> + 12 altın senaryo, hepsi yeşil. Gerekçe ortadan kalktı.
+> `.github/workflows/testler.yml` içine `motor` adlı ikinci bir iş eklendi:
+> 60 birim testi + 12 altın senaryo + fikstür denetleyicisi. Docker
+> gerektirmiyor, Python 3.14'e sabitli (Mustafa'nın makinesiyle aynı sürüm).
 >
-> Tek iş teknik: motor ayrı bir servis olduğu için CI adımının onu önce ayağa
-> kaldırması gerekiyor (servisi başlat, `/health` yeşil olana kadar bekle,
-> sonra `pytest`). C# taslakları `.cs.taslak` uzantılı kalmaya devam edecek.
+> **Ama henüz koşmadı.** Bu cümlelerin kanıtı, GitHub'da yeşil yanan bir
+> `motor` işidir. İlk push'tan önce yazılan her şey niyet, kanıt değil (§5).
+>
+> İlk koşudan sonra: `04-TEST-HARITASI.md`'deki *"henüz koşmadı"* uyarısı
+> kaldırılacak.
+>
+> **Kapının kendi kırmızı kanıtı yapıldı** — adres verilmezse `exit=1`,
+> servis kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım
+> `::error::` ile duruyor. Motor yokken kapı sessizce geçmiyor.
 >
 > ### ⛔ Bozulmaması gereken kural
 >
@@ -224,6 +230,8 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > - **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.** Sayı boyutları çalışıyor;
 >   süre boyutu karara bağlanmadı, `eksik_boyutlar` ile açıkça bildiriliyor.
 > - **`/suggest` (§11.5)** — motorun yazılmamış tek ucu, bilerek 501 dönüyor.
+> - **`09-motor/requirements.txt`** — sürümler sabitlendi (O-8 gerekçesi).
+>   Doğrulayıcının **hiçbir** dış bağımlılığı yok ve bu bilerek korunuyor.
 > - **A-16 hukuk teyidi** — madde numaralı tablo hazır, uzman bakacak.
 > - **`07-motor/` yeniden adlandırma** — önerilen `08-analiz/` adı
 >   `08-motor-testleri/` ile çakışır. Karar verilirken göz önüne alınmalı.
