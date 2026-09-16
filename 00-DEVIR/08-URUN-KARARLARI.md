@@ -819,6 +819,118 @@ iki kez yazar ve **az çalışan kişiyi adaletsizlikle suçlar**.
 
 ---
 
+## K-28 · Çözücü ne zaman durur: erken dur, bekletme
+
+**Tarih:** 16 Eylül 2026 · **Soran:** Claude · **Karar:** Mustafa
+
+**Soru.** CP-SAT bütçesi 15 dakika. Optimuma çok yaklaşmışken kalan süreyi
+sonuna kadar kullanmalı mı, yoksa *"yeterince iyi"* deyip dönmeli mi?
+
+**Karar:** *"Erken dur, bekletme."*
+
+| Durma koşulu | Değer |
+|---|---|
+| Optimuma yakınlık (nispi boşluk) | **%2** |
+| İyileşme olmayan süre (durgunluk) | **2 dakika** |
+| Mutlak bütçe (üstte) | 15 dakika |
+
+**Gerekçe.** 3. dakikada bulunan planla 15. dakikadakinin farkı sahada
+1–2 saatlik kapsamadır. Planı bekleyen yönetici için kalan 12 dakika daha
+değerlidir. Çıktıdaki `durma_sebebi` hangi koşulun durdurduğunu söyler —
+`optimum` / `hedef_bosluk` / `durgunluk` / `butce_doldu`.
+
+→ `02-spec/v1.4-master-spec.md` §11.2 · `09-motor/cozucu/coz.py`
+
+---
+
+## K-29 · Adalet: eşik ihlali sayar, planı **gradyan** seçer
+
+**Tarih:** 16 Eylül 2026 · **Kaynak:** motor yazılırken çıkan ölçüm ·
+**Karar:** Mustafa — *"Onaylıyorum."* (16 Eylül) · **Durum:** ✅ kapandı
+
+**Soru.** K-27 *"ne zaman ihlaldir"* sorusunu cevapladı (ortalamadan 2 fazla).
+Peki **eşiğin altındaki** iki dağılım arasında motor neye göre seçer?
+
+**Bulgu (tahmin değil, ölçüm).** Eşik tek başına amaç fonksiyonuna konduğunda
+eşiğin altındaki bütün dağılımlar sıfır ceza aldı. *"Ç01 üçüncü kez
+cumartesi"* ile *"Ç04 ilk kez cumartesi"* motor için **eşit değerdeydi**.
+Ağırlığı 2'den 8'e çıkarmak hiçbir şeyi değiştirmedi — sıfırın sekiz katı
+yine sıfır. **KAPSAMA ve CALISAN profilleri birebir aynı planı üretti.**
+Yani şartnamenin *"üç bakışlı plan"* iddiası çalışmıyordu.
+
+**Karar (uygulanan).**
+
+| | Nerede | Ne yapar |
+|---|---|---|
+| Eşik (K-27) | Yalnız **doğrulayıcıda** | İhlali sayar, yayın kapısına bildirir |
+| Gradyan (K-29) | Yalnız **motorda** | Eşiği aşmayan planlar arasında dengeli olanı seçtirir |
+
+Gradyanın biçimi **artan marjinal maliyet**: üçüncü cumartesi ikinciden,
+ikinci birinciden pahalıdır.
+
+**İki yanlış biçim denendi ve ölçümle elendi:**
+
+1. *"Ortalamanın üstündeki sapma"* → motor cumartesiye gerekenden fazla kişi
+   koymaya başladı (3 yerine 5). Ortalamayı yükseltmek herkesin sapmasını
+   düşürüyordu; ceza, cezalandırdığı şeyi ödüllendiriyordu.
+2. *Eşik terimi amaç fonksiyonunda* → aynı açık: ihlali kaldırmanın ucuz yolu
+   **başkalarına gereksiz cumartesi vermek**. Çıkarıldığında 57 birim testinin
+   ve 12 altın senaryonun hiçbiri değişmedi; terim zaten atıl duruyordu.
+
+**Onaylandı.** *"Adalet"* eşiğin altında da bir **tercihtir**: motor eşiği
+aşmasa bile daha dengeli dağılımı seçer. Üç plan kartının birbirinden farklı
+çıkmasını sağlayan mekanizma budur.
+
+→ `02-spec/v1.4-master-spec.md` §6.5 · `09-motor/cozucu/model.py`
+
+---
+
+## K-30 · Fazla mesai: hedef için asla, asgari zorlarsa minimum
+
+**Tarih:** 16 Eylül 2026 · **Karar:** Mustafa · **Durum:** ✅ kapandı,
+**kod değişmedi**
+
+**Karar:**
+
+> *"Zaten hedef hiç gitmemek. Gidilecekse de minimum gitmek. Mantığımız
+> değişmedi."*
+
+| Durum | Davranış |
+|---|---|
+| Yalnız **hedef** kapsama iyileşecek | Fazla mesai **yapılmaz** — hedef eksik bırakılır |
+| **Asgari** kapsama (SERT) fazla mesaisiz tutmuyor | Fazla mesai **yapılır**, gereken kadar |
+| Profil tavanı zorunlu aşıma yetmiyor | Plan **çözümsüz** olur |
+
+**Soru kötü sorulmuştu ve Mustafa bunu söyledi:** *"ben tam neyi
+cevaplayayım onu da anlamadım."* Soruyu *"bir saat fazla mesai kaç saatlik
+açığa değer"* diye sormuştum — ürün dilinde değil, ceza katsayısı dilinde.
+Doğru soru *"açığı fazla mesaiyle mi kapatalım, eksik mi bırakalım"*
+olmalıydı ve cevabı zaten verilmişti.
+
+**Ölçüldü: mevcut kod bu kararı zaten uyguluyor.** Küçük bir sahnede:
+
+| Sahne | Fazla mesai | Sonuç |
+|---|---|---|
+| Asgari 2, hedef 3 (fazla mesai **opsiyonel**) | **0 saat** | Hedef %0'a düştü |
+| Asgari 3 (fazla mesai **zorunlu**) | **12 saat** — tam gereken kadar | Plan üretildi |
+
+Sayı değiştirilmedi. Üç test kararı çiviledi
+(`09-motor/testler/test_profiller.py`).
+
+### ⚠ Önceki ifadem yanlıştı — düzeltiliyor
+
+*"§5.2'nin profil tavanı pratikte hiç kullanılmıyor"* demiştim. **Yanlış.**
+Tavan ölü bir sayı değil: **zorunlu** aşımın ne kadarına izin verildiğini o
+söylüyor. Aynı sahnede CALISAN profilinde (tavan 0) plan **çözümsüz**,
+DENGELI (10) ve KAPSAMA'da (15) **çözülüyor**.
+
+Doğrusu: tavan **isteğe bağlı** fazla mesai için hiç kullanılmıyor (ceza
+karşılıyor), **zorunlu** fazla mesai için belirleyici.
+
+→ `06-ACIK-RISKLER.md` T-15 (kapandı) · `09-motor/cozucu/model.py`
+
+---
+
 ## Geriye dönük kayda alınacaklar
 
 Bu sicil 14 Eylül'de kuruldu. Daha önce verilmiş ürün kararları hâlâ

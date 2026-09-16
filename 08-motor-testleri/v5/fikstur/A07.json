@@ -10,6 +10,31 @@
     "Calisan TERCIHI yok (K-13) - gerilim adalet ile kapsama arasinda.",
     "Kaynak: KABUL-OLCUTLERI.md #4 A7."
   ],
+  "_duzeltme_16_eylul": [
+    "BU FIKSTUR EKSIKTI ve motor yazilana kadar eksikligi gorunmedi.",
+    "",
+    "Kabul olcutu sunu diyor: 'C01-C03 en deneyimli ve EN MUSAIT olanlar;",
+    "kapsama acisindan EN KOLAY SECIM onlar.' Fikstur bunu HIC kodlamamisti:",
+    "on calisanin hepsi ayni ekipte, ayni yetkinlikte, ayni sozlesmedeydi.",
+    "Yani cumartesiyi kime verdigin kapsamaya hicbir sey MAL OLMUYORDU.",
+    "",
+    "Sonuc: iki profil de ayni plani uretiyordu ve test '4. madde: en az biri",
+    "kesin fark gosterir' yuzunden kirmizi yaniyordu. Kirmizi HAKLIYDI ama",
+    "sebebi motor degil fiksturdu -- senaryonun anlattigi gerilim fiksturde",
+    "yoktu.",
+    "",
+    "Iki sey eklendi, ikisi de kabul olcutundeki cumlenin karsiligi:",
+    "  1. C04, C05, C06 sozlesmesi 40 saat (digerleri 45).",
+    "     5 tam gun = 40 saat; cumartesi nobeti (3.75 saat net) eklenince",
+    "     tavan asilir, bu yuzden onlardan birini cumartesiye koymak bir",
+    "     HAFTA ICI vardiyasini feda etmek demektir. C01-C03 icin 43.75 <= 45,",
+    "     yani bedava. 'En musait olanlar' cumlesinin mekanik karsiligi budur.",
+    "  2. Hafta ici 10:00-11:00 arasi zirve: hedef 8 (diger saatlerde 5).",
+    "     Feda edilen vardiya ancak kapsama SIKISIKSA olculebilir olur.",
+    "",
+    "Asgari kapsama (3) DEGISMEDI: her iki profil de %100 tutturmali.",
+    "Cumartesi nobeti hala 3 kisi -- kabul olcutu boyle diyor."
+  ],
   "fark": {
     "calisanlar": {
       "C01": {
@@ -58,7 +83,12 @@
           "hafta_sonu": 0,
           "saat": 0,
           "cumartesi": 0
-        }
+        },
+        "sozlesme": {
+          "tip": "tam_zamanli",
+          "haftalik_saat": 40
+        },
+        "_not": "40 saat: 5 tam gun tavani doldurur, cumartesi ancak bir hafta ici gunu birakirsa mumkun"
       },
       "C05": {
         "devir_yuk": {
@@ -66,6 +96,10 @@
           "hafta_sonu": 0,
           "saat": 0,
           "cumartesi": 0
+        },
+        "sozlesme": {
+          "tip": "tam_zamanli",
+          "haftalik_saat": 40
         }
       },
       "C06": {
@@ -74,6 +108,10 @@
           "hafta_sonu": 0,
           "saat": 0,
           "cumartesi": 0
+        },
+        "sozlesme": {
+          "tip": "tam_zamanli",
+          "haftalik_saat": 40
         }
       },
       "C08": {
@@ -92,7 +130,33 @@
           "cumartesi": 0
         }
       }
-    }
+    },
+    "talep": [
+      {
+        "ekip": "E1",
+        "gunler": [0, 1, 2, 3, 4],
+        "saatler": [9, 10, 11, 12, 13, 14, 15],
+        "asgari": 3,
+        "hedef": 5,
+        "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda"
+      },
+      {
+        "ekip": "E1",
+        "gunler": [0, 1, 2, 3, 4],
+        "saatler": [16, 17],
+        "asgari": 3,
+        "hedef": 8,
+        "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor."
+      },
+      {
+        "ekip": "E1",
+        "gunler": [5],
+        "saatler": [9, 10, 11, 12],
+        "asgari": 3,
+        "hedef": 3,
+        "_not": "Cumartesi nobeti: 3 kisi. Kabul olcutu boyle diyor, degistirilmedi."
+      }
+    ]
   },
   "cagrilar": [
     {
@@ -144,7 +208,7 @@
     ]
   },
   "turetilmis_degerler": {
-    "_not": "Adalet sapmasi = secim sonrasi cumartesi sayilarinin standart sapmasi.",
+    "_not": "Adalet sapmasi = secim sonrasi cumartesi sayilarinin ANAKUTLE standart sapmasi (ddof=0).",
     "devir_cumartesi": {
       "C01": 2,
       "C02": 2,
@@ -159,6 +223,10 @@
     },
     "secim_C01_C02_C03_sonrasi_sapma": 1.3,
     "secim_C04_C05_C06_sonrasi_sapma": 0.7,
-    "_hesap_notu": "Programatik dogrulandi; iki secim olculebilir sekilde farkli."
+    "_hesap_notu": "Programatik dogrulandi; iki secim olculebilir sekilde farkli.",
+    "hafta_ici_vardiya_kapasitesi": 42,
+    "_kapasite_notu": "C01-C07 5'er (35) + C08 2 + C09 3 + C10 2 = 42. Zirve hedefi 8 kisi x 5 gun = 40 vardiya ister; 42 ile tutar, 39 ile tutmaz.",
+    "cumartesi_bedeli_40_saatlik_sozlesme": 1,
+    "_bedel_notu": "40 saatlik sozlesmede cumartesi nobeti bir hafta ici vardiyasina mal olur; 45 saatlikte olmaz. Gerilimin kaynagi bu."
   }
 }

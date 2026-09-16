@@ -291,7 +291,8 @@
         "en_erken": 12,
         "en_gec_bitis": 14
       },
-      "_not": "9 saat sahada, 8 saat net. Ogle arasi 12:00-14:00 arasinda tek blok (K-14)."
+      "_not": "9 saat sahada, 8 saat net. Ogle arasi 12:00-14:00 arasinda tek blok (K-14).",
+      "_gunler_notu": "gunler alani yok = her gun kullanilabilir"
     },
     {
       "id": "V-ERKEN",
@@ -302,7 +303,8 @@
         "en_erken": 12,
         "en_gec_bitis": 14
       },
-      "_not": "8 saat sahada, 7 saat net. C09 icin uygun olan tek tam gun sablonu."
+      "_not": "8 saat sahada, 7 saat net. C09 icin uygun olan tek tam gun sablonu.",
+      "_gunler_notu": "gunler alani yok = her gun kullanilabilir"
     },
     {
       "id": "V-CMT",
@@ -313,7 +315,10 @@
         "en_erken": 11,
         "en_gec_bitis": 12
       },
-      "_not": "Cumartesi nobeti. 4 saat sahada -> MOLA_HAKKI tablosunda '<=4 saat' bandi, 15 dk."
+      "_not": "Cumartesi nobeti. 4 saat sahada -> MOLA_HAKKI tablosunda '<=4 saat' bandi, 15 dk. GUNLER: yalniz Cumartesi (T-14). Alan yokken hafta ici de kullanilabiliyordu ve A9'un kapasite matematigini bozuyordu: 42 yerine 49.",
+      "gunler": [
+        5
+      ]
     }
   ],
   "talep": [

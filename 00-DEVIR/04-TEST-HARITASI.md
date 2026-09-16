@@ -135,19 +135,16 @@ mi, senin kararın.
 
 ---
 
-## Şartnamedeki kabul senaryoları — iskelet hazır, bilerek kırmızı
+## Şartnamedeki kabul senaryoları — **on ikisi de yeşil**
 
-**Master Spec v1.3 §16** on iki altın senaryo tanımlıyor (A1–A12): basit
+**Master Spec §16** on iki altın senaryo tanımlıyor (A1–A12): basit
 uygulanabilir, çelişkili sert kural → `cozumsuz`, yetkinlik açığı, **gece
 yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak hedef
 çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
 plan kopyalama.
 
-**Durum (16 Eylül):** On ikisinin de *"doğru çalışıyorsa ne görmeliyiz"*
-cümleleri yazıldı ve **Mustafa tarafından tek tek onaylandı** —
-`08-motor-testleri/v5/KABUL-OLCUTLERI.md` (dondurulmuş). Beklenen sonuçlar
-**şartnameden türetildi**, motora bakılmadı; motor zaten yok. Cümleler
-fikstüre, fikstürler koşan bir pytest paketine bağlandı.
+**Durum (16 Eylül).** Zincir uçtan uca tamam ve **yeşil**: onaylı cümle →
+fikstür → test → motor.
 
 | Adım | Durum |
 |---|---|
@@ -155,83 +152,74 @@ fikstüre, fikstürler koşan bir pytest paketine bağlandı.
 | Mustafa onayladı | ✅ **12/12 senaryo, 6/6 varsayım** (A5 ertelendi) |
 | Fikstürler yazıldı | ✅ **11 dosya** (A5 hariç) + ortak sahne, hepsi denetleyiciden geçiyor |
 | Test iskeleti | ✅ `08-motor-testleri/v5/testler/` — pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` |
-| Bağımsız doğrulayıcı | ✅ `09-motor/` — `/evaluate`, 17 kural gövdesi, 26 birim testi |
-| **A4 ve A8** | ✅ **YEŞİL** — motorun ilk korunan davranışları |
-| Kalan beş senaryo | 🔴 A1, A3, A6, A7, A9 — çözücü bekliyor (`/solve` → 501) |
-
-### Kapsama İLK KEZ büyüdü (16 Eylül)
-
-Zincir (kabul ölçütü → fikstür → test) 16 Eylül sabahı tamamdı ama ucu boştaydı.
-Öğleden sonra **bağımsız doğrulayıcı** yazıldı ve **iki senaryo yeşile döndü**.
-
-| | Motorsuz | Doğrulayıcıyla |
-|---|---|---|
-| Kırmızı | 7 | **5** |
-| Yeşil | 4 | **7** |
-| Atlanan | 5 | 4 |
-
-**A4 ve A8 artık bekçi.** Bu iki senaryonun koruduğu davranışlar — gece
-yarısını aşan vardiyada dinlenme hesabı, çakışma tespiti, öğle arasında
-sahadaki kişi sayısı — bundan sonra sessizce bozulamaz.
-
-Kalan beş kırmızı **doğru sebeple** kırmızı: servis ayakta, `/solve` ucu yok
-(501). İstemci bunu *"COZUCU YAZILMADI"* diye ayırt ediyor; "motor çöktü" ile
-karıştırılmıyor.
-
-> **Neden önce doğrulayıcı:** yedi kırmızının ikisi plan üretmiyor, var olan
-> planı denetliyor. Çözücü olmadan yeşile dönebilecek tek iki senaryo onlardı.
-> En küçük adım seçildi.
+| Bağımsız doğrulayıcı | ✅ `09-motor/dogrulayici/` — `/evaluate`, 17 kural gövdesi |
+| Çözücü | ✅ `09-motor/cozucu/` — CP-SAT, `/solve` |
+| Onarım döngüsü | ✅ `09-motor/orkestra.py` — §11.7, en fazla 2 deneme |
+| **Altın senaryolar** | ✅ **12 passed, 4 skipped** (atlananlar backend tarafında) |
+| Birim testi | ✅ **60 passed** |
 
 ```
-py -m pytest -q   →   7 failed, 3 passed, 4 skipped
+py servis.py   (ayri pencerede)
+set TSHIFT_MOTOR_URL=http://localhost:8000
+py -m pytest -q   →   12 passed, 4 skipped
 ```
 
-| Sonuç | Kaç | Hangileri | Neden |
+### Kapsamanın büyüme çizgisi
+
+| | Motorsuz | Doğrulayıcıyla | Çözücüyle |
 |---|---|---|---|
-| 🔴 failed | 7 | A1, A3, A4, A6, A7, A8, A9 | Motor yok — `MotorYok` fırlatılıyor, mesaj bunu açıkça söylüyor |
-| 🟢 passed | 3 | Paketin kendi sağlığı | Fikstürler yükleniyor mu, her `kontrol` adının gövdesi var mı, motor yokluğu sessizce mi geçiliyor |
-| ⏭ skipped | 4 | A2, A10, A11, A12 | Backend senaryosu; xUnit tarafında koşacak |
+| Kırmızı | 7 | 5 | **0** |
+| Yeşil | 4 | 7 | **12** |
+| Atlanan | 5 | 4 | 4 |
 
-### ⚠ Bu paket CI'da koşmuyor — bilerek
+Atlanan dördü backend senaryosu (A2, A10, A11, A12); xUnit tarafında koşacak.
 
-CI şu an yalnız `dotnet test` çalıştırıyor (A-4 kapısı). Kırmızı bir paketi
-şimdi kapıya bağlamak **"main her zaman yeşil"** kuralını bozar ve kapıyı
-sürekli kırmızı tutardı. Motor var olduğunda CI'a eklenecek.
+### Son üç senaryo neyi ortaya çıkardı
 
-Aynı sebeple C# taslakları `.cs.taslak` uzantılı: dayandıkları tablolar
-(`plans`, `plan_runs`, `plan_violations`, `leaves.durum`, `rules.yasal`) henüz
-yok, `.cs` olsalardı **derleme hatası** verip CI'ı kırarlardı. 20 test adı ve
-ne bekledikleri yazılı — yalnız koşamıyorlar. Bkz.
-`08-motor-testleri/v5/testler/backend-taslak/OKU-BENI.md`.
+Yeşile dönmeleri kolay olmadı ve üçü de **motorda ya da fikstürde gerçek bir
+boşluk** olduğu için kırmızıydı:
 
-### İskeletin yapısı
-
-A1–A9 motor testi (Python + pytest), A10–A12 backend testi (bu projedeki
-xUnit). Bu, projedeki en önemli test ilkesinin (uygulama ile doğrulayıcı aynı
-varsayımdan beslenmez) şartname seviyesindeki karşılığı.
-
-| Dosya | Görevi | Motor gelince değişir mi |
+| Senaryo | Kırmızı tutan şey | Nasıl bulundu |
 |---|---|---|
-| `08-motor-testleri/v5/testler/test_altin_senaryolar.py` | Testlerin kendisi | Hayır |
-| `08-motor-testleri/v5/testler/motor_istemci.py` | Motorla **tek temas noktası** (`/solve`, `/evaluate`, `/health`) | **Evet — yalnız bu** |
-| `08-motor-testleri/v5/testler/kontroller.py` | Fikstürdeki `degismezler` adlarının gövdesi | Hayır |
-| `08-motor-testleri/v5/testler/conftest.py` | pytest ayarları, karşılaştırma sözdizimi | Hayır |
-| `08-motor-testleri/v5/fikstur_yukleyici.py` | Sahne + `fark` birleştirme; **denetleyici ile test aynı mantığı kullansın diye ortak** | Hayır |
+| **A9** kadro yetmiyor | `shift_templates`'te *"bu şablon hangi günlerde kullanılır"* alanı **yoktu**. "Cumartesi nöbeti" adlı şablonu motor hafta içi de kullanıyordu — adı bir yorumdur, kısıt değildir | Tahminle değil **deneyle**: şablon çıkarılınca kapasite tam olarak fikstürün belgelediği 42'ye düştü (şablon dururken 49) → T-14 |
+| **A1** normal hafta | `/solve` §11.7 onarım döngüsünü hiç koşmuyordu; `onarim_denemesi` diye bir sayı yoktu | Fikstür istiyordu, çıktı vermiyordu → `09-motor/orkestra.py` yazıldı |
+| **A7** adalet mi kapsama mı | **İki ayrı boşluk birden.** (1) Motor `profil` alanını hiç okumuyordu — ağırlık tablosu (§5.4) kodda yoktu. (2) `ADALET_DENGESI`'nin eşik altında gradyanı yoktu, yani ağırlığı değiştirmek planı değiştiremiyordu. (3) **Fikstürün kendisi de eksikti**: kabul ölçütü *"Ç01–Ç03 en müsait olanlar"* diyordu ama fikstürde on çalışan da birbirinin aynısıydı — cumartesiyi kime verdiğin kapsamaya hiçbir şey mal olmuyordu | Test kırmızıydı ve **haklıydı**; sebebi ararken üçü de çıktı → K-29, T-14 |
 
-Motor yazıldığında **tek dosya** değişecek: `motor_istemci.py` içindeki
-`_cagir`. Fikstürlerin, kabul ölçütünün ve kontrollerin tek satırı değişmez.
+> **A7'nin dersi.** Kabul ölçütündeki bir cümle (*"en müsait olanlar"*)
+> fikstüre çevrilmemişse, senaryo anlattığı şeyi sınamaz. Cümle onaylıydı,
+> fikstür ona uymuyordu ve bu ancak motor yazılınca görüldü.
 
-`kontroller.py` **ürünün doğrulayıcısı değildir** — §16.1 bağımsız
-doğrulayıcının çözücüyle hiçbir mantık paylaşmamasını şart koşuyor. Oradaki
-kontroller kaba, dar ve testin yardımcısı.
+### Kırmızı kanıt turu — 12/12, ama ilk turda 8'de 4'ü kaçtı
 
-**Onay turunun yan faydası:** Kabul ölçütü yazmak şartnameyi de denetledi.
-İki eksik senaryolar yazılırken çıktı, şartname okunurken değil —
-`leaves` tablosunda izin durumu alanı yok (K-9) ve §6 kataloğunda `yasal`
-sütunu yok (K-16, K-17). İkincisi olmadan "hangi ihlal kabul edilebilir"
-sorusu cevaplanamıyor.
+§16.4 kuralı: bir test yeşil sayılmadan önce **kırmızı yanabildiği**
+gösterilmeli. 16 Eylül'de motor koduna tek tek kasıtlı bozmalar uygulandı.
 
----
+**İlk tur: 8 bozmanın 4'ü hiçbir teste yakalanmadı.**
+
+| Kaçan bozma | Ne demek |
+|---|---|
+| Ağırlık tablosu yok sayılır | Profil farkı **başka bir sebepten** oluşuyordu; A7 yeşildi ama §5.4'ü kanıtlamıyordu |
+| Adalet gradyanı kaldırılır | Aynı |
+| Orkestra doğrulayıcıyı çağırmaz | Import'a bakan test yakalamıyor — import durur, çağrı kaybolur |
+| Fazla mesai tavanı sabitlenir | Hiçbir senaryo bu tavana dokunmuyordu |
+
+Eksik testler bunun üzerine yazıldı (`09-motor/testler/test_profiller.py`, 16
+test). İkinci turda **12 bozmanın 12'si yakalandı.**
+
+> **Bu turun varlık sebebi tam olarak budur.** Dört boşluk, testler yeşil
+> yanarken duruyordu. "Testler geçiyor" ile "testler bir şeyi koruyor" aynı
+> şey değildir.
+
+### ⚠ Bu paket CI'da hâlâ koşmuyor — ama gerekçesi kalmadı
+
+CI şu an yalnız `dotnet test` çalıştırıyor (A-4 kapısı). Bugüne kadarki
+gerekçe basitti: kırmızı bir paketi kapıya bağlamak *"main her zaman yeşil"*
+kuralını bozardı.
+
+**Artık kırmızı yok.** 60 birim + 12 altın senaryo, hepsi yeşil. Bağlamanın
+önündeki tek iş teknik: motor ayrı bir servis, CI adımının onu önce ayağa
+kaldırması gerekiyor (`py servis.py &` + sağlık beklemesi). C# taslakları
+`.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez, CI kırılmaz.
 
 ## Kapsama özeti — dürüst tablo
 

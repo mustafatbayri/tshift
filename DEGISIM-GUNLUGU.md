@@ -4,6 +4,96 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · ÇÖZÜCÜ YAZILDI · ON İKİ ALTIN SENARYONUN TAMAMI YEŞİL**
+**.NET ürün kodu değişmedi, 39/39 hâlâ yeşil.**
+
+**Motor tamamlandı.** `09-motor/cozucu/` (CP-SAT) ve `09-motor/orkestra.py`
+(§11.7 onarım döngüsü) yazıldı. Kalan beş kırmızı senaryo — A1, A3, A6, A7,
+A9 — yeşile döndü. Birim testi 44 → **60**, altın senaryo **12/12**.
+
+**Üç senaryo kolay yeşile dönmedi ve üçü de gerçek bir boşluk buldu:**
+
+- **A9** — `shift_templates`'te *"bu şablon hangi günlerde kullanılır"* alanı
+  **yoktu**. "Cumartesi nöbeti" adlı 4 saatlik şablonu motor hafta içi de
+  kullanıyor, kapasiteyi 42 yerine 49 gösteriyordu. Tahminle değil **deneyle**
+  bulundu: şablon çıkarılınca kapasite tam olarak fikstürün belgelediği 42'ye
+  düştü. **Ders:** bir alanın *adı* motoru bağlamaz; bağlayan tek şey kısıttır.
+  → `gunler` alanı eklendi (T-14 kapandı)
+- **A1** — `/solve` §11.7 onarım döngüsünü hiç koşmuyordu. `orkestra.py`
+  yazıldı: üret → **bağımsız** doğrulayıcıyla denetle → en fazla 2 onarım.
+  Denetim her zaman **kullanıcının** girdisiyle yapılıyor, onarımın eklediği
+  kilitlerle değil — yoksa motor kendi koltuk değneğini kural sanardı.
+- **A7** — üç ayrı boşluk birden. (1) Motor `profil` alanını **hiç
+  okumuyordu**; §5.4 ağırlık tablosu kodda yoktu. (2) `ADALET_DENGESI`'nin
+  eşik altında gradyanı yoktu, yani ağırlığı değiştirmek planı
+  değiştiremiyordu — iki profil **birebir aynı planı** üretiyordu. (3)
+  **Fikstürün kendisi de eksikti:** kabul ölçütü *"Ç01–Ç03 en müsait
+  olanlar"* diyordu ama fikstürde on çalışan birbirinin aynısıydı, yani
+  cumartesiyi kime verdiğin kapsamaya **hiçbir şey mal olmuyordu**.
+
+> **A7'nin dersi.** Onaylı bir cümle fikstüre çevrilmemişse, senaryo
+> anlattığı şeyi sınamaz. Cümle onaylıydı, fikstür ona uymuyordu — ve bu
+> ancak motor yazılınca görüldü.
+
+**K-29 doğdu: eşik ihlali sayar, planı gradyan seçer.** Adalet eşiği
+(K-27) yalnız doğrulayıcıda; motorda yerine **artan marjinal maliyet** var.
+İki yanlış biçim denendi ve **ölçümle** elendi: *"ortalamanın üstündeki
+sapma"* denendiğinde motor cumartesiye gerekenden fazla kişi koymaya başladı
+(3 yerine 5) — ortalamayı yükseltmek herkesin sapmasını düşürüyordu, yani
+ceza cezalandırdığı şeyi ödüllendiriyordu. Aynı açık eşik teriminde de vardı;
+çıkarıldı ve 57 birim + 12 altın testin **hiçbiri değişmedi** — terim zaten
+atıl duruyordu.
+
+**Kırmızı kanıt ilk turda 8'de 4'ünü KAÇIRDI.** Ağırlık tablosu yok sayılsa,
+adalet gradyanı kaldırılsa, orkestra doğrulayıcıyı çağırmasa ya da fazla mesai
+tavanı sabitlense **hiçbir test kırmızı yanmıyordu**. Üçüncüsü özellikle
+öğretici: import'a bakan test yakalamıyor, çünkü import durur, **çağrı**
+kaybolur. Eksik testler yazıldı (`09-motor/testler/test_profiller.py`, 13
+test); ikinci turda **12/12 yakalandı**.
+
+**Ölçüm yöntemi de bir tuzak çıkardı.** *"Motor şu kişiyi seçti"* testleri
+kırılgan: kısıt gevşekse çözücü eşit değerdeki seçenekler arasında arama
+sırasına göre seçiyor ve **bozulmuş kod aynı cevabı verebiliyor**. Bu
+varsayılmadı, denendi ve doğrulandı. Çözüm: `amac_degeri` çıktıya eklendi;
+aynı girdi, iki seçim sabitlenmiş hâlde çözülüp amaç değerleri
+karşılaştırılıyor.
+
+**K-29 ve K-30 karara bağlandı.** K-29 onaylandı: adalet eşiğin altında da
+bir **tercihtir**; üç plan kartını birbirinden farklı yapan mekanizma bu.
+
+K-30'da soruyu kötü sormuşum — *"bir saat fazla mesai kaç saatlik açığa
+değer"* diye, yani ceza katsayısı dilinde. Mustafa haklı olarak *"ben tam
+neyi cevaplayayım onu da anlamadım"* dedi ve kararı ürün dilinde verdi:
+**"Zaten hedef hiç gitmemek. Gidilecekse de minimum gitmek."** Ölçüldü — kod
+bunu **zaten yapıyormuş**: hedef kapsama için 0 saat, asgari kapsama zorlarsa
+tam gereken kadar. Sayı değişmedi, üç test kararı çiviledi.
+
+**Riski açarken yazdığım teşhis yanlıştı ve düzeltildi.** *"Profil tavanı
+pratikte hiç kullanılmıyor"* demiştim; tavan **ölü değil** — zorunlu aşımın
+sınırını o çiziyor (CALISAN'da tavan 0 → plan çözümsüz). Ölçüm doğruydu,
+yorumu yanlıştı: ölçtüğüm sayıyı ürün kararının yerine koymuşum. T-15 kapandı.
+
+**O-9 · Gönderilmeyen dosya iki tarafta da "temiz" görünüyordu.** Mustafa'nın
+makinesinde ilk koşuda A06 kırmızı yandı ve birim testi 53 çıktı (57 değil):
+doğrulayıcıdaki `KILIT_UYUMU` düzeltmesi ve 4 testi **hiç gönderilmemişti.**
+Hiçbir yerde kırmızı yanmıyordu — git temiz, `DENETIM.py` *"commit bekleyen
+0"*, testler yeşil; çünkü her iki taraf **kendi içinde** tutarlıydı ve
+tutarsızlık **aralarındaydı**.
+
+Yakalayan şey `orkestra.py` oldu: `/solve` ilk kez doğrulayıcıyı çağırınca
+eski `KILIT_UYUMU`, A06'nın `tip: "yasak"` kilidinde patladı. Onarım
+döngüsünün yazıldığı ilk gün amacı dışında bir şeyi de yakaladı.
+
+Kalıcı bekçi: **commit öncesi dosyalar karşı taraftan çekilip içerikçe
+karşılaştırılır** — hafızaya değil `cmp`'ye güvenilir. D-1 zincirine yeni
+halka: *yazdım ≠ gönderdim ≠ commit ettim ≠ karşı tarafta değişti ≠
+göndermem gerektiğini fark ettim.*
+
+→ `09-motor/` · `02-spec/v1.4-master-spec.md` §5.4, §6.5, §6.7, §8.4, §11.3
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-28, K-29, K-30
+→ `00-DEVIR/05-HATA-OTOPSILERI.md` O-9
+→ `00-DEVIR/oturumlar/2026-09-16-cozucu.md`
+
 **2026-09-16 · ADALET KURALI YAZILDI (K-27) · kırmızı kanıt ÜÇ ZAYIF TEST buldu**
 **.NET ürün kodu değişmedi, 39/39 hâlâ yeşil. A4 ve A8 yeşil kalmaya devam.**
 

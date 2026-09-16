@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (bağımsız doğrulayıcı yazıldı; A4 ve A8 YEŞİL)
+**Son güncelleme:** 2026-09-16 (çözücü + onarım döngüsü yazıldı; **12 altın senaryonun tamamı YEŞİL**)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -68,9 +68,10 @@ A12). Koşuyor ve **bilerek kırmızı**:
 py -m pytest -q   →   7 failed, 4 passed, 5 skipped      (motor ADRESSIZ)
 ```
 
-Motorsuz koşu hâlâ kırmızı ve bu doğru (§16.4 kırmızı kanıt). Yeşiller paketin
-**kendi** sağlık kontrolü: fikstürler yükleniyor mu, her `kontrol` adının
-gövdesi var mı, motorun yokluğu açıkça söyleniyor mu.
+Motorsuz koşu **hâlâ kırmızı ve bu doğru** (§16.4 kırmızı kanıt): motor
+adressizken testler yeşil yanıyorsa hiçbir şeyi sınamıyorlar demektir.
+Yeşiller paketin **kendi** sağlık kontrolü: fikstürler yükleniyor mu, her
+`kontrol` adının gövdesi var mı, motorun yokluğu açıkça söyleniyor mu.
 
 ✅ **"Motor gelince tek dosya değişecek" sözü tutuldu.** Doğrulayıcı yazıldı ve
 yalnız `motor_istemci.py` değişti — testlerin, fikstürlerin ve kontrollerin
@@ -81,29 +82,37 @@ tek satırı değişmedi.
 kuralını bozardı. C# taslakları da bu yüzden `.cs.taslak` uzantılı —
 derleyici görmez, CI kırılmaz. Ayrıntı: `08-motor-testleri/v5/testler/OKU-BENI.md`.
 
-**BAĞIMSIZ DOĞRULAYICI YAZILDI (16 Eylül) — ilk iki senaryo yeşile döndü.**
-`09-motor/` — `/evaluate` ucu ve onu sunan küçük bir HTTP servisi.
-**Dışarıdan hiçbir paket gerekmiyor**, yalnız Python standart kütüphanesi.
+**MOTOR TAMAMLANDI (16 Eylül) — on iki altın senaryonun tamamı yeşil.**
+`09-motor/` üç parçadan oluşuyor ve **üçü ayrı ayrı durur**:
+
+| Parça | Ne yapar | Ne yapmaz |
+|---|---|---|
+| `09-motor/dogrulayici/` | Var olan planı kurallara karşı denetler | Plan üretmez |
+| `09-motor/cozucu/` | CP-SAT ile plan üretir | Kendi ürettiğini denetlemez |
+| `09-motor/orkestra.py` | İkisini üstten çağırır, §11.7 onarım döngüsünü koşar | Kural bilmez |
 
 ```
 py servis.py   (ayri pencerede)
 set TSHIFT_MOTOR_URL=http://localhost:8000
-py -m pytest -q   →   5 failed, 7 passed, 4 skipped
+py -m pytest -q   →   12 passed, 4 skipped
 ```
 
-**A4 ve A8 artık gerçekten korunuyor.** Kapsama ilk kez büyüdü — kabul ölçütü
-bir taahhüt olmaktan çıkıp iki senaryoda bekçiye dönüştü.
-
-Kalan beş kırmızı (A1, A3, A6, A7, A9) **doğru sebeple** kırmızı: servis
-ayakta ama `/solve` yok, 501 dönüyor. İstemci bunu *"COZUCU YAZILMADI"* diye
-ayırt ediyor — "motor çöktü" ile karıştırılmıyor.
+Atlanan dört senaryo backend tarafında koşuyor (A2, A10, A11, A12);
+A5 ertelendi (K-12).
 
 | | Sayı |
 |---|---|
 | Yazılan kural gövdesi | **17** (katalogdaki 35'in alt kümesi) |
-| Doğrulayıcı birim testi | **26**, hepsi yeşil |
-| Kırmızı kanıt | **7 kasten bozma, 7'si de yakalandı** |
-| Bilerek yazılmayan | `ADALET_DENGESI` — şartnamede ihlal eşiği yok (T-12) |
+| Birim testi | **60**, hepsi yeşil |
+| Altın senaryo | **12**, hepsi yeşil |
+| Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** |
+
+⚠ **Kırmızı kanıtın ilk turu 8'de 4'ünü KAÇIRDI.** Kaçanlar: ağırlık tablosu
+yok sayılsa, adalet gradyanı kaldırılsa, orkestra doğrulayıcıyı çağırmasa ya
+da fazla mesai tavanı sabitlense **hiçbir test kırmızı yanmıyordu**. Eksik
+testler o yüzden yazıldı (`09-motor/testler/test_profiller.py`). Kırmızı
+kanıt turu olmasaydı bu dört boşluk sessizce kalırdı — turun varlık sebebi
+tam olarak budur.
 
 ⚠ **Doğrulayıcı çözücüyle mantık paylaşmaz** (§7.6, §16.1). Çözücü yazılırken
 *"aynı hesabı iki kez yazmayalım"* deyip ortak modül çıkarmak **yasaktır** —
@@ -172,44 +181,59 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 
 ## 3. Sıradaki tek adım
 
-> **Çözücü (M-09).** Python + OR-Tools CP-SAT, ayrı servis. Kalan beş altın
-> senaryoyu (A1, A3, A6, A7, A9) yeşile çevirecek.
+> **pytest paketini CI'ya bağlamak.**
 >
-> 1. **Oku:** `02-spec/v1.4-master-spec.md` §11.2 (`/solve` girdisi), §11.3
->    (çıktı + `en_iyi_plan` + teşhis), §11.7 (idempotency, onarım döngüsü),
->    §7.2 (motor neden ayrı servis).
-> 2. **Yaz:** `09-motor/` altına çözücü. `servis.py`'deki `/solve` ucu şu an
->    501 dönüyor; oraya bağlanacak.
-> 3. **Koştur:** `py -m pytest -v` — beş senaryo teker teker yeşile dönmeli.
+> Bugüne kadarki gerekçe basitti: kırmızı bir paketi kapıya bağlamak
+> *"main her zaman yeşil"* kuralını bozardı. **Artık kırmızı yok** — 60 birim
+> + 12 altın senaryo, hepsi yeşil. Gerekçe ortadan kalktı.
 >
-> ### ⛔ Çözücü doğrulayıcıyla mantık paylaşmaz
+> Tek iş teknik: motor ayrı bir servis olduğu için CI adımının onu önce ayağa
+> kaldırması gerekiyor (servisi başlat, `/health` yeşil olana kadar bekle,
+> sonra `pytest`). C# taslakları `.cs.taslak` uzantılı kalmaya devam edecek.
 >
-> Şartname §7.6 ve §16.1 bunu şart koşuyor ve bu, projedeki **en kolay
-> bozulacak** kuraldır. Çözücüyü yazarken `09-motor/dogrulayici/` altındaki
-> `zaman.py` ya da `kurallar.py`'yi **import etmek yasaktır.** Aynı aritmetik
-> ikinci kez, bağımsız olarak yazılacak.
+> ### ⛔ Bozulmaması gereken kural
 >
-> Sebebi D-6: kodu yazan testi de yazarsa aynı yanlış varsayım iki yere
-> birden geçer ve hiçbir test yakalamaz. Doğrulayıcı ancak çözücüden
-> bağımsızsa onu denetleyebilir.
+> Şartname §7.6 ve §16.1: **doğrulayıcı çözücüyle mantık paylaşmaz.**
+> `09-motor/cozucu/` ve `09-motor/dogrulayici/` birbirini **import etmez**;
+> aynı aritmetik iki kez, bağımsız olarak yazılıdır. `09-motor/orkestra.py`
+> ikisini de import eder ve bu doğrudur — yasak olan, ikisinin birbirini
+> çağırmasıdır.
+>
+> Bunu artık bir test koruyor: `09-motor/testler/test_bagimsizlik.py`.
+> *"Aynı hesabı iki kez yazmayalım"* deyip ortak modül çıkarmak yasaktır;
+> tekrar burada maliyet değil, güvencedir.
+>
+> ### ⛔ Commit öncesi içerik karşılaştırması (O-9)
+>
+> 16 Eylül'de bir düzeltme ve 4 testi **hiç gönderilmemiş**, iki tarafta da
+> hiçbir şey kırmızı yanmamıştı: git temiz, `DENETIM.py` *"commit bekleyen
+> 0"*, testler yeşil — çünkü her iki taraf **kendi içinde** tutarlıydı.
+>
+> Bekçi: commit öncesi dosyalar karşı taraftan çekilip **içerikçe**
+> karşılaştırılır. Hafızaya değil `cmp`'ye güvenilir. Ayrıntı:
+> `00-DEVIR/05-HATA-OTOPSILERI.md` O-9.
 >
 > ✅ **Tamamlananlar:** fikstürler · test iskeleti · şartname v1.4 · kural
-> sınıflandırması · mevzuat araştırması · **bağımsız doğrulayıcı**.
-> A-15 kapandı, A4 ve A8 yeşil.
+> sınıflandırması · mevzuat araştırması · bağımsız doğrulayıcı · **çözücü**
+> · **onarım döngüsü** · **plan profilleri**.
+> A-15, A-17, A-18, T-12, T-14, T-15 kapandı.
+> K-27, K-28, K-29, K-30 karara bağlandı.
 >
 > **Paralelde açık kalanlar:**
 >
-> - **T-12 — `ADALET_DENGESI` ihlal eşiği** şartnamede tanımsız. Yumuşak kural
->   olduğu için aciliyeti düşük; ürün kararı gerekiyor (ne kadar sapma ihlal).
+> - **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.** Sayı boyutları çalışıyor;
+>   süre boyutu karara bağlanmadı, `eksik_boyutlar` ile açıkça bildiriliyor.
+> - **`/suggest` (§11.5)** — motorun yazılmamış tek ucu, bilerek 501 dönüyor.
 > - **A-16 hukuk teyidi** — madde numaralı tablo hazır, uzman bakacak.
 > - **`07-motor/` yeniden adlandırma** — önerilen `08-analiz/` adı
 >   `08-motor-testleri/` ile çakışır. Karar verilirken göz önüne alınmalı.
 > - ✅ **`DENETIM.py` her oturum sonunda koşturulmalı:**
 >   `cd C:\Users\PC\Desktop\Tshift` sonra `py DENETIM.py`.
 > - **2 pencere kurulumu yapılmadı** — karar 15 Eylül'de verildi, komutlar §5b'de.
-> - **pytest paketi CI'a bağlanmadı.** Artık daha yakın: 7 test yeşil, ama beşi
->   hâlâ kırmızı. Çözücü bitince bağlanacak.
-> - A-6 mutasyon raporu, A-2 ve A-3 eksik bekçiler.
+> - **A-6 mutasyon raporu.** 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama
+>   yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok.
+> - **R7 eşiği:** `00-DEVIR` kökünde 9 dosya. Onuncusu uyarı üretir.
+> - A-2 ve A-3 eksik bekçiler.
 >
 > Tam öncelik listesi: `06-ACIK-RISKLER.md` sonundaki tablo.
 
@@ -248,8 +272,8 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `05-inceleme/v1-2026-09-11/` | **Yılmaz'a gönderilen inceleme paketi** — 8 soru, 4 hata otopsisi, bilinen açıklar | Dış inceleme konuşulacaksa |
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
-| **`08-motor-testleri/`** | ⚠ **Motor YOK; testler koşuyor ama bilerek kırmızı.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
-| **`09-motor/`** | ✅ **BAĞIMSIZ DOĞRULAYICI — çalışıyor.** `/evaluate` ucu, 17 kural gövdesi, 26 birim testi. Dışarıdan paket gerektirmez. **Çözücü burada YOK** — `/solve` bilerek 501 dönüyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`08-motor-testleri/`** | ✅ **Motor var, 12 altın senaryonun tamamı yeşil.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, 17 kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). 57 birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

@@ -60,7 +60,8 @@ def test_solve_senaryosu(yol, motor):
             _solve_dogrula(cikti, girdi,
                            fy.temiz(bek.get("her_iki_cagri", {})),
                            "%s/%s" % (fik["senaryo"], ad))
-        _karsilastirmalar(sonuclar, bek.get("karsilastirma", []), fik["senaryo"])
+        _karsilastirmalar(sonuclar, girdi, bek.get("karsilastirma", []),
+                          fik["senaryo"])
         return
 
     cikti = motor.solve(girdi)
@@ -95,16 +96,103 @@ def _solve_dogrula(cikti, girdi, bek, etiket):
         pytest.fail("[%s]\n  " % etiket + "\n  ".join(hatalar), pytrace=False)
 
 
-def _karsilastirmalar(sonuclar, tanimlar, etiket):
-    """A7: iki profilin sonuclarini karsilastirir."""
+def _karsilastirmalar(sonuclar, girdi, tanimlar, etiket):
+    """A7: iki profilin sonuclarini karsilastirir.
+
+    Fikstur `yon` alaninda "sol OP sag" yazar; sol ve sag `cagrilar`
+    listesindeki cagri adlaridir:
+
+        {"olcut": "hedef_kapsama_yuzde", "yon": "kapsama >= calisan"}
+
+    Ozel bir yon var: `en_az_biri_kesin_buyuk`. Digerlerinden turetilir ve
+    su soruyu sorar: iki profil GERCEKTEN farkli plan uretti mi? Butun
+    olcutler esitse kosullar saglanir ama agirliklar hic calismiyordur --
+    yesil yanan ama hicbir sey sinamayan testin tam kendisi. O yuzden
+    esitlik burada BASARISIZLIKTIR.
+    """
     hatalar = []
+    kesin_fark = False
+
     for t in tanimlar:
         if t.get("yon") == "en_az_biri_kesin_buyuk":
-            continue        # digerlerinden turetiliyor
-        hatalar.append("karsilastirma '%s' henuz sinanmiyor: motor yok"
-                       % t.get("ad"))
+            continue                    # dongu bitince bakilir
+        olcut = t.get("olcut")
+        hesap = OLCUTLER.get(olcut)
+        if hesap is None:
+            hatalar.append("olcut bilinmiyor: %r ('%s')" % (olcut, t.get("ad")))
+            continue
+        try:
+            sol_ad, op, sag_ad = t["yon"].split()
+        except ValueError:
+            hatalar.append("yon okunamadi: %r ('%s')" % (t.get("yon"), t.get("ad")))
+            continue
+        if sol_ad not in sonuclar or sag_ad not in sonuclar:
+            hatalar.append("yonde gecen cagri adi yok: %r" % t["yon"])
+            continue
+
+        sol = hesap(sonuclar[sol_ad], girdi)
+        sag = hesap(sonuclar[sag_ad], girdi)
+        if sol is None or sag is None:
+            hatalar.append("%s: olcut hesaplanamadi (%s=%r, %s=%r)"
+                           % (t.get("ad"), sol_ad, sol, sag_ad, sag))
+            continue
+
+        tamam = sol <= sag + TOLERANS if op == "<=" else sol >= sag - TOLERANS
+        if not tamam:
+            hatalar.append("%s: %s(%s)=%s %s %s(%s)=%s tutmadi"
+                           % (t.get("ad"), olcut, sol_ad, sol, op,
+                              olcut, sag_ad, sag))
+        if abs(sol - sag) > TOLERANS:
+            kesin_fark = True
+
+    if any(t.get("yon") == "en_az_biri_kesin_buyuk" for t in tanimlar) \
+            and not hatalar and not kesin_fark:
+        hatalar.append(
+            "iki profil de ayni sonucu verdi: hicbir olcutte kesin fark yok. "
+            "Agirlik tablosu (#5.4) calismiyor demektir -- profil okunmuyor "
+            "ya da agirliklar amac fonksiyonuna girmiyor.")
+
     if hatalar:
         pytest.fail("[%s]\n  " % etiket + "\n  ".join(hatalar), pytrace=False)
+
+
+TOLERANS = 1e-9     # float karsilastirmasi icin; anlamli fark degil
+
+
+def _adalet_sapmasi(cikti, girdi, boyut, gunler):
+    """Devir yuku + bu haftaki atamalar -> kisi basi sayi -> STANDART SAPMA.
+
+    Anakutle sapmasi (ddof=0) kullanilir: elimizdeki kadro ornek degil,
+    kadronun kendisidir. A7 fiksturunun `turetilmis_degerler` blogundaki
+    1.3 ve 0.7 sayilari da bu tanimla hesaplandi.
+    """
+    atamalar = cikti.get("atamalar") or []
+    sayilar = []
+    for c in girdi.get("calisanlar", []):
+        devir = (c.get("devir_yuk") or {}).get(boyut, 0)
+        bu_hafta = sum(1 for a in atamalar
+                       if a.get("calisan") == c["id"] and a.get("gun") in gunler)
+        sayilar.append(devir + bu_hafta)
+    if not sayilar:
+        return None
+    ort = sum(sayilar) / float(len(sayilar))
+    return (sum((s - ort) ** 2 for s in sayilar) / float(len(sayilar))) ** 0.5
+
+
+OLCUTLER = {
+    "adalet_sapmasi_cumartesi":
+        lambda c, g: _adalet_sapmasi(c, g, "cumartesi", (5,)),
+    "adalet_sapmasi_hafta_sonu":
+        lambda c, g: _adalet_sapmasi(c, g, "hafta_sonu", (5, 6)),
+    "hedef_kapsama_yuzde":
+        lambda c, g: (c.get("metrikler") or {}).get("hedef_kapsama_yuzde"),
+    "asgari_kapsama_yuzde":
+        lambda c, g: (c.get("metrikler") or {}).get("asgari_kapsama_yuzde"),
+    "fazla_mesai_saat":
+        lambda c, g: (c.get("metrikler") or {}).get("fazla_mesai_saat"),
+    "toplam_saat":
+        lambda c, g: (c.get("metrikler") or {}).get("toplam_saat"),
+}
 
 
 # ----------------------------------------------------------------------

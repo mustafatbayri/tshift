@@ -226,6 +226,67 @@ analizör uyarıları çıktı.
 
 ---
 
+## O-9 · Gönderilmeyen dosya, iki tarafta da "temiz" görünüyordu ⚠
+
+**Tarih:** 16 Eylül 2026
+
+**Ne oldu.** Doğrulayıcıdaki `KILIT_UYUMU` düzeltmesi ve onun 4 testi
+Claude'un çalışma alanında vardı, **Mustafa'nın makinesine hiç
+gönderilmemişti**. Commit listesi *"hangi dosyaları değiştirdiğimi
+hatırlıyorum"* yöntemiyle çıkarılmıştı; `kurallar.py` "zaten commit
+edilmişti" diye atlanmıştı.
+
+**Neden hiçbir yerde kırmızı yanmadı:**
+
+| Nerede | Ne görünüyordu | Neden yanıltıcı |
+|---|---|---|
+| Mustafa'nın makinesi | `git status` **temiz**, `DENETIM.py` *"commit bekleyen dosya: 0"* | Eski dosya zaten commit'liydi. Git, **var olmayan** bir değişikliği bildiremez |
+| Claude'un tarafı | Testler **yeşil** | Onun kopyasında dosya doğruydu |
+
+İki taraf da kendi içinde tutarlıydı. Tutarsızlık **aralarındaydı** ve
+aradaki farka bakan hiçbir kontrol yoktu.
+
+**Nasıl ortaya çıktı.** `orkestra.py` yazılınca `/solve` ilk kez bağımsız
+doğrulayıcıyı çağırmaya başladı. Eski `KILIT_UYUMU`, A06'nın
+`{calisan, gun, tip: "yasak"}` biçimindeki kilidinde `KeyError: 'bas'`
+veriyordu — bu yüzden A06 Mustafa'da kırmızı, Claude'da yeşildi. İkinci
+ipucu test sayısıydı: **53 yerine 57**; eksik dördü tam olarak o kilit
+biçimini sınayan testlerdi.
+
+**Düzeltme:** İki dosya gönderildi, boyutları **birebir doğrulandı**.
+
+### Kalıcı bekçi
+
+> **Commit öncesi dosyalar karşı taraftan çekilip içerikçe karşılaştırılır.**
+> Hafızaya değil, `cmp`'ye güvenilir. Bu seferki fark da öyle bulundu.
+
+### D-1 zincirine eklenen halka
+
+Zincir şuydu: **yazdım ≠ gönderdim ≠ commit ettim ≠ karşı tarafta değişti.**
+Şimdi bir halka daha var:
+
+> **≠ göndermem gerektiğini fark ettim.**
+
+Önceki halkalar *"gönderdim ama gitmedi"* hatalarıydı — ölçülebilir, çünkü
+bir gönderme denemesi var. Bu ise *"göndermeyi hiç denemedim"*: ortada
+başarısız bir işlem bile yok, dolayısıyla loglanacak bir şey de yok.
+
+Aynı aile: boyut eşitliği içerik eşitliği demek değil (15 Eylül, `v2`→`v5`
+17 bayat atıf, dosya boyutları **birebir aynıydı**). Her ikisinde de hata,
+*doğru sinyale bakıp yanlış sonuç çıkarmaktı*.
+
+### Çıkarılan genel ders
+
+> **İki sistem ayrı ayrı "temiz" olabilir ve yine de birbirinden farklı
+> olabilir.** Her iki tarafın kendi içindeki tutarlılığını ölçen kontroller,
+> aradaki farkı **tanım gereği** göremez. Fark ancak karşılaştırılırsa
+> görülür.
+
+Bu, O-1 ile aynı sınıftan: *hiçbir şey kırmızı yanmadı.* Gürültülü hata
+ucuzdur; sessiz olan pahalıdır.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -238,6 +299,7 @@ analizör uyarıları çıktı.
 | O-6 | `dotnet test` DLL kilidi | `TEST.ps1` | ✅ |
 | O-7 | M4 yanlış alarm veriyordu | Yorum satırları atlanıyor | ✅ |
 | O-8 | EF sürüm uyuşmazlığı | Sabitlenmiş paket sürümleri | 🟡 Kısmi |
+| O-9 | Gönderilmeyen dosya iki tarafta da temiz görünüyordu | Commit öncesi içerik karşılaştırması (`cmp`), hafıza değil | ✅ |
 
 ---
 
@@ -256,3 +318,9 @@ görmüyor çünkü idealize edilmiş bir Linux/CI dünyası için yazılmış.
 O-1'de hiçbir şey kırmızı yanmadı, hiçbir şey uyarı vermedi, doğrulama
 sorgusu bile "her şey yolunda" dedi. Diğerlerinin hepsi gürültülüydü —
 gürültülü hata ucuzdur.
+
+**O-9 aynı sınıfa dördüncü bir örnek ekledi ve bir şeyi netleştirdi:** bu
+sınıfın ortak özelliği *kontrolün yokluğu* değil, **kontrolün yanlış şeye
+bakması**. O-1'de RLS tanımlıydı ama etkisizdi; O-9'da git temizdi ama
+karşılaştırdığı iki şey de aynı taraftaydı. Her ikisinde de kapı vardı,
+sadece başka bir kapıydı.

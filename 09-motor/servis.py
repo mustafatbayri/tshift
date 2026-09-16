@@ -6,10 +6,12 @@ SU AN NE VAR
   GET  /health     saglik + surum
   POST /evaluate   var olan plani denetler (#11.4)
 
+  POST /solve      plan uretir (#11.2). 16 Eylul'de yazildi.
+                   Govdesi orkestra.py: cozucu uretir, BAGIMSIZ dogrulayici
+                   denetler, sert ihlal varsa en fazla 2 onarim (#11.7).
+
 SU AN NE YOK -- ve bunu SESSIZCE gizlemez
-  POST /solve      plan uretir (#11.2). Cozucu yazilmadi; bu uc
-                   501 + acik bir mesajla cevap verir.
-  POST /suggest    bosluk icin aday uretir (#11.5). Ayni sekilde 501.
+  POST /suggest    bosluk icin aday uretir (#11.5). Yazilmadi; 501 doner.
 
 NEDEN STDLIB
   Disaridan tek bir paket gerektirmiyor. Kurulum adimi olmayan bir servis,
@@ -33,6 +35,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from dogrulayici import SURUM, degerlendir
+from orkestra import coz_ve_onar
 
 AZAMI_GOVDE = 32 * 1024 * 1024        # 32 MB -- 2.000 kisilik plan bunun altinda
 
@@ -71,8 +74,8 @@ class Ucler(BaseHTTPRequestHandler):
                 "durum": "ayakta",
                 "surum": SURUM,
                 "ucler": {"health": True, "evaluate": True,
-                          "solve": False, "suggest": False},
-                "not": "Cozucu yazilmadi. /solve ve /suggest 501 doner.",
+                          "solve": True, "suggest": False},
+                "not": "/suggest yazilmadi, 501 doner.",
             })
         return self._cevap(404, {"hata": "bilinmeyen uc", "yol": self.path})
 
@@ -93,12 +96,23 @@ class Ucler(BaseHTTPRequestHandler):
                     "ayrinti": "%s: %s" % (type(e).__name__, e),
                 })
 
-        if yol in ("/solve", "/suggest"):
+        if yol == "/solve":
+            ayar = govde.pop("_cozucu_ayari", None)
+            govde.pop("atamalar", None)          # /solve atama ALMAZ, URETIR
+            try:
+                # Cozucu + bagimsiz dogrulayici + onarim dongusu (#11.7).
+                return self._cevap(200, coz_ve_onar(govde, ayar))
+            except (KeyError, TypeError, ValueError) as e:
+                return self._cevap(400, {
+                    "hata": "girdi eksik ya da bicimi yanlis",
+                    "ayrinti": "%s: %s" % (type(e).__name__, e),
+                })
+
+        if yol in ("/suggest",):
             return self._cevap(501, {
                 "hata": "cozucu yazilmadi",
                 "uc": yol,
-                "aciklama": ("Bu surumde yalniz bagimsiz dogrulayici var (#11.4). "
-                             "Plan uretimi (#11.2) ve oneri (#11.5) henuz yazilmadi. "
+                "aciklama": ("Oneri uretimi (#11.5) henuz yazilmadi. "
                              "Bu bir hata degil, bilinen ve kayitli durum."),
             })
 
@@ -111,7 +125,8 @@ def main(argv):
     print("TShift dogrulayici %s  ->  http://127.0.0.1:%d" % (SURUM, port))
     print("  GET  /health")
     print("  POST /evaluate")
-    print("  POST /solve, /suggest  ->  501 (cozucu yazilmadi)")
+    print("  POST /solve")
+    print("  POST /suggest  ->  501 (yazilmadi)")
     print("Durdurmak icin Ctrl+C")
     try:
         sunucu.serve_forever()

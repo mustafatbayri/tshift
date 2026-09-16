@@ -410,12 +410,42 @@ def mola_kapsamasi(girdi, atamalar, tanim):
 
 @kural("KILIT_UYUMU")
 def kilit_uyumu(girdi, atamalar, tanim):
+    """Yoneticinin elle verdigi karar plana aynen yansir; motor geri alamaz.
+
+    IKI KILIT BICIMI VAR ve ikisi de desteklenir:
+
+      sabitleme  {calisan, ekip, gun, bas, bit}   -> bu atama MUTLAKA olacak
+      yasak      {calisan, gun, tip: "yasak"}     -> o gun HICBIR atama olmayacak
+
+    16 Eylul: ilk yazimda yalniz sabitleme biciminde dusunulmustu ve 'yasak'
+    kilidi KeyError ile cokuyordu. A06 fiksturu tam da bu bicimi kullaniyor.
+    Cokme sessiz bir hata degil ama yanlis yerde patliyordu.
+    """
     def anahtar(a):
         return (a["calisan"], a.get("ekip"), a["gun"], a["bas"], a["bit"])
+
     var = {anahtar(a) for a in atamalar}
-    return [_ihlal("KILIT_UYUMU", tanim, calisan=k["calisan"], gun=k["gun"],
-                   mesaj="kilitli atama planda yok: %s gun %d" % (k["calisan"], k["gun"]))
-            for k in girdi.get("kilitler", []) or [] if anahtar(k) not in var]
+    cikan = []
+    for k in girdi.get("kilitler", []) or []:
+        if k.get("tip") == "yasak":
+            calisiyor = [a for a in atamalar
+                         if a["calisan"] == k["calisan"] and a["gun"] == k["gun"]]
+            if calisiyor:
+                cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=k["calisan"],
+                                    gun=k["gun"],
+                                    mesaj="%s gun %d'de calismamali (kilit: yasak) ama %d atama var"
+                                          % (k["calisan"], k["gun"], len(calisiyor))))
+        elif "bas" in k and "bit" in k:
+            if anahtar(k) not in var:
+                cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=k["calisan"],
+                                    gun=k["gun"],
+                                    mesaj="kilitli atama planda yok: %s gun %d"
+                                          % (k["calisan"], k["gun"])))
+        else:
+            cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=k.get("calisan"),
+                                gun=k.get("gun"),
+                                mesaj="kilit bicimi taninmadi: %r" % sorted(k)))
+    return cikan
 
 
 @kural("DONMUS_GUN")

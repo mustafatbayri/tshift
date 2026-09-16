@@ -3,7 +3,7 @@
 **Bilinen ama henüz kapatılmamış** maddeler. Kanıtı olmayan her şey buraya
 yazılır — `00`–`05` arası dosyalar yalnız **kanıtlanmış** bilgiyi taşır.
 
-**Son güncelleme:** 2026-09-12
+**Son güncelleme:** 2026-09-16
 
 ## Öncelik anahtarı
 
@@ -675,26 +675,85 @@ fazladan çalışırsa bu adaletsizliktir?"*
 
 ---
 
+## ✅ T-15 · Fazla mesai ayarı — **KAPANDI (16 Eylül 2026)**
+
+**Kapanış:** K-30. Mustafa: *"Zaten hedef hiç gitmemek. Gidilecekse de
+minimum gitmek. Mantığımız değişmedi."*
+
+**Sonuç: kod değişmedi, çünkü mevcut davranış zaten karara uygunmuş.**
+
+| Durum | Davranış | Doğrulandı |
+|---|---|---|
+| Yalnız hedef kapsama iyileşecek | Fazla mesai yapılmaz | `test_fazla_mesai_hedef_kapsama_icin_KULLANILMAZ` |
+| Asgari kapsama zorluyor | Gereken kadar yapılır | `test_fazla_mesai_asgari_kapsama_zorlarsa_KULLANILIR` |
+| Tavan zorunlu aşıma yetmiyor | Plan çözümsüz | `test_profil_tavani_zorunlu_fazla_mesainin_SINIRIDIR` |
+
+### ⚠ Maddeyi açarken yazdığım teşhis yanlıştı
+
+*"§5.2'nin profil tavanı pratikte hiç kullanılmıyor"* demiştim. Tavan ölü
+bir sayı değil: **zorunlu** aşımın ne kadarına izin verildiğini o söylüyor.
+Aynı sahnede CALISAN profilinde (tavan 0) plan çözümsüz, DENGELI (10) ve
+KAPSAMA'da (15) çözülüyor.
+
+Doğrusu: tavan **isteğe bağlı** fazla mesai için hiç kullanılmıyor,
+**zorunlu** fazla mesai için belirleyici.
+
+**Kendi dersim:** riski açarken *"motor 150 hücre kazanacak olsa bile fazla
+mesai yapmıyor"* diye yazdım ve bunu bir **kusur** gibi sundum. Ölçüm doğruydu,
+**yorumu** yanlıştı — ürünün istediği tam olarak oydu. Ölçtüğüm sayıyı ürün
+kararı yerine koymuşum.
+
+---
+
+## 🟢 T-16 · Adalet eşiği ortalamaya göre; şişirilerek aşılabilir
+
+**Bulundu:** 16 Eylül 2026 · **Durum:** motorda etkisiz, doğrulayıcıda **var**
+
+**Ne.** K-27 adaletsizliği *"ortalamadan 2 fazla"* diye tanımlıyor. Ortalama
+sabit değil, **plandan çıkan** bir sayı. Dolayısıyla bir ihlali kaldırmanın
+matematiksel olarak geçerli ama sahada saçma bir yolu var: *başkalarına
+gereksiz cumartesi vererek ortalamayı yükseltmek.*
+
+**Motorda kapatıldı** — eşik terimi amaç fonksiyonundan çıkarıldı (K-29),
+yerine artan marjinal maliyet kondu. Motor artık ortalamayı oyunlayamaz.
+
+**Doğrulayıcıda duruyor ve durması doğru:** doğrulayıcı planı *sayar*,
+üretmez. K-27 neyin ihlal olduğunu söylüyor; doğrulayıcı ona uyuyor.
+
+**Kalan risk:** plan elle düzenlendiğinde (§4.4 yerel onarım) bir yönetici,
+farkında olmadan, birine gereksiz hafta sonu vererek başkasının adaletsizlik
+bayrağını düşürebilir. Küçük bir risk ama kaydı olsun.
+
+**Neden 🟢:** Kimseyi yanlış yere geçerli göstermiyor; ters yönde çalışıyor
+(fazladan çalıştırma, eksik değil). Tanım değişirse (K-29 onayıyla birlikte)
+yeniden bakılır.
+
+---
+
 ## Öncelik sırası — önerilen
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **Çözücü** (M-09: Python + OR-Tools, ayrı servis) | Kalan beş kırmızı senaryo (A1, A3, A6, A7, A9). ⛔ Doğrulayıcıyla mantık paylaşmayacak |
+| **1** | **pytest paketini CI'ya bağlamak** | Artık **bütün** testler yeşil (60 birim + 12 altın). Kırmızı paketi kapıya bağlamama gerekçesi ortadan kalktı. Tek iş teknik: CI adımı motoru önce ayağa kaldırmalı |
 | 2 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
-| 3 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 fikstürü yazıldı, motor gelince koşacak |
-| 4 | **A-6** mutasyon raporu | 39 testin gerçek gücünü söyler |
-| 5 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
-| 6 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
-| 7 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 8 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
-| 9 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
-| 10 | **A-9** KVKK | Gerçek veriden önce |
-| 11 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| 3 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu; bilerek 501 dönüyor |
+| 4 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
+| 5 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
+| 6 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| 7 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
+| 8 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
+| 9 | **A-13** kapsam envanteri | Ocak hedefi hâlâ ölçülmedi |
+| 10 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
+| 11 | **A-9** KVKK | Gerçek veriden önce |
+| 12 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
-> **16 Eylül'de kapanan dört iş:** fikstürler · test iskeleti · **şartname v1.4**
-> (A-15) · **bağımsız doğrulayıcı** (`09-motor/`). İlk ikisi
-> `08-motor-testleri/v5/` altında, üçüncüsü `02-spec/v1.4-master-spec.md`.
-> Dördüncüsüyle **A4 ve A8 yeşile döndü** — motorun ilk korunan davranışları.
+> **16 Eylül'de kapanan beş iş:** fikstürler · test iskeleti · **şartname v1.4**
+> (A-15) · **bağımsız doğrulayıcı** · **çözücü + onarım döngüsü** (`09-motor/`).
+>
+> **On iki altın senaryonun tamamı yeşil** (A5 ertelendi, dört backend
+> senaryosu xUnit tarafında). Birim testi 60. Kırmızı kanıt turunda 12
+> kırılmanın 12'si yakalandı — ilk turda 8'de 4'ü kaçmıştı, eksik testler
+> o yüzden yazıldı (`09-motor/testler/test_profiller.py`).
 
 ### Kapanan maddeler
 
@@ -705,3 +764,7 @@ fazladan çalışırsa bu adaletsizliktir?"*
 | **A-4 CI yok** | **14 Eylül 2026** | **GitHub Actions koştu ve yeşil yandı** |
 | **A-15 şartname v1.4** | **16 Eylül 2026** | **`02-spec/v1.4-master-spec.md` — 35 kural sınıflandırıldı, 11 tutarsızlık düzeltildi** |
 | **A-17 adalet eşiği** | **16 Eylül 2026** | **K-27: eşik 2, ortalamadan sapma. Doğrulayıcıda yazıldı, 8 testle sabitlendi** |
+| **T-12 adalet kuralı yazılmadı** | **16 Eylül 2026** | K-27 geldi, doğrulayıcıda yazıldı |
+| **T-14 şablonun günü yok** | **16 Eylül 2026** | `shift_templates.gunler` — A9'u kırmızı tutan şeydi, deneyle kanıtlandı |
+| **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. On iki altın senaryonun tamamı yeşil |
+| **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |

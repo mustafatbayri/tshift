@@ -490,3 +490,43 @@ def test_eksik_hedef_dakika_hesaplanir():
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))
+
+
+# ----------------------------------------------------------------------
+# KILIT_UYUMU -- iki kilit bicimi
+# ----------------------------------------------------------------------
+
+def test_yasak_kilidi_ihlal_edilirse_yakalanir():
+    """A06'daki bicim: {calisan, gun, tip: "yasak"} -- o gun calismayacak.
+
+    Ilk yazimda yalniz sabitleme bicimi dusunulmustu ve bu kilit KeyError
+    ile cokuyordu. Cokme sessiz degil ama yanlis yerde patliyordu.
+    """
+    g = sahne([kural("KILIT_UYUMU")])
+    g["kilitler"] = [{"calisan": "C1", "gun": 2, "tip": "yasak"}]
+    s = degerlendir(g, [atama("C1", 2, 9, 18, [(12, 13)])])
+    assert kodlar(s) == ["KILIT_UYUMU"]
+
+
+def test_yasak_kilidine_uyulursa_ihlal_yok():
+    g = sahne([kural("KILIT_UYUMU")])
+    g["kilitler"] = [{"calisan": "C1", "gun": 2, "tip": "yasak"}]
+    s = degerlendir(g, [atama("C1", 3, 9, 18, [(12, 13)])])
+    assert kodlar(s) == []
+
+
+def test_sabitleme_kilidi_eksikse_yakalanir():
+    """Digeri bicim: atama MUTLAKA planda olmali."""
+    g = sahne([kural("KILIT_UYUMU")])
+    g["kilitler"] = [{"calisan": "C1", "ekip": "E1", "gun": 0, "bas": 9, "bit": 18}]
+    s = degerlendir(g, [])
+    assert kodlar(s) == ["KILIT_UYUMU"]
+
+
+def test_taninmayan_kilit_bicimi_SESSIZCE_GECILMEZ():
+    """Ucuncu bir bicim gelirse cokme degil, ACIK ihlal uretilmeli."""
+    g = sahne([kural("KILIT_UYUMU")])
+    g["kilitler"] = [{"calisan": "C1", "gun": 0, "tip": "bilinmeyen_bicim"}]
+    s = degerlendir(g, [])
+    assert kodlar(s) == ["KILIT_UYUMU"]
+    assert "taninmadi" in s["ihlaller"][0]["mesaj"]

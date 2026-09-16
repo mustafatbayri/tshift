@@ -1,107 +1,188 @@
 # 09-motor — Planlama motoru servisi
 
-**Ne var:** Bağımsız doğrulayıcı (`/evaluate`) ve onu sunan küçük bir HTTP servisi.
-**Ne yok:** Çözücü. Plan **üretilmiyor** — `/solve` ve `/suggest` bilerek 501 dönüyor.
-**Yazıldı:** 16 Eylül 2026 · **Şartname:** `02-spec/v1.4-master-spec.md` §7.6, §11.4, §16.1
+**Ne var:** Bağımsız doğrulayıcı (`/evaluate`), çözücü (`/solve`) ve §11.7
+onarım döngüsü.
+**Ne yok:** Öneri üretimi — `/suggest` bilerek 501 dönüyor.
+**Yazıldı:** 16 Eylül 2026 · **Şartname:** `02-spec/v1.4-master-spec.md`
+§7.6, §11.2, §11.3, §11.4, §11.7, §16.1
+
+```
+py -m pytest testler -q                        →  60 passed
+py -m pytest -q   (08-motor-testleri/v5, motor ayakta)  →  12 passed, 4 skipped
+```
 
 ---
 
-## 1. Neden önce doğrulayıcı, sonra çözücü
+## 1. Üç parça, üçü ayrı durur
 
-Altın senaryo testlerinin yedisi kırmızıydı. **İkisi** (A4, A8) plan üretmiyor,
-var olan bir planı **denetliyor** — yani çözücü olmadan yeşile dönebilirler.
-En küçük adım buydu ve döndüler.
+| Parça | Ne yapar | Ne yapmaz |
+|---|---|---|
+| `09-motor/dogrulayici/` | Var olan planı kurallara karşı denetler | Plan **üretmez** |
+| `09-motor/cozucu/` | CP-SAT ile plan üretir | Kendi ürettiğini **denetlemez** |
+| `09-motor/orkestra.py` | İkisini üstten çağırır, onarım döngüsünü koşar | Kural **bilmez** |
 
-Kalan beşi (A1, A3, A6, A7, A9) hâlâ kırmızı ve **doğru sebeple**: servis
-ayakta, ama `/solve` ucu yok. Hata mesajı bunu ayırt ediyor — "motor çökmüş"
-ile "çözücü henüz yazılmadı" aynı şey değil.
+Bu ayrım şartnamenin §7.6 ve §16.1 maddeleridir ve projedeki **en kolay
+bozulacak** kuraldır. Somut hâli:
 
-```
-py -m pytest -q          (motor adresliyken)
-→ 5 failed, 7 passed, 4 skipped
-```
+> `cozucu/` ile `dogrulayici/` birbirini **import etmez.**
+> `orkestra.py` ikisini de import eder — ve bu doğrudur.
 
-## 2. Bu doğrulayıcı çözücüyle mantık paylaşmaz
+`orkestra.py` bir istisna değil; §11.7'nin tarif ettiği mimarinin ta kendisi:
+*"Motor plan üretir, doğrulayıcı denetler."* Yasak olan, **ikisinin birbirini
+çağırmasıdır**.
 
-Şartname §7.6 ve §16.1 bunu şart koşuyor. Sebebi **D-6 sınıfı hata**: kodu
-yazan testi de yazarsa aynı yanlış varsayım iki yere birden geçer ve hiçbir
-test yakalamaz.
+Bunu artık yorum değil bir test koruyor:
+`09-motor/testler/test_bagimsizlik.py` — dosyaların import ağacına bakar ve
+üçüncü bir ortak yerel modül çıkarılmasını da yakalar.
 
-Bu yüzden `dogrulayici/kurallar.py` içindeki her kural **şartnameden okunarak
-yeniden yazıldı**. Çözücü yazıldığında onun kısıt kodunu çağırmayacak, onunla
-tek bir yardımcı fonksiyon bile paylaşmayacak. Kod bilerek "aptal" ve
-doğrudan: her kural kendi sayımını kendi yapar, optimizasyon yok.
+### Neden bu kadar üstünde duruluyor — D-6
 
-> ⚠ Çözücü yazılırken en kolay hata, "aynı hesabı iki kez yazmayalım" diyip
-> ortak bir yardımcı modül çıkarmaktır. **Yapılmamalı.** Tekrar burada
-> maliyet değil, güvencedir.
+Kodu yazan testi de yazarsa, aynı yanlış varsayım iki yere birden geçer ve
+hiçbir test yakalamaz. Doğrulayıcı ancak çözücüden **bağımsızsa** onu
+denetleyebilir.
 
-## 3. Çalıştırma
+Bu yüzden zaman aritmetiği iki kez, **bilerek farklı** yazıldı: doğrulayıcı
+mutlak saat aralıklarıyla, çözücü saat dilimi (slot) tabanlı. Aynı sonuca iki
+ayrı yoldan varmaları, ikisinin birden yanlış olma ihtimalini düşürür.
+
+> ⚠ En kolay hata: *"aynı hesabı iki kez yazmayalım"* deyip ortak bir yardımcı
+> modül çıkarmak. **Yapılmamalı.** Tekrar burada maliyet değil, güvencedir.
+
+## 2. Çalıştırma
 
 ```powershell
 cd C:\Users\PC\Desktop\Tshift\09-motor
 py servis.py
 ```
 
-Dışarıdan **hiçbir paket gerekmiyor** — yalnız Python standart kütüphanesi.
-Kurulum adımı olmayan bir servis, "bende çalışmadı" ile geçen saatleri de
-ortadan kaldırır. Yük altında koşacak sürüm için ASGI'ye taşınabilir;
-sözleşme değişmez.
+Doğrulayıcı ve servis **hiçbir dış paket gerektirmiyor** — yalnız Python
+standart kütüphanesi. Çözücü OR-Tools istiyor:
 
-Testleri yeşile çevirmek için, **ayrı bir pencerede** servis açıkken:
+```powershell
+py -m pip install ortools
+```
+
+Testleri koşturmak için, **ayrı bir pencerede** servis açıkken:
 
 ```powershell
 set TSHIFT_MOTOR_URL=http://localhost:8000
-cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\v5\testler
+cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\v5
 py -m pytest -v
 ```
 
-Doğrulayıcının kendi testleri servis gerektirmez:
+Motorun kendi testleri servis gerektirmez:
 
 ```powershell
 cd C:\Users\PC\Desktop\Tshift\09-motor
 py -m pytest testler -v
 ```
 
-## 4. Dosyalar
+## 3. Dosyalar
 
 | Dosya | Ne yapar |
 |---|---|
-| `servis.py` | HTTP ucları. `/health`, `/evaluate`; `/solve` ve `/suggest` → 501 |
-| `dogrulayici/zaman.py` | Zaman modeli (Z-1…Z-6). Gece yarısını aşan vardiya aritmetiğinin **tek** kaynağı |
-| `dogrulayici/kurallar.py` | Kural gövdeleri. Her biri ihlal listesi döndürür |
-| `dogrulayici/denetle.py` | Orkestrasyon + metrikler + yayın kapısı |
-| `testler/test_kurallar.py` | 26 birim testi. Her biri bir K-kararını sabitler |
+| `09-motor/servis.py` | HTTP ucları. `/health`, `/evaluate`, `/solve`; `/suggest` → 501 |
+| `09-motor/orkestra.py` | §11.7 onarım döngüsü: üret → bağımsız denetle → en fazla 2 onarım |
+| `09-motor/dogrulayici/zaman.py` | Zaman modeli (Z-1…Z-6), doğrulayıcı tarafı |
+| `09-motor/dogrulayici/kurallar.py` | 17 kural gövdesi. Her biri ihlal listesi döndürür |
+| `09-motor/dogrulayici/denetle.py` | Denetim + metrikler + yayın kapısı |
+| `09-motor/cozucu/model.py` | CP-SAT modeli, ağırlık tablosu (§5.4), zaman aritmetiğinin **ikinci** yazımı |
+| `09-motor/cozucu/coz.py` | `/solve` gövdesi, K-28 erken durma |
+| `09-motor/cozucu/teshis.py` | Çözümsüzlük teşhisi (§11.3) + K-10 en iyi plan |
+| `09-motor/testler/test_kurallar.py` | 40 birim testi. Her biri bir K-kararını sabitler |
+| `09-motor/testler/test_profiller.py` | 16 birim testi. Plan profilleri, adalet gradyanı, onarım döngüsü, fazla mesai (K-30) |
+| `09-motor/testler/test_bagimsizlik.py` | 4 birim testi. §7.6 bağımsızlığını korur |
 
-## 5. Şu an hangi kurallar yazıldı
+## 4. Şu an hangi kurallar yazıldı
 
-**14 kural.** Katalogdaki 35'in hepsi değil — şu an gereken alt küme.
+**17 kural.** Katalogdaki 35'in hepsi değil — şu an gereken alt küme.
 
 | Bölüm | Yazılanlar |
 |---|---|
 | §6.1 Uygunluk | `AKTIF_CALISAN` · `SOZLESME_GECERLI` · `ONAYLI_IZIN` · `UYGUNLUK_TAKVIMI` |
 | §6.2 Süre ve dinlenme | `GUNLUK_AZAMI` · `HAFTALIK_AZAMI` · `PART_TIME_LIMIT` · `CAKISMA_YOK` · `VARDIYA_ARASI_DINLENME` · `HAFTA_TATILI` · `ARDISIK_CALISMA_GUNU` · `MOLA_HAKKI` |
 | §6.4 Kapsama | `ASGARI_KAPSAMA` · `HEDEF_KAPSAMA` · `MOLA_KAPSAMASI` |
+| §6.5 Adalet | `ADALET_DENGESI` (K-27 eşiği geldi) |
 | §6.6 Düzenleme | `KILIT_UYUMU` · `DONMUS_GUN` |
 | §6.7 Fazla mesai | `FAZLA_MESAI_TAVANI` |
 
 ### Sessiz geçmeme ilkesi
 
 Girdide **aktif ama gövdesi yazılmamış** bir kural varsa, cevap
-`uygulanmayan_kurallar` listesinde bunu **açıkça** bildirir.
+`uygulanmayan_kurallar` listesinde bunu **açıkça** bildirir. Bir kuralın
+gövdesi var ama bir **boyutu** yazılmamışsa, o da `eksik_boyutlar`'da görünür
+(`ADALET_DENGESI`'nin `saat` boyutu — T-13).
 
 > *"İhlal bulamadım"* ile *"bakmadım"* aynı şey değildir. İkisini karıştıran
 > bir doğrulayıcı, yeşil yanan ama hiçbir şey sınamayan testten daha
 > tehlikelidir — çünkü planı temiz gösterir.
 
-Şu an bilerek yazılmayan: **`ADALET_DENGESI`**. Şartname §6.5 kuralı
-tanımlıyor ama **ihlal eşiğini tanımlamıyor** — dağılım ne kadar sapınca
-ihlal sayılır? `SAAT_DENGESI`'nde eşik var (`tolerans_saat`, ±2),
-`ADALET_DENGESI`'nde yok. Eşiği koda gömmek, ürün kararını gizlemek olurdu.
-**T-12** olarak kaydedildi. Yumuşak bir kural olduğu için hiçbir planı yanlış
-yere geçerli göstermiyor; yalnız puan hesabı eksik kalıyor.
+## 5. Plan profilleri — §5.4 artık gerçekten çalışıyor
 
-## 6. İki kural bilerek ayrı — karıştırılırsa sessiz hata olur
+Aynı kural seti, farklı ağırlıklarla üç farklı plan üretir: `DENGELI`,
+`KAPSAMA`, `CALISAN`. Ağırlık okuma sırası:
+
+1. İsteğin `agirliklar` alanı — kiracının düzenlediği `plan_profiles`
+2. §5.4 tablosu, istekteki `profil` sütunundan
+3. Kural kataloğundaki `agirlik`
+
+Tanınmayan profil adı `DENGELI`'ye düşer **ama sessizce değil** — çıktıdaki
+`uygulanmayan_notlar` bildirir. Sessizce düşmek, kullanıcının *"çalışan odaklı
+plan istedim"* deyip dengeli plan alması ve bunu hiç öğrenmemesi demektir.
+
+### Adalet: eşik **ihlali sayar**, gradyan **planı seçer** (K-29)
+
+K-27 eşiği (ortalamadan 2 fazla) yalnız **doğrulayıcıda** duruyor. Motorda
+onun yerine **artan marjinal maliyet** var: üçüncü cumartesi ikinciden, ikinci
+birinciden pahalıdır.
+
+Sebebi ölçüldü: eşik tek başınayken eşiğin altındaki bütün dağılımlar sıfır
+ceza alıyordu, yani ağırlığı 2'den 8'e çıkarmak planı değiştiremiyordu. İki
+profil **birebir aynı planı** üretiyordu.
+
+> İki yanlış biçim denendi ve ölçümle elendi. *"Ortalamanın üstündeki sapma"*
+> denendiğinde motor cumartesiye gerekenden fazla kişi koymaya başladı (3
+> yerine 5): ortalamayı yükseltmek herkesin sapmasını düşürüyordu. Aynı açık
+> eşik teriminde de var — ihlali kaldırmanın ucuz yolu *başkalarına gereksiz
+> cumartesi vermek*. Artan marjinal maliyette bu açık yok.
+
+**Onaylandı (K-29, Mustafa, 16 Eylül):** adalet eşiğin altında da bir
+tercihtir. Üç plan kartının birbirinden farklı çıkmasını sağlayan mekanizma
+budur.
+
+## 5b. Fazla mesai — hedef için asla, asgari zorlarsa minimum (K-30)
+
+| Durum | Davranış |
+|---|---|
+| Yalnız **hedef** kapsama iyileşecek | Fazla mesai **yapılmaz** |
+| **Asgari** kapsama (SERT) tutmuyor | Fazla mesai **yapılır**, gereken kadar |
+| Profil tavanı zorunlu aşıma yetmiyor | Plan **çözümsüz** |
+
+Profil tavanı (CALISAN 0 · DENGELI 10 · KAPSAMA 15) **zorunlu** fazla
+mesainin sınırıdır; isteğe bağlı fazla mesai için zaten kullanılmıyor.
+
+Ceza katsayısı (dakika başına 50) bir **kalibrasyondur**, karar değil.
+Testler *"ceza sıfır olmasın"* diyor, *"tam olarak 50 olsun"* demiyor —
+ölçüldü: ceza 0 yapılınca test kırmızı yanıyor, 1 yapılınca yanmıyor.
+
+## 6. Onarım döngüsü — §11.7
+
+`/solve` üç adım koşar:
+
+1. Çözücü plan üretir
+2. **Bağımsız doğrulayıcı** denetler
+3. Sert ihlal varsa, ihlal edilen çalışan-gün çiftleri kapatılıp **en fazla
+   2 kez** yeniden denenir; hâlâ varsa `durum: cozumsuz` + K-10 en iyi plan
+
+Denetim **her zaman kullanıcının girdisiyle** yapılır, onarım için eklenen
+kilitlerle değil. Yoksa ikinci turda doğrulayıcı, motorun kendi koyduğu koltuk
+değneklerini "kural" sanıp onaylardı.
+
+Çıktıdaki `bagimsiz_denetim` bloğu doğrulayıcının sayılarını taşır ve
+`metrikler.sert_ihlal` (motorun **kendi** ölçümü) ile yan yana durur. İkisi
+ayrışıyorsa taraflardan biri kuralı yanlış yorumluyor demektir.
+
+## 7. İki kural bilerek ayrı — karıştırılırsa sessiz hata olur
 
 | Kural | Molayı ne yapar | Türü |
 |---|---|---|
@@ -114,24 +195,35 @@ planı **geçersiz** yapardı; doğrusu puanını düşürmektir.
 
 Bu ayrım `test_asgari_kapsama_molayi_SAYMAZ_yani_dusurmez` ile sabitlendi.
 
-## 7. Kırmızı kanıt — testler gerçekten bir şey koruyor mu
+## 8. Kırmızı kanıt — ilk turda 8'de 4'ü **kaçtı**
 
-Doğrulayıcı **yedi ayrı şekilde kasten bozuldu**, yedisi de yakalandı:
+§16.4 kuralı: bir test yeşil sayılmadan önce kırmızı yanabildiği
+gösterilmeli. Motor koduna tek tek kasıtlı bozmalar uygulandı.
 
-| # | Bozma | Sonuç |
-|---|---|---|
-| 1 | `GUNLUK_AZAMI` 11 → 9 (K-18 geri alınır) | ✅ yakalandı |
-| 2 | `MOLA_HAKKI` brüt yerine net süreye bakar (K-4) | ✅ yakalandı |
-| 3 | Tam 11 saat dinlenme de ihlal sayılır (K-11) | ✅ yakalandı |
-| 4 | Örtüşmede ayrıca dinlenme ihlali yazılır (V-1) | ✅ yakalandı |
-| 5 | Yayın kapısı `yasal`a bakar, `kabul_edilebilir`e değil (K-24) | ✅ yakalandı |
-| 6 | Gövdesi olmayan kural sessizce geçilir | ✅ yakalandı |
-| 7 | `ASGARI_KAPSAMA` molayı düşer | ✅ yakalandı |
+**İlk tur: 8 bozmanın 4'ü hiçbir teste yakalanmadı.**
 
-Bunlar rastgele seçilmedi: her biri **sessizce bozulabilecek bir ürün
-kararıdır** ve hiçbiri derleme hatası vermez.
+| Kaçan bozma | Neden kaçtı |
+|---|---|
+| Ağırlık tablosu yok sayılır | A7 yeşil kalıyordu; profil farkı **başka bir sebepten** oluşuyordu |
+| Adalet gradyanı kaldırılır | Aynı |
+| Orkestra doğrulayıcıyı çağırmaz | Import'a bakan test yakalamıyor — import durur, **çağrı** kaybolur |
+| Fazla mesai tavanı sabitlenir | Hiçbir senaryo o tavana dokunmuyordu |
 
-## 8. Klasör adı hakkında — açık bir sorun
+Eksik testler bunun üzerine yazıldı (`09-motor/testler/test_profiller.py`).
+İkinci turda **12 bozmanın 12'si yakalandı.**
+
+### Ölçüm yöntemi hakkında bir not
+
+*"Motor şu kişiyi seçti"* biçimindeki testler **kırılgandır**: kısıt gevşekse
+çözücü eşit değerdeki seçenekler arasında arama sırasına göre seçer ve bozulmuş
+kod aynı cevabı verebilir. Bu varsayılmadı, **ölçüldü** — gradyan kaldırıldığı
+hâlde küçük bir sahnede aynı kişiler seçildi.
+
+Bu yüzden `cozum_istatistikleri.amac_degeri` çıktıya eklendi: aynı girdi, iki
+farklı seçim **sabitlenmiş** hâlde çözülüp amaç değerleri karşılaştırılıyor.
+Arama sırasından bağımsız, kesin ölçüm.
+
+## 9. Klasör adı hakkında — açık bir sorun
 
 `07-motor/` klasöründe **motor yok**, müşteri Excel'ini okuyan analiz
 betikleri var. Oradaki OKU-BENİ `08-analiz/` olarak yeniden adlandırılmasını
@@ -141,12 +233,14 @@ betikleri var. Oradaki OKU-BENİ `08-analiz/` olarak yeniden adlandırılmasın�
 aynı numarayı paylaşır. Yeniden adlandırma kararı verilirken bu göz önüne
 alınmalı — örneğin `10-analiz/`.
 
-## 9. Sıradaki
+## 10. Sıradaki
 
-**Çözücü (M-09).** Python + OR-Tools CP-SAT, ayrı servis. Kalan beş altın
-senaryoyu (A1, A3, A6, A7, A9) yeşile çevirecek.
+| | Ne |
+|---|---|
+| **1** | **pytest paketini CI'a bağlamak** — artık kırmızı yok, gerekçe kalmadı. CI adımı motoru önce ayağa kaldırmalı |
+| 2 | **T-13** `ADALET_DENGESI`'nin `saat` boyutu |
+| 3 | `/suggest` (§11.5) — öneri üretimi |
 
-Çözücü yazılırken uyulacak tek zorunlu kural yukarıda, §2'de: **doğrulayıcıyla
-hiçbir mantık paylaşmayacak.**
-
-Paralelde: `ADALET_DENGESI` eşiği (T-12) ve A-16 hukuk teyidi.
+**Kapanan ürün kararları:** K-27 (adalet eşiği) · K-28 (erken durma) ·
+K-29 (adalet gradyanı) · K-30 (fazla mesai: hedef için asla, asgari zorlarsa
+minimum).
