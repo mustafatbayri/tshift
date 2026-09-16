@@ -50,10 +50,10 @@ jobs:
 
     steps:
       - name: Depoyu al
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: .NET kur
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -116,12 +116,12 @@ jobs:
 
     steps:
       - name: Depoyu al
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Mustafa'nin makinesindeki surumun AYNISI. Ayni gerekce yukarida
       # docker icin de yazili: CI ile yerel arasinda fark olmasin.
       - name: Python kur
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
           cache: pip
