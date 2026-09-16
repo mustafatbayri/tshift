@@ -108,8 +108,8 @@ Docker gerektirmiyor, Python 3.14'e sabitli.
 Kapının kendi kırmızı kanıtı yapıldı: adres verilmezse `exit=1`, servis
 kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım durur.
 
-**İlk koşu yeşil** (16 Eylül, `47c7050`). Tek çıktı bir uyarı: eylemler Node
-20 hedefliyor, GitHub Node 24'e zorluyor — T-17.
+**İlk koşu yeşil** (16 Eylül, `47c7050`). Çıkan Node 20 uyarısı aynı gün
+kapatıldı (T-17): checkout v7, setup-python v7, setup-dotnet v6.
 
 ## 4. Şu an hangi kurallar yazıldı
 
@@ -255,9 +255,8 @@ alınmalı — örneğin `10-analiz/`.
 
 | | Ne |
 |---|---|
-| **1** | **CI kapısının ilk koşusunu görmek** — `motor` işi eklendi, henüz koşmadı |
-| 2 | **T-13** `ADALET_DENGESI`'nin `saat` boyutu |
-| 3 | `/suggest` (§11.5) — öneri üretimi |
+| **1** | **T-13** — `ADALET_DENGESI`'nin `saat` boyutu (ürün kararı gerekiyor) |
+| 2 | **`/suggest`** (§11.5) — ⚠ kabul ölçütü yok, önce cümleler yazılıp onaylanmalı |
 
 **Kapanan ürün kararları:** K-27 (adalet eşiği) · K-28 (erken durma) ·
 K-29 (adalet gradyanı) · K-30 (fazla mesai: hedef için asla, asgari zorlarsa

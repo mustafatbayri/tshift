@@ -250,10 +250,11 @@ Yani motor ayağa kalkmazsa kapı **sessizce geçmiyor**.
 Her iki iş de **yeşil** yandı. Artık bu satırların kanıtı var: kapı gerçekten
 koştu, gerçekten geçti.
 
-Tek çıktı iki **uyarı**, ikisi de aynı ve bugünden değil: `actions/checkout@v4`
-ve `actions/setup-python@v5` Node 20 hedefliyor, GitHub onları Node 24'e
-zorluyor. `.NET` işi de aynı uyarıyı veriyor. Kapıyı kırmıyor ama zamanla
-kıracak — **T-17** olarak kaydedildi.
+İlk koşuda iki **uyarı** çıktı: eylemler Node 20 hedefliyordu, GitHub onları
+Node 24'e zorluyordu. Aynı gün kapatıldı (**T-17**) — checkout v7,
+setup-python v7, setup-dotnet v6. Değişiklik önce `ci/node24` dalında
+denendi, yeşil görülünce `main`'e alındı: *"`main` her zaman yeşildir"*
+bir değişmez, bir CI değişikliği için bedava riske atılmaz.
 
 C# taslakları `.cs.taslak` uzantılı kalmaya devam ediyor — derleyici görmez,
 CI kırılmaz.

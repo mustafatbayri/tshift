@@ -4,6 +4,24 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-16 · T-17 kapandı · Actions eylemleri Node 24'e çıkarıldı**
+
+CI kapısının ilk koşusunda iki uyarı çıkmıştı: eylemler Node 20 hedefliyordu,
+GitHub onları Node 24'te zorla koşturuyordu. Kapı çalışıyordu ama zorlama
+kalkınca çalışmayacaktı — kendi kendine kırmızıya dönecek bir madde.
+
+checkout v4→**v7**, setup-python v5→**v7**, setup-dotnet v4→**v6**. En güncel
+ana sürümlere çıkıldı ki aynı iş birkaç ay sonra tekrarlanmasın. `checkout`
+v7'nin kırıcı değişikliği fork PR'larıyla ilgili (`pull_request_target` /
+`workflow_run`); bu depoda o tetikleyiciler yok.
+
+**Önce dalda denendi.** Workflow zaten `branches: ["**"]` ile her dalda
+koştuğu için `ci/node24` dalına push edildi, orada yeşil yandığı görüldü,
+sonra `main`'e alındı. Gerekçe bir değişmez: *"`main` her zaman yeşildir"* —
+bir CI değişikliği için bedava riske atılmaz.
+
+→ `.github/workflows/testler.yml`
+
 **2026-09-16 · Güncelleme ritüelinin tetikleyicisi değişti**
 
 Devir dosyalarının **ne zaman** güncelleneceği tek cümleye bağlıydı:

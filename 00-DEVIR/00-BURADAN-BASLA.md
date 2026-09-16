@@ -205,8 +205,10 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > servis kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım
 > `::error::` ile duruyor. Motor yokken kapı sessizce geçmiyor.
 >
-> İlk koşuda iki uyarı çıktı, ikisi de bugünden değil: eylemler Node 20
-> hedefliyor, GitHub Node 24'e zorluyor. **T-17** olarak kaydedildi.
+> İlk koşuda çıkan Node 20 uyarısı aynı gün kapatıldı (T-17): checkout v7,
+> setup-python v7, setup-dotnet v6. Değişiklik **önce `ci/node24` dalında**
+> denendi, yeşil görülünce `main`'e alındı — *"`main` her zaman yeşildir"*
+> bir CI değişikliği için bedava riske atılmaz.
 >
 > ### ⛔ Bozulmaması gereken kural
 >
@@ -241,6 +243,9 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > - **T-13 — `ADALET_DENGESI`'nin `saat` boyutu.** Sayı boyutları çalışıyor;
 >   süre boyutu karara bağlanmadı, `eksik_boyutlar` ile açıkça bildiriliyor.
 > - **`/suggest` (§11.5)** — motorun yazılmamış tek ucu, bilerek 501 dönüyor.
+>   ⚠ **Kabul ölçütü yok, fikstürü yok.** On iki altın senaryonun hiçbiri onu
+>   sınamıyor. Kod yazmadan önce *"doğru çalışıyorsa ne görmeliyiz"* cümleleri
+>   yazılıp onaylanmalı — A7'de bu adımın atlanmasının bedeli görüldü.
 > - **`09-motor/requirements.txt`** — sürümler sabitlendi (O-8 gerekçesi).
 >   Doğrulayıcının **hiçbir** dış bağımlılığı yok ve bu bilerek korunuyor.
 > - **A-16 hukuk teyidi** — madde numaralı tablo hazır, uzman bakacak.

@@ -730,39 +730,34 @@ yeniden bakılır.
 
 ---
 
-## 🟢 T-17 · GitHub Actions eylemleri Node 20 hedefliyor
+## ✅ T-17 · Actions eylemleri — **KAPANDI (16 Eylül 2026)**
 
-**Bulundu:** 16 Eylül 2026, CI kapısının ilk koşusunda · **Durum:** kapı
-**yeşil**, uyarı seviyesinde
+**Ne vardı.** Her iki CI işi de aynı uyarıyı veriyordu: `actions/checkout@v4`,
+`actions/setup-python@v5` ve `actions/setup-dotnet@v4` Node 20 hedefliyordu,
+GitHub onları Node 24'te **zorla** koşturuyordu. Kapı çalışıyordu ama zorlama
+kalktığında çalışmayacaktı — **kendi kendine kırmızıya dönecek** bir madde.
 
-**Ne.** Her iki iş de aynı uyarıyı veriyor:
+**Ne yapıldı.**
 
-> *Node.js 20 is deprecated. The following actions target Node.js 20 but are
-> being forced to run on Node.js 24: `actions/checkout@v4`,
-> `actions/setup-python@v5`, `actions/setup-dotnet@v4`.*
-
-GitHub şimdilik onları Node 24'te **zorla** koşturuyor, yani kapı çalışıyor.
-Zorlama kaldırıldığında çalışmayacak.
-
-**Hedef sürümler** *(16 Eylül'de bakıldı)*:
-
-| Eylem | Şu an | Node 24'e geçen ilk sürüm | En güncel |
+| Eylem | Önce | Sonra | Node 24'e geçen ilk sürüm |
 |---|---|---|---|
-| `actions/checkout` | v4 | — | **v7** |
-| `actions/setup-python` | v5 | **v6** | v7 |
+| `actions/checkout` | v4 | **v7** | v5 |
+| `actions/setup-python` | v5 | **v7** | v6 |
 | `actions/setup-dotnet` | v4 | **v6** | v6 |
 
-**Neden hemen yapılmadı.** Ana sürüm atlamak kırıcı değişiklik demektir ve
-bunu *"kapı yeni yeşil yandı"* anının hemen ardından, yorgun bir günün
-sonunda yapmak yanlış sıra olurdu. Kapının bir kez temiz yeşil yandığı
-görüldü; bir sonraki değişiklik onun üstüne konur.
+En güncel ana sürümlere çıkıldı ki aynı iş birkaç ay sonra tekrarlanmasın.
+`checkout` v7'nin kırıcı değişikliği fork PR'larıyla ilgili
+(`pull_request_target` / `workflow_run`) — bu depoda o tetikleyiciler yok.
 
-**Neden 🟢:** Hiçbir şeyi yanlış göstermiyor, kapı çalışıyor. Ama **kendi
-kendine kırmızıya dönecek** bir madde — unutulursa bir sabah CI kırık
-bulunur ve sebebi bu değişiklik sanılmaz.
+### Önce dalda denendi — `main` her zaman yeşil
 
-**Ne gerek:** Üç eylemi sürüm atlatıp koşturmak. Tek commit, tek push, sonuç
-Actions sekmesinde hemen görünür.
+Değişiklik doğrudan `main`'e atılmadı. Workflow zaten `branches: ["**"]` ile
+her dalda koştuğu için `ci/node24` dalına push edildi, orada **yeşil yandığı
+görüldü**, sonra `main`'e alındı.
+
+> **Gerekçe bir değişmez:** *"`main` her zaman yeşildir"* (`SURUMLEME.md`).
+> Bir CI değişikliğini doğrudan `main`'e atmak, o kuralı bozma ihtimalini
+> bedava kabul etmek demektir — oysa dal denemesi üç komut.
 
 ---
 
@@ -771,8 +766,8 @@ Actions sekmesinde hemen görünür.
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | **1** | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık. `SAAT_DENGESI` ile örtüşme de bakılmalı |
-| 2 | **T-17 · Actions eylemlerini sürüm atlatmak** | Kendi kendine kırmızıya dönecek bir madde. Tek commit |
-| 3 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu; bilerek 501 dönüyor |
+| 2 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ **Kabul ölçütü yok, fikstürü yok** — önce cümleler yazılıp onaylanmalı |
+| 3 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
 | 4 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
 | 5 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
 | 6 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
@@ -805,3 +800,4 @@ Actions sekmesinde hemen görünür.
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. On iki altın senaryonun tamamı yeşil |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
+| **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |
