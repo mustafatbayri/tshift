@@ -4,6 +4,42 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · T-34 KAPANDI — sırlar depodan çıktı**
+
+Ortam değişkeni verilmediğinde uygulama hata vermiyor, **bilinen bir
+anahtarla** açılıyordu. `Program.cs`'in kendi yorumu *"Parola koda ve
+appsettings'e YAZILMAZ"* diyordu; bir satır altında koda yazılmıştı.
+
+**Kayıttaki tarif eksikti.** `grep` ile tarandı: aynı sabit **beş katmanda 16
+yerde**. Uygulama kodu (4), test kodu (7 dosya), `docker-compose.yml` (4) ve
+**`04-kod/db/rls/02-uygulama-rolu.sql`** — veritabanı rolü o parolayla
+*yaratılıyordu*. Yalnız C# tarafını düzeltmek tiyatro olurdu.
+
+**`Sirlar.Zorunlu()` yazıldı:** varsayılan yok, sır yoksa uygulama açılmaz,
+hata **değişkenin adını** söyler, değerini asla yazmaz. SQL betiği yer
+tutucuya geçti (`{APP_DB_PASSWORD}`) ve `ALTER ROLE ... PASSWORD` eklendi —
+rol zaten varsa yaratma bloğu atlanıyor, eski parolayla kalıyordu. CI her
+koşuda `openssl rand` ile üretiyor: depoda sır yok, GitHub secret'ı gerekmiyor.
+
+**`.env.example`'da `JWT_SECRET` hiç yoktu** — örneği takip eden biri imza
+anahtarsız kalır ve koddaki sabiti kullanırdı. Eklendi. `TEST.ps1` artık
+`.env`'i okuyor.
+
+**Kırmızı kanıt CI dalında, kalıcı.** `48583e4` yalnız testi taşıyordu:
+*42 test, 40 geçti, S1 ve S2 kırmızı — "No exception was thrown"*.
+`3ec5d42` düzeltmeyi getirdi: **42/42 yeşil.**
+
+⚠ **`M5 - appsettings icinde gercek parola yok` bu ailenin tek üyesini
+koruyordu ve yeşil yanıyordu.** Parola `appsettings`'te değildi, başka beş
+yerdeydi. Kapı vardı; başka bir kapıydı — O-1 ve O-9 ile aynı sınıf.
+
+**Yan düzeltme:** `04-TEST-HARITASI.md` başlığında hâlâ *"on ikisi de yeşil"*
+yazıyordu — 16 Eylül'de beş dosyada düzeltilen yanlış iddia, burası
+atlanmıştı. T-37'nin aynı sınıfı.
+
+→ `04-kod/backend/src/TShift.Infrastructure/Sirlar.cs` ·
+`04-kod/db/rls/02-uygulama-rolu.sql` · `.github/workflows/testler.yml`
+
 **2026-09-23 · T-22 KAPANDI — çözümsüzlükteki taslak artık denetleniyor**
 
 `orkestra.py` çözücü *"cozumsuz"* dediğinde erken dönüyor, bağımsız

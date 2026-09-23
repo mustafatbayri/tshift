@@ -190,10 +190,60 @@ onayladığı bir altın senaryoda görünüyor.**
 T-18 açık kalıyor: kapının bilinmeyen kuralda ne yapacağı **ürün kararı**,
 uydurulmadı.
 
-## 8. Bu oturumda üretilmeyenler — dürüstlük notu
+## 8. T-34 kapatıldı — CI dalında kırmızı kanıt
 
-- **T-22 dışında kod değişmedi.** 72 birim testi, 7 altın senaryo, fikstür
-  denetleyicisi 0 — hepsi koşturuldu.
+İlk kez `04-kod` tarafında bir düzeltme yapıldı ve ilk kez **kırmızı kanıt
+kalıcı bir yere** yazıldı: Claude'un konteynerinde .NET yok, testi
+koşturamıyor. Yol T-17'nin yolu oldu — önce yalnız test, dalda kırmızı,
+sonra düzeltme, dalda yeşil.
+
+| Commit | Ne | Sonuç |
+|---|---|---|
+| `48583e4` | Yalnız `SirTestleri.cs` | **42 test, 40 geçti** — S1, S2 kırmızı: *"No exception was thrown"* |
+| `3ec5d42` | Düzeltme, 19 dosya | **42/42 yeşil** |
+
+Hata mesajının kendisi bulgunun ifadesi: *sır yoktu, uygulama yine de açıldı.*
+
+### Kayıttaki tarif kapsamı küçük gösteriyordu
+
+T-34 iki satır olarak yazılmıştı (`Program.cs`'teki iki `??`). `grep` beş
+katmanda **16 yer** buldu — ve en kritiği kayıtta hiç geçmiyordu:
+`04-kod/db/rls/02-uygulama-rolu.sql` veritabanı rolünü o parolayla
+**yaratıyordu**.
+
+> **Ders:** bir bulgunun kaydı, bulgunun kapsamı değildir. Kapatmadan önce
+> aynı desen depoda aranır. Bu, kabul cümlesini madde madde işaretleme
+> kuralının kardeşi: *"nerede daha var?"*
+
+### M5 — kapı vardı, başka bir kapıydı
+
+`M5 - appsettings icinde gercek parola yok` yıllardır yeşil yanıyor ve
+doğru söylüyordu: parola `appsettings`'te değildi. **Başka beş yerdeydi.**
+
+O-1'de RLS tanımlıydı ama etkisizdi. O-9'da git temizdi ama karşılaştırdığı
+iki şey de aynı taraftaydı. Burada test doğruydu ama **baktığı dosya
+yanlıştı.** Aynı ailenin üçüncü örneği.
+
+### Kendi kuralımı iki kez uyguladım
+
+**Yer tutucu deseni uydurulmadı, koddan alındı.** `KurulumHizmeti` zaten
+`{DB_PASSWORD}` için aynı şeyi yapıyordu; SQL betiği o desene bağlandı.
+
+**`.env` yazılmadı.** Proje kuralı: *"Mustafa'nın `.env` dosyasını uzak
+araçlar yazamaz."* Eksik olan `JWT_SECRET` satırı ona bildirildi, kendisi
+ekledi.
+
+### ⚠ Açık kalan
+
+`.env`'deki üç değer herkese açık bir depoda aylardır duruyordu — artık sır
+değiller. Değiştirilmeleri ve `TSHIFT_KURULUM=true` ile bir kurulum koşusuyla
+veritabanı rolünün senkronlanması gerekiyor. **Mustafa'nın işi**, kayda geçti.
+
+## 9. Bu oturumda üretilmeyenler — dürüstlük notu
+
+- **Kapanan iki 🔴:** T-22 (motor) ve T-34 (`04-kod`). Motor tarafı burada
+  koşturuldu (72 birim, 7 altın senaryo, fikstür 0); `04-kod` tarafı CI'da
+  (42/42).
 - **Kapsam dışı bulgu kuralı `02-DEGISMEZLER.md`'ye yazılmadı** — kabul edildi
   ama bu oturumda uygulanmadı. Sıradaki iş.
 - **M kayıtlarına zorunlu alanlar eklenmedi** (reddedilen alternatifler, geri

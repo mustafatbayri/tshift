@@ -1312,27 +1312,82 @@ yarım saat **veri modelinde mümkün**, motorda değil.
 
 ---
 
-## 🔴 T-34 · Sırlar kodda varsayılan değere düşüyor *(`04-kod`)*
+## ✅ T-34 · Sırlar kodda varsayılana düşüyordu — **KAPANDI (23 Eylül 2026)**
 
-**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod okumasıyla doğrulandı**
+**Bulundu:** 16 Eylül, dış inceleme (3. tur) · **Kapandı:** 23 Eylül ·
+**Kanıt:** `fix/t34-sirlar` dalı, CI
 
-`04-kod/backend/src/TShift.Api/Program.cs` iki sır için **koda gömülü
-varsayılan** taşıyor ve **hiçbiri ortama bağlı değil**:
+Ortam değişkeni verilmediğinde uygulama **hata vermiyor, bilinen bir anahtarla
+açılıyordu**. `Program.cs`'in kendi yorumu *"Parola koda ve appsettings'e
+YAZILMAZ"* diyordu — bir satır altında koda yazılmıştı. K-28 ve T-18 ile aynı
+sınıf: **yazılı, yürürlükte değil.**
 
-| Değişken | Verilmezse |
+### Kayıttaki tarif eksikti — gerçek kapsam beş katman
+
+`grep` ile tarandı: aynı sabit **16 yerde** duruyordu.
+
+| Katman | Yer |
 |---|---|
-| `APP_DB_PASSWORD` | `"tshift_app_dev_2026"` — uygulamanın **veritabanı parolası** |
-| `JWT_SECRET` | `"yerel-gelistirme-imza-anahtari-..."` — oturum **imza anahtarı** |
+| Uygulama kodu | `Program.cs` ×2, `KurulumHizmeti.cs`, `TasarimZamaniFabrika.cs` |
+| **Test kodu** | 7 test dosyasında sabit bağlantı dizesi |
+| Orkestrasyon | `docker-compose.yml` ×4 (`${VAR:-varsayilan}`) |
+| **Veritabanı betiği** | `04-kod/db/rls/02-uygulama-rolu.sql` — rol bu parolayla **yaratılıyordu** |
+| CI | Hiç sır vermiyordu, tamamen compose varsayılanlarına dayanıyordu |
 
-Yanındaki yorum *"Canlıda JWT_SECRET mutlaka verilir"* diyor — **zorlayan
-kod yok.** Kurulum hatası sessizce bilinen bir sırla devam ediyor.
+> Yalnız C# tarafını düzeltmek **düzeltilmiş görünüp düzeltmemek** olurdu:
+> compose aynı bilinen değerleri enjekte etmeye, veritabanı rolü aynı
+> parolayla yaratılmaya devam ederdi. T-32'nin aynısı — tek gerçeğin
+> birden çok kaynağı.
 
-`02-DEGISMEZLER.md` *"sırlar `appsettings.json`'a yazılmaz"* diyor. Yazılmamış,
-`Program.cs`'e yazılmış — **git geçmişinde**. Kuralın harfi tutulmuş, amacı
-tutulmamış.
+### Yazılanlar
 
-**Ne gerek:** canlı kipte bu değişkenler yoksa uygulama **başlamayı
-reddetmeli**.
+**`04-kod/backend/src/TShift.Infrastructure/Sirlar.cs`** —
+`Sirlar.Zorunlu(ad, enAzUzunluk)`.
+Varsayılan yok; sır yoksa **açılmaz** ve hata **değişkenin adını** söyler.
+Değerin kendisi asla yazılmaz, yalnız uzunluğu. `JWT_SECRET` için 32 karakter
+alt sınırı (`KimlikAyarlari`'nın istediği).
+
+**SQL betiği yer tutucuya geçti** (`{APP_DB_PASSWORD}`), `KurulumHizmeti`
+dolduruyor — `{DB_PASSWORD}` için zaten kurulu olan desen. Ayrıca
+`ALTER ROLE tshift_app PASSWORD` eklendi: rol zaten varsa yaratma bloğu
+atlanıyordu ve **eski parolayla kalıyordu**.
+
+**CI her koşuda `openssl rand` ile üretiyor.** Depoda sır yok, GitHub
+secret'ı da gerekmiyor — ve uygulamanın **keyfi bir değerle** çalıştığı da
+böylece kanıtlanmış oluyor.
+
+**`.env.example`'a `JWT_SECRET` eklendi.** Daha önce **yoktu**: örneği takip
+eden biri imza anahtarsız kalır ve farkında olmadan koddaki sabiti kullanırdı.
+
+**`TEST.ps1` artık `.env`'i okuyor**, eksik değişkende açık hata veriyor.
+
+### Kalıcı bekçi
+
+`04-kod/backend/tests/TShift.Tests/SirTestleri.cs` — **3 test**, kendi
+koleksiyonunda (ortam değişkeni süreç geneli; paralellik kapalı).
+
+| | Ne |
+|---|---|
+| `S1` | `APP_DB_PASSWORD` silinince açılmaz, hata değişkenin adını söyler |
+| `S2` | `JWT_SECRET` için aynısı |
+| `S3` | **Gerileme koruması** — düzeltme *"her koşulda patla"* diye yapılamaz |
+
+**Kırmızı kanıt CI'da, kalıcı.** `48583e4` (yalnız test): *42 test, 40 geçti,
+S1 ve S2 kırmızı — "No exception was thrown"*. `3ec5d42` (düzeltme):
+**42/42 yeşil.**
+
+### ⚠ M5 bu ailenin tek üyesini koruyordu ve yeşil yanıyordu
+
+`M5 - appsettings icinde gercek parola yok` doğruydu — parola `appsettings`'te
+değil, **başka beş yerdeydi**. Kapı vardı; başka bir kapıydı. O-1 (RLS
+tanımlıydı ama etkisizdi) ve O-9 (git temizdi ama yanlış şeye bakıyordu) ile
+aynı sınıf: *kontrolün yokluğu değil, kontrolün yanlış şeye bakması.*
+
+### Açık kalan — Mustafa'nın işi
+
+`.env`'deki değerler herkese açık bir depoda aylardır duruyordu; **artık sır
+değiller.** Üçünün de değiştirilmesi ve `TSHIFT_KURULUM=true` ile bir kurulum
+koşusuyla veritabanı rolünün yeni parolaya senkronlanması gerekiyor.
 
 ---
 
@@ -1439,12 +1494,11 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | **1** | **T-35 · kiracı çapında kilitlenme** 🔴 | Bir kişinin beş yanlış parolası herkesi kilitliyor; denetim kaydındaki IP kurgusal *(`04-kod`)* |
-| **2** | **T-34 · sırlar varsayılana düşüyor** 🔴 | Veritabanı parolası ve imza anahtarı kodda, ortam kontrolü yok *(`04-kod`)* |
-| **3** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
-| **4** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
-| **5** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
-| **6** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
-| **7** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
+| **2** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
+| **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
+| **4** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
+| **5** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
+| **6** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -1507,6 +1561,7 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. Yedi altın senaryo koşuyor ve yeşil; dördü backend tarafında |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
+| **T-34 sırlar varsayılana düşüyordu** | **23 Eylül 2026** | Beş katmanda 16 yer temizlendi; `Sirlar.Zorunlu()`. Kırmızı kanıt CI dalında kalıcı. 3 test |
 | **T-22 denetlenmeyen taslak** | **23 Eylül 2026** | Çözümsüzlükte sunulan plan artık özgün girdiyle denetleniyor; boş plan `var: False`. 4 test. A03'te T-18'i görünür kıldı |
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |
