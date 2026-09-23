@@ -4,6 +4,54 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · T-35 KAPANDI — kurulum çapında kilitlenme**
+
+Kayıt iki yerde küçük yazmıştı. **Etki:** *"bütün kiracıyı kilitliyor"*
+deniyordu; `KilitliMi` sorgusunda kiracı filtresi yok (M-13, bilerek), yani
+gerçek etki **kurulum çapında** — herhangi bir kiracıda 5 yanlış parola,
+herkesi 15 dakika kilitliyordu. **Kapsam:** yalnız `04-kod/frontend/src/app/api/giris/route.ts`
+anılıyordu; `grep` API'ye giden **beş** çağrı yeri buldu.
+
+**Kural doğruydu, gördüğü IP yanlıştı.** Şartname *"aynı e-posta veya IP için
+5 başarısız denemede 15 dakika kilit"* diyor ve kod bunu doğru uygulamış.
+Tarayıcı API'ye doğrudan gitmediği için `RemoteIpAddress` her zaman ön yüzün
+adresiydi.
+
+⚠ **"Mekanik" etiketi yanlıştı.** `X-Forwarded-For` istemcinin yazdığı bir
+başlık; körlemesine güvenmek saldırganın kendini istediği IP gibi
+göstermesine izin verir. Güvenilen vekil listesi şart, o da barındırmaya
+bağlı — yani içinde bir ürün kararı vardı ve soruldu.
+
+**Yazılanlar:** API tarafında `UseForwardedHeaders` +
+`TSHIFT_GUVENILEN_VEKILLER` (liste boşsa başlık **hiç** okunmaz — güvenli
+varsayılan); ön yüzde `istemciBasliklari()` ve beş çağrı yerinin hepsi;
+compose ve `.env.example`.
+
+**Ölçümler:** kırmızı kanıt `IP1` (`Expected: "203.0.113.9", Actual: null`) →
+düzeltme → **45/45 yeşil**. Uçtan uca elle: Next'e `198.51.100.7` verildi,
+`login_attempts.ip` **aynısını** yazdı.
+
+⚠ **Sonra sahte başlık denendi ve GEÇTİ — ilk yapılandırma yanlıştı.**
+Güvenilen aralık `172.16.0.0/12` konmuş, yanına *"host'tan gelen istek bu
+aralığa girmez"* diye yazılmıştı. Ölçüldü: host'tan gelen istek API'ye
+**docker ağ geçidinden** (`::ffff:172.18.0.1`) ulaşıyor ve o adres aralığın
+**içinde**. Yani aralık host'taki her şeyi güvenilir sayıyordu.
+
+**Düzeltildi:** compose'a sabit alt ağ (`172.28.9.0/24`), web kutusuna sabit
+adres, güvenilen liste **tek adres**. İkinci tur: Next'ten `198.51.100.8`
+geçti ✅, host'tan `203.0.113.55` **yok sayıldı** ✅.
+
+`IP2` testi bunu yakalayamazdı — kod doğru, test doğru, yanlış olan
+**yapılandırma**. Otopsisi **O-11**: *birim testi mantığı doğrular,
+topolojiyi doğrulayamaz.*
+
+⚠ **Ön yüzün otomatik testi yok** — `IP1`–`IP3` API'ye doğrudan gidiyor.
+Elle doğrulandı, gerileme bekçisi yok; Next test altyapısı bilerek ertelendi.
+
+→ `04-kod/backend/src/TShift.Api/Program.cs` ·
+`04-kod/frontend/src/lib/api.ts` ·
+`04-kod/backend/tests/TShift.Tests/IstemciIpTestleri.cs`
+
 **2026-09-23 · T-34 KAPANDI — sırlar depodan çıktı**
 
 Ortam değişkeni verilmediğinde uygulama hata vermiyor, **bilinen bir

@@ -134,6 +134,9 @@ mi, senin kararın.
 | `M6 - Denetim kaydi sadece eklenir (UPDATE/DELETE yok)` | Veritabanı yetkilerinin gerçekten "sadece ekle" olduğunu **veritabanına sorarak** doğrular. | `[karar]` |
 | `S1 - APP_DB_PASSWORD verilmezse uygulama acilmaz` | Sır verilmezse uygulama **sessizce koddaki sabite düşemez**; açılmaz ve eksik değişkenin adını söyler. | `[karar]` — T-34 |
 | `S2 - JWT_SECRET verilmezse uygulama acilmaz` | Aynısı imza anahtarı için; ayrıca en az 32 karakter şartı. `Program.cs` *"canlıda mutlaka verilir"* diyordu, **zorlayan yoktu**. | `[karar]` — T-34 |
+| `IP1 - Guvenilen vekilden gelen gercek istemci IP'si kaydedilir` | Kullanıcının IP'si API'ye ulaşır. Ulaşmazsa kaba kuvvet kilidi herkesi birden kilitler ve denetim kaydındaki IP kurgusal olur. | `[karar]` — T-35 |
+| `IP2 - Guvenilmeyen kaynaktan gelen X-Forwarded-For yok sayilir` | **Sahte başlık koruması.** Başlığa körlemesine güvenen bir düzeltme IP1'i yeşil yakar ama saldırganın kendini istediği IP gibi göstermesine izin verir. | `[karar]` — T-35 |
+| `IP3 - Baslik hic yoksa istek yine de kayda gecer` | Gerileme koruması: düzeltme *"başlık yoksa patla"* diye yapılamaz. | `[karar]` — T-35 |
 | `S3 - Sirlar verildiginde uygulama normal acilir` | Gerileme koruması: düzeltme *"her koşulda patla"* diye yapılamaz. S1/S2 tek başlarına hiç açılmayan bir uygulamayla da yeşil yanar. | `[karar]` — T-34 |
 
 > **M5 bu ailenin tek üyesini koruyordu ve yeşil yanıyordu.** *"appsettings
@@ -247,6 +250,11 @@ bitti, kırmızı kalmadı, gerekçe de ortadan kalktı.
 |---|---|---|
 | `test` | .NET backend — 39 test + mimari kuralları | gerekli |
 | `motor` 🆕 | **72** birim + 7 altın senaryo + fikstür denetleyicisi | **gerekmez** |
+
+> ⚠ **Ön yüzün testi yok.** `IP1`–`IP3` API'ye doğrudan gidiyor. Next.js
+> route handler'larının istemci IP'sini ilettiği **elle doğrulandı**
+> (23 Eylül: `X-Forwarded-For: 198.51.100.7` → `login_attempts.ip` aynısı)
+> ama gerileme bekçisi yok. Next test altyapısı kurulmadı.
 
 **Neden ayrı iş, aynı işe ek adım değil:** aynı işte olsalardı ilkinin
 kırmızısı ikincinin sonucunu **gizlerdi** — bir adım patlayınca sonrakiler hiç

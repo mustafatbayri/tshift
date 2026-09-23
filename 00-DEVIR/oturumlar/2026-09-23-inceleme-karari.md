@@ -239,9 +239,89 @@ ekledi.
 değiller. Değiştirilmeleri ve `TSHIFT_KURULUM=true` ile bir kurulum koşusuyla
 veritabanı rolünün senkronlanması gerekiyor. **Mustafa'nın işi**, kayda geçti.
 
-## 9. Bu oturumda üretilmeyenler — dürüstlük notu
+## 9. T-35 kapatıldı — ve "mekanik" etiketi yanlış çıktı
 
-- **Kapanan iki 🔴:** T-22 (motor) ve T-34 (`04-kod`). Motor tarafı burada
+Üçüncü 🔴. Bu madde *"karar gerektirmiyor"* diye kaydedilmişti; **değildi**.
+
+`X-Forwarded-For` istemcinin yazdığı bir başlıktır. Körlemesine güvenmek
+saldırganın kendini istediği IP gibi göstermesine izin verir — hem kilitten
+kaçar hem denetim kaydını kirletir. Güvenilen vekil listesi şart, o liste de
+barındırmaya bağlı, barındırma ertelenmiş. Yani içinde gerçek bir ürün kararı
+vardı ve kayıtta görünmüyordu.
+
+> **Bugünün ikinci dersi:** *"mekanik"* etiketi de bir iddiadır ve
+> doğrulanmadan taşınır. T-34'te kapsam küçük yazılmıştı; burada **zorluk**
+> küçük yazılmıştı.
+
+### Kayıt yine iki yerde küçük yazmış
+
+| | Kayıtta | Ölçülen |
+|---|---|---|
+| Etki | *"bütün kiracıyı kilitliyor"* | **Kurulum çapında** — `KilitliMi`'de kiracı filtresi yok (M-13, bilerek) |
+| Kapsam | Yalnız `04-kod/frontend/src/app/api/giris/route.ts` | API'ye giden **beş** çağrı yeri |
+
+Üçüncü kez aynı şey: *bir bulgunun kaydı, bulgunun kendisi değildir.*
+
+### Kural doğruydu
+
+Şartname *"aynı e-posta veya IP için 5 başarısız denemede 15 dakika kilit"*
+diyor; kod bunu doğru uygulamış. Kusur kuralda değil, kuralın **gördüğü
+veride**. Bu ayrımı yapmasaydım IP kilidini kaldırmayı önerecektim — yani
+şartnameden sapmayı, hiç gerekmezken.
+
+### Test sunucusu sınırı — ince ve kayda değer
+
+Gerçek soket olmadığı için `RemoteIpAddress` null geliyordu ve
+`UseForwardedHeaders` tam o adresi karşılaştırıyor. `TestUygulamasi`'na boş
+adresi loopback'e dolduran bir filtre eklendi.
+
+> **Yapılan:** testin ortamını gerçeğe benzetmek. **Yapılmayan:** iddiayı
+> gevşetmek. `02-DEGISMEZLER.md` §6 *"kırılan test iddiayı zayıflatarak
+> düzeltilmez"* diyor; bu onun sınırında durduğu için kayda geçti.
+
+### ⚠ Elle doğrulama bir kusur yakaladı — ve yakalaması şanstı
+
+Uçtan uca ölçüm ilk turda **geçti**: Next'e verilen `198.51.100.7` kayda aynen
+yazıldı. T-35 orada kapatılabilirdi. Kapatılmadı, çünkü bir ölçüm daha
+yapıldı: **sahte başlık host'tan doğrudan API'ye**.
+
+**Geçti.** Yani koruma çalışmıyordu.
+
+```
+host -> yayinlanmis port -> api   =>  ::ffff:172.18.0.1   (docker AG GECIDI)
+web kutusu                        =>  172.18.0.4
+```
+
+Güvenilen aralık `172.16.0.0/12` yazılmıştı ve ağ geçidi de o aralıkta.
+Yanına da *"host'tan gelen istek bu aralığa girmez"* diye **ölçülmemiş bir
+gerekçe** yazılmıştı. Otopsisi **O-11**.
+
+Düzeltme: sabit alt ağ, web kutusuna sabit adres, güvenilen liste tek adres.
+İkinci tur iki yönde de geçti.
+
+> **İki ders.** Birincisi: bir yorum *"şu saldırı geçmez"* diyorsa bu bir
+> iddiadır ve ölçülür — ölçülmemiş güvenlik yorumu hiç yorum olmamasından
+> kötüdür, çünkü sonraki okuyan kontrol etmez.
+>
+> İkincisi: `IP2` doğru şeyi sınıyor ve çalışıyordu. Yanlış olan **kod değil
+> yapılandırma**, ve test sunucusu üretimdeki yapılandırmayla hiç
+> karşılaşmıyor. **Birim testi mantığı doğrular, topolojiyi doğrulayamaz.**
+
+Bu yüzden iki elle ölçüm, T-35'in kapanış kaydına *koşturulacak adım* olarak
+yazıldı: topoloji değişirse ikisi de yeniden koşar.
+
+### Ön yüzün testi yok — bilerek
+
+`IP1`–`IP3` API'ye doğrudan gidiyor. Beş çağrı yerinin başlığı ilettiği
+**elle doğrulandı**: Next'e `X-Forwarded-For: 198.51.100.7` verildi,
+`login_attempts.ip` aynısını yazdı. Gerileme bekçisi yok; Next.js route
+handler test altyapısı kurmak T-35'ten büyük bir iş, ertelendi.
+
+Bu seçim Mustafa'ya soruldu, sessizce yapılmadı.
+
+## 10. Bu oturumda üretilmeyenler — dürüstlük notu
+
+- **Kapanan üç 🔴:** T-22 (motor), T-34 ve T-35 (`04-kod`). Motor tarafı burada
   koşturuldu (72 birim, 7 altın senaryo, fikstür 0); `04-kod` tarafı CI'da
   (42/42).
 - **Kapsam dışı bulgu kuralı `02-DEGISMEZLER.md`'ye yazılmadı** — kabul edildi

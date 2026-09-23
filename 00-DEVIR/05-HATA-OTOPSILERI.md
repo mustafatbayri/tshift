@@ -327,6 +327,70 @@ fikri**.
 
 ---
 
+## O-11 · Yorumda yazılmış, ölçülmemiş güvenlik iddiası ⚠
+
+**Tarih:** 23 Eylül 2026
+
+**Ne oldu.** T-35'in düzeltmesinde `X-Forwarded-For` başlığına güvenilecek
+adresler `172.16.0.0/12` olarak verildi ve yanına şu yorum yazıldı:
+
+> *"Host'tan (127.0.0.1) doğrudan atılan bir istek bu aralığa GİRMEZ, yani
+> yayınlanmış porttan sahte başlık geçmez."*
+
+**Yanlıştı.** Elle yapılan uçtan uca denemede ölçüldü:
+
+```
+host -> yayinlanmis port -> api kutusu  =>  ::ffff:172.18.0.1  (docker AG GECIDI)
+web kutusu                              =>  172.18.0.4
+```
+
+Docker yayınlanmış portu **ağ geçidi üzerinden** geçiriyor. Ağ geçidi de
+`/12`'nin içinde. Yani aralık, host'taki her şeyi güvenilir sayıyordu:
+`curl` ile atılan sahte `X-Forwarded-For` **kabul edildi ve kaydedildi.**
+
+Düzeltilen şey, korumanın kendisi olduğu için ciddiydi — hem kaba kuvvet
+kilidinden kaçmaya hem denetim kaydını kirletmeye izin veriyordu.
+
+**Neden hiçbir test yakalayamadı.**
+
+| | |
+|---|---|
+| `IP2` ne sınıyor | *"Güvenilmeyen kaynaktan gelen başlık yok sayılır"* |
+| `IP2` doğru mu | **Evet.** Kod doğru, test doğru, ikisi de çalışıyor |
+| Yanlış olan ne | **Yapılandırma** — hangi kaynağın "güvenilen" sayıldığı |
+| Test bunu neden göremez | Test sunucusunda liste boş; üretimdeki listeyle hiç karşılaşmıyor |
+
+> **Birim testi mantığı doğrular, topolojiyi doğrulayamaz.**
+
+**Neyin yakaladığı.** Elle yapılan uçtan uca deneme — ve o adım plana
+*"nice-to-have"* diye kondu, sonra zorunlu yapıldı. Yapılmasaydı T-35
+"kapandı" diye kaydedilecek, sahte IP koruması çalışmıyor olacaktı.
+
+### Neden bu, koddaki bir hatadan tehlikeli
+
+Yanlış olan yalnız değer değildi; yanına **onu doğru gösteren bir gerekçe**
+yazılmıştı. Sonraki okuyan o yorumu görür ve kontrol etmez — yorumun işi
+zaten kontrolü gereksiz kılmaktır.
+
+> **Kalıcı bekçi:** bir yorum *"şu saldırı geçmez"* diyorsa, o cümle bir
+> **iddiadır** ve kaydedilmeden önce **ölçülür**. Ölçülmemiş bir güvenlik
+> yorumu, hiç yorum olmamasından kötüdür.
+
+Bu, O-10'un ikizi. O-10'da *"erişimim yok"* denip denenmemişti; burada
+*"bu saldırı geçmez"* denip denenmedi. İkisinde de eksik olan **işlem**
+değil, **işlemi yapma fikri**.
+
+### Sınıfa eklediği yeni şey
+
+O-1'den O-9'a kadar hatalar **kodun** ya da **deponun** durumuydu; bekçi
+yazılabildi. O-10 bir **cevabın** durumuydu. O-11 bir **yapılandırmanın**
+durumu — ve yapılandırma, kodla birlikte test edilmediği sürece görünmez.
+
+Bu yüzden T-35'in kapanış kaydına iki elle ölçüm **koşturulacak adım**
+olarak yazıldı: topoloji değişirse ikisi de yeniden koşar.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -341,6 +405,7 @@ fikri**.
 | O-8 | EF sürüm uyuşmazlığı | Sabitlenmiş paket sürümleri | 🟡 Kısmi |
 | O-9 | Gönderilmeyen dosya iki tarafta da temiz görünüyordu | Commit öncesi içerik karşılaştırması (`cmp`), hafıza değil | ✅ |
 | O-10 | *"Doğrulayamam"* denildi, denenmemişti | "Erişimim yok" demeden önce erişimi dene | ✅ *(kural; otomatik bekçisi yok)* |
+| O-11 | Yorumda ölçülmemiş güvenlik iddiası; yapılandırma yanlıştı | Uçtan uca elle ölçüm, kapanış kaydına adım olarak yazılı | ✅ *(kural; birim testi göremez)* |
 
 ---
 

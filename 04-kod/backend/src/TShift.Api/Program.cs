@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using System.Text;
+using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TShift.Domain.Calisanlar;
@@ -102,6 +104,62 @@ builder.Services.AddAuthorization(o =>
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+// ---- Gerçek istemci IP'si (T-35) -------------------------------------------
+// Tarayıcı API'ye doğrudan gelmiyor; Next.js üzerinden geçiyor. O yüzden
+// `ctx.Connection.RemoteIpAddress` HER ZAMAN ön yüzün adresi.
+//
+// NEDEN ÖNEMLİ: kaba kuvvet kilidi (§ "aynı e-posta VEYA IP için 5 başarısız
+// denemede 15 dakika") IP'ye bakıyor ve `KilitliMi` sorgusunda kiracı filtresi
+// YOK — olmaması bilinçli (M-13). Bütün istekler tek adresten geliyor gibi
+// görününce: herhangi bir kiracıda 5 yanlış parola, KURULUMDAKİ HERKESİ
+// kilitliyordu. Denetim kaydındaki her IP de kurgusaldı.
+//
+// NEDEN "GÜVENİLEN VEKİL" LİSTESİ ŞART: `X-Forwarded-For` istemcinin yazdığı
+// bir başlıktır. Körlemesine güvenilirse saldırgan kendini istediği IP gibi
+// gösterir — hem kilitten kaçar hem denetim kaydını kirletir. Bu yüzden
+// başlık YALNIZ listedeki adreslerden geldiğinde okunur.
+//
+// Liste BOŞSA başlık hiç okunmaz. Bu güvenli varsayılan bilerek seçildi:
+// yanlış yapılandırma "herkese güven" değil, "kimseye güvenme" tarafına
+// düşsün. Barındırma kararı verilince (M- tablosu: ertelendi) bu değişkene
+// yük dengeleyicinin adresi yazılacak.
+var vekilAyari = Environment.GetEnvironmentVariable("TSHIFT_GUVENILEN_VEKILLER");
+if (!string.IsNullOrWhiteSpace(vekilAyari))
+{
+    var secenekler = new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor,
+        // Zincirde kaç adım geriye bakılacağı. Bir vekilimiz var (Next.js);
+        // fazlasını kabul etmek, istemcinin sahte adım eklemesine izin verir.
+        ForwardLimit = 1,
+    };
+    // Varsayilan liste loopback'i iceriyor; temizliyoruz ki GUVEN yalniz
+    // acikca yazilan adreslerden gelsin.
+    secenekler.KnownProxies.Clear();
+    // KnownNetworks kullanimdan kalkti (ASPDEPR005); KnownIPNetworks onun
+    // yerine geciyor ve System.Net.IPNetwork aliyor.
+    secenekler.KnownIPNetworks.Clear();
+
+    foreach (var parca in vekilAyari.Split(',', StringSplitOptions.RemoveEmptyEntries
+                                                | StringSplitOptions.TrimEntries))
+    {
+        if (parca.Contains('/'))
+        {
+            var bolum = parca.Split('/', 2);
+            // IPNetwork adi iki yerde birden tanimli: System.Net ve
+            // Microsoft.AspNetCore.HttpOverrides. Tam adiyla yaziyoruz.
+            if (IPAddress.TryParse(bolum[0], out var ag) && int.TryParse(bolum[1], out var uzunluk))
+                secenekler.KnownIPNetworks.Add(new System.Net.IPNetwork(ag, uzunluk));
+        }
+        else if (IPAddress.TryParse(parca, out var adres))
+        {
+            secenekler.KnownProxies.Add(adres);
+        }
+    }
+
+    app.UseForwardedHeaders(secenekler);
+}
 
 // Kutu içi inceleme kurulumu. Ortam değişkeni AÇIKÇA verilmediği sürece
 // hiçbir şey yapmaz. Canlıda kapalı kalmalı — bkz. KurulumHizmeti.

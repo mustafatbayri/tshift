@@ -36,7 +36,7 @@ ve çalışıyor:
 PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → API → Next.js arayüz
 ```
 
-- **42/42 test yeşil.** Hepsi gerçek PostgreSQL'e karşı koşuyor, hiç mock yok.
+- **45/45 test yeşil.** Hepsi gerçek PostgreSQL'e karşı koşuyor, hiç mock yok.
   *(23 Eylül: T-34 ile üç sır testi eklendi — `S1`, `S2`, `S3`.)*
 - **CI çalışıyor (14 Eylül), 16 Eylül'de motor da bağlandı.** Her `git push`
   sonrası **iki iş** koşuyor: `test` (.NET) ve `motor` (Python). Kurallar
@@ -63,8 +63,8 @@ tek bekçisi ateşlenemiyor (T-29), şartname biçimindeki talep sessizce
 atlanıyor (T-19), çok ekipli çalışan iki ekibi aynı anda dolduruyor (T-21),
 denetlenmemiş kural yayını engellemiyor (T-18), çözümsüzlükte sunulan taslak
 hiç denetlenmiyor (T-22). İkisi motor dışında: sırlar kodda varsayılana
-düşüyordu (T-34 — **23 Eylül'de kapandı**), bir kişinin hatalı girişi bütün
-kiracıyı kilitliyor (T-35).
+düşüyordu (T-34), bir kişinin hatalı girişi bütün kurulumu kilitliyordu
+(T-35) — **ikisi de 23 Eylül'de kapandı**.
 
 **Henüz yazılmadı:** `/suggest` ucu (öneri üretimi, §11.5), plan editörü,
 kural yönetimi, kullanıcı/rol yönetim ekranları.
@@ -214,7 +214,7 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > | Sıra | Ne oluyor | Karar gerekiyor mu |
 > |---|---|---|
 > | ~~T-27~~ | ✅ **KAPANDI 16 Eylül** — mola artık vardiyaya kırpılıyor ve üst üste binenler birleştiriliyor. 8 test | — |
-> | **T-35** | Giriş isteği `X-Forwarded-For` taşımıyor, backend `RemoteIpAddress` okuyor → bir kişinin beş yanlış parolası **bütün kiracıyı** kilitliyor, denetim kaydındaki IP kurgusal | ❌ mekanik *(`04-kod`)* |
+> | ~~T-35~~ | ✅ **KAPANDI 23 Eylül** — gerçek istemci IP'si + güvenilen vekil listesi. Etkisi kayıtta *kiracı* yazıyordu, **kurulum çapında** çıktı | — |
 > | ~~T-34~~ | ✅ **KAPANDI 23 Eylül** — beş katmanda 16 yer; sır yoksa uygulama açılmıyor. Kırmızı kanıt `fix/t34-sirlar` dalında | — |
 > | **T-28** | `gecmis_vardiyalar` `09-motor/` içinde **hiç geçmiyor** — yasal dinlenme kuralı önceki haftaya kör | ✅ veri nereden gelecek |
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
@@ -223,7 +223,7 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor | ✅ kapı ne yapmalı |
 > | **T-22** | Çözümsüzlükte sunulan taslak hiç denetlenmiyor; boş plan *"var"* diyor | ❌ mekanik |
 >
-> **Karar beklemeyen tek madde kaldı: T-35.** Beşi
+> **Karar beklemeyen madde kalmadı.** Beşi
 > Mustafa'nın cevabını bekliyor.
 >
 > ### Neden bunlar önce

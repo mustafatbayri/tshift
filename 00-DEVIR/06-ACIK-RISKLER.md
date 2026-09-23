@@ -1374,7 +1374,7 @@ koleksiyonunda (ortam değişkeni süreç geneli; paralellik kapalı).
 
 **Kırmızı kanıt CI'da, kalıcı.** `48583e4` (yalnız test): *42 test, 40 geçti,
 S1 ve S2 kırmızı — "No exception was thrown"*. `3ec5d42` (düzeltme):
-**42/42 yeşil.**
+**o günkü 42 testin tamamı yeşil.**
 
 ### ⚠ M5 bu ailenin tek üyesini koruyordu ve yeşil yanıyordu
 
@@ -1391,25 +1391,115 @@ koşusuyla veritabanı rolünün yeni parolaya senkronlanması gerekiyor.
 
 ---
 
-## 🔴 T-35 · Bir kullanıcının hatalı girişi bütün kiracıyı kilitliyor *(`04-kod`)*
+## ✅ T-35 · Kurulum çapında kilitlenme — **KAPANDI (23 Eylül 2026)**
 
-**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kod okumasıyla doğrulandı**
+**Bulundu:** 16 Eylül, dış inceleme (3. tur) · **Kapandı:** 23 Eylül
 
-`frontend/.../api/giris/route.ts` arka uca yalnız `{firma, eposta, parola}`
-gönderiyor — `X-Forwarded-For` **yok**. Arka uç `ctx.Connection.
-RemoteIpAddress` okuyor ve depoda `ForwardedHeaders` ara yazılımı **hiç yok**.
+### Kayıt olduğundan küçük yazmıştı — iki yerde
 
-Yani her kullanıcı arka uca **arayüz sunucusunun IP'si** olarak görünüyor.
-`KimlikServisi.KilitliMi` o IP'nin başarısız denemelerini sayıp eşiği aşınca
-kilitliyor.
+**Etki.** Kayıt *"bütün kiracıyı kilitliyor"* diyordu. Ölçüldü: `KilitliMi`
+sorgusunda **kiracı filtresi yok** ve olmaması bilinçli (M-13). Gerçek etki
+**kurulum çapında**:
 
-**Sonuç: bir kişinin beş yanlış parolası bütün kiracıyı kilitler.** Kötü
-niyetle yapmak bedava — kimlik doğrulaması gerektirmeyen bir hizmet reddi.
+> Herhangi bir kiracıda, herhangi biri, 15 dakikada 5 kez yanlış parola
+> girerse — **kurulumdaki herkes** 15 dakika giriş yapamaz.
 
-**İkinci etkisi:** denetim kaydına yazılan IP herkeste aynı. D-serisi
-değişmezi *"her işlem iz bırakır"* diyor; iz var ama içindeki IP **kurgusal**.
+**Kapsam.** Kayıt yalnız `04-kod/frontend/src/app/api/giris/route.ts`'i anıyordu. `grep`: API'ye **beş
+yerden** gidiliyor — `giris`, `yenile`, `cikis`, `calisan` ve `04-kod/frontend/src/lib/api.ts`
+içindeki `apiGet()` (bütün sunucu tarafı GET'ler; denetim kaydındaki IP
+oradan). *(`proxy.ts` ara katmanı kontrol edildi — API'ye gitmiyor, çağrı
+yeri değil.)*
 
-**Kabul cümlesi:** *"Bir kişinin yanlış parolası diğerlerini kilitlemez."*
+### Kural doğruydu, gördüğü IP yanlıştı
+
+Şartname (§ satır 1403): *"aynı e-posta **veya IP** için 5 başarısız denemede
+15 dakika kilit."* Kod bunu doğru uygulamış. Kusur: tarayıcı API'ye doğrudan
+gitmediği için `ctx.Connection.RemoteIpAddress` **her zaman ön yüzün adresi**.
+
+### ⚠ "Mekanik" etiketi yanlıştı
+
+Bu madde *"karar gerektirmiyor"* diye kaydedilmişti. **Değildi.**
+`X-Forwarded-For` istemcinin yazdığı bir başlıktır; körlemesine güvenmek
+saldırganın kendini istediği IP gibi göstermesine izin verir — hem kilitten
+kaçar hem denetim kaydını kirletir. Güvenilen vekil listesi **şart**, o liste
+de barındırmaya bağlı ve barındırma ertelenmiş. Karar Mustafa'ya soruldu:
+*gerçek IP + yapılandırılabilir vekil listesi.*
+
+### Yazılanlar
+
+| Taraf | Ne |
+|---|---|
+| API | `UseForwardedHeaders`, `TSHIFT_GUVENILEN_VEKILLER`'den okunan `KnownProxies`/`KnownIPNetworks`, `ForwardLimit = 1` |
+| Ön yüz | `04-kod/frontend/src/lib/api.ts` → `istemciBasliklari()`; **beş çağrı yeri de** kullanıyor |
+| Compose | Sabit alt ağ (`172.28.9.0/24`), web kutusuna sabit adres, `TSHIFT_GUVENILEN_VEKILLER` = **yalnız o adres** |
+| `.env.example` | Değişken belgelendi (sır değil, topoloji bilgisi) |
+
+**Liste boşsa başlık hiç okunmaz.** Güvenli varsayılan bilerek seçildi: yanlış
+yapılandırma *"herkese güven"* değil, *"kimseye güvenme"* tarafına düşsün.
+
+### Kalıcı bekçi
+
+`04-kod/backend/tests/TShift.Tests/IstemciIpTestleri.cs` — **3 test**:
+
+| | Ne |
+|---|---|
+| `IP1` | Güvenilen vekilden gelen gerçek IP kaydedilir |
+| `IP2` | **Güvenilmeyen kaynaktan gelen başlık yok sayılır** — sessiz tuzak bu |
+| `IP3` | Başlık yoksa istek yine de kayda geçer (gerileme koruması) |
+
+### Kırmızı kanıt ve ölçümler
+
+| Aşama | Sonuç |
+|---|---|
+| Yalnız test | `IP1` kırmızı — `Expected: "203.0.113.9", Actual: null` |
+| Düzeltme, 1. deneme | Derleme hatası: `IPNetwork` iki ad alanında birden |
+| Düzeltme, 2. deneme | **45/45 yeşil**, uyarı yok |
+| Ön yüz | `next build` temiz |
+| **Uçtan uca (elle), 1. tur** | Next'e `198.51.100.7` → `login_attempts.ip` aynısı ✅ |
+| **Sahte başlık (elle), 1. tur** | Host'tan API'ye `203.0.113.99` → **kaydedildi ❌ koruma çalışmıyor** |
+| Yapılandırma düzeltildi | Aralık → tek adres |
+| **Uçtan uca (elle), 2. tur** | Next'e `198.51.100.8` → aynısı ✅ |
+| **Sahte başlık (elle), 2. tur** | Host'tan `203.0.113.55` → `::ffff:172.28.9.1` yazıldı, **başlık yok sayıldı** ✅ |
+
+### ⚠ İlk yapılandırma yanlıştı ve testler yakalayamazdı
+
+Güvenilen vekil olarak `172.16.0.0/12` konmuştu ve yanına şu yorum
+yazılmıştı: *"host'tan atılan bir istek bu aralığa girmez."* **Ölçüldü,
+yanlıştı:**
+
+```
+host -> yayinlanmis port -> api   =>  ::ffff:172.18.0.1   (docker AG GECIDI)
+web kutusu                        =>  172.18.0.4
+```
+
+İkisi de `/12` içinde. Yani aralık ağ geçidini — dolayısıyla host'taki her
+şeyi — güvenilir sayıyordu ve **sahte başlık geçiyordu.**
+
+`IP2` testi bunu yakalayamazdı: test doğru şeyi sınıyor ve doğru çalışıyor.
+Yanlış olan **kod değil yapılandırma**, ve yapılandırma yalnız gerçek
+kurulumda görünüyor. Otopsisi **O-11**.
+
+> **Topoloji değişirse bu iki ölçüm yeniden koşturulur.** Birim testi
+> mantığı doğrular, topolojiyi doğrulayamaz.
+
+### ⚠ Ön yüz tarafının otomatik testi YOK
+
+`IP1`–`IP3` API'ye doğrudan gidiyor; ön yüzden geçmiyor. Beş çağrı yerinin
+başlığı ilettiği **elle doğrulandı** (yukarıdaki uçtan uca ölçüm) ama bir
+gerileme bekçisi yok. Next.js route handler test altyapısı kurulmadı —
+T-35'ten büyük bir iş olduğu için bilerek ertelendi.
+
+### Test sunucusuna dair bir not — sınır ince
+
+`WebApplicationFactory` içinde gerçek soket olmadığı için
+`Connection.RemoteIpAddress` **null** geliyor ve `UseForwardedHeaders`
+güvenilen vekil listesini tam o adresle karşılaştırıyor. `TestUygulamasi`'na
+bir başlangıç filtresi eklendi: boş adresi loopback'e dolduruyor.
+
+> **Yapılan:** testin *ortamını* gerçeğe benzetmek. **Yapılmayan:** bir
+> iddiayı gevşetmek. `IP1`/`IP2`/`IP3`'ün iddiaları aynen duruyor.
+> Bu ayrım `02-DEGISMEZLER.md` §6'daki *"kırılan test iddiayı zayıflatarak
+> düzeltilmez"* kuralının sınırında; o yüzden kayda geçiyor.
 
 ---
 
@@ -1493,12 +1583,11 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **T-35 · kiracı çapında kilitlenme** 🔴 | Bir kişinin beş yanlış parolası herkesi kilitliyor; denetim kaydındaki IP kurgusal *(`04-kod`)* |
-| **2** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
-| **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
-| **4** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
-| **5** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
-| **6** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
+| **1** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
+| **2** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
+| **3** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
+| **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
+| **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -1561,6 +1650,7 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. Yedi altın senaryo koşuyor ve yeşil; dördü backend tarafında |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
+| **T-35 kurulum çapında kilitlenme** | **23 Eylül 2026** | Gerçek istemci IP'si + güvenilen **tek adres**. 3 test + iki turlu uçtan uca elle ölçüm. İlk yapılandırma yanlıştı, elle deneme yakaladı (O-11) |
 | **T-34 sırlar varsayılana düşüyordu** | **23 Eylül 2026** | Beş katmanda 16 yer temizlendi; `Sirlar.Zorunlu()`. Kırmızı kanıt CI dalında kalıcı. 3 test |
 | **T-22 denetlenmeyen taslak** | **23 Eylül 2026** | Çözümsüzlükte sunulan plan artık özgün girdiyle denetleniyor; boş plan `var: False`. 4 test. A03'te T-18'i görünür kıldı |
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |

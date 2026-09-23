@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiAdresi, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
+import { apiAdresi, istemciBasliklari, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
 
 /**
  * Erişim jetonu süresi dolduğunda buraya uğranır.
@@ -19,7 +19,7 @@ export async function GET(istek: NextRequest) {
 
   const cevap = await fetch(`${apiAdresi()}/api/v1/auth/refresh`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(await istemciBasliklari()) },   // T-35
     body: JSON.stringify({ yenilemeJetonu: yenileme }),
     cache: "no-store",
   });

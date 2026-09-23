@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { apiAdresi, ERISIM_CEREZ } from "@/lib/api";
+import { apiAdresi, istemciBasliklari, ERISIM_CEREZ } from "@/lib/api";
 
 /**
  * Yeni çalışan kaydı. Tarayıcı doğrudan API'ye gitmiyor; buradan geçiyor,
@@ -25,6 +25,7 @@ export async function POST(istek: NextRequest) {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${jeton}`,
+      ...(await istemciBasliklari()),   // T-35
     },
     body: JSON.stringify(govde),
     cache: "no-store",

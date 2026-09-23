@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiAdresi, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
+import { apiAdresi, istemciBasliklari, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
 
 /**
  * Çıkış. İki iş yapıyor ve ikisi de gerekli:
@@ -16,7 +16,7 @@ export async function POST(istek: NextRequest) {
   if (yenileme) {
     await fetch(`${apiAdresi()}/api/v1/auth/logout`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(await istemciBasliklari()) },   // T-35
       body: JSON.stringify({ yenilemeJetonu: yenileme }),
       cache: "no-store",
     }).catch(() => {

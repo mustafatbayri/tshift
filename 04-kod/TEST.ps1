@@ -25,11 +25,22 @@ Get-Content $envDosya | ForEach-Object {
         [Environment]::SetEnvironmentVariable($matches[1], $matches[2].Trim())
     }
 }
+$eksik = @()
 foreach ($ad in @("DB_PASSWORD", "APP_DB_PASSWORD", "JWT_SECRET")) {
-    if (-not [Environment]::GetEnvironmentVariable($ad)) {
-        Write-Host "$ad .env icinde yok. Bkz. .env.example (T-34)" -ForegroundColor Red
-        exit 1
-    }
+    if (-not [Environment]::GetEnvironmentVariable($ad)) { $eksik += $ad }
+}
+if ($eksik.Count -gt 0) {
+    # Hepsini birden soyluyoruz: tek tek bildirmek her seferinde bir kosum
+    # daha demek. Eksik listesi tam olsun ki tek duzenlemede bitsin.
+    Write-Host "" 
+    Write-Host ".env icinde eksik degisken(ler):" -ForegroundColor Red
+    foreach ($ad in $eksik) { Write-Host "  - $ad" -ForegroundColor Red }
+    Write-Host ""
+    Write-Host "Ornekler icin: 04-kod\.env.example  (T-34)" -ForegroundColor Yellow
+    Write-Host "Not: APP_DB_PASSWORD, veritabanindaki tshift_app rolunun" -ForegroundColor DarkGray
+    Write-Host "     mevcut parolasiyla AYNI olmali; degistirmek istersen" -ForegroundColor DarkGray
+    Write-Host "     once TSHIFT_KURULUM=true ile kurulum kosusu gerekir." -ForegroundColor DarkGray
+    exit 1
 }
 
 $surecler = Get-Process -Name TShift.Api -ErrorAction SilentlyContinue

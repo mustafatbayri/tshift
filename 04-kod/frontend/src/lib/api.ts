@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 /**
  * Backend'e sunucu tarafından istek atar.
@@ -29,14 +29,44 @@ export type Cevap<T> = { durum: number; veri: T | null };
  */
 export const ULASILAMADI = 0;
 
+/**
+ * API'ye iletilecek istemci kimliği başlıkları (T-35).
+ *
+ * NEDEN GEREKLİ:
+ * Tarayıcı API'ye hiç gitmiyor; her istek Next.js üzerinden geçiyor. Bu
+ * sayfanın en başında anlatılan fayda (jeton tarayıcıya hiç inmiyor) bir
+ * yan etki üretiyordu: API'nin gördüğü adres HER ZAMAN bu sunucunun adresi.
+ *
+ * Sonucu ölçüldü: kaba kuvvet kilidi IP'ye de bakıyor ve o sorguda kiracı
+ * filtresi yok (M-13, bilerek). Herkes tek adresten geliyor gibi görününce
+ * herhangi bir kiracıda 5 yanlış parola KURULUMDAKİ HERKESİ kilitliyordu.
+ * Denetim kaydındaki her IP de bu sunucunun adresiydi.
+ *
+ * GÜVENLİK NOTU: burada gönderilen başlığa API körlemesine GÜVENMEZ.
+ * Yalnızca `TSHIFT_GUVENILEN_VEKILLER` listesindeki adreslerden geldiğinde
+ * okur. Yani bu satır tek başına bir açık değil; listeyle birlikte anlamlı.
+ *
+ * Yerel geliştirmede önünde vekil olmadığı için `x-forwarded-for` gelmez ve
+ * hiçbir şey iletilmez — API o durumda bağlantı adresini kullanır.
+ */
+export async function istemciBasliklari(): Promise<Record<string, string>> {
+  const gelen = await headers();
+  const adres = gelen.get("x-forwarded-for") ?? gelen.get("x-real-ip");
+  return adres ? { "X-Forwarded-For": adres } : {};
+}
+
 export async function apiGet<T>(yol: string): Promise<Cevap<T>> {
   const kavanoz = await cookies();
   const jeton = kavanoz.get(ERISIM_CEREZ)?.value;
+  const istemci = await istemciBasliklari();
 
   let cevap: Response;
   try {
     cevap = await fetch(`${API}${yol}`, {
-      headers: jeton ? { Authorization: `Bearer ${jeton}` } : {},
+      headers: {
+        ...istemci,
+        ...(jeton ? { Authorization: `Bearer ${jeton}` } : {}),
+      },
       // Her istek taze: vardiya verisi önbellekten servis edilmemeli.
       cache: "no-store",
     });

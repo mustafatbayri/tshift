@@ -35,6 +35,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 12
+    networks: [tshift]
 
   # ---- Asagidakiler yalniz "--profile tam" ile calisir ----------------------
   # Gunluk gelistirmede API ve arayuz makinede calisiyor: derleme daha hizli,
@@ -67,6 +68,27 @@ services:
       # Yerel gelistirme anahtari. Canlida mutlaka disaridan verilir.
       JWT_SECRET: ${JWT_SECRET:?.env dosyasi yok ya da JWT_SECRET bos -- bkz T-34}
 
+      # T-35: X-Forwarded-For basligi YALNIZ bu adresten geldiginde okunur.
+      # Liste bossa baslik hic okunmaz (guvenli varsayilan).
+      #
+      # TEK ADRES, ARALIK DEGIL -- ve bunun bedeli olculerek ogrenildi.
+      # Ilk yazimda buraya 172.16.0.0/12 kondu ve yanina "host'tan gelen
+      # istek bu araliga girmez" diye yazildi. OLCULDU, YANLISTI:
+      #
+      #   host -> yayinlanmis port -> api kutusu  =>  ::ffff:172.18.0.1
+      #                                               (docker AG GECIDI)
+      #   web kutusu                              =>  172.18.0.4
+      #
+      # Ikisi de /12'nin icinde. Yani aralik, ag gecidini -- dolayisiyla
+      # host'taki her seyi -- guvenilir sayiyordu ve sahte baslik geciyordu.
+      # Elle yapilan uctan uca deneme bunu yakaladi; birim testi yakalayamaz,
+      # cunku yanlis olan kod degil YAPILANDIRMA.
+      #
+      # Cozum: web kutusuna sabit adres verip YALNIZ onu guvenmek.
+      # Bu bir SIR DEGIL, topoloji bilgisi. Barindirma karari verilince
+      # yuk dengeleyicinin adresiyle degistirilecek.
+      TSHIFT_GUVENILEN_VEKILLER: ${TSHIFT_GUVENILEN_VEKILLER:-172.28.9.10}
+
       # Development DEGIL. Sebep: gelistirme kipinde EF "sensitive data logging"
       # aciliyor ve sorgu parametreleri kayda yaziliyor - iclerinde e-posta,
       # jeton ozeti, parola ozeti gecebilir. Inceleme kutusu yerelde calissa da
@@ -82,6 +104,7 @@ services:
         condition: service_healthy
     ports:
       - "5146:8080"
+    networks: [tshift]
 
   web:
     profiles: ["tam"]
@@ -97,6 +120,21 @@ services:
       - api
     ports:
       - "3000:3000"
+    networks:
+      tshift:
+        # SABIT adres. api kutusu X-Forwarded-For basligini YALNIZ bu
+        # adresten kabul ediyor; adres her acilista degisseydi liste
+        # tutmazdi. Bkz. TSHIFT_GUVENILEN_VEKILLER.
+        ipv4_address: 172.28.9.10
+
+networks:
+  # Alt ag ACIKCA veriliyor: sabit adres verebilmek icin sart, ve boylece
+  # "hangi araliktayiz" sorusu docker'in kararina birakilmiyor.
+  tshift:
+    name: tshift-ag
+    ipam:
+      config:
+        - subnet: 172.28.9.0/24
 
 volumes:
   tshift-db-data:

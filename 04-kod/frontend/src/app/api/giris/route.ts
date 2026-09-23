@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { apiAdresi, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
+import { apiAdresi, istemciBasliklari, ERISIM_CEREZ, YENILEME_CEREZ } from "@/lib/api";
 
 /**
  * Giriş. Tarayıcı doğrudan API'ye gitmez; buradan geçer.
@@ -15,7 +15,9 @@ export async function POST(istek: NextRequest) {
   try {
     cevap = await fetch(`${apiAdresi()}/api/v1/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // T-35: istemcinin IP'si iletilmezse kaba kuvvet kilidi herkesi
+      // birden kilitliyor. Bkz. lib/api.ts -> istemciBasliklari().
+      headers: { "Content-Type": "application/json", ...(await istemciBasliklari()) },
       body: JSON.stringify({ firma, eposta, parola }),
       cache: "no-store",
     });
