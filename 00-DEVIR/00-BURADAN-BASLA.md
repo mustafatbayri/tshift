@@ -114,7 +114,7 @@ derleyici görmez, CI kırılmaz. Ayrıntı: `08-motor-testleri/v5/testler/OKU-B
 
 ```
 py servis.py   (ayri pencerede)
-set TSHIFT_MOTOR_URL=http://localhost:8000
+$env:TSHIFT_MOTOR_URL = "http://localhost:8000"
 py -m pytest -q   →   12 passed, 4 skipped
 ```
 

@@ -4,6 +4,107 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · T-41 açıldı — DENETIM uyarılarının 13'ü kalıcı**
+
+Commit öncesi denetim: **0 HATA, 14 UYARI**. Ölçüldü: 14'ün 13'ü
+`oturumlar/` ve `DEGISIM-GUNLUGU.md` içinde, yani append-only dosyalarda —
+düzeltilemez. İş düşen tek uyarı *"commit bekleyen 19 dosya"*.
+
+`DENETIM.py` okundu: tasarım **zaten doğru**
+(`bildir = uyari if tarihsel_mi(yol) else hata`). Eksik olan kural değil
+etiket — düzeltilemez uyarı, iş düşenle aynı listede basılıyor. Her koşuda
+akan 13 satır, uyarı bloğunu okunmaz hale getirir; **O-7**, bu kez projenin
+kendi bekçisinde.
+
+Kod değişmedi: `DENETIM.py` her şeyin bekçisi, dokunmak onay ister.
+
+---
+
+**2026-09-23 · Koşturma yönergeleri sekiz yerde cmd sözdizimi veriyordu**
+
+Mustafa altın senaryoları koşturdu, 7 kırmızı geldi: *"MOTOR ADRESI TANIMLI
+DEGIL"*. Sebep kodda değildi — `set AD=deger` **cmd** sözdizimi. PowerShell'de
+`set`, `Set-Variable`'ın takma adıdır ve ortam değişkeni kurmaz.
+
+Yönerge deponun **kendi** dosyalarında sekiz yerde böyle yazılıydı; ikisi
+`​```powershell` etiketli blokların içinde. Yani etiket bir şey iddia ediyor,
+içeriği başka şey yapıyordu.
+
+Düzeltildi: `$env:TSHIFT_MOTOR_URL = "http://localhost:8000"`.
+`00-DEVIR/00-BURADAN-BASLA.md`, `00-DEVIR/04-TEST-HARITASI.md`,
+`08-motor-testleri/v5/testler/motor_istemci.py` (yardım metni **ve** hata
+metni), `08-motor-testleri/v5/testler/OKU-BENI.md`, `09-motor/OKU-BENI.md`,
+`09-motor/servis.py`. Ayrıca `cd 09-motor && py servis.py` → `ve`;
+`&&` PowerShell 5.1'de geçerli bir ayraç değil.
+
+**Testin kendisi doğru davrandı:** motora ulaşamayınca sessizce atlamadı,
+*"adres tanımlı değil"* diye durdu (§16.4). Yanlış olan tek şey yönergeydi.
+
+Sonuç: **12 geçti, 4 atlandı** — makinede doğrulandı.
+
+---
+
+**2026-09-23 · T-19 KAPANDI — şartnamedeki talep biçimi sessizce atlanıyordu**
+
+**Karar (Mustafa): şartname kazanır; okunmayan alan bildirilir, iş
+durdurulmaz.** Reddetmek, motorun tanımadığı tek bir alan yüzünden çalışan
+bir planı yok ederdi.
+
+**Kırmızı kanıt — bulgu iki satırda:**
+
+```
+assert c["metrikler"]["asgari_kapsama_yuzde"] == 100.0   -> GEÇTİ
+assert len(c["atamalar"]) > 0                            -> KALDI
+```
+
+Sıfır atamalı plan, %100 kapsama, yayınlanabilir. Beş testin **beşi de**
+kırmızı yandı.
+
+**Yazılanlar:** talep hücre başına okunuyor —
+`09-motor/cozucu/model.py`, `09-motor/dogrulayici/kurallar.py`,
+`09-motor/dogrulayici/denetle.py`, **üçü ayrı ayrı** (§7.6; ortak yardımcı
+modül `test_ortak_yardimci_modul_yok` ile yasak). Yeni kanal:
+`okunmayan_alanlar` — *"gönderildi ama okunmadı"*.
+Fikstür kısayolu `08-motor-testleri/v5/fikstur_yukleyici.py` içinde açılıyor.
+
+**Kayıtta yazan ile ölçülen — üçüncü kez.** Kayıt *"2 yer okuyor, 11 fikstür
+dönüşecek, 5 alan sessiz"* diyordu. Ölçülen: **5 yer**, **0 fikstür dosyası**
+(kısayol yükleyicide açıldı), **12 alan** — artı `gecmis_vardiyalar` (T-28).
+T-34 ve T-35'ten sonra aynı ders üçüncü kez: *bir bulgunun kaydı, bulgunun
+kendisi değildir.*
+
+⚠ **Kendi testimde birim hatası.** İlk yazımda *"4 saat × 3 kişi = 12 atama"*
+diyordum. Yanlış: bir atama kişi × **vardiya**, kişi × saat değil. Motor
+doğruydu, test yanlıştı. Sayı yerine **kapsama** sınanacak şekilde
+değiştirildi — birimden bağımsız.
+
+⚠ **Mekanizma ilk sürümünde iki yanlış alarm üretti.** `yetkinlikler` ve
+`operasyonel_rol` *"okunmuyor"* diye bildirildi; oysa
+`09-motor/cozucu/model.py` `_yetkinlik()` ikisini de okuyor. Kendi koyduğum
+kurala (*"önce okuyan satırı bul"*) iki adda uymamışım. **O-7:** sessizliğe
+karşı kurulan mekanizmanın ilk hatası gürültü olmak oldu.
+
+**Yan bulgu — T-26'nın ikinci canlı örneği.**
+`08-motor-testleri/v5/fikstur-denetleyici.py`, ortak olduğu **yazılı** olan
+`fikstur_yukleyici.py`'yi hiç import etmiyor, kendi kopyasını taşıyormuş.
+Kopya bugün ayrıştı ve A08'i tutarsız gösterdi. Silindi; ortak modül
+çağrılıyor.
+
+**Şartname değişti:** §11.3 çıktısına `okunmayan_alanlar` eklendi
+(`02-spec/v1.4-master-spec.md`). Kanal kodda var, sözleşmede yoktu — bu da
+T-19'un ta kendisi olurdu.
+
+**Açılan kayıtlar:** **T-38** (şartnamenin 12 alanı daha karşılıksız —
+`kural_degerleri` yok sayılıyor, 9 saatlik sözleşme 11 saate planlanabilir) ·
+**T-39** (aynı hücreye iki talep satırı tanımsız) · **T-40**
+(`tercih_karsilama_yuzde` §11.3'te yazılı ama motorda yok; onu gerektirdiği
+söylenen A7 onsuz yeşil).
+
+**Ölçümler:** motor **77/77** · altın senaryolar **12 geçti, 4 atlandı** ·
+fikstür denetleyicisi **11/11**.
+
+---
+
 **2026-09-23 · T-35 KAPANDI — kurulum çapında kilitlenme**
 
 Kayıt iki yerde küçük yazmıştı. **Etki:** *"bütün kiracıyı kilitliyor"*

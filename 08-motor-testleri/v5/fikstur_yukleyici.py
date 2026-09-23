@@ -42,6 +42,49 @@ def temiz(d):
     return d
 
 
+def talep_hucrelere_ac(talep):
+    """Fikstur kisayolunu sartname bicimine acar (#11.2).
+
+    NE YAPAR
+      {"ekip": "E1", "gunler": [0,1], "saatler": [9,10]}
+        -> dort satir: {"ekip": "E1", "gun": 0, "saat": 9}, (0,10), (1,9), (1,10)
+      Zaten {gun, saat} yazilmis satira dokunmaz.
+
+    NEDEN VAR
+      Sartname talebi HUCRE BASINA tanimliyor. Hafta ici bir talep boyle
+      yazilinca 45 satir eder; fikstur insan gozuyle okunamaz hale gelir ve
+      okunmayan fikstur gozden gecirilmez. Kisayol FIKSTUR KATMANINDA kalir.
+
+    NEDEN MOTORDA DEGIL -- T-19'un dersi
+      Kisayolu motorun de anlamasi IKI DOGRULUK yaratirdi. T-19 tam olarak
+      buydu: fikstur bir bicim secti, motor fiksture bakarak yazildi, ikisi
+      birbiriyle tutarli ama sartnameyle tutarsiz oldu. Motor artik yalniz
+      sartname bicimini okur. Gruplu bir satir motora ULASIRSA denetleyicinin
+      `okunmayan_alanlar` raporu bunu bildirir -- sessizce gecmez.
+
+    TANIMADIGI SATIRDA DURUR
+      Ne {gun, saat} ne {gunler, saatler} olan satir hata verir. Sessizce
+      atlamak, acilmayan talebi "talep yok" saymak olurdu.
+    """
+    cikan = []
+    for t in talep or []:
+        if "gun" in t and "saat" in t:
+            cikan.append(copy.deepcopy(t))
+            continue
+        if "gunler" not in t or "saatler" not in t:
+            raise ValueError(
+                "talep satiri ne sartname bicimi ({gun, saat}) ne fikstur "
+                "kisayolu ({gunler, saatler}): %r" % (t,))
+        govde = {k: v for k, v in t.items() if k not in ("gunler", "saatler")}
+        for gun in t["gunler"]:
+            for saat in t["saatler"]:
+                h = copy.deepcopy(govde)
+                h["gun"] = gun
+                h["saat"] = saat
+                cikan.append(h)
+    return cikan
+
+
 def sahne_uygula(sahne, fark):
     """Sahneye farki uygular, birlesmis girdiyi dondurur."""
     g = copy.deepcopy(sahne)
@@ -66,6 +109,10 @@ def sahne_uygula(sahne, fark):
     if "kurallar_cikar" in fark:
         cikar = set(fark["kurallar_cikar"])
         g["kurallar"] = [k for k in g["kurallar"] if k["kod"] not in cikar]
+
+    # Motora giden girdide talep HER ZAMAN sartname bicimindedir (T-19).
+    # Sahne de fark da kisayol yazabilir; acma tek yerde, en sonda olur.
+    g["talep"] = talep_hucrelere_ac(g.get("talep"))
 
     return g
 

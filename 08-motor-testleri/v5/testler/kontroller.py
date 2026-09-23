@@ -188,19 +188,22 @@ def mola_tek_blok(cikti, girdi, tanim):
 def mola_sonrasi_kapsama_en_az(cikti, girdi, tanim):
     asgari = tanim["deger"]
     kotu = []
+    # Talep sartname biciminde: bir satir = bir hucre (T-19). Fikstur
+    # kisayolunu yukleyici zaten acmis oluyor.
     for t in girdi.get("talep", []):
-        for gun in t.get("gunler", []):
-            for saat in t.get("saatler", []):
-                sahada = 0
-                for a in _atamalar(cikti):
-                    if a["gun"] != gun or not (a["bas"] <= saat < a["bit"]):
-                        continue
-                    if any(m["bas"] <= saat < m["bit"]
-                           for m in a.get("molalar", [])):
-                        continue
-                    sahada += 1
-                if sahada < asgari:
-                    kotu.append((gun, saat, sahada))
+        gun, saat = t.get("gun"), t.get("saat")
+        if gun is None or saat is None:
+            continue
+        sahada = 0
+        for a in _atamalar(cikti):
+            if a["gun"] != gun or not (a["bas"] <= saat < a["bit"]):
+                continue
+            if any(m["bas"] <= saat < m["bit"]
+                   for m in a.get("molalar", [])):
+                continue
+            sahada += 1
+        if sahada < asgari:
+            kotu.append((gun, saat, sahada))
     if kotu:
         return False, ("Mola dusuldukten sonra %d hucrede sahadaki kisi "
                        "%d'un altina indi: %s"

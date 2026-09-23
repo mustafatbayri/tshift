@@ -397,10 +397,24 @@ class Model(object):
     # ---- kapsama ------------------------------------------------------
 
     def _hucreler(self):
+        """Sartname #11.2: BIR talep satiri = BIR hucre {ekip, gun, saat}.
+
+        T-19 (23 Eylul). Bu satirlar 23 Eylul'e kadar gruplu bicim okuyordu
+        ({gunler: [...], saatler: [...]}). Sartname biciminde bir istek
+        gelince motor talebi HIC gormuyor, sifir atamali plan uretiyor ve
+        kapsama %100 cikiyordu. Kimse yanlis degildi: fikstur bir bicim
+        secti, motor fiksture bakarak yazildi; ikisi birbiriyle tutarli,
+        ikisi de sartnameyle tutarsizdi. Karar (Mustafa): SARTNAME KAZANIR.
+
+        Okunamayan satir burada SESSIZCE atlanir, ve bu bilerekdir: "neye
+        bakmadim" demek #7.6 geregi dogrulayicinin isi
+        (dogrulayici.denetle._okunmayan_alanlar). Cozucu rapor uretmez.
+        """
         for t in self.girdi.get("talep", []) or []:
-            for gun in t.get("gunler", []):
-                for saat in t.get("saatler", []):
-                    yield t, gun, saat
+            gun, saat = t.get("gun"), t.get("saat")
+            if gun is None or saat is None:
+                continue
+            yield t, gun, saat
 
     def _atanmis(self, ekip, gun, saat):
         """O hucreye ATANMIS kisiler -- mola DUSULMEZ (ASGARI/HEDEF_KAPSAMA)."""

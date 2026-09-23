@@ -62,9 +62,11 @@ def _sahne(devir, profil="DENGELI", esik=2, haftalik=45, asgari=3):
         "vardiya_sablonlari": [
             {"id": "V", "bas": 9, "bit": 13, "mola_dk": 0, "gunler": [5]},
         ],
+        # Sartname #11.2: bir satir = bir hucre {ekip, gun, saat} -- T-19.
         "talep": [
-            {"ekip": "E", "gunler": [5], "saatler": [9, 10, 11, 12],
-             "asgari": asgari, "hedef": asgari},
+            {"ekip": "E", "gun": 5, "saat": s,
+             "asgari": asgari, "hedef": asgari}
+            for s in (9, 10, 11, 12)
         ],
         "kurallar": [
             {"kod": "ASGARI_KAPSAMA", "tur": "SERT", "aktif": True,
@@ -314,8 +316,9 @@ def _fm_sahne(asgari, hedef, profil="DENGELI"):
     kisi basi 3 vardiya = 12 saat duser -> 4 saat fazla mesai ZORUNLU olur."""
     g = _sahne({"C1": 0, "C2": 0, "C3": 0}, profil=profil, haftalik=8)
     g["vardiya_sablonlari"] = [{"id": "V", "bas": 9, "bit": 13, "mola_dk": 0}]
-    g["talep"] = [{"ekip": "E", "gunler": [0, 1, 2], "saatler": [9, 10, 11, 12],
-                   "asgari": asgari, "hedef": hedef}]
+    g["talep"] = [{"ekip": "E", "gun": d, "saat": s,
+                   "asgari": asgari, "hedef": hedef}
+                  for d in (0, 1, 2) for s in (9, 10, 11, 12)]
     g["kurallar"] = g["kurallar"] + [
         {"kod": "HEDEF_KAPSAMA", "tur": "YUMUSAK", "aktif": True},
         {"kod": "HAFTALIK_AZAMI", "tur": "SERT", "aktif": True,
@@ -399,8 +402,9 @@ def test_sozlesme_asimi_yalniz_tavan_izin_verdiginde_mumkun(profil, cozulur):
     girdi["vardiya_sablonlari"] = [
         {"id": "V", "bas": 9, "bit": 13, "mola_dk": 0},          # 4 saat, her gun
     ]
-    girdi["talep"] = [{"ekip": "E", "gunler": [0, 1, 2], "saatler": [9, 10, 11, 12],
-                       "asgari": 3, "hedef": 3}]
+    girdi["talep"] = [{"ekip": "E", "gun": d, "saat": s,
+                       "asgari": 3, "hedef": 3}
+                      for d in (0, 1, 2) for s in (9, 10, 11, 12)]
     girdi["kurallar"] = girdi["kurallar"] + [
         {"kod": "FAZLA_MESAI_TAVANI", "tur": "SERT", "aktif": True,
          "parametreler": {"azami_saat_hafta": 10}},

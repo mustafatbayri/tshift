@@ -52,7 +52,7 @@ Hata mesajı da bunu açıkça söylüyor:
 MOTOR YAZILMADI.
   Bu test, motor var oldugunda yesile donecek sekilde yazildi.
   Kirmizi olmasi BEKLENEN durumdur (spec #16.4 kirmizi kanit).
-  Motor hazir oldugunda: set TSHIFT_MOTOR_URL=http://localhost:8000
+  Motor hazir oldugunda: $env:TSHIFT_MOTOR_URL = "http://localhost:8000"
 ```
 
 ### ⚠ Bu paket CI'da koşmuyor — bilerek
@@ -122,8 +122,12 @@ servis (M-09); testler onun içini bilmez, yalnız sözleşmesini (§11.1) bilir
 Adres ortam değişkeninden okunur:
 
 ```powershell
-set TSHIFT_MOTOR_URL=http://localhost:8000
+$env:TSHIFT_MOTOR_URL = "http://localhost:8000"
 ```
+
+> `set AD=deger` **cmd** sozdizimidir. PowerShell'de `set`, `Set-Variable`'in
+> takma adidir ve ortam degiskeni kurmaz -- test motora hic baglanmaz, "MOTOR
+> ADRESI TANIMLI DEGIL" der. 23 Eylul'de bu yasandi; sekiz dosyada duzeltildi.
 
 ---
 

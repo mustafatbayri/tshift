@@ -22,7 +22,8 @@ HANGI UCLER GERCEK
 
 KOSTURMA
       cd 09-motor  ve  py servis.py          (ayri bir pencerede)
-      set TSHIFT_MOTOR_URL=http://localhost:8000
+      $env:TSHIFT_MOTOR_URL = "http://localhost:8000"     (PowerShell)
+      set TSHIFT_MOTOR_URL=http://localhost:8000          (cmd)
 
 BU NE DEGILDIR
   * Urunun dogrulayicisi degildir.
@@ -94,9 +95,14 @@ class MotorIstemci(object):
                 "  Bu test, motor ayaktayken yesile doner.\n"
                 "  Kirmizi olmasi BEKLENEN durumdur (spec #16.4 kirmizi kanit).\n"
                 "  Baslatmak icin:\n"
-                "    1) ayri pencerede:  cd 09-motor  &&  py servis.py\n"
-                "    2) bu pencerede:    set %s=http://localhost:8000"
-                % ORTAM_DEGISKENI)
+                "    1) ayri pencerede:  cd 09-motor  ve  py servis.py\n"
+                "    2) bu pencerede, PowerShell:\n"
+                "         $env:%s = \"http://localhost:8000\"\n"
+                "       cmd kullaniyorsan:\n"
+                "         set %s=http://localhost:8000\n"
+                "    NOT: PowerShell'de `set` ortam degiskeni KURMAZ;\n"
+                "         Set-Variable'in takma adidir."
+                % (ORTAM_DEGISKENI, ORTAM_DEGISKENI))
 
         veri = None if govde is None else json.dumps(govde).encode("utf-8")
         istek = urllib.request.Request(

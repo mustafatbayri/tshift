@@ -25,7 +25,8 @@ KOSTURMA
 
 TESTLERI YESILE CEVIRMEK ICIN
   Once bu servisi ayri bir pencerede baslat, sonra:
-    set TSHIFT_MOTOR_URL=http://localhost:8000
+    $env:TSHIFT_MOTOR_URL = "http://localhost:8000"    (PowerShell)
+    set TSHIFT_MOTOR_URL=http://localhost:8000         (cmd)
     cd ..\\08-motor-testleri\\v5\\testler
     py -m pytest -v -k "A04 or A08"
 """

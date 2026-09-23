@@ -113,37 +113,18 @@ def capa_uret(baslik):
 # Sahne cozumu
 # ----------------------------------------------------------------------
 
-def sahne_uygula(sahne, fark):
-    """Sahneye farki uygular, birlesmis girdiyi dondurur."""
-    g = copy.deepcopy(sahne)
-    fark = fark or {}
-
-    # calisanlar: kimlige gore birlestirme
-    if "calisanlar" in fark:
-        indeks = {c["id"]: c for c in g["calisanlar"]}
-        for cid, degisiklik in fark["calisanlar"].items():
-            if cid not in indeks:
-                raise KeyError("fark bilinmeyen calisani degistiriyor: %s" % cid)
-            indeks[cid].update(copy.deepcopy(degisiklik))
-
-    # tamamen degistirilenler
-    for alan in ("talep", "sabit_atamalar", "kilitler", "profil",
-                 "donmus_gunler", "kiraci_saat_dilimi", "hafta_baslangic"):
-        if alan in fark:
-            g[alan] = copy.deepcopy(fark[alan])
-
-    # eklenenler
-    if "vardiya_sablonlari_ekle" in fark:
-        g["vardiya_sablonlari"] += copy.deepcopy(fark["vardiya_sablonlari_ekle"])
-    if "kurallar_ekle" in fark:
-        g["kurallar"] += copy.deepcopy(fark["kurallar_ekle"])
-
-    # cikarilanlar
-    if "kurallar_cikar" in fark:
-        cikar = set(fark["kurallar_cikar"])
-        g["kurallar"] = [k for k in g["kurallar"] if k["kod"] not in cikar]
-
-    return g
+# Sahne+fark birlestirmesi ORTAK moduldedir (fikstur_yukleyici). Burada kendi
+# kopyasi vardi ve yukleyicinin kendi basligi "ikisi de bunu kullaniyor"
+# diyordu -- kayit vardi, YURURLUK yoktu (T-26). Kopya 23 Eylul'de ayristi:
+# T-19 talebi sartname bicimine acmayi yukleyiciye ekledi, buradaki kopya
+# eski kaldi ve A08 tutarsiz gorundu. Kopya silindi, ortak modul cagriliyor.
+#
+# ORTAK OLAN NE, OLMAYAN NE
+#   ORTAK  : GIRDI insasi. Iki taraf ayni girdiyi kurmazsa ayri seyleri
+#            denetler; denetleyici yesil yanarken testler baskasini sinar.
+#   AYRI   : `turet` -- beklenen sonucun BAGIMSIZ turetilmesi. Onu paylasmak
+#            bagimsizligi yok eder, iste o zaman denetim denetim olmaz.
+from fikstur_yukleyici import sahne_uygula          # noqa: E402
 
 
 # ----------------------------------------------------------------------
@@ -202,22 +183,24 @@ def turet(girdi, atamalar):
 
     # MOLA_KAPSAMASI -- K-14 geregi YUMUSAK
     if "MOLA_KAPSAMASI" in kural:
+        # Talep sartname biciminde: bir satir = bir hucre (T-19).
         for t in girdi.get("talep", []):
-            for gun in t.get("gunler", []):
-                for saat in t.get("saatler", []):
-                    sahada = 0
-                    for a in atamalar:
-                        if a["gun"] != gun:
-                            continue
-                        if not (a["bas"] <= saat < a["bit"]):
-                            continue
-                        molada = any(m["bas"] <= saat < m["bit"]
-                                     for m in a.get("molalar", []))
-                        if not molada:
-                            sahada += 1
-                    if sahada < t["asgari"]:
-                        yumusak.append(("MOLA_KAPSAMASI", gun, saat,
-                                        sahada, t["asgari"]))
+            gun, saat = t.get("gun"), t.get("saat")
+            if gun is None or saat is None:
+                continue
+            sahada = 0
+            for a in atamalar:
+                if a["gun"] != gun:
+                    continue
+                if not (a["bas"] <= saat < a["bit"]):
+                    continue
+                molada = any(m["bas"] <= saat < m["bit"]
+                             for m in a.get("molalar", []))
+                if not molada:
+                    sahada += 1
+            if sahada < t["asgari"]:
+                yumusak.append(("MOLA_KAPSAMASI", gun, saat,
+                                sahada, t["asgari"]))
 
     return sorted(sert), sorted(yumusak)
 

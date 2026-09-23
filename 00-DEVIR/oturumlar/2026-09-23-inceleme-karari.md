@@ -332,3 +332,153 @@ Bu seçim Mustafa'ya soruldu, sessizce yapılmadı.
 
 > Son üç madde T-26'nın kendisidir: *kayıt ≠ yürürlük.* Bu oturum tam da onun
 > üçüncü örneğini bulmakla başladı; dördüncüsünü üretmemek için buraya yazıldı.
+
+---
+
+## 11. T-19 kapandı — aynı gün, dördüncü 🔴
+
+**Karar (Mustafa):** *şartname kazanır* + *okunmayan alan bildirilir, iş
+durdurulmaz.* Reddedilen seçenek "tanınmayan girdiyi reddet"ti: tek bir
+tanınmayan alan yüzünden çalışan bir planı yok ederdi.
+
+Kararın kendisi kolay çıkmadı. Mustafa üç kez üst üste *"motor neden bir alanı
+okuyamıyor, bunu anlamıyorum"* dedi ve haklıydı — soru teknik değildi: **arkada
+tercihler varsa motor onları görmeli**; görülmemesi bir eksiklik, bir seçenek
+değil. Karar netleştikten sonra yazıldı, öncesinde değil.
+
+### Kırmızı kanıt
+
+```
+assert c["metrikler"]["asgari_kapsama_yuzde"] == 100.0   -> GEÇTİ
+assert len(c["atamalar"]) > 0                            -> KALDI
+```
+
+Beş testin beşi de kırmızı yandı (`09-motor/testler/test_girdi_sozlesmesi.py`).
+
+### Üç ölçüm, üç sürpriz
+
+| Kayıtta | Ölçülen |
+|---|---|
+| 2 yer talebi okuyor | **5** — `09-motor/dogrulayici/denetle.py` de okuyormuş |
+| 11 fikstür dönüşecek | **0 fikstür dosyası**; kısayol yükleyicide açıldı |
+| 5 alan sessiz | **12** (+ `gecmis_vardiyalar`, zaten T-28) |
+
+Üçüncü kez aynı ders: **bir bulgunun kaydı, bulgunun kendisi değildir.**
+T-34 iki satır sanılmıştı, 16 yer çıktı. T-35 kiracı çapı sanılmıştı, kurulum
+çapı çıktı. T-19'un üç ölçüsünün üçü de dardı.
+
+### İki kendi hatam — ikisi de ölçümle yakalandı
+
+**1. Birim hatası.** Testi *"4 saat × 3 kişi = 12 atama"* diye yazmışım. Bir
+atama kişi × **vardiya**. Üç kişi tek 09–13 vardiyasını alınca dört hücre de
+dolar, atama sayısı **üç**tür. Kod doğruydu, test yanlıştı; sayı yerine
+kapsama sınanacak şekilde değiştirildi.
+
+**2. Mekanizmanın kendisi yanlış alarm verdi.** `okunmayan_alanlar`'ın ilk
+sürümü `yetkinlikler` ve `operasyonel_rol`'ü *"okunmuyor"* diye bildirdi;
+oysa `09-motor/cozucu/model.py` `_yetkinlik()` ikisini de okuyor. Listenin
+üstüne *"önce okuyan satırı bul, sonra adı ekle"* diye yazmış, iki adda kendi
+kuralıma uymamışım.
+
+> **O-7:** sessizliğe karşı kurulan mekanizmanın ilk hatası **gürültü olmak**
+> oldu. Yanlış alarm veren uyarı, bir süre sonra okunmayan uyarıdır.
+
+Listenin elle bakımlı olduğu ve metin aramasının kap bağlamını ayırt
+edemediği **bilinen sınır olarak** T-38'e yazıldı — kapatılmış gibi
+gösterilmedi.
+
+### Bayat servisle yeşil görmek
+
+Altın senaryolar HTTP üzerinden koşuyor. Doğrulayıcıyı değiştirdikten sonra
+servis **yeniden başlatılmadan** koşuldu ve 12 yeşil geldi — eski kodun
+yeşili. Fark edilip servis yeniden başlatıldı, tekrar koşuldu. O-9 ailesi:
+*iki taraf da temiz görünüyordu çünkü sınanan şey gönderilmemişti.*
+
+### Yan bulgu — T-26'nın ikinci canlı örneği
+
+`08-motor-testleri/v5/fikstur_yukleyici.py` tam da bu riske karşı yazılmış ve
+başlığında *"hem denetleyici hem testler bunu kullanıyor"* yazıyor.
+**Denetleyici onu hiç import etmiyormuş**; `sahne_uygula`'nın birebir
+kopyasını taşıyordu. Kopya bugün ayrıştı (T-19 kısayol açmayı yükleyiciye
+ekledi) ve A08 tutarsız göründü. Kopya silindi.
+
+Paylaşılan şey **girdi inşası**; `turet` — bağımsız türetme — paylaşılmadı ve
+paylaşılmamalı.
+
+### Açılan kayıtlar
+
+- **T-38** 🔴 — şartnamenin 12 alanı daha motorda karşılıksız. En ağırı
+  `kural_degerleri`: kişiye özel kural değeri yok sayılıyor, günde 9 saatlik
+  sözleşme genel kuralın 11 saatine planlanabiliyor. Öncelik listesinde
+  **2. sıra**.
+- **T-39** 🟡 — aynı hücreye iki talep satırı gelirse ne olacağı yazılı değil.
+  Bugün oluşamıyor; **talep ekranından önce** karara bağlanmalı.
+- **T-40** 🟡 — §11.3 `tercih_karsilama_yuzde` metriğini yazıyor ve gerekçesi
+  *"A7 bu metrik olmadan ölçülemiyor"*. Motorda yok, A07 fikstüründe
+  beklenmiyor, **A07 yeşil**. Soru başka bir ölçüyle cevaplanmış.
+
+### Şartname değişikliği — onay bekliyor
+
+`02-spec/v1.4-master-spec.md` §11.3 çıktısına `okunmayan_alanlar` eklendi.
+Gerekçe: kanal kodda var, sözleşmede yoktu; arka uç varlığını öğrenemezdi —
+T-19'un aynısı, bu kez çıktı tarafında. **Bu bir şartname düzenlemesi ve
+Mustafa'nın onayını bekliyor**; geri alması tek blok.
+
+### Hâlâ açık
+
+`okunmayan_alanlar` bugün yalnız **rapor**. Yayın kapısı ona da,
+`uygulanmayan_kurallar`'a da, `eksik_boyutlar`'a da bakmıyor — üçü de kapıyı
+geçiyor. **T-18**'in cevabı artık üç kanalı birden bağlıyor.
+
+### Ölçümler
+
+| Ne | Sonuç |
+|---|---|
+| Motor birim testleri | **77 geçti** (72 → 77) |
+| Altın senaryolar (taze servis) | **12 geçti, 4 atlandı** |
+| Fikstür denetleyicisi | **11/11 tutarlı** |
+| `YOL-KONTROL.py` | 8 kırık yol — **hepsi eski**, bu oturumdan yok |
+
+### Ek — koşturma yönergesi yanlış kabuğa yazılmıştı
+
+İlk koşuda 7 kırmızı geldi: *"MOTOR ADRESI TANIMLI DEGIL"*. Kodla ilgisi
+yoktu. `set AD=deger` **cmd** sözdizimi; PowerShell'de `set`,
+`Set-Variable`'ın takma adı ve ortam değişkeni kurmuyor.
+
+Deponun **kendi** yönergeleri sekiz yerde böyleydi — ikisi `​```powershell`
+etiketli blokların içinde, yani etiket bir şey söylüyor içeriği başka şey
+yapıyordu. Bu O-11 ailesinden: **iddia ile ölçülen arasındaki fark**, bu kez
+belgede.
+
+Hepsi `$env:TSHIFT_MOTOR_URL = "http://localhost:8000"` yapıldı; hata metnine
+iki kabuk da yazıldı ve *"PowerShell'de `set` ortam değişkeni KURMAZ"* notu
+eklendi. `&&` de `ve` yapıldı — PowerShell 5.1'de geçerli ayraç değil.
+
+Bu benim üçüncü kabuk hatam (önce PowerShell'e `curl -H`, sonra bu). Bir
+kerelik düzeltme yetmiyor; **yönergenin kendisi** yanlış kabuğa yazılmıştı ve
+onu düzeltmek tekrarını önleyen tek şey.
+
+**Doğrulandı:** `12 passed, 4 skipped` — Mustafa'nın makinesinde.
+
+### Ek 2 — commit öncesi denetim ve T-41
+
+`DENETIM.py`: **0 HATA, 14 UYARI** (sabah 3 HATA vardı). 19 dosyanın 19'u
+bugünün işi.
+
+14 uyarının **13'ü kalıcı**: 5 test adı + 8 yol, hepsi `oturumlar/` ve
+`DEGISIM-GUNLUGU.md` içinde — yani append-only, tanım gereği düzeltilemez.
+Gerçekten iş düşen tek uyarı *"commit bekleyen 19 dosya"*.
+
+Bakmadan varsaymamak için `DENETIM.py` okundu ve **tasarımın zaten doğru
+olduğu** görüldü: `bildir = uyari if tarihsel_mi(yol) else hata`. Tarihsel
+dosyadaki sorun bilerek hata sayılmıyor; 0 HATA'nın sebebi bu. Eksik olan
+kural değil, **etiket** — 13 düzeltilemez uyarı, iş düşenle aynı listede ve
+*"bakılmalı"* başlığı altında basılıyor.
+
+Kayda geçti: **T-41**. Önerilen düzeltme yeni bir kural değil, `uyari()`'ye
+bir `tarihsel` bayrağı ve çıktıda iki ayrı blok. `DENETIM.py` her şeyin
+bekçisi olduğu için dokunulmadı, karar Mustafa'da.
+
+> Aynı gün ikinci kez: `okunmayan_alanlar` da ilk sürümünde yanlış alarm
+> vermişti. **Sessizliğe karşı kurulan her mekanizma gürültüyle kendini
+> iptal edebilir.**

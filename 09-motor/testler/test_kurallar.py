@@ -295,7 +295,10 @@ def test_gunluk_azami_11_ustu_ihlal():
 # Kapsama -- asgari mola SAYAR, mola kapsamasi mola DUSER
 # ----------------------------------------------------------------------
 
-TALEP = [{"ekip": "E1", "gunler": [0], "saatler": [12], "asgari": 3, "hedef": 3}]
+# Sartname #11.2: bir satir = bir hucre {ekip, gun, saat}. 23 Eylul'e kadar
+# burada gruplu bicim ({gunler, saatler}) yaziyordu; motor da onu okuyordu --
+# ikisi tutarli, ikisi de sartnameyle tutarsizdi (T-19).
+TALEP = [{"ekip": "E1", "gun": 0, "saat": 12, "asgari": 3, "hedef": 3}]
 
 
 def test_asgari_kapsama_molayi_SAYMAZ_yani_dusurmez():
@@ -582,8 +585,8 @@ def test_talep_yokken_kapsama_yuzde_100_ama_bu_MUKEMMEL_DEMEK_DEGIL():
 def test_eksik_hedef_dakika_hesaplanir():
     """T-4: A9 bu metrik olmadan olculemiyordu."""
     s = degerlendir(sahne([kural("HEDEF_KAPSAMA", tur="YUMUSAK")],
-                          talep=[{"ekip": "E1", "gunler": [0], "saatler": [9, 10],
-                                  "asgari": 1, "hedef": 3}]),
+                          talep=[{"ekip": "E1", "gun": 0, "saat": s,
+                                  "asgari": 1, "hedef": 3} for s in (9, 10)]),
                     [atama("C1", 0, 9, 18)])
     assert s["metrikler"]["eksik_hedef_dakika"] == 240      # 2 saat x 2 eksik kisi x 60
 

@@ -339,10 +339,20 @@ def mola_hakki(girdi, atamalar, tanim):
 # ----------------------------------------------------------------------
 
 def _talep_hucreleri(girdi):
+    """Sartname #11.2: talep hucre basinadir -- {ekip, gun, saat, asgari, hedef}.
+
+    T-19. Cozucu ayni yorumu kendi tarafinda AYRI yapiyor (cozucu.model
+    ._hucreler). Buradaki tekrar maliyet degil, #7.6'nin istedigi guvencedir:
+    iki taraf ayni girdiyi birbirine sormadan okur; ayrisirlarsa bagimsiz
+    denetim ayrismayi gorur. Ortak bir yardimci modul CIKARILAMAZ --
+    test_bagimsizlik.test_ortak_yardimci_modul_yok bunu yasakliyor.
+
+    Okunamayan satir atlanir; bildirmek denetle._okunmayan_alanlar'in isi.
+    """
     for t in girdi.get("talep", []) or []:
-        for gun in t.get("gunler", []):
-            for saat in t.get("saatler", []):
-                yield t, gun, saat
+        if t.get("gun") is None or t.get("saat") is None:
+            continue
+        yield t, t["gun"], t["saat"]
 
 
 @kural("ASGARI_KAPSAMA")

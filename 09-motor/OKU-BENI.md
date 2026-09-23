@@ -72,7 +72,7 @@ yalnız çözücüyü ya da testleri ilgilendirmeli.
 Testleri koşturmak için, **ayrı bir pencerede** servis açıkken:
 
 ```powershell
-set TSHIFT_MOTOR_URL=http://localhost:8000
+$env:TSHIFT_MOTOR_URL = "http://localhost:8000"
 cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\v5
 py -m pytest -v
 ```

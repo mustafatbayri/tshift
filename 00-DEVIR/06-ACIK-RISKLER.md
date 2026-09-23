@@ -884,7 +884,7 @@ yetkili gerekçeyle onaylasın, (c) yalnız SERT olanlarda engelle. Uydurulmadı
 
 ---
 
-## 🔴 T-19 · Şartnamedeki talep biçimi sessizce gözden kaçıyor
+## ✅ T-19 · Şartnamedeki talep biçimi sessizce gözden kaçıyordu — **KAPANDI (23 Eylül 2026)**
 
 **Bulundu:** 16 Eylül 2026, **dış inceleme** (GPT) · **Yeniden üretildi:** evet
 
@@ -920,10 +920,54 @@ fikstürleri de aynı kişi yazdı. Birbirleriyle tutarlılar, ikisi de
 diyor ve bunu bilinçli bir karar olarak belgeliyor. Ama **"talep yok"** ile
 **"talebi okuyamadım"** ayrımı yok. T-18 ile birebir aynı sınıf.
 
-**Ürün kararı gerekiyor:** hangi biçim kazanacak — şartname mi, kod mu?
-Şartname kazanırsa motor ve 11 fikstür dönüştürülecek. Kod kazanırsa §11.2
-düzeltilecek. Hangisi olursa olsun **tanınmayan talep satırı sessizce
-atlanmamalı**.
+### Karar (23 Eylül, Mustafa): **şartname kazanır** + okunmayan alan **bildirilir**
+
+Reddedilen seçenek *"tanınmayan girdiyi reddet"*ti. Reddetmek, motorun
+tanımadığı **tek bir alan** yüzünden çalışan bir planı yok eder.
+
+| Ne yapıldı | Nerede |
+|---|---|
+| Talep hücre başına okunuyor (`gun`, `saat`) | `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py` · `09-motor/dogrulayici/denetle.py` — **üç ayrı yerde, üç ayrı yazım**; ortak yardımcı modül §7.6 gereği çıkarılamaz |
+| Okunmayan girdi alanları raporlanıyor | `09-motor/dogrulayici/denetle.py` → `okunmayan_alanlar` |
+| Fikstür kısayolu açılıyor | `08-motor-testleri/v5/fikstur_yukleyici.py` → `talep_hucrelere_ac()` |
+| Kırmızı kanıt | `09-motor/testler/test_girdi_sozlesmesi.py` — 5 test, **beşi de kırmızı yandı** |
+
+### Kırmızı kanıt — bulgunun kendisi iki satırda
+
+```
+assert c["metrikler"]["asgari_kapsama_yuzde"] == 100.0   -> GEÇTİ
+assert len(c["atamalar"]) > 0                            -> KALDI
+```
+
+Sıfır atamalı plan, **%100 kapsama**, yayınlanabilir.
+
+### Kayıtta yazan ile ölçülen — üçüncü kez
+
+| | Kayıtta | Ölçülen |
+|---|---|---|
+| Kaç yer talebi okuyor | 2 (çözücü + doğrulayıcı) | **5** — `denetle.py` de okuyormuş; ayrıca fikstür katmanında 2 |
+| Kaç fikstür dönüşecek | 11 | **0 fikstür dosyası** — kısayol yükleyicide açıldı. Ama motorun **kendi** testlerinde 5 yer dönüştü |
+| Kaç alan sessiz | 5 | **12** (+ `gecmis_vardiyalar`, T-28) |
+
+T-34 (2 satır → 16 yer), T-35 (kiracı → kurulum çapı), şimdi T-19.
+**Bir bulgunun kaydı, bulgunun kendisi değildir.** Kayıt, yazıldığı anda ne
+kadar bakıldıysa onu taşır — eksiğini değil.
+
+### Bu turun açtığı dört yeni kayıt
+
+* **T-38** — şartnamenin on iki alanı daha motorda karşılıksız.
+* **T-39** — aynı hücreye iki talep satırı gelirse ne olacağı yazılı değil.
+* **T-40** — `tercih_karsilama_yuzde` çıktı sözleşmesinde var, motorda yok;
+  onu gerektirdiği söylenen **A7 onsuz yeşil**.
+* **T-26'ya kanıt** — `08-motor-testleri/v5/fikstur-denetleyici.py`, ortak
+  olduğu yazılı modülü hiç kullanmıyormuş; kendi kopyası vardı. Aşağıda.
+
+### Hâlâ açık olan
+
+`okunmayan_alanlar` bugün **yalnız rapor**. Yayın kapısı ona bakmıyor —
+`uygulanmayan_kurallar` ve `eksik_boyutlar`'a da bakmıyor. **Üçü de kapıyı
+geçiyor.** Bu **T-18**'dir, ve T-18'in cevabı artık bir değil **üç** kanalı
+bağlıyor.
 
 ---
 
@@ -1519,6 +1563,191 @@ Mevcut testler işlemleri **sırayla** yapıyor; bu yolu sınamıyor.
 
 ---
 
+## 🔴 T-38 · Şartnamenin on iki alanı daha motorda karşılıksız
+
+**Bulundu:** 23 Eylül 2026, T-19 kapatılırken · **Ölçüldü:** evet — her ad
+`09-motor/` içinde tek tek arandı
+
+**Ne.** T-19 tek bir alanın sessizce atlanmasıydı. Kapatırken §11.2'nin
+**bütün** alanları tarandı. `talep` yalnızca ilk örnekmiş.
+
+| Alan | Gönderilirse ne olur |
+|---|---|
+| `calisanlar[].kural_degerleri` | **Kişiye özel kural değeri yok sayılır.** Sözleşmesi günde 9 saat diyen kişi genel kuralın 11 saatine planlanabilir — yasal tarafta yanlış plan |
+| `calisanlar[].izinler[].tum_gun` | **Yarım gün izin tam gün gibi engeller.** İzin her koşulda bütün günü kapatıyor |
+| `calisanlar[].tercihler` | Tercih plana hiç etki etmez; ekran topluyorsa boşuna topluyor |
+| `devir_kapsama` | Devreden kapsama yükü yok sayılır |
+| `vardiya_sablonlari[].mola_tek_blok` | Mola bölünebilir; şablonun *"tek blok"* şartı uygulanmaz |
+| `vardiya_sablonlari[].mola_en_erken` · `.mola_en_gec_bitis` | Motor bunları `mola_penceresi.en_erken` / `.en_gec_bitis` altında bekliyor — **ad uyuşmazlığı**, T-19'un ikizi |
+| `sabit_atamalar[].bas` · `.bit` · `.ekip` | Motor sabit atamayı `sablon` kimliğinden eşliyor; §11.2 örneğinde `sablon` **yok**. Eşleşmeyen satır `uygulanmayan_notlar`a düşüyor — sessiz değil; ama gönderilen `bas`/`bit` şablonunkinden **farklıysa** kimse görmez |
+| `istek_id` | Motor okumuyor **ve çıktıya geri yazmıyor**; §11.3 yazdığını söylüyor |
+| `sure_butcesi_sn` | **Çağıranın süre bütçesi yok sayılıyor.** Motor süreyi `_cozucu_ayari`'ndan alıyor |
+
+`calisanlar[].gecmis_vardiyalar` de bu ailenin üyesi ama ayrı numarası var:
+**T-28**, öncelik 1.
+
+### Artık sessiz değil
+
+`09-motor/dogrulayici/denetle.py` → `okunmayan_alanlar` bunların hepsini
+**her istekte** sayıyor. Liste bir **borç defteri**: uzun olması bilgidir,
+gürültü değil, ve her madde uygulandıkça kısalır.
+
+Kanal tanımadığı **her** adı bildiriyor, yalnız bilinen listeyi değil —
+`ekpiler` gibi bir yazım hatası da bu kanaldan görünüyor.
+
+### ⚠ Mekanizmanın kendi ilk sürümü iki yanlış alarm üretti
+
+`yetkinlikler` ve `operasyonel_rol`'ü *"okunmuyor"* diye bildirdi. Oysa
+`09-motor/cozucu/model.py` `_yetkinlik()` içinde ikisini de okuyor. Listeyi yazarken
+kendi koyduğum kurala — *"önce okuyan satırı bul, sonra adı listeye ekle"* —
+iki adda uymadım; tek tek `grep` ile yakalandı.
+
+> **O-7 tam da budur:** yanlış alarm üreten bir uyarı, bir süre sonra
+> okunmayan bir uyarıdır. Sessizliğe karşı kurulan mekanizmanın ilk hatası
+> gürültü olmak oldu.
+
+Listenin kendisi hâlâ **elle bakımlı** ve bir adın gerçekten okunup
+okunmadığını tam doğrulayan otomatik kontrol yok — metin araması kap
+bağlamını ayırt edemiyor. Bu bilinen sınır, kaydı burada.
+
+### Yan bulgu — tek taraflı kural
+
+`YETKINLIK_KAPSAMASI` ve `ROL_KAPSAMASI` **yalnız çözücüde** var;
+doğrulayıcıda gövdeleri yok. Çözücü bunları sert kısıt olarak sağlıyor ama
+bağımsız denetleyen yok. Sessiz değil — `uygulanmayan_kurallar` bildiriyor;
+kapının ne yapacağı **T-18**.
+
+**Ne gerek:** on iki satır, on iki ürün kararı. Hepsi aynı anda gerekmiyor.
+Sıra `kural_degerleri` ve `tum_gun` ile başlamalı — ikisi de **yanlış plan**
+üretiyor, biri yasal tarafta.
+
+---
+
+## 🟡 T-39 · Aynı hücreye iki talep satırı gelirse ne olacağı yazılı değil
+
+**Bulundu:** 23 Eylül 2026, T-19 uygulanırken · **Ölçülmedi** — bugün
+oluşamıyor, ileride oluşabilir
+
+**Ne.** Talep artık hücre başına bir satır (§11.2). Şartname satırların
+**benzersiz** olduğunu hiçbir yerde söylemiyor. Aynı `(ekip, gün, saat)` için
+iki satır gelirse bugün olan:
+
+* hücre kapsama paydasında **iki kez** sayılır → yüzde bozulur;
+* iki ayrı ihlal yazılır → aynı olay iki kez raporlanır (V-1'in başka bir
+  yerde yasakladığı şeyin aynısı);
+* hangi `asgari` geçerli — büyüğü mü, sonuncusu mu — **tanımsız**.
+
+**Neden bugün görünmüyor.** Fikstür kısayolu kartezyen çarpım ürettiği için
+yinelenen hücre çıkmıyor; ürünün talep ekranı ise henüz yok.
+
+**Neden şimdi yazıldı.** Talep ekranı yazıldığında bu karar **verilmiş
+olmalı**, sonra değil. Seçenekler: (a) benzersizlik şartname kuralı olsun,
+girişte engellensin; (b) motor birleştirsin — en büyük `asgari` kazansın;
+(c) yinelenen satır ayrı bir kanaldan bildirilsin. Uydurulmadı.
+
+**Kapı şartı:** talep ekranı yazılmadan önce karara bağlanacak.
+
+---
+
+## 🟡 T-40 · `tercih_karsilama_yuzde` çıktıda yazılı, motorda yok — A7 onsuz yeşil
+
+**Bulundu:** 23 Eylül 2026, §11.3 okunurken · **Ölçüldü:** evet
+
+**Ne.** Şartname §11.3 çıktı metriklerinde `tercih_karsilama_yuzde` var ve
+gerekçesi şöyle yazılmış:
+
+> *"**A7** altın senaryosu iki plan profilini karşılaştırıyor; bu metrik
+> olmadan 'CALISAN profili gerçekten çalışan lehine mi' sorusu ölçülemiyor."*
+
+Ölçülen:
+
+| | |
+|---|---|
+| Motorda `tercih_karsilama_yuzde` | **hiçbir satırda yok** |
+| A07 fikstüründe | **beklenmiyor** |
+| A07 | **yeşil** |
+
+A07 aynı soruyu başka bir ölçüyle cevaplıyor: `adalet_sapmasi_cumartesi` +
+`hedef_kapsama_yuzde`. Yani metrik **yetim**: sözleşmede duruyor, üretilmiyor,
+ve onu gerektirdiği söylenen test onsuz kurulmuş.
+
+**İki ayrı zarar:**
+
+1. §11.3'ü okuyup arayüz yazan biri bu alanı bekler, bulamaz.
+2. *"CALISAN profili çalışan lehine mi"* sorusu bugün **tek boyuttan**
+   cevaplanıyor (cumartesi adaleti). Tercih karşılama hiç ölçülmüyor — zaten
+   `calisanlar[].tercihler` de okunmuyor (**T-38**). İkisi aynı boşluğun iki
+   ucu.
+
+**Ne gerek:** ya metrik yazılacak (önce `tercihler` okunacak — T-38), ya
+§11.3'ten çıkarılacak. Üçüncü seçenek yok: sözleşmede durup üretilmemesi
+T-19'un çıktı tarafındaki hâli.
+
+---
+
+## 🟡 T-41 · `DENETIM.py` uyarılarının 13'ü kalıcı; düzeltilemeyenle iş düşen aynı listede
+
+**Bulundu:** 23 Eylül 2026, T-19 commit'i öncesi · **Ölçüldü:** evet
+
+**Ne.** 23 Eylül koşusu: **0 HATA, 14 UYARI.** Uyarı bloğunun başlığı
+*"bakılmalı, ama devri durdurmaz"*. Ama 14'ün **13'ü bakılamaz**:
+
+| Kaynak | Adet | Neden düzeltilemez |
+|---|---|---|
+| Test adı uyuşmazlığı | 5 | Hepsi `oturumlar/` ve `DEGISIM-GUNLUGU.md` içinde |
+| Bulunamayan yol | 8 | Aynı iki yer |
+| **Gerçekten iş düşen** | **1** | *"Commit bekleyen 19 dosya"* |
+
+Bu dosyalar `00-BURADAN-BASLA.md` #5b gereği **append-only**: tanım gereği
+yeniden yazılmazlar.
+
+### Tasarım zaten doğru — eksik olan tek şey etiket
+
+`DENETIM.py` bunu biliyor ve doğru davranıyor:
+
+```python
+TARIHSEL = ("oturumlar", "DEGISIM-GUNLUGU.md")
+bildir = uyari if tarihsel_mi(yol) else hata
+```
+
+Yani *"tarihsel dosyadaysa hata sayma, uyar"* kuralı **yazılmış ve
+çalışıyor** — 0 HATA çıkmasının sebebi bu. Kusur yalnızca **çıktıda**: iki
+`bildir` çağrısının ürettiği 13 kalıcı uyarı, iş düşen uyarılarla aynı listede
+ve aynı başlık altında basılıyor.
+
+Uç bir örnek: `DEGISIM-GUNLUGU.md` 832. satır, geçmişte yaşanan bir test-adı
+uyarısını **anlatan** cümle. DENETIM açıklamayı kusurun kendisi sanıp tekrar
+bayrak kaldırıyor. Kaydın kendisi uyarı üretiyor.
+
+### Neden bugün yazıldı
+
+Zarar bugün yok — 0 HATA, koşu temiz. Zarar **alışkanlıkta**: her koşuda aynı
+13 satır aktığında uyarı bloğu okunmayı bırakır, ve o blokta bir gün gerçek
+bir şey belirdiğinde görünmez. **O-7'nin kendisi**, bu kez projenin kendi
+bekçisinde.
+
+Aynı gün `okunmayan_alanlar` da ilk sürümünde iki yanlış alarm üretmişti
+(**T-38**). İkisi aynı dersin iki örneği: *sessizliğe karşı kurulan her
+mekanizma, gürültüyle kendini iptal edebilir.*
+
+### Önerilen düzeltme — yeni kural değil, ayrı sayaç
+
+`uyari()`'ye üçüncü bir argüman (`tarihsel=False`); iki `bildir` çağrısında
+`True` geçilir; çıktıda iki blok basılır:
+
+```
+UYARI (1) - sana is dusuyor
+UYARI (13) - tarihsel dosyalarda, DUZELTILEMEZ (append-only)
+```
+
+Yeni liste, yeni beyaz liste, yeni eşik yok. Ayrım kodda **zaten
+hesaplanıyor**; yalnız basılmıyor.
+
+**Karar bekliyor:** `DENETIM.py` her şeyin bekçisi; ona dokunmak Mustafa'nın
+onayıyla olur.
+
+---
+
 ## 📌 T-26 · Kayıt ile yürürlük arasında kontrol yok
 
 **Bulundu:** 16 Eylül 2026, dış incelemenin **yöntem önerisinden**
@@ -1542,6 +1771,33 @@ K-27, K-29 ve K-30'un böyle testleri **var**; K-28'in **yok**.
 **Ne gerek:** ürün kararları sicilinde her K maddesine *"bekçi"* sütunu, ve
 `DENETIM.py`'ye bekçisi olmayan K maddelerini **uyarı** olarak listeleyen bir
 kontrol. Uyarı seviyesinde kalmalı — hata yaparsa O-7'ye düşer.
+
+### İkinci canlı örnek — 23 Eylül'de ölçüldü ve düzeltildi
+
+`08-motor-testleri/v5/fikstur_yukleyici.py` tam da bu riski önlemek için
+yazılmıştı. Kendi başlığı şöyle diyor:
+
+> *"Aynı birleştirme mantığını hem `fikstur-denetleyici.py` hem testler
+> kullanıyor. İki yerde ayrı ayrı yazılsaydı zamanla ayrışır ve denetleyici
+> ile testler FARKLI girdiler üzerinde çalışırdı."*
+
+**`08-motor-testleri/v5/fikstur-denetleyici.py` o modülü hiç import
+etmiyordu.** `sahne_uygula`'nın
+birebir kopyasını kendi içinde taşıyordu. Yani ortak modül vardı, gerekçesi
+yazılıydı, **tek kullanıcısı vardı.**
+
+Ayrışma 23 Eylül'de gerçekleşti: T-19 kısayol açmayı yükleyiciye ekledi,
+denetleyicideki kopya eski kaldı, **A08 tutarsız** gösterdi. Kopya silindi,
+ortak modül çağrılıyor; 11/11 fikstür tutarlı.
+
+> **Dikkat:** paylaşılan şey **girdi inşası**. `turet` — beklenen sonucun
+> bağımsız türetilmesi — paylaşılmadı ve paylaşılmamalı. Girdiyi paylaşmamak
+> iki tarafın farklı şeyi denetlemesine yol açar; sonucu paylaşmak denetimin
+> kendisini yok eder.
+>
+> Bu bulgu bir **teste** bağlanmadı. T-26'nın kendi teşhisi: kayıt yeter
+> sanılıyor. `DENETIM.py`'ye *"ortak diye yazılmış modülün kaç kullanıcısı
+> var"* kontrolü eklenebilir — bekçisi olmayan üçüncü kayıt bu.
 
 ---
 
@@ -1584,10 +1840,10 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | **1** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
-| **2** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
-| **3** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
+| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴 | `kural_degerleri` yok sayılıyor: günde 9 saatlik sözleşme 11 saate planlanabilir |
+| **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
-| **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
+| **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -1595,27 +1851,30 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 |---|---|---|
 | 10 | **T-23 · "süre yetmedi" ≠ "imkânsız"** | Yanlış açıklama yöneticiyi gereksiz personel alımına iter |
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
-| 12 | **T-30 · T-31 · T-32 · T-33** 🟡 | Hafta tatili · adalet penceresi · tavan uyuşmazlığı · yarım saatler. **T-32'yi bugün ben açtım** (K-30) |
-| 13 | **T-36** 🟡 | Eşzamanlı oturum yenilemesi yarışı *(`04-kod`)* |
-| 14 | **T-26 · kayıt ≠ yürürlük** | K-28'i kimse yakalamadı. Bekçisi olmayan kararlar için kontrol yok |
-| 15 | **T-20 · M0 kapsamı** | A-1'i kapatan test. Doğrulanmalı |
-| 16 | **T-25 · tek iş parçacıklı servis** | Tek satırlık düzeltme; pilot öncesi. **Karar gerektirmiyor** |
-| 17 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık |
+| 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
+| 13 | **T-40 · `tercih_karsilama_yuzde` yetim** 🟡 | Şartname çıktıda yazıyor, motor üretmiyor; A7 onsuz yeşil |
+| 14 | **T-41 · DENETIM uyarılarının 13'ü kalıcı** 🟡 | Düzeltilemeyen ile iş düşen aynı listede; uyarı bloğu okunmaz hale gelir (O-7) |
+| 15 | **T-30 · T-31 · T-32 · T-33** 🟡 | Hafta tatili · adalet penceresi · tavan uyuşmazlığı · yarım saatler. **T-32'yi bugün ben açtım** (K-30) |
+| 16 | **T-36** 🟡 | Eşzamanlı oturum yenilemesi yarışı *(`04-kod`)* |
+| 17 | **T-26 · kayıt ≠ yürürlük** | K-28'i kimse yakalamadı. Bekçisi olmayan kararlar için kontrol yok |
+| 18 | **T-20 · M0 kapsamı** | A-1'i kapatan test. Doğrulanmalı |
+| 19 | **T-25 · tek iş parçacıklı servis** | Tek satırlık düzeltme; pilot öncesi. **Karar gerektirmiyor** |
+| 20 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık |
 
 ### Ondan sonra — yeni iş
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| 18 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ Kabul ölçütü yok, fikstürü yok — önce cümleler yazılıp onaylanmalı |
-| 19 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
-| 20 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
-| 21 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
-| 22 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
-| 23 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 24 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
-| 25 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
-| 26 | **A-9** KVKK | Gerçek veriden önce |
-| 27 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| 21 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ Kabul ölçütü yok, fikstürü yok — önce cümleler yazılıp onaylanmalı |
+| 22 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
+| 23 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
+| 24 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| 25 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
+| 26 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
+| 27 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
+| 28 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
+| 29 | **A-9** KVKK | Gerçek veriden önce |
+| 30 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
 > **Yeni özellikten önce bu liste.** Dış incelemenin sözü: *"önce yanlış yayın
 > izni ve sessiz veri atlama sorunları değerlendirilsin, ardından tamamlanma
@@ -1652,6 +1911,7 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
 | **T-35 kurulum çapında kilitlenme** | **23 Eylül 2026** | Gerçek istemci IP'si + güvenilen **tek adres**. 3 test + iki turlu uçtan uca elle ölçüm. İlk yapılandırma yanlıştı, elle deneme yakaladı (O-11) |
 | **T-34 sırlar varsayılana düşüyordu** | **23 Eylül 2026** | Beş katmanda 16 yer temizlendi; `Sirlar.Zorunlu()`. Kırmızı kanıt CI dalında kalıcı. 3 test |
+| **T-19 şartname talep biçimi** | **23 Eylül 2026** | Şartname kazandı; talep beş yerde hücre başına okunuyor. Okunmayan girdi alanları için `okunmayan_alanlar` kanalı açıldı. 5 test, beşi de kırmızı yandı. Aynı turda T-38, T-39 ve T-26'nın ikinci kanıtı bulundu |
 | **T-22 denetlenmeyen taslak** | **23 Eylül 2026** | Çözümsüzlükte sunulan plan artık özgün girdiyle denetleniyor; boş plan `var: False`. 4 test. A03'te T-18'i görünür kıldı |
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |

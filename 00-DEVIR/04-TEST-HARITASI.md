@@ -186,7 +186,7 @@ plan kopyalama.
 
 ```
 py servis.py   (ayri pencerede)
-set TSHIFT_MOTOR_URL=http://localhost:8000
+$env:TSHIFT_MOTOR_URL = "http://localhost:8000"
 py -m pytest -q   →   12 passed, 4 skipped
 ```
 
