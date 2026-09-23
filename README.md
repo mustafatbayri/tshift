@@ -9,11 +9,18 @@ Bu klasör projenin **tek doğru kaynağı**: analiz, testler, spec, demo ve kod
 
 | Klasör | İçinde ne var |
 |---|---|
+| **`00-DEVIR/`** | **Buradan başla.** Devir paketi: proje kimliği, değişmezler, mimari ve ürün kararları, test haritası, hata otopsileri, açık riskler, oturum günlükleri. |
 | `00-arsiv/` | Artık kullanılmayan ama saklanan işler. Eski demolar, eski dokümanlar. Silinmez, buraya taşınır. |
 | `01-spike/` | Motorun ar-ge testleri. Her test turu kendi versiyon klasöründe. |
-| `02-spec/` | Ürün ve teknik spec dokümanları. Yazılım ekibinin okuyacağı asıl kaynak. |
+| `02-spec/` | Ürün ve teknik spec dokümanları. **Güncel: `v1.4-master-spec.md`** — yazılım ekibinin okuyacağı asıl kaynak. |
 | `03-demo/` | Tıklanabilir prototipler. Kodlamadan önce akışı doğrulamak için. |
-| `04-kod/` | Gerçek yazılım. Henüz boş. |
+| `04-kod/` | Gerçek yazılım: .NET API + Next.js arayüz + PostgreSQL. Çalışıyor. |
+| `05-inceleme/` | Dış inceleme işleri. `05-inceleme/beceriler/` altında **incelemenin nasıl yapılacağı** yazılı. |
+| `06-veri/` | Gerçek müşteri verisi. **Git'e gitmez** (gitignore). |
+| `07-motor/` | Gerçek veri analiz araçları. ⚠ Motor burada **değil**. |
+| `08-motor-testleri/` | Altın senaryolar ve fikstürler. Güncel sürüm `08-motor-testleri/v5/`. |
+| **`09-motor/`** | **Planlama motoru.** `09-motor/dogrulayici/` · `09-motor/cozucu/` (CP-SAT) · `09-motor/orkestra.py`. |
+| `DENETIM.py` | Devir paketi denetim betiği. Her oturum sonunda koşar: `py DENETIM.py` |
 | `DEGISIM-GUNLUGU.md` | Ne zaman ne değişti — tek satırlık kayıtlar. Bir şey aradığında önce buraya bak. |
 
 ---
@@ -51,11 +58,21 @@ Ayrıntı için: `02-spec/`
 
 ## Şu an neredeyiz
 
-| Konu | Durum |
+> ⚠ **Bu bölüm 23 Eylül'de düzeltildi.** Aylardır bayattı: *"kod başlamadı"*
+> yazıyordu, `04-kod/` çalışıyor. Otopsisi `00-DEVIR/06-ACIK-RISKLER.md` · T-37.
+> Ayrıntılı ve güncel durum her zaman **`00-DEVIR/00-BURADAN-BASLA.md`**'dedir;
+> bu tablo yalnız kabaca yön verir.
+
+| Konu | Durum *(23 Eylül 2026)* |
 |---|---|
-| Planlama motoru | Test edildi, çalışıyor (`01-spike/`) |
-| Kural seti | 21 kural aktif, 6 kural havuzdan seçildi, karar föyüyle onaylandı |
-| Teknoloji kararları | Verildi (PostgreSQL · .NET 10 · Python motor · Next.js · RabbitMQ · Keycloak) |
-| Master spec | Yazılıyor |
-| Demo v2 | Spec bittikten sonra |
-| Kod | Başlamadı |
+| Master spec | ✅ **v1.4 bitti** — 17 bölüm, 35 kural sınıflandırıldı |
+| Backend (`04-kod/`) | ✅ Çalışıyor — 39 test, çok kiracılık (RLS), yetki, denetim kaydı |
+| Planlama motoru (`09-motor/`) | 🟡 **Çekirdek çalışıyor** — 68 birim testi, 7 altın senaryo. Kataloğun 35 kuralının 19'u yazılı |
+| CI kapısı | ✅ GitHub Actions — iki iş (backend + motor), yeşil |
+| Dış inceleme | 🔴 **19 bulgu kayıtlı, 8'i açık** (T-18…T-36) |
+| `/suggest` ucu, plan editörü, yönetim ekranları | ❌ Yazılmadı |
+| Demo v2 | ✅ `03-demo/v2-html/` — 15 ekran |
+
+**Teknoloji:** PostgreSQL · .NET 10 · Python (OR-Tools CP-SAT) · Next.js.
+*(Keycloak **elendi** — kimlik katmanı kendi kodumuzda, bkz. M-03. RabbitMQ
+ertelendi.)*

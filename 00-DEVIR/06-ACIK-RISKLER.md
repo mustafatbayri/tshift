@@ -406,7 +406,7 @@ mantık içeren yerlerde (`Yetki/KapsamFiltresi`).
 | **SBOM, bağımlılık allowlist, lisans tarama** | Bir avuç paket var, hepsi Microsoft. Kurulum maliyeti bugünkü riskten büyük. |
 | **k6 / NBomber** (yük testi) | Motor yokken yük testi anlamsız. Motor sözleşmesiyle birlikte. |
 | **SonarQube / CodeQL** | `MimariTestleri` zaten kritik kuralları tutuyor. Ek gürültü, ek bakım. |
-| **opencode** — paralel ikinci ajan *(15 Eylül)* | İkinci **yazıcı** ajan R5'i (*iki pencere yazar, sürüklenme*) yeniden açar; R5 kapalı ve açacak ölçülmüş gerekçe yok. **Salt-okunur inceleyici** olarak değerli — ama bugün inceletilecek bitmiş iş yok: motor yazılmadı, A1–A12 onaylanmadı, fikstürler yazılmadı. Motorun bağımsız doğrulayıcısı (M-09) yazıldığında yeniden bakılacak, **iki haftalık ölçüm şartıyla**: on incelemede kayda değer bulgu yoksa bırakılır. Tam gerekçe: `oturumlar/2026-09-15-calisma-bicimi-opencode.md` |
+| **opencode** — paralel ikinci ajan | **Yazıcı olarak kapalı** (R5). **Salt-okunur inceleyici olarak da reddedildi — 23 Eylül**, ama yerine bir şey kondu: haftalık elle tarama. Gerekçe aşağıda, 📌 *İnceleme döngüsü*. Tarihçe: `00-DEVIR/oturumlar/2026-09-15-calisma-bicimi-opencode.md` ve `00-DEVIR/oturumlar/2026-09-23-inceleme-karari.md` |
 
 **İlke:** Her araç bir bakım yüküdür. Yanlış alarm veren araç, bir süre sonra
 bakılmayan araca dönüşür (bkz. O-7). Kullanılan araç sayısı değil, kapatılan
@@ -487,6 +487,94 @@ bu risk kapanmaz. Kodla telafi edilemeyen tek açık madde budur.
 gelirse o kadar çok karar etkiler.
 
 </details>
+
+---
+
+## 📌 İnceleme döngüsü (23 Eylül) — tadımcı kararı kapandı
+
+**15 Eylül'de ertelenen karar bugün kapandı.** O günkü metin şuydu:
+
+> *"Motorun bağımsız doğrulayıcısı (M-09) yazıldığında yeniden bakılacak, iki
+> haftalık ölçüm şartıyla: on incelemede kayda değer bulgu yoksa bırakılır."*
+
+**M-09'un doğrulayıcısı 16 Eylül'de yazıldı. Tetikleyici ateşlendi, kimse
+fark etmedi** — T-26'nın üçüncü örneği ve ilk kez bir **ürün** kararında değil,
+**sürecin** kendisinde.
+
+### Ölçüm şartı fazlasıyla karşılandı
+
+16 Eylül'de deney elle yapıldı: farklı sağlayıcı (GPT), salt-okunur, üç tur.
+
+| Şart | Gerçekleşen |
+|---|---|
+| On incelemede bulgu yoksa bırak | **Üç incelemede 19 bulgu** |
+| Yanlış alarm riski (O-7) | **Sıfır** — 19'u da bu tarafta ölçülerek doğrulandı |
+
+### Ama tasarım değişti — ölçüldü
+
+15 Eylül'ün kurgusu *"birleştirme öncesi **dal farkını** incele"* idi. `git log`
+ile bakıldı: 16 Eylül'de `09-motor/` klasörünün **tamamı o gün doğdu**, yani o
+günün dal farkı motorun kendisiydi ve tasarım tesadüfen çalışırdı.
+
+**Bir daha çalışmaz.** Şu sınıflar hiçbir dal farkında görünmez:
+
+| Bulgu | Neden |
+|---|---|
+| **T-19** talep biçimi | Kod eski, değişmiyor; yanlış olan **gelenek** |
+| **T-28** `gecmis_vardiyalar` | Bir **yokluk** — olmayan şey diff'te görünmez |
+| **T-29** `DONMUS_GUN` ölü | Ölü kod yolu; kimse dokunmuyor |
+| **T-34, T-35** 🔴 | `04-kod`'da, 11 Eylül'den; motor dalının dışında |
+
+> **Dal farkı incelemesi ile şartname-kod taraması iki ayrı alettir.** Birincisi
+> yeni işteki gerilemeyi, ikincisi **birikmiş sapmayı ve eksikliği** yakalar.
+
+### Karar
+
+| | |
+|---|---|
+| **Kalıcı araç** (opencode vb.) | ❌ **Reddedildi.** Değeri üreten şey ikinci ajan değil **soğukluk**; depoda bağlam biriktiren inceleyici onu kaybeder. Makalenin kendi uyarısı: *"talimatlar bayatsa iyi yapılandırılmış ama kötü bağlama dayanan karar çıkar"* |
+| **Haftalık elle tarama** | ✅ Mustafa + farklı sağlayıcının modeli. **İki geçiş:** haftanın farkı · şartname-kod taraması |
+| **Yöntem nerede yazılı** | `05-inceleme/beceriler/` — dört dosya. `00-DEVIR/` dışında, çünkü R7 eşikte |
+| **Yeni ölçüm şartı** | Arka arkaya **üç haftada** kayda değer bulgu yoksa sıklık düşer (**bırakılmaz**). İki geçiş ayrı ayrı ölçülür |
+
+### ⚠ Bu düzenlemenin açık tarafı
+
+Mimar (Yılmaz) şu an ulaşılamıyor. Geri alma bedeli 🔴 olan beş karar —
+**M-01** kiracılık · **M-06** denetim kaydı · **M-09** motor mimarisi ·
+**M-10** kurallar veride · **M-11** zaman modeli — için **ikinci bir teknik
+insan görüşü yok.**
+
+Dış tarama bunu karşılamaz: kodun şartnameye uyup uymadığına bakar, **kararın
+kendisinin doğru olup olmadığına** değil. Yılmaz'a ulaşılınca ilk gösterilecek
+şey bu beş satır.
+
+---
+
+## 📌 T-37 · Giriş dokümanı hiçbir tazelik kontrolünün kapsamında değil
+
+**Bulundu:** 23 Eylül, `README.md` düzenlenirken · **Ölçüldü:** evet
+
+`README.md` deponun **ilk okunan** dosyası ve içeriği aylardır bayat:
+
+| README diyor ki | Gerçek |
+|---|---|
+| *"`04-kod/` — Gerçek yazılım. **Henüz boş.**"* | 39 test, çalışan API, RLS, denetim kaydı |
+| *"Kod \| **Başlamadı**"* | 8 Eylül'den beri yazılıyor |
+| *"Master spec \| **Yazılıyor**"* | v1.4 bitti (A-15, 16 Eylül) |
+| Teknoloji listesinde **Keycloak** | **M-03'te elendi** — kimlik katmanı kendi kodumuzda |
+| Klasör tablosu `04-kod/`'da bitiyor | `00-DEVIR/`, `05-inceleme/`, `06-veri/`, `07-motor/`, `08-motor-testleri/`, `09-motor/` yok |
+
+**Neden kimse yakalamadı.** `DENETIM.py`'nin 6. kontrolü tazeliğe bakıyor ama
+yalnız **oturum günlüğü ile değişim günlüğü arasında**. `README.md` hiçbir
+kontrolün kapsamında değil — ne tazelik, ne tutarlılık.
+
+**Bu, 16 Eylül'ün *"17 kural"* hatasıyla aynı sınıf** ve dış incelemenin
+uyarısının tam hedefi: *bayat bağlam, iyi yapılandırılmış yanlış karar üretir.*
+README'yi okuyup *"kod başlamamış"* sanan biri projeye yanlış yerden girer.
+
+**Bugün yapılan:** yalnız ölçülebilir olgular düzeltildi (klasör listesi,
+durum tablosu, elenen teknoloji). **Yapılmayan:** bir tazelik kontrolü
+eklenmedi — `DENETIM.py`'nin neyi doğru sayacağı karar gerektiriyor.
 
 ---
 

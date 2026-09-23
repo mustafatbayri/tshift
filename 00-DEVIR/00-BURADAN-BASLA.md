@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-16 (motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 68 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36. **T-27 kapandı**)
+**Son güncelleme:** 2026-09-23 (haftalık inceleme döngüsü kuruldu — `05-inceleme/beceriler/`; motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 68 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36. **T-27 kapandı**)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -315,6 +315,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `06-veri/` | **Gerçek müşteri verisi** (PDKS + plan) ve türetilen çıktılar. ⚠ **`.gitignore` içinde — git'e girmez.** | Veri analizi yapılacaksa |
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
+| **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
 | **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **68** birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |

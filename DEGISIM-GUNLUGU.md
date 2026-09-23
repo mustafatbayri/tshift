@@ -4,6 +4,42 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · İNCELEME DÖNGÜSÜ KURULDU — tadımcı kararı kapandı**
+
+15 Eylül'de ertelenen salt-okunur inceleyici kararı kapandı. **Tetikleyici
+16 Eylül'de ateşlenmişti ve kimse fark etmemişti** — T-26'nın üçüncü örneği,
+ilk kez bir ürün kararında değil **sürecin kendisinde**.
+
+**Ölçüm şartı fazlasıyla karşılandı.** Şart *"on incelemede bulgu yoksa
+bırak"* idi; 16 Eylül'de üç incelemede **19 bulgu**, yanlış alarm sıfır.
+
+**Ama tasarım değişti ve gerekçesi ölçüldü.** Kurgu *"dal farkını incele"*
+idi. `git log` ile bakıldı: `09-motor/` klasörünün tamamı 16 Eylül'de doğmuş,
+yani o günün dal farkı motorun kendisiymiş — tasarım **tesadüfen** çalışırdı.
+Bir daha çalışmaz: T-19 (kod eski, yanlış olan gelenek), T-28 (bir **yokluk**),
+T-29 (ölü kod yolu) ve T-34/T-35 (motor dalının dışında) hiçbir diff'te
+görünmez.
+
+**Kalıcı araç reddedildi.** Değeri üreten şey ikinci ajan değil **soğukluk**:
+hatırlamayan bakar. Depoda bağlam biriktiren inceleyici onu kaybeder.
+
+**Kurulan:** haftalık elle tarama, iki geçiş (haftanın farkı · şartname-kod
+taraması), farklı sağlayıcının modeliyle. Yöntem `05-inceleme/beceriler/`
+altında dört dosyada — `00-DEVIR/` dışında, çünkü **R7 eşikte** (9 dosya).
+Yeni ölçüm şartı: üç haftada bulgu yoksa **sıklık düşer**, bırakılmaz.
+
+⚠ **Kapatılamayan boşluk:** mimar ulaşılamıyor. Geri alma bedeli 🔴 olan beş
+karar (M-01, M-06, M-09, M-10, M-11) için ikinci teknik insan görüşü yok. Dış
+tarama kodun şartnameye uygunluğuna bakar, **kararın doğruluğuna** değil.
+
+**T-37 açıldı.** `README.md` aylardır bayat: *"kod başlamadı"*, *"master spec
+yazılıyor"*, elenen Keycloak, eksik altı klasör. `DENETIM.py` yakalayamaz —
+6. kontrolü yalnız oturum günlüğü ile değişim günlüğü arasına bakıyor, giriş
+dokümanı **hiçbir kontrolün kapsamında değil**. Olgular düzeltildi, kontrol
+eklenmedi.
+
+→ `05-inceleme/beceriler/` · `00-DEVIR/06-ACIK-RISKLER.md` · `README.md`
+
 **2026-09-16 · T-27 KAPANDI — olmayan mola artık yasal sınırı devirmiyor**
 
 Dış incelemenin **1 numaralı** bulgusu. `mola_araliklari()` molayı, vardiyanın
