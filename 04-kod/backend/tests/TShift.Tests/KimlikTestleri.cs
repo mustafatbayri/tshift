@@ -26,8 +26,7 @@ namespace TShift.Tests;
 public class KimlikTestleri
 {
     // Testler de uygulama gibi kısıtlı rolle bağlanır — RLS geçerli olsun diye.
-    private const string Baglanti =
-        "Host=localhost;Port=5433;Database=tshift;Username=tshift_app;Password=tshift_app_dev_2026";
+    private static readonly string Baglanti = TestAyarlari.UygulamaBaglantisi;   // T-34
 
     private const string DogruParola = "Deneme-Parolasi-2026!";
 

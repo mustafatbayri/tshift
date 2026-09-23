@@ -21,7 +21,7 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'tshift_app') THEN
         CREATE ROLE tshift_app
-            LOGIN PASSWORD 'tshift_app_dev_2026'
+            LOGIN PASSWORD '{APP_DB_PASSWORD}'
             NOSUPERUSER NOBYPASSRLS NOCREATEDB NOCREATEROLE NOINHERIT;
         RAISE NOTICE 'tshift_app rolu olusturuldu.';
     ELSE
@@ -31,6 +31,12 @@ END $$;
 
 -- Süper yetki ve RLS muafiyeti kesinlikle kapalı olsun (rol önceden varsa diye).
 ALTER ROLE tshift_app NOSUPERUSER NOBYPASSRLS;
+
+-- T-34: parolayı da her koşulda eşitle. Rol daha önce ESKİ sabit parolayla
+-- yaratılmış olabilir; yukarıdaki blok "zaten var" deyip atlar ve uygulama
+-- artık ortam değişkeninden gelen parolayla bağlanamaz.
+-- {APP_DB_PASSWORD} yer tutucusunu KurulumHizmeti doldurur.
+ALTER ROLE tshift_app PASSWORD '{APP_DB_PASSWORD}';
 
 -- ---- 2) Yetkiler ------------------------------------------------------------
 -- Veri okuyup yazabilir; tablo yaratamaz, şema değiştiremez.

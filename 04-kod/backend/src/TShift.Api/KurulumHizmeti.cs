@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using TShift.Infrastructure;
 using TShift.Infrastructure.Persistence;
 
 namespace TShift.Api;
@@ -61,7 +62,11 @@ public static class KurulumHizmeti
             {
                 kayit.LogInformation("Betik: {Dosya}", Path.GetFileName(dosya));
                 await using var komut = ham.CreateCommand();
-                komut.CommandText = await File.ReadAllTextAsync(dosya);
+                // T-34: 02-uygulama-rolu.sql rolun parolasini ICERIYORDU.
+                // Artik yer tutucu; deger ortam degiskeninden gelir. Ayni
+                // desen SahipBaglantisi'nda {DB_PASSWORD} icin de kullaniliyor.
+                komut.CommandText = (await File.ReadAllTextAsync(dosya))
+                    .Replace("{APP_DB_PASSWORD}", Sirlar.Zorunlu("APP_DB_PASSWORD"));
                 await komut.ExecuteNonQueryAsync();
             }
         }
@@ -98,7 +103,7 @@ public static class KurulumHizmeti
     {
         var sablon = Environment.GetEnvironmentVariable("TSHIFT_SAHIP_BAGLANTI")
             ?? "Host=localhost;Port=5433;Database=tshift;Username=tshift;Password={DB_PASSWORD}";
-        var parola = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "tshift_dev_2026";
+        var parola = Sirlar.Zorunlu("DB_PASSWORD");        // T-34
         return sablon.Replace("{DB_PASSWORD}", parola);
     }
 

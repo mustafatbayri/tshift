@@ -38,8 +38,7 @@ public class HttpSinirTestleri : IClassFixture<TestUygulamasi>
 
     public HttpSinirTestleri(TestUygulamasi uygulama) => _uygulama = uygulama;
 
-    private const string Baglanti =
-        "Host=localhost;Port=5433;Database=tshift;Username=tshift_app;Password=tshift_app_dev_2026";
+    private static readonly string Baglanti = TestAyarlari.UygulamaBaglantisi;   // T-34
     private const string Parola = "Http-Sinir-Testi-2026!";
 
     private static TShiftDbContext Baglam(IKiraciBaglami b)

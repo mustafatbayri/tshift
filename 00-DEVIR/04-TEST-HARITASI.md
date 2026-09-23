@@ -132,10 +132,18 @@ mi, senin kararın.
 | `M4 - Kulture bagimli ToLower/ToUpper kullanilmiyor` | Türkçe `I` harfi tuzağı: `"IZMIR".ToLower()` Türkçe ayarda `ızmır` verir. Bu tür kullanım yasak. | `[karar]` |
 | `M5 - appsettings icinde gercek parola yok` | Ayar dosyalarına yanlışlıkla gerçek bir parola yazılırsa test kırılır. | `[karar]` |
 | `M6 - Denetim kaydi sadece eklenir (UPDATE/DELETE yok)` | Veritabanı yetkilerinin gerçekten "sadece ekle" olduğunu **veritabanına sorarak** doğrular. | `[karar]` |
+| `S1 - APP_DB_PASSWORD verilmezse uygulama acilmaz` | Sır verilmezse uygulama **sessizce koddaki sabite düşemez**; açılmaz ve eksik değişkenin adını söyler. | `[karar]` — T-34 |
+| `S2 - JWT_SECRET verilmezse uygulama acilmaz` | Aynısı imza anahtarı için; ayrıca en az 32 karakter şartı. `Program.cs` *"canlıda mutlaka verilir"* diyordu, **zorlayan yoktu**. | `[karar]` — T-34 |
+| `S3 - Sirlar verildiginde uygulama normal acilir` | Gerileme koruması: düzeltme *"her koşulda patla"* diye yapılamaz. S1/S2 tek başlarına hiç açılmayan bir uygulamayla da yeşil yanar. | `[karar]` — T-34 |
+
+> **M5 bu ailenin tek üyesini koruyordu ve yeşil yanıyordu.** *"appsettings
+> icinde gercek parola yok"* doğruydu — parola `Program.cs`'teydi, üstelik
+> yedi test dosyasında, `docker-compose.yml`'de ve bir SQL betiğinde de.
+> Kapı vardı; başka bir kapıydı. O-1 ve O-9 ile aynı sınıf.
 
 ---
 
-## Şartnamedeki kabul senaryoları — **on ikisi de yeşil**
+## Şartnamedeki kabul senaryoları — **yedisi koşuyor ve yeşil**
 
 **Master Spec §16** on iki altın senaryo tanımlıyor (A1–A12): basit
 uygulanabilir, çelişkili sert kural → `cozumsuz`, yetkinlik açığı, **gece
@@ -143,8 +151,14 @@ yarısı → 8 saat dinlenme ihlali**, DST geçişi, kilitli revizyon, yumuşak 
 çatışması, mola kapsaması, kısmi kapasite, idempotency, lookback eksikliği,
 plan kopyalama.
 
-**Durum (16 Eylül).** Zincir uçtan uca tamam ve **yeşil**: onaylı cümle →
-fikstür → test → motor.
+**Durum (16 Eylül).** Zincir uçtan uca tamam: onaylı cümle → fikstür → test
+→ motor.
+
+> ⚠ **Düzeltme (23 Eylül).** Bu başlıkta *"on ikisi de yeşil"* yazıyordu.
+> **Yanlıştı** ve 16 Eylül'de beş dosyada düzeltilen iddianın aynısıydı —
+> burası atlanmış. Gerçek: **yedi senaryo koşuyor ve yeşil** (A1, A3, A4, A6,
+> A7, A8, A9). A2, A10, A11, A12 backend tarafında `.cs.taslak` hâlinde,
+> **hiç koşmadı**. A5 ertelendi (K-12). Aynı sınıf: T-37.
 
 | Adım | Durum |
 |---|---|

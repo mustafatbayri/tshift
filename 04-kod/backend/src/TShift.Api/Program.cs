@@ -7,6 +7,7 @@ using TShift.Domain.Calisanlar;
 using TShift.Domain.Kimlik;
 using TShift.Domain.Kiracilar;
 using TShift.Domain.Organizasyon;
+using TShift.Infrastructure;
 using TShift.Infrastructure.Kimlik;
 using TShift.Infrastructure.Persistence;
 using TShift.Api;
@@ -25,14 +26,15 @@ var builder = WebApplication.CreateBuilder(args);
 // `tshift` süper kullanıcıdır ve PostgreSQL'de süper kullanıcı satır seviyesi
 // güvenliği tamamen aşar. Migration'lar sahibi rolle (tshift) çalışır,
 // çalışan uygulama kısıtlı rolle. Bkz. db/rls/02-uygulama-rolu.sql
-var parola = Environment.GetEnvironmentVariable("APP_DB_PASSWORD") ?? "tshift_app_dev_2026";
+// T-34: varsayilan YOK. Degisken verilmezse uygulama acilmaz.
+var parola = Sirlar.Zorunlu("APP_DB_PASSWORD");
 var baglantiDizesi = builder.Configuration.GetConnectionString("TShift")!.Replace("{APP_DB_PASSWORD}", parola);
 
 // ---- Kimlik ayarları -------------------------------------------------------
 // JWT imza anahtarı da bir sırdır ve aynı kurala tabidir.
-// Canlıda JWT_SECRET mutlaka verilir; aşağıdaki değer yalnız yerel geliştirme içindir.
-var imzaAnahtari = Environment.GetEnvironmentVariable("JWT_SECRET")
-    ?? "yerel-gelistirme-imza-anahtari-en-az-32-bayt-olmali!";
+// T-34: "canlida mutlaka verilir" yazmak yetmiyordu -- zorlayan yoktu.
+// Artik zorunlu; KimlikAyarlari en az 32 bayt istiyor, sinir burada.
+var imzaAnahtari = Sirlar.Zorunlu("JWT_SECRET", 32);
 
 var kimlikAyarlari = new KimlikAyarlari { ImzaAnahtari = imzaAnahtari };
 

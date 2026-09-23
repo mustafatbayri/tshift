@@ -57,6 +57,15 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # T-34: sirlarin varsayilani YOK. Depoya da yazilmaz, GitHub secret'i
+      # da gerekmez -- her kosuda yenisi uretilir. Yan fayda: uygulamanin
+      # KEYFI bir degerle calistigi da boylece kanitlanmis olur.
+      - name: Test sirlarini uret
+        run: |
+          echo "DB_PASSWORD=$(openssl rand -hex 16)"      >> $GITHUB_ENV
+          echo "APP_DB_PASSWORD=$(openssl rand -hex 16)"  >> $GITHUB_ENV
+          echo "JWT_SECRET=$(openssl rand -hex 32)"       >> $GITHUB_ENV
+
       # Yerel makinedeki ile AYNI yol: docker compose "tam" profili.
       # Yalniz db ve api servisleri; arayuz (web) testler icin gereksiz.
       - name: Veritabani ve kurulum

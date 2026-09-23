@@ -20,7 +20,7 @@ services:
     environment:
       POSTGRES_DB: tshift
       POSTGRES_USER: tshift
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-tshift_dev_2026}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?.env dosyasi yok ya da DB_PASSWORD bos -- bkz T-34}
       TZ: Europe/Istanbul
       PGTZ: Europe/Istanbul
     ports:
@@ -52,20 +52,20 @@ services:
       # Uygulama KISITLI rolle baglanir. Super kullaniciyla baglanmak
       # RLS'i tamamen devre disi birakir - bkz. db/rls/02-uygulama-rolu.sql
       ConnectionStrings__TShift: "Host=db;Port=5432;Database=tshift;Username=tshift_app;Password={APP_DB_PASSWORD}"
-      APP_DB_PASSWORD: ${APP_DB_PASSWORD:-tshift_app_dev_2026}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?.env dosyasi yok ya da APP_DB_PASSWORD bos -- bkz T-34}
 
       # Kurulum SAHIBI rolle calisir: migration ve yetki betikleri icin gerekli.
       # AYRI bir degisken olmasi kasitli - ikisi karisirsa uygulama super
       # kullaniciyla baglanir ve guvenlik sessizce kaybolur.
       TSHIFT_SAHIP_BAGLANTI: "Host=db;Port=5432;Database=tshift;Username=tshift;Password={DB_PASSWORD}"
-      DB_PASSWORD: ${DB_PASSWORD:-tshift_dev_2026}
+      DB_PASSWORD: ${DB_PASSWORD:?.env dosyasi yok ya da DB_PASSWORD bos -- bkz T-34}
 
       # DIKKAT: acilista migration + guvenlik betikleri + ornek veri calistirir.
       # CANLIDA ASLA "true" OLMAZ. Bkz. KurulumHizmeti.cs
       TSHIFT_KURULUM: "true"
 
       # Yerel gelistirme anahtari. Canlida mutlaka disaridan verilir.
-      JWT_SECRET: ${JWT_SECRET:-inceleme-ortami-imza-anahtari-en-az-32-bayt!}
+      JWT_SECRET: ${JWT_SECRET:?.env dosyasi yok ya da JWT_SECRET bos -- bkz T-34}
 
       # Development DEGIL. Sebep: gelistirme kipinde EF "sensitive data logging"
       # aciliyor ve sorgu parametreleri kayda yaziliyor - iclerinde e-posta,

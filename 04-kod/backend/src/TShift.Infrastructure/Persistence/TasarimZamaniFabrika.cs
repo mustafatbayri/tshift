@@ -9,7 +9,8 @@ public class TasarimZamaniFabrika : IDesignTimeDbContextFactory<TShiftDbContext>
 {
     public TShiftDbContext CreateDbContext(string[] args)
     {
-        var parola = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "tshift_dev_2026";
+        // T-34: "dotnet ef" komutlari da DB_PASSWORD ister. Varsayilan yok.
+        var parola = Sirlar.Zorunlu("DB_PASSWORD");
         var opt = new DbContextOptionsBuilder<TShiftDbContext>()
             .UseNpgsql($"Host=localhost;Port=5433;Database=tshift;Username=tshift;Password={parola}")
             .Options;

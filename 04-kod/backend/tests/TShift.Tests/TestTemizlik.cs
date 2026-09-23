@@ -22,8 +22,7 @@ namespace TShift.Tests;
 /// </summary>
 public static class TestTemizlik
 {
-    private const string SahipBaglanti =
-        "Host=localhost;Port=5433;Database=tshift;Username=tshift;Password=tshift_dev_2026";
+    private static readonly string SahipBaglanti = TestAyarlari.SahipBaglantisi;   // T-34
 
     /// <summary>
     /// Silme sırası: en derindeki çocuktan yukarı doğru.

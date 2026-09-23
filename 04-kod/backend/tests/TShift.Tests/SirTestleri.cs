@@ -15,8 +15,8 @@ namespace TShift.Tests;
 /// 16 Eylül dış incelemesi, sırların ortam değişkeni yoksa KODDAKİ SABİTE
 /// düştüğünü buldu. Uygulama hata vermiyor, bilinen bir anahtarla açılıyordu:
 ///
-///     APP_DB_PASSWORD ?? "tshift_app_dev_2026"
-///     JWT_SECRET      ?? "yerel-gelistirme-imza-anahtari-..."
+///     APP_DB_PASSWORD ?? "&lt;koda yazilmis sabit&gt;"
+///     JWT_SECRET      ?? "&lt;koda yazilmis sabit&gt;"
 ///
 /// Program.cs'in kendi yorumu "canlıda JWT_SECRET mutlaka verilir" diyordu.
 /// Bunu ZORLAYAN hiçbir şey yoktu — yazılıydı, yürürlükte değildi. K-28 ve

@@ -21,8 +21,7 @@ namespace TShift.Tests;
 /// </summary>
 public class YetkiTestleri
 {
-    private const string Baglanti =
-        "Host=localhost;Port=5433;Database=tshift;Username=tshift_app;Password=tshift_app_dev_2026";
+    private static readonly string Baglanti = TestAyarlari.UygulamaBaglantisi;   // T-34
 
     private static TShiftDbContext Baglam(IKiraciBaglami baglam)
     {
