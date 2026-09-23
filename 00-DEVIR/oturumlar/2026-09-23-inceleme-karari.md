@@ -136,10 +136,64 @@ gerektiriyor. T-37 açık.
 
 ---
 
-## 7. Bu oturumda üretilmeyenler — dürüstlük notu
+## 7. T-22 kapatıldı — ve kapatırken T-18'i görünür kıldı
 
-- **Kod değişmedi.** 68 birim testi, 7 altın senaryo; hiçbiri koşturulmadı
-  çünkü değişen bir şey yok.
+Karar gerektirmeyen ilk 🔴. Teknik kısmı kısa: `orkestra.py`'nin erken dönüşü
+artık `_taslagi_denetle()`'den geçiyor, denetim **özgün** girdiyle yapılıyor,
+sıfır atamalı plan `var: False` diyor.
+
+### Kabul cümlesi yine üç şartlıydı, yine ikincisi tuzaktı
+
+`en_iyi_plan` üretilirken `ASGARI_KAPSAMA` **bilerek gevşetilir**. Denetim o
+gevşetilmiş girdiyle yapılsaydı doğrulayıcı gevşetilen kuralı hiç görmez,
+taslak tertemiz görünürdü — **denetim eklenmiş ama işe yaramaz olurdu** ve
+diğer üç test yeşil yanardı.
+
+Bunun için ayrı bir bekçi yazıldı: `test_taslak_denetimi_OZGUN_girdiyle_yapilir`.
+T-27'de öğrenilen şey burada tekrar işe yaradı — **kabul cümlesi madde madde
+işaretlenir.**
+
+### Ölçtüm, kaydetmedim — bir bulgu adayı elendi
+
+İlk sahnemde `en_iyi_plan` **boş** dönüyordu, oysa atanabilecek üç kişi vardı.
+Yeni bir bulgu gibi göründü. `HEDEF_KAPSAMA` kuralını ekleyip tekrar ölçtüm:
+üç atama geldi. Yani boşluk **benim minimal fikstürümün eseriymiş**, motorun
+değil. Kaydedilmedi.
+
+> Bu da kuralın diğer yönü: bulgu ölçülebilir olmalı — ölçüm tutmuyorsa
+> bulgu da yoktur. Kaydedilmeyen bir bulgu, kaydedilen yanlış bir bulgudan
+> iyidir.
+
+### ⚠ A03 — T-18'in kanıtı güçlendi
+
+A03 (*"İmkânsız durum ve yöneticinin kararı"*) tam bu yoldan geçiyor. Denetim
+artık koşuyor ve şunu söylüyor:
+
+```
+uygulanmayan_kurallar : ['YETKINLIK_KAPSAMASI']
+sert_ihlal            : 0
+yayinlanabilir        : true
+```
+
+`YETKINLIK_KAPSAMASI` A03'ün girdisinde **aktif ve SERT**, gövdesi
+doğrulayıcıda **yok**. Aynı cevapta *"bu SERT kuralı kontrol edemedim"* ve
+*"yayınlanabilir"* — üstelik A03'ün tamamı o kural sağlanamadığı için
+çözümsüz.
+
+**T-18 daha önce kurulmuş bir girdiyle gösteriliyordu; artık Mustafa'nın
+onayladığı bir altın senaryoda görünüyor.**
+
+> Dikkat: T-22 düzeltmesi bu hatayı **üretmedi**. Denetim hiç koşmadığı için
+> çelişki görünmüyordu. Düzeltme, görünmez bir boşluğu **görünür bir
+> çelişkiye** çevirdi — bir denetim eklemenin asıl getirisi budur.
+
+T-18 açık kalıyor: kapının bilinmeyen kuralda ne yapacağı **ürün kararı**,
+uydurulmadı.
+
+## 8. Bu oturumda üretilmeyenler — dürüstlük notu
+
+- **T-22 dışında kod değişmedi.** 72 birim testi, 7 altın senaryo, fikstür
+  denetleyicisi 0 — hepsi koşturuldu.
 - **Kapsam dışı bulgu kuralı `02-DEGISMEZLER.md`'ye yazılmadı** — kabul edildi
   ama bu oturumda uygulanmadı. Sıradaki iş.
 - **M kayıtlarına zorunlu alanlar eklenmedi** (reddedilen alternatifler, geri

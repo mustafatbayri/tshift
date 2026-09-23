@@ -232,7 +232,7 @@ bitti, kırmızı kalmadı, gerekçe de ortadan kalktı.
 | İş | Ne koşar | Docker |
 |---|---|---|
 | `test` | .NET backend — 39 test + mimari kuralları | gerekli |
-| `motor` 🆕 | **68** birim + 7 altın senaryo + fikstür denetleyicisi | **gerekmez** |
+| `motor` 🆕 | **72** birim + 7 altın senaryo + fikstür denetleyicisi | **gerekmez** |
 
 **Neden ayrı iş, aynı işe ek adım değil:** aynı işte olsalardı ilkinin
 kırmızısı ikincinin sonucunu **gizlerdi** — bir adım patlayınca sonrakiler hiç

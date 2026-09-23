@@ -9,7 +9,7 @@ kuralının 19'u yazılı, `/suggest` yok, ve **iki 🔴 açık bulgu var**
 §7.6, §11.2, §11.3, §11.4, §11.7, §16.1
 
 ```
-py -m pytest testler -q                        →  68 passed
+py -m pytest testler -q                        →  72 passed
 py -m pytest -q   (08-motor-testleri/v5, motor ayakta)  →  12 passed, 4 skipped
 ```
 
@@ -97,7 +97,7 @@ py -m pytest testler -v
 | `09-motor/cozucu/coz.py` | `/solve` gövdesi, K-28 erken durma |
 | `09-motor/cozucu/teshis.py` | Çözümsüzlük teşhisi (§11.3) + K-10 en iyi plan |
 | `09-motor/testler/test_kurallar.py` | **48** birim testi. Her biri bir K-kararını sabitler. Sekizi T-27'nin bekçisi: mola vardiyaya kırpılır, gece yarısını aşanda kaydırılır, üst üste binenler birleşir |
-| `09-motor/testler/test_profiller.py` | 16 birim testi. Plan profilleri, adalet gradyanı, onarım döngüsü, fazla mesai (K-30) |
+| `09-motor/testler/test_profiller.py` | **20** birim testi. Plan profilleri, adalet gradyanı, onarım döngüsü, fazla mesai (K-30). Dördü T-22'nin bekçisi: çözümsüzlükte sunulan taslak da denetlenir |
 | `09-motor/testler/test_bagimsizlik.py` | 4 birim testi. §7.6 bağımsızlığını korur |
 | `09-motor/requirements.txt` | Sabitlenmiş bağımlılıklar. Doğrulayıcı hiçbirini kullanmaz |
 

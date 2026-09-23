@@ -226,6 +226,81 @@ def test_onarim_denemesi_her_zaman_bildirilir():
 
 
 # ----------------------------------------------------------------------
+# T-22 -- cozumsuzlukte sunulan taslak da denetlenir
+#
+# Dis incelemenin bulgusu: orkestra, cozucu "cozumsuz" dediginde ERKEN
+# donuyor ve bagimsiz dogrulayiciyi hic cagirmiyordu. Oysa en_iyi_plan'in
+# kendi notu "icindeki her ihlal bagimsiz dogrulayicidan gecirilmeli"
+# diyor -- geciren yoktu.
+#
+# Iki ayri sorun:
+#   1. En cok aciklama gereken plan, en az denetlenen plandi. Yonetici
+#      K-10 uyarinca bu taslagi GEREKCEYLE onayliyor; neyi onayladigini
+#      goremiyordu.
+#   2. Sifir atamali plan `var: True` diyordu. K-10'un sozu "eller bos
+#      donulmez"ti; bos bir plani "var" diye sunmak o sozu bosa cikarir.
+# ----------------------------------------------------------------------
+
+def _cozumsuz_sahne(hedef_kapsama=True, asgari=5):
+    """Uc kisi var, asgari bes isteniyor -> SERT kapsama saglanamaz.
+
+    `hedef_kapsama` acikken gevsetilmis model yine de atama yapmak ISTER
+    (yumusak ceza), yani en_iyi_plan DOLU doner. Kapaliyken hicbir sey
+    atamayi odullendirmez ve en_iyi_plan BOS doner -- iki ayri durum,
+    ikisi de sinaniyor.
+    """
+    g = _sahne({"C1": 0, "C2": 0, "C3": 0}, asgari=asgari)
+    if hedef_kapsama:
+        g["kurallar"] = g["kurallar"] + [
+            {"kod": "HEDEF_KAPSAMA", "tur": "YUMUSAK", "aktif": True}]
+    return g
+
+
+def test_cozumsuzlukte_en_iyi_plan_DA_denetlenir():
+    """T-22 birinci sart: taslak bagimsiz dogrulayicidan gecmis olmali."""
+    c = coz_ve_onar(_cozumsuz_sahne(), {"azami_saniye": 15})
+    assert c["durum"] == "cozumsuz"
+    assert (c["en_iyi_plan"].get("atamalar") or []), "sahne dolu taslak uretmeliydi"
+    assert "bagimsiz_denetim" in c, \
+        "cozumsuzlukte sunulan taslak denetlenmeden donuyor (T-22)"
+    assert "sert_ihlal" in c["bagimsiz_denetim"]
+    assert "yayin_kapisi" in c["bagimsiz_denetim"]
+
+
+def test_taslak_denetimi_OZGUN_girdiyle_yapilir():
+    """T-22'nin sessiz tuzagi -- bu test olmadan yanlis duzeltme yesil yanar.
+
+    `en_iyi_plan` uretilirken ASGARI_KAPSAMA bilerek GEVSETILIR. Denetim de
+    o gevsetilmis girdiyle yapilirsa dogrulayici o kurali hic gormez ve
+    taslak tertemiz gorunur -- yani denetim eklenmis ama ise yaramaz olur.
+    Denetim KULLANICININ girdisiyle yapilmali; orada kural hala aktiftir.
+    """
+    c = coz_ve_onar(_cozumsuz_sahne(), {"azami_saniye": 15})
+    kodlar = {i["kural"] for i in c["bagimsiz_denetim"]["ihlaller"]}
+    assert "ASGARI_KAPSAMA" in kodlar, \
+        "denetim gevsetilmis girdiyle yapilmis: gevsetilen kural hic gorunmuyor"
+
+
+def test_BOS_taslak_var_demez():
+    """T-22 ikinci sart: sifir atamali plan `var: True` diyemez."""
+    c = coz_ve_onar(_cozumsuz_sahne(hedef_kapsama=False), {"azami_saniye": 15})
+    assert c["durum"] == "cozumsuz"
+    assert len(c["en_iyi_plan"].get("atamalar") or []) == 0, "sahne bos taslak uretmeliydi"
+    assert c["en_iyi_plan"]["var"] is False, \
+        "sifir atamali plan 'var: True' diyor (T-22)"
+
+
+def test_DOLU_taslak_var_demeye_devam_eder():
+    """Gerileme korumasi: duzeltme 'hep False' diyerek yapilamaz.
+
+    K-10'un sozu eller bos donulmemesi; dolu bir taslak elbette vardir.
+    """
+    c = coz_ve_onar(_cozumsuz_sahne(), {"azami_saniye": 15})
+    assert len(c["en_iyi_plan"]["atamalar"]) > 0
+    assert c["en_iyi_plan"]["var"] is True
+
+
+# ----------------------------------------------------------------------
 # 4. Fazla mesai tavani profile bagli mi  (kirilma 4)
 # ----------------------------------------------------------------------
 

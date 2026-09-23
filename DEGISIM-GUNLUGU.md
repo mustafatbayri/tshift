@@ -4,6 +4,36 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · T-22 KAPANDI — çözümsüzlükteki taslak artık denetleniyor**
+
+`orkestra.py` çözücü *"cozumsuz"* dediğinde erken dönüyor, bağımsız
+doğrulayıcıyı hiç çağırmıyordu. **En çok açıklama gereken plan, en az
+denetlenen plandı** — yönetici K-10 uyarınca bu taslağı gerekçeyle onaylıyor
+ve neyi onayladığını göremiyordu.
+
+Üç şart yazıldı: taslak `degerlendir()`'den geçer · denetim **özgün** girdiyle
+yapılır · sıfır atamalı plan `var: False` der.
+
+**İkincisi sessiz tuzaktı.** `en_iyi_plan` üretilirken `ASGARI_KAPSAMA`
+bilerek gevşetilir; denetim gevşetilmiş girdiyle yapılsaydı doğrulayıcı o
+kuralı hiç görmez, taslak tertemiz görünürdü — denetim eklenmiş ama işe
+yaramaz olurdu. Bekçisi ayrı bir test.
+
+**Kırmızı kanıt:** 3 kırmızı / 1 yeşil (yeşil olan gerileme koruması:
+düzeltme *"hep False de"* diye yapılamaz) → 4/4. **72 birim testi** ·
+7 altın senaryo · fikstür denetleyicisi 0.
+
+⚠ **Düzeltme A03'te T-18'i görünür kıldı.** Artık gelen denetim raporu şunu
+diyor: `uygulanmayan_kurallar: ['YETKINLIK_KAPSAMASI']`, `sert_ihlal: 0`,
+`yayinlanabilir: true`. O kural A03'ün girdisinde **aktif ve SERT**, gövdesi
+doğrulayıcıda yok — ve A03'ün tamamı zaten o kural sağlanamadığı için
+çözümsüz. Aynı cevapta *"kontrol edemedim"* ve *"yayınlanabilir"*.
+**T-18 artık onaylanmış bir altın senaryoda görünüyor.** Hata üretilmedi,
+görünmez olmaktan çıktı.
+
+→ `09-motor/orkestra.py` · `09-motor/cozucu/teshis.py` ·
+`09-motor/testler/test_profiller.py`
+
 **2026-09-23 · İNCELEME DÖNGÜSÜ KURULDU — tadımcı kararı kapandı**
 
 15 Eylül'de ertelenen salt-okunur inceleyici kararı kapandı. **Tetikleyici

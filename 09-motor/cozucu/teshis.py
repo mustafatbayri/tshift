@@ -193,7 +193,10 @@ def _en_iyi_plan(girdi, ayar, saniye=30):
     from .coz import _atamalari_cikar
     atamalar = _atamalari_cikar(m, c)
     return {
-        "var": True,
+        # T-22: gevsetilmis model cozulebilir ama hicbir atama uretmeyebilir
+        # (hicbir kural atamayi odullendirmiyorsa bos plan en ucuzudur).
+        # Boyle bir plani "var" diye sunmak K-10'un sozunu bosa cikarir.
+        "var": bool(atamalar),
         "atamalar": atamalar,
         "not": ("K-10: bu bir TASLAKTIR, otomatik kaydedilmez. Icindeki her "
                 "ihlal bagimsiz dogrulayicidan gecirilmeli; yayin kapisi "

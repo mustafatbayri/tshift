@@ -58,10 +58,12 @@ def coz_ve_onar(girdi, ayar=None, azami_onarim=AZAMI_ONARIM):
         cikti.setdefault("cozum_istatistikleri", {})["onarim_denemesi"] = tur
 
         if cikti.get("durum") != "cozuldu":
-            # Cozucu zaten teshis dondurdu (#11.3). Onarim burada biter:
-            # elde denetlenecek plan yok.
+            # Cozucu teshis dondurdu (#11.3). Onarim burada biter -- ama
+            # T-22: elde DENETLENECEK PLAN VAR. `en_iyi_plan` yoneticinin
+            # gerekceyle onaylayacagi taslaktir (K-10) ve denetlenmeden
+            # donuyordu. Onarim bitti demek, denetim bitti demek degil.
             cikti["onarim_gunlugu"] = gunluk
-            return cikti
+            return _taslagi_denetle(girdi, cikti)
 
         rapor = degerlendir(girdi, cikti.get("atamalar") or [])
         sert = [i for i in rapor["ihlaller"] if i.get("agirlik") == "SERT"]
@@ -121,6 +123,38 @@ def _yasak_cikar(sert, zaten):
     return yeni
 
 
+def _taslagi_denetle(girdi, cikti):
+    """T-22: cozumsuzlukte sunulan taslagi bagimsiz dogrulayicidan gecirir.
+
+    NEDEN GEREKLI
+      `en_iyi_plan`in kendi notu "icindeki her ihlal bagimsiz dogrulayicidan
+      gecirilmeli" diyordu; geciren yoktu. Sonuc: EN COK aciklama gereken
+      plan, EN AZ denetlenen plandi. Yonetici K-10 uyarinca bu taslagi
+      gerekceyle onayliyor ve neyi onayladigini goremiyordu.
+
+    NEDEN `girdi` -- ve bu satir goruldugunden onemli
+      `en_iyi_plan` uretilirken ASGARI_KAPSAMA gibi kapsama kurallari
+      BILEREK gevsetilir (teshis._en_iyi_plan). Denetim o gevsetilmis
+      girdiyle yapilsaydi dogrulayici gevsetilen kurali hic gormez, taslak
+      tertemiz gorunurdu -- denetim eklenmis ama ise yaramaz olurdu.
+      Kullanicinin girdisinde kural hala aktiftir; denetim onunla yapilir.
+      Ayni gerekce onarim dongusunun kendisinde de yaziliydi.
+
+    `var` ALANI
+      Atama sayisi sifirsa plan yoktur. Bunu burada da duzeltiyoruz cunku
+      bu yol `_cozumsuz`dan gecmez.
+    """
+    plan = cikti.get("en_iyi_plan")
+    atamalar = (plan or {}).get("atamalar") or []
+    if plan is not None:
+        plan["var"] = bool(atamalar)
+
+    rapor = degerlendir(girdi, atamalar)
+    sert = [i for i in rapor["ihlaller"] if i.get("agirlik") == "SERT"]
+    cikti["bagimsiz_denetim"] = _denetim_ozeti(rapor, sert)
+    return cikti
+
+
 def _denetim_ozeti(rapor, sert):
     """Motorun kendi metrigi DEGIL -- bagimsiz dogrulayicinin sayilari.
 
@@ -152,7 +186,9 @@ def _cozumsuz(cikti, gunluk, sebep):
                 {k for t in gunluk for k in t["kurallar"]}),
         },
         "en_iyi_plan": {
-            "var": True,
+            # T-22: sifir atamali plan "var" diyemez. K-10'un sozu "eller
+            # bos donulmez"ti; bos bir plani var saymak o sozu bosa cikarir.
+            "var": bool(cikti.get("atamalar")),
             "atamalar": cikti.get("atamalar") or [],
             "not": ("K-10: bu bir TASLAKTIR, otomatik kaydedilmez. Icinde "
                     "dogrulayicinin bildirdigi sert ihlaller VARDIR; yayin "

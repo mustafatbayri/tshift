@@ -980,37 +980,67 @@ iç içe geçebilir mi? Şartname §8'de `ekipler` çoğul; anlamı tanımlı de
 
 ---
 
-## 🔴 T-22 · Çözümsüzlükte sunulan plan denetlenmeden dönüyor
+## ✅ T-22 · Çözümsüzlükte sunulan plan denetlenmiyordu — **KAPANDI (23 Eylül 2026)**
 
-**Bulundu:** 16 Eylül 2026, dış inceleme · **Yeniden üretildi:** evet
+**Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Kapandı:** 23 Eylül
 
-**Ne.** `orkestra.py` sonuç `cozuldu` değilse **erken dönüyor** ve bağımsız
-doğrulayıcıyı hiç çağırmıyor. Oysa `en_iyi_plan`ın kendi notu şunu diyor:
+`orkestra.py`, çözücü `cozumsuz` dediğinde **erken dönüyor** ve bağımsız
+doğrulayıcıyı hiç çağırmıyordu. Oysa `en_iyi_plan`ın kendi notu şunu diyordu:
 
 > *"K-10: bu bir TASLAKTIR… İçindeki her ihlal bağımsız doğrulayıcıdan
 > geçirilmeli."*
 
-Geçiren yok.
+Geçiren yoktu. **En çok açıklama gereken plan, en az denetlenen plandı** —
+yönetici K-10 uyarınca bu taslağı *gerekçeyle* onaylıyor ve neyi onayladığını
+göremiyordu.
+
+### Kabul cümlesi üç şart içeriyordu
+
+| Şart | Nasıl karşılandı |
+|---|---|
+| Taslak `degerlendir()`'den geçsin | `orkestra._taslagi_denetle()` — erken dönüş artık buradan geçiyor |
+| Denetim **özgün** girdiyle yapılsın | `girdi` kullanılıyor, gevşetilmiş kopya değil |
+| Sıfır atamalı plan `var: False` desin | İki üretici yerde de düzeltildi: `teshis._en_iyi_plan` ve `orkestra._cozumsuz` |
+
+**İkinci şart sessiz tuzak.** `en_iyi_plan` üretilirken `ASGARI_KAPSAMA` gibi
+kurallar **bilerek gevşetilir**. Denetim o gevşetilmiş girdiyle yapılsaydı
+doğrulayıcı gevşetilen kuralı hiç görmez, taslak tertemiz görünürdü — denetim
+eklenmiş ama işe yaramaz olurdu. `test_taslak_denetimi_OZGUN_girdiyle_yapilir`
+tam bunun bekçisi.
+
+### Kalıcı bekçi
+
+`09-motor/testler/test_profiller.py` içinde **4 test**: denetimin varlığı,
+özgün girdiyle yapılması, boş planın `var: False` demesi, dolu planın `var:
+True` demeye devam etmesi (gerileme koruması — düzeltme *"hep False de"* diye
+yapılamaz).
+
+**Kırmızı kanıt:** düzeltmeden önce 3 kırmızı / 1 yeşil (yeşil olan gerileme
+koruması). Sonrasında 4/4. **72 birim testi** · **7 altın senaryo** ·
+fikstür denetleyicisi 0.
+
+### ⚠ Düzeltme bir şeyi görünür kıldı — A03
+
+A03 (*"İmkânsız durum ve yöneticinin kararı"*) tam bu yoldan geçiyor. Artık
+denetim raporu geliyor ve **şunu söylüyor:**
 
 ```
-durum                    : cozumsuz
-en_iyi_plan var mi       : True
-en_iyi_plan atama sayisi : 0        <- "var" diyor, ici bos
-bagimsiz_denetim VAR MI  : False
+uygulanmayan_kurallar : ['YETKINLIK_KAPSAMASI']
+sert_ihlal            : 0
+yayinlanabilir        : true
 ```
 
-**İki ayrı sorun var.**
+`YETKINLIK_KAPSAMASI` A03'ün girdisinde **aktif ve SERT**; gövdesi
+doğrulayıcıda **yok**. Yani aynı cevapta *"bu SERT kuralı kontrol edemedim"*
+ve *"yayınlanabilir"* yazıyor — üstelik A03'ün **tamamı** o kural
+sağlanamadığı için çözümsüz.
 
-1. **En çok açıklama gereken plan, en az denetlenen plan.** Başarılı plan
-   doğrulayıcıdan geçiyor; yöneticinin *gerekçeyle kabul edeceği* taslak
-   geçmiyor. K-10 *"yöneticilere onay ile en iyi planı sunmalıyız"* diyor —
-   yönetici neyi onayladığını göremiyor.
-2. **Boş plan "var" diye sunuluyor.** K-10'un sözü *"eller boş dönülmez"*ti.
-   Sıfır atamalı bir planı `var: True` ile döndürmek o sözü boşa çıkarıyor.
+> **Bu T-18'dir ve kanıtı güçlendi.** Daha önce kurulmuş bir girdiyle
+> gösteriliyordu; artık **onaylanmış bir altın senaryoda** görünüyor.
+> T-22 düzeltmesi hatayı üretmedi — **görünmez olmaktan çıkardı.** Denetim
+> hiç koşmadığı için kimse bu çelişkiyi göremiyordu.
 
-**Düzeltme yönü açık** (ürün kararı gerektirmiyor): `en_iyi_plan` üretildikten
-sonra kullanıcının **özgün** girdisiyle `degerlendir()` çağrılmalı, sonuç
-`bagimsiz_denetim` olarak eklenmeli; atama sayısı sıfırsa `var: False`.
+T-18 hâlâ açık: kapının bilinmeyen kuralda ne yapacağı **ürün kararı**.
 
 ---
 
@@ -1415,7 +1445,6 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **5** | **T-19 · talep biçimi** 🔴 | Şartname biçimi verilince sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* çıkıyor |
 | **6** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
 | **7** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta |
-| **8** | **T-22 · denetlenmeyen taslak** 🔴 | Yöneticinin onaylayacağı plan, denetimden geçmeyen tek plan. **Karar gerektirmiyor** |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -1478,5 +1507,6 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | **A-18 çözücü yok** | **16 Eylül 2026** | `09-motor/cozucu/` + `09-motor/orkestra.py`. Yedi altın senaryo koşuyor ve yeşil; dördü backend tarafında |
 | **T-15 fazla mesai ayarı** | **16 Eylül 2026** | K-30: hedef için asla, asgari zorlarsa minimum. Kod değişmedi — mevcut davranış zaten buymuş, üç testle çivilendi |
 | **Motor CI'ya bağlı değil** | **16 Eylül 2026** | `motor` işi eklendi, **ilk koşu yeşil** (`47c7050`). Kapının kendi kırmızı kanıtı da yapıldı |
+| **T-22 denetlenmeyen taslak** | **23 Eylül 2026** | Çözümsüzlükte sunulan plan artık özgün girdiyle denetleniyor; boş plan `var: False`. 4 test. A03'te T-18'i görünür kıldı |
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |
