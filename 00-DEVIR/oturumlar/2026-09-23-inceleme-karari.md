@@ -482,3 +482,28 @@ bekçisi olduğu için dokunulmadı, karar Mustafa'da.
 > Aynı gün ikinci kez: `okunmayan_alanlar` da ilk sürümünde yanlış alarm
 > vermişti. **Sessizliğe karşı kurulan her mekanizma gürültüyle kendini
 > iptal edebilir.**
+
+### Ek 3 — devir dosyası tazelendi, içinde iki yanlış sayı buldu
+
+Mustafa kapanmadan önce `00-BURADAN-BASLA.md`'nin güncellenmesini istedi.
+Güncellerken iki yanlış sayı çıktı:
+
+| Yazan | Gerçek | Ne zamandır yanlış |
+|---|---|---|
+| Kural gövdesi **17** | **19** (`@kural` sayılarak) | belirsiz |
+| *"Altın senaryo **12**, hepsi yeşil"* | **7 koşuyor**; `12 passed` = 7 senaryo + paketin 5 sağlık testi | **bir hafta** |
+
+İkincisi önemli: bu düzeltme 16 Eylül'de `06-ACIK-RISKLER.md`'ye
+*"⚠ Düzeltme (16 Eylül, dış inceleme)"* başlığıyla yazılmış. Giriş
+dokümanına **taşınmamış**. Yani hata bir yerde bulunmuş, adı konmuş,
+belgelenmiş — ve deponun **ilk okunan sayfasında** aynen durmaya devam
+etmiş.
+
+> **T-37 ile T-26 aynı noktada kesişiyor.** Giriş dokümanı hiçbir tazelik
+> kontrolünün kapsamında değil (T-37) ve bir yerde yapılan düzeltme
+> kendiliğinden yürürlüğe girmiyor (T-26). Bu satır ikisinin de kanıtı.
+
+Ayrıca `09-motor/` satırındaki **68** birim testi **77** yapıldı, 16 Eylül
+anlatısındaki "60" o günün sayısı olarak işaretlendi, ve *"Kalan 14 uyarı
+aksiyon gerektirmiyor"* cümlesine T-41 bağlandı — o cümle 16 Eylül'de
+yazılmış ve bugünkü bulgunun ta kendisiydi.

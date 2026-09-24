@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-23 (haftalık inceleme döngüsü kuruldu — `05-inceleme/beceriler/`; motor çekirdeği çalışıyor, CI kapısına bağlandı; **7 altın senaryo + 68 birim test yeşil**. ⚠ **Dış inceleme üç turda 19 bulgu buldu, 9'u 🔴** — T-18…T-36. **T-27 kapandı**)
+**Son güncelleme:** 2026-09-23 akşam (**dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -47,24 +47,38 @@ PostgreSQL + RLS → EF Core → Kimlik → Yetki/Kapsam → Denetim kaydı → 
 - **Yılmaz'a inceleme paketi gönderildi** (`05-inceleme/v1-2026-09-11/`).
 
 **Motor çekirdeği çalışıyor (16 Eylül).** Doğrulayıcı, çözücü ve onarım
-döngüsü yazıldı; **yedi altın senaryo** (A1, A3, A4, A6, A7, A8, A9) ve 60
-birim testi yeşil, CI'da da yeşil.
+döngüsü yazıldı; **yedi altın senaryo** (A1, A3, A4, A6, A7, A8, A9) ve o gün
+60 birim testi yeşildi. **23 Eylül itibarıyla 77 birim testi**, CI'da da
+yeşil.
 
 ⚠ **"Motor tamamlandı" demiyoruz, bilerek.** Kataloğun 35 kuralının 19'u
 yazılı; A2/A10/A11/A12 backend tarafında ve hiç sınanmadı; aynı gün yapılan
 **dış inceleme üç turda 19 bulgu** buldu, dokuzu 🔴 (T-18…T-36). Doğru
 ifade: *belirli senaryoları çalışan bir motor çekirdeği var.*
 
-**Dokuz 🔴'nın hepsi sessiz:** hiçbiri kırmızı yanmıyor, hepsi planı temiz
-gösteriyor. ✅ *Hiç yaşanmamış molanın yasal günlük sınırı devirmesi —
-T-27 — 16 Eylül'de kapatıldı.* Kalanlar:
-geçmiş hafta hiç okunmuyor (T-28), *"geçmiş yeniden planlanamaz"* sözünün
-tek bekçisi ateşlenemiyor (T-29), şartname biçimindeki talep sessizce
-atlanıyor (T-19), çok ekipli çalışan iki ekibi aynı anda dolduruyor (T-21),
-denetlenmemiş kural yayını engellemiyor (T-18), çözümsüzlükte sunulan taslak
-hiç denetlenmiyor (T-22). İkisi motor dışında: sırlar kodda varsayılana
-düşüyordu (T-34), bir kişinin hatalı girişi bütün kurulumu kilitliyordu
-(T-35) — **ikisi de 23 Eylül'de kapandı**.
+**Dokuz 🔴'nın hepsi sessizdi:** hiçbiri kırmızı yanmıyordu, hepsi planı
+temiz gösteriyordu.
+
+**Beşi kapandı:** T-27 (16 Eylül) · T-22, T-34, T-35, T-19 (23 Eylül).
+
+**Dördü açık:** geçmiş hafta hiç okunmuyor (**T-28**), *"geçmiş yeniden
+planlanamaz"* sözünün tek bekçisi ateşlenemiyor (**T-29**), çok ekipli çalışan
+iki ekibi aynı anda dolduruyor (**T-21**), denetlenmemiş kural yayını
+engellemiyor (**T-18**).
+
+⚠ **Kapatma turları dört yeni bulgu açtı — ve bu bir kural haline geldi.**
+T-19'u kapatırken şartnamenin **on iki alanı daha** motorda karşılıksız çıktı
+(**T-38** 🔴; en ağırı `kural_degerleri` — kişiye özel sözleşme sınırı yok
+sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor). Yanında
+**T-39** 🟡 (aynı hücreye iki talep satırı tanımsız), **T-40** 🟡
+(`tercih_karsilama_yuzde` şartnamede var, motorda yok — onu gerektirdiği
+söylenen A7 onsuz yeşil) ve **T-41** 🟡 (`DENETIM.py` uyarılarının 13'ü
+kalıcı). Açık 🔴 sayısı dörtten **beşe** çıktı.
+
+> **Kaydedilen bulgu, bulgunun kendisi değildir.** T-34 iki satır sanılmıştı,
+> 16 yer çıktı. T-35 kiracı çapı sanılmıştı, kurulum çapı çıktı. T-19'un üç
+> ölçüsünün üçü de dardı. Bir bulguyu kapatmak, onu **ilk kez gerçekten
+> ölçmek** demek.
 
 **Henüz yazılmadı:** `/suggest` ucu (öneri üretimi, §11.5), plan editörü,
 kural yönetimi, kullanıcı/rol yönetim ekranları.
@@ -121,12 +135,23 @@ py -m pytest -q   →   12 passed, 4 skipped
 Atlanan dört senaryo backend tarafında koşuyor (A2, A10, A11, A12);
 A5 ertelendi (K-12).
 
-| | Sayı |
-|---|---|
-| Yazılan kural gövdesi | **17** (katalogdaki 35'in alt kümesi) |
-| Birim testi | **60**, hepsi yeşil |
-| Altın senaryo | **12**, hepsi yeşil |
-| Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** |
+| | Sayı | Ne zaman ölçüldü |
+|---|---|---|
+| Yazılan kural gövdesi | **19** (katalogdaki 35'in alt kümesi) | 23 Eylül, `@kural` sayılarak |
+| Motor birim testi | **77**, hepsi yeşil | 23 Eylül |
+| **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
+| Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
+
+⚠ **Bu tabloda 23 Eylül akşamına kadar iki yanlış sayı vardı.**
+*"Altın senaryo 12, hepsi yeşil"* yazıyordu: `12 passed` sayısı **7 senaryo +
+paketin kendi 5 sağlık testidir**; A2, A10, A11, A12 backend tarafında ve hiç
+koşmadı. Bu düzeltme 16 Eylül'de `06-ACIK-RISKLER.md`'ye yazılmış ama **buraya
+taşınmamış** — bir hafta burada yanlış durdu. Kural gövdesi de 17 yazıyordu,
+sayılınca 19 çıktı.
+
+> **T-37 ile T-26 aynı anda.** Giriş dokümanı hiçbir tazelik kontrolünün
+> kapsamında değil (T-37), ve bir yerde yapılan düzeltme kendiliğinden
+> yürürlüğe girmiyor (T-26). Bu tablo ikisinin kesişme noktasıydı.
 
 ⚠ **Kırmızı kanıtın ilk turu 8'de 4'ünü KAÇIRDI.** Kaçanlar: ağırlık tablosu
 yok sayılsa, adalet gradyanı kaldırılsa, orkestra doğrulayıcıyı çağırmasa ya
@@ -188,7 +213,13 @@ sürüm atıflarını ve commit durumunu makineye kontrol ettirir.
 dondurulmuş **v2** ve **v4** sürümlerini gösteriyordu. O düzeltmeler aslında
 yapılmıştı ama makineye hiç gönderilmemişti — ve **dosya boyutu değişmediği
 için** (`v2` ile `v5` aynı uzunlukta) hiçbir boyut kontrolü bunu yakalayamazdı.
-Hepsi düzeltildi. Kalan 14 uyarı tarihsel dosyalarda, aksiyon gerektirmiyor.
+Hepsi düzeltildi. Kalan 14 uyarı tarihsel dosyalarda.
+
+⚠ **23 Eylül'de bu cümlenin kendisi bir bulguya dönüştü.** *"Aksiyon
+gerektirmiyor"* doğru ama eksik: o 14 uyarı, iş düşen uyarılarla **aynı
+listede** ve *"bakılmalı"* başlığı altında basılıyor. Her koşuda akan aynı 13
+satır, uyarı bloğunu okunmaz hale getirir — ve o blokta bir gün gerçek bir şey
+belirdiğinde görünmez. Kayıt: **T-41**.
 
 ⚠ **Her oturumun sonunda koşturulmalı.** Göz bu 17 satırı üç oturumdur
 görmedi; betik ilk koşuşunda gördü.
@@ -216,15 +247,21 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > | ~~T-27~~ | ✅ **KAPANDI 16 Eylül** — mola artık vardiyaya kırpılıyor ve üst üste binenler birleştiriliyor. 8 test | — |
 > | ~~T-35~~ | ✅ **KAPANDI 23 Eylül** — gerçek istemci IP'si + güvenilen vekil listesi. Etkisi kayıtta *kiracı* yazıyordu, **kurulum çapında** çıktı | — |
 > | ~~T-34~~ | ✅ **KAPANDI 23 Eylül** — beş katmanda 16 yer; sır yoksa uygulama açılmıyor. Kırmızı kanıt `fix/t34-sirlar` dalında | — |
+> | ~~T-22~~ | ✅ **KAPANDI 23 Eylül** — çözümsüzlükteki taslak artık **özgün** girdiyle denetleniyor; boş plan `var: False`. 4 test | — |
+> | ~~T-19~~ | ✅ **KAPANDI 23 Eylül** — şartname biçimi kazandı; talep beş yerde hücre başına okunuyor. Yeni kanal `okunmayan_alanlar`. 5 test, **beşi de kırmızı yandı** | — |
 > | **T-28** | `gecmis_vardiyalar` `09-motor/` içinde **hiç geçmiyor** — yasal dinlenme kuralı önceki haftaya kör | ✅ veri nereden gelecek |
+> | **T-38** 🆕 | Şartnamenin **on iki alanı daha** karşılıksız. En ağırı `kural_degerleri`: kişiye özel sözleşme sınırı yok sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor | ✅ hangisi önce yazılacak |
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
-> | **T-19** | Şartname biçimindeki talep sessizce atlanıyor → sıfır kişilik plan *"%100 kapsama, yayınlanabilir"* | ✅ şartname mi kod mu kazanacak |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
-> | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor | ✅ kapı ne yapmalı |
-> | **T-22** | Çözümsüzlükte sunulan taslak hiç denetlenmiyor; boş plan *"var"* diyor | ❌ mekanik |
+> | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor. ⚠ Artık **üç** kanal bu kapıda bekliyor: `uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar` | ✅ kapı ne yapmalı |
 >
-> **Karar beklemeyen madde kalmadı.** Beşi
-> Mustafa'nın cevabını bekliyor.
+> **Beş 🔴 açık ve beşi de Mustafa'nın cevabını bekliyor.** Mekanik olanların
+> hepsi kapandı.
+>
+> **İki küçük onay da bekliyor:** §11.3 çıktısına eklenen `okunmayan_alanlar`
+> (commit'e girdi; itiraz gelirse tek blok çıkar) ve **T-41**'in `DENETIM.py`
+> yaması (kod değişmedi, `DENETIM.py` her şeyin bekçisi olduğu için onay
+> istiyor).
 >
 > ### Neden bunlar önce
 >
@@ -239,9 +276,14 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > `09-motor/orkestra.py` ikisini de import eder ve bu doğrudur.
 > `09-motor/testler/test_bagimsizlik.py` bunu koruyor.
 >
-> ⚠ **Ama T-19 bu kuralın sınırını gösterdi:** bağımsızlık kural
-> *mantığını* ayırıyor, **girdi yorumunu** ayırmıyor. İkisi de aynı fikstür
-> geleneğiyle okuyor ve o gelenek şartnameyle uyuşmuyor.
+> ⚠ **T-19 bu kuralın sınırını gösterdi ve ders kapandıktan sonra da
+> geçerli:** bağımsızlık kural *mantığını* ayırıyor, **girdi yorumunu**
+> ayırmıyor. İki taraf da aynı fikstür geleneğiyle okuyordu ve o gelenek
+> şartnameyle uyuşmuyordu — ikisi birbiriyle tutarlı, ikisi de yanlıştı.
+>
+> Çözüm ortak modül **değildi**: talep artık üç yerde ayrı ayrı okunuyor ve
+> `okunmayan_alanlar` *"neye bakmadım"* sorusunu cevaplıyor.
+> `09-motor/testler/test_bagimsizlik.py` ortak yardımcı modülü hâlâ yasaklıyor.
 >
 > ⚠ **T-32 aynı sınırın ikinci örneği ve onu bugün ben açtım:** K-30'u
 > yazarken fazla mesai tavanını çözücüde **profil tablosundan**, doğrulayıcıda
@@ -257,12 +299,17 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > sınıflandırması · mevzuat araştırması · bağımsız doğrulayıcı · çözücü ·
 > onarım döngüsü · plan profilleri · **CI kapısı (yeşil)**.
 > A-15, A-17, A-18, T-12, T-14, T-15, T-17 kapandı.
+> Dış incelemeden: **T-27** (16 Eylül) · **T-22, T-34, T-35, T-19** (23 Eylül).
 > K-27, K-28, K-29, K-30 karara bağlandı — **ama K-28 kodda eksik (T-24a).**
 >
 > **Paralelde açık kalanlar:**
 >
 > - **T-23, T-24, T-25, T-26** — ikinci turun kalan bulguları
 > - **T-30, T-31, T-32, T-33, T-36** 🟡 — üçüncü turun kalan bulguları
+> - **T-39, T-40, T-41** 🟡 — 23 Eylül kapatma turunun açtıkları.
+>   **T-39** talep ekranı yazılmadan önce karara bağlanmalı (kapı şartı);
+>   **T-40** `tercih_karsilama_yuzde` üretilmiyor — T-38'in `tercihler`
+>   satırına bağlı; **T-41** `DENETIM.py` uyarı çıktısının ayrıştırılması
 > - **T-20** — M0 testinin kapsamı; A-1'i kapatan test, doğrulanmalı
 > - **T-13** — `ADALET_DENGESI`'nin `saat` boyutu
 > - **`/suggest` (§11.5)** — ⚠ **kabul ölçütü yok, fikstürü yok.** Kod
@@ -318,7 +365,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **68** birim testi. **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **77** birim testi (23 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

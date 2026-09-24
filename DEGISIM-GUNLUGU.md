@@ -4,6 +4,24 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-23 · Devir dosyası tazelendi; içinde bir haftalık yanlış sayı vardı**
+
+`00-DEVIR/00-BURADAN-BASLA.md` güncellendi: dört kapanan 🔴, yeni dört bulgu,
+77 birim test, `okunmayan_alanlar` kanalı.
+
+Güncellerken iki yanlış sayı çıktı. Kural gövdesi **17** yazıyordu, sayılınca
+**19**. Daha önemlisi: *"Altın senaryo 12, hepsi yeşil"* — `12 passed` sayısı
+**7 senaryo + paketin 5 sağlık testidir**; A2/A10/A11/A12 hiç koşmadı. Bu
+düzeltme **16 Eylül'de** `06-ACIK-RISKLER.md`'ye yazılmış ama giriş
+dokümanına taşınmamış: hata bulunmuş, adı konmuş, belgelenmiş ve deponun ilk
+okunan sayfasında **bir hafta** aynen durmuş.
+
+**T-37 ile T-26'nın kesişme noktası.** Giriş dokümanı tazelik kontrolünün
+kapsamında değil, ve bir yerde yapılan düzeltme kendiliğinden yürürlüğe
+girmiyor.
+
+---
+
 **2026-09-23 · T-41 açıldı — DENETIM uyarılarının 13'ü kalıcı**
 
 Commit öncesi denetim: **0 HATA, 14 UYARI**. Ölçüldü: 14'ün 13'ü
