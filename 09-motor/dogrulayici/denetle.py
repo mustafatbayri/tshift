@@ -128,7 +128,9 @@ SEBEPLER = {
     ("sabit_atamalar", "ekip"):
         "sabit atamanin ekibi okunmuyor; ekip calisanin kendi listesinden gelir",
     ("calisanlar.izinler", "tum_gun"):
-        "izin her zaman TUM GUN sayiliyor; yarim gun izin tam gun gibi engeller",
+        "motora YALNIZ tam gun izin gonderilir (K-31). Bu alan geldiyse yarim "
+        "gunluk izin ayiklanmamis olabilir; motor onu TAM GUN sayar ve kisiyi "
+        "o gun hic planlamaz. Yarim gun plan editoruyle yonetilir",
     ("vardiya_sablonlari", "mola_tek_blok"):
         "mola tek blok zorunlulugu modele girmiyor; mola bolunebilir",
     ("vardiya_sablonlari", "mola_en_erken"):

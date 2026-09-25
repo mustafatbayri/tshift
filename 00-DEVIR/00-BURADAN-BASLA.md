@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-23 akşam (**dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41)
+**Son güncelleme:** 2026-09-23 akşam (**dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı), katalog **34**; T-42 açıldı, T-43 aynı gün geri çekildi)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -51,7 +51,7 @@ döngüsü yazıldı; **yedi altın senaryo** (A1, A3, A4, A6, A7, A8, A9) ve o 
 60 birim testi yeşildi. **23 Eylül itibarıyla 77 birim testi**, CI'da da
 yeşil.
 
-⚠ **"Motor tamamlandı" demiyoruz, bilerek.** Kataloğun 35 kuralının 19'u
+⚠ **"Motor tamamlandı" demiyoruz, bilerek.** Kataloğun **34** kuralının 19'u
 yazılı; A2/A10/A11/A12 backend tarafında ve hiç sınanmadı; aynı gün yapılan
 **dış inceleme üç turda 19 bulgu** buldu, dokuzu 🔴 (T-18…T-36). Doğru
 ifade: *belirli senaryoları çalışan bir motor çekirdeği var.*
@@ -68,8 +68,10 @@ engellemiyor (**T-18**).
 
 ⚠ **Kapatma turları dört yeni bulgu açtı — ve bu bir kural haline geldi.**
 T-19'u kapatırken şartnamenin **on iki alanı daha** motorda karşılıksız çıktı
-(**T-38** 🔴; en ağırı `kural_degerleri` — kişiye özel sözleşme sınırı yok
-sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor). Yanında
+(**T-38** 🔴). ⚠ Bu kaydın ilk gerekçesi **yanlış yazılmıştı** ve 25 Eylül'de
+düzeltildi; en ağır satır `izinler[].tum_gun`: **yarım günlük izin motora
+gelmiyor**, motor bütün günü kapatıyor, yarım gün rapor alan kişi o gün hiç
+planlanamıyor. Yanında
 **T-39** 🟡 (aynı hücreye iki talep satırı tanımsız), **T-40** 🟡
 (`tercih_karsilama_yuzde` şartnamede var, motorda yok — onu gerektirdiği
 söylenen A7 onsuz yeşil) ve **T-41** 🟡 (`DENETIM.py` uyarılarının 13'ü
@@ -137,7 +139,7 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **19** (katalogdaki 35'in alt kümesi) | 23 Eylül, `@kural` sayılarak |
+| Yazılan kural gövdesi | **19** (katalogdaki **34**'ün alt kümesi) | 25 Eylül, ikisi de sayılarak |
 | Motor birim testi | **77**, hepsi yeşil | 23 Eylül |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -178,8 +180,8 @@ hangi ihlali kabul etmeye izin vereceğini bilemiyordu.
 
 | Ne | Sayı |
 |---|---|
-| Sınıflandırılan kural | **35** (v1.3 "27" diyordu, gerçek 33'tü) |
-| Yeni kural | 2 — `SAGLIK_KISITI`, `GECE_POSTASI_DEVRI` |
+| Sınıflandırılan kural | 16 Eylül'de **35** (v1.3 "27" diyordu, gerçek 33'tü) · **25 Eylül'den beri 34** — `SAGLIK_KISITI` kaldırıldı |
+| Yeni kural | 1 — `GECE_POSTASI_DEVRI`. (`SAGLIK_KISITI` de eklenmişti, **25 Eylül'de geri alındı** — K-21) |
 | Türü/değeri/anlamı değişen | 3 — `MOLA_KAPSAMASI` yumuşadı · `GUNLUK_AZAMI` 9→11 · `TERCIH_KARSILAMA` |
 | Yeni veri alanı | 13 |
 | Düzeltilen tutarsızlık | 11 (T-1…T-11) |
@@ -355,7 +357,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 
 | Yol | İçerik | Ne zaman aç |
 |---|---|---|
-| **`02-spec/v1.4-master-spec.md`** | **YÜRÜRLÜKTEKİ ŞARTNAME — 17 bölüm, son karar.** §3 roller ve yetki matrisi · **§5.3 `yasal` / `kabul_edilebilir` ayrımı** · §6 kural kataloğu (**35 kural**, yasal ve kabul sütunlarıyla, madde dayanaklarıyla) · §6.3 gece yarısını aşan vardiya + **sektör istisnası** + DST modeli · §8 veri modeli · §9 ekranlar · **§11 motor sözleşmesi** (`/solve`, `/evaluate`, çözümsüzlük teşhisi, **`en_iyi_plan`**, §11.2 lookback, §11.7 idempotency + onarım) · **§16 test stratejisi ve 12 altın senaryo** · §17 sürüm notları. | **Motor, kural ya da ekran işine başlamadan ÖNCE.** v1.0–v1.3 aynı klasörde, **dondurulmuş** (geçmiş korunuyor). Hazırlık notları `02-spec/v1.4-hazirlik/`. |
+| **`02-spec/v1.4-master-spec.md`** | **YÜRÜRLÜKTEKİ ŞARTNAME — 17 bölüm, son karar.** §3 roller ve yetki matrisi · **§5.3 `yasal` / `kabul_edilebilir` ayrımı** · §6 kural kataloğu (**34 kural**, yasal ve kabul sütunlarıyla, madde dayanaklarıyla) · §6.3 gece yarısını aşan vardiya + **sektör istisnası** + DST modeli · §8 veri modeli · §9 ekranlar · **§11 motor sözleşmesi** (`/solve`, `/evaluate`, çözümsüzlük teşhisi, **`en_iyi_plan`**, §11.2 lookback, §11.7 idempotency + onarım) · **§16 test stratejisi ve 12 altın senaryo** · §17 sürüm notları. | **Motor, kural ya da ekran işine başlamadan ÖNCE.** v1.0–v1.3 aynı klasörde, **dondurulmuş** (geçmiş korunuyor). Hazırlık notları `02-spec/v1.4-hazirlik/`. |
 | **`02-spec/v0-koken-...Analiz_v2.docx`** | **KÖKEN DOKÜMANI — 27 bölüm.** Projenin doğduğu analiz. Master Spec'in kapsamadığı yerde **hâlâ kaynak**: §8 sektörel kural paketleri (çağrı merkezi/perakende/üretim) · §23 Faz 0–10 geliştirme planı · §25 12 haftalık yol haritası · §20 riskler. | Gerekçe, fazlama ya da sektör paketi sorusu varsa. **Çeliştiğinde Master Spec kazanır** (§17). |
 | `03-demo/v2-html/tshift-demo-v2.html` | **Çalışan demo** — 15 ekran, iki operasyon (çağrı merkezi + otel), sürükle-bırak takvim. Tek HTML dosyası, tarayıcıda açılır. | Ekran tasarımı ya da akış konuşulacaksa. Ürünün görsel dili burada. |
 | `01-spike/` | **Motor fizibilite testleri** (7–8 Eylül) — CP-SAT vs greedy karşılaştırması, ölçek testleri (200→2000 kişi), otel senaryosu. Kronoloji ve ölçülen sayılar `01-spike/README.md`'de. | Motor yazılmadan **önce mutlaka.** Teknoloji kararının dayanağı burada. |

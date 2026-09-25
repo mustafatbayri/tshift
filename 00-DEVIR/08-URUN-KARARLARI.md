@@ -630,7 +630,39 @@ kabul ettirmek — daha pahalı bulundu.
 
 ---
 
-## K-21 · Sağlık raporu için ayrı kural: `SAGLIK_KISITI`
+## K-21 · ~~Sağlık raporu için ayrı kural: `SAGLIK_KISITI`~~ — **GERİ ALINDI (25 Eylül)**
+
+> ⛔ **Bu karar yürürlükte değil. Kural kataloğdan kaldırıldı; yerine bir kural
+> gelmedi — bilinçli bir kapsam sınırı bırakıldı.**
+>
+> **Neden geri alındı (Mustafa, 25 Eylül):** *"Real ortamlarda çalışanların
+> ayakta çalışamaz gibi sağlık kısıtları olabilir, bunlar da bizi
+> etkilemiyor. Günde 4 veya max 5 saat çalışabilir diye bir sağlık raporu
+> belki milyonda bir vaka olarak karşımıza çıkabilir. Ürüne eklememiz
+> gereksiz."*
+>
+> **Ürünün gördüğü sağlık durumu dönemseldir ve bir kural değil, bir
+> izindir:** iki günlük rapor da yarım günlük rapor da `leaves` satırıdır
+> (`tip = rapor`, §8.3) ve motoru `ONAYLI_IZIN` üzerinden bağlar. Bunun için
+> yeni bir kural gerekmiyor — zaten yazılı.
+>
+> ⚠ **Bırakılan sınır, açıkça:** kalıcı bir **süre** kısıtı olan çalışan
+> gerçekten çıkarsa sistem onu koruyamaz; plan onu normal yasal tavana kadar
+> planlar. O durum sistem dışında yönetilir. Şartname §5.2'deki *"Ayşe'nin
+> raporu var, günde en fazla 4 saat nereye yazılacak?"* sorusunun cevabı
+> artık **"hiçbir yere"**dir ve orada öyle yazıyor — boşluk bırakılmadı.
+>
+> **Nasıl ortaya çıktı:** 25 Eylül'de T-43 (*"`SAGLIK_KISITI` yazılmadı"*)
+> üzerinde çalışılırken Mustafa'ya üç ürün kararı soruldu. İkinci soruya
+> verdiği cevap, kuralın kendisinin gereksiz olduğunu gösterdi. Kuralı
+> yazmadan önce sorulması, yazıldıktan sonra çıkarılmasından ucuza geldi.
+>
+> **Dokunulan yerler (25 Eylül):** `02-spec/v1.4-master-spec.md` §1 değişiklik
+> tablosu · §5.2 · §6 kural sayısı (35 → **34**, sayılarak doğrulandı) · §6.1
+> katalog satırı ve bölümü · §6.2 · §6.6 yasal dayanak tablosu · §8.3 · §17
+> sürüm notları.
+
+*Özgün metin, kayıt için:*
 
 **Karar (16 Eylül 2026, Mustafa).** K-18 `GUNLUK_AZAMI`'yi sabitleyince,
 *"Ayşe'nin raporu var, günde en fazla 4 saat"* durumu yersiz kaldı. Ayrı bir
@@ -948,3 +980,45 @@ alacaklar.
 **Kural:** Bundan sonra verilen her ürün/kapsam kararı **önce buraya**
 yazılır, sonra spec'e taşınır. Oturum günlüğü kararın *hikâyesini* tutar;
 sicil kararın *kendisini*.
+
+---
+
+## K-31 · Yarım günlük izin motora gönderilmez — elle yönetilir
+
+**Karar (25 Eylül 2026, Mustafa).** Yarım günlük izin/rapor sistemde
+**kaydedilir** ama plan üretimine **girmez**. Yönetici planı editörle günceller,
+asistan yerine kimin geçebileceğini önerir.
+
+**Gerekçe, Mustafa'nın kendi cümleleriyle:**
+
+> *"Yarım günlük bir rapor anca şu şekilde çalışır: ya çalışan bir gün önceden
+> der ki hastanede işlerim var, öğlene kadar halledeceğim... yahut çalışan
+> sabahtan rahatsızlanır ve öğlen hastaneye gider. Yarım günlük bir rapor
+> önceden verilmez veya tahmin etmesi zordur. Bunu sistemin tutmasına gerek yok
+> yani. Kullanıcı iznini girer, sistemde kayıt tutulur. Planı ilgili yönetici
+> edit yardımıyla günceller."*
+
+**Altında yatan ilke:** plan **hafta öncesinden** üretilir; yarım günlük izin
+**aynı gün ya da bir gün önce** doğar. Çözücüye verilecek bir bilgi değil,
+yayınlanmış plana yapılacak bir düzeltmedir.
+
+| | |
+|---|---|
+| Nerede tutulur | `leaves`, `tum_gun = false` + `baslangic_saat`/`bitis_saat` (§8.3) |
+| Motora gider mi | **Hayır.** `izinler` dizisi yalnız `tum_gun = true` taşır (§11.2) |
+| Kim çözer | Yönetici, plan editörü + `/suggest` ile |
+
+### ⚠ Bırakılan sınır — açıkça
+
+Yönetici planı düzeltmeyi **unutursa** sistem bunu yakalamaz: kişi
+çalışamayacağı bir vardiyaya atanmış görünür ve hiçbir kural itiraz etmez.
+Bu bilinçli kabul edilen bir risktir; otomatik bekçisi yoktur.
+
+### Bekçisi ne
+
+Arka uç yarım günlük izni yanlışlıkla gönderirse motor **bütün günü** kapatır
+— yanlış ama sessiz değil: `okunmayan_alanlar` raporu `izinler[].tum_gun`
+satırını bildirir (23 Eylül'de T-19 ile açılan kanal). Bu, kararın tek
+otomatik bekçisidir.
+
+→ `02-spec/v1.4-master-spec.md` §11.2, §8.3

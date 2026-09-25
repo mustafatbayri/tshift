@@ -4,6 +4,72 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-25 · K-31: yarım günlük izin motora gönderilmez, elle yönetilir**
+
+**Karar (Mustafa):** yarım günlük izin/rapor sistemde kaydedilir ama plan
+üretimine girmez. Yönetici planı editörle günceller.
+
+**Gerekçe:** yarım günlük izin plan yapılırken **bilinemez**. Ya bir gün
+önceden (*"sabah hastanede işim var"*) ya da aynı gün doğar — her iki durumda
+da plan çoktan yayınlanmıştır. Çözücüye verilecek bilgi değil, yayınlanmış
+plana yapılacak düzeltmedir.
+
+**Yazılanlar:** §11.2'ye *"`izinler` yalnız TAM GÜN taşır"* notu · §8.3'e ikinci
+not · **K-31** · `09-motor/dogrulayici/denetle.py` içindeki bildirim metni
+(*"kusur"* değil *"sınır"* diyecek şekilde).
+
+**Kararın tek otomatik bekçisi 23 Eylül'de kurulmuş.** Arka uç yarım günlük
+izni yanlışlıkla gönderirse motor bütün günü kapatır — ama sessiz kalmaz:
+`okunmayan_alanlar` `izinler[].tum_gun` satırını bildirir. T-19 ile açılan
+kanal burada ilk kez **bekçi** olarak kullanıldı, bulgu raporu olarak değil.
+
+⚠ **Bırakılan sınır açıkça yazıldı:** yönetici planı düzeltmeyi unutursa
+sistem yakalamaz — kişi çalışamayacağı vardiyada görünür ve hiçbir kural
+itiraz etmez. Bilinçli kabul edilen risk.
+
+**Yan sonuç:** T-38'in iki ağır satırı da (`kural_degerleri`, `tum_gun`) aynı
+gün kapsam kararına bağlandı. Kalanlar yazılmamış özellik ve ad uyuşmazlığı;
+**ölçüme göre T-38 artık 🟡** — seviye onayı Mustafa'da, tek taraflı
+düşürülmedi.
+
+**Motor:** 77/77 yeşil (metin değişikliği, davranış değişmedi).
+
+---
+
+**2026-09-25 · `SAGLIK_KISITI` kaldırıldı — K-21 geri alındı, katalog 34**
+
+**Karar (Mustafa):** *"Günde 4 veya max 5 saat çalışabilir diye bir sağlık
+raporu belki milyonda bir vaka olarak karşımıza çıkabilir. Ürüne eklememiz
+gereksiz."*
+
+Ürünün gördüğü sağlık durumu **dönemseldir** — iki günlük rapor, yarım günlük
+rapor — ve o zaten bir **izin** satırıdır (`leaves.tip = rapor`, §8.3), motoru
+`ONAYLI_IZIN` üzerinden bağlar ve **yazılı**. Yeni kural gerekmiyordu.
+
+**Nasıl ortaya çıktı.** İş `SAGLIK_KISITI`'nı yazmak diye başladı. Kod yazmadan
+önce üç ürün kararı soruldu; ikincisine verilen cevap kuralın kendisini
+gereksiz kıldı. **Yazmadan sormak, yazdıktan sonra çıkarmaktan ucuza geldi.**
+
+**Dokunulan yerler:** şartnamede sekiz (§1 değişiklik tablosu · §5.2 · §6 kural
+sayısı · §6.1 katalog satırı ve bölümü · §6.2 · §6.6 yasal dayanak · §8.3 · §17
+sürüm notları), artı `08-URUN-KARARLARI.md` (K-21 geri alındı, K-1 biçiminde),
+`06-ACIK-RISKLER.md` ve `00-BURADAN-BASLA.md`. **Katalog 35 → 34**, sayılarak
+doğrulandı (benzersiz kural kodu 34).
+
+⚠ **Bırakılan sınır açıkça yazıldı:** kalıcı bir *süre* kısıtı olan çalışan
+gerçekten çıkarsa sistem onu koruyamaz; plan onu normal yasal tavana kadar
+planlar. §5.2'deki *"Ayşe'nin raporu var, günde en fazla 4 saat nereye
+yazılacak?"* sorusunun cevabı artık **"hiçbir yere"** ve orada öyle yazıyor.
+
+**Yan sonuçlar:** **T-43** aynı gün açıldı ve geri çekildi. **T-42** (§11.2
+örneği §5.2 ile çelişiyor) yarı yarıya çözüldü — taşıyıcı biçim sorunu
+kalmadı, örnek sorunu duruyor. **T-38**'in gerekçesi düzeltildi: `kural_degerleri`
+değil, **`izinler[].tum_gun`** en ağır satır — yarım günlük izin motora hiç
+gelmiyor, ve Mustafa'nın *"yarım gün de rapor alabilir"* cümlesi onu asıl iş
+yaptı.
+
+---
+
 **2026-09-23 · Devir dosyası tazelendi; içinde bir haftalık yanlış sayı vardı**
 
 `00-DEVIR/00-BURADAN-BASLA.md` güncellendi: dört kapanan 🔴, yeni dört bulgu,

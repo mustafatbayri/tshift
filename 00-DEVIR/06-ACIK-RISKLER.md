@@ -875,7 +875,7 @@ elimizle yazdığımız cümle şu:
 listesine bakıyor; `uygulanmayan_kurallar` dolu olsa bile umursamıyor.
 **O-1'in tam şekli:** koruma tanımlı, etkisiz.
 
-Şu an kataloğun 35 kuralının 19'u yazılı. Kalan 16'sı bir kiracıda aktif
+Şu an kataloğun **34** kuralının 19'u yazılı. Kalan 15'i bir kiracıda aktif
 edilirse, plan o kurallara **hiç bakılmadan** yayınlanabilir görünür.
 
 **Ürün kararı gerekiyor:** gövdesi olmayan aktif bir kural varken kapı ne
@@ -1573,8 +1573,8 @@ Mevcut testler işlemleri **sırayla** yapıyor; bu yolu sınamıyor.
 
 | Alan | Gönderilirse ne olur |
 |---|---|
-| `calisanlar[].kural_degerleri` | **Kişiye özel kural değeri yok sayılır.** Sözleşmesi günde 9 saat diyen kişi genel kuralın 11 saatine planlanabilir — yasal tarafta yanlış plan |
-| `calisanlar[].izinler[].tum_gun` | **Yarım gün izin tam gün gibi engeller.** İzin her koşulda bütün günü kapatıyor |
+| `calisanlar[].kural_degerleri` | **§5.2'nin `C` kademesi motorda hiç çözülmüyor.** Çözücü de doğrulayıcı da düz `kurallar[]` listesinden okuyor. ⚠ **Bu satır 23 Eylül'de yanlış yazılmıştı** — bkz. aşağıdaki düzeltme |
+| `calisanlar[].izinler[].tum_gun` | ✅ **Kapsam kararı verildi (K-31, 25 Eylül):** yarım günlük izin motora **gönderilmez**, elle yönetilir. Alan yine de gelirse motor bütün günü kapatır — ve `okunmayan_alanlar` bunu bildirir. Kanal burada **bekçi** görevi görüyor |
 | `calisanlar[].tercihler` | Tercih plana hiç etki etmez; ekran topluyorsa boşuna topluyor |
 | `devir_kapsama` | Devreden kapsama yükü yok sayılır |
 | `vardiya_sablonlari[].mola_tek_blok` | Mola bölünebilir; şablonun *"tek blok"* şartı uygulanmaz |
@@ -1617,9 +1617,59 @@ doğrulayıcıda gövdeleri yok. Çözücü bunları sert kısıt olarak sağlı
 bağımsız denetleyen yok. Sessiz değil — `uygulanmayan_kurallar` bildiriyor;
 kapının ne yapacağı **T-18**.
 
+### ⚠ Düzeltme (25 Eylül) — bu kaydın kendi gerekçesi yanlıştı
+
+23 Eylül'de `kural_degerleri` satırına *"sözleşmesi günde 9 saat diyen kişi
+genel kuralın 11 saatine planlanabilir — yasal tarafta yanlış plan"*
+yazmıştım. **Şartname okunmadan yazılmıştı ve yanlıştı.**
+
+§5.2 ve §6.1 birlikte okunduğunda:
+
+| İddia | Gerçek |
+|---|---|
+| Kişiye özel günlük sınır `kural_degerleri` ile verilir | `GUNLUK_AZAMI` **kapsamı `S`** — hiçbir kademede ezilemez (K-18). O satır zaten olmamalı |
+| Yasal tarafta yanlış plan üretiyor | Üretmiyor. 16 Eylül'de bunun yolu `SAGLIK_KISITI` idi; **25 Eylül'de o kural da kaldırıldı** (K-21 geri alındı) — ürün kalıcı süre kısıtını hiç ifade etmiyor |
+
+**Gerçek etki neyse o:** §5.2'nin `C` kademesi hiç çözülmüyor. Bu kademeye
+açık **iki** kural kaldı — `PART_TIME_LIMIT` (Z,C) ve `UYGUNLUK_TAKVIMI`
+(K,C). Motor `UYGUNLUK_TAKVIMI`'nin **verisini** kişi başına okuyor;
+`PART_TIME_LIMIT`'in `Z` kademesini sözleşme tipinden okuyor ama `C`
+kademesini okumuyor. Üçüncüsü `SAGLIK_KISITI` idi, 25 Eylül'de kaldırıldı.
+
+**`izinler[].tum_gun` de aynı gün kapsam kararına bağlandı** (K-31): yarım
+günlük izin motora gönderilmeyecek, plan editörüyle yönetilecek. Gerekçe:
+yarım günlük izin plan yapılırken **bilinemez** — aynı gün ya da bir gün önce
+doğar, plan çoktan yayınlanmıştır.
+
+### ⚠ Seviye önerisi — Mustafa'nın onayını bekliyor
+
+T-38 öncelik listesinde **2. sırada ve 🔴**. Bu, iki satırın ağırlığından
+geliyordu: `kural_degerleri` ve `tum_gun`. **25 Eylül'de ikisi de kapsam
+kararına bağlandı** — biri kural kaldırılarak (K-21 geri alındı), biri elle
+yönetime bırakılarak (K-31).
+
+Kalan satırlar: `tercihler`, `devir_kapsama`, `mola_tek_blok`,
+`mola_en_erken`/`mola_en_gec_bitis` (ad uyuşmazlığı),
+`sabit_atamalar[].bas`/`.bit`/`.ekip`, `istek_id`, `sure_butcesi_sn`.
+
+**Hiçbiri yasadışı ya da sessizce yanlış bir plan üretmiyor** — yazılmamış
+özellikler ve ad uyuşmazlıkları. Ölçüme göre **T-38 artık 🟡**.
+
+Tek taraflı düşürmedim: seviye kararı Mustafa'da. Onaylanana kadar listede
+🔴 olarak duruyor ve bu satır **neden şüpheli olduğunu** söylüyor.
+
+> **Dördüncü kez, ama ilk kez ters yönde.** T-34, T-35 ve T-19'un kayıtları
+> gerçeği **eksik** söylüyordu; bu kayıt **fazla** söyledi. Ders *"hafife
+> alıyorum"* değil: **ölçmeden yazıyorum**, ve bu iki yöne de sapıyor.
+> Kaydı yazan da düzelten de aynı taraf — dış inceleme değil.
+
+⚠ **Bu düzeltme T-38'in 🔴 seviyesini tartışmaya açıyor.** Öncelik
+listesinde 2. sırada duruyor ve gerekçesi buydu. Kalan en ağır satır
+`izinler[].tum_gun` (yarım gün izin tam gün gibi engelliyor) — yanlış plan
+üretiyor ama **kısıtlayıcı** yönde, yasadışı yönde değil. **Seviye kararı
+Mustafa'da**; ölçüm değişti diye sırayı tek taraflı değiştirmedim.
+
 **Ne gerek:** on iki satır, on iki ürün kararı. Hepsi aynı anda gerekmiyor.
-Sıra `kural_degerleri` ve `tum_gun` ile başlamalı — ikisi de **yanlış plan**
-üretiyor, biri yasal tarafta.
 
 ---
 
@@ -1748,6 +1798,84 @@ onayıyla olur.
 
 ---
 
+## 🟡 T-42 · §11.2'nin `kural_degerleri` örneği §5.2 ile çelişiyor
+
+**Bulundu:** 25 Eylül 2026, T-38'e bakılırken · **Ölçüldü:** evet
+
+**Ne.** §11.2 girdi örneği kişiye özel kural değerlerini şöyle gösteriyor:
+
+```json
+"kural_degerleri": { "GUNLUK_AZAMI": 9, "HAFTALIK_AZAMI": 45 }
+```
+
+§6 kataloğunda **ikisinin de kapsamı `S`**. §5.2 bunun ne demek olduğunu
+yazıyor: *"Kapsamı `S` olan bir kural hiçbir kademede değiştirilemez."* Ve
+aynı bölüm `GUNLUK_AZAMI`'yi **ismen** örnek olmaktan çıkarıyor:
+
+> *"v1.3'te bu bölümün örneği `GUNLUK_AZAMI` idi... Kademeli olması
+> yanlıştı. `GUNLUK_AZAMI` artık kapsamı `S` olan, 11 saatlik,
+> değiştirilemez bir kuraldır."*
+
+**Mekanizma doğru, örnek yanlış.** `kural_degerleri` §5.2'nin `C` kademesinin
+taşıyıcısıdır ve gereklidir; sadece onu **şartnamenin kendi yasakladığı iki
+kuralla** anlatıyor. v1.3'ten kalan bir örnek, v1.4'te düzeltilen kuralın
+yanında durmuş.
+
+### Taşıyıcı biçim sorunu 25 Eylül'de kendiliğinden çözüldü
+
+Bu kayıt açıldığında ikinci bir taraf daha vardı: `{KOD: sayı}` biçimi
+`SAGLIK_KISITI`'nın beş zorunlu alanını taşıyamıyordu. **`SAGLIK_KISITI`
+aynı gün kataloğdan kaldırıldı** (K-21 geri alındı, T-43), ve `C` kademesinde
+taşınacak karmaşık bir şey kalmadı: geriye `PART_TIME_LIMIT` toleransı ve
+`UYGUNLUK_TAKVIMI` verisi kalıyor, ikisi de bugünkü biçime sığar.
+
+**Geriye kalan tek sorun örnek.** `kural_degerleri` mekanizması doğru ve
+gerekli; sadece §11.2 onu şartnamenin kendi yasakladığı iki kuralla
+anlatıyor. Düzeltme küçük: örneği `C` kademesine gerçekten açık bir kuralla
+değiştirmek.
+
+**Karar bekliyor:** örnek hangi kuralla yazılsın — yoksa `kural_degerleri`
+hiç kullanılmıyorsa §11.2'den tümüyle çıkarılsın mı?
+
+---
+
+## ✅ T-43 · ~~`SAGLIK_KISITI` yazılmadı~~ — **GERİ ÇEKİLDİ (25 Eylül)**
+
+**Açıldı ve kapandı:** 25 Eylül 2026, aynı gün.
+
+**Ne oldu.** Kural yazılmadı diye 🔴 açıldı. Yazmadan önce üç ürün kararı
+soruldu. İkinci soruya Mustafa'nın cevabı **kuralın kendisini gereksiz
+kıldı**: ürünün gördüğü sağlık durumu kalıcı bir *süre kısıtı* değil,
+**dönemsel bir rapor** — ve o zaten bir izin satırı.
+
+`SAGLIK_KISITI` kataloğdan kaldırıldı, **K-21 geri alındı**. Katalog 35 → **34**
+(sayılarak doğrulandı). Şartnamede dokunulan sekiz yer K-21 kaydında listeli.
+
+### Bunun yerine ne var
+
+| Durum | Nerede |
+|---|---|
+| İki günlük rapor | `leaves` satırı, `tip = rapor`, `tum_gun = true` (§8.3) |
+| Yarım günlük rapor | Aynı satır, `tum_gun = false` + saat aralığı |
+| Motoru bağlaması | `ONAYLI_IZIN` — **yazılı ve testli** |
+
+**Plan yayınlandıktan sonra gelen rapor** (yerine kim geçecek) bir kural
+değil; plan editörü + `/suggest` işi. İkisi de yazılmadı, ikisi de ayrı.
+
+### Geriye kalan gerçek iş
+
+**Yarım gün motora hiç gelmiyor.** `tum_gun = false` ve saat aralığı
+veritabanında var; §11.2 yalnız `tum_gun` gönderiyor ve motor her koşulda
+bütün günü kapatıyor. Yarım gün rapor alan kişi o gün hiç planlanamıyor.
+Kayıt: **T-38**'in `izinler[].tum_gun` satırı — ve Mustafa'nın 25 Eylül'deki
+kullanımı onu ikincil olmaktan çıkarıp **asıl iş** yaptı.
+
+> **Kaydedilen ders:** bir kuralı yazmadan önce *"bu hangi gerçek vakayı
+> çözüyor"* diye sormak, yazdıktan sonra çıkarmaktan ucuz. T-43 bir gün
+> yaşadı ve maliyeti üç sorudan ibaret kaldı.
+
+---
+
 ## 📌 T-26 · Kayıt ile yürürlük arasında kontrol yok
 
 **Bulundu:** 16 Eylül 2026, dış incelemenin **yöntem önerisinden**
@@ -1840,7 +1968,7 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | **1** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
-| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴 | `kural_degerleri` yok sayılıyor: günde 9 saatlik sözleşme 11 saate planlanabilir |
+| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴⚠ | ⚠ **Seviyesi şüpheli.** İki ağır satırı da 25 Eylül'de kapsam kararına bağlandı (K-21 geri alındı, K-31 verildi). Kalanlar yazılmamış özellik ve ad uyuşmazlığı — **ölçüme göre 🟡**, onay bekliyor |
 | **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
 | **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
@@ -1853,28 +1981,29 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
 | 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
 | 13 | **T-40 · `tercih_karsilama_yuzde` yetim** 🟡 | Şartname çıktıda yazıyor, motor üretmiyor; A7 onsuz yeşil |
-| 14 | **T-41 · DENETIM uyarılarının 13'ü kalıcı** 🟡 | Düzeltilemeyen ile iş düşen aynı listede; uyarı bloğu okunmaz hale gelir (O-7) |
-| 15 | **T-30 · T-31 · T-32 · T-33** 🟡 | Hafta tatili · adalet penceresi · tavan uyuşmazlığı · yarım saatler. **T-32'yi bugün ben açtım** (K-30) |
-| 16 | **T-36** 🟡 | Eşzamanlı oturum yenilemesi yarışı *(`04-kod`)* |
-| 17 | **T-26 · kayıt ≠ yürürlük** | K-28'i kimse yakalamadı. Bekçisi olmayan kararlar için kontrol yok |
-| 18 | **T-20 · M0 kapsamı** | A-1'i kapatan test. Doğrulanmalı |
-| 19 | **T-25 · tek iş parçacıklı servis** | Tek satırlık düzeltme; pilot öncesi. **Karar gerektirmiyor** |
-| 20 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık |
+| 14 | **T-42 · §11.2 örneği §5.2 ile çelişiyor** 🟡 | `kural_degerleri` örneği şartnamenin kendi yasakladığı iki `S` kapsamlı kuralla yazılmış. Taşıyıcı biçim sorunu T-43 ile çözüldü |
+| 15 | **T-41 · DENETIM uyarılarının 13'ü kalıcı** 🟡 | Düzeltilemeyen ile iş düşen aynı listede; uyarı bloğu okunmaz hale gelir (O-7) |
+| 16 | **T-30 · T-31 · T-32 · T-33** 🟡 | Hafta tatili · adalet penceresi · tavan uyuşmazlığı · yarım saatler. **T-32'yi bugün ben açtım** (K-30) |
+| 17 | **T-36** 🟡 | Eşzamanlı oturum yenilemesi yarışı *(`04-kod`)* |
+| 18 | **T-26 · kayıt ≠ yürürlük** | K-28'i kimse yakalamadı. Bekçisi olmayan kararlar için kontrol yok |
+| 19 | **T-20 · M0 kapsamı** | A-1'i kapatan test. Doğrulanmalı |
+| 20 | **T-25 · tek iş parçacıklı servis** | Tek satırlık düzeltme; pilot öncesi. **Karar gerektirmiyor** |
+| 21 | **T-13 · `ADALET_DENGESI`'nin `saat` boyutu** | K-27 sayı eşiğini verdi; süre boyutu açık |
 
 ### Ondan sonra — yeni iş
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| 21 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ Kabul ölçütü yok, fikstürü yok — önce cümleler yazılıp onaylanmalı |
-| 22 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
-| 23 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
-| 24 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
-| 25 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
-| 26 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
-| 27 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
-| 28 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
-| 29 | **A-9** KVKK | Gerçek veriden önce |
-| 30 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| 22 | **`/suggest`** (§11.5) | Motorun yazılmamış tek ucu. ⚠ Kabul ölçütü yok, fikstürü yok — önce cümleler yazılıp onaylanmalı |
+| 23 | **A-5** zaman modeli testleri | 182 gerçek gece-yarısı ataması var; A4 yeşil ama gerçek veriyle koşulmadı |
+| 24 | **A-6** mutasyon raporu | 16 Eylül kırmızı kanıt turu 12/12 yakaladı ama yalnız **elle seçilen** kırılmalarda. Otomatik mutasyon hâlâ yok |
+| 25 | **A-2**, **A-3** eksik bekçiler | Küçük, tanımlı |
+| 26 | **A-13 · kapsam envanteri** | Ocak hedefi hâlâ ölçülmedi. Ayrı pencere işi |
+| 27 | Eksik 14 senaryo sınıfı (G02–G04, G07–G14, G16, G20) | `04-TEST-HARITASI.md` kapsama tablosu |
+| 28 | **A-16** hukuk teyidi | Sahaya çıkmadan önce; işi bloke etmiyor |
+| 29 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
+| 30 | **A-9** KVKK | Gerçek veriden önce |
+| 31 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
 
 > **Yeni özellikten önce bu liste.** Dış incelemenin sözü: *"önce yanlış yayın
 > izni ve sessiz veri atlama sorunları değerlendirilsin, ardından tamamlanma
