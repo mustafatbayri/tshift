@@ -248,3 +248,25 @@ matematiği yanlış olursa **testler yeşilken** yanlış plan üretir.
 | Altın senaryolar | **12 geçti, 4 atlandı** |
 | Fikstür denetleyicisi | **11/11 tutarlı** |
 | Katalogdaki kural | **38**, programla sayıldı |
+
+---
+
+## 9. Devir dosyası — yine Mustafa yakaladı
+
+Gün kapanırken *"devir dosyasını da güncelledik mi"* diye sordu. **Hayır.**
+Günün ikinci yarısı (K-31, K-32, dört yeni kural, 98 test, katalog 38)
+`00-BURADAN-BASLA.md`'ye hiç işlenmemişti; dosya hâlâ *"77 test, katalog 34"*
+diyordu.
+
+**Üç gün içinde ikinci kez.** 23 Eylül'de aynı dosyada bir haftalık yanlış sayı
+bulunmuştu (*"altın senaryo 12, hepsi yeşil"*), o da düzeltmesi başka dosyaya
+yazılıp buraya taşınmadığı için.
+
+> **T-37 kendini üçüncü kez kanıtladı:** giriş dokümanı hiçbir tazelik
+> kontrolünün kapsamında değil. `DENETIM.py` test adlarını, yolları, sürüm
+> atıflarını ve commit durumunu kontrol ediyor — ama *"bu dosya bugünkü işi
+> anlatıyor mu"* diye sormuyor. İki seferde de yakalayan **insan** oldu.
+
+Güncellendi: başlık · kural sayısı (34 → **38**, `@kural` sayılarak) · test
+sayısı (77 → **98**) · v1.4 özet tablosu · depo haritası · ve 25 Eylül'ün
+kendi bölümü (K-31, K-32, yanlış model düzeltmesi, bitmeyen iş).
