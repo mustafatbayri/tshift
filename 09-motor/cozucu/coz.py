@@ -137,9 +137,17 @@ def _atamalari_cikar(kuruldu, cozucu):
             continue
         sablon = kuruldu.sablon[tid]
         molalar = []
-        for s in _mola_baslangiclari(sablon):
+        yemek_dk = kuruldu.yemek_dk[tid]
+        for s in _mola_baslangiclari(sablon, kuruldu.mola_penceresi, yemek_dk):
             if s is not None and cozucu.Value(kuruldu.mola[(e, d, tid, s)]):
-                molalar.append({"bas": s, "bit": s + sablon.get("mola_dk", 0) / 60.0})
+                # K-32: cozucunun yerlestirdigi tek mola UCRETSIZ ogle
+                # arasidir -- calisma suresinden de ucret hesabindan da
+                # dusulur. Ucretli kisa molalarin yerlesimi HENUZ YAZILMADI
+                # (mola_politikasi, K-32 madde 6); o gelene kadar cozucu
+                # yalniz yemek uretir.
+                molalar.append({"bas": s,
+                                "bit": s + yemek_dk / 60.0,
+                                "tip": "yemek"})
         ekip = next((c.get("ekipler", [None])[0]
                      for c in kuruldu.calisanlar if c["id"] == e), None)
         cikan.append({"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,

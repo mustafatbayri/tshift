@@ -172,3 +172,79 @@ K-31'e yazıldı.
 | Motor birim testleri | **77 geçti** (metin değişikliği, davranış aynı) |
 | `YOL-KONTROL.py` | 8 kırık yol — hepsi eski |
 | `00-DEVIR/` kökü | 9 dosya, R7 eşiği değişmedi |
+
+---
+
+## 8. K-32 — mola modeli baştan kuruldu
+
+`SAGLIK_KISITI` kaldırıldıktan sonra iş mola tarafına kaydı ve günün en uzun
+parçası oldu. Karar zinciri: mola ikiye ayrılsın (`dinlenme`/`yemek`) → yemeğin
+yeri mutlak saat değil vardiyaya göre olsun → firma politikası tanımlansın →
+dinlenme molaları eşit dağıtılsın.
+
+### Gün içinde bir kez ters yöne gittim
+
+K-32'nin ilk hâli *"yasal hakkı `dinlenme` karşılar"* ve *"dinlenme ücretli
+olduğu için çalışma süresine dahildir"* diyordu. **İkisi de yanlıştı.**
+
+Bunun üstüne `net_saat`'i değiştirdim, sonuç olarak *"motor günde bir saat
+eksik hesaplıyor"* diye bir **bulgu uydurdum** ve Mustafa'ya sundum. Ardından
+A08'in kırıldığını görüp *"altın senaryo yeniden onaylanmalı"* dedim.
+
+Gerçek: `net_saat` **doğruydu**, A08 **doğruydu**, kıran şey benim modelimdi.
+
+**Yakalayan dış inceleme oldu.** GPT'nin cümlesi: *"Bir molanın ücretli
+olması, o sırada çalışanın iş yapıyor olmasıyla aynı şey değil."*
+
+> Kendi ölçümüm bunu bulamazdı — **yanlış modeli doğru ölçüyordum** ve her
+> test yeşil yanıyordu. 16 Eylül'de dış inceleme döngüsünü kurarken yazdığımız
+> gerekçe buydu: *"aynı model aynı kör noktayı iki kez taşır."* İlk sefer kör
+> nokta koddaydı; bu sefer **tasarımda** ve **bendeydi**.
+
+Dört büyüklük ayrımı (`brut` / `çalışma` / `ücret` / `görev kapasitesi`) ve
+*"sistem yemeğin üstüne otomatik bir saat eklemez"* kuralı dış incelemeden
+geldi ve K-32'ye aynen alındı.
+
+### Ölçmenin iki kez daha kazandırdığı
+
+**Bir:** 9 saatlik vardiyaya *"30 dk yemek"* politikası verdim, plan
+çözülemedi. Önce testimi yanlış yazdım sandım; motor haklıydı — politika
+yasal tabanın altına inemez. Davranış teste bağlandı
+(`test_politika_yasal_tabanin_ALTINA_inemez`).
+
+**İki:** mutlak pencereyi kaldırmak A08'i hiç kırmadı. Çünkü A08'deki mola
+09:00 vardiyasında 12:00'de, yani tam **3. saat** — Mustafa'nın verdiği 3–5
+penceresinin içinde. 15 Eylül'de onaylanan fikstür, 25 Eylül'de konan kuralla
+kendiliğinden uyumlu çıktı.
+
+### Yazılanlar
+
+| Katman | Ne |
+|---|---|
+| `09-motor/dogrulayici/zaman.py` | Mola tipi, tip süzgeci, `yemek_saat`/`dinlenme_saat`/`ucret_saat` |
+| `09-motor/dogrulayici/kurallar.py` | Dört yeni kural; `MOLA_HAKKI`'ya hatanın kaydı ve bekçisinin adı |
+| `09-motor/dogrulayici/denetle.py` | Üç süre ayrı metrik; sözleşme karşılaştırması ücrete bakıyor |
+| `09-motor/cozucu/model.py` | Göreli pencere, mola politikası, eşit dağıtım aritmetiği |
+| `09-motor/cozucu/coz.py` | Üretilen molaya `tip` |
+| `02-spec/v1.4-master-spec.md` | §6.2 dört kural (34 → **38**), §8.4, §11.2, §11.3 |
+| `08-motor-testleri/v5/fikstur/` | Mutlak pencere kaldırıldı, **19 mola bloğu** tiplendi |
+
+### Bitmeyen — açıkça
+
+**Dinlenme molaları çözücüye bağlanmadı.** Eşit dağıtım aritmetiği yazıldı ve
+beş testle sınandı ama **çağrısız**; motor hâlâ tek mola üretiyor. Bağlamak
+`_sahada`'yı yeniden kurgulamayı gerektiriyor: bugün *"seçilen mola bu dilimi
+kapsamıyor"* diye tek bir boolean toplanıyor, dinlenme eklenince bu bir **VE**
+bağlacına dönüşüyor ve yardımcı değişken + reification istiyor.
+
+Bilerek bırakıldı: günün dersi ölçmeden ilerlememekti, ve çözücünün kapsama
+matematiği yanlış olursa **testler yeşilken** yanlış plan üretir.
+
+### Ölçümler
+
+| Ne | Sonuç |
+|---|---|
+| Motor birim testleri | **98 geçti** |
+| Altın senaryolar | **12 geçti, 4 atlandı** |
+| Fikstür denetleyicisi | **11/11 tutarlı** |
+| Katalogdaki kural | **38**, programla sayıldı |

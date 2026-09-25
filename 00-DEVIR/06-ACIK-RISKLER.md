@@ -1578,7 +1578,7 @@ Mevcut testler işlemleri **sırayla** yapıyor; bu yolu sınamıyor.
 | `calisanlar[].tercihler` | Tercih plana hiç etki etmez; ekran topluyorsa boşuna topluyor |
 | `devir_kapsama` | Devreden kapsama yükü yok sayılır |
 | `vardiya_sablonlari[].mola_tek_blok` | Mola bölünebilir; şablonun *"tek blok"* şartı uygulanmaz |
-| `vardiya_sablonlari[].mola_en_erken` · `.mola_en_gec_bitis` | Motor bunları `mola_penceresi.en_erken` / `.en_gec_bitis` altında bekliyor — **ad uyuşmazlığı**, T-19'un ikizi |
+| ~~`vardiya_sablonlari[].mola_en_erken` · `.mola_en_gec_bitis`~~ | ✅ **ÇÖZÜLDÜ (25 Eylül, K-32).** Düzeltilmedi, **kaldırıldı**: mutlak saatli pencere şablona bağlıydı ve 12:00'de başlayan vardiyada kendi kendini patlatıyordu. Yerine `MOLA_YERLESIMI` — vardiyaya göre göreli, firma parametresi |
 | `sabit_atamalar[].bas` · `.bit` · `.ekip` | Motor sabit atamayı `sablon` kimliğinden eşliyor; §11.2 örneğinde `sablon` **yok**. Eşleşmeyen satır `uygulanmayan_notlar`a düşüyor — sessiz değil; ama gönderilen `bas`/`bit` şablonunkinden **farklıysa** kimse görmez |
 | `istek_id` | Motor okumuyor **ve çıktıya geri yazmıyor**; §11.3 yazdığını söylüyor |
 | `sure_butcesi_sn` | **Çağıranın süre bütçesi yok sayılıyor.** Motor süreyi `_cozucu_ayari`'ndan alıyor |

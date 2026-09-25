@@ -85,22 +85,118 @@ def _brut_saat(sablon):
     return sablon["bit"] - sablon["bas"]
 
 
-def _mola_baslangiclari(sablon):
-    """Molanin baslayabilecegi TAM SAAT dilimleri.
+MOLA_PENCERESI_VARSAYILAN = (3, 5)   # vardiyaya GORE saat -- K-32
 
-    Pencere yoksa vardiyanin ortasina yakin her yer serbesttir.
+
+def _mola_politikasi(girdi, sablon):
+    """Firmanin mola politikasi -- SABLON ezer, firma varsayilan verir (K-32).
+
+    Bicimi:
+        [ {"tip": "yemek",    "dakika": 60, "adet": 1, "ucretli": false},
+          {"tip": "dinlenme", "dakika": 15, "adet": 3, "ucretli": true } ]
+
+    NEDEN IKI KADEME (K-32 madde 6, Mustafa 25 Eylul)
+      "Biz 3x15 veriyoruz" bir SIRKET kararidir; ama 4 saatlik cumartesi
+      nobetine 1 saatlik yemek konamaz -- sablonun kendi gercegi vardir.
+      Yeni bir mekanizma degil: #5.2 cozunurluk merdiveninin (kapsam K
+      firma, D departman) bu alandaki karsiligidir.
+
+    POLITIKA YOKSA
+      Eski `mola_dk` alanina duser: tek bir `yemek` molasi. Boylece
+      politika tanimlanmamis kiracilarda davranis DEGISMEZ.
+
+    ⚠ Politika yasal tavani EZEMEZ: MOLA_HAKKI kapsami `S`. Politika
+    md. 68'in altina inen bir toplam uretirse dogrulayici sert ihlal yazar.
+    Burasi onu engellemez, cunku engellemek politikayi sessizce degistirmek
+    olurdu -- yanlis politika GORUNUR kalmali.
+    """
+    p = sablon.get("mola_politikasi") or girdi.get("mola_politikasi")
+    if p:
+        return list(p)
+    dk = sablon.get("mola_dk", 0)
+    if dk > 0:
+        return [{"tip": "yemek", "dakika": dk, "adet": 1, "ucretli": False}]
+    return []
+
+
+def _mola_baslangiclari(sablon, pencere=MOLA_PENCERESI_VARSAYILAN,
+                       yemek_dk=None):
+    """Yemek molasinin baslayabilecegi TAM SAAT dilimleri.
+
+    K-32 (25 Eylul): pencere MUTLAK SAAT degil, kisinin KENDI vardiyasina
+    GORELIDIR. `pencere` = (en_az_saat, en_gec_saat): vardiya basindan
+    itibaren gecmesi gereken en az / en cok sure.
+
+    Eskiden `sablon["mola_penceresi"]` mutlak saat okunuyordu (12-14 gibi).
+    Sablon paylasildigi icin 12:00'de baslayip 20:00'de biten bir vardiyada
+    o pencere vardiyanin ILK IKI SAATINE denk geliyordu -- kural kendi
+    kendini patlatiyordu.
+
     Mola suresi 0 ise tek bir sahte secenek dondurulur (model basit kalsin).
     """
-    mola_saat = sablon.get("mola_dk", 0) / 60.0
+    dk = sablon.get("mola_dk", 0) if yemek_dk is None else yemek_dk
+    mola_saat = dk / 60.0
     if mola_saat <= 0:
         return [None]
-    p = sablon.get("mola_penceresi") or {}
-    erken = p.get("en_erken", sablon["bas"])
-    gec = p.get("en_gec_bitis", sablon["bit"])
+    en_az, en_gec = pencere
+    erken = sablon["bas"] + en_az
+    gec = sablon["bas"] + en_gec + mola_saat
     son = int(gec - mola_saat)
     adaylar = [s for s in range(int(erken), son + 1)
                if s >= sablon["bas"] and s + mola_saat <= sablon["bit"]]
-    return adaylar or [int(erken)]
+    # Pencere vardiyaya sigmiyorsa (kisa vardiya) molayi yine de bir yere
+    # koymak gerekir; yerlesim ihlali dogrulayicida YUMUSAK olarak yazilir.
+    if adaylar:
+        return adaylar
+    esnek = [s for s in range(int(sablon["bas"]), int(sablon["bit"]) + 1)
+             if s + mola_saat <= sablon["bit"]]
+    return esnek or [int(sablon["bas"])]
+
+
+def _dinlenme_baslangiclari(sablon, adet, dakika):
+    """Ucretli kisa molalarin aday baslangic dilimleri -- ESIT DAGITIM (K-32).
+
+    Karar (Mustafa, 25 Eylul): dinlenme molalari vardiyaya ESIT dagitilir.
+    Serbest birakilsa cozucu en ucuz yeri secer ve ucunu de vardiyanin basina
+    yigardi -- "adil plan" tam bunun tersi.
+
+    NASIL
+      Vardiya N+1 esit parcaya bolunur; i. mola i/(N+1) noktasina konur.
+      9 saatlik vardiyada 3 mola -> 11.25, 13.50, 15.75 -> saat dilimi
+      olarak 11, 13, 15.
+
+      Her molaya IKI aday verilir (ideal dilim ve bir sonraki). Tek aday
+      birakmak yemek molasiyla cakisma durumunda cozumu imkansiz kilardi;
+      iki aday cozucuye kacacak yer birakir ama modeli buyutmez.
+
+    DONEN DEGER
+      [[aday, ...], ...] -- mola basina bir aday listesi, sirali.
+      Vardiyaya sigmayan mola icin bos liste doner; cagiran taraf onu atlar
+      ve dogrulayici eksikligi kendi tarafinda gorur.
+    """
+    if adet <= 0 or dakika <= 0:
+        return []
+    bas, bit = int(sablon["bas"]), int(sablon["bit"])
+    uzunluk = bit - bas
+    sure = dakika / 60.0
+    cikan = []
+    onceki_son = bas          # bir onceki molanin en gec bitisi
+    for i in range(1, adet + 1):
+        ideal = bas + uzunluk * i / float(adet + 1)
+        adaylar = []
+        for kaydirma in (0, 1):
+            s = int(ideal) + kaydirma
+            # AYRIK PENCERE: bir onceki molanin adaylariyla kesismez.
+            # Boylece iki dinlenme molasi ayni dilime dusemez ve cozucuye
+            # cakismama kisiti YAZMAK GEREKMEZ -- model kucuk kalir.
+            if s < onceki_son:
+                continue
+            if bas <= s and s + sure <= bit and s not in adaylar:
+                adaylar.append(s)
+        cikan.append(adaylar)
+        if adaylar:
+            onceki_son = adaylar[-1] + int(sure) + (1 if sure % 1 else 0)
+    return cikan
 
 
 def _mola_dilimleri(gun, sablon, baslangic):
@@ -161,6 +257,32 @@ class Model(object):
         self.cezalar = []    # (agirlik, IntVar) ciftleri
         self.notlar = []     # uygulanmayan/atlanan seyler -- sessiz gecmemek icin
         self.profil = self._profil_sec(girdi.get("profil"))
+        self.mola_penceresi = self._mola_penceresi_sec()
+        self.yemek_dk = {t["id"]: self._yemek_dk_sec(t) for t in self.sablonlar}
+
+    def _yemek_dk_sec(self, sablon):
+        """Bu sablonda yemek molasi kac dakika -- politikadan (K-32).
+
+        Politika yoksa eski `mola_dk` alanina duser; yani politika
+        tanimlanmamis kiracida davranis DEGISMEZ.
+        """
+        for satir in _mola_politikasi(self.girdi, sablon):
+            if satir.get("tip") == "yemek":
+                return satir.get("dakika", 0) * max(1, satir.get("adet", 1))
+        return sablon.get("mola_dk", 0)
+
+    def _mola_penceresi_sec(self):
+        """Yemek molasinin GORELI penceresi -- MOLA_YERLESIMI'nden (K-32).
+
+        Kural yoksa varsayilan (3, 5). Kural firma parametresidir: kapsam K.
+        Yasal kural MOLA_HAKKI'dir ve kapsami S -- bu pencere onu EZEMEZ,
+        yalniz molanin nereye konacagini soyler (K-18'in ayni gerekcesi).
+        """
+        k = _kural(self.girdi, "MOLA_YERLESIMI")
+        if not k:
+            return MOLA_PENCERESI_VARSAYILAN
+        en_az, en_gec = MOLA_PENCERESI_VARSAYILAN
+        return (_par(k, "en_az_saat", en_az), _par(k, "en_gec_saat", en_gec))
 
     # ---- profil -------------------------------------------------------
 
@@ -222,12 +344,12 @@ class Model(object):
                 for t in self.sablonlar:
                     v = self.m.NewBoolVar("x_%s_%d_%s" % (c["id"], d, t["id"]))
                     self.x[(c["id"], d, t["id"])] = v
-                    for s in _mola_baslangiclari(t):
+                    for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']]):
                         self.mola[(c["id"], d, t["id"], s)] = self.m.NewBoolVar(
                             "m_%s_%d_%s_%s" % (c["id"], d, t["id"], s))
                     # Vardiya secildiyse TAM BIR mola yerlesimi secilir.
                     self.m.Add(sum(self.mola[(c["id"], d, t["id"], s)]
-                                   for s in _mola_baslangiclari(t)) == v)
+                                   for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']])) == v)
 
     def _calisiyor(self, e, d):
         return sum(self.x[(e, d, t["id"])] for t in self.sablonlar)
@@ -437,7 +559,7 @@ class Model(object):
                 for t in self.sablonlar:
                     if dilim not in _dilimler(d, t["bas"], t["bit"]):
                         continue
-                    for s in _mola_baslangiclari(t):
+                    for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']]):
                         if dilim not in _mola_dilimleri(d, t, s):
                             cikan.append(self.mola[(c["id"], d, t["id"], s)])
         return cikan

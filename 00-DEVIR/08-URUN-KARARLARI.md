@@ -385,8 +385,20 @@ asıl gerilim **adalet ile kapsama** arasında (§6.5 `ADALET_DENGESI`).
 
 1. **Parametre:** Vardiya şablonu oluşturulurken öğle arası **süresi** ve
    **penceresi** (en erken başlangıç – en geç bitiş, ör. 12:00–14:00) girilir.
+   > ⚠ **Düzeltme (25 Eylül, K-32):** pencere artık **mutlak saat değil**.
+   > Mutlak pencere şablona bağlıydı ve şablon paylaşılıyor: 12:00'de başlayıp
+   > 20:00'de biten bir vardiya için *"12:00–14:00 arası"* anlamsız — kural
+   > kendi kendini patlatıyordu. Pencere **kişinin kendi vardiyasına göre
+   > göreli** oldu: en erken 3., en geç 5. saatinden sonra.
 2. **Tek blok:** *"Öğle arasını bölemeyiz. Mevzuatta böyle diyor."* 60 dakika
    30+30 verilemez. (v3'teki V-2 varsayımı bu kararla kapandı.)
+   > ⚠ **Düzeltme (25 Eylül, K-32):** kural **ayakta**, gerekçesi **değişti**.
+   > K-14 yazılırken öğle arası, İş K. md. 68'in yasal ara dinlenmesi
+   > sayılıyordu — *"mevzuatta böyle diyor"* buradan geliyordu. K-32 yasal
+   > hakkı **`dinlenme`** tipine bağladı ve onu bölünebilir yaptı (60 dk, en az
+   > 15'er dakikalık bloklar). **Yemek tek blok kalır**, ama sebebi mevzuat
+   > değil **operasyon**: bölünmüş bir öğle arası ne çalışana dinlenme sağlar
+   > ne operasyona öngörülebilirlik.
 3. **Motor kaydırır:** Molalar pencere içinde kişiler arasında kaydırılarak
    yerleştirilir, kapsama korunur.
 4. **Çıktı öneridir:** *"Mola öneri gibi düşünmeliyiz. Kişiler molalarını
@@ -1022,3 +1034,174 @@ satırını bildirir (23 Eylül'de T-19 ile açılan kanal). Bu, kararın tek
 otomatik bekçisidir.
 
 → `02-spec/v1.4-master-spec.md` §11.2, §8.3
+
+---
+
+## K-32 · Mola ikiye ayrılır ve **dört ayrı süre** hesaplanır
+
+**Karar (25 Eylül 2026, Mustafa).**
+
+> ⚠ **Bu karar aynı gün bir kez yanlış yazıldı ve düzeltildi.** İlk hâli
+> *"yasal hakkı `dinlenme` karşılar"* ve *"dinlenme ücretli olduğu için
+> çalışma süresine dahildir"* diyordu. İkisi de yanlıştı; gerekçesi aşağıda,
+> **Düzeltmenin kaydı** bölümünde.
+
+### 1. Molanın iki tipi var — ayrım **ücret** eksenindedir
+
+| Tip | Ücretli mi | Ücret hesabından | Çalışma süresinden | Bölünebilir mi |
+|---|---|---|---|---|
+| `yemek` | ❌ hayır | **düşülür** | **düşülür** | ❌ tek blok (K-14) |
+| `dinlenme` | ✅ evet | düşülmez | **düşülür** | ✅ en az 15'er dk |
+
+**Kritik ayrım:** bir molanın **ücretli** olması, o sırada **iş yapılıyor**
+olması demek değildir. Ara dinlenme ücretli de olsa **çalışma süresinden
+düşülür**; ücret tarafı ayrı bir büyüklüktür.
+
+Kısa molanın ücretli sayılıp sayılmayacağı **sözleşmeye ve işyeri
+uygulamasına** bağlıdır — yasal varsayılan değildir. Motor bunu girdiden
+okur, kendisi varsaymaz.
+
+### 2. Dört ayrı süre — tek bir "mesai süresi" toplamı YOK
+
+| Büyüklük | Ne ölçer | Kim kullanır |
+|---|---|---|
+| **Vardiya aralığı** (`brut_saat`) | Baştan sona | `MOLA_HAKKI` eşiği (K-4) |
+| **Çalışma süresi** (`net_saat`) | Bütün molalar düşük | `GUNLUK_AZAMI`, `HAFTALIK_AZAMI` |
+| **Ücret hesabı** (`ucret_saat`) 🆕 | Yalnız ücretsiz mola düşük | Sözleşme saati, fazla mesai |
+| **Görev kapasitesi** | Molada kimse sahada sayılmaz | Kapsama kuralları |
+
+Aynı çalışanın bu dört değeri **farklı** olabilir ve ekranda **ayrı ayrı**
+gösterilir. Örnek — 09:00–18:00, 60 dk yemek, 3×15 dk ücretli kısa mola:
+
+```
+vardiya araligi : 9 saat
+mola toplami    : 1 saat 45 dk
+calisma suresi  : 7 saat 15 dk      <- yasal sayac
+ucret hesabi    : 8 saat            <- firma politikasinin sonucu
+```
+
+Bu sayede firmanın kabul ettiği ücretli molalar yüzünden sistem yanlışlıkla
+*"45 dakika eksik çalıştı"* uyarısı üretmez.
+
+### 3. Yasal ara dinlenme — yemek de sayılır, üstüne EKLENMEZ
+
+`MOLA_HAKKI` (İş K. md. 68 · ≤4sa 15 dk · 4–7,5sa 30 dk · >7,5sa 60 dk)
+**bütün ara dinlenmelerin toplamına** bakar. **Yemek arası bu ihtiyacı
+karşılayabilir.**
+
+> ⛔ **Sistem yemek arasının üzerine otomatik olarak bir saat daha
+> eklememelidir.** 9 saatlik vardiyada 1 saatlik öğle arası md. 68'i
+> karşılar; ayrıca 60 dk ücretli mola *zorunlu değildir*. Firma isterse
+> verir — o zaman ücret hesabı büyür, yasal zorunluluk değişmez.
+
+### 4. Yemek molasının yeri — göreli, mutlak değil
+
+Yemek molası kişinin **kendi vardiyasının** en erken **3.**, en geç **5.**
+saatinden sonra başlar. İkisi de **firma parametresidir** (2/4, 3/5, …).
+
+Mutlak saatli pencere (`mola_en_erken: 12`) **kaldırılır**: şablona bağlıydı,
+şablon paylaşılıyor ve 12:00'de başlayan vardiyada kural kendi kendini
+patlatıyordu.
+
+### 5. Yeni kural: `MOLA_YERLESIMI` — kapsam `K`, **YUMUŞAK**
+
+Firma parametresi `MOLA_HAKKI`'nın üstüne binemez: onun kapsamı `S`, yasal ve
+değiştirilemez (K-18'in aynı gerekçesi).
+
+**Yumuşaktır, ve bu K-14'ün kendi mantığıdır:**
+
+> *"Mola çıktısı öneri niteliğindeyse, mola sırasındaki kapsamayı sert kısıt
+> yapmak kendi kendisiyle çelişirdi."* (K-14)
+
+**Sert olan, hakkın verilmiş olmasıdır** (`MOLA_HAKKI`). **Nereye konduğu
+yumuşaktır** (`MOLA_YERLESIMI`) — puan düşürür, yayını engellemez.
+
+### 6. Mola politikası tanımlanır — firmada **ve** şablonda
+
+Bugün şablonda tek bir sayı var (`mola_dk: 60`) ve bu sayı iki tipi, adedi ve
+ücretliliği taşıyamaz. Politika bir **liste** olur:
+
+```json
+"mola_politikasi": [
+  { "tip": "yemek",    "dakika": 60, "adet": 1, "ucretli": false },
+  { "tip": "dinlenme", "dakika": 15, "adet": 3, "ucretli": true  }
+]
+```
+
+**Nerede durur — ikisinde de (Mustafa, 25 Eylül).** Firma varsayılanı verir,
+**şablon gerekirse ezer.** Gerekçe: *"biz 3×15 veriyoruz"* şirket kararıdır,
+ama 4 saatlik cumartesi nöbetine 1 saatlik yemek konamaz — şablonun kendi
+gerçeği vardır.
+
+Yeni bir mekanizma değil: §5.2'nin çözünürlük merdiveni zaten bunu tarif
+ediyor (kapsam `K` firma, `D` departman). Politika o merdivenin bir yolcusu.
+
+**Adet, sıklık değil (Mustafa, 25 Eylül).** *"3×15 dk"* ile *"2 saatte bir
+15 dk"* aynı şey değildir: 9 saatlik vardiyada ikisi de üç mola verir,
+**12 saatlik** vardiyada biri üç öteki beş der. **Adet** seçildi — daha
+öngörülebilir ve zaten şablon başına tanımlanıyor.
+
+*"İki saatte bir 15 dk"* bütün çalışanlar için genel bir kanuni kural
+**değildir**; işyeri politikası olarak tanımlanır.
+
+⚠ **Politika yasal tavanı ezemez.** `MOLA_HAKKI` kapsamı `S`: politika
+md. 68'in altına inen bir toplam üretirse **sert ihlal** yazılır. Politika
+fazlasını verebilir, eksiğini veremez.
+
+### 7. Molalar çalışan ekranında görünmez — şimdilik
+
+> *"Bu molalar çalışanların ekranlarında gözükmeyecek şimdilik. Yöneticilere
+> adil plan ve yönetilebilir bir mola operasyonu sunmak amaçlı duracak."*
+
+### ⏳ A-16'ya bağlı — doğrulanmadı
+
+Buradaki yasal rakamlar (md. 68 eşikleri, ara dinlenmenin çalışma süresinden
+sayılmaması, kısa molaların sözleşmeyle çalışma süresine dahil
+edilebilmesi) **hukuk uzmanına doğrulatılmadı**. Şartname bu noktayı zaten
+*"⚠️ Brüt/net yorumu açık (K-4, A-16)"* diye işaretlemişti. Model bu
+rakamlardan **bağımsız** çalışır: eşikler parametredir, dört büyüklük
+ayrımı yorumdan etkilenmez.
+
+### Kabul cümleleri
+
+1. Her molanın tipi vardır: `dinlenme` ya da `yemek`. Tipsiz mola bildirilir.
+2. 09:00–18:00 vardiyada 60 dk `yemek` + 3×15 dk `dinlenme` verilirse:
+   vardiya **9 saat**, çalışma süresi **7 saat 15 dk**, ücret hesabı
+   **8 saat**. Üçü ayrı ayrı raporlanır.
+3. 09:00'da başlayan vardiyada yemek **en erken 12:00**, **en geç 14:00**.
+4. 12:00'de başlayan vardiyada yemek **en erken 15:00**, **en geç 17:00**.
+   *(Bugün bu vardiyada kural hiç çalışmıyor.)*
+5. Firma 3/5 yerine 2/4 derse plan buna uyar.
+6. Yemek penceresi dışına konmuş plan **yumuşak** ihlal üretir — yayın
+   engellenmez.
+7. 9 saatlik vardiyada **yalnız 1 saat yemek** verilmişse `MOLA_HAKKI`
+   **sağlanmıştır**; sistem üstüne mola eklemez ve ihlal yazmaz.
+8. 15 dakikadan kısa bir `dinlenme` bloğu **sert** ihlal.
+9. İki bloğa bölünmüş `yemek` **sert** ihlal (K-14).
+10. Ücretli mola, sözleşme saati karşılaştırmasında **düşülmez**; çalışma
+    süresi sayacında **düşülür**. İkisi aynı anda doğrudur.
+
+### Düzeltmenin kaydı — 25 Eylül, aynı gün
+
+**İlk hâli neyi yanlış söylüyordu:**
+
+| İlk yazılan | Doğrusu |
+|---|---|
+| *"Yasal hakkı `dinlenme` karşılar"* | Bütün ara dinlenmeler sayılır; **yemek de karşılar** |
+| *"Dinlenme ücretli, o halde çalışma süresine dahil"* | **Ücretli olmak ≠ iş yapıyor olmak.** İki ayrı eksen |
+| *"Motor günde 1 saat eksik hesaplıyor"* | **Hesap doğruydu.** Eksik olan yanlış bir büyüklük değil, **hiç olmayan** bir büyüklüktü (ücret hesabı) |
+| *"A08 fikstürü kırılıyor, yeniden onaylanmalı"* | **A08 doğruymuş.** Kıran şey K-32 değil, yanlış modeldi |
+
+**Nasıl yakalandı:** Mustafa taslağı haftalık dış incelemeye (GPT) verdi.
+Kendi ölçümüm bunu bulamazdı — **yanlış modeli doğru ölçüyordum**, ve her
+test yeşil yanıyordu.
+
+> **16 Eylül'de dış inceleme döngüsünü kurarken yazdığımız gerekçe buydu:**
+> *"aynı model aynı kör noktayı iki kez taşır."* İlk sefer kör nokta kodda
+> çıkmıştı; bu sefer **tasarımda** ve **bendeydi**. Kod gönderilmeden önce
+> yakalandı.
+
+**Dört büyüklük ayrımı ve *"yemeğin üstüne otomatik saat eklenmez"* kuralı
+dış incelemeden geldi**, bu kayda aynen alındı.
+
+→ `02-spec/v1.4-master-spec.md` §6.2, §11.2 · K-14 (düzeltildi), K-18, K-4, A-16

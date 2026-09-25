@@ -40,7 +40,7 @@ def aralik(atama):
     return bas, bit
 
 
-def mola_araliklari(atama):
+def mola_araliklari(atama, tip=None):
     """Molalarin mutlak araliklari -- VARDIYANIN ICINE KIRPILMIS.
 
     T-27 (16 Eylul dis incelemesi): burasi eskiden molayi, vardiyanin
@@ -65,10 +65,17 @@ def mola_araliklari(atama):
 
     DONEN DEGER ayrik ve sirali araliklardir. `sahada_mi` bundan
     etkilenmez (nokta kumesi ayni), `mola_saat` ise artik dogru toplar.
+
+    TIP SUZGECI (K-32)
+      `tip` verilirse yalniz o tipteki molalar toplanir. Birlestirme de
+      TIP ICINDE yapilir: ust uste binen iki `yemek` birlesir, ama bir
+      `yemek` ile bir `dinlenme` birlesmez -- ikisi ayri kovadir.
     """
     v_bas, v_bit = aralik(atama)
     ham = []
     for m in atama.get("molalar") or []:
+        if tip is not None and mola_tipi(m) != tip:
+            continue
         b = mutlak(atama["gun"], m["bas"])
         s = mutlak(atama["gun"], m["bit"])
         if s <= b:
@@ -101,23 +108,91 @@ def brut_saat(atama):
     return bit - bas
 
 
-def mola_saat(atama):
+# ----------------------------------------------------------------------
+# Mola tipleri -- K-32 (25 Eylul)
+# ----------------------------------------------------------------------
+#
+# `yemek`    : UCRETSIZ. Calisma suresinden DUSULUR. Tek blok (K-14).
+# `dinlenme` : UCRETLI.  Calisma suresinden DUSULMEZ. Is K. md. 68'in yasal
+#              hakkini BU karsilar; en az 15'er dakikalik bloklara bolunebilir.
+#
+# TIPSIZ MOLA NE OLUR
+#   `yemek` sayilir -- yani 25 Eylul oncesindeki davranis aynen korunur ve
+#   eski girdiler sessizce DEGISMEZ. Ama tipsiz olmasi bir ihlaldir:
+#   `MOLA_TIPI_ZORUNLU` bunu bildirir. Varsayilan davranisi korumak susmak
+#   degil; susmayi engelleyen ayri bir kural var.
+
+YEMEK = "yemek"
+DINLENME = "dinlenme"
+VARSAYILAN_MOLA_TIPI = YEMEK
+
+
+def mola_tipi(mola):
+    """Bir mola satirinin tipi. Yazilmamissa VARSAYILAN_MOLA_TIPI."""
+    return mola.get("tip") or VARSAYILAN_MOLA_TIPI
+
+
+def mola_saat(atama, tip=None):
     """Vardiya ICINDE gecen toplam mola suresi.
 
     Vardiya disina yazilmis mola buraya girmez -- yasanmamis bir molanin
     suresi dusulemez (T-27). Sonucu MOLA_HAKKI'nda da gorulur: disariya
     yazilan mola 'verilmis mola' sayilmaz.
+
+    `tip` verilirse yalniz o tip toplanir (K-32).
     """
-    return sum(s - b for b, s in mola_araliklari(atama))
+    return sum(s - b for b, s in mola_araliklari(atama, tip))
+
+
+def yemek_saat(atama):
+    """Ucretsiz mola suresi -- calisma suresinden DUSULEN kisim (K-32)."""
+    return mola_saat(atama, YEMEK)
+
+
+def dinlenme_saat(atama):
+    """Ucretli mola suresi -- calisma suresinden DUSULMEYEN kisim (K-32).
+
+    Is K. md. 68'in yasal hakkini bu karsilar; MOLA_HAKKI buna bakar.
+    """
+    return mola_saat(atama, DINLENME)
 
 
 def net_saat(atama):
-    """Calisilan sure -- mola DUSULMUS.
+    """CALISMA SURESI -- butun molalar dusulmus.
 
     #6.2: GUNLUK_AZAMI ve HAFTALIK_AZAMI NET sureye bakar.
-    #6.2 MOLA_HAKKI ise BRUT sureye bakar (K-4). Ikisi bilerek farkli.
+    #6.2 MOLA_HAKKI'nin ESIGI ise BRUT sureye bakar (K-4). Ikisi bilerek
+    farkli.
+
+    ⚠ 25 Eylul'de bu satir bir kez YANLIS degistirildi ve geri alindi.
+    Degisiklik "dinlenme molasi ucretlidir, o halde calisma suresine
+    dahildir" varsayimina dayaniyordu. Varsayim yanlis: bir molanin
+    UCRETLI olmasi, o sirada is yapiliyor olmasi demek degildir. Ara
+    dinlenme ucretli de olsa calisma suresinden dusulur; ucret tarafi
+    AYRI bir buyuktur (bkz. `ucret_saat`). Dordu ayri sayilir:
+
+        brut_saat  : vardiya araligi          9 saat
+        net_saat   : calisma suresi (yasal)   butun molalar dusuk
+        ucret_saat : ucret hesabina esas      yalniz UCRETSIZ mola dusuk
+        (gorev kapasitesi = net_saat; molada kimse sahada sayilmaz)
     """
     return brut_saat(atama) - mola_saat(atama)
+
+
+def ucret_saat(atama):
+    """UCRET HESABINA ESAS sure -- yalniz UCRETSIZ mola dusulmus (K-32).
+
+    `net_saat`ten farki bilerek: ucretli kisa molalar calisma suresinden
+    dusulur ama ucretten dusulmez. 09:00-18:00 vardiyada 1 saat yemek ve
+    3x15 dk ucretli kisa mola varsa:
+
+        brut  9 saat  ·  calisma 7 saat 15 dk  ·  ucret 8 saat
+
+    Bu bir FIRMA POLITIKASIDIR, yasal varsayilan degil: kisa molanin
+    ucretli sayilip sayilmayacagi sozlesmeye ve isyeri uygulamasina
+    baglidir. Motor bunu girdiden okur, kendisi varsaymaz.
+    """
+    return brut_saat(atama) - yemek_saat(atama)
 
 
 def ortusme(a, b):

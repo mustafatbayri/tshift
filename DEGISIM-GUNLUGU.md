@@ -4,6 +4,40 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-25 · K-32 uygulandı: mola tipleri, dört süre, göreli pencere**
+
+**Motor.** `dinlenme` / `yemek` tipleri · üç süre ayrı ayrı hesaplanıyor ve
+raporlanıyor (`brut_saat`, `toplam_saat` = çalışma, `ucret_saat`) · sözleşme
+karşılaştırması artık **ücret** saatine bakıyor · dört yeni kural:
+`MOLA_YERLESIMI` (yumuşak), `MOLA_TIPI_ZORUNLU`, `MOLA_ASGARI_BLOK`,
+`YEMEK_TEK_BLOK` · mola politikası firmadan ve şablondan okunuyor (şablon
+ezer) · mutlak mola penceresi kaldırıldı, yerine vardiyaya **göreli** pencere.
+
+**Şartname.** §6.2 kataloğuna dört kural (**34 → 38**, sayılarak doğrulandı) ·
+§8.4'te `mola_en_erken`/`mola_en_gec_bitis`/`mola_tek_blok` kaldırıldı,
+`mola_politikasi` eklendi · §11.2 şablon örneği ve §11.3 metrikleri
+güncellendi · *"Üç süre, tek toplam değil"* notu eklendi.
+
+**Fikstürler.** Sahnedeki üç şablondan mutlak pencere kaldırıldı; A04 ve
+A08'deki **19 mola bloğu** tiplendi.
+
+⚠ **Bu kararın ilk hâli yanlıştı ve aynı gün düzeltildi.** *"Ücretli olmak"*
+ile *"çalışma süresine dahil olmak"* karıştırılmıştı; `net_saat` ters yönde
+değiştirilip geri alındı. Yakalayan haftalık dış inceleme oldu — kendi
+ölçümüm bulamazdı, çünkü **yanlış modeli doğru ölçüyordum**. Ayrıntısı
+K-32'nin "Düzeltmenin kaydı" bölümünde.
+
+**Bitmeyen:** dinlenme molalarının çözücüye bağlanması. Eşit dağıtım
+aritmetiği yazıldı ve **5 testle sınandı**, ama çağrısız duruyor — motor hâlâ
+tek mola (yemek) üretiyor. Bağlanması `_sahada`'nın yeniden kurgulanmasını
+gerektiriyor: *"yemek kapsamıyor **ve** hiçbir dinlenme kapsamıyor"* bir VE
+bağlacı ve bugünkü boolean toplamıyla ifade edilemiyor.
+
+**Ölçümler:** motor **98/98** · altın senaryolar **12 geçti, 4 atlandı** ·
+fikstür denetleyicisi **11/11**.
+
+---
+
 **2026-09-25 · K-31: yarım günlük izin motora gönderilmez, elle yönetilir**
 
 **Karar (Mustafa):** yarım günlük izin/rapor sistemde kaydedilir ama plan

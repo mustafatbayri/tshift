@@ -318,6 +318,15 @@ MOLA_TABLOSU = ((4, 15), (7.5, 30), (float("inf"), 60))
 
 @kural("MOLA_HAKKI")
 def mola_hakki(girdi, atamalar, tanim):
+    """Yasal ara dinlenme -- BUTUN molalarin toplamina bakar (K-32).
+
+    ⚠ 25 Eylul'de bu kural bir kez "yalniz `dinlenme` sayilsin" diye
+    degistirilmek uzereydi ve YANLIS olurdu: yemek arasi da bir ara
+    dinlenmedir ve md. 68'i karsilar. Sistem yemek arasinin uzerine
+    otomatik bir saat daha EKLEMEZ. Hatayi A08 altin senaryosu ve dis
+    inceleme birlikte yakaladi; ayrintisi K-32'nin duzeltme kaydinda.
+    `test_mola_modeli.test_yalniz_yemek_yasal_hakki_KARSILAR` bekcisidir.
+    """
     esikler = _p(tanim, "esikler", None)
     tablo = tuple((float(e["ustsinir_saat"]), e["mola_dk"]) for e in esikler) \
         if esikler else MOLA_TABLOSU
@@ -331,6 +340,127 @@ def mola_hakki(girdi, atamalar, tanim):
                                 gun=a["gun"], olculen=verilen, gereken=gereken,
                                 mesaj="%s gun %d: %s saatlik vardiyada %.0f dk mola verilmis (en az %d dk)"
                                       % (a["calisan"], a["gun"], brut, verilen, gereken)))
+    return cikan
+
+
+# ----------------------------------------------------------------------
+# Mola bicimi -- K-32 (25 Eylul)
+# ----------------------------------------------------------------------
+
+@kural("MOLA_TIPI_ZORUNLU")
+def mola_tipi_zorunlu(girdi, atamalar, tanim):
+    """Her molanin tipi olmali: `dinlenme` ya da `yemek` (K-32).
+
+    Tipsiz mola motorda `yemek` sayilir -- yani 25 Eylul oncesi davranis
+    korunur ve eski girdiler sessizce DEGISMEZ. Ama varsayilana dusmek
+    susmak degildir: bu kural onu bildirir. Ucret hesabi tipe bagli oldugu
+    icin tipsiz veri, ucreti sessizce yanlis hesaplatabilir.
+    """
+    gecerli = (zaman.DINLENME, zaman.YEMEK)
+    cikan = []
+    for a in atamalar:
+        kotu = [m for m in (a.get("molalar") or [])
+                if m.get("tip") not in gecerli]
+        if kotu:
+            cikan.append(_ihlal("MOLA_TIPI_ZORUNLU", tanim,
+                                calisan=a["calisan"], gun=a["gun"],
+                                olculen=len(kotu),
+                                mesaj="%s gun %d: %d molanin tipi yok ya da taninmiyor "
+                                      "(gecerli: %s). `yemek` sayildi."
+                                      % (a["calisan"], a["gun"], len(kotu),
+                                         ", ".join(gecerli))))
+    return cikan
+
+
+@kural("MOLA_ASGARI_BLOK")
+def mola_asgari_blok(girdi, atamalar, tanim):
+    """Bir mola blogu cok kisa olamaz -- varsayilan 15 dk (K-32).
+
+    KAPSAM NOTU: K-32'nin kabul cumlesi yalniz `dinlenme` icin 15 dakika
+    diyor. Burasi BUTUN molalara uyguluyor ve bu bilerek daha genis: bes
+    dakikalik bir yemek arasi da gercek bir mola degildir. Mevcut hicbir
+    fikstur ya da testte 15 dakikadan kisa blok yok, yani genisletme kimseyi
+    kirmiyor. Daraltilmasi istenirse `tip` suzgeci eklenir.
+    """
+    asgari = _p(tanim, "asgari_dakika", 15) / 60.0
+    cikan = []
+    for a in atamalar:
+        for b, s in zaman.mola_araliklari(a):
+            if s - b + 1e-9 < asgari:
+                cikan.append(_ihlal("MOLA_ASGARI_BLOK", tanim,
+                                    calisan=a["calisan"], gun=a["gun"],
+                                    olculen=round((s - b) * 60),
+                                    gereken=round(asgari * 60),
+                                    mesaj="%s gun %d: %.0f dakikalik mola blogu var "
+                                          "(en az %.0f dk)"
+                                          % (a["calisan"], a["gun"],
+                                             (s - b) * 60, asgari * 60)))
+    return cikan
+
+
+@kural("MOLA_YERLESIMI")
+def mola_yerlesimi(girdi, atamalar, tanim):
+    """Yemek molasi kisinin KENDI vardiyasina gore konumlanir (K-32).
+
+    Parametre firma tercihidir: en erken `en_az_saat`, en gec `en_gec_saat`
+    -- vardiya BASINDAN itibaren. Mutlak saat degil: 12:00'de baslayan bir
+    vardiyada "12-14 arasi" penceresi vardiyanin ilk iki saatine denk gelir
+    ve kural kendi kendini patlatir.
+
+    YUMUSAK OLMASI BILEREK (K-14):
+      "Mola ciktisi oneri niteligindeyse, mola sirasindaki kapsamayi sert
+      kisit yapmak kendi kendisiyle celisirdi."
+    Kurumlar molayi bes dakika one, bes dakika arkaya alacak. Sert yapmak
+    her gercek plani cokertirdi. SERT olan hakkin VERILMIS olmasidir
+    (MOLA_HAKKI); NEREYE kondugu yumusaktir.
+
+    Agirlik girdiden gelir (`tur`), burada sabitlenmez -- kural tanimini
+    girdi soyler (#5.1).
+
+    Cozucu ayni pencereyi KENDI tarafinda ayri hesaplar
+    (cozucu.model._mola_penceresi_sec). #7.6: tekrar maliyet degil guvence.
+    """
+    en_az = _p(tanim, "en_az_saat", 3)
+    en_gec = _p(tanim, "en_gec_saat", 5)
+    cikan = []
+    for a in atamalar:
+        v_bas, _ = zaman.aralik(a)
+        for b, s in zaman.mola_araliklari(a, zaman.YEMEK):
+            gecen = b - v_bas
+            if gecen + 1e-9 < en_az or gecen - 1e-9 > en_gec:
+                cikan.append(_ihlal("MOLA_YERLESIMI", tanim,
+                                    calisan=a["calisan"], gun=a["gun"],
+                                    olculen=round(gecen, 2),
+                                    mesaj="%s gun %d: yemek molasi vardiyanin "
+                                          "%.2f. saatinde; %s-%s saat arasi "
+                                          "bekleniyordu"
+                                          % (a["calisan"], a["gun"], gecen,
+                                             en_az, en_gec)))
+    return cikan
+
+
+@kural("YEMEK_TEK_BLOK")
+def yemek_tek_blok(girdi, atamalar, tanim):
+    """Ogle arasi bolunemez -- K-14 madde 2.
+
+    Ucu uca degen iki blok `mola_araliklari`nda ZATEN birlesir (12:00-12:30
+    ile 12:30-13:00 kesintisiz bir saattir). Burada yakalanan, aralarinda
+    calisma olan AYRI bloklardir.
+
+    K-14'un gerekcesi 25 Eylul'de duzeltildi: kural ayakta ama sebebi
+    mevzuat degil OPERASYON -- bolunmus bir ogle arasi ne calisana dinlenme
+    saglar ne operasyona ongorulebilirlik (K-32).
+    """
+    cikan = []
+    for a in atamalar:
+        blok = zaman.mola_araliklari(a, zaman.YEMEK)
+        if len(blok) > 1:
+            cikan.append(_ihlal("YEMEK_TEK_BLOK", tanim,
+                                calisan=a["calisan"], gun=a["gun"],
+                                olculen=len(blok), gereken=1,
+                                mesaj="%s gun %d: yemek molasi %d bloga bolunmus "
+                                      "(tek blok olmali)"
+                                      % (a["calisan"], a["gun"], len(blok))))
     return cikan
 
 

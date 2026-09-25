@@ -211,12 +211,24 @@ def _eksik_boyutlar(girdi):
 def _metrikler(girdi, atamalar, ihlaller):
     sert = [i for i in ihlaller if i.get("agirlik") == "SERT"]
     hucre = kapsama_yuzdeleri(girdi, atamalar)
-    toplam_net = sum(zaman.net_saat(a) for a in atamalar)
 
+    # K-32: TEK bir "mesai suresi" toplami YOK. Ucu ayri ayri raporlanir,
+    # cunku ayni calisanin ucu de farkli olabilir:
+    #   toplam_saat  -- CALISMA suresi, butun molalar dusuk (yasal sayac)
+    #   ucret_saat   -- UCRET hesabi, yalniz ucretsiz mola dusuk
+    #   brut_saat    -- vardiya araligi, hic mola dusulmemis
+    toplam_net = sum(zaman.net_saat(a) for a in atamalar)
+    toplam_ucret = sum(zaman.ucret_saat(a) for a in atamalar)
+    toplam_brut = sum(zaman.brut_saat(a) for a in atamalar)
+
+    # Sozlesme saati bir UCRET buyuklugudur: firmanin ucretli saydigi kisa
+    # molalar yuzunden "eksik calisti" denmemeli (K-32 kabul cumlesi 10).
+    # Tipsiz veride ucret_saat == net_saat oldugu icin eski davranis aynen
+    # korunur.
     fazla = 0.0
     kisi_saat = {}
     for a in atamalar:
-        kisi_saat[a["calisan"]] = kisi_saat.get(a["calisan"], 0.0) + zaman.net_saat(a)
+        kisi_saat[a["calisan"]] = kisi_saat.get(a["calisan"], 0.0) + zaman.ucret_saat(a)
     for c in girdi.get("calisanlar", []):
         soz = (c.get("sozlesme") or {}).get("haftalik_saat")
         if soz is not None:
@@ -229,6 +241,8 @@ def _metrikler(girdi, atamalar, ihlaller):
         "hedef_kapsama_yuzde": hucre["hedef_yuzde"],
         "eksik_hedef_dakika": hucre["eksik_hedef_dakika"],
         "toplam_saat": toplam_net,
+        "ucret_saat": toplam_ucret,
+        "brut_saat": toplam_brut,
         "fazla_mesai_saat": fazla,
     }
 

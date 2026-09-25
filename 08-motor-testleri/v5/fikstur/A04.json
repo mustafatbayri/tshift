@@ -43,7 +43,8 @@
       "molalar": [
         {
           "bas": 20,
-          "bit": 21
+          "bit": 21,
+          "tip": "yemek"
         }
       ]
     },
@@ -57,7 +58,8 @@
       "molalar": [
         {
           "bas": 13,
-          "bit": 14
+          "bit": 14,
+          "tip": "yemek"
         }
       ]
     },
@@ -71,7 +73,8 @@
       "molalar": [
         {
           "bas": 20,
-          "bit": 21
+          "bit": 21,
+          "tip": "yemek"
         }
       ]
     },
@@ -85,7 +88,8 @@
       "molalar": [
         {
           "bas": 16,
-          "bit": 17
+          "bit": 17,
+          "tip": "yemek"
         }
       ]
     },
@@ -99,7 +103,8 @@
       "molalar": [
         {
           "bas": 20,
-          "bit": 21
+          "bit": 21,
+          "tip": "yemek"
         }
       ]
     },
@@ -113,7 +118,8 @@
       "molalar": [
         {
           "bas": 4,
-          "bit": 5
+          "bit": 5,
+          "tip": "yemek"
         }
       ]
     },
@@ -127,7 +133,8 @@
       "molalar": [
         {
           "bas": 20,
-          "bit": 21
+          "bit": 21,
+          "tip": "yemek"
         }
       ]
     }
