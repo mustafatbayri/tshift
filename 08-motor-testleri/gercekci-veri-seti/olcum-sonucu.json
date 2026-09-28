@@ -1,0 +1,32 @@
+{
+ "olcek": 1.0,
+ "kisi": 350,
+ "sablon": 14,
+ "hucre": 415,
+ "kural": 39,
+ "azami_saniye": 900,
+ "kurma_sn": 27.3,
+ "degisken": 335072,
+ "kisit": 423489,
+ "cozum_sn": 963.7,
+ "durum": "cozuldu",
+ "atama": 1755,
+ "metrikler": {
+  "sert_ihlal": 0,
+  "asgari_kapsama_yuzde": 100.0,
+  "hedef_kapsama_yuzde": 98.8,
+  "eksik_hedef_dakika": 600,
+  "toplam_saat": 12262.25,
+  "fazla_mesai_saat": 0.0,
+  "optimuma_uzaklik_yuzde": 10.017,
+  "cozum_suresi_sn": 901.58
+ },
+ "dogrulama_sn": 1.0,
+ "ihlal": {
+  "HEDEF_KAPSAMA": 5,
+  "ADALET_DENGESI": 79,
+  "MOLA_KAPSAMASI": 13
+ },
+ "sert_ihlal": 0,
+ "yayinlanabilir": null
+}

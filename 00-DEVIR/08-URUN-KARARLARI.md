@@ -1147,6 +1147,14 @@ ediyor (kapsam `K` firma, `D` departman). Politika o merdivenin bir yolcusu.
 ⚠ **Politika yasal tavanı ezemez.** `MOLA_HAKKI` kapsamı `S`: politika
 md. 68'in altına inen bir toplam üretirse **sert ihlal** yazılır. Politika
 fazlasını verebilir, eksiğini veremez.
+Bekçisi: `test_politika_yasal_tabanin_ALTINA_inemez`.
+
+✅ **Uygulandı (28 Eylül).** Çözücü politikayı plana çeviriyor: yemek göreli
+pencerede, dinlenmeler vardiyaya eşit dağıtılmış, hepsi kişiler arasında
+kaydırılabilir. `_sahada` yeniden kuruldu — *"sahada olmak"* artık
+`(kapsamayan yemek seçenekleri) − (kapsayan dinlenmeler)` olarak **doğrusal**
+yazılıyor; yardımcı değişken ve reification gerekmedi, çünkü molalar
+birbirini kesmiyor. 5 test.
 
 ### 7. Molalar çalışan ekranında görünmez — şimdilik
 
@@ -1205,3 +1213,248 @@ test yeşil yanıyordu.
 dış incelemeden geldi**, bu kayda aynen alındı.
 
 → `02-spec/v1.4-master-spec.md` §6.2, §11.2 · K-14 (düzeltildi), K-18, K-4, A-16
+
+---
+
+## K-33 · Firma **sahada** kaç kişi ister — `SAHADA_ASGARI`
+
+**Karar (28 Eylül 2026, Mustafa).**
+
+> ⚠ **Bu karar da bir kez yanlış yazıldı ve aynı gün düzeltildi.** İlk hâli
+> kuralı `MOLA_ASGARI_SAHADA` diye adlandırıyor ve tabanı talep tablosunun
+> `asgari`si ile sınırlıyordu. Gerekçesi aşağıda, **Düzeltmenin kaydı**
+> bölümünde.
+
+### Neden gerekti
+
+Mustafa: *"Mola için şöyle bir kural gerekebilir: ilgili saatte çalışması
+gereken minimum çalışan sayısını firmanın tanımlaması gerekebilir. Biz saat
+başı kafamıza göre kişileri yollayamayız."*
+
+Ölçülen durum (28 Eylül, üç kişilik plan, hücre `asgari` 2):
+
+| saat | 11 | 12 | 13 | 14 |
+|---|---|---|---|---|
+| sahada | 3 | **0** | **0** | 3 |
+
+Sert ihlal **0**, `yayınlanabilir` **True**. Üçü de aynı anda molada ve plan
+temiz görünüyordu.
+
+Sebep kod değil **K-14**: `MOLA_KAPSAMASI` bilerek YUMUŞAK. O karar kişi
+başına *tek* öğle arası varken verildi; motor artık kişi başına **dört** mola
+üretiyor ve aynı dişsiz kural tabanı tamamen boşaltıyor.
+
+### Karar
+
+`MOLA_KAPSAMASI` **yumuşak kalır** (K-14 ayakta; planı `asgari`ye doğru iter).
+Yanına **SERT** bir saha tabanı gelir: `SAHADA_ASGARI`, parametre
+`asgari_sahada`. İkisi ayrı iş yapar, biri ötekinin yerine geçmez.
+
+| | sayar | mola |
+|---|---|---|
+| `ASGARI_KAPSAMA` | o saate **atanmış** kişi | sayılır |
+| `SAHADA_ASGARI` | o saatte **sahada** olan kişi | düşülür |
+
+Fark tam da molalardır. Müşterinin gördüğü ikincisidir.
+
+### ⚠ Düzeltmenin kaydı
+
+İlk yazımda kural `min(parametre, hücrenin asgarisi)` ile sınırlanıyordu ve
+hem doğrulayıcıda hem çözücüde *"firma **molada** en az 5 dese de..."* diye
+açıklanmıştı. Bundan daha kötüsü: `test_taban_hucre_ASGARISINI_asamaz` adlı
+bir test **bu hatayı sabitliyordu** — yani hatayı kalıcı hâle getiren şey
+testin kendisiydi.
+
+> **Mustafa:** *"Firma molada en az 5 demeyecek, firma sahada en az 5
+> diyecek, yanlış mantık kurma lütfen."*
+
+İki ayrı hata vardı:
+
+1. **Yanlış cümle.** Firma *"molada en az 5"* demez, *"**sahada** en az 5"*
+   der. Parametre bir mola kotası değil, **saha tabanıdır**. Kuralın adı da
+   bu yüzden `MOLA_` ile başlamamalı — `SAHADA_ASGARI` oldu.
+2. **Yanlış mantık.** `min(...)` firmanın sayısını sessizce talep tablosunun
+   sayısıyla değiştiriyordu: firma 5 der, hücre 2 isterse motor 2 uygular ve
+   firmanın cümlesi buharlaşırdı.
+
+Sınır kaldırıldı; parametre olduğu gibi uygulanır. O test silinmedi,
+**tersine çevrildi**: `test_taban_TALEBE_boyun_egmez` artık tabanın talep
+tablosuna boyun eğmediğini korur. (Mutasyonla sınandı: eski `min(...)`
+mantığı geri konduğunda test kırmızı oluyor.)
+
+### Taban talebi yukarı çekebilir — bu kasıtlıdır
+
+Firma 5 derken hücre 2 kişi istiyorsa iki SERT kural aynı anda geçerlidir ve
+**katı olan bağlar**: o saatte en az 5 kişi sahada olmak zorundadır,
+dolayısıyla en az 5 kişi atanır. Talep tablosu işin gerektirdiğini söyler,
+firma tezgâhta görmek istediğini; ikisi çelişirse motor birini ötekine tercih
+etmez.
+
+Çelişki planı çözümsüz bırakabilir. Çözümsüzlük **sessiz değildir** — teşhis
+katmanı sebebi yazar. Sessizce gevşetmek yerine yüksek sesle durmak bu
+projenin tercihi (§7.6).
+
+**Nereye uygulanır:** talep hücresi **olan** her saate; hücrenin kendi
+`asgari`sine bakılmaz. Firmanın talep yazmadığı saatte (kapalı dönem) taban
+da yoktur — o saatte saha diye bir şey yoktur.
+
+### 🔴 Açık bulgu: bugünkü mola geometrisi bu kuralı boğuyor
+
+Kural yazıldı ve çalışıyor, ama **bugünkü mola yerleşimiyle plan ancak
+`N ≥ 4F` iken çözülüyor** (N = ekipteki kişi, F = taban). 15 senaryo
+ölçüldü, formül 15/15 tuttu.
+
+09:00–18:00 vardiya, 1 yemek + 3×15 dk dinlenme için aday pencereler:
+
+| mola | aday saatler |
+|---|---|
+| yemek | 12, 13, 14 |
+| dinlenme #0 | 11, 12 |
+| dinlenme #1 | 13, 14 |
+| dinlenme #2 | 15, 16 |
+
+Kişi başına dört molanın **üçü** `{11,12,13,14}` dört saatine sıkışıyor:
+`4(N−F) ≥ 3N` → `N ≥ 4F`. Saat **9, 10 ve 17'ye hiçbir mola düşemiyor**.
+
+Yani taban 3 isteyen bir firmanın o vardiyada **12 kişisi** olmak zorunda.
+Gerçekçi değil.
+
+İki ayrı maliyet, ayrı ayrı ölçüldü:
+
+| kaynak | etkisi | ne gerektirir |
+|---|---|---|
+| **pencere darlığı** | eşik `4F` → `~1.8F` | aday penceresini ±2 saate açmak — yerel değişiklik |
+| **saat yuvarlaması** | `~1.8F` → `~1.24F` | ⚠ Şişme **yemekte 1.00×, dinlenmede 4.00×**; önceki "2.29×" ikisini harmanlıyordu (bkz. K-34). → K-34 ile kaldırıldı |
+
+Baskın maliyet **pencere darlığı** — bu beklenmiyordu, ölçüm gösterdi.
+Pencereyi ±2'ye açmanın "eşit dağıtım" kararına (K-32, 25 Eylül) maliyeti de
+ölçüldü: dinlenmeler arası ortalama boşluk 2.12 sa → 2.83 sa (ideal 2.25),
+en küçük boşluk iki durumda da 1.00 sa. Adalet çökmüyor.
+
+~~**Karar bekliyor** → T-44.~~ ✅ **Çözüldü 28 Eylül, K-34** — zaman birimi çeyrek saate indi, eşik `4F → 12F/7`.
+
+→ `02-spec/v1.4-master-spec.md` §6.2 · K-14, K-32, T-44
+
+---
+
+## K-34 · Motorun zaman birimi **çeyrek saat**
+
+**Karar (28 Eylül 2026, Mustafa).**
+
+> *"Molalar zaten normalde planlanırken, gün içinde 15 dk lık dilimlere
+> dağıtılıyor. Yani 15:15'e de mola koyabiliyorlar, 15:30'a da 15:45'e de.
+> Doğrusu bu."*
+
+Bu bir hız/maliyet kararı değil **doğruluk** kararı. Saat izgarası bir
+modelleme kolaylığı sanılıyordu; gerçekte mola operasyonu çeyrek saatle
+yapıldığı için izgara **gerçeğe aykırıydı**.
+
+### ⚠ Yemek ile dinlenme ayrı şeylerdir
+
+> **Mustafa:** *"Yemek ile molayı birbirine karıştırma."*
+
+Bu uyarı, T-44'e yazdığım **"2.29× şişme"** rakamının neyi gizlediğini
+ortaya çıkardı. Ayrıştırınca:
+
+| | gerçek | modelde | şişme | |
+|---|---|---|---|---|
+| **yemek** | 60 dk | 60 dk | **1.00×** | hata yok |
+| **dinlenme** | 45 dk (3×15) | 180 dk | **4.00×** | hata burada |
+| toplam | 105 dk | 240 dk | 2.29× | ← benim yazdığım |
+
+**2.29× harmanlanmış bir rakamdır** ve yemeğin doğruluğunu dinlenmenin
+hatasıyla ortalar. Düzeltme dinlenmeyi düzeltir, yemeği **olduğu gibi
+bırakır**. T-44 kaydındaki tablo bu yüzden düzeltildi.
+
+### Ne değişti
+
+| | eski | yeni |
+|---|---|---|
+| iç zaman birimi | 1 saat | **15 dk** |
+| 15 dk mola kaç dilim kaplar | 4 (bir tam saat) | **1** |
+| 60 dk yemek kaç dilim kaplar | 4 | **4** (değişmedi) |
+| dinlenme aday sayısı (9 sa vardiya) | molaya 2 | molaya **9** |
+| eşit dağıtım noktaları | 11, 13, 15 (yuvarlanmış) | **11:15, 13:30, 15:45** (tam isabet) |
+| kapsama kontrolü | saat başı | **her çeyrekte** |
+
+**Girdi sözleşmesi DEĞİŞMEDİ** (§11.2). Talep yine saatlik okunur; bir
+saatlik hücrenin değeri o saatin dört çeyreğinin her birine uygulanır.
+Hücre bölünmez, yalnızca daha sık **örneklenir**. Fikstürler ve altın
+senaryo girdileri aynen geçerli.
+
+### Ölçülen sonuç
+
+**T-44 kapandı.** Eşik `N ≥ 4F` → **`N ≥ 12F/7`** (~1.71×F), 15 senaryoda
+15/15:
+
+| taban | eskiden gereken ekip | şimdi |
+|---|---|---|
+| 2 | 8 kişi | **4** |
+| 3 | 12 kişi | **6** |
+| 5 | 20 kişi | **9** |
+
+**Çözüm süresi** — T-44'te *"bilmiyorum"* dediğim sayı, artık ölçüldü:
+
+| senaryo | süre |
+|---|---|
+| 8 kişi, taban 2 | 0.14 sn |
+| 20 kişi, taban 4 | 0.37 sn |
+| 40 kişi, taban 5 | 0.78 sn |
+
+Model dört kat büyüdü, maliyeti pratikte yok. Kaygı yersizmiş — ama
+ölçmeden bilinemezdi.
+
+### Kalan sınır (~1.71×F) bir modelleme hatası **değil**
+
+5 kişi / taban 3 senaryosunda kısıtlar **tek tek gevşetilerek** bulundu:
+
+| gevşetilen | sonuç |
+|---|---|
+| hiçbiri | çözümsüz |
+| `MOLA_HAKKI` kapalı | çözümsüz |
+| yemek yok, yalnız 3×15 dinlenme | çözümsüz |
+| **dinlenme yok, yalnız yemek** | **çözüldü** |
+| **yemek 60 → 30 dk** | **çözüldü** |
+
+Bağlayan şey **yemek ile ortadaki dinlenme molasının aynı dilimler için
+yarışması**. Yemek 4 çeyrek kaplar ve penceresi vardiyanın ortasındadır;
+ortadaki dinlenme de oradadır. `{12:00..15:00}` arasındaki 12 çeyrekte:
+
+```
+4N (yemek) + N (dinlenme#1)  ≤  12(N − F)   →   N ≥ 12F/7
+```
+
+Bu gerçek bir planlama gerilimi: insanlar öğle yemeğini günün ortasında
+ister, ortadaki dinlenme molası da oradadır. Yemek penceresini genişletmek
+eşiği **değiştirmedi** (ölçüldü: 3–5, 3–6 ve 2–7 saat pencerelerinin üçü de
+taban 3 için 6 kişi verdi).
+
+### 🔴 Yol üstünde bulunan sessiz geçiş — kapatıldı
+
+K-34 uygulanırken K-33'ü doğuran sessiz geçişin **aynısı** bulundu, bu kez
+bir çeyreğin içine saklanmış:
+
+> İki kişilik planda ikisi de **14:15–14:30** arası molada. 14:00'de ve
+> 15:00'te sahadalar. **14:15'te sahada sıfır kişi.**
+> Doğrulayıcı: **hiçbir ihlal yok.**
+
+Sebep: `_talep_hucreleri` tam saat üretiyordu, kural yalnız o anlara
+bakıyordu. Molayı çeyreğe taşıyıp kontrolü saatte bırakmak sessiz geçişi
+**düzeltmek değil gizlemek** olurdu — ihlal artık daha kolay saklanırdı.
+
+`SAHADA_ASGARI` ve `MOLA_KAPSAMASI` çeyrek bazına indirildi. İkincisinde
+hücre başına **tek** ihlal yazılır (saatin en kötü çeyreği); dört ayrı satır
+yazmak aynı boşluğu dört kez sayar ve puanı sessizce dört katına çıkarırdı.
+
+### Bekçiler (mutasyonla sınandı)
+
+| mutasyon | kırmızı yanan |
+|---|---|
+| saat yuvarlaması geri kondu | 2 test |
+| pencere yarıçapından mola süresi çıkarıldı | `test_adaylar_AYRIK` |
+| taban yine yalnız tam saatte bakıyor | `test_GEOMETRI_SINIRI` |
+
+Üçüncüsü yalnız sınır kaydı tarafından yakalandı — zayıftı; doğrudan
+bekçisi `test_taban_CEYREKTE_delinirse_de_gorulur` olarak eklendi.
+
+→ `02-spec/v1.4-master-spec.md` §6.3 · K-32, K-33, T-44 (kapandı)

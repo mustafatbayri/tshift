@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-25 akşam · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**, motor **98 birim test** yeşil. T-42 açıldı, T-43 aynı gün geri çekildi)
+**Son güncelleme:** 2026-09-28 · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) — motor **120 test** yeşil. ⚠ K-33 bir kez **yanlış mantıkla** yazıldı (taban talep tablosuyla sınırlanıyordu), Mustafa yakaladı, aynı gün düzeltildi. **T-44** açıldı ve K-34 ile **kapandı**: eşik `4F → 12F/7`.)* T-42 açıldı, T-43 aynı gün geri çekildi)
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -104,11 +104,14 @@ diye okundu. Gerçek: `net_saat` doğruydu, A08 doğruydu, kıran şey modeldi.
 doğru ölçülüyordu** ve her test yeşil yanıyordu. Ayrıntısı K-32'nin
 *"Düzeltmenin kaydı"* bölümünde.
 
-⚠ **Bitmeyen:** dinlenme molaları **çözücüye bağlanmadı**. Eşit dağıtım
-aritmetiği yazıldı ve beş testle sınandı ama çağrısız duruyor; motor hâlâ tek
-mola üretiyor. Bağlanması `_sahada`'nın yeniden kurgusunu gerektiriyor
-(*"yemek kapsamıyor **ve** hiçbir dinlenme kapsamıyor"* bir VE bağlacı).
-**Yarının ilk işi.**
+✅ **28 Eylül'de tamamlandı.** Dinlenme molaları çözücüye bağlandı; motor
+firmanın mola politikasını plana çeviriyor ve molaları kişiler arasında
+kaydırıyor. `_sahada` yeniden kuruldu: *"sahada olmak"* artık
+`(kapsamayan yemek seçenekleri) − (kapsayan dinlenmeler)` — **doğrusal**,
+yardımcı değişken yok. Şartı molaların birbirini kesmemesi; bekçisi
+`test_molalar_BIRBIRINI_kesmez`.
+
+Aynı gün **K-33** geldi: firma *"sahada en az N kişi"* diyebiliyor (`SAHADA_ASGARI`, SERT). Önce bir plan ölçüldü: saat 12 ve 13'te **sahada sıfır kişi**, sert ihlal 0, `yayınlanabilir` **True**. ⚠ Kuralın ilk hali **yanlıştı** — tabanı `min(parametre, hücrenin asgarisi)` ile sınırlıyordu ve bir test bu hatayı **sabitliyordu**. Mustafa: *"Firma molada en az 5 demeyecek, firma sahada en az 5 diyecek."* Sınır kaldırıldı, test **tersine çevrildi**. Ölçüm yeni bir 🔴 açtı (**T-44**): bugünkü mola pencereleriyle plan ancak **`N ≥ 4F`** iken çözülüyor — taban 3 için 12 kişi gerekiyor. Motor **109 test** yeşil.
 
 > **Kaydedilen bulgu, bulgunun kendisi değildir.** T-34 iki satır sanılmıştı,
 > 16 yer çıktı. T-35 kiracı çapı sanılmıştı, kurulum çapı çıktı. T-19'un üç
@@ -172,8 +175,8 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **23** (katalogdaki **38**'in alt kümesi) | 25 Eylül akşamı, ikisi de sayılarak |
-| Motor birim testi | **98**, hepsi yeşil | 25 Eylül akşamı |
+| Yazılan kural gövdesi | **24** (katalogdaki **39**'un alt kümesi) | 28 Eylül, ikisi de sayılarak |
+| Motor birim testi | **120**, hepsi yeşil | 28 Eylül |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
 
@@ -289,6 +292,7 @@ açıyor. Salt-okunur inceleyici Aşama 2'ye ertelendi, ölçüm şartıyla.
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
 > | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor. ⚠ Artık **üç** kanal bu kapıda bekliyor: `uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar` | ✅ kapı ne yapmalı |
+> | ~~T-44~~ | ✅ **KAPANDI 28 Eylül** — K-34 ile zaman birimi çeyrek saate indi; eşik `4F → 12F/7` (taban 3 için 12 kişi yerine **6**). Çözüm süresi 40 kişide 0.78 sn | — |
 >
 > **Beş 🔴 açık ve beşi de Mustafa'nın cevabını bekliyor.** Mekanik olanların
 > hepsi kapandı.
@@ -400,7 +404,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **19** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **98** birim testi (25 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **24** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **120** birim testi (28 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

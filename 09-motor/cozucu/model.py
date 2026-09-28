@@ -68,13 +68,45 @@ FAZLA_MESAI_PROFIL = {"DENGELI": 10, "KAPSAMA": 15, "CALISAN": 0}
 # Zaman -- dogrulayicidan BAGIMSIZ ikinci uygulama
 # ----------------------------------------------------------------------
 
-def _dilimler(gun, bas, bit):
-    """Vardiyanin kapsadigi mutlak saat dilimleri.
+# Zaman izgarasi -- K-34 (28 Eylul, Mustafa)
+#
+#   "Molalar zaten normalde planlanirken, gun icinde 15 dk lik dilimlere
+#    dagitiliyor. Yani 15:15'e de mola koyabiliyorlar, 15:30'a da 15:45'e
+#    de. Dogrusu bu."
+#
+# Dilim SAAT degil CEYREK SAATTIR. Bu bir hiz meselesi degil DOGRULUK
+# meselesiydi: saat izgarasi 15 dk'lik bir molayi 60 dk sayiyordu.
+#
+# ⚠ YEMEK ILE DINLENME AYRI SEYLER (Mustafa, ayni gun). Eski izgaranin
+#   hatasi ikisine ESIT DAGILMIYORDU:
+#
+#       yemek     60 dk gercek ->  60 dk modelde   1.00x   HATA YOK
+#       dinlenme  45 dk gercek -> 180 dk modelde   4.00x   HATA BURADA
+#
+#   Eski kayitlardaki "2.29x" HARMANLANMIS bir rakamdir; yemegin
+#   dogrulugunu dinlenmenin hatasiyla ortalar. Duzeltme dinlenmeyi
+#   duzeltir, yemegi OLDUGU GIBI birakir.
+CEYREK = 4          # bir saatte kac dilim
 
-    Genisletilmis saat dogrudan toplanir: gun 1, 16 -> 25  =>  40..48.
-    Bitis dilimi DAHIL DEGIL (bit=18 ise son dilim 17).
+
+def _q(gun, saat):
+    """Gun + genisletilmis saat -> mutlak CEYREK dilim indeksi.
+
+    Genisletilmis saat dogrudan toplanir: gun 1, 16 -> 25  =>  164.
+
+    Yuvarlama bilerek `round`: 11.25 ikilik gosterimde tam degildir ve
+    `int()` onu asagi kirpabilir. Bir ceyreklik kayma molayi yanlis
+    dilime koyar ve `_sahada` aritmetigini sessizce bozar.
     """
-    return list(range(gun * 24 + int(bas), gun * 24 + int(bit)))
+    return int(round((gun * 24 + saat) * CEYREK))
+
+
+def _dilimler(gun, bas, bit):
+    """Vardiyanin kapsadigi mutlak CEYREK dilimler.
+
+    Bitis dilimi DAHIL DEGIL (bit=18 ise son dilim 17:45).
+    """
+    return list(range(_q(gun, bas), _q(gun, bit)))
 
 
 def _net_saat(sablon):
@@ -86,6 +118,11 @@ def _brut_saat(sablon):
 
 
 MOLA_PENCERESI_VARSAYILAN = (3, 5)   # vardiyaya GORE saat -- K-32
+
+# Dinlenme molasinin ideal noktasi etrafindaki aday penceresinin yaricapi,
+# CEYREK cinsinden. 4 = +-1 saat. UST SINIR; ideal noktalar birbirine daha
+# yakinsa `_dinlenme_baslangiclari` bunu kirpar (pencereler DEGMEZ).
+PENCERE_YARICAPI_Q = 4
 
 
 def _mola_politikasi(girdi, sablon):
@@ -121,7 +158,7 @@ def _mola_politikasi(girdi, sablon):
 
 def _mola_baslangiclari(sablon, pencere=MOLA_PENCERESI_VARSAYILAN,
                        yemek_dk=None):
-    """Yemek molasinin baslayabilecegi TAM SAAT dilimleri.
+    """YEMEK molasinin baslayabilecegi CEYREK dilimler (saat olarak).
 
     K-32 (25 Eylul): pencere MUTLAK SAAT degil, kisinin KENDI vardiyasina
     GORELIDIR. `pencere` = (en_az_saat, en_gec_saat): vardiya basindan
@@ -132,6 +169,11 @@ def _mola_baslangiclari(sablon, pencere=MOLA_PENCERESI_VARSAYILAN,
     o pencere vardiyanin ILK IKI SAATINE denk geliyordu -- kural kendi
     kendini patlatiyordu.
 
+    K-34 (28 Eylul): adim CEYREK SAAT. Yemek 12:30'da da baslayabilir.
+    Yemegin SURESI ve TEK BLOK olmasi (K-14) degismedi -- degisen yalnizca
+    baslangicin izgarasi. Yemek zaten dogru modelleniyordu (1.00x); burasi
+    onu bozmamak icin degil, yalnizca izgarayi ortaklastirmak icin degisti.
+
     Mola suresi 0 ise tek bir sahte secenek dondurulur (model basit kalsin).
     """
     dk = sablon.get("mola_dk", 0) if yemek_dk is None else yemek_dk
@@ -140,17 +182,20 @@ def _mola_baslangiclari(sablon, pencere=MOLA_PENCERESI_VARSAYILAN,
         return [None]
     en_az, en_gec = pencere
     erken = sablon["bas"] + en_az
-    gec = sablon["bas"] + en_gec + mola_saat
-    son = int(gec - mola_saat)
-    adaylar = [s for s in range(int(erken), son + 1)
-               if s >= sablon["bas"] and s + mola_saat <= sablon["bit"]]
+    gec = sablon["bas"] + en_gec
+    adaylar = [s / float(CEYREK)
+               for s in range(int(round(erken * CEYREK)),
+                              int(round(gec * CEYREK)) + 1)
+               if s / float(CEYREK) >= sablon["bas"]
+               and s / float(CEYREK) + mola_saat <= sablon["bit"]]
     # Pencere vardiyaya sigmiyorsa (kisa vardiya) molayi yine de bir yere
     # koymak gerekir; yerlesim ihlali dogrulayicida YUMUSAK olarak yazilir.
     if adaylar:
         return adaylar
-    esnek = [s for s in range(int(sablon["bas"]), int(sablon["bit"]) + 1)
-             if s + mola_saat <= sablon["bit"]]
-    return esnek or [int(sablon["bas"])]
+    esnek = [s / float(CEYREK)
+             for s in range(_q(0, sablon["bas"]), _q(0, sablon["bit"]) + 1)
+             if s / float(CEYREK) + mola_saat <= sablon["bit"]]
+    return esnek or [sablon["bas"]]
 
 
 def _dinlenme_baslangiclari(sablon, adet, dakika):
@@ -162,12 +207,24 @@ def _dinlenme_baslangiclari(sablon, adet, dakika):
 
     NASIL
       Vardiya N+1 esit parcaya bolunur; i. mola i/(N+1) noktasina konur.
-      9 saatlik vardiyada 3 mola -> 11.25, 13.50, 15.75 -> saat dilimi
-      olarak 11, 13, 15.
+      9 saatlik vardiyada 3 mola -> 11.25, 13.50, 15.75. CEYREK izgarada
+      bu noktalar TAM ISABET eder (K-34); saat izgarasinda 11, 13, 15'e
+      yuvarlaniyorlardi.
 
-      Her molaya IKI aday verilir (ideal dilim ve bir sonraki). Tek aday
-      birakmak yemek molasiyla cakisma durumunda cozumu imkansiz kilardi;
-      iki aday cozucuye kacacak yer birakir ama modeli buyutmez.
+      Her molaya ideal noktanin etrafinda bir PENCERE verilir (varsayilan
+      +-1 saat = +-4 ceyrek). Pencereler birbirine DEGMEZ.
+
+    ⚠ AYRIK PENCERE SARTI -- SUSLEME DEGIL, ARITMETIGIN KOSULU
+      Pencereler kesisirse iki dinlenme molasi ayni dilime dusebilir ve
+      `_sahada`nin dogrusal toplami eksiye duser (oradaki nota bak). Bu
+      yuzden pencere genisligi ideal noktalar arasi mesafenin YARISINI
+      asamaz; asarsa buradan kirpilir.
+
+    T-44 ILE ILISKISI
+      Esigi (N >= 4F) yukselten iki sebep vardi: aday penceresinin darligi
+      ve saat yuvarlamasi. K-34 ikisini birden kaldirir -- yuvarlama
+      dogrudan, pencere ise ceyrek izgarada ayni sure icine dort kat aday
+      sigdigi icin.
 
     DONEN DEGER
       [[aday, ...], ...] -- mola basina bir aday listesi, sirali.
@@ -176,48 +233,61 @@ def _dinlenme_baslangiclari(sablon, adet, dakika):
     """
     if adet <= 0 or dakika <= 0:
         return []
-    bas, bit = int(sablon["bas"]), int(sablon["bit"])
+    bas, bit = sablon["bas"], sablon["bit"]
     uzunluk = bit - bas
     sure = dakika / 60.0
+    # PENCERE YARICAPI -- iki komsu pencere ne kesisebilir ne de molalari
+    # ust uste binebilir. Sart:
+    #
+    #     (ideal_i + yaricap) + sure_q  <=  ideal_(i+1) - yaricap
+    #     2*yaricap <= aralik_q - sure_q
+    #
+    # ⚠ MOLA SURESI HESABA KATILMAK ZORUNDA. Ilk yazimda yalniz
+    #   `aralik_q // 2` kullandim: 4 saatlik vardiyada pencereler
+    #   [9.5..10.5] ve [10.5..11.5] cikiyor, 10.5 IKISINDE de var ve iki
+    #   dinlenme ayni dilime dusebiliyordu. `test_adaylar_AYRIK` yakaladi.
+    #   30 dk'lik molada uc nokta esitligi bile yetmez, sure kadar bosluk
+    #   gerekir -- o yuzden `- sure_q`.
+    aralik_q = uzunluk / float(adet + 1) * CEYREK
+    sure_q = int(round(sure * CEYREK))
+    yaricap = max(0, int(min(PENCERE_YARICAPI_Q, (aralik_q - sure_q) // 2)))
     cikan = []
-    onceki_son = bas          # bir onceki molanin en gec bitisi
     for i in range(1, adet + 1):
-        ideal = bas + uzunluk * i / float(adet + 1)
+        ideal_q = int(round((bas + uzunluk * i / float(adet + 1)) * CEYREK))
         adaylar = []
-        for kaydirma in (0, 1):
-            s = int(ideal) + kaydirma
-            # AYRIK PENCERE: bir onceki molanin adaylariyla kesismez.
-            # Boylece iki dinlenme molasi ayni dilime dusemez ve cozucuye
-            # cakismama kisiti YAZMAK GEREKMEZ -- model kucuk kalir.
-            if s < onceki_son:
-                continue
-            if bas <= s and s + sure <= bit and s not in adaylar:
+        for q in range(ideal_q - yaricap, ideal_q + yaricap + 1):
+            s = q / float(CEYREK)
+            if bas <= s and s + sure <= bit:
                 adaylar.append(s)
         cikan.append(adaylar)
-        if adaylar:
-            onceki_son = adaylar[-1] + int(sure) + (1 if sure % 1 else 0)
     return cikan
 
 
-def _mola_dilimleri(gun, sablon, baslangic):
-    """Molanin kapsadigi dilimler. 15 dk'lik mola da o saat dilimini kaplar.
+def _mola_dilimleri(gun, sablon, baslangic, dakika=None):
+    """Molanin kapsadigi CEYREK dilimler -- GERCEK suresi kadar (K-34).
 
     Dogrulayici ile AYNI anlami tasir ama farkli yoldan: orada
     `mola.bas <= saat < mola.bit` diye bakilir, burada dilim uretilir.
-    15 dk mola 11:00'de baslarsa 11. dilim doludur -- kisi o saatte
-    sahada sayilmaz. Kaba ama iki tarafta da ayni kaba.
+
+    ⚠ 28 Eylul'e kadar burasi molayi TAM SAATE yuvarliyordu: 11:00'de
+    baslayan 15 dk'lik mola 11. saatin tamamini kapatiyordu. Yemek icin
+    dogru sonuc veriyordu (60 dk zaten bir saat), dinlenme icin DORT KAT
+    yanlisti. Iki tipin ayni koda girip farkli sonuc almasi, hatanin bu
+    kadar uzun sure gorunmez kalmasinin sebebi.
+
+    Artik yuvarlama YOK: 15 dk bir ceyrek, 60 dk dort ceyrek kaplar.
     """
     if baslangic is None:
         return []
-    mola_saat = sablon.get("mola_dk", 0) / 60.0
-    bitis = baslangic + mola_saat
-    return [d for d in range(gun * 24 + int(baslangic),
-                             gun * 24 + int(bitis) + (1 if bitis % 1 else 0))]
+    dk = sablon.get("mola_dk", 0) if dakika is None else dakika
+    if dk <= 0:
+        return []
+    return list(range(_q(gun, baslangic), _q(gun, baslangic + dk / 60.0)))
 
 
 def _gece_mi(sablon, gun, pencere=(20, 30)):
     s = set(_dilimler(gun, sablon["bas"], sablon["bit"]))
-    p = set(range(gun * 24 + pencere[0], gun * 24 + pencere[1]))
+    p = set(range(_q(gun, pencere[0]), _q(gun, pencere[1])))
     return bool(s & p)
 
 
@@ -259,6 +329,24 @@ class Model(object):
         self.profil = self._profil_sec(girdi.get("profil"))
         self.mola_penceresi = self._mola_penceresi_sec()
         self.yemek_dk = {t["id"]: self._yemek_dk_sec(t) for t in self.sablonlar}
+        self.dinlenme_tanim = {t["id"]: self._dinlenme_sec(t) for t in self.sablonlar}
+        self.dinlenme = {}   # (e,d,t,i,s) -> BoolVar
+
+    def _dinlenme_sec(self, sablon):
+        """(adet, dakika) -- ucretli kisa molalar, politikadan (K-32).
+
+        Politika yoksa (0, 0): motor dinlenme molasi URETMEZ ve davranis
+        25 Eylul oncesiyle ayni kalir.
+        """
+        for satir in _mola_politikasi(self.girdi, sablon):
+            if satir.get("tip") == "dinlenme":
+                return (int(satir.get("adet", 0)), int(satir.get("dakika", 0)))
+        return (0, 0)
+
+    def _dinlenme_adaylari(self, sablon):
+        """Bu sablonun dinlenme molalari icin aday dilimler."""
+        adet, dk = self.dinlenme_tanim[sablon["id"]]
+        return _dinlenme_baslangiclari(sablon, adet, dk)
 
     def _yemek_dk_sec(self, sablon):
         """Bu sablonda yemek molasi kac dakika -- politikadan (K-32).
@@ -338,21 +426,113 @@ class Model(object):
         self._amac()
         return self
 
+    def _sablonlari(self, c):
+        """Bu calisanin ATANABILECEGI sablonlar -- T-46 (28 Eylul).
+
+        Kisi yalniz KENDI ekiplerinin vardiyalarina atanabilir. `ekipler`
+        bir listedir: cok ekipli calisan hepsini gorur. `ekip` alani
+        olmayan sablon HERKESE aciktir -- eski fiksturlerde o alan yok.
+
+        ⚠ NEDEN BU SUZGEC VAR
+          28 Eylul'e kadar yoktu ve motor SATIS calisanini BACKOFFICE
+          vardiyasina atayabiliyordu. Teorik degil: uretilen planda
+          gercekten oldu (test_ekip_kapsami).
+
+          Sonucu SESSIZ BIR KAPASITE KAYBI -- kisinin saatleri dolar
+          (HAFTALIK_AZAMI, HAFTA_TATILI, ARDISIK_CALISMA_GUNU hepsi sayar)
+          ama `_atanmis` ekibe gore suzdugu icin HICBIR ekibin kapsamasina
+          sayilmaz. Calisan mesgul, kimseye faydasi yok.
+
+          Performans yuzu ayni kokten (T-46): 350 kisilik sahnede 968 bin
+          degiskenin %64'u kisinin calisamayacagi sablonlar icindi.
+
+          Neden simdiye kadar gorulmedi: butun test sahnelerinde TEK EKIP
+          vardi, capraz atama tanimsizdi.
+        """
+        ekipler = set(c.get("ekipler") or [])
+        return [t for t in self.sablonlar
+                if t.get("ekip") is None or t.get("ekip") in ekipler]
+
+    def _calisan_sablonlari(self, kimlik):
+        """Kimlikten sablon listesi -- yalniz id bilen cagiranlar icin."""
+        for c in self.calisanlar:
+            if c["id"] == kimlik:
+                return self._sablonlari(c)
+        return self.sablonlar
+
+    def _X(self, kimlik, gun, sablon_id):
+        """x degiskeni; kisi o sablona atanamiyorsa SABIT SIFIR.
+
+        Boylece cagiran taraflarin dongulerini degistirmek gerekmez:
+        olmayan degisken aritmetikte zaten sifirdir.
+        """
+        return self.x.get((kimlik, gun, sablon_id), 0)
+
     def _degiskenler(self):
         for c in self.calisanlar:
             for d in self.gunler:
-                for t in self.sablonlar:
+                for t in self._sablonlari(c):
                     v = self.m.NewBoolVar("x_%s_%d_%s" % (c["id"], d, t["id"]))
                     self.x[(c["id"], d, t["id"])] = v
-                    for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']]):
+                    yemek_dk = self.yemek_dk[t["id"]]
+                    yemekler = _mola_baslangiclari(t, self.mola_penceresi, yemek_dk)
+                    for s in yemekler:
                         self.mola[(c["id"], d, t["id"], s)] = self.m.NewBoolVar(
                             "m_%s_%d_%s_%s" % (c["id"], d, t["id"], s))
                     # Vardiya secildiyse TAM BIR mola yerlesimi secilir.
                     self.m.Add(sum(self.mola[(c["id"], d, t["id"], s)]
-                                   for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']])) == v)
+                                   for s in yemekler) == v)
+                    self._dinlenme_degiskenleri(c, d, t, v, yemekler, yemek_dk)
+
+    def _dinlenme_degiskenleri(self, c, d, t, v, yemekler, yemek_dk):
+        """Ucretli kisa molalarin degiskenleri ve kisitlari -- K-32.
+
+        NEDEN KARAR DEGISKENI
+          Molalar sabit yerlestirilseydi ayni sablondaki HERKES ayni dakikada
+          molaya cikardi ve kapsama coker; "adil plan" tam bunun tersi. Her
+          molaya IKI aday verilir, cozucu kisileri kaydirir.
+
+        NEDEN MODEL BUYUMUYOR
+          Aday pencereleri ESIT DAGITIMDAN geliyor ve birbirini kesmiyor
+          (_dinlenme_baslangiclari). Bu yuzden dinlenme molalari arasinda
+          cakismama kisiti YAZILMIYOR -- yalniz YEMEKLE cakismama yaziliyor.
+
+        SIGMAYAN MOLA
+          Aday listesi bosalirsa mola URETILMEZ ve `notlar`a yazilir. Olmayan
+          yere mola koymak, yasanmamis molayi varmis gibi gostermek olurdu
+          (T-27'nin ayni sinifi). Eksikligi dogrulayici MOLA_HAKKI'nda gorur.
+        """
+        adet, dk = self.dinlenme_tanim[t["id"]]
+        if adet <= 0 or dk <= 0:
+            return
+        for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
+            if not adaylar:
+                not_ = ("dinlenme molasi %d/%d sablon %s'e sigmadi"
+                        % (i + 1, adet, t["id"]))
+                if not_ not in self.notlar:
+                    self.notlar.append(not_)
+                continue
+            for s in adaylar:
+                self.dinlenme[(c["id"], d, t["id"], i, s)] = self.m.NewBoolVar(
+                    "dm_%s_%d_%s_%d_%s" % (c["id"], d, t["id"], i, s))
+            self.m.Add(sum(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                           for s in adaylar) == v)
+            # Dinlenme yemekle CAKISAMAZ. Bu kisit yalniz "adil plan" icin
+            # degil, ARITMETIK icin de sart: _sahada "molada olmak" durumunu
+            # bir TOPLAM olarak yaziyor; iki mola ayni dilimi kapsarsa toplam
+            # ikiye cikar ve sahadaki kisi sayisi eksi degere duser.
+            for s in adaylar:
+                dil = set(_mola_dilimleri(d, t, s, dk))
+                for sy in yemekler:
+                    if sy is None:
+                        continue
+                    if dil & set(_mola_dilimleri(d, t, sy, yemek_dk)):
+                        self.m.Add(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                                   + self.mola[(c["id"], d, t["id"], sy)] <= 1)
 
     def _calisiyor(self, e, d):
-        return sum(self.x[(e, d, t["id"])] for t in self.sablonlar)
+        return sum(self._X(e, d, t["id"])
+                   for t in self._calisan_sablonlari(e))
 
     # ---- sert kurallar ------------------------------------------------
 
@@ -372,11 +552,12 @@ class Model(object):
 
     def _gun_disi_sablonlari_kapat(self):
         for c in self.calisanlar:
-            for t in self.sablonlar:
+            for t in self._sablonlari(c):
                 izinli = set(self._sablon_gunleri(t))
                 for d in self.gunler:
                     if d not in izinli:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        if (c["id"], d, t["id"]) in self.x:
+                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
     def _gunde_tek_vardiya(self):
         """CAKISMA_YOK + gunde tek vardiya.
@@ -397,7 +578,8 @@ class Model(object):
                 for d in self.gunler:
                     for t in self.sablonlar:
                         if set(_dilimler(d, t["bas"], t["bit"])) & yasak:
-                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                            if (c["id"], d, t["id"]) in self.x:
+                                self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
     def _izin(self):
         for c in self.calisanlar:
@@ -405,9 +587,11 @@ class Model(object):
                       if i.get("durum", "onayli") == "onayli"}
             for d in self.gunler:
                 for t in self.sablonlar:
-                    dokundugu = {g // 24 for g in _dilimler(d, t["bas"], t["bit"])}
+                    dokundugu = {g // (24 * CEYREK)
+                                 for g in _dilimler(d, t["bas"], t["bit"])}
                     if dokundugu & izinli:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        if (c["id"], d, t["id"]) in self.x:
+                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
     def _kilitler(self):
         for k in self.girdi.get("kilitler", []) or []:
@@ -419,7 +603,17 @@ class Model(object):
                 eslesen = [t for t in self.sablonlar
                            if t["bas"] == k["bas"] and t["bit"] == k["bit"]]
                 if eslesen:
-                    self.m.Add(self.x[(e, d, eslesen[0]["id"])] == 1)
+                    if (e, d, eslesen[0]["id"]) in self.x:
+                        self.m.Add(self.x[(e, d, eslesen[0]["id"])] == 1)
+                    else:
+                        # T-46: kilit, kisinin ekibinde OLMAYAN bir sablona
+                        # isaret ediyor. Sessizce `0 == 1` yazip plani
+                        # cozumsuz birakmak yanlis cevap olurdu -- sebebi
+                        # gorunmezdi. Not birakip geciyoruz.
+                        self.notlar.append(
+                            "kilit calisanin ekibinde olmayan sablona isaret "
+                            "ediyor: %s gun %s sablon %s"
+                            % (e, d, eslesen[0]["id"]))
                 else:
                     self.notlar.append("kilit sablona eslesmedi: %s gun %s" % (e, d))
             else:
@@ -428,7 +622,9 @@ class Model(object):
     def _sabit_atamalar(self):
         for a in self.girdi.get("sabit_atamalar", []) or []:
             anahtar = (a["calisan"], a["gun"], a.get("sablon"))
-            if anahtar in [(k[0], k[1], k[2]) for k in self.x]:
+            # Dogrudan sozluk aramasi: eskiden her sabit atama icin butun
+            # anahtarlar listeleniyordu (350 kiside 346 bin anahtar).
+            if anahtar in self.x:
                 self.m.Add(self.x[anahtar] == 1)
             else:
                 self.notlar.append("sabit atama modele girmedi: %r" % (anahtar,))
@@ -446,11 +642,12 @@ class Model(object):
             for d in self.gunler:
                 for t in self.sablonlar:
                     if _net_saat(t) > gunluk:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        if (c["id"], d, t["id"]) in self.x:
+                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
             # Dakika cinsinden tam sayi calisilir; float kisit CP-SAT'e girmez.
-            dakika = sum(int(round(_net_saat(t) * 60)) * self.x[(c["id"], d, t["id"])]
-                         for d in self.gunler for t in self.sablonlar)
+            dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
+                         for d in self.gunler for t in self._sablonlari(c))
             self.m.Add(dakika <= int(haftalik * 60))
 
             soz = c.get("sozlesme") or {}
@@ -501,8 +698,8 @@ class Model(object):
                     for t2 in self.sablonlar:
                         baslangic = (d + 1) * 24 + t2["bas"]
                         if baslangic - bitis < asgari:
-                            self.m.Add(self.x[(c["id"], d, t1["id"])]
-                                       + self.x[(c["id"], d + 1, t2["id"])] <= 1)
+                            self.m.Add(self._X(c["id"], d, t1["id"])
+                                       + self._X(c["id"], d + 1, t2["id"]) <= 1)
 
     def _ardisik_gun(self):
         azami = _par(_kural(self.girdi, "ARDISIK_CALISMA_GUNU"), "azami_gun", 6)
@@ -540,28 +737,63 @@ class Model(object):
 
     def _atanmis(self, ekip, gun, saat):
         """O hucreye ATANMIS kisiler -- mola DUSULMEZ (ASGARI/HEDEF_KAPSAMA)."""
-        dilim = gun * 24 + saat
-        return [self.x[(c["id"], d, t["id"])]
+        dilim = _q(gun, saat)
+        return [self._X(c["id"], d, t["id"])
                 for c in self.calisanlar
                 if ekip in (c.get("ekipler") or [])
                 for d in self.gunler
-                for t in self.sablonlar
+                for t in self._sablonlari(c)
                 if dilim in _dilimler(d, t["bas"], t["bit"])]
 
     def _sahada(self, ekip, gun, saat):
-        """O hucrede SAHADA olanlar -- mola DUSULUR (MOLA_KAPSAMASI)."""
-        dilim = gun * 24 + saat
+        """O hucrede SAHADA olanlar -- BUTUN molalar dusulur (MOLA_KAPSAMASI).
+
+        ARITMETIK NOTU (K-32, 28 Eylul)
+          "Sahada" = atanmis VE hicbir mola bu dilimi kapsamiyor. Bu bir VE
+          bagladir ve carpim gerektiriyor gibi gorunur -- gerektirmiyor,
+          cunku molalar birbirini KESMIYOR: _dinlenme_degiskenleri yemekle
+          cakismayi yasakliyor, dinlenmeler arasi cakisma ise aday
+          pencereleri ayrik oldugu icin zaten imkansiz.
+
+          Kesismeyen olaylarda "molada olmak" bir TOPLAMDIR:
+
+              sahada = (kapsamayan yemek secenekleri) - (kapsayan dinlenmeler)
+
+          Ilk terim atanmissa 1, atanmamissa 0. Ikinci terim dinlenme o
+          dilimi kapsiyorsa 1. Ikisi de dogrusal; yardimci degisken ve
+          reification GEREKMIYOR. Cakismama kisiti bu yuzden yalniz "adil
+          plan" icin degil, bu aritmetigin GECERLILIGI icin de sarttir --
+          iki mola ayni dilimi kapsarsa sonuc eksiye duser.
+
+          K-34 (28 Eylul): `dilim` artik CEYREK SAAT. Aritmetik aynen
+          gecerli -- degisen yalnizca izgaranin sikligi. `saat` kesirli
+          gelebilir (14.25 gibi); `_q` onu dogru dilime cevirir.
+        """
+        dilim = _q(gun, saat)
         cikan = []
         for c in self.calisanlar:
             if ekip not in (c.get("ekipler") or []):
                 continue
             for d in self.gunler:
-                for t in self.sablonlar:
+                for t in self._sablonlari(c):
                     if dilim not in _dilimler(d, t["bas"], t["bit"]):
                         continue
-                    for s in _mola_baslangiclari(t, self.mola_penceresi, self.yemek_dk[t['id']]):
-                        if dilim not in _mola_dilimleri(d, t, s):
-                            cikan.append(self.mola[(c["id"], d, t["id"], s)])
+                    yemek_dk = self.yemek_dk[t["id"]]
+                    terim = [self.mola[(c["id"], d, t["id"], s)]
+                             for s in _mola_baslangiclari(t, self.mola_penceresi,
+                                                          yemek_dk)
+                             if dilim not in _mola_dilimleri(d, t, s, yemek_dk)]
+                    if not terim:
+                        continue      # her secenekte yemekte -- hic sahada degil
+                    ifade = sum(terim)
+                    _, dk = self.dinlenme_tanim[t["id"]]
+                    for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
+                        for s in adaylar:
+                            anahtar = (c["id"], d, t["id"], i, s)
+                            if (anahtar in self.dinlenme
+                                    and dilim in _mola_dilimleri(d, t, s, dk)):
+                                ifade = ifade - self.dinlenme[anahtar]
+                    cikan.append(ifade)
         return cikan
 
     def _kapsama(self):
@@ -570,6 +802,12 @@ class Model(object):
         mola_kural = _kural(self.girdi, "MOLA_KAPSAMASI")
         hedef_agirlik = self._agirlik("HEDEF_KAPSAMA", hedef_kural)
         mola_agirlik = self._agirlik("MOLA_KAPSAMASI", mola_kural)
+        # SAHADA_ASGARI (K-33): firmanin "sahada en az N kisi" cumlesi.
+        # Talep tablosunun `asgari`si ile SINIRLANMAZ -- ikisi ayri sey
+        # soyler, ikisi de SERT, kati olan baglar. Ayrintisi ve bir kez
+        # yapilan min(...) hatasinin kaydi kurallar.py::sahada_asgari'de.
+        taban_kisi = _par(_kural(self.girdi, "SAHADA_ASGARI"),
+                          "asgari_sahada", 0)
 
         for t, gun, saat in self._hucreler():
             atanmis = self._atanmis(t.get("ekip"), gun, saat)
@@ -579,11 +817,40 @@ class Model(object):
                 eksik = self.m.NewIntVar(0, t["hedef"], "he_%d_%d" % (gun, saat))
                 self.m.Add(eksik >= t["hedef"] - sum(atanmis))
                 self.cezalar.append((hedef_agirlik, eksik))
+            # MOLA_KAPSAMASI (yumusak) -- K-34: hucrenin DORT ceyregi ayri
+            # ayri olculur ama CEZA DEGISKENI TEK KALIR ve hucrenin EN KOTU
+            # anini tasir.
+            #
+            # ⚠ Neden ceyrek basina ayri ceza degil: `self.cezalar` agirlikli
+            #   bir toplamdir. Ceyrek basina bir degisken koymak bu kuralin
+            #   agirligini otekilere gore DORT KATINA cikarirdi -- plan
+            #   secimi sessizce degisirdi. Tek degisken + dort kisit ayni
+            #   olcegi korur ve bilgiyi INCELTIR: eskiden saatin tek bir
+            #   degeri bakiliyordu, simdi en kotu ceyregi.
             if mola_kural and t.get("asgari"):
-                sahada = self._sahada(t.get("ekip"), gun, saat)
                 eksik = self.m.NewIntVar(0, t["asgari"], "me_%d_%d" % (gun, saat))
-                self.m.Add(eksik >= t["asgari"] - sum(sahada))
+                for ceyrek in range(CEYREK):
+                    an = saat + ceyrek / float(CEYREK)
+                    self.m.Add(eksik >= t["asgari"]
+                               - sum(self._sahada(t.get("ekip"), gun, an)))
                 self.cezalar.append((mola_agirlik, eksik))
+            # SERT saha tabani (K-33). MOLA_KAPSAMASI (yumusak) plani
+            # `asgari`ye dogru iter; bu kural tabanin COKMESINI engeller.
+            # Ikisi ayri isi yapar, biri otekinin yerine gecmez.
+            #
+            # `t.get("asgari")` KOSUL DEGIL: talep hucresi varsa taban da
+            # vardir. Taban hucrenin asgarisinden buyukse atamayi YUKARI
+            # ceker -- kasitli, cunku ikisi de SERT ve kati olan baglar.
+            #
+            # K-34: SERT oldugu icin her CEYREGE ayri kisit yazilir. Olcek
+            # sorunu yok (ceza degil kisit), ve taban "saatin bir aninda"
+            # degil "her aninda" tutmali -- 14:15'te cokup 14:00'de duran
+            # bir saha, tabani tutmus sayilmaz.
+            if taban_kisi:
+                for ceyrek in range(CEYREK):
+                    an = saat + ceyrek / float(CEYREK)
+                    self.m.Add(sum(self._sahada(t.get("ekip"), gun, an))
+                               >= taban_kisi)
 
     def _yetkinlik(self):
         """ROL_KAPSAMASI / YETKINLIK_KAPSAMASI -- satir bazli gereklilikler."""
@@ -602,12 +869,12 @@ class Model(object):
                              if alan == "yetkinlikler" else c.get(alan) == aranan)]
                 for gun in ([p["gun"]] if "gun" in p else self.gunler):
                     for saat in p.get("saatler", []):
-                        dilim = gun * 24 + saat
-                        var = [self.x[(c["id"], d, t["id"])]
+                        dilim = _q(gun, saat)
+                        var = [self._X(c["id"], d, t["id"])
                                for c in uygun
                                if p.get("ekip") in (c.get("ekipler") or [])
                                for d in self.gunler
-                               for t in self.sablonlar
+                               for t in self._sablonlari(c)
                                if dilim in _dilimler(d, t["bas"], t["bit"])]
                         self.m.Add(sum(var) >= p.get("asgari", 1))
 
@@ -693,8 +960,8 @@ class Model(object):
                 devir = (c.get("devir_yuk") or {}).get(boyut, 0)
                 en_yuksek_devir = max(en_yuksek_devir, devir)
                 sayim[c["id"]] = devir + sum(
-                    self.x[(c["id"], d, t["id"])]
-                    for d in self.gunler for t in self.sablonlar if sayac(t, d))
+                    self._X(c["id"], d, t["id"])
+                    for d in self.gunler for t in self._sablonlari(c) if sayac(t, d))
 
             # Bu boyutta bir kisinin alabilecegi en yuksek sayi: devri +
             # boyuta giren gun sayisi. "cumartesi" icin 1, "hafta_sonu" icin 2.
@@ -728,8 +995,8 @@ class Model(object):
             soz = (c.get("sozlesme") or {}).get("haftalik_saat")
             if soz is None:
                 continue
-            dakika = sum(int(round(_net_saat(t) * 60)) * self.x[(c["id"], d, t["id"])]
-                         for d in self.gunler for t in self.sablonlar)
+            dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
+                         for d in self.gunler for t in self._sablonlari(c))
             sapma = self.m.NewIntVar(0, 100000, "sd_%s" % c["id"])
             self.m.Add(sapma >= int((soz - tolerans) * 60) - dakika)
             self.cezalar.append((agirlik, sapma))

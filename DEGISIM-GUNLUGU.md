@@ -4,6 +4,65 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-28 · K-34 · Motorun zaman birimi çeyrek saat oldu (Z-7)**
+Mustafa: *"Molalar zaten 15 dk lık dilimlere dağıtılıyor, doğrusu bu."* Saat izgarası
+kolaylık değil **hataydı**: 15 dk'lık dinlenme bir tam saat kaplıyordu (yemekte hata
+yoktu, **1.00×**; dinlenmede **4.00×** — önceki "2.29×" ikisini harmanlıyordu).
+T-44 **kapandı**: eşik `4F → 12F/7`, taban 3 için 12 kişi yerine 6. Çözüm süresi
+40 kişide 0.78 sn. Yol üstünde bir sessiz geçiş bulundu ve kapatıldı: 14:15'te
+sahada sıfır kişi varken doğrulayıcı hiçbir ihlal yazmıyordu. Motor **120 test** yeşil.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-34 · `02-spec/v1.4-master-spec.md` Z-7
+
+**2026-09-28 · K-33 · `SAHADA_ASGARI` — firma *"sahada en az N kişi"* diyebiliyor**
+Molada olan sahada sayılmaz; `ASGARI_KAPSAMA` *atanmış*ı sayar, bu *sahadaki*ni.
+⚠ Kural bir kez **yanlış mantıkla** yazıldı (taban talep tablosuyla sınırlanıyordu,
+bir test de bunu sabitliyordu); Mustafa yakaladı, aynı gün düzeltildi ve test
+tersine çevrildi. Katalog **39**, motor **109 test** yeşil. Yeni 🔴 T-44:
+bugünkü mola geometrisi kuralı boğuyor (`N ≥ 4F`).
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-33 · `00-DEVIR/06-ACIK-RISKLER.md` T-44
+
+**2026-09-28 · Dinlenme molaları çözücüye bağlandı — K-32 tamamlandı**
+
+Motor artık firmanın mola politikasını **plana çeviriyor**. *"60 dk yemek +
+3×15 dk ücretli kısa mola"* politikasıyla üretilen gerçek plan:
+
+```
+C3  11:00 dinlenme · 12:00 yemek · 13:00 dinlenme · 16:00 dinlenme
+C2  12:00 dinlenme · 13:00 yemek · 14:00 dinlenme · 15:00 dinlenme
+C1  12:00 dinlenme · 13:00 dinlenme · 14:00 yemek · 15:00 dinlenme
+```
+
+**Yemekler kişiler arasında kaydırılmış** — üçü de 3–5 saat penceresinde ama
+farklı saatlerde. "Adil ve yönetilebilir mola operasyonu" istenen buydu.
+
+**Asıl zorluk `_sahada`'daydı ve reification'sız çözüldü.** *"Sahada olmak"*
+= atanmış **ve** hiçbir mola bu dilimi kapsamıyor — bir VE bağlacı, çarpım
+gerektiriyor gibi görünüyor. Gerektirmiyor: molalar birbirini kesmiyorsa
+*"molada olmak"* bir **toplamdır**.
+
+```
+sahada = (kapsamayan yemek seçenekleri) − (kapsayan dinlenmeler)
+```
+
+İkisi de doğrusal, yardımcı değişken yok. Çakışmama kısıtı bu yüzden yalnız
+adil plan için değil, **bu aritmetiğin geçerliliği** için de şart — iki mola
+aynı dilimi kapsarsa sonuç eksiye düşer. Bekçisi
+`test_molalar_BIRBIRINI_kesmez`.
+
+**Model neden büyümedi:** aday pencereleri eşit dağıtımdan geliyor ve ayrık,
+bu yüzden dinlenmeler arası çakışma kısıtı **hiç yazılmıyor** — yalnız
+yemekle çakışma yazılıyor.
+
+**Yol üstünde bir tutarsızlık bulundu:** `_mola_baslangiclari` yemek süresini
+politikadan alıyordu ama `_mola_dilimleri` hâlâ `mola_dk`'ya bakıyordu.
+Politika farklı bir süre verdiğinde kapsama dilimleri yanlış hesaplanacaktı.
+Düzeltildi.
+
+**Ölçümler:** motor **103/103** · altın senaryolar **12 geçti, 4 atlandı** ·
+fikstür denetleyicisi **11/11**.
+
+---
+
 **2026-09-25 · K-32 uygulandı: mola tipleri, dört süre, göreli pencere**
 
 **Motor.** `dinlenme` / `yemek` tipleri · üç süre ayrı ayrı hesaplanıyor ve

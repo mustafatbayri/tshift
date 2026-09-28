@@ -27,13 +27,85 @@ EN IYI PLAN -- K-10
 
 from ortools.sat.python import cp_model
 
-from .model import Model
+from .model import Model, _q, _dilimler
 
 
-def teshis_koy(girdi, kuruldu, istatistik, ayar):
-    kapsam, hucre, gereken, mumkun = _nerede_tikaniyor(girdi, kuruldu)
-    engelleyen = _engelleyen_kurallar(girdi, kuruldu, hucre)
-    en_iyi = _en_iyi_plan(girdi, ayar)
+def ulasilamayan_hucre(girdi, kuruldu):
+    """Hicbir vardiya sablonunun ULASAMADIGI ilk talep hucresi -- ya da None.
+
+    COZUCU CALISTIRMADAN sorulabilecek en basit soru: bu saati kapatabilecek
+    bir vardiya var mi? Yoksa plan imkansizdir ve bunu kanitlamak icin
+    arama yapmaya gerek yoktur.
+
+    ⚠ NEDEN EKLENDI (28 Eylul, gercekci veri setinde olculdu)
+      7/24 calisan bir organizasyonda Pazartesi 00:00-06:00 talebi vardi.
+      O saatleri yalniz PAZAR GECESI baslayan bir vardiya kapatabilir ve
+      Pazar planlanan haftanin icinde degil. Motor dogru cevabi veriyordu
+      ama once cozumsuzlugu KANITLIYORDU: 105 kisilik sahnede 292 saniye,
+      10 kisilik tek ekipte 73 saniye. Ayni cevap burada milisaniyede.
+
+      (Bunun urun tarafindaki karsiligi T-28: onceki haftanin gece
+       vardiyasi okunmuyor. Bu kontrol T-28'i COZMEZ, gorunur kilar.)
+
+    Z-1'I BILIR: gece yarisini asan vardiya (23->31) bir sonraki gunun
+    erken saatlerine ulasir. Bilmezse cozulebilir plani reddederdi --
+    bu, gec cevap vermekten daha kotu olurdu.
+    """
+    gunler = list(kuruldu.gunler)
+    for t, gun, saat in kuruldu._hucreler():
+        if not t.get("asgari"):
+            continue
+        hedef = _q(gun, saat)
+        for sablon in kuruldu.sablonlar:
+            if sablon.get("ekip") is not None and sablon.get("ekip") != t.get("ekip"):
+                continue
+            izinli = sablon.get("gunler", gunler)
+            for d in gunler:
+                if d not in izinli:
+                    continue
+                if hedef in _dilimler(d, sablon["bas"], sablon["bit"]):
+                    break
+            else:
+                continue
+            break
+        else:
+            return {"ekip": t.get("ekip"), "gun": gun, "saat": saat,
+                    "gereken": t["asgari"]}
+    return None
+
+
+def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None):
+    if on_kontrol:
+        # ON KONTROL yolu: hucre zaten belli, aramaya gerek yok.
+        kapsam = "hucre"
+        hucre = {"ekip": on_kontrol["ekip"], "gun": on_kontrol["gun"],
+                 "saat": on_kontrol["saat"]}
+        gereken, mumkun = on_kontrol["gereken"], 0
+        # ⚠ `_engelleyen_kurallar` BILEREK cagrilmaz. O fonksiyon her SERT
+        #   kurali tek tek gevsetip yeniden cozer (kural basina 10 sn'ye
+        #   kadar); 20 sert kurali olan bir sahnede dakikalar surer ve
+        #   on kontrolun butun kazancini yer.
+        #
+        #   Burada aramaya gerek yok: hucreye ULASAN vardiya yoksa onu
+        #   kapatmayi zorunlu kilan kural ASGARI_KAPSAMA'dir, tanimi geregi.
+        #   Baska hicbir kuralin gevsetilmesi bu hucreyi kapatamaz.
+        engelleyen = [{"kod": k["kod"],
+                       "yasal": k.get("yasal", False),
+                       "kabul_edilebilir": k.get("kabul_edilebilir", False),
+                       "etkilenen_hucre": hucre,
+                       "gerekce": "hucreye ulasan vardiya sablonu yok"}
+                      for k in (girdi.get("kurallar") or [])
+                      if k.get("kod") == "ASGARI_KAPSAMA"
+                      and k.get("aktif", True)]
+        # `_en_iyi_plan` BILEREK atlanir: kurallari gevseterek bir taslak
+        # uretir ama bu hucreyi HICBIR gevsetme kapatamaz -- kapatabilecek
+        # vardiya YOK. Tam cozum suresini odeyip ayni cevabi almak olurdu.
+        en_iyi = {"var": False,
+                  "sebep": "on kontrol: hucreye ulasan vardiya sablonu yok"}
+    else:
+        kapsam, hucre, gereken, mumkun = _nerede_tikaniyor(girdi, kuruldu)
+        engelleyen = _engelleyen_kurallar(girdi, kuruldu, hucre)
+        en_iyi = _en_iyi_plan(girdi, ayar)
 
     return {
         "durum": "cozumsuz",

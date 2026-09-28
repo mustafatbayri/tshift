@@ -1956,6 +1956,349 @@ bütün gün elimdeydi; dosyaları **hiç istememiştim**. Mustafa itiraz etti,
 > kaydedilirken bulgu gibi görünür. Bu T-18'in insan tarafındaki hâli:
 > *"kontrol edemedim"* ile *"sorun yok"* aynı cümlede.
 
+## ✅ T-44 · ~~Mola geometrisi `SAHADA_ASGARI`'yi boğuyor~~ — **KAPANDI (28 Eylül, K-34)**
+
+> **Kapanış.** Motorun zaman birimi çeyrek saate indirildi (**K-34**). Eşik
+> `N ≥ 4F` → **`N ≥ 12F/7`** (~1.71×F), 15 senaryoda 15/15. Taban 2 için 8
+> kişi yerine **4**, taban 5 için 20 yerine **9**. Çözüm süresi 40 kişi /
+> taban 5'te **0.78 sn** — model dört kat büyüdü, maliyeti pratikte yok.
+> Kalan ~1.71×F bir modelleme hatası değil, yemek ile ortadaki dinlenme
+> molasının aynı dilimler için yarışması; ölçüm K-34'te.
+
+> ⚠ **Bu kayıttaki "2.29×" rakamı yanıltıcıydı, düzeltildi.** Mustafa:
+> *"Yemek ile molayı birbirine karıştırma."* Ayrıştırınca yemeğin şişmesi
+> **1.00×** (hata yok), dinlenmeninki **4.00×**. Harmanlanmış rakam yemeğin
+> doğruluğunu dinlenmenin hatasıyla ortalıyordu.
+
+
+**Bulundu:** 28 Eylül 2026, K-33 yazılırken ölçümle
+
+**Ne.** `SAHADA_ASGARI` (K-33) yazıldı ve çalışıyor, ama bugünkü mola
+yerleşimiyle plan **ancak `N ≥ 4F` iken çözülüyor** — N ekipteki kişi, F
+taban. Taban 3 isteyen bir firmanın o vardiyada **12 kişisi** olmak zorunda.
+Gerçekçi değil.
+
+**Ölçüm.** 15 senaryo çözücüye verildi, formül **15/15** tuttu. İlk tahminim
+(`N ≥ 3F`, toplam kapasite hesabı) **10/15** tutmuştu — yani kaba kapasite
+hesabı yanlış cevap veriyordu; bağlayan kısıt **pencerelerin örtüşmesi**.
+
+09:00–18:00 vardiya, 1 yemek + 3×15 dk dinlenme:
+
+| mola | aday saatler |
+|---|---|
+| yemek | 12, 13, 14 |
+| dinlenme #0 | 11, 12 |
+| dinlenme #1 | 13, 14 |
+| dinlenme #2 | 15, 16 |
+
+Kişi başına dört molanın **üçü** `{11,12,13,14}` dört saatine sıkışıyor:
+`4(N−F) ≥ 3N` → `N ≥ 4F`. Saat **9, 10 ve 17'ye hiçbir mola düşemiyor**.
+
+**İki ayrı maliyet, ayrı ayrı ölçüldü:**
+
+| kaynak | eşiğe etkisi | ne gerektirir |
+|---|---|---|
+| **pencere darlığı** | `4F` → `~1.8F` | aday penceresini ±2 saate açmak — `_dinlenme_baslangiclari` içinde yerel değişiklik |
+| **saat yuvarlaması** | `~1.8F` → `~1.24F` | 15 dk'lık mola tam saat dilimi kaplıyor. ⚠ Düzeltme: şişme **yemekte 1.00×, dinlenmede 4.00×** — önceki "2.29×" ikisini harmanlıyordu. → K-34 ile kaldırıldı |
+
+**Baskın maliyet pencere darlığı** — bu beklenmiyordu, ölçüm gösterdi.
+Sezgi saat yuvarlamasını suçluyordu.
+
+**Pencereyi açmanın adalet maliyeti de ölçüldü** (K-32'nin *"eşit dağıtım"*
+kararına karşı): dinlenmeler arası ortalama boşluk **2.12 sa → 2.83 sa**
+(ideal 2.25), en küçük boşluk iki durumda da **1.00 sa**. Adalet çökmüyor.
+Üstelik saha kullanımı düzeliyor: bugün 12 kişilik planda saat 9, 10 ve
+17'de **12 kişi birden** sahada (taban 3 iken), ±2 ile gün boyu düz **3**.
+
+**Karar bekliyor.** Seçenekler:
+
+- **(a)** Aday penceresini ±2'ye aç — eşik `4F → ~1.8F`, adalet maliyeti
+  ölçüldü ve küçük. Yerel değişiklik.
+- **(b)** Ayrıca zaman çözünürlüğünü inceltip (15 dk dilim) yuvarlamayı da
+  kaldır — `~1.24F`'e iner ama modelin büyüklüğü ve çözüm süresi artar,
+  şartnamenin saat dilimi varsayımı (#6.3) değişir.
+- **(c)** Bugünkü hali kalsın, sınır belgelensin — küçük ekiplerde taban
+  kullanılamaz.
+
+`test_bugunku_GEOMETRI_SINIRI` bu sınırı **kayıt olarak** tutuyor: kırmızı
+olması *"kod bozuldu"* değil, *"sınır değişti, kaydı güncelle"* demektir.
+
+→ K-33 · K-32 (*"eşit dağıtım"*) · `09-motor/cozucu/model.py::_dinlenme_baslangiclari`
+
+---
+
+## 🔴 T-45 · Tanınmayan **değer** sessizce geçiyor — dördüncü bir kanal gerek
+
+**Bulundu:** 28 Eylül 2026, v6 gerçekçi veri seti kurulurken
+
+**Ne.** Veri setini yazarken sözleşme tipini `part_time` diye uydurdum.
+Şartnamedeki sözlük (§8.3) `tam_zamanli | yari_zamanli | sezonluk | stajyer`.
+Motor `part_time` değerini **tanımadı**, `PART_TIME_LIMIT` kuralı **90 kişiyi
+sessizce atladı** ve rapor tertemiz geldi.
+
+**Üç sessizlik kanalının hiçbiri bunu yakalamadı:**
+
+| kanal | neyi yakalar | bunu yakalar mı |
+|---|---|---|
+| `okunmayan_alanlar` | gönderilen ama **okunmayan alan** | ❌ alan okunuyor |
+| `uygulanmayan_kurallar` | gövdesi **yazılmamış kural** | ❌ kuralın gövdesi var |
+| `eksik_boyutlar` | yazılı kuralın **eksik boyutu** | ❌ boyut eksik değil |
+
+Boşluk tam ortada: **alan okunuyor, kural çalışıyor, ama değer tanınmıyor.**
+Kural `if tip != "yari_zamanli": continue` diyor ve tanımadığı her değeri
+sessizce atlıyor.
+
+**Karşılaştırma — kanal çalışınca ne oluyor.** Aynı veri setinde `aktif: false`
+diye de yanlış yazmıştım (doğrusu `durum: pasif`). Onu `okunmayan_alanlar`
+**yakaladı**: *"alan: aktif, yer: calisanlar, sebep: motor bu alani okumuyor"*.
+Yani mekanizma çalışıyor; kapsamı dar.
+
+**Neden önemli.** Bu bir test verisi kazası değil, kiracı entegrasyonunun
+olagan hali. Başka bir sistemden gelen `part-time`, `PartTime`, `yarizamanli`
+gibi bir değer: plan üretilir, rapor temiz çıkar, **yasal bir tavan hiç
+uygulanmamış olur.** Hata yönü yine tek taraflı ve yanlış tarafa — bozuk
+girdi motoru daha GEVŞEK yapıyor (T-27'nin aynı sınıfı).
+
+**Ayrıca:** `PART_TIME_LIMIT` yalnız `yari_zamanli`ye bakıyor. Şartnamedeki
+`sezonluk` ve `stajyer` tiplerinin **hiçbir haftalık tavanı yok** — ayrı bir
+soru, aynı kökten.
+
+**Ne gerek.** Dördüncü bir kanal: `taninmayan_degerler`. Şartnamede
+sayılabilir (enum) olarak tanımlı her alan için geçerli değer kümesi bilinir;
+girdide o kümenin dışında bir değer varsa bildirilir. `okunmayan_alanlar` ile
+aynı desen, aynı yer (`09-motor/dogrulayici/denetle.py`).
+
+⚠ **T-18 ile bağlantılı:** yayın kapısında bekleyen kanal sayısı **üçten
+dörde** çıkar. T-18 kararı verilirken bu da hesaba katılmalı.
+
+→ T-18 · T-19 (`okunmayan_alanlar`) · T-27 · `02-spec/v1.4-master-spec.md` §8.3
+
+---
+
+## ✅ T-46 · ~~Motor gerçekçi ölçekte çok yavaş~~ — **KAPANDI (28 Eylül)**
+
+> ⚠ **Açıldığında performans bulgusu sanıldı; ölçünce DOĞRULUK hatası çıktı.**
+> Motor SATIŞ çalışanını BACKOFFICE vardiyasına atamayı **engellemiyordu**.
+> Teorik değil: üretilen planda gerçekten oldu (`test_ekip_kapsami`).
+> Sonucu sessiz bir kapasite kaybı — kişinin saatleri dolar
+> (`HAFTALIK_AZAMI`, `HAFTA_TATILI`, `ARDISIK_CALISMA_GUNU` hepsi sayar)
+> ama `_atanmis` ekibe göre süzdüğü için **hiçbir ekibin kapsamasına
+> sayılmaz**. Çalışan meşgul, kimseye faydası yok.
+>
+> **Neden şimdiye kadar görülmedi:** bütün test sahnelerinde TEK EKİP
+> vardı, çapraz atama tanımsızdı. Üç ekipli ilk sahne kurulunca bir
+> dakikada görüldü. Mustafa'nın *"testlerimiz yetersiz"* sezgisinin
+> en net kanıtı.
+>
+> **Çözüm.** `_sablonlari(c)` süzgeci: kişi yalnız kendi ekiplerinin
+> vardiyalarına atanabilir. `ekipler` bir listedir (çok ekipli çalışan
+> hepsini görür); `ekip` alanı olmayan şablon herkese açık kalır
+> (eski fikstürler bozulmaz). Okuma noktaları `_X()` erişicisine çevrildi:
+> olmayan değişken aritmetikte sabit sıfır, böylece 16 döngünün hepsini
+> yeniden yazmak gerekmedi.
+>
+> **Ölçülen kazanç (350 kişi):**
+>
+> | | önce | sonra | |
+> |---|---|---|---|
+> | değişken | 968.244 | **335.086** | 2.9× küçük |
+> | model kurma | 117 sn | **41 sn** | 2.8× hızlı |
+>
+> Tahmin (~346.545 / ~42 sn) tuttu — çünkü bu kez **sayarak** tahmin
+> edilmişti, akıl yürüterek değil.
+>
+> Motor **124 test** yeşil. Kilit çapraz ekibe işaret ederse model sessizce
+> çözümsüz olmaz, `notlar`a sebep yazılır.
+>
+> 🔴 **Açık kalan:** doğrulayıcı tarafında çapraz ekip atamasını yakalayan
+> **hiçbir kural yok**. §7.6 gereği iki taraf bağımsız: elle düzenlenmiş ya
+> da dışarıdan gelen bir plan bu ihlali taşırsa **sessizce geçer**.
+> Katalogda karşılığı olmayan bir kural gerekiyor — Mustafa'nın kararı.
+> (T-45 ile aynı aile: motor tanımadığı şeyi sessizce geçiyor.)
+
+
+**Bulundu:** 28 Eylül 2026, v6 veri seti ilk kez çalıştırıldığında
+
+**Ne.** 350 kişilik gerçekçi sahnede (3 ekip, 14 şablon, 7 gün):
+
+| | |
+|---|---|
+| model **kurma** süresi | **117 saniye** (çözmeye başlamadan) |
+| değişken | **968.244** |
+| kısıt | **965.563** |
+
+**Sebebin büyük kısmı ölçüldü.** `_degiskenler` her kişi için **bütün**
+şablonlara değişken açıyor — kişinin ekibinde olmayanlar dahil. Bir SATIŞ
+çalışanı için 14 şablonun **9'u anlamsız**:
+
+| | şimdi | ekip süzgeciyle |
+|---|---|---|
+| `x` değişkeni | 32.550 | 11.650 |
+| toplam değişken | 968.244 | ~346.545 |
+| kurma süresi | 117 sn | ~42 sn |
+
+**Doğruluk hatası DEĞİL** — sınandı: çapraz ekip ataması kapsamaya
+sayılmıyor (`_atanmis` ekibe göre süzüyor). İsraf yalnızca kurma süresi ve
+bellek. Ama çözücüye gereksiz serbestlik derecesi de veriyor.
+
+**Düzeltme küçük değil:** `self.sablonlar` üzerinde dönüp `self.x`i indeksleyen
+**15+ nokta** var; hepsi kişiye özel listeye çevrilmeli. Aceleye getirilmedi.
+
+⚠ **Neden şimdiye kadar görülmedi:** en büyük test sahnesi **S-10** idi —
+10 kişi, 1 ekip, 3 şablon. Mustafa'nın *"test senaryolarımız yetersiz"*
+sezgisinin doğrudan karşılığı. Ayrıca K-34 (çeyrek saat) kapsama maliyetini
+dört katına çıkardı ve bu **hiçbir testte görünmedi**, çünkü her sahne oyuncaktı.
+
+**Tam ölçekli ÇÖZÜM süresi henüz ölçülmedi** (kurma ölçüldü: 41 sn). Ölçmek için: `08-motor-testleri/gercekci-veri-seti/coz-olc.py`.
+
+→ T-45 · K-34 · `08-motor-testleri/gercekci-veri-seti/` · `09-motor/cozucu/model.py::_degiskenler`
+
+---
+
+## ✅ T-47 · Çözümsüzlük **beş dakika sonra** bildiriliyordu — **KAPANDI (28 Eylül)**
+
+**Bulundu:** gerçekçi veri seti ilk kez çalıştırıldığında, Mustafa'nın makinesinde
+
+**Ne oldu.** 105 kişilik sahne **292 saniye** sonra *"çözümsüz"* döndü. Sebep
+gerçekti ve motorun teşhisi **tam yerindeydi**:
+
+```
+kapsam : hucre        hucre  : SATIS, gun 0, saat 0
+gereken: 1            mumkun : 0
+engelleyen: ASGARI_KAPSAMA
+```
+
+Pazartesi 00:00–06:00 arasında talep vardı ama o saatleri yalnız **Pazar
+gecesi** başlayan bir vardiya kapatabilir — Pazar, planlanan haftanın içinde
+değil. (Gerçek hayattaki karşılığı **T-28**: önceki haftanın gece vardiyası
+okunmuyor. Bu bulgu T-28'i çözmez, ne kadar erken çarptığını gösterir.)
+
+**Sorun cevapta değil, cevabın fiyatında.** Teşhis ancak çözücü
+çözümsüzlüğü KANITLADIKTAN sonra hesaplanıyordu. Üstelik
+`_engelleyen_kurallar` her SERT kuralı tek tek gevşetip **yeniden çözüyor**
+(kural başına 10 sn'ye kadar; 20 sert kuralda dakikalar).
+
+**Çözüm.** `teshis.ulasilamayan_hucre()` — model kurulduktan hemen sonra,
+çözücü çalışmadan önce sorulan basit soru: *bu saate ulaşan bir vardiya
+şablonu var mı?* Yoksa plan imkânsızdır ve aramaya gerek yoktur. Kontrol
+Z-1'i bilir (gece yarısını aşan vardiya ertesi günün erken saatlerine
+ulaşır), yoksa çözülebilir planı reddederdi.
+
+Bu yolda `_engelleyen_kurallar` ve `_en_iyi_plan` da **atlanır**: hiçbir
+gevşetme o hücreyi kapatamaz çünkü kapatabilecek vardiya YOK. Engelleyen
+kural analitik olarak bellidir (`ASGARI_KAPSAMA`), aranmasına gerek yok.
+
+**Ölçülen (aynı cevap, aynı hücre):**
+
+| sahne | önce | sonra | |
+|---|---|---|---|
+| 35 kişi | 73 sn | **3.7 sn** | 20× |
+| 105 kişi | 292 sn | **10.7 sn** | 27× |
+| 350 kişi | ölçülemedi | **37 sn** | — |
+
+**⚠ Testin ilk hali yanlıştı ve yazıldığı anda yeşildi.** SÜREYE bakıyordu;
+dört kişilik bir sahnede çözücü zaten milisaniyede bitiriyordu, yani test
+ölçmek istediği şeyi hiç ölçmüyordu. Süre bir MAKİNE özelliğidir,
+mekanizma değil. Test `durma_sebebi == "on_kontrol"` ve
+`cozum_suresi_sn == 0.0`'a bakacak şekilde yeniden yazıldı; mutasyonla
+sınandı (ön kontrol kapatılınca iki test kırmızı).
+
+Bu, aynı gün üçüncü kez: **küçük sahne sorunu gizliyor.**
+
+**Veri tarafı da düzeltildi.** Üretici gece talebini `saat % 24` yapıp günü
+aynen bırakıyordu; 24'ü aşan saat **ertesi güne** aittir. Haftanın son
+gününden taşan kısım planın dışında kalır. Düzeltme sonrası sahne
+**çözülüyor** (35 kişi → 165 atama).
+
+→ T-28 · T-46 · `09-motor/cozucu/teshis.py::ulasilamayan_hucre`
+
+---
+
+## 🟡 T-48 · *"Çözümsüz"* iki ayrı şeyi aynı kelimeyle söylüyor olabilir
+
+**⚠ BU MADDE ÖLÇÜLMEDİ.** Kod okunarak çıkarıldı; uçtan uca bir vaka
+kurulamadı (denendi, zaman bütçesine sığmadı). **Bulgu değil, hipotez.**
+Kapatmadan önce kanıtı üretilmeli.
+
+**Ne.** `09-motor/cozucu/coz.py`:
+
+```python
+if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+    return {"durum": "cozuldu", ...}
+return teshis_koy(...)          # -> "durum": "cozumsuz"
+```
+
+CP-SAT üç farklı sonuç dönebilir ve ikisi aynı kapiya çıkıyor:
+
+| CP-SAT | anlamı | motorun dediği |
+|---|---|---|
+| `INFEASIBLE` | **kanıtlandı**: böyle bir plan yok | `cozumsuz` |
+| `UNKNOWN` | **bütçe doldu**, plan bulunamadı | `cozumsuz` |
+
+Ayrım `cozum_istatistikleri.durma_sebebi` içinde duruyor
+(`cozumsuz` / `butce_doldu`), ama **başlık verdikte yok**.
+
+**Neden önemli.** Bir yöneticiye *"çözümsüz"* demek, *"bu talebi bu
+kadroyla karşılamak imkânsız"* demektir — personel alımına ya da talep
+düşürmeye kadar giden bir karar. Oysa gerçek *"biz yetiştiremedik, süre
+verseniz bulurduk"* olabilir. Hata yönü bu kez **katı** tarafa: motor
+yapabileceği bir şeyi yapamaz diye bildiriyor.
+
+T-45 ve T-46 ile aynı aile: **motorun bildiği bir ayrım çıktıya taşınmıyor.**
+
+**Önerilen.** Üçüncü bir `durum` değeri (`sure_yetmedi` gibi) ya da başlıkta
+`durma_sebebi`nin yer alması. Şartname §11.3 çıktı sözleşmesini
+ilgilendirdiği için **ürün kararı** — Mustafa'ya sorulacak.
+
+→ T-22 (çözümsüzlükteki taslak) · T-45 · `02-spec/v1.4-master-spec.md` §11.3
+
+---
+
+## ✅ T-49 · ~~Çözücü iyileşme durduğu hâlde aramaya devam ediyordu~~ — **KAPANDI (28 Eylül)**
+
+**Bulundu:** gerçekçi veri seti çalıştırılırken, Mustafa'nın makinesinde
+
+**Ne.** `09-motor/cozucu/coz.py` içindeki ayarlarda şu satır duruyordu:
+
+```python
+"durgunluk_saniye": 120,      # 2 dk iyilesme yoksa bitir
+```
+
+Parametre **tanımlı**, açıklaması **yazılı**, `_ErkenDur.son_iyilesme` alanı her
+çözümde **güncelleniyor** — ama hiçbir yerde **okunmuyordu**. Karar verilmiş,
+belgelenmiş, hiç uygulanmamış.
+
+Bu, T-24a/T-26'nın (*"karar kayıtlı ama yürürlükte değil"*) canlı örneği — ve
+bu kez **bedeli ölçüldü**: 35 kişilik gerçekçi bir sahnede çözücü bütçenin
+tamamını (**903 saniye**) kullandı; planı çok daha önce bulmuştu.
+
+**Neden basit bir kontrol yetmedi.** CP-SAT'in çözüm callback'i yalnız **yeni
+çözüm** bulununca tetiklenir. Çözücü tıkandığında callback hiç çağrılmaz —
+yani durgunluğu callback'in **kendisi fark edemez**. Dışarıdan saniyede bir
+bakan ayrı bir bekçi gerekti (`_durgunluk_bekcisiyle_coz`).
+
+**Bekçinin şartı:** en az bir plan bulunmuş olmalı. Hiç plan yokken durmak,
+*"imkânsız"* ile *"bakmadım"*ı karıştırmak olurdu (T-48'in aynı ailesi).
+
+**Ölçülen (35 kişi, aynı sahne, aynı plan):**
+
+| | önce | sonra |
+|---|---|---|
+| çözüm süresi | 903 sn | **111–135 sn** |
+| atama | 164 | 164 |
+| sert ihlal | 0 | 0 |
+
+Aynı plan, sekizde bir sürede. Motor **133 test** yeşil.
+
+**⚠ Testin ilk hali yine yanlıştı** — bugün üçüncü kez. Sahne 24 kişilikti ve
+çözücü 3 saniyede `hedef_bosluk` ile bitiyordu; test durgunluğu **hiç
+sınamadan** yeşil geliyordu. Sahne gerçekten tıkanan bir şekle (60 kişi,
+asgari 10 / hedef 30) çevrildi ve mutasyonla sınandı.
+
+→ T-24a · T-26 · T-48 · `09-motor/cozucu/coz.py::_durgunluk_bekcisiyle_coz`
+
+---
+
 ---
 
 ## Öncelik sırası — önerilen

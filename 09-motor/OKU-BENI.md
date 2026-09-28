@@ -44,7 +44,7 @@ hiçbir test yakalamaz. Doğrulayıcı ancak çözücüden **bağımsızsa** onu
 denetleyebilir.
 
 Bu yüzden zaman aritmetiği iki kez, **bilerek farklı** yazıldı: doğrulayıcı
-mutlak saat aralıklarıyla, çözücü saat dilimi (slot) tabanlı. Aynı sonuca iki
+mutlak saat aralıklarıyla, çözücü **çeyrek saat** dilimi (slot) tabanlı (K-34, §Z-7). Aynı sonuca iki
 ayrı yoldan varmaları, ikisinin birden yanlış olma ihtimalini düşürür.
 
 > ⚠ En kolay hata: *"aynı hesabı iki kez yazmayalım"* deyip ortak bir yardımcı

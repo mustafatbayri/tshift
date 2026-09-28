@@ -24,6 +24,9 @@ VARSAYILAN = {
     "azami_saniye": 900,          # 15 dk mutlak butce
     "hedef_bosluk": 0.02,         # optimuma %2
     "durgunluk_saniye": 120,      # 2 dk iyilesme yoksa bitir
+    "iki_asama_esigi": 50000,     # bu kadar degiskenden sonra ONCE gecerli plan
+    "ilk_asama_saniye": 120,      # gecerli plan aramasina ayrilan sure
+    "isci_sayisi": 8,
 }
 
 
@@ -51,6 +54,102 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
             self.StopSearch()
 
 
+def _ipucu_ver(kuruldu, ayar):
+    """Once GECERLI bir plan bul, sonra onu cozucuye baslangic olarak ver.
+
+    ⚠ NEDEN GEREKTI (28 Eylul, 350 kisilik gercekci sahnede olculdu)
+      Buyuk modelde cozucu HIC plan uretemiyordu:
+
+          amac VAR : 45 saniyede hic cozum yok (UNKNOWN)
+          amac YOK : 32 saniyede OPTIMAL
+
+      Yani GECERLI plan bulmak kolay, IYILESTIRMEK zor. Cozucu butun
+      butceyi iyilestirmeye harciyor ve eli bos donuyordu. Kullaniciya bu
+      "cozumsuz" olarak gorunuyordu -- yani "imkansiz" ile "yetistiremedim"
+      ayni cevaba cikiyordu.
+
+    NASIL
+      Amac GECICI olarak kaldirilir, uygun bir plan aranir, bulunan degerler
+      ipucu (hint) olarak yazilir ve amac GERI KONUR. Iyilestirme artik
+      elde bir planla baslar; butce dolsa bile cikti bos kalmaz.
+
+    ⚠ AMAC HER YOLDA GERI KONUR. Konmazsa motor sessizce "herhangi bir
+      plan" uretmeye baslar ve butun yumusak kurallar etkisiz kalir --
+      plan gecerli ama kalitesiz olur ve bunu kimse fark etmez.
+
+    Ipucu bulunamazsa sessizce vazgecilir: ipucu bir HIZLANDIRMADIR,
+    dogrulugun parcasi degil.
+    """
+    if not kuruldu.cezalar:
+        return False                      # amac yok; iki asamanin anlami yok
+
+    def amaci_geri_koy():
+        kuruldu.m.Minimize(sum(a * v for a, v in kuruldu.cezalar))
+
+    kuruldu.m.ClearObjective()
+    try:
+        c = cp_model.CpSolver()
+        c.parameters.max_time_in_seconds = float(ayar.get("ilk_asama_saniye", 120))
+        c.parameters.num_search_workers = ayar.get("isci_sayisi", 8)
+        if c.Solve(kuruldu.m) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+            return False
+        kuruldu.m.ClearHints()
+        for sozluk in (kuruldu.x, kuruldu.mola, kuruldu.dinlenme):
+            for v in sozluk.values():
+                kuruldu.m.AddHint(v, c.Value(v))
+        return True
+    finally:
+        amaci_geri_koy()
+
+
+def _durgunluk_bekcisiyle_coz(cozucu, model, geri, ayar):
+    """K-28'in ikinci kosulu: iyilesme durursa arama biter (T-24a).
+
+    ⚠ NEDEN AYRI BIR BEKCI GEREKTI
+      `durgunluk_saniye` parametresi `VARSAYILAN` icinde TANIMLIYDI,
+      aciklamasi yaziliydi ("2 dk iyilesme yoksa bitir") ve
+      `_ErkenDur.son_iyilesme` her cozumde guncelleniyordu -- ama hicbir
+      yerde OKUNMUYORDU. Karar verilmis, belgelenmis, hic uygulanmamis.
+      T-24a/T-26'nin ta kendisi.
+
+      28 Eylul'de bedeli olculdu: 35 kisilik gercekci bir sahnede cozucu
+      butcenin TAMAMINI (900 sn) kullandi; plani cok daha once bulmustu.
+
+    ⚠ CALLBACK TEK BASINA YETMEZ
+      CP-SAT'in cozum callback'i yalniz YENI COZUM bulununca tetiklenir.
+      Cozucu tikandiginda callback hic cagrilmaz -- durgunlugu callback'in
+      KENDISI fark edemez. Disaridan bakan bir bekci sart.
+
+    Bekci ayri bir is parcaciginda saniyede bir bakar; son iyilesmenin
+    uzerinden `durgunluk_saniye` gectiyse `cozucu.StopSearch()` cagirir.
+    En az bir cozum bulunmus olmasi sarti var: hicbir plan yokken durmak,
+    "cozumsuz" ile "bakmadim"i karistirmak olurdu (T-48'in ayni ailesi).
+    """
+    import threading
+
+    sinir = ayar.get("durgunluk_saniye") or 0
+    if sinir <= 0:
+        return cozucu.Solve(model, geri)
+
+    dur = threading.Event()
+
+    def bekci():
+        while not dur.wait(1.0):
+            if geri.cozum_sayisi == 0:
+                continue          # hic plan yok -- durmak yanlis olur
+            if time.time() - geri.son_iyilesme >= sinir:
+                geri.durma_sebebi = geri.durma_sebebi or "durgunluk"
+                cozucu.StopSearch()
+                return
+
+    is_parcacigi = threading.Thread(target=bekci, daemon=True)
+    is_parcacigi.start()
+    try:
+        return cozucu.Solve(model, geri)
+    finally:
+        dur.set()
+
+
 def coz(girdi, ayar=None):
     """Master Spec #11.3 ciktisi. Plan URETIR; denetlemez.
 
@@ -60,13 +159,39 @@ def coz(girdi, ayar=None):
     ayar = dict(VARSAYILAN, **(ayar or {}))
     kuruldu = Model(girdi).kur()
 
+    # ON KONTROL -- cozucuyu calistirmadan once (28 Eylul)
+    #
+    # Hicbir vardiya sablonunun ULASAMADIGI bir talep hucresi varsa plan
+    # imkansizdir ve bunu kanitlamak icin cozucuye gerek yoktur. Ayni cevabi
+    # cozucu de veriyordu, ama ancak cozumsuzlugu KANITLADIKTAN sonra:
+    # 105 kisilik gercek sahnede 292 saniye, 10 kisilik tek ekipte 73 saniye.
+    #
+    # Verilen cevap DEGISMEDI, yalnizca fiyati dustu. Ulasilamayan hucre
+    # yoksa bu kontrol sessizdir.
+    from .teshis import ulasilamayan_hucre, teshis_koy
+    erisilmez = ulasilamayan_hucre(girdi, kuruldu)
+    if erisilmez:
+        return teshis_koy(girdi, kuruldu,
+                          {"degisken_sayisi": len(kuruldu.x) + len(kuruldu.mola),
+                           "kisit_sayisi": len(kuruldu.m.Proto().constraints),
+                           "cozum_sayisi": 0, "motor": "CP-SAT",
+                           "profil": kuruldu.profil, "amac_degeri": None,
+                           "durma_sebebi": "on_kontrol",
+                           "cozum_suresi_sn": 0.0},
+                          ayar, on_kontrol=erisilmez)
+
     cozucu = cp_model.CpSolver()
     cozucu.parameters.max_time_in_seconds = float(ayar["azami_saniye"])
-    cozucu.parameters.num_search_workers = 8
+    cozucu.parameters.num_search_workers = ayar.get("isci_sayisi", 8)
     geri = _ErkenDur(ayar)
 
+    # IKI ASAMA -- yalniz BUYUK modelde. Kucuk sahnede iki kat kurulum
+    # gereksiz maliyettir; esik `iki_asama_esigi` ile ayarlanir.
+    iki_asama = (len(kuruldu.m.Proto().variables) >= ayar["iki_asama_esigi"]
+                 and _ipucu_ver(kuruldu, ayar))
+
     basladi = time.time()
-    durum = cozucu.Solve(kuruldu.m, geri)
+    durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
     sure = time.time() - basladi
 
     istatistik = {
@@ -78,6 +203,7 @@ def coz(girdi, ayar=None):
         "amac_degeri": _amac_degeri(cozucu, durum),
         "durma_sebebi": geri.durma_sebebi or _durma_sebebi(durum, cozucu, ayar, sure),
         "cozum_suresi_sn": round(sure, 2),
+        "iki_asama": iki_asama,
     }
 
     if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
@@ -91,7 +217,6 @@ def coz(girdi, ayar=None):
             "uygulanmayan_notlar": kuruldu.notlar,
         }
 
-    from .teshis import teshis_koy
     return teshis_koy(girdi, kuruldu, istatistik, ayar)
 
 
@@ -148,6 +273,16 @@ def _atamalari_cikar(kuruldu, cozucu):
                 molalar.append({"bas": s,
                                 "bit": s + yemek_dk / 60.0,
                                 "tip": "yemek"})
+        # Ucretli kisa molalar -- vardiyaya ESIT dagitilmis (K-32, 28 Eylul)
+        _, dinlenme_dk = kuruldu.dinlenme_tanim[tid]
+        for i, adaylar in enumerate(kuruldu._dinlenme_adaylari(sablon)):
+            for s in adaylar:
+                anahtar = (e, d, tid, i, s)
+                if anahtar in kuruldu.dinlenme and cozucu.Value(kuruldu.dinlenme[anahtar]):
+                    molalar.append({"bas": s,
+                                    "bit": s + dinlenme_dk / 60.0,
+                                    "tip": "dinlenme"})
+        molalar.sort(key=lambda mm: mm["bas"])
         ekip = next((c.get("ekipler", [None])[0]
                      for c in kuruldu.calisanlar if c["id"] == e), None)
         cikan.append({"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,

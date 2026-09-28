@@ -398,6 +398,88 @@ def mola_asgari_blok(girdi, atamalar, tanim):
     return cikan
 
 
+@kural("SAHADA_ASGARI")
+def sahada_asgari(girdi, atamalar, tanim):
+    """Her saatte sahada fiilen bulunmasi gereken kisi sayisi -- SERT (K-33).
+
+    FIRMANIN CUMLESI
+      "Sahada en az 5 kisi olacak." Bu bir MOLA kurali degil, SAHA kuralidir:
+      firma molayi degil, tezgahta duran kisi sayisini soyler. Molalar bu
+      sayiyi tutturmanin onundeki kisittir, konusu degil.
+
+    NEDEN ASGARI_KAPSAMA YETMIYOR
+      Ikisi FARKLI BUYUKLUK sayar ve fark tam da molalardir:
+          ASGARI_KAPSAMA  -> o saate ATANMIS kisi (mola sayilir)
+          SAHADA_ASGARI   -> o saatte SAHADA olan kisi (mola dusulur)
+      Vardiyaya yazilmis ama molada olan kisi ilkinde vardir, ikincisinde
+      yoktur. Musterinin gordugu ikincisidir.
+
+    NEDEN AYRI BIR KURAL (MOLA_KAPSAMASI degil)
+      `MOLA_KAPSAMASI` bilerek YUMUSAK (K-14): mola ciktisi oneridir, sert
+      yapmak kendisiyle celisirdi. O karar kisi basina TEK ogle arasi varken
+      verildi. Motor artik kisi basina DORT mola uretiyor ve ayni dissiz
+      kural tabani tamamen bosaltabiliyor -- 28 Eylul'de olculdu: uc kisilik
+      bir planda saat 12 ve 13'te SAHADA SIFIR KISI vardi, sert ihlal 0,
+      "yayinlanabilir" True.
+
+      Cozum MOLA_KAPSAMASI'ni sertlestirmek DEGIL: o zaman sahada tam asgari
+      kadar kisi varken hic mola verilemez ve plan cozumsuz kalirdi. Ikisi
+      ayri isi yapar: yumusak olan plani `asgari`ye dogru iter, bu kural
+      tabanin COKMESINI engeller.
+
+    ⚠ DUZELTMENIN KAYDI (28 Eylul, Mustafa)
+      Bu kural ilk yazildiginda `min(parametre, hucrenin asgarisi)` ile
+      sinirlaniyordu ve hem burada hem cozucude "firma MOLADA en az 5 dese
+      de..." diye aciklanmisti. Iki ayri hata:
+
+        1. YANLIS CUMLE. Firma "molada en az 5" demez, "SAHADA en az 5" der.
+           Parametre bir mola kotasi degil, saha tabanidir.
+        2. YANLIS MANTIK. min(...) firmanin sayisini sessizce talep
+           tablosunun sayisiyla degistiriyordu: firma 5 der, hucre 2
+           isterse motor 2 uygular ve firmanin cumlesi buharlasirdi.
+
+      Mustafa'nin sozu: "Firma molada en az 5 demeyecek, firma sahada en az
+      5 diyecek." Sinir kaldirildi; parametre oldugu gibi uygulanir.
+
+    TABAN TALEBI YUKARI CEKEBILIR -- BU KASITLIDIR
+      Firma 5 derken hucre 2 kisi istiyorsa iki SERT kural ayni anda
+      gecerlidir ve KATI OLAN baglar: o saatte en az 5 kisi sahada olmak
+      zorundadir, dolayisiyla en az 5 kisi atanir. Talep tablosu isin
+      gerektirdigini soyler, firma tezgahta gormek istedigini; ikisi
+      celisirse motor birini otekine tercih etmez, katiya uyar.
+
+      Celisi plani cozumsuz birakabilir. Cozumsuzluk SESSIZ DEGILDIR --
+      teshis katmani sebebi yazar. Sessizce gevsetmek yerine yuksek sesle
+      durmak bu projenin tercihi (#7.6).
+
+    NEREYE UYGULANIR
+      Talep hucresi OLAN her saate; hucrenin kendi `asgari`sine BAKILMAZ.
+      Firmanin talep yazmadigi saatte (kapali donem) taban da yoktur --
+      o saatte saha diye bir sey yoktur.
+
+    Kural tanimli degilse taban YOKTUR -- eski davranis aynen korunur.
+    """
+    taban = _p(tanim, "asgari_sahada", 0)
+    if taban <= 0:
+        return []
+    cikan = []
+    # CEYREK bazinda (K-34): 14:15'te cokup 14:00'de duran bir saha,
+    # tabani tutmus SAYILMAZ. Gerekcesi `_talep_anlari`da.
+    for t, gun, saat in _talep_anlari(girdi):
+        sahada = sum(1 for a in atamalar
+                     if a.get("ekip") == t.get("ekip")
+                     and zaman.sahada_mi(a, gun, saat))
+        if sahada < taban:
+            cikan.append(_ihlal("SAHADA_ASGARI", tanim, ekip=t.get("ekip"),
+                                gun=gun, saat=saat, olculen=sahada,
+                                gereken=taban,
+                                mesaj="gun %d saat %s: sahada %d kisi var "
+                                      "(en az %d olmali; molada olanlar "
+                                      "sahada sayilmaz)"
+                                      % (gun, _ss(saat), sahada, taban)))
+    return cikan
+
+
 @kural("MOLA_YERLESIMI")
 def mola_yerlesimi(girdi, atamalar, tanim):
     """Yemek molasi kisinin KENDI vardiyasina gore konumlanir (K-32).
@@ -485,6 +567,41 @@ def _talep_hucreleri(girdi):
         yield t, t["gun"], t["saat"]
 
 
+def _ss(an):
+    """Kesirli saati insan okusun diye bicimler: 14.25 -> '14:15'."""
+    saat = int(an)
+    dk = int(round((an - saat) * 60))
+    return "%02d:%02d" % (saat % 24, dk) if dk else "%d" % saat
+
+
+# Talep SAATLIK gelir (#11.2 degismedi), ama kapsama artik CEYREK SAATTE
+# olculur -- K-34.
+CEYREK = 4
+
+
+def _talep_anlari(girdi):
+    """Talep hucresinin kapsadigi CEYREK anlar -- (hucre, gun, an).
+
+    ⚠ NEDEN VAR (28 Eylul, K-34 uygulanirken bulundu)
+      K-33'u doguran sessiz gecisin AYNISI, bu kez bir ceyregin icine
+      saklanmisti. Olculdu: iki kisilik planda ikisi de 14:15-14:30 arasi
+      molada. 14:00'de ve 15:00'te sahadalar, 14:15'te SIFIR kisi var.
+      Dogrulayici HICBIR ihlal yazmiyordu -- cunku yalniz tam saatlere
+      bakiyordu.
+
+      Molayi ceyrege tasiyip kontrolu saatte birakmak, sessiz gecisi
+      duzeltmek degil GIZLEMEK olurdu: ihlal artik daha kolay saklanirdi.
+
+    GIRDI SOZLESMESI DEGISMEZ
+      Talep yine saatlik okunur (#11.2). Bir saatlik hucrenin degeri o
+      saatin DORT ceyreginin her birine uygulanir; hucre bolunmez, yalniz
+      daha sik ORNEKLENIR.
+    """
+    for t, gun, saat in _talep_hucreleri(girdi):
+        for ceyrek in range(CEYREK):
+            yield t, gun, saat + ceyrek / float(CEYREK)
+
+
 @kural("ASGARI_KAPSAMA")
 def asgari_kapsama(girdi, atamalar, tanim):
     """Atanmis kisi sayisina bakar -- MOLA DUSULMEZ.
@@ -530,17 +647,26 @@ def mola_kapsamasi(girdi, atamalar, tanim):
     """YUMUSAK (K-14). Mola DUSULDUKTEN sonra sahadaki kisi asgarinin
     altina inerse puan duser -- plan gecersiz OLMAZ."""
     cikan = []
+    # CEYREK bazinda olculur (K-34) ama hucre basina TEK ihlal yazilir:
+    # o saatin EN KOTU ceyregi. Dort ayri satir yazmak ayni bosuluğu dort
+    # kez sayar ve puani sessizce dort katina cikarirdi.
     for t, gun, saat in _talep_hucreleri(girdi):
         asgari = t.get("asgari", 0)
-        sahada = sum(1 for a in atamalar
-                     if a.get("ekip") == t.get("ekip")
-                     and zaman.sahada_mi(a, gun, saat))
-        if sahada < asgari:
+        en_kotu, en_kotu_an = None, saat
+        for ceyrek in range(CEYREK):
+            an = saat + ceyrek / float(CEYREK)
+            sahada = sum(1 for a in atamalar
+                         if a.get("ekip") == t.get("ekip")
+                         and zaman.sahada_mi(a, gun, an))
+            if en_kotu is None or sahada < en_kotu:
+                en_kotu, en_kotu_an = sahada, an
+        if en_kotu is not None and en_kotu < asgari:
             cikan.append(_ihlal("MOLA_KAPSAMASI", tanim, ekip=t.get("ekip"),
-                                gun=gun, saat=saat, sahada=sahada, asgari=asgari,
-                                olculen=sahada, gereken=asgari,
-                                mesaj="gun %d saat %d: molalar dusulunce sahada %d kisi kaliyor (asgari %d)"
-                                      % (gun, saat, sahada, asgari)))
+                                gun=gun, saat=en_kotu_an, sahada=en_kotu,
+                                asgari=asgari,
+                                olculen=en_kotu, gereken=asgari,
+                                mesaj="gun %d saat %s: molalar dusulunce sahada %d kisi kaliyor (asgari %d)"
+                                      % (gun, _ss(en_kotu_an), en_kotu, asgari)))
     return cikan
 
 
