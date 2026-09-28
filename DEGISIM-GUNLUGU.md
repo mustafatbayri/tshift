@@ -4,6 +4,15 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-28 · Gerçekçi veri seti (350 kişi) ve K-35**
+Üç ekipli, 14 vardiya şablonlu, 39 kurallı bir sahne kuruldu ve tam ölçekte
+çalıştı: **1.757 atama, 0 sert ihlal**, %100 asgari kapsama, optimuma %10 uzak.
+Bir saatte altı bulgu çıktı (T-45…T-49), beşi aynı gün kapandı.
+**K-35:** süre seçimi (10/15/30 dk), sonuç kartında **kanıtlanmış** optimuma
+yakınlık, ve plan başına bir kez *İyileştir* — plan asla kötüleşmez.
+Motor **137 test** yeşil.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-35 · `08-motor-testleri/gercekci-veri-seti/`
+
 **2026-09-28 · K-34 · Motorun zaman birimi çeyrek saat oldu (Z-7)**
 Mustafa: *"Molalar zaten 15 dk lık dilimlere dağıtılıyor, doğrusu bu."* Saat izgarası
 kolaylık değil **hataydı**: 15 dk'lık dinlenme bir tam saat kaplıyordu (yemekte hata

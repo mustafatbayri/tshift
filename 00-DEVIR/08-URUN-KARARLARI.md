@@ -1458,3 +1458,102 @@ yazmak aynı boşluğu dört kez sayar ve puanı sessizce dört katına çıkar�
 bekçisi `test_taban_CEYREKTE_delinirse_de_gorulur` olarak eklendi.
 
 → `02-spec/v1.4-master-spec.md` §6.3 · K-32, K-33, T-44 (kapandı)
+
+---
+
+## K-35 · Süre seçimi, **kanıtlanmış** optimuma yakınlık ve "İyileştir"
+
+**Karar (28 Eylül 2026, Mustafa).**
+
+### Çözülen sorun: aynı girdi, farklı plan
+
+Motor aynı girdiye her seferinde aynı planı vermiyor. Ölçüldü (35 kişilik
+sahne, 25 saniye, iki koşu): **21.905** ve **22.715**.
+
+Sebep paralel çalışma — sekiz arama işçisi aynı anda arıyor ve hangisinin
+önce iyi bir plan bulduğu her koşuda değişiyor. Birbirine çok yakın binlerce
+plan var; hangisinin geldiği yarışa bağlı.
+
+Tekrarlanabilirlik mümkün ama bedeli ağır. Ölçüldü:
+
+| ayar | koşu 1 | koşu 2 | aynı mı |
+|---|---|---|---|
+| 25 sn, 8 işçi | 21.905 | 22.715 | ❌ |
+| 25 sn, **1 işçi** | 1.010.039 | 1.010.039 | ✅ |
+
+Tek işçiyle aynı sürede üretilen plan **46 kat kötü**. Yani *"her seferinde
+aynı"* istemek, *"her seferinde çok daha kötü"* demek.
+
+> **Mustafa:** *"Yönetici tekrar çalıştırdığında daha iyi bir plan gelip
+> gelmeyeceğini nasıl bilecek? Bunu bilmezse nasıl güvenecek?"*
+
+### Karar: tekrarlanabilirlik değil, **görünürlük + birikim**
+
+**1. Süre seçimi — üç seçenek: 10 / 15 / 30 dakika.**
+
+⚠ Seçeneklerin yanına *"%85 optimum"* gibi yüzde **yazılmaz**. Optimuma
+yakınlık senaryoya göre değişir; 50 kişilik bir dükkânla 500 kişilik bir
+operasyonun eğrisi aynı değildir. Önden yüzde söz vermek çoğu kiracıda
+yalan olur.
+
+**2. Sonuç kartında kanıtlanmış yakınlık gösterilir.**
+
+Çözücü optimumun alt sınırını (`BestObjectiveBound`) matematiksel olarak
+kanıtlar. *"Bu plan teorik en iyisinin %90'ı kadar iyi"* bir tahmin değil,
+garantidir. Yönetici böylece *"tekrar denesem daha iyisi gelir mi"*
+sorusunu **kendi planı için** cevaplar: boşluk %2 ise denemeye değmez,
+%25 ise değer.
+
+Bu, önden ortalama yüzde göstermekten güçlüdür — çünkü onun planı hakkında.
+
+**3. "İyileştir" düğmesi — plan başına bir kez.**
+
+Sıfırdan üretmez; mevcut planı çözücüye başlangıç noktası (hint) olarak
+verir. Çözücü amacı küçülttüğü için **plan asla kötüleşmez**. Yönetici zar
+atmıyor, biriktiriyor.
+
+Ölçüldü (35 kişilik sahne, üç adım):
+
+| adım | süre | optimuma yakınlık |
+|---|---|---|
+| 1 | 15 sn | %24,5 |
+| 2 | +20 sn | %44,3 |
+| 3 | +25 sn | %71,2 |
+
+Geçersiz bir başlangıç planı (girdi değişmişse) sessizce yok sayılmaz,
+**bildirilir**. *"İyileştirdim"* deyip aslında zar atmak, çözmeye
+çalıştığımız güveni daha da bozardı.
+
+### ⚠ Neden "İyileştir" asıl yol değil
+
+Ölçüldü — aynı 60 saniye, iki farklı şekilde:
+
+| | optimuma yakınlık |
+|---|---|
+| **tek seferde 60 sn** | **%93,0** |
+| 15+20+25 sn (üç adım) | %71,2 |
+
+Her yeniden başlayışta çözücü kendi iç birikimini kaybediyor; ipucu
+**planı** koruyor ama **aramayı** korumuyor. Bu yüzden kullanıcı önden
+makul bir süre seçmeli; "İyileştir" sonucu görüp *"biraz daha"* demek
+isteyene ikinci şanstır, birincil yol değil.
+
+Plan başına bir kezle sınırlı olmasının sebebi de bu (ve maliyet).
+
+**4. Problem büyüklüğü ekranda gösterilir.**
+
+Mustafa (14 Eylül): *"müşteri de bu verileri istatistiki olarak görebilir,
+örnek 17.000 değişken… etkileyici olabilir."* 28 Eylül'de 350 kişilik
+gerçekçi sahnede ölçülen: **335.072 değişken · 423.489 kısıt · 39 kural**.
+`cozum_istatistikleri` bunları zaten üretiyor (§11.3).
+
+### Maliyet
+
+**Yapay zeka maliyeti yok.** Planlama motoru bir kısıt çözücüsüdür (CP-SAT),
+dil modeli değil. Token harcamaz.
+
+İşlem maliyeti plan başına birkaç sent mertebesinde. Asıl risk çarpan:
+3 öncelik × 3 süre seçeneği. "İyileştir"in plan başına bir kezle
+sınırlanması bu yüzden.
+
+→ `02-spec/v1.4-master-spec.md` §9.4, §11.3 · K-28 · `09-motor/cozucu/coz.py`

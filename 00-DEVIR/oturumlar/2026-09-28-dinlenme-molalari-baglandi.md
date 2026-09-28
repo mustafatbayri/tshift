@@ -1,4 +1,4 @@
-# 2026-09-28 · Dinlenme molaları (K-32) · saha tabanı (K-33) · çeyrek saat (K-34)
+# 2026-09-28 · Mola modeli bitti, gerçek ölçek ilk kez denendi (K-32…K-35)
 
 **İş parçası:** 25 Eylül'de bilerek yarım bırakılan tek iş. Eşit dağıtım
 aritmetiği yazılı ve beş testle sınanmıştı ama çağrısızdı; motor hâlâ tek
@@ -235,7 +235,67 @@ için yarışması**. Gerçek bir planlama gerilimi.
 
 ---
 
-## 8. Sıradaki iş — Mustafa'nın isteği
+## 8. Gerçek ölçek — 350 kişi, ve çıkan altı bulgu
+
+Mustafa:
+
+> *"Test senaryolarını 15-20 kişilik bir ekip düşünerek yapıyorsun hep…
+>  Kullanmadığımız hiçbir kural veya kriter olmamalı. Ancak bu şekilde
+>  doğru test sonuçları elde edebiliriz."*
+
+Üç ekipli (200 satış / 100 back office / 50 müşteri hizmetleri), 14 vardiya
+şablonlu, hafta içi–hafta sonu ayrı eşikli, 39 kurallı bir sahne kuruldu.
+
+**Bir saat içinde altı ayrı bulgu çıktı** — hepsi kodda aylardır duruyordu ve
+hiçbiri 10 kişilik sahnelerde görünmüyordu:
+
+| bulgu | ne çıktı |
+|---|---|
+| **T-45** 🔴 | Tanınmayan bir **değer** sessizce geçiyor. `part_time` yazıldı, motor tanımadı, yarı zamanlı tavanı 90 kişiye hiç uygulanmadı, hiçbir kanal bildirmedi |
+| **T-46** ✅ | Motor SATIŞ çalışanını BACKOFFICE vardiyasına atayabiliyordu. Performans sorunu sanıldı, **doğruluk hatası** çıktı. Düzeltildi: 968→335 bin değişken |
+| **T-47** ✅ | Çözümsüzlük 292 saniye sonra bildiriliyordu. Ön kontrol yazıldı: **10 saniye**, hücre adıyla |
+| **T-48** 🟡 | *"Çözümsüz"* hem *kanıtlandı imkânsız* hem *süre doldu* demek. **Ölçülmedi, hipotez** |
+| **T-49** ✅ | `durgunluk_saniye` tanımlıydı, açıklaması yazılıydı, **hiç okunmuyordu**. 903 sn → 111 sn |
+| **K-35** | Aynı girdi farklı plan veriyor. Çözüm: tekrarlanabilirlik değil, **görünürlük + birikim** |
+
+### Kapanış ölçümü
+
+350 kişi · 1.757 atama · **0 sert ihlal** · %100 asgari kapsama · %98,8 hedef
+kapsama · 0 saat fazla mesai · optimuma **%10** uzak · model 435 MB.
+
+### ⚠ Üç test yazıldığı anda yeşildi ve hiçbir şey ölçmedı
+
+Günün en önemli dersi bu. Üç ayrı testi **süreye** ya da **küçük sahneye**
+dayandırdım; üçü de yeşil geldi ve ölçmek istediği şeyi hiç ölçmedi:
+
+- ön kontrol testi **süreye** bakıyordu — dört kişilik sahnede çözücü zaten
+  milisaniyede bitiyordu
+- durgunluk testi 24 kişilik sahnede 3 saniyede `hedef_bosluk` ile bitiyordu
+- iki aşama testi 350 kişiyi bekleyemezdi
+
+Üçü de **mekanizmayı** sınayacak şekilde yeniden yazıldı (`durma_sebebi`,
+`iki_asama`, `cozum_suresi_sn == 0`) ve mutasyonla doğrulandı.
+
+Ayrıca `test_sigmayan_mola_UYDURULMAZ` eski davranışı **kural sanıp** yanlış
+mantığı sabitliyordu.
+
+### Motorun iyi tarafı
+
+Veri setini kurarken **dört veri hatası** yapıldı. Motor **üçünü yakaladı** ve
+doğru yeri gösterdi; yalnız biri sessizce geçti (T-45). Kilit biçimi hatasında
+çözücü ve doğrulayıcı **birbirinden bağımsız olarak aynı şeyi** söyledi —
+§7.6 tam bunun için var.
+
+### Günün dersi — altı kez aynı şey
+
+Ölçmeden kurulan mantık altı kez yanlış çıktı; altısında da ölçüm düzeltti.
+İkisini Mustafa yakaladı (ürün), dördünü ölçüm (mühendislik). Tahmin
+etmeyi bırakıp **kısıtları tek tek gevşetmeye** geçildiğinde doğru cevap ilk
+denemede geldi — iki ayrı vakada.
+
+---
+
+## 9. Sıradaki iş — Mustafa'nın isteği
 
 > *"Şu altın test senaryoları ve diğer test senaryolarını bana açıklayan,
 > aptala anlatır gibi anlatacağın bir içerik istiyorum. İçimde bir his var,

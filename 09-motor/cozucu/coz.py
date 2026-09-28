@@ -40,10 +40,15 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
         self.son_iyilesme = self.baslangic
         self.cozum_sayisi = 0
         self.durma_sebebi = None
+        # Ilk cozumun amac degeri. Baslangic plani verildiyse ILK cozum
+        # odur; boylece "nereden nereye" ciktida gosterilebilir.
+        self.ilk_amac = None
 
     def on_solution_callback(self):
         self.cozum_sayisi += 1
         self.son_iyilesme = time.time()
+        if self.ilk_amac is None:
+            self.ilk_amac = self.ObjectiveValue()
         sinir = self.BestObjectiveBound()
         deger = self.ObjectiveValue()
         if deger > 0 and abs(deger - sinir) / abs(deger) <= self.ayar["hedef_bosluk"]:
@@ -52,6 +57,68 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
         elif deger == 0 and sinir == 0:
             self.durma_sebebi = "optimum"
             self.StopSearch()
+
+
+def _plandan_ipucu(kuruldu, plan):
+    """Var olan bir plani cozucuye baslangic noktasi olarak verir.
+
+    NEDEN (Mustafa, 28 Eylul)
+      Motor ayni girdiye her seferinde ayni plani vermiyor: sekiz arama
+      iscisi paralel calisiyor ve hangisinin once iyi bir plan buldugu her
+      kosuda degisiyor (olculdu: 25 saniyede 21.905 ve 22.715). Tek isciyle
+      tekrarlanabilir olur ama ayni surede uretilen plan 46 KAT kotu.
+
+      Mustafa'nin sorusu: "Yonetici tekrar calistirdiginda daha iyi bir plan
+      gelip gelmeyecegini nasil bilecek? Bunu bilmezse nasil guvenecek?"
+
+      Cevap "yeniden uret" degil IYILESTIR. Plan ipucu olarak verilince
+      CP-SAT onu bir baslangic cozumu sayar; amaci KUCULTTUGU icin
+      donduregi sonuc ipucundan KOTU OLAMAZ. Yonetici zar atmiyor,
+      biriktiriyor.
+
+    DONEN DEGER
+      Ipucu yazildiysa True. Plan bu modele oturmuyorsa (girdi degismis,
+      sablon kalkmis, kisi ayrilmis) False -- ve cagiran taraf bunu
+      CIKTIDA BILDIRIR. Sessizce sifirdan baslamak, kullaniciya
+      "iyilestirdim" deyip aslinda zar atmak olurdu.
+    """
+    if not plan:
+        return False
+
+    degerler = {}
+    for a in plan:
+        anahtar = (a.get("calisan"), a.get("gun"), a.get("sablon"))
+        if anahtar not in kuruldu.x:
+            return False                      # plan bu modele oturmuyor
+        degerler[kuruldu.x[anahtar]] = 1
+
+        tid = a.get("sablon")
+        sablon = kuruldu.sablon.get(tid)
+        if sablon is None:
+            return False
+        yemek_dk = kuruldu.yemek_dk.get(tid, 0)
+        _, dinlenme_dk = kuruldu.dinlenme_tanim.get(tid, (0, 0))
+
+        for m in (a.get("molalar") or []):
+            bas = m.get("bas")
+            if m.get("tip") == "dinlenme":
+                for i, adaylar in enumerate(kuruldu._dinlenme_adaylari(sablon)):
+                    k = (a["calisan"], a["gun"], tid, i, bas)
+                    if k in kuruldu.dinlenme:
+                        degerler[kuruldu.dinlenme[k]] = 1
+                        break
+            else:
+                k = (a["calisan"], a["gun"], tid, bas)
+                if k in kuruldu.mola:
+                    degerler[kuruldu.mola[k]] = 1
+
+    # Plana girmeyen her sey SIFIR. Eksik birakmak ipucunu yarim birakir
+    # ve CP-SAT onu bir baslangic cozumu olarak kullanamaz.
+    kuruldu.m.ClearHints()
+    for sozluk in (kuruldu.x, kuruldu.mola, kuruldu.dinlenme):
+        for v in sozluk.values():
+            kuruldu.m.AddHint(v, degerler.get(v, 0))
+    return True
 
 
 def _ipucu_ver(kuruldu, ayar):
@@ -150,7 +217,7 @@ def _durgunluk_bekcisiyle_coz(cozucu, model, geri, ayar):
         dur.set()
 
 
-def coz(girdi, ayar=None):
+def coz(girdi, ayar=None, baslangic_plani=None):
     """Master Spec #11.3 ciktisi. Plan URETIR; denetlemez.
 
     Denetleme bagimsiz dogrulayicinin isidir (#7.6) ve bu fonksiyon onu
@@ -185,10 +252,20 @@ def coz(girdi, ayar=None):
     cozucu.parameters.num_search_workers = ayar.get("isci_sayisi", 8)
     geri = _ErkenDur(ayar)
 
-    # IKI ASAMA -- yalniz BUYUK modelde. Kucuk sahnede iki kat kurulum
-    # gereksiz maliyettir; esik `iki_asama_esigi` ile ayarlanir.
-    iki_asama = (len(kuruldu.m.Proto().variables) >= ayar["iki_asama_esigi"]
-                 and _ipucu_ver(kuruldu, ayar))
+    # BASLANGIC PLANI varsa onu ipucu yap; yoksa buyuk modelde iki asama.
+    # Ikisi ayni mekanizmayi kullanir (solution hint) ama amaclari farkli:
+    #   baslangic plani -> KULLANICININ elindeki plandan devam et
+    #   iki asama       -> cozucu hic plan bulamiyorsa ona bir tane ver
+    baslangic_kullanildi = False
+    iki_asama = False
+    if baslangic_plani:
+        baslangic_kullanildi = _plandan_ipucu(kuruldu, baslangic_plani)
+        if not baslangic_kullanildi:
+            kuruldu.notlar.append(
+                "baslangic plani bu girdiye oturmadi; sifirdan aranacak")
+    if not baslangic_kullanildi:
+        iki_asama = (len(kuruldu.m.Proto().variables) >= ayar["iki_asama_esigi"]
+                     and _ipucu_ver(kuruldu, ayar))
 
     basladi = time.time()
     durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
@@ -204,6 +281,9 @@ def coz(girdi, ayar=None):
         "durma_sebebi": geri.durma_sebebi or _durma_sebebi(durum, cozucu, ayar, sure),
         "cozum_suresi_sn": round(sure, 2),
         "iki_asama": iki_asama,
+        "baslangic_plani_kullanildi": baslangic_kullanildi,
+        "baslangic_amac": (round(geri.ilk_amac) if baslangic_kullanildi
+                           and geri.ilk_amac is not None else None),
     }
 
     if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
