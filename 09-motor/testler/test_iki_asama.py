@@ -86,8 +86,10 @@ def test_esik_asilinca_IKI_ASAMA_devreye_girer():
        esigi indirip mekanizmayi dogrudan sinamak.)
     """
     g = _sahne(14, gun=2, asgari=3, hedef=8)
-    c = coz(g, {"azami_saniye": 40, "durgunluk_saniye": 5,
-                "ilk_asama_saniye": 15, "iki_asama_esigi": 1000})
+    # Butceler CI icin bilerek genis: yavas bir makinede kisa butce
+    # mekanizmayla ilgisiz bir kirmizi uretirdi.
+    c = coz(g, {"azami_saniye": 60, "durgunluk_saniye": 8,
+                "ilk_asama_saniye": 25, "iki_asama_esigi": 1000})
     ist = c.get("cozum_istatistikleri") or {}
     assert c["durum"] == "cozuldu", c["durum"]
     assert c.get("atamalar"), "plan bos"
@@ -102,8 +104,10 @@ def test_iki_asamadan_sonra_AMAC_geri_konur():
     Plan gecerli gorunur, kalitesi cokerdi ve kimse fark etmezdi.
     """
     g = _sahne(14, gun=2, asgari=3, hedef=8)
-    c = coz(g, {"azami_saniye": 40, "durgunluk_saniye": 5,
-                "ilk_asama_saniye": 15, "iki_asama_esigi": 1000})
+    # Butceler CI icin bilerek genis: yavas bir makinede kisa butce
+    # mekanizmayla ilgisiz bir kirmizi uretirdi.
+    c = coz(g, {"azami_saniye": 60, "durgunluk_saniye": 8,
+                "ilk_asama_saniye": 25, "iki_asama_esigi": 1000})
     ist = c.get("cozum_istatistikleri") or {}
     assert ist.get("amac_degeri") is not None, (
         "amac degeri yok -- amac geri konmamis olabilir: %r" % ist)

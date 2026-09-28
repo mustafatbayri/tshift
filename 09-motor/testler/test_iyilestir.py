@@ -83,22 +83,29 @@ def _amac(c):
 
 def test_plan_IYILESTIRILEBILIR():
     """Kisa kosuyla plan uret, sonra onu baslangic alarak devam et."""
+    # ⚠ BUTCE CI ICIN SECILDI. Ilk yazimda 4 saniyeydi; yavas bir CI
+    #   makinesinde o surede hic plan bulunamayabilir ve test, iyilestirmeyle
+    #   ilgisiz bir sebepten kirmizi yanardi. Sure duyarli testin en kotu
+    #   hali budur: gercek bir hata varmis gibi gorunur.
     g = _sahne()
-    ilk = coz(g, {"azami_saniye": 4, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
+    ilk = coz(g, {"azami_saniye": 12, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
     assert ilk["durum"] == "cozuldu", ilk["durum"]
 
     ikinci = coz(g, {"azami_saniye": 20, "hedef_bosluk": 0.0,
                      "durgunluk_saniye": 999},
                  baslangic_plani=ilk["atamalar"])
     assert ikinci["durum"] == "cozuldu", ikinci["durum"]
-    assert _amac(ikinci) <= _amac(ilk), (
-        "iyilestirme plani KOTULESTIRDI: %s -> %s" % (_amac(ilk), _amac(ikinci)))
+    # Amac degeri yoksa (cozucu hic iyilesme gormediyse) karsilastirilacak
+    # bir sey yok; asil sinav planin KOTULESMEMESI.
+    a1, a2 = _amac(ilk), _amac(ikinci)
+    assert a1 is not None and a2 is not None, "amac degeri yok: %r / %r" % (a1, a2)
+    assert a2 <= a1, ("iyilestirme plani KOTULESTIRDI: %s -> %s" % (a1, a2))
 
 
 def test_baslangic_plani_CIKTIDA_bildirilir():
     """Kullanici nereden baslandigini ve ne kazanildigini gormeli."""
     g = _sahne()
-    ilk = coz(g, {"azami_saniye": 4, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
+    ilk = coz(g, {"azami_saniye": 12, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
     ikinci = coz(g, {"azami_saniye": 15, "hedef_bosluk": 0.0,
                      "durgunluk_saniye": 999},
                  baslangic_plani=ilk["atamalar"])
