@@ -327,15 +327,55 @@ def test_mola_kapsamasi_molayi_DUSER_ve_YUMUSAKTIR():
 
 
 # ----------------------------------------------------------------------
-# PART_TIME_LIMIT -- toleranssiz (Fazla Calisma Yon. md. 8)
+# PART_TIME_LIMIT -- tavan MEVZUATTAN gelir (K-39, 29 Eylul)
 # ----------------------------------------------------------------------
 
-def test_part_time_sozlesme_saati_toleranssiz():
+def test_yari_zamanli_KENDI_sozlesmesiyle_sinirlanmaz():
+    """⚠ BU TEST 29 EYLUL'DE TERSINE CEVRILDI.
+
+    Onceki hali sunu sabitliyordu: 20 saat sozlesmeli bir yari zamanliya
+    24 saat verilirse IHLAL. Yani tavan KISININ SOZLESMESIYDI.
+
+    Mustafa (29 Eylul): "Part time calisanin calisabilecegi zaman max
+    olarak mevzuatta belirlenmis zaten. Bizim calisan icin su kadar saat
+    max veya min calisabilir diye bir kisit girmemize aslinda gerek yok.
+    Yapmamiz gereken sadece calisanin calisabilecegi kisitli gunler veya
+    saat araliklari varsa bunu tutmak."
+
+    Yani 24 saat ihlal DEGILDIR: mevzuat tavani 30 saat (emsal tam
+    surelinin 2/3'u). Kisinin kisitli gunleri UYGUNLUK_TAKVIMI'nde durur,
+    ayri ve SERT bir kuraldir.
+
+    ⚠ Test SILINMEDI, TERSINE CEVRILDI: eski davranis geri gelirse bu
+      satir kirmizi yanar ve neden degistigi burada yazili kalir.
+    """
     s = degerlendir(
         sahne([kural("PART_TIME_LIMIT", yasal=True, tolerans_saat=0)],
               calisanlar=[calisan("C1", tip="yari_zamanli", saat=20)]),
         [atama("C1", g, 9, 18, [(12, 13)]) for g in range(3)])   # 24 saat net
-    assert kodlar(s) == ["PART_TIME_LIMIT"]
+    assert kodlar(s) == [], (
+        "yari zamanli hala KENDI sozlesmesiyle sinirlaniyor: %r" % kodlar(s))
+
+
+def test_yari_zamanli_MEVZUAT_tavanini_asamaz():
+    """45 saatin ustu ihlal -- tavan kalkmadi, yeri degisti.
+
+    ⚠ Bu test once 30 saatlik tavana gore yazilmisti (4 gun = 32 saat).
+      Mustafa 29 Eylul'de tavani 45'e cikardi ("yasa da 45 saate kadar
+      calistirabilirsin, bu fazla mesaiye girmez diyor"), sahne de
+      6 gune buyutuldu. Testin gorevi degismedi: tavanin VAR oldugunu
+      kanitlamak.
+
+    6 gun x 8 net = 48 saat > 45.
+    """
+    s = degerlendir(
+        sahne([kural("PART_TIME_LIMIT", yasal=True, tolerans_saat=0),
+               kural("HAFTALIK_AZAMI", yasal=True, azami_saat=45)],
+              calisanlar=[calisan("C1", tip="yari_zamanli", saat=20)]),
+        [atama("C1", g, 9, 18, [(12, 13)]) for g in range(6)])   # 48 saat net
+    assert "PART_TIME_LIMIT" in kodlar(s), (
+        "mevzuat tavani (30 saat) asildigi halde ihlal yazilmadi: %r"
+        % kodlar(s))
 
 
 def test_tam_zamanliya_part_time_limiti_UYGULANMAZ():

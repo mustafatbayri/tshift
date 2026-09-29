@@ -18,7 +18,8 @@ import time
 
 from ortools.sat.python import cp_model
 
-from .model import Model, _mola_baslangiclari, _mola_dilimleri
+from .model import (Model, _mola_baslangiclari, _mola_dilimleri,
+                    isci_sayisi)
 
 VARSAYILAN = {
     "azami_saniye": 900,          # 15 dk mutlak butce
@@ -26,7 +27,9 @@ VARSAYILAN = {
     "durgunluk_saniye": 120,      # 2 dk iyilesme yoksa bitir
     "iki_asama_esigi": 50000,     # bu kadar degiskenden sonra ONCE gecerli plan
     "ilk_asama_saniye": 120,      # gecerli plan aramasina ayrilan sure
-    "isci_sayisi": 8,
+    # None = MAKINENIN cekirdek sayisi. Burada sabit 8 yaziyordu ve iki
+    # cekirdekli makinelerde plani kotulestiriyordu (bkz. model.isci_sayisi).
+    "isci_sayisi": None,
 }
 
 
@@ -157,7 +160,7 @@ def _ipucu_ver(kuruldu, ayar):
     try:
         c = cp_model.CpSolver()
         c.parameters.max_time_in_seconds = float(ayar.get("ilk_asama_saniye", 120))
-        c.parameters.num_search_workers = ayar.get("isci_sayisi", 8)
+        c.parameters.num_search_workers = isci_sayisi(ayar)
         if c.Solve(kuruldu.m) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
         kuruldu.m.ClearHints()
@@ -244,12 +247,14 @@ def coz(girdi, ayar=None, baslangic_plani=None):
                            "cozum_sayisi": 0, "motor": "CP-SAT",
                            "profil": kuruldu.profil, "amac_degeri": None,
                            "durma_sebebi": "on_kontrol",
+                           "isci_sayisi": isci_sayisi(ayar),
                            "cozum_suresi_sn": 0.0},
                           ayar, on_kontrol=erisilmez)
 
     cozucu = cp_model.CpSolver()
     cozucu.parameters.max_time_in_seconds = float(ayar["azami_saniye"])
-    cozucu.parameters.num_search_workers = ayar.get("isci_sayisi", 8)
+    isci = isci_sayisi(ayar)
+    cozucu.parameters.num_search_workers = isci
     geri = _ErkenDur(ayar)
 
     # BASLANGIC PLANI varsa onu ipucu yap; yoksa buyuk modelde iki asama.
@@ -278,8 +283,14 @@ def coz(girdi, ayar=None, baslangic_plani=None):
         "motor": "CP-SAT",
         "profil": kuruldu.profil,     # #5.4 -- hangi agirlik sutunu kosuldu
         "amac_degeri": _amac_degeri(cozucu, durum),
+        # Oranin diger tarafi. Bkz. _alt_sinir: plan mi duzeldi, kanit mi.
+        "alt_sinir": _alt_sinir(cozucu, durum),
         "durma_sebebi": geri.durma_sebebi or _durma_sebebi(durum, cozucu, ayar, sure),
         "cozum_suresi_sn": round(sure, 2),
+        # Kac isciyle kosuldugu. Ekranda gosterilen "degisken | kisit"
+        # bilgisinin ayni ailesinden: "neden bu kadar surdu" sorusunun
+        # cevabi bunsuz eksik kalir.
+        "isci_sayisi": isci,
         "iki_asama": iki_asama,
         "baslangic_plani_kullanildi": baslangic_kullanildi,
         "baslangic_amac": (round(geri.ilk_amac) if baslangic_kullanildi
@@ -297,7 +308,48 @@ def coz(girdi, ayar=None, baslangic_plani=None):
             "uygulanmayan_notlar": kuruldu.notlar,
         }
 
-    return teshis_koy(girdi, kuruldu, istatistik, ayar)
+    # ------------------------------------------------------------------
+    # K-37 -- "IMKANSIZ" ile "YETISTIREMEDIM" ayri cevaplardir
+    #
+    # ⚠ NEDEN (Mustafa, 29 Eylul)
+    #   Burada eskiden tek satir vardi: plan yoksa teshis koy, "cozumsuz" de.
+    #   Oysa cozucu iki bambaska sebeple plansiz doner:
+    #
+    #     INFEASIBLE : KANITLADI -- boyle bir plan yok
+    #     UNKNOWN    : SURE DOLDU -- ariyordu, yetistiremedi
+    #
+    #   Ikisine de "cozumsuz" demek, yoneticiye "bu talebi bu kadroyla
+    #   karsilamak imkansiz" dedirtiyordu -- personel alimina kadar giden
+    #   bir karar, ve dayanagi olmayabilirdi.
+    #
+    #   Ustelik teshis ucuz degil: her sert kurali tek tek gevsetip yeniden
+    #   cozer. Olculdu -- 45 saniyelik butce TOPLAM 470 saniye surdu.
+    #   Kullanici butcesini bekledikten sonra 7 dakika daha bekleyip
+    #   muhtemelen yanlis bir cumle aliyordu.
+    #
+    #   Artik: kanit varsa teshis kosar; yoksa kosmaz ve kullaniciya
+    #   "neden oldugunu arastir" secenegi sunulur (`teshis_iste`).
+    # ------------------------------------------------------------------
+    if durum == cp_model.INFEASIBLE:
+        return teshis_koy(girdi, kuruldu, istatistik, ayar)
+
+    if ayar.get("teshis_iste"):
+        # Kullanici dugmeye basti: bekleme onun SECIMI. Ama cikan teshis
+        # yine de kanit degildir ve oyle isaretlenir -- aksi halde ayni
+        # yanlis cumleyi bu kez dugme arkasindan soylerdik.
+        return teshis_koy(girdi, kuruldu, istatistik, ayar, kesin=False)
+
+    return {
+        "durum": "sure_yetmedi",
+        "motor_surumu": SURUM,
+        "aciklama": ("Verilen surede plan bulunamadi. Boyle bir planin "
+                     "OLMADIGI kanitlanmis DEGILDIR -- daha uzun sure ile "
+                     "bulunabilir."),
+        "verilen_saniye": ayar["azami_saniye"],
+        "teshis_istenebilir": True,
+        "cozum_istatistikleri": istatistik,
+        "uygulanmayan_notlar": kuruldu.notlar,
+    }
 
 
 SURUM = "0.2.0-cozucu"
@@ -321,6 +373,31 @@ def _amac_degeri(cozucu, durum):
         return None
     try:
         return int(cozucu.ObjectiveValue())
+    except Exception:
+        return None
+
+
+def _alt_sinir(cozucu, durum):
+    """Cozucunun KANITLADIGI alt sinir: optimum bundan iyi OLAMAZ.
+
+    ⚠ NEDEN CIKTIDA (29 Eylul)
+      `optimuma_uzaklik_yuzde` = (amac - alt sinir) / amac. Tek bir oran
+      olarak bakildiginda IKI ayri iyilesme ayni gorunuyor:
+
+          PLAN duzeldi   -> amac dustu      (sahada daha iyi vardiya)
+          KANIT guclendi -> alt sinir cikti (ayni plan, daha az suphe)
+
+      350 kisilik sahnede tam bu soru cevapsiz kaldi: 900 saniye 360
+      saniyeden neden daha iyi? Oranin iki tarafi da yazilmadan bu
+      ayrilamiyor -- ve K-35 kullaniciya sure sectirirken hangisini
+      vaat ettigimizi bilmemiz gerekiyor.
+
+    Plan yoksa None -- "0" demek "optimum sifir olabilir" anlamina gelirdi.
+    """
+    if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return None
+    try:
+        return int(round(cozucu.BestObjectiveBound()))
     except Exception:
         return None
 

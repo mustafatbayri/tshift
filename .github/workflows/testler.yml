@@ -121,7 +121,7 @@ jobs:
   motor:
     name: Motor (dogrulayici + cozucu)
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Depoyu al
@@ -174,6 +174,35 @@ jobs:
       - name: Fikstur tutarliligi
         working-directory: 08-motor-testleri/v5
         run: python fikstur-denetleyici.py
+
+      # ZOR VERI SETI -- 500 KISI, IKI DOLULUK (%85 ve %95)
+      #
+      # NEDEN KAPIDA
+      # 28 Eylul'de kurulan 350 kisilik set bir saat icinde alti hata buldu,
+      # ama ELLE calistiriliyordu -- elle calistirilan bir set, unutuldugu
+      # gun yok hukmundedir.
+      #
+      # 29 Eylul'de set YENIDEN kuruldu, cunku eskisi bizi KIRAMIYORDU:
+      # 39 kuraldan 15'inin govdesi yoktu, kadro talebin iki katiydi ve 45
+      # saatlik sozlesme sablonlarla tutturulamiyordu. Yenisi daha kapiya
+      # baglanmadan UC hata buldu (T-57, T-58 ve K-38'in dogrulayiciya
+      # uygulanmamis olmasi).
+      #
+      # TAM OLCEKLI COZUM BURADA KOSMAZ
+      # 500 kiside model kurma tek basina ~65 saniye, cozum dakikalar.
+      #   cozmeden olculenler -> TAM olcekte (model buyuklugu, 40 kuralin
+      #                          tamami, 45 saati tutturan sablonlar,
+      #                          ulasilamayan hucre, her kural kirmizi
+      #                          yanabiliyor mu)
+      #   cozum gerektirenler -> 0.1 olcekte, yalniz %95 seti (zor olani)
+      # Tam olcekli cozum elle: `py coz-olc.py --saniye 900`
+      #
+      # Olculen kosu suresi: 12 test, ~4 dk 47 sn. Motor isinin sure siniri
+      # bu yuzden 20 dakika: butce asimindan gelen kirmizi, gercek hatadan
+      # gelen kirmiziya benziyor ve insani yanlis yere bakmaya gonderiyor.
+      - name: Zor veri seti (500 kisi, %85 ve %95)
+        working-directory: 08-motor-testleri/gercekci-veri-seti
+        run: python -m pytest testler -q
 
       - name: Hata halinde motor kaydi
         if: failure()

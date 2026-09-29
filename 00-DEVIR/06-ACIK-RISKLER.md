@@ -1088,7 +1088,7 @@ T-18 hâlâ açık: kapının bilinmeyen kuralda ne yapacağı **ürün kararı*
 
 ---
 
-## 🟡 T-23 · "Süre yetmedi" ile "imkânsız" aynı cevabı alıyor
+## ✅ T-23 · ~~"Süre yetmedi" ile "imkânsız" aynı cevabı alıyor~~ — **KAPANDI (29 Eylül, K-37)**
 
 **Bulundu:** 16 Eylül 2026, dış inceleme · **Kod okumasıyla kesin**,
 deneyle üretilemedi (iki denemede de CP-SAT gerçekten çözümsüzlüğü kanıtladı)
@@ -1111,6 +1111,26 @@ değiştirmeye yönlendirebilir.
 **Not:** bilgi aslında çıktıda **var** — `cozum_istatistikleri.durma_sebebi`
 `butce_doldu` diyebiliyor. Ama `durum` alanı `cozumsuz` diyor ve ekranda
 okunacak olan o.
+
+### ✅ Kapanış — 29 Eylül, K-37
+
+Mustafa'nın kararı: iki durum **iki ayrı cevap** alır.
+
+| CP-SAT | `durum` | teşhis koşar mı | yöneticinin gördüğü |
+|---|---|---|---|
+| `INFEASIBLE` | `cozumsuz` | evet, `teshis_kesin` **True** | *"böyle bir plan yok"* |
+| `UNKNOWN` | `sure_yetmedi` | **hayır** | *"süreyi uzat"* + **"neden olduğunu araştır"** düğmesi |
+
+Teşhis artık yalnız **istenirse** koşuyor (`teshis_iste`) ve o yolda
+`teshis_kesin` **False** — cümlenin kanıtlanmadığı çıktının kendisinde yazılı.
+
+⚠ **Ekran tarafı yazılmadı.** Plan editörü henüz hiç yok; K-37 motorun çıktı
+sözleşmesini ve düğmenin davranışını tanımlıyor.
+
+Bekçisi altı test: `09-motor/testler/test_sure_yetmedi.py`. Asıl kazancı
+ölçen `test_sure_yetmedigi_zaman_TESHIS_KOSMAZ`.
+
+→ K-37 · T-48 (aynı bulgunun ölçülmüş hâli) · T-59
 
 ---
 
@@ -2027,7 +2047,16 @@ olması *"kod bozuldu"* değil, *"sınır değişti, kaydı güncelle"* demektir
 
 ---
 
-## 🔴 T-45 · Tanınmayan **değer** sessizce geçiyor — dördüncü bir kanal gerek
+## 🟡 T-45 · Tanınmayan **değer** sessizce geçiyor — **seviye düşürüldü (29 Eylül, Mustafa)**
+
+> **Mustafa'nın değerlendirmesi.** *"Data girişleri ekrandan olacak, entegrasyonla gelen data zaten bizim uygulamamıza göre DB'ye yazılacak, Excel import'ta da aynı mantık var — hatalı datayı yükleme aşamasında kullanıcıya bildirerek ilerleyeceğiz. Yine de böyle bir kontrol olması tabii ki iyi. Ben sadece risk görmüyorum fazla."*
+>
+> **Doğrulama.** .NET tarafında `enum SozlesmeTipi { TamZamanli = 1, YariZamanli = 2, Sezonluk = 3, Stajyer = 4 }` var ve veritabanında **sayı** olarak tutuluyor. Kullanıcı ekrandan seçiyor, elle yazamıyor. Yani *"müdür `part_time` yazar"* senaryosu **yok**.
+>
+> **Kalan gerçek risk, dar ama sıfır değil:** motor ayrı bir servis ve girdisini JSON olarak alıyor; veritabanındaki `2` değerini `"yari_zamanli"` metnine çeviren katman **henüz yazılmadı**. O çevirici yazılırken bir uyuşmazlık olursa (ya da enum'a beşinci tip eklenip çeviriye eklenmezse) motor sessizce atlar. **Kanıtı var: 28 Eylül'de tam bu hata yapıldı.**
+>
+> **Karar:** önceliği düşük. Çevirici yazılmadan ÖNCE koymak en ucuzu; sonra koyarsak önce hatayı yaşarız.
+
 
 **Bulundu:** 28 Eylül 2026, v6 gerçekçi veri seti kurulurken
 
@@ -2214,11 +2243,12 @@ gününden taşan kısım planın dışında kalır. Düzeltme sonrası sahne
 
 ---
 
-## 🟡 T-48 · *"Çözümsüz"* iki ayrı şeyi aynı kelimeyle söylüyor olabilir
+## ✅ T-48 · ~~*"Çözümsüz"* iki ayrı şeyi aynı kelimeyle söylüyor~~ — **KAPANDI (29 Eylül, K-37)**
 
-**⚠ BU MADDE ÖLÇÜLMEDİ.** Kod okunarak çıkarıldı; uçtan uca bir vaka
-kurulamadı (denendi, zaman bütçesine sığmadı). **Bulgu değil, hipotez.**
-Kapatmadan önce kanıtı üretilmeli.
+**⚠ 28 Eylül'de bu madde hipotezdi.** Kod okunarak çıkarılmıştı, uçtan uca
+bir vaka kurulamamıştı ve *"kapatmadan önce kanıtı üretilmeli"* yazıyordu.
+29 Eylül'de çekirdek ölçüm aracı yazılırken kanıt kendiliğinden çıktı — ve
+beklenenden **pahalı** olduğu görüldü.
 
 **Ne.** `09-motor/cozucu/coz.py`:
 
@@ -2228,29 +2258,68 @@ if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
 return teshis_koy(...)          # -> "durum": "cozumsuz"
 ```
 
-CP-SAT üç farklı sonuç dönebilir ve ikisi aynı kapiya çıkıyor:
+CP-SAT'ın iki farklı sonucu aynı kapıya çıkıyor:
 
 | CP-SAT | anlamı | motorun dediği |
 |---|---|---|
 | `INFEASIBLE` | **kanıtlandı**: böyle bir plan yok | `cozumsuz` |
 | `UNKNOWN` | **bütçe doldu**, plan bulunamadı | `cozumsuz` |
 
-Ayrım `cozum_istatistikleri.durma_sebebi` içinde duruyor
-(`cozumsuz` / `butce_doldu`), ama **başlık verdikte yok**.
+Ayrım `cozum_istatistikleri.durma_sebebi` içinde duruyor, ama **başlıkta yok**.
 
-**Neden önemli.** Bir yöneticiye *"çözümsüz"* demek, *"bu talebi bu
-kadroyla karşılamak imkânsız"* demektir — personel alımına ya da talep
-düşürmeye kadar giden bir karar. Oysa gerçek *"biz yetiştiremedik, süre
-verseniz bulurduk"* olabilir. Hata yönü bu kez **katı** tarafa: motor
-yapabileceği bir şeyi yapamaz diye bildiriyor.
+### Ölçülen (29 Eylül, 35 kişilik sahne, tek arama işçisi)
 
-T-45 ve T-46 ile aynı aile: **motorun bildiği bir ayrım çıktıya taşınmıyor.**
+| | |
+|---|---|
+| verilen bütçe | 45 sn |
+| satırın **toplam** süresi | **470 sn** |
+| bulunan plan | yok |
 
-**Önerilen.** Üçüncü bir `durum` değeri (`sure_yetmedi` gibi) ya da başlıkta
-`durma_sebebi`nin yer alması. Şartname §11.3 çıktı sözleşmesini
-ilgilendirdiği için **ürün kararı** — Mustafa'ya sorulacak.
+Bütçe dolduğunda motor teşhis koyuyor: her sert kuralı tek tek gevşetip
+yeniden çözüyor (kural başına 10 sn'ye kadar) ve üstüne bir *"en iyi plan"*
+arıyor. Yani kullanıcı 45 saniyeyi bekledikten sonra **7 dakika daha**
+bekliyor — bütçesinin **on katı**.
 
-→ T-22 (çözümsüzlükteki taslak) · T-45 · `02-spec/v1.4-master-spec.md` §11.3
+### İki ayrı zarar, tek sebepten
+
+1. **Yanlış olabilecek cümle.** Teşhis *"şu hücreyi şu kural engelliyor"*
+   diyor. Ama hiçbir şey kanıtlanmadı — çözücü yalnızca yetiştiremedi.
+   Yöneticiye *"çözümsüz"* demek, *"bu talebi bu kadroyla karşılamak
+   imkânsız"* demektir — personel alımına kadar giden bir karar.
+2. **Üstelik bedava değil.** Yanlış olabilecek bu cevap, zaten dolmuş
+   bütçenin on katı sürede veriliyor.
+
+### Önerilen — **ürün kararı, Mustafa'ya sorulacak**
+
+| CP-SAT | motorun diyeceği | teşhis koşsun mu |
+|---|---|---|
+| `INFEASIBLE` | `cozumsuz` — böyle bir plan yok | **evet**, soru anlamlı |
+| `UNKNOWN` | `sure_yetmedi` — bulamadım | **hayır**, cevaplanacak soru yok |
+
+Kazanç iki taraflı: cümle doğrulaşır **ve** kullanıcı 7 dakikayı beklemez.
+Onun yerine *"süreyi uzat"* anlamlı hâle gelir — K-35'in süre seçimiyle
+aynı aile.
+
+Şartname §11.3 çıktı sözleşmesini değiştirir.
+
+### ✅ Kapanış — 29 Eylül, K-37
+
+**Önerilen tablo aynen uygulandı.** `UNKNOWN` artık `sure_yetmedi` diyor ve o
+yolda teşhis **koşmuyor**. `INFEASIBLE` `cozumsuz` diyor ve teşhis
+`teshis_kesin` **True** ile koşuyor. Kullanıcı yine de sorabiliyor:
+*"neden olduğunu araştır"* → teşhis koşuyor ama cevap `teshis_kesin` **False**.
+
+**Kazanılan:** 45 saniyelik bütçe artık 45 saniye sürüyor. 470 saniyelik yol
+kapanmadı, **isteğe bağlandı** — bekleyen ne beklediğini biliyor.
+
+Bekçisi altı test: `09-motor/testler/test_sure_yetmedi.py`.
+
+⚠ **Bütçe aşımının ikinci kaynağı açık, başka numarada.** Iki aşamalı
+çözümde ilk aşamanın süresi ana bütçenin **üstüne** ekleniyor — **T-59**.
+Yani *"15 dakika"* diyen yönetici henüz 15 dakikada cevap almıyor; sebebi
+artık teşhis değil.
+
+→ T-22 (çözümsüzlükteki taslak) · T-45 · K-35 · `02-spec/v1.4-master-spec.md` §11.3 · K-37 · T-23 · T-59
 
 ---
 
@@ -2301,6 +2370,627 @@ asgari 10 / hedef 30) çevrildi ve mutasyonla sınandı.
 
 ---
 
+## 🟡 T-50 · 350 kişide plan optimuma **çok uzak** — ve sebebi henüz ayrılmadı
+
+**Bulundu:** 29 Eylül akşamı, çekirdek ölçümü yapılırken, Mustafa'nın makinesinde.
+
+**Ne.** 350 kişilik gerçek sahnede iki ölçüm çok farklı rakam verdi:
+
+| ne zaman | süre | iki aşama | işçi | optimuma uzaklık |
+|---|---|---|---|---|
+| 28 Eylül | 900 sn | **açık** | 8 | **%10,0** |
+| 29 Eylül | 360 sn | **kapalı** | 6 | **%42,4** |
+| 29 Eylül | 120 sn | kapalı | 6 | %69,3 |
+
+⚠ **İki değişken aynı anda değişti** (süre ve iki aşama), bu yüzden %10 ile
+%42 arasındaki farkın ne kadarı hangisinden geliyor **bilinmiyor**. Sürenin
+tek başına etkisi ölçüldü: 120 → 360 saniye, %69 → %42. Bu eğrinin 900
+saniyede %10'a inmesi zor görünüyor — yani farkın büyük kısmı muhtemelen
+**iki aşamadan** geliyor. **Muhtemelen — ölçülmedi.**
+
+**Neden önemli.** K-35 kullanıcıya *"bu plan teorik en iyisinin %X'i kadar
+iyi"* diyeceksek, 350 kişilik bir müşteride o X'in ne olduğunu bilmemiz
+gerekiyor. %10 ile %42 arasındaki fark, ekranda görülecek cümlenin
+*"neredeyse en iyisi"* ile *"kabaca bir plan"* arasındaki farkıdır.
+
+Ayrıca **iki aşama** şu an yalnız *"çözücü hiç plan bulamıyorsa ona bir tane
+ver"* diye konumlandırılmıştı. Eğer plan **kalitesini** de bu kadar
+değiştiriyorsa, eşiği ve rolü yeniden düşünülmeli.
+
+**Kapatmak için gereken tek koşu.** ⚠ Süresini tahmin etmiyorum: iki aşama açıkken her koşu, verilen bütçeye ek olarak birinci aşamaya ayrılan süreyi de harcar (`ilk_asama_saniye`, varsayılan 120 sn), artı ~27 sn model kurma. Yani iki koşu için kabaca 2 × (360 + 120 + 27) saniye — ama gerçeği ekranda görülecek:
+
+```
+py cekirdek-olc.py --olcek 1 --saniye 360 --isci 6 --tekrar 2
+```
+
+Araçta iki aşama artık **varsayılan açık**, yani bu koşu 29 Eylül'ün %42,4'ü
+ile doğrudan karşılaştırılabilir: tek değişen iki aşama olur.
+
+→ K-35 · K-36 · `09-motor/cozucu/coz.py` (`_ipucu_ver`, `iki_asama_esigi`)
+
+---
+
+## 🟡 T-51 · 45 saatlik sözleşme tutturulamıyor — **KURAL TARAFI KAPANDI (29 Eylül, K-39), VERİ TARAFI AÇIK**
+
+**Kapanan:** kural artık sert, izin düşülüyor ve **doğrulayıcıda gövdesi var** — eksik planlanan saat artık sessizce geçmiyor.
+
+**Açık kalan:** veri seti. Şablonlar 45 saati taşımıyor (SATIŞ 6 günde 42, BACKOFFICE 43,5). Yeni şablonlarla (6×7,5 ve 5×9) birlikte zor veri setinde çözülecek.
+
+**Bulundu:** 29 Eylül, Mustafa'nın sorusuyla: *"Tam zamanlı çalışanların
+haftada 45 saati doldurmaları gerekli. Yani 42 saat olarak planlayamayız."*
+
+**Ölçüldü.** Veri setindeki şablonların net süreleri ve hafta tatili (1 gün)
+birlikte bir **tavan** koyuyor:
+
+| ekip | en uzun vardiya (net) | 6 günde azami | 45 saat tutar mı |
+|---|---|---|---|
+| SATIŞ *(200 kişi)* | 7,0 | **42,0** | **hayır** |
+| BACKOFFICE *(100 kişi)* | 7,2 | **43,5** | **hayır** |
+| MÜŞTERİ HİZMETLERİ *(50 kişi)* | 8,0 | 48,0 | evet |
+
+350 kişinin 300'ü için 45 saat **ulaşılamaz bir hedef**. Plandaki sonuç
+(0.1 ölçek, 17 kişi 45 saat sözleşmeli):
+
+| | |
+|---|---|
+| 45 saati tutturan | **0** |
+| 43–45 arası | 8 |
+| 43'ün altında | 9 |
+| ortalama | **38,2 saat** |
+
+### ⚠ Asıl bulgu: hiçbir kapı bunu görmedi
+
+Plan **`0 sert ihlal`**, **`yayınlanabilir: True`** döndü. Üç sebepten:
+
+1. `SAAT_DENGESI` **yumuşak** — ihlal değil, ceza.
+2. **Tek taraflı**: yalnız *eksik* çalışmayı cezalandırıyor, üstelik
+   **2 saat toleransla**. Yani 43 saat bedava, 42 saat çok ucuz.
+3. **Doğrulayıcıda gövdesi YOK.** Bağımsız denetçi bu kuralı hiç
+   bakamıyor — yani §7.6'nın koruması bu kuralda çalışmıyor.
+
+17 kişi × ~3 saat = haftada ~51 saat, sözleşmeyle ödenen ama planlanmayan
+zaman. 350 kişilik gerçek ölçekte bunun karşılığı çok daha büyük.
+
+### Bu, fazla kadro bulgusuyla AYNI bulgunun iki yüzü
+
+Aynı gün ölçülmüştü: hedef talep 5.815 kişi-saat, sözleşme kapasitesi
+13.520 saat (**%43**), ve plan hedefin **2,00 katı** kişiyi sahaya koyuyor.
+Sebebi tam olarak bu: `SAAT_DENGESI` sözleşmeleri doldurmaya çalışıyor,
+hedefi aşmayı cezalandıran bir kural yok, ve şablonlar zaten yetmiyor.
+
+### Kapatmak için gereken — ve bunların ikisi **ürün kararı**
+
+1. **Veri**: 45 saatlik sözleşmeyi taşıyabilen şablonlar (ör. 9 saat brüt /
+   8 saat net × 6 gün, ya da 10/9 × 5 gün). Şu anki set bu sözleşmeyi
+   **tanımlıyor ama karşılayamıyor**.
+2. **Kural sertliği (Mustafa)**: `SAAT_DENGESI` sert mi, yumuşak mı; tolerans
+   kaç saat; üst taraf (sözleşmeden fazla çalıştırma) ayrı mı yönetilecek.
+3. **Yasal mı — CEVAPLANDI (Mustafa, 29 Eylül): hayır, `yasal: false`.**
+   Gerekçesi ticari: *"Türkiye'de çalışma saati başına maaş verilmediği,
+   direkt net maaş verildiği için, tam zamanlı bir çalışanın 43 saat
+   çalışması demek ona 2 saat fazla para veriyorum demektir."*
+   Yani eksik planlama **kanunu değil bütçeyi** deler; kural gevşetilebilir
+   ama gevşetmenin bir **para karşılığı** vardır. Üst taraf (sözleşmeden
+   fazla çalışma) ayrı bir konudur: o **fazla mesaidir** ve yasal
+   sınırları vardır (bkz. T-52).
+4. **Doğrulayıcı gövdesi**: karar ne olursa olsun yazılmalı. Kontrol
+   edilmeyen bir kural, kural değildir.
+
+→ K-36 · `09-motor/cozucu/model.py` (`_saat_dengesi`) ·
+  `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+
+---
+
+## ✅ T-52 · ~~45 saatlik tam zamanlı çalışana fazla mesai yaptırılamıyor~~ — **KAPANDI (29 Eylül, K-38)**
+
+**Çözüm:** `HAFTALIK_AZAMI` artık normal çalışma sınırı; toplam tavan *normal + fazla mesai tavanı*. 6 test, ikisi kırmızı başladı; mutasyon bir boşluk yakaladı ve altıncı test onu kapattı. Ayrıntı K-38'de.
+
+**Bulundu:** 29 Eylül, Mustafa'nın *"çözümsüzse fazla mesaiye başvuracak,
+en son çare"* cümlesi üzerine bakılırken.
+
+**Ne.** `09-motor/cozucu/model.py` → `_sure_sinirlari()` iki kisit koyuyor:
+
+```python
+self.m.Add(dakika <= int(haftalik * 60))                    # HAFTALIK_AZAMI = 45
+self.m.Add(dakika <= int((tavan + fm_tavan) * 60))          # 45 + 10 = 55
+```
+
+Bağlayıcı olan **birincisi**. 45 saat sözleşmeli bir çalışan zaten 45'te
+duruyor — yani **fazla mesai matematiksel olarak imkânsız**. K-30'un
+*"asgari zorlarsa minimum fazla mesai"* dalı, `fazla` ceza değişkeni ve
+profile bağlı `FAZLA_MESAI_PROFIL` tavanı bu çalışanlar için **ölü kod**.
+
+**Ölçüldü — tek değişken izole edildi.** Aynı sahne (6 kişi, 6 gün, herkesin
+48 net saat çalışması gerekiyor; sözleşme 40 saat, fazla mesai tavanı 10 —
+yani 48 saat **izinli olmalı**). Tek değişen `HAFTALIK_AZAMI` parametresi:
+
+| `HAFTALIK_AZAMI` | sonuç | en çok çalışan | fazla mesai |
+|---|---|---|---|
+| **45** | **çözümsüz** | — | — |
+| **55** | çözüldü | 48 saat | 48 saat *(6 kişi × 8)* |
+
+**Neden önemli.** Mustafa'nın tarif ettiği Türkiye gerçeği şu: *"eleman
+yetmiyor, fazla mesaiye gidiliyor."* Motor bugün bunu **yapamaz**; onun
+yerine `cozumsuz` ya da `sure_yetmedi` döner. Yani en çok ihtiyacımız
+olacak kaçış yolu kapalı.
+
+Ve fark edilmemesinin sebebi tanıdık: veri seti kimseyi 45 saate
+yaklaştırmıyordu (herkes 38–42 saatteydi, bkz. T-51).
+
+**Karar — ürün + hukuk (Mustafa).** `HAFTALIK_AZAMI` neyin tavanı?
+
+* **normal çalışma sınırı** ise 45 doğrudur, ama o zaman fazla mesai
+  **ayrı bir tavanla** modellenmeli ve toplam saat 45'i aşabilmeli;
+* **toplam saat tavanı** ise 45 fazla mesaiyi tanımdan imkânsız kılar.
+
+Mustafa'nın söylediği iki sınır ayrıca modelde **zaten var**: günlük 11
+saat (`GUNLUK_AZAMI`, SERT + yasal) ve haftalık fazla mesai tavanı
+(`FAZLA_MESAI_TAVANI`, profile bağlı: CALISAN 0 · DENGELI 10 · KAPSAMA 15).
+Yıllık tavan (`YILLIK_FAZLA_MESAI_TAVANI`) **SERT ve yasal işaretli ama
+gövdesi yok** — geçmiş dönem verisi gerektiriyor.
+
+⚠ **Bu, zor veri setinin ÖNKOŞULU.** Talep kapasitenin %95'ine
+çıkarıldığında izinlerle birlikte fazla mesai **zorunlu** hale gelir;
+bu kisit düzeltilmezse yeni set yanlış sebeple çözümsüz döner.
+
+→ K-30 · T-51 · `09-motor/cozucu/model.py` (`_sure_sinirlari`)
+
+---
+
+## ✅ T-53 · ~~K-39 üç altın senaryoyu gevşetti~~ — **KAPANDI (29 Eylül)**
+
+### Ortak kök sebep (29 Eylül'de ölçüldü)
+
+Altın senaryoların **kıtlık mekanizması** yarı zamanlıların sözleşme saatiydi
+(20, 24 saat). K-39 o alanı kaldırınca üç sahne birden gevşedi ve
+*"kadro yetmiyor"* / *"iki profil farklı plan üretir"* iddiaları doğru olmaktan
+çıktı. Hata değil; onaylanmış bir kararın onaylanmış sahneleri gevşetmesi.
+
+### ✅ A1 — kapandı
+
+Yarı zamanlılarda `haftalik_saat` alanı kaldırıldı (Mustafa onayı), kontrol
+alanı `.get()` ile okuyor (alan yokken **KeyError** veriyordu — düpEDüz hata).
+
+### ✅ A9 — kapandı
+
+Yarı zamanlılara **gerçekçi uygunluk** kondu (Mustafa'nın seçimi): C08 3,
+C09 2, C10 2 gün hafta içi müsait → 7 atama. 7 tam zamanlı × 5 gün = 35;
+toplam **42** — fikstürün kendi hesabı aynen korundu.
+
+⚠ Uygunluk **A9'un kendi `fark`ına** kondu, paylaşılan S10 sahnesine
+dokunulmadı. İlk denemede S10'a konmuştu ve **A7'yi de bozdu**; geri alındı.
+
+### ✅ A7 — kapandı (29 Eylül)
+
+A7 aynı girdiyi iki profille koşturur ve **farklı plan çıkmasını** şart koşar
+(eşitlik = ağırlık tablosu çalışmıyor demektir → kırmızı).
+
+⚠ **Tek başına hiçbir seçenek yetmedi — ölçüldü:**
+
+| ayar | KAPSAMA | CALISAN | fark |
+|---|---|---|---|
+| cmt 3, uygunluk yok | %100,0 / sapma 2 | %100,0 / sapma 2 | yok |
+| cmt 4, uygunluk yok | %100,0 / sapma 2 | %100,0 / sapma 2 | yok |
+| cmt 5, uygunluk yok | %100,0 / sapma 1 | %100,0 / sapma 1 | yok |
+| cmt 3, uygunluk VAR | %95,92 / sapma 2 | %95,92 / sapma 2 | yok |
+| cmt 4, uygunluk VAR | %95,92 / sapma 2 | %91,84 / sapma 2 | kısmi |
+| **cmt 5, uygunluk VAR** | **%95,92 / sapma 2** | **%91,84 / sapma 1** | **iki eksende de** |
+
+Mustafa'nın seçtiği 1. seçenek (cumartesi talebini artır) **tek başına
+çalışmıyor**: 6 kişiye kadar çıkarıldı, iki profil yine aynı planı verdi.
+Sahnede o kadar boşluk var ki hedef her ayarda %100 tutuyordu.
+
+Çözüm iki şeyin BİRLİKTE uygulanmasıydı ve **deneme-yanılmayla değil
+ızgara ölçümüyle** seçildi: **cumartesi 5 kişi + yarı zamanlılara gerçekçi
+uygunluk** (A9'dakinin aynısı). Sonuçta A7'nin iki onaylı cümlesi de doğru
+yönde ayrışıyor:
+
+* *"Çalışan profili cumartesiyi daha adil dağıtır"* — sapma 1 ≤ 2 ✓
+* *"Kapsama profili hedefi daha iyi tutturur"* — %95,92 ≥ %91,84 ✓
+
+Üç ardışık koşuda da yeşil (kararlılık kontrolü). İkisi de A7'nin **kendi
+`fark`ında**; paylaşılan S10 sahnesine dokunulmadı.
+
+**Altın senaryolar 12/12 yeşil.**
+
+→ K-39 · `08-motor-testleri/v5/fikstur/A07.json`
+
+**Bulundu:** 29 Eylül, K-39 uygulandıktan hemen sonra, altın senaryolar koşulunca.
+
+⚠ **Bunlar hata değil.** Mustafa'nın bugün verdiği kararın, 15 Eylül'de yine
+onun onayladığı iki cümleyle çelişmesi. Fikstürlere **dokunulmadı**:
+onaylanmış cümleyi değiştirmek Mustafa'nın işi.
+
+### A1 — *"Haftalık saat sözleşmeyi aşmaz"*
+
+```
+metrikler.fazla_mesai_saat: 0 olmalıydı, 3.0 geldi
+Sözleşme saatini aşanlar: C08 23.0 saat (sözleşme 20)
+```
+
+C08 yarı zamanlı. K-39'dan sonra kişinin **kendi** sözleşmesi tavan değil;
+tavan mevzuattan geliyor (30 saat). 23 saat artık ihlal değil.
+
+**Karar (Mustafa):** A1'in cümlesi mi değişecek (*"haftalık saat **mevzuat
+tavanını** aşmaz"*), yoksa yarı zamanlıda sözleşme yine tavan mı olacak?
+
+⚠ Yan soru: `fazla_mesai_saat` metriği **sözleşmenin üstündeki her saati**
+sayıyor. Yarı zamanlı için bu yanlış ad: Mustafa'nın kendi aktardığına göre
+30–45 saat arası *"fazla sürelerle çalışma"*, *"fazla mesai"* değil. Metriğin
+ikiye ayrılması gerekebilir.
+
+### A9/a — *"hedef yetmiyor"* senaryosu artık yetiyor
+
+```
+hedef_kapsama_yuzde: en fazla 99.9 olmalıydı, 100.0 geldi
+eksik_hedef_dakika : en az 1 olmalıydı, 0 geldi
+```
+
+Senaryonun **ön kabulü** bozuldu: yarı zamanlılar artık 20 yerine 30 saate
+kadar çalışabildiği için kadro, hedefi karşılamaya yetiyor. Yani senaryo
+*"hedef yetmiyor"* demeyi bıraktı.
+
+**Karar (Mustafa):** sahne yeniden sıkılaştırılacak mı (kadro azalt / talep
+artır), yoksa senaryonun anlamı mı değişecek?
+
+⚠ **Bu iki kırmızı çözülmeden `main`'e push edilmemeli** — *"main her zaman
+yeşil"* kuralı.
+
+→ K-39 · `08-motor-testleri/v5/fikstur/A01.json` · `.../A09.json` ·
+  `08-motor-testleri/v5/KABUL-OLCUTLERI.md`
+
+---
+
+## 🔴 T-54 · Yarı zamanlı saatinin **maliyeti yok** — çözücü onları bedava sanıyor
+
+**Bulundu:** 29 Eylül, yarı zamanlı tavanı 45'e çıkarıldıktan hemen sonra,
+kendi testim kırmızı yanınca.
+
+**Ölçülen.** Talep **asgari 1 kişi**. Sahnede 4 yarı zamanlı var. Üretilen plan:
+
+```
+C1: 45.0   C2: 45.0   C3: 45.0   C4: 45.0   saat
+```
+
+Dördünü de tavana kadar doldurdu — 1 kişilik talep için.
+
+**Neden.** Modelde bir saatin **parası tanımlı değil**. Hiçbir kural
+*"gereksiz yere kişi yazma"* demiyor; hedefi **aşmayı** cezalandıran kural da
+yok. Yarı zamanlıları eskiden sınırlayan tek şey kendi sözleşme saatleriydi
+(20, 24 saat) — K-39 ile o kalktı, yerine 45 geldi.
+
+**Aynı açığın daha önce ölçülen yüzü:** 350 kişilik sahnede plan, hedefin
+**2,00 katı** kişiyi sahaya koyuyordu (415 hücrenin 324'ünde hedef aşılmıştı).
+O zaman fazlalık tam zamanlılardan geliyordu (sözleşme doldurma baskısı);
+şimdi yarı zamanlılardan da gelebilir — ve **her saati para**.
+
+⚠ Mustafa'nın mantığı (*"önce tam zamanlıları 45'e tamamlarız, sonra yarı
+zamanlılara geçeriz"*) tam zamanlı tarafı için **kendiliğinden çalışıyor**:
+45 saat tabanı SERT, yani onlar zaten dolar. Fren eksik olan yer **ondan
+sonrası**: asgariyi tutturduktan sonra dur diyen bir şey yok.
+
+**Çözüm adayı (ürün kararı — Mustafa).** Hedefi aşmayı cezalandıran bir kural
+(ör. `HEDEF_ASIMI`, yumuşak). Bugün katalogda **yok**. Alternatifi, saat
+başına maliyet terimi — ama o, ücret verisini motora sokmak demek.
+
+→ K-39 · `09-motor/cozucu/model.py` (`_sure_sinirlari`) ·
+  `09-motor/testler/test_sozlesme_saati.py`
+
+---
+
+## ✅ T-55 · ~~*"Gece vardiyası yapamaz"* işareti yok~~ — **KAPANDI (29 Eylül, K-40)**
+
+**Çözüm:** `gece_vardiyasi` (şablon) + `gece_calisamaz` (çalışan) alanları ve `GECE_UYGUNLUGU` kuralı (SERT, katalog 40). İşaret tahmini ezer; işaret yoksa tahmine düşülür ve not yazılır. 8 test, 3 mutasyon. Ayrıntı K-40'ta.
+
+<details><summary>ilk kayıt</summary>
+
+
+**İstek (Mustafa, 29 Eylül).**
+
+> *"Kullanıcı kartında gece vardiyası yapamaz gibi bir ifadeye ihtiyacımız var.
+> Vardiya planı yapılırken de vardiya gece vardiyasıdır diye bir işaret koymamız
+> gerekiyor. Bunu kullanıcı işaretleyecek. Böylelikle gece vardiyalarına uygun
+> olmayan çalışanları ilgili vardiyadan direkt elemiş olacağız."*
+
+**Bugün ne var, ne yok.** Motor gece vardiyasını **saat aralığından tahmin
+ediyor** (`_gece_mi`, `GECE_PENCERESI`) ve bunu yalnız `ADALET_DENGESI`'nin
+"gece" boyutunda, yani **adil dağıtım** için kullanıyor. Çalışan tarafında
+*"gece çalışamaz"* diye bir alan **yok**; bugün ancak `uygunluk` ile, her gece
+için ayrı saat aralığı yazılarak taklit edilebilir — zahmetli ve hataya açık.
+
+**Gereken iki alan (girdi sözleşmesi — §8.3 / §11.2):**
+
+| nerede | alan | anlamı |
+|---|---|---|
+| vardiya şablonu | `gece_vardiyasi: true` | bu şablon gece vardiyasıdır — **kullanıcı işaretler** |
+| çalışan | `gece_calisamaz: true` | bu kişi gece vardiyasına atanamaz |
+
+⚠ **Tahmin ile işaret ayrı şeylerdir.** Saat aralığından çıkarmak
+(ör. 23:00-07:00) çoğu zaman doğru çalışır ama 22:00-06:00 ya da 00:00-08:00
+gibi sınır durumlarında firmanın kendi tanımıyla çelişebilir. Mustafa'nın
+istediği **işaret**: kullanıcı söyler, motor tahmin etmez.
+
+**Yeni kural** (katalog **40**'a çıkar): `GECE_UYGUNLUGU`, SERT.
+Gerekçesi firma-çalışan anlaşması ya da sağlık raporu olabilir — `yasal`
+bayrağı Mustafa'nın kararı.
+
+⚠ `ADALET_DENGESI`'nin "gece" boyutu da bu işaretten beslenmeli; iki yerde
+iki farklı gece tanımı kalmamalı.
+
+**Sırada nereye giriyor.** Veri setlerinden önce: yarı zamanlılara gece
+vardiyası verilecekse (Mustafa: *"gece vardiyaları genelde bu arkadaşlara
+yaptırılıyor"*) bu işaret olmadan set gerçekçi olmaz.
+
+→ K-39 · K-40
+
+</details>
+
+---
+
+## 🟡 T-56 · Veri seti yenilendi — **500 KİŞİLİK İKİ SET KURULDU, BEKÇİLER BAĞLANDI**
+
+**29 Eylül akşamı kurulan:** `_sahne-S30-85.json` ve `_sahne-S30-95.json`.
+
+| | |
+|---|---|
+| kişi | **500** (285 satış / 145 backoffice / 70 müşteri hizmetleri) |
+| sözleşme | tam zamanlı 341, yarı zamanlı 130, sezonluk 13, stajyer 16 |
+| şablon | **17** — 6×7,5 ve 5×9,0 net desenleri; gece vardiyaları **işaretli** |
+| kural | **40**, hepsi tanımlı |
+| izinli 59 · gece çalışamaz 60 · pasif 16 | |
+| kapasite | 19.630 kişi-saat/hafta |
+| **%85 seti** | hedef 16.654 (%84,8) |
+| **%95 seti** | hedef 18.660 (%95,1) |
+
+İki set arasındaki **tek fark talep tablosu**.
+
+**0.1 ölçekte ölçüm (49 kişi):**
+
+| | %85 | %95 |
+|---|---|---|
+| durum | çözüldü | çözüldü |
+| asgari kapsama | %100 | %100 |
+| hedef kapsama | %97,35 | **%89,4** |
+| sert ihlal | **YOK** | **YOK** |
+| yayınlanabilir | True | True |
+| fazla mesai | 124 sa | 128 sa |
+
+Set kurulurken **üç hata buldu**: kesirli vardiya bitişi (T-58), net saat
+ayrışması (T-57) ve K-38'in doğrulayıcıya uygulanmamış olması.
+
+**✅ BEKÇİLER BAĞLANDI (29 Eylül akşamı)**
+
+**12 bekçi, ~4 dk 47 sn, hepsi yeşil.** Yeni eklenenler:
+
+* `test_SABLONLAR_45_SAATI_tutturabiliyor` — her ekipte 6× ya da 5× ile
+  tam 45 eden bir şablon olmalı. T-51 ve T-57'nin ortak bekçisi.
+* `test_TAM_ZAMANLI_sozlesme_saatini_DOLDURUYOR` — saatler **doğrulayıcının**
+  ölçüsüyle hesaplanır; çözücünün kendi ölçüsüyle bakmak kendi işini kendi
+  onaylamak olurdu (§7.6).
+* `test_DOLULUK_hedeflenen_oranda` — iki setin tek farkı bu; oran kayarsa
+  karşılaştırma anlamsızlaşır.
+* `test_fikstur_URETICIYLE_ayni` ve `test_sahne_KATALOGUN_TAMAMINI_tanimlar`
+  iki set için ayrı ayrı koşuyor.
+
+**Gövdesi yazılı 26 kuralın hepsi kendi ihlal vakasında kırmızı yanıyor** (eksik: sıfır). İki vaka eklendi
+(`GECE_UYGUNLUGU`, `SAAT_DENGESI`), biri **yeniden yazıldı**:
+`PART_TIME_LIMIT`'in eski vakası "5 gün × 9 saat" diyordu ve tavan kişinin
+sözleşmesi olduğu için ihlal sayılıyordu; K-39 tavanı 45'e çıkarınca vaka
+**SESSİZ** kaldı ve kural görmez oldu. Yeni vaka 7 gün × 9 net = 63 saat.
+
+**CI adımı güncellendi**: *"Zor veri seti (500 kişi, %85 ve %95)"*.
+Yol aynı olduğu için komut değişmedi; süre sınırı 20 dakika yeterli
+(motor 110 sn + altın 10 sn + bekçiler 287 sn).
+
+**AÇIK KALAN İŞ:**
+1. ⚠ **Fazla mesai 49 kişide 124 saat** (kişi başı ~2,5 sa) — %85 doluluktaki
+   bir sahnede bu çok. T-54'ün (saatin maliyeti yok) yeni ölçümü; taban 45
+   iken kimse üzerine çıkmayı engellemiyor.
+2. ✅ **Tam ölçek çözüldü** — 29 Eylül gecesi, Mustafa'nın makinesinde:
+   638.572 değişken, 754.633 kısıt, kurma **51 sn**, çözüm **1.078 sn**,
+   2.493 atama, **0 sert ihlal**, `yayınlanabilir` **True** — ama optimuma
+   **%98,3** uzak. İki yeni bulgu açtı: **T-59** (bütçe aşımı) ve **T-60**
+   (plan yasal çıkıyor, *iyi* çıkmıyor). Eski 350 kişilik setin 1,9 katı.
+
+<details><summary>ilk kayıt</summary>
+
+**Bulundu:** 29 Eylül, K-40'tan sonra bütün paketler koşturulunca.
+
+Motor **178 test** yeşil, altın senaryolar **12/12** yeşil; kırmızı olan
+yalnız gerçekçi ölçek bekçileri (3/7). Üçü de **veri setinin eski olduğunu**
+söylüyor, motorda bir bozukluk değil:
+
+| bekçi | ne diyor | sebep |
+|---|---|---|
+| kural kataloğu tam mı | `GECE_UYGUNLUGU` sahnede tanımlı değil | K-40 yeni kuralı ekledi, set 39 kuralla kuruldu |
+| her kural kırmızı yanabiliyor mu | 1 kural ihlal vakasında yanmadı | aynı sebep — `GECE_UYGUNLUGU`'nun vakası yok |
+| plan temiz mi | `FAZLA_MESAI_TAVANI` sert ihlali | yarı zamanlıların sözleşmesinde hâlâ saat var (20/24); tavan 45 olunca "sözleşme üstü" 10 saati aşıyor |
+
+⚠ **Üçü de bekçilerin görevini yaptığının kanıtı.** Set 28 Eylül'de elle
+çalıştırılıyordu ve bu tür kaymalar aylarca görünmez kalıyordu; artık her
+push'ta görünüyor.
+
+**Çözümü sıradaki iş:** veri setinin yeniden kurulması (%85 ve %95). Yeni
+setin taşıması gerekenler:
+
+* 45 saati taşıyan şablonlar (6×7,5 ya da 5×9) — T-51'in veri tarafı
+* yarı zamanlılarda `haftalik_saat` **yok** — K-39
+* tam zamanlı sözleşmesinde `gun_sayisi` — K-39
+* `gece_vardiyasi` işaretli şablonlar + bazı çalışanlarda `gece_calisamaz` — K-40
+* 40 kuralın hepsi + her biri için ihlal vakası
+
+</details>
+
+→ K-38 · K-39 · K-40 · T-51 · T-54 · T-57 · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+
+---
+
+## ✅ T-57 · ~~Çözücü ile doğrulayıcı "net saat"i farklı hesaplıyor~~ — **KAPANDI (29 Eylül)**
+
+**Çözüm.** Çözücünün `_net_saat`'i artık mola politikasının **tamamını**
+düşüyor — doğrulayıcıyla aynı tanım. Politika sahne seviyesindeyse şablona
+taşınıyor (yoksa `_net_saat` onu göremezdi). Yanına `_ucret_saat` kondu:
+ücret hesabı yalnız **ücretsiz** molayı düşer (K-32'nin dört ayrı süresi).
+
+3 test, üçü de kırmızı başladı; iki mutasyon (yalnız `mola_dk`; yalnız
+ücretsiz molalar) ikisi de öldü.
+
+⚠ **Veri setinin şablon aritmetiği de düzeltildi.** Brüt = net + **bütün**
+molalar: SATIŞ 9,25/10,75 · BACKOFFICE 8,75/10,25 · MHİZMET 9,00/10,50.
+Artık her tam zamanlı şablon tam 7,50 ya da 9,00 net veriyor (6×7,5 = 5×9 = 45).
+
+⚠ **Aynı turda ikinci bir ayrışma çıktı:** K-38 (45 = normal çalışma sınırı)
+yalnız **çözücüye** uygulanmıştı; doğrulayıcının `HAFTALIK_AZAMI` kuralı toplamı
+hâlâ 45'te kesiyordu ve motorun ürettiği plana 9-13 ihlal yazıyordu. Sınır
+artık *normal + fazla mesai tavanı*. 2 test, 2 mutasyon.
+
+<details><summary>ilk kayıt</summary>
+
+### Ölçülen ayrışma
+
+**Bulundu:** 29 Eylül, zor veri seti ilk kez çözüldüğünde. Plan çıktı, ama
+bağımsız doğrulayıcı **28 sert `SAAT_DENGESI` ihlali** yazdı.
+
+**Ne.** İki taraf aynı kelimeye farklı anlam veriyor:
+
+| | formül | 8,5 saatlik SATIŞ vardiyası |
+|---|---|---|
+| **çözücü** `_net_saat(sablon)` | brüt − `mola_dk` | 8,5 − 1,00 = **7,50** |
+| **doğrulayıcı** `zaman.net_saat(atama)` | brüt − **bütün molalar** | 8,5 − 1,75 = **6,75** |
+
+Çözücü yalnız **ücretsiz yemeği** düşüyor; doğrulayıcı **ücretli dinlenme
+molalarını da** düşüyor. Altı vardiyalık bir haftada fark **4,5 saat**:
+çözücü "45 saat oldu" derken doğrulayıcı "40,5" görüyor.
+
+**Hangisi doğru?** Doğrulayıcının tanımı belgeli ve gerekçeli
+(`09-motor/dogrulayici/zaman.py`): *"Bir molanın ücretli olması, o sırada iş yapılıyor
+olması demek değildir. Ara dinlenme ücretli de olsa çalışma süresinden
+düşülür; ücret tarafı AYRI bir büyüktür (`ucret_saat`)."* ⚠ 25 Eylül'de bu
+satır bir kez yanlış değiştirilmiş ve geri alınmış — yani karar bilinçli.
+
+**O halde çözücü tarafı yanlış** ve iki sonucu var:
+
+1. `_net_saat` mola politikasının TAMAMINI düşmeli.
+2. **Zor veri setinin şablon aritmetiği de yanlış kuruldu.** 45 net saat için
+   6 günlük desende brüt = 7,5 + yemek + dinlenme olmalıydı (SATIŞ için
+   7,5 + 1,00 + 0,75 = **9,25** saat, 07:00-16:15). Şu an 8,5 yazılı.
+
+**Neden bugüne kadar görülmedi.** İki şey aynı anda değişti:
+`SAAT_DENGESI`'nin doğrulayıcı gövdesi bugün yazıldı (K-39) ve eski veri seti
+kimseyi sözleşme saatine yaklaştırmıyordu. İkisi olmadan bu ayrışma
+görünmezdi — **§7.6'nın tam olarak yakalamak için var olduğu şey.**
+
+⚠ Kapsamı geniş: `GUNLUK_AZAMI`, `HAFTALIK_AZAMI`, `FAZLA_MESAI_TAVANI`,
+`PART_TIME_LIMIT`, `SAAT_DENGESI` — hepsi net saate bakıyor. Düzeltme
+kırmızı kanıtla ve mutasyonla yapılmalı, aceleye gelmez.
+
+</details>
+
+→ K-32 · K-38 · K-39 · `09-motor/cozucu/model.py` (`_net_saat`,
+  `_mola_toplam_dk`) · `09-motor/dogrulayici/kurallar.py` (`haftalik_azami`) ·
+  `09-motor/testler/test_net_saat_uyumu.py`
+
+---
+
+## ✅ T-58 · ~~Kesirli vardiya bitişi doğrulayıcıyı çökertıyordu~~ — **KAPANDI (29 Eylül)**
+
+**Bulundu:** zor veri seti ilk kez çözüldüğünde, daha kapıya bağlanmadan.
+
+```
+ONAYLI_IZIN -> range(a["gun"], (bit - 1) // 24 + 1)
+TypeError: 'float' object cannot be interpreted as an integer
+```
+
+K-34 çeyrek saat ızgarasını getirdiğinden beri vardiya bitişi **kesirli**
+olabiliyordu (07:00-15:30 gibi); bu kural bitişin tam sayı olduğunu
+**varsayıyordu**. Hiçbir test kesirli bitiş kullanmadığı için aylarca
+görünmedi. `int(...)` ile düzeltildi, kırmızı kanıtlı test eklendi
+(`test_ceyrek_saat.py`).
+
+---
+
+## 🔴 T-59 · Verilen süre bütçesi **aşılıyor** — 900 saniye istendi, 1078 sürdü
+
+**Ölçüldü:** 29 Eylül, Mustafa'nın makinesinde, 500 kişilik tam ölçek.
+
+```
+2/3  Cozuluyor... (en fazla 900 sn)
+     1078 sn  |  durum: cozuldu  |  2493 atama
+     durma: butce_doldu    iki asama: False
+```
+
+**Sebep.** `ilk_asama_saniye` (varsayılan **120 sn**) verilen bütçenin
+**ÜSTÜNE** ekleniyor, içinden gelmiyor:
+
+```
+_ipucu_ver   -> max_time_in_seconds = ilk_asama_saniye   (120)
+ana çözüm    -> max_time_in_seconds = azami_saniye       (900)
+```
+
+900 + 120 = 1020, artı model kurma 51 sn ≈ **1071** — ölçülen 1078 ile
+tutuyor.
+
+**Neden önemli.** K-35 kullanıcıya **süre seçtiriyor** (10/15/30 dakika).
+*"15 dakika"* diyen yönetici 18 dakika bekliyor. Bir süre vaadi, vaat
+edilen süreden uzun sürüyorsa vaat değildir.
+
+**Önerilen.** Birinci aşama bütçenin **içinden** pay alsın
+(ör. `min(ilk_asama_saniye, azami_saniye * 0.2)`), toplam asla
+`azami_saniye`yi geçmesin. Model kurma süresi ayrı bir kalem — o da
+kullanıcıya ayrıca gösterilmeli.
+
+→ K-35 · `09-motor/cozucu/coz.py` (`_ipucu_ver`, `coz`)
+
+---
+
+## 🔴 T-60 · Tam ölçekte plan **üretiliyor ama optimize edilemiyor** — optimuma %98,3 uzak
+
+**Ölçüldü:** 29 Eylül, 500 kişi, 900 saniye bütçe, Mustafa'nın makinesi
+(6 çekirdek).
+
+| | |
+|---|---|
+| model | 638.572 değişken · 754.633 kısıt · kurma **51 sn** |
+| çözüm | 1078 sn, **2493 atama** |
+| **optimuma uzaklık** | **%98,3** |
+| sert ihlal | **0** · yayınlanabilir **True** |
+| yumuşak ihlal | ADALET_DENGESI 157 · HEDEF_KAPSAMA 95 · MOLA_KAPSAMASI 63 |
+
+**⚠ İki yüzü var ve karıştırılmamalı.**
+
+* **Yasal/sözleşmesel taraf tamam:** 0 sert ihlal, plan yayınlanabilir.
+  Çözücü ile doğrulayıcı aynı plan hakkinda **anlaşıyor** (T-57 sonrası).
+* **Kalite tarafı yok denecek kadar az:** %98,3, *"neredeyse hiçbir şey
+  optimize edilmedi"* demektir. Kıyas: eski 350 kişilik set aynı 900
+  saniyede **%10** veriyordu.
+
+**Ne değişti.** Set 1,9 kat büyüdü **ve** iki yeni sert kısıt geldi
+(`SAAT_DENGESI` her tam zamanlıyı 45 saate çiviliyor, `GECE_UYGUNLUGU`).
+Arama alanı hem büyüdü hem daraldı.
+
+**⚠ İki aşama DEVREYE GİRMEDİ** (`iki_asama: False`) — oysa 638 bin
+değişken eşiğin (50.000) 12 katı üstünde. Demek ki **birinci aşama
+başarısız oldu**: 120 saniyede uygun bir plan bile bulamadı ve `_ipucu_ver`
+`False` döndü. Yani bütçenin 120 saniyesi **hiçbir şeye yaramadan** gitti
+(T-59 ile aynı kök).
+
+**Sıradaki ölçümler — tahminle değil deneyle:**
+
+1. `ilk_asama_saniye`'yi 300'e çıkar: iki aşama devreye giriyor mu, girerse
+   uzaklık düşüyor mu?
+2. T-50'nin sorusu bu ölçekte yeniden geçerli: iki aşama açık mı kapalı mı
+   daha iyi? (350 kişide **kapalı** daha iyiydi.)
+3. `SAAT_DENGESI`'yi geçici olarak yumuşatıp ölç: uzaklığın ne kadarı
+   ondan geliyor? (Ürün kararı değil, **teşhis** için.)
+4. %85 seti aynı bütçeyle ne veriyor?
+
+⚠ **Karar vermek için henüz yeterli veri yok.** %98,3'ün kabul edilemez
+olduğu açık; sebebi açık değil.
+
+→ T-50 · T-54 · T-59 · K-35 · K-39
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
@@ -2315,12 +3005,15 @@ asgari 10 / hedef 30) çevrildi ve mutasyonla sınandı.
 | **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
 | **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
+| **6** | **T-59 · süre bütçesi aşılıyor** 🔴 | K-35 kullanıcıya bir süre **söz veriyor**; 900 saniye istenen koşu 1.078 sürdü. **Karar gerektirmiyor**, mekanik |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. Yönetici *"motor kötü plan yapıyor"* der. ⚠ Sebebi henüz ayrılmadı — önce dört ölçüm |
+| **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| 10 | **T-23 · "süre yetmedi" ≠ "imkânsız"** | Yanlış açıklama yöneticiyi gereksiz personel alımına iter |
+| ~~10~~ | ~~**T-23 · "süre yetmedi" ≠ "imkânsız"**~~ | ✅ **KAPANDI 29 Eylül, K-37** — `UNKNOWN` artık `sure_yetmedi` diyor, o yolda teşhis koşmuyor |
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
 | 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
 | 13 | **T-40 · `tercih_karsilama_yuzde` yetim** 🟡 | Şartname çıktıda yazıyor, motor üretmiyor; A7 onsuz yeşil |

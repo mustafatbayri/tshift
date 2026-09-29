@@ -26,10 +26,64 @@ MODEL
   Sert kurallar kisit, yumusak kurallar amac fonksiyonunda ceza.
 """
 
+import os
+
 from ortools.sat.python import cp_model
 
 # Modelde saatler TAM SAYI dilimdir. Genisletilmis saat: 25 = ertesi gun 01:00.
 HAFTA_GUN = 7
+
+
+# ----------------------------------------------------------------------
+# Arama iscisi sayisi -- 29 Eylul
+# ----------------------------------------------------------------------
+
+def cekirdek_sayisi():
+    """Bu SURECIN kullanabilecegi cekirdek sayisi. Hicbir zaman 0 donmez.
+
+    ⚠ NEDEN `os.cpu_count()` TEK BASINA YETMEZ
+      `os.cpu_count()` MAKINENIN cekirdegini sayar, bu surece AYRILANI
+      degil. Iki cekirdege sinirlanmis bir kap icinde de "32" cevabi
+      gelebilir -- ve duzeltmeye calistigimiz hata tam olarak budur. Once
+      surece ayrilan sayi sorulur, o okunamazsa makineninki kullanilir.
+
+    Okunamazsa 1'e duser: cozucuye 0 vermek onu patlatirdi.
+    """
+    okuyucular = [getattr(os, "process_cpu_count", None)]
+    if hasattr(os, "sched_getaffinity"):
+        okuyucular.append(lambda: len(os.sched_getaffinity(0)))
+    okuyucular.append(os.cpu_count)
+    for oku in okuyucular:
+        if oku is None:
+            continue
+        try:
+            n = oku()
+        except Exception:
+            continue
+        if n:
+            return max(1, int(n))
+    return 1
+
+
+def isci_sayisi(ayar=None):
+    """Kac arama iscisiyle kosulacagi.
+
+    ⚠ NEDEN SABIT 8 DEGIL (29 Eylul, olculdu)
+      Iki cekirdekli bir makinede ayni sahne, ayni surede:
+          8 isci -> optimumun %50,0'si      2 isci -> optimumun %80,4'u
+      Makinede olmayan cekirdegi istemek plani KOTULESTIRIYOR: isciler
+      sirayla bekliyor ve her biri digerinin isini bolerek ilerliyor.
+
+    Ayarda acik bir sayi varsa O KULLANILIR -- olcum araci ayni sahneyi
+    1, 2, 4, 8 isciyle kosabilsin diye. Yoksa makineye uyulur.
+    """
+    deger = (ayar or {}).get("isci_sayisi")
+    try:
+        deger = int(deger)
+    except (TypeError, ValueError):
+        return cekirdek_sayisi()
+    return deger if deger >= 1 else cekirdek_sayisi()
+
 
 # ----------------------------------------------------------------------
 # Plan profilleri -- Master Spec v1.4 #5.4
@@ -109,8 +163,47 @@ def _dilimler(gun, bas, bit):
     return list(range(_q(gun, bas), _q(gun, bit)))
 
 
+def _mola_toplam_dk(sablon):
+    """Vardiyada gecen TOPLAM mola dakikasi -- ucretli ucretsiz ayrimi YOK.
+
+    ⚠ NEDEN UCRETLI MOLA DA SAYILIR (T-57, 29 Eylul)
+      Bir molanin UCRETLI olmasi, o sirada is yapiliyor olmasi demek
+      degildir. Ara dinlenme ucretli de olsa CALISMA SURESINDEN dusulur;
+      ucret tarafi ayri bir buyuktur. Dogrulayici bunu 25 Eylul'den beri
+      boyle hesapliyor ve karari `dogrulayici/zaman.py` icinde belgeli.
+
+      Cozucu ise yalniz `mola_dk` (ucretsiz yemek) dusuyordu. 8,5 saatlik
+      bir vardiyada fark 0,75 saat; alti vardiyalik haftada 4,5 saat.
+      500 kisilik sahnede sonuc: cozucu "45 saat oldu" diyor, bagimsiz
+      dogrulayici 28 SERT ihlal yaziyordu. Iki taraf ayni plan hakkinda
+      farkli sey soyluyordu -- #7.6'nin yakalamak icin var oldugu sey.
+
+    Politika yoksa `mola_dk`ya dusulur: eski sahneler kirilmasin.
+    """
+    pol = sablon.get("mola_politikasi")
+    if not pol:
+        return float(sablon.get("mola_dk", 0))
+    return float(sum(int(m.get("dakika", 0)) * int(m.get("adet", 1))
+                     for m in pol))
+
+
 def _net_saat(sablon):
-    return (sablon["bit"] - sablon["bas"]) - (sablon.get("mola_dk", 0) / 60.0)
+    """CALISMA SURESI -- butun molalar dusuk. Dogrulayici ile AYNI tanim."""
+    return (sablon["bit"] - sablon["bas"]) - (_mola_toplam_dk(sablon) / 60.0)
+
+
+def _ucret_saat(sablon):
+    """UCRET HESABINA ESAS sure -- yalniz UCRETSIZ mola dusuk (K-32).
+
+    `net_saat`ten bilerek farkli. Burada yalniz raporlama icin duruyor;
+    kisitlar net saate bakar.
+    """
+    pol = sablon.get("mola_politikasi")
+    if not pol:
+        return (sablon["bit"] - sablon["bas"]) - (sablon.get("mola_dk", 0) / 60.0)
+    ucretsiz = sum(int(m.get("dakika", 0)) * int(m.get("adet", 1))
+                   for m in pol if not m.get("ucretli"))
+    return (sablon["bit"] - sablon["bas"]) - (ucretsiz / 60.0)
 
 
 def _brut_saat(sablon):
@@ -285,7 +378,26 @@ def _mola_dilimleri(gun, sablon, baslangic, dakika=None):
     return list(range(_q(gun, baslangic), _q(gun, baslangic + dk / 60.0)))
 
 
-def _gece_mi(sablon, gun, pencere=(20, 30)):
+def _gece_sablonu(sablon):
+    """Bu sablon GECE VARDIYASI mi -- K-40 (Mustafa, 29 Eylul).
+
+    Donen: (gece_mi, tahmin_mi)
+
+    ⚠ ISARET TAHMINI EZER. Kullanici `gece_vardiyasi` yazdiysa o gecerlidir.
+      22:00-06:00 ya da 00:00-08:00 gibi sinir durumlarinda bizim saat
+      penceremiz firmanin kendi tanimiyla celisebilir; Mustafa'nin istedigi
+      sey tam olarak buydu: "Bunu KULLANICI isaretleyecek."
+
+    ⚠ ISARET YOKSA tahmine dusulur -- ama SESSIZ DEGIL. Cagiran taraf
+      `tahmin_mi` bayragini nota cevirir. Isaretlenmemis bir gece
+      vardiyasi, korunmasi gereken birini sessizce geceye koyabilirdi.
+    """
+    if "gece_vardiyasi" in sablon:
+        return bool(sablon["gece_vardiyasi"]), False
+    return _gece_penceresinde(sablon, 0), True
+
+
+def _gece_penceresinde(sablon, gun, pencere=(20, 30)):
     s = set(_dilimler(gun, sablon["bas"], sablon["bit"]))
     p = set(range(_q(gun, pencere[0]), _q(gun, pencere[1])))
     return bool(s & p)
@@ -319,7 +431,16 @@ class Model(object):
         self.girdi = girdi
         self.m = cp_model.CpModel()
         self.calisanlar = [c for c in girdi.get("calisanlar", []) if _calisabilir(c)]
-        self.sablonlar = list(girdi.get("vardiya_sablonlari", []) or [])
+        # ⚠ Politika sablona TASINIR (T-57): `_net_saat` yalniz sablona
+        #   bakiyor; firma varsayilani sahne seviyesindeyse goremezdi ve
+        #   net saati yine yanlis hesaplardi.
+        self.sablonlar = []
+        for _s in (girdi.get("vardiya_sablonlari", []) or []):
+            if "mola_politikasi" not in _s:
+                _pol = _mola_politikasi(girdi, _s)
+                if _pol:
+                    _s = dict(_s, mola_politikasi=_pol)
+            self.sablonlar.append(_s)
         self.sablon = {s["id"]: s for s in self.sablonlar}
         self.gunler = list(range(HAFTA_GUN))
         self.x = {}          # (e,d,t) -> BoolVar
@@ -415,6 +536,7 @@ class Model(object):
         self._gun_disi_sablonlari_kapat()
         self._gunde_tek_vardiya()
         self._uygunluk()
+        self._gece_uygunlugu()
         self._izin()
         self._kilitler()
         self._sabit_atamalar()
@@ -581,6 +703,43 @@ class Model(object):
                             if (c["id"], d, t["id"]) in self.x:
                                 self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
+    def _gece_uygunlugu(self):
+        """K-40 -- "bu kisi gece vardiyasi yapamaz" SERT kisiti.
+
+        ⚠ NEDEN (Mustafa, 29 Eylul)
+            "Kullanici kartinda gece vardiyasi yapamaz gibi bir ifadeye
+             ihtiyacimiz var... Boylelikle gece vardiyalarina uygun olmayan
+             calisanlari ilgili vardiyadan direkt elemis olacagiz."
+
+          Bu alan yoktu. Motor geceyi yalniz ADALET_DENGESI'nin dagitimi
+          icin tahmin ediyordu; "gece calisamaz" diye bir kayit hicbir
+          yerde tutulmuyordu.
+
+        ⚠ ISARETSIZ SABLON SESSIZ GECMEZ: tahmine dusuldugunde not yazilir.
+        """
+        if not _kural(self.girdi, "GECE_UYGUNLUGU"):
+            return
+        geceler, tahminler = [], []
+        for t in self.sablonlar:
+            gece, tahmin = _gece_sablonu(t)
+            if gece:
+                geceler.append(t)
+            if tahmin:
+                tahminler.append(t["id"])
+        if tahminler:
+            self.notlar.append(
+                "gece_vardiyasi isareti yok, saat araligindan tahmin edildi: "
+                + ", ".join(sorted(tahminler)))
+        if not geceler:
+            return
+        for c in self.calisanlar:
+            if not c.get("gece_calisamaz"):
+                continue
+            for d in self.gunler:
+                for t in geceler:
+                    if (c["id"], d, t["id"]) in self.x:
+                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+
     def _izin(self):
         for c in self.calisanlar:
             izinli = {i["gun"] for i in c.get("izinler", []) or []
@@ -632,7 +791,11 @@ class Model(object):
     def _sure_sinirlari(self):
         gunluk = _par(_kural(self.girdi, "GUNLUK_AZAMI"), "azami_saat", 11)
         haftalik = _par(_kural(self.girdi, "HAFTALIK_AZAMI"), "azami_saat", 45)
-        pt_tol = _par(_kural(self.girdi, "PART_TIME_LIMIT"), "tolerans_saat", 0)
+        # K-39: yari zamanli tavani emsal tam sureliye ORANLA hesaplanir.
+        # `azami_saat` acikca verilmisse o kullanilir (kiraci ayari).
+        pt_kural = _kural(self.girdi, "PART_TIME_LIMIT")
+        pt_oran = _par(pt_kural, "emsal_orani", 1.0)
+        pt_tavan = _par(pt_kural, "azami_saat", haftalik * pt_oran)
         fm_kural = _kural(self.girdi, "FAZLA_MESAI_TAVANI")
         # #5.2: tavan profile baglidir. Kuralin kendi parametresi DENGELI
         # sutununun yazili halidir; profil onu ezer (bkz. _agirlik notu).
@@ -648,42 +811,98 @@ class Model(object):
             # Dakika cinsinden tam sayi calisilir; float kisit CP-SAT'e girmez.
             dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
                          for d in self.gunler for t in self._sablonlari(c))
-            self.m.Add(dakika <= int(haftalik * 60))
+
+            # K-38 -- HAFTALIK_AZAMI *NORMAL CALISMA* SINIRIDIR, TOPLAM TAVAN DEGIL
+            #
+            # ⚠ NE VARDI (29 Eylul'e kadar)
+            #     self.m.Add(dakika <= int(haftalik * 60))       # 45 saat
+            #   Bu satir toplam saati 45'te kesiyordu. 45 saat sozlesmeli bir
+            #   calisan zaten 45'te duruyordu -- yani FAZLA MESAI MATEMATIKSEL
+            #   OLARAK IMKANSIZDI. Asagidaki `fazla` ceza degiskeni, profile
+            #   bagli tavan ve K-30'un butun "zorunlu ise minimum yap" dali
+            #   bu calisanlar icin OLU KODDU.
+            #
+            # ⚠ OLCULDU -- tek degisken izole edilerek, ayni sahne:
+            #     HAFTALIK_AZAMI 45 -> cozumsuz
+            #     HAFTALIK_AZAMI 55 -> cozuldu, 48 saat, fazla mesai bildirildi
+            #
+            #   Yani motor, Mustafa'nin "cozumsuzse fazla mesaiye basvuracak"
+            #   dedigi kacis yolunu kullanamiyor, onun yerine yoneticiye
+            #   "bu talebi bu kadroyla karsilayamazsiniz" dedirtiyordu.
+            #
+            # KARAR (Mustafa, 29 Eylul): "Normal calisma siniri. Toplam tavan
+            #   degil. Yani minimum 45 saat calismali." Asan kisim FAZLA
+            #   MESAIDIR; kendi tavanina (profile bagli) ve gunluk 11 saat
+            #   sinirina tabidir -- ikisi de asagida/yukarida duruyor.
+            #
+            # ⚠ TAVAN KALKMADI, YERI DEGISTI: toplam hala sinirli, ama sinir
+            #   artik "normal calisma + fazla mesai tavani".
+            self.m.Add(dakika <= int((haftalik + (fm_tavan if fm_kural else 0)) * 60))
 
             soz = c.get("sozlesme") or {}
             tavan = soz.get("haftalik_saat")
-            if tavan is not None:
-                if soz.get("tip") == "yari_zamanli":
-                    # Fazla Calisma Yon. md. 8 -- kismi sureliye fazla
-                    # surelerle calisma da yaptirilamaz. Toleranssiz.
-                    self.m.Add(dakika <= int((tavan + pt_tol) * 60))
-                else:
-                    self.m.Add(dakika <= int((tavan + (fm_tavan if fm_kural else 0)) * 60))
-                    # Fazla mesai YUMUSAK cezayla sifira itilir (A1: esit 0).
-                    #
-                    # K-30 (Mustafa, 16 Eylul): "Zaten hedef hic gitmemek.
-                    # Gidilecekse de minimum gitmek."
-                    #
-                    #   `fazla` DAKIKA cinsinden, agirlik 50. Bir saat fazla
-                    #   mesai 3000 puan; kacirilan bir hedef hucresi 9-20 puan.
-                    #   Yani HEDEF kapsama ugruna fazla mesai yapilmaz.
-                    #
-                    #   ASGARI kapsama SERT oldugu icin ceza hesabina girmez:
-                    #   fazla mesai olmadan tutmuyorsa motor onu yapar, hem de
-                    #   tam gerektigi kadar. Karar tam olarak bunu istiyor.
-                    #
-                    #   Yukaridaki `dakika <= (tavan + fm_tavan)` kisiti ise
-                    #   ZORUNLU asimin sinirini cizer: CALISAN profilinde
-                    #   fm_tavan 0 oldugu icin boyle bir plan cozumsuz olur.
-                    #   Tavan olu bir sayi degil -- isteğe bagli fazla mesai
-                    #   icin kullanilmiyor, zorunlu olan icin belirleyici.
-                    #
-                    #   50 sayisi bir KALIBRASYON, karar degil. Testler
-                    #   "ceza sifir olmasin" diyor, "tam olarak 50 olsun"
-                    #   demiyor (testler/test_profiller.py).
-                    fazla = self.m.NewIntVar(0, int(fm_tavan * 60), "fm_%s" % c["id"])
-                    self.m.Add(fazla >= dakika - int(tavan * 60))
-                    self.cezalar.append((50, fazla))
+            # ⚠ TAVAN TIPTEN GELIR, SOZLESME SAATINDEN DEGIL (K-39, 29 Eylul)
+            #   Onceki kurulus `if tavan is not None:` idi. Mustafa yari
+            #   zamanlida `haftalik_saat` alanini TAMAMEN kaldirinca o kosul
+            #   sessizce yanlis cevap verecekti: alan yok -> blok atlanir ->
+            #   yari zamanliya HIC tavan kalmaz. Kosul artik tipe bakiyor.
+            if soz.get("tip") == "yari_zamanli":
+                # K-39 -- TAVAN KISIDEN DEGIL MEVZUATTAN GELIR
+                #
+                # ⚠ NE VARDI: tavan = kisinin kendi sozlesme saati.
+                #   20 saatlik bir yari zamanli, yogun bir haftada 24
+                #   saat calisamiyordu -- oysa mevzuatin koydugu sinir
+                #   bu degil.
+                #
+                # Mustafa (29 Eylul): "Kisi icin su kadar saat max veya
+                #   min calisabilir diye kisit girmemize gerek yok.
+                #   Yapmamiz gereken, calisanin calisabilecegi kisitli
+                #   gunler veya saat araliklari varsa bunu tutmak."
+                #   (O da UYGUNLUK_TAKVIMI, ayri ve SERT.)
+                #
+                # SINIR (Mustafa, 29 Eylul): emsal tam surelinin TAMAMI,
+                # yani 45 saat. Gerekcesi: "Yasa da 45 saate kadar
+                # calistirabilirsin, bu fazla mesaiye girmez diyor."
+                #
+                # ⚠ Once 2/3 (30 saat) yazilmisti -- kismi sureli calismanin
+                #   TANIMINDAKI oran. Mustafa 45'i secti: 30-45 arasi "fazla
+                #   surelerle calisma"dir ve fazla mesai ucreti dogurmaz.
+                #   Oran `emsal_orani` ile kiraci basina degistirilebilir.
+                #
+                # ⚠ BURADA BIR FREN YOK: modelde yari zamanli saatinin
+                #   MALIYETI tanimli degil. Onlari sinirlayan tek sey eskiden
+                #   kendi sozlesme saatleriydi; o kalkti. Cozucunun yari
+                #   zamanliyi gereksiz yere 45 saate kadar yazmamak icin bir
+                #   sebebi yok -- hedef asimini cezalandiran bir kural
+                #   gelene kadar bu acik durur (bkz. 06-ACIK-RISKLER T-54).
+                self.m.Add(dakika <= int(pt_tavan * 60))
+            elif tavan is not None:
+                self.m.Add(dakika <= int((tavan + (fm_tavan if fm_kural else 0)) * 60))
+                # Fazla mesai YUMUSAK cezayla sifira itilir (A1: esit 0).
+                #
+                # K-30 (Mustafa, 16 Eylul): "Zaten hedef hic gitmemek.
+                # Gidilecekse de minimum gitmek."
+                #
+                #   `fazla` DAKIKA cinsinden, agirlik 50. Bir saat fazla
+                #   mesai 3000 puan; kacirilan bir hedef hucresi 9-20 puan.
+                #   Yani HEDEF kapsama ugruna fazla mesai yapilmaz.
+                #
+                #   ASGARI kapsama SERT oldugu icin ceza hesabina girmez:
+                #   fazla mesai olmadan tutmuyorsa motor onu yapar, hem de
+                #   tam gerektigi kadar. Karar tam olarak bunu istiyor.
+                #
+                #   Yukaridaki `dakika <= (tavan + fm_tavan)` kisiti ise
+                #   ZORUNLU asimin sinirini cizer: CALISAN profilinde
+                #   fm_tavan 0 oldugu icin boyle bir plan cozumsuz olur.
+                #   Tavan olu bir sayi degil -- isteğe bagli fazla mesai
+                #   icin kullanilmiyor, zorunlu olan icin belirleyici.
+                #
+                #   50 sayisi bir KALIBRASYON, karar degil. Testler
+                #   "ceza sifir olmasin" diyor, "tam olarak 50 olsun"
+                #   demiyor (testler/test_profiller.py).
+                fazla = self.m.NewIntVar(0, int(fm_tavan * 60), "fm_%s" % c["id"])
+                self.m.Add(fazla >= dakika - int(tavan * 60))
+                self.cezalar.append((50, fazla))
 
     def _dinlenme(self):
         """VARDIYA_ARASI_DINLENME -- ardisik gunlerdeki her sablon cifti.
@@ -978,7 +1197,7 @@ class Model(object):
 
     def _boyut_sayaci(self, boyut):
         if boyut == "gece":
-            return lambda t, d: _gece_mi(t, d)
+            return lambda t, d: _gece_sablonu(t)[0]
         if boyut == "hafta_sonu":
             return lambda t, d: d in (5, 6)
         if boyut == "cumartesi":
@@ -986,17 +1205,73 @@ class Model(object):
         return None
 
     def _saat_dengesi(self):
+        """K-39 -- tam zamanli calisan SOZLESME SAATINI DOLDURUR.
+
+        ⚠ NE VARDI (29 Eylul'e kadar)
+          Kural YUMUSAK, TEK TARAFLI ve 2 SAAT TOLERANSLIYDI. Yani 43 saat
+          bedava, 42 saat cok ucuzdu. 350 kisilik sahnede olculdu: 45 saat
+          sozlesmeli 17 kisiden 45'i tutturan SIFIR, ortalama 38,2 saat --
+          ve plan "0 sert ihlal, yayinlanabilir: True" donuyordu.
+
+        ⚠ NEDEN SERT (Mustafa, 29 Eylul)
+            "Turkiye'de saat basina degil net maas verildigi icin, tam
+             zamanli bir calisanin 43 saat calismasi demek ona 2 saat
+             fazla para veriyorum demektir. Boyle plan yapilmaz."
+          Yani eksik planlama kanunu degil BUTCEYI deler -- ama yapilmaz.
+
+        ⚠ IZIN BORCU DUSURUR, MUSAITSIZLIK DUSURMEZ
+          Yillik izin UCRETLIDIR: o saatin parasi zaten odeniyor. Uygunluk
+          takvimi ("o gun calisamam") ise bir odeme degil bir kisittir;
+          borcu dusurmez. Ikisini ayni saymak, calisani eksik calistirip
+          "olsun, zaten musait degildi" demek olurdu.
+
+        TABAN YALNIZ TAM ZAMANLIYA UYGULANIR (Mustafa): yari zamanlida
+        kisiye ozel taban yoktur; onlar yogun saatlere gore cagrilir.
+        """
         k = _kural(self.girdi, "SAAT_DENGESI")
         if not k:
             return
-        tolerans = _par(k, "tolerans_saat", 2)
+        sert = (k.get("tur") == "SERT")
         agirlik = self._agirlik("SAAT_DENGESI", k)
         for c in self.calisanlar:
-            soz = (c.get("sozlesme") or {}).get("haftalik_saat")
-            if soz is None:
+            soz = c.get("sozlesme") or {}
+            if soz.get("tip") != "tam_zamanli":
+                continue
+            if soz.get("haftalik_saat") is None:
+                continue
+            gereken_dk = _borc_dakika(c)
+            if gereken_dk <= 0:
                 continue
             dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
                          for d in self.gunler for t in self._sablonlari(c))
-            sapma = self.m.NewIntVar(0, 100000, "sd_%s" % c["id"])
-            self.m.Add(sapma >= int((soz - tolerans) * 60) - dakika)
-            self.cezalar.append((agirlik, sapma))
+            if sert:
+                self.m.Add(dakika >= gereken_dk)
+            else:
+                sapma = self.m.NewIntVar(0, 100000, "sd_%s" % c["id"])
+                self.m.Add(sapma >= gereken_dk - dakika)
+                self.cezalar.append((agirlik, sapma))
+
+
+def _borc_dakika(c):
+    """Bu calisanin bu hafta DOLDURMASI GEREKEN net dakika.
+
+        gunluk norm = haftalik_saat / gun_sayisi
+        borc        = haftalik_saat - (onayli izin gunu x gunluk norm)
+
+    ⚠ `gun_sayisi` OLMADAN IZIN SAATE CEVRILEMEZ. Ayni 45 saat, 6 gunluk
+      desende bir izin gunu 7,5 saat; 5 gunluk desende 9,0 saat eder.
+      Alan yoksa 6 varsayilir (Turkiye'de yaygin desen).
+
+    ⚠ BU HESAP DOGRULAYICIDA IKINCI KEZ, BAGIMSIZ OLARAK YAZILMISTIR
+      (#7.6). Ortak bir module cikarmak YASAKTIR: ayni yanlis varsayim iki
+      yere birden gecerse hicbir test yakalamaz.
+    """
+    soz = c.get("sozlesme") or {}
+    hafta = soz.get("haftalik_saat")
+    if hafta is None:
+        return 0
+    gun_sayisi = soz.get("gun_sayisi") or 6
+    gunluk = float(hafta) / max(1, int(gun_sayisi))
+    izin_gun = len({i["gun"] for i in (c.get("izinler") or [])
+                    if i.get("durum", "onayli") == "onayli"})
+    return max(0, int(round((float(hafta) - izin_gun * gunluk) * 60)))

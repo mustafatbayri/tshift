@@ -173,7 +173,7 @@ def yaz(g, atamalar):
 
 
 if __name__ == "__main__":
-    sahne = os.path.join(BURASI, "fikstur", "_sahne-S20.json")
+    sahne = os.path.join(BURASI, "fikstur", "_sahne-S30-95.json")
     g = json.load(io.open(sahne, encoding="utf-8"))
     if "--plan" in sys.argv:
         atamalar = json.load(io.open(sys.argv[sys.argv.index("--plan") + 1],

@@ -463,9 +463,30 @@ def kontrol_commit():
     if not os.path.isdir(os.path.join(KOK, ".git")):
         print("   ATLANDI - git deposu degil")
         return
+    # 29 EYLUL DUZELTMESI -- GIT_OPTIONAL_LOCKS=0
+    #
+    # NE OLDU
+    #   `git status` sessiz bir yan etki yapar: dizini (index) tazeler ve
+    #   bunun icin `.git/index.lock` dosyasini olusturur. Bu betigin bir
+    #   kosusu yarida kesildiginde kilit dosyasi ORTADA KALDI ve Mustafa'nin
+    #   kendi commit'i "Another git process seems to be running" diye
+    #   reddedildi -- sebebi kendi yazdigi koda hic benzemeyen bir denetim
+    #   betigiydi.
+    #
+    # NE YAPAR
+    #   GIT_OPTIONAL_LOCKS=0, git'e "zorunlu olmayan kilitleri alma" der.
+    #   `status` o zaman dizini tazelemez, kilit dosyasi hic olusmaz.
+    #   Ciktinin dogrulugu degismez -- yalniz bir sonraki `git status`
+    #   birkac milisaniye daha uzun surer.
+    #
+    # NEDEN TEK DOGRU YER BURASI
+    #   Kilidi biz almasak da olurdu; ama asil mesele su: OKUMAK icin
+    #   calistirdigimiz bir komut, YAZMA hakki almamali.
+    ortam = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
     try:
         cikti = subprocess.run(["git", "status", "--porcelain"], cwd=KOK,
-                               capture_output=True, text=True, timeout=30)
+                               capture_output=True, text=True, timeout=30,
+                               env=ortam)
     except Exception as e:                       # git yoksa ya da yavassa
         uyari("git calistirilamadi", str(e))
         print("   ATLANDI - git calistirilamadi")

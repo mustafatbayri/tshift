@@ -4,7 +4,9 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-28 akşam · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) · **K-35** süre seçimi, kanıtlanmış optimuma yakınlık ve *İyileştir* — motor **137 test** yeşil, katalog **39**. **350 kişilik gerçekçi veri seti kuruldu** ve tam ölçekte çalıştı: 1.757 atama, **0 sert ihlal**, %100 asgari kapsama. Altı bulgu açıldı, beşi aynı gün kapandı.)* T-42 açıldı, T-43 aynı gün geri çekildi)
+**Son güncelleme:** 2026-09-29 · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) · **K-35** süre seçimi, kanıtlanmış optimuma yakınlık ve *İyileştir* — motor **137 test** yeşil, katalog **39**. **350 kişilik gerçekçi veri seti kuruldu** ve tam ölçekte çalıştı: 1.757 atama, **0 sert ihlal**, %100 asgari kapsama. Altı bulgu açıldı, beşi aynı gün kapandı.)* T-42 açıldı, T-43 aynı gün geri çekildi) *(**29 Eylül:** 350 kişilik set **otomatik koşuya bağlandı** — çözmeden ölçülenler tam ölçekte, çözüm gerektirenler 0.1'de · **K-36** arama işçisi sayısı makinenin çekirdeğine uyuyor: 2 çekirdekte optimuma **%23,6 yerine %7,0** uzaklık — ⚠ 6 çekirdekli makinede aynı sahne ayırt etmedi, sunucu sorusu için gerçekçi ölçek + `--tekrar` gerekiyor · motor **146 test** yeşil · **T-48 hipotez olmaktan çıktı:** 45 saniyelik bütçe çözümsüzlükte **470 saniye** sürüyor.)*
+
+**⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -175,8 +177,9 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **24** (katalogdaki **39**'un alt kümesi) | 28 Eylül, ikisi de sayılarak |
-| Motor birim testi | **137**, hepsi yeşil | 28 Eylül |
+| Yazılan kural gövdesi | **26** (katalogdaki **40**'ın alt kümesi) | 29 Eylül, ikisi de sayılarak |
+| Motor birim testi | **184**, hepsi yeşil | 29 Eylül, sayılarak |
+| Zor veri seti bekçisi | **12**, hepsi yeşil (yaklaşık 5 dakika) | 29 Eylül |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
 
@@ -308,6 +311,71 @@ Veri setini kurarken **dört ayrı veri hatası** yapıldı. Motor üçünü yak
 ve doğru yeri gösterdi; yalnız biri sessizce geçti (tanınmayan bir **değer**,
 T-45). Yani motor sanılandan iyi durumda; zayıf olan test verisiydi.
 
+### 29 Eylül — set baştan kuruldu, dört karar, iki yeni bulgu
+
+Gün 350 kişilik seti otomatik koşuya bağlamakla başladı, **500 kişilik iki
+yeni set** ve dört ürün kararıyla bitti.
+
+**Kırılma noktası Mustafa'nın uyarısıydı.** 28 Eylül'de seti *"en zor
+senaryo"* diye anlatmıştım. Ölçülünce öyle olmadığı çıktı:
+
+| ne yazmıştım | ölçülen |
+|---|---|
+| 39 kuralın hepsi uygulanıyor | **15'inin gövdesi hiç yazılmamış** |
+| kurallar sınanıyor | **13'ü hiç zorlanmıyor** |
+| gerçekçi kadro | kapasite talebin **2,3 katı** — kimse sıkışmıyor |
+| 45 saatlik sözleşme | hiçbir şablon kombinasyonu 45 etmiyor |
+
+> *"Beni yanılttın. Patlasa da çatlasa da en zor senaryo ile test etmeliyiz…
+>  Konuyu çözmek için problemi daraltma bir daha!!! Beni memnun etmeye
+>  çalışma, problemlere odaklan. Beni yanıltmanın bedeli en ağır!"*
+
+Bu, §6'ya **7. ve 8. çalışma kuralı** olarak yazıldı.
+
+**Dört karar** (ayrıntısı `00-DEVIR/08-URUN-KARARLARI.md`):
+
+| | ne değişti |
+|---|---|
+| **K-37** | Süre dolduğunda motor *"çözümsüz"* **demiyor** — `sure_yetmedi` diyor ve teşhis **koşmuyor**. Kullanıcı isterse *"neden olduğunu araştır"* der; o cevapta *kanıtlanmadığı* yazılı. **T-23 ve T-48 kapandı** |
+| **K-38** | Haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil. Fazla mesai yolu tanımlıydı ama **hiç açılamıyordu** |
+| **K-39** | Tam zamanlının sözleşme saati **doldurulur** (izin oranında düşer; yeni alan `gun_sayisi`). Yarı zamanlıya kişi başı saat **girilmez**, tavan mevzuattan gelir |
+| **K-40** | *"Bu kişi gece vardiyası yapamaz"* ve *"bu vardiya gece vardiyasıdır"* artık **işaret**. Tahmin işareti **ezmez** |
+
+**Yeni veri seti:** 500 kişi · 17 şablon · 40 kural · 19.630 kişi-saat
+kapasite · iki doluluk (%85 ve %95, tek fark talep tablosu). Mustafa'nın
+gerekçesi: *"%85 demek 'fazladan %15 elemana sahibim' gibi bir ifadeyi
+doğurabilir. Türkiye'de genelde eleman yetmiyor, fazla mesaiye gidiliyor."*
+
+**Set kurulurken üç hata buldu:** çözücü ile doğrulayıcı *"net saat"*i farklı
+hesaplıyordu (geçerli planda **28 sert ihlal**), kesirli vardiya bitişi
+doğrulayıcıyı **çökertiyordu**, ve K-38 doğrulayıcı tarafına uygulanmamıştı.
+Üçünü de **veri seti** buldu, test paketi bulmadı.
+
+**Tam ölçek ilk kez çözüldü** — ve asıl soruyu açtı:
+
+| | |
+|---|---|
+| model | 638.572 değişken · 754.633 kısıt |
+| süre | kurma 51 sn · çözüm **1.078 sn** (900 istenmişti) |
+| sonuç | 2.493 atama · **0 sert ihlal** · `yayınlanabilir` **True** |
+| kalite | optimuma **%98,3** uzak (eski 350 kişilik set aynı bütçede %10) |
+
+Yani **yasal ve sözleşmesel taraf temiz, kalite neredeyse yok.** İki yeni 🔴:
+**T-59** (verilen süre bütçesi aşılıyor — mekanik, karar gerektirmiyor) ve
+**T-60** (kalite yok — ⚠ sebebi henüz ayrılmadı, önce dört ölçüm).
+
+#### Günün dersi — dört kez aynı şey
+
+Bugün dört kez **ölçmeden yazdım**: 117 saniyeyi *"beklenen ~2 dakika"* diye,
+iki çekirdekli tek ölçümü genel kural diye, ölçüm aracında ürünün hiç
+kullanmadığı bir ayarı ölçerek, ve veri setini *"hepsini kapsıyor"* diye.
+Dördünü de ölçüm ya da Mustafa düzeltti.
+
+Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
+`assert True` bulunan testlerdi — yani yeşil yanıyor, hiçbir şey ölçmüyordu.
+
+---
+
 ## 3. Sıradaki tek adım
 
 > **Dış incelemenin 🔴 bulguları — yeni özellikten önce.**
@@ -331,10 +399,21 @@ T-45). Yani motor sanılandan iyi durumda; zayıf olan test verisiydi.
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
 > | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor. ⚠ Artık **üç** kanal bu kapıda bekliyor: `uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar` | ✅ kapı ne yapmalı |
+> | **T-59** 🆕 | Verilen süre bütçesi **aşılıyor**: 900 saniye istenen koşu 1.078 sürdü. İki aşamalı çözümde ilk aşamanın süresi ana bütçenin **üstüne** ekleniyor. K-35 kullanıcıya bir süre **söz veriyor** | ❌ **karar gerektirmiyor**, mekanik |
+> | **T-60** 🆕 | Tam ölçekte plan üretiliyor ama optimuma **%98,3** uzak. Yasal taraf temiz, kalite yok | ⚠ önce **dört ölçüm**, sonra karar |
+> | **T-54** 🆕 | Saatin **maliyeti yok**: çözücü fazladan saat yazmaktan çekinmiyor (%85 dolulukta 49 kişiye 124 saat fazla mesai) | ✅ `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 > | ~~T-44~~ | ✅ **KAPANDI 28 Eylül** — K-34 ile zaman birimi çeyrek saate indi; eşik `4F → 12F/7` (taban 3 için 12 kişi yerine **6**). Çözüm süresi 40 kişide 0.78 sn | — |
+> | ~~T-23~~, ~~T-48~~ | ✅ **KAPANDI 29 Eylül, K-37** — *"süre yetmedi"* ile *"imkânsız"* ayrıldı; teşhis artık yalnız istenirse koşuyor | — |
 >
-> **Beş 🔴 açık ve beşi de Mustafa'nın cevabını bekliyor.** Mekanik olanların
-> hepsi kapandı.
+> **Sekiz 🔴 açık.** Altısı Mustafa'nın cevabını bekliyor (T-28, T-38, T-29,
+> T-21, T-18, T-54); **T-59 mekanik** ve karar gerektirmiyor; **T-60** karar
+> değil önce **ölçüm** istiyor.
+>
+> ⚠ **Sıra Mustafa'nın verdiği sıradır:** *"Gece işareti → iki veri seti →
+> eksik kurallar → testleri tekrarlarız."* İlk ikisi 29 Eylül'de bitti;
+> şimdi **eksik kuralların gövdeleri** (14 kural) geliyor. İçlerinde
+> **rol kapsaması** ve **yetkinlik kapsaması** çözücüde var, doğrulayıcıda
+> yok — yani motor kendi işini kendi onaylıyor (§7.6'nın tam tersi).
 >
 > **İki küçük onay da bekliyor:** §11.3 çıktısına eklenen `okunmayan_alanlar`
 > (commit'e girdi; itiraz gelirse tek blok çıkar) ve **T-41**'in `DENETIM.py`
@@ -382,7 +461,7 @@ T-45). Yani motor sanılandan iyi durumda; zayıf olan test verisiydi.
 >
 > **Paralelde açık kalanlar:**
 >
-> - **T-23, T-24, T-25, T-26** — ikinci turun kalan bulguları
+> - **T-24, T-25, T-26** — ikinci turun kalan bulguları (**T-23** 29 Eylül'de K-37 ile kapandı)
 > - **T-30, T-31, T-32, T-33, T-36** 🟡 — üçüncü turun kalan bulguları
 > - **T-39, T-40, T-41** 🟡 — 23 Eylül kapatma turunun açtıkları.
 >   **T-39** talep ekranı yazılmadan önce karara bağlanmalı (kapı şartı);
@@ -443,7 +522,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **24** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **137** birim testi (28 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **26** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **184** birim testi (29 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
@@ -693,6 +772,25 @@ Bu kurallar Mustafa ile üzerinde anlaşılmıştır; tartışmaya açık değil
 6. **Anlaşılmayan komut çalıştırılmaz** — özellikle `rm`, `del`, `format`,
    `Remove-Item`, `--force` içerenler. Bu projede `git reset --hard` ve
    `git push --force` yasaktır.
+7. **ÇÖZÜMLEMEK İÇİN PROBLEMİ DARALTMA.** *(Mustafa, 29 Eylül — iki kez
+   ihlal edildiği için yazıldı.)* Test verisi, senaryo ya da ölçüm ayarı,
+   geçmesi kolay olsun diye küçültülmez, gevşetilmez, ürünün gerçek
+   ayarından uzaklaştırılmaz. **En zor senaryoyla test edilir**; o
+   aşılırsa konu zaten çözülmüş olur.
+
+   İki ihlal aynı gün yaşandı:
+   * *"Tüm kuralların uygulandığı 350 kişilik set"* denildi; gerçekte 39
+     kuralın **15'inin gövdesi yoktu**, 13'ü hiç zorlanmıyordu, kadro
+     talebin **iki katıydı** ve 45 saatlik sözleşme şablonlarla
+     **tutturulamıyordu** (T-51).
+   * Ölçüm aracı *"temiz olsun"* diye iki aşamayı kapatıyordu — yani
+     ürünün hiç kullanmadığı bir ayarı ölçüyordu.
+
+   **Bir ölçümü ya da testi kolaylaştıran her ayar, raporda AÇIKÇA
+   yazılır.** Yazılamayacak kadar utandırıcıysa, yapılmamalıdır.
+8. **Beni memnun etme, problemlere odaklan.** *(Mustafa, 29 Eylül:
+   "Beni yanıltmanın bedeli en ağır.")* İyi haber özetlenmez, kötü haber
+   yumuşatılmaz. Ölçülmemiş bir şey **ölçülmedi** diye yazılır.
 
 ---
 

@@ -181,15 +181,25 @@ def _(g, p):
                   "bas": 8, "bit": 19, "molalar": []})
 
 
-@vaka("PART_TIME_LIMIT", "Part-time calisana tam zamanli yuk yazilir")
+@vaka("PART_TIME_LIMIT", "Yari zamanliya MEVZUAT TAVANININ ustu yazilir")
 def _(g, p):
+    """⚠ BU VAKA 29 EYLUL'DE YENIDEN YAZILDI (K-39).
+
+    Eski hali "part-time'a bes gun x 9 saat yaz" diyordu ve o zaman ihlal
+    sayiliyordu, cunku tavan KISININ SOZLESME SAATIYDI (20/24). Mustafa
+    tavani mevzuata bagladi: emsal tam surelinin tamami, 45 saat. 5x8 = 40
+    saat artik ihlal DEGIL -- ve vaka SESSIZ kaldi, kural gormez oldu.
+
+    Yeni vaka tavanin USTUNE cikar: 7 gun x 9 net = 63 saat.
+    """
     pt = _bul(g["calisanlar"],
               lambda c: c["sozlesme"].get("tip") == "yari_zamanli")
     p[:] = [a for a in p if a["calisan"] != pt["id"]]
-    for gun in range(5):
+    for gun in range(7):
         p.append({"calisan": pt["id"], "ekip": pt["ekipler"][0],
-                  "sablon": "X", "gun": gun, "bas": 9, "bit": 18,
-                  "molalar": []})
+                  "sablon": "X", "gun": gun, "bas": 8, "bit": 18,
+                  "molalar": [{"tip": "yemek", "bas": 12, "bit": 13,
+                               "ucretli": False}]})       # 9 net x 7 = 63
 
 
 @vaka("VARDIYA_ARASI_DINLENME", "Gece vardiyasindan sonra ertesi sabah vardiya")
@@ -314,6 +324,43 @@ def _(g, p):
                   "bas": 9, "bit": 17, "molalar": []})
 
 
+@vaka("GECE_UYGUNLUGU", "Gece calisamayan kisi gece vardiyasina yazilir")
+def _(g, p):
+    """K-40. Iki sey birden gerekiyor: `gece_calisamaz` bir kisi ve
+    `gece_vardiyasi` isaretli bir sablon."""
+    gece_sablon = next((t for t in g["vardiya_sablonlari"]
+                        if t.get("gece_vardiyasi")), None)
+    kisi = next((c for c in g["calisanlar"]
+                 if c.get("gece_calisamaz")
+                 and gece_sablon and gece_sablon["ekip"] in (c.get("ekipler") or [])),
+                None)
+    if not (gece_sablon and kisi):
+        return
+    p.append({"calisan": kisi["id"], "ekip": gece_sablon["ekip"],
+              "sablon": gece_sablon["id"], "gun": 2,
+              "bas": gece_sablon["bas"], "bit": gece_sablon["bit"],
+              "molalar": []})
+
+
+@vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")
+def _(g, p):
+    """K-39. Sozlesme saati doldurulmazsa ihlal.
+
+    ⚠ Vaka DAR olmali: butun tam zamanlilara dokunmak yerine BIR kisinin
+      atamalarinin yarisini siliyoruz. Genis bir bozma, kuralin gercekten
+      o sebepten yandigini kanitlamaz.
+    """
+    tz = next((c for c in g["calisanlar"]
+               if (c.get("sozlesme") or {}).get("tip") == "tam_zamanli"
+               and c.get("durum", "aktif") == "aktif"
+               and sum(1 for a in p if a["calisan"] == c["id"]) >= 4), None)
+    if not tz:
+        return
+    onun = [a for a in p if a["calisan"] == tz["id"]]
+    birak = set(id(a) for a in onun[:len(onun) // 2])
+    p[:] = [a for a in p if a["calisan"] != tz["id"] or id(a) in birak]
+
+
 # ----------------------------------------------------------------------
 # Kosturucu
 # ----------------------------------------------------------------------
@@ -405,7 +452,9 @@ def kostur(g0, temel_plan, ayrintili=False):
 
 
 if __name__ == "__main__":
-    sahne = os.path.join(BURASI, "fikstur", "_sahne-S20.json")
+    ad = sys.argv[sys.argv.index("--sahne") + 1] if "--sahne" in sys.argv \
+        else "_sahne-S30-95.json"
+    sahne = os.path.join(BURASI, "fikstur", ad)
     g0 = json.load(io.open(sahne, encoding="utf-8"))
     sys.path.insert(0, BURASI)
     import importlib.util

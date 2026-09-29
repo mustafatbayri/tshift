@@ -84,7 +84,10 @@ def calisan_vardiya_bitisi_en_fazla(cikti, girdi, tanim):
 
 @kontrol("haftalik_net_saat_sozlesme_alti")
 def haftalik_net_saat_sozlesme_alti(cikti, girdi, tanim):
-    sozlesme = {c["id"]: c["sozlesme"]["haftalik_saat"]
+    # ⚠ `.get()` -- K-39'dan sonra yari zamanlilarda `haftalik_saat` ALANI
+    #   YOK. Dogrudan indeksleme KeyError verirdi. Kontrolun kendisi zaten
+    #   None olanlari atliyordu; sadece okumasi kiriktu.
+    sozlesme = {c["id"]: (c.get("sozlesme") or {}).get("haftalik_saat")
                 for c in girdi["calisanlar"]}
     toplam = defaultdict(float)
     for a in _atamalar(cikti):

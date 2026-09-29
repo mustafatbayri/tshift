@@ -1,0 +1,46 @@
+{
+ "cekirdek": 6,
+ "olcek": 1.0,
+ "saniye": 360,
+ "tekrar": 2,
+ "iki_asama": true,
+ "kisi": 350,
+ "kosular": [
+  {
+   "isci": 6,
+   "kosu": 1,
+   "durum": "cozuldu",
+   "amac": 155620,
+   "uzaklik_yuzde": 56.419,
+   "cozum_sayisi": 617,
+   "toplam_sn": 421.5,
+   "cozum_sn": 360.92,
+   "kurma_sn": 60.6
+  },
+  {
+   "isci": 6,
+   "kosu": 2,
+   "durum": "cozuldu",
+   "amac": 143590,
+   "uzaklik_yuzde": 52.636,
+   "cozum_sayisi": 630,
+   "toplam_sn": 421.3,
+   "cozum_sn": 361.0,
+   "kurma_sn": 60.3
+  }
+ ],
+ "ozet": [
+  {
+   "isci": 6,
+   "en_iyi": 143590,
+   "ortanca": 149605.0,
+   "en_kotu": 155620,
+   "yayilma": 12030,
+   "kosu": 2
+  }
+ ],
+ "en_iyi_isci": 6,
+ "satirlar_arasi_fark": 0.0,
+ "satir_ici_en_buyuk_yayilma": 12030,
+ "karar": "sahne_ayrim_yapmiyor"
+}

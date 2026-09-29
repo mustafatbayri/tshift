@@ -87,11 +87,17 @@ def test_plan_IYILESTIRILEBILIR():
     #   makinesinde o surede hic plan bulunamayabilir ve test, iyilestirmeyle
     #   ilgisiz bir sebepten kirmizi yanardi. Sure duyarli testin en kotu
     #   hali budur: gercek bir hata varmis gibi gorunur.
+    #
+    # ⚠ 29 EYLUL'DE IKINCI KEZ ISIRDI. T-57 duzeltmesi (net saat butun
+    #   molalari duser) modeli degistirdi; 12 saniyelik butce TEK BASINA
+    #   kosuldugunda yetiyordu (olculdu: 11 sn) ama tam suit icinde
+    #   yetmedi ve test "sure_yetmedi" dedi. Olculen sey iyilestirme degil,
+    #   MAKINENIN O ANKI YUKUYDU. Butce 12 -> 30 saniyeye cikarildi.
     g = _sahne()
-    ilk = coz(g, {"azami_saniye": 12, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
+    ilk = coz(g, {"azami_saniye": 30, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
     assert ilk["durum"] == "cozuldu", ilk["durum"]
 
-    ikinci = coz(g, {"azami_saniye": 20, "hedef_bosluk": 0.0,
+    ikinci = coz(g, {"azami_saniye": 30, "hedef_bosluk": 0.0,
                      "durgunluk_saniye": 999},
                  baslangic_plani=ilk["atamalar"])
     assert ikinci["durum"] == "cozuldu", ikinci["durum"]
@@ -105,8 +111,8 @@ def test_plan_IYILESTIRILEBILIR():
 def test_baslangic_plani_CIKTIDA_bildirilir():
     """Kullanici nereden baslandigini ve ne kazanildigini gormeli."""
     g = _sahne()
-    ilk = coz(g, {"azami_saniye": 12, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
-    ikinci = coz(g, {"azami_saniye": 15, "hedef_bosluk": 0.0,
+    ilk = coz(g, {"azami_saniye": 30, "hedef_bosluk": 0.0, "durgunluk_saniye": 999})
+    ikinci = coz(g, {"azami_saniye": 30, "hedef_bosluk": 0.0,
                      "durgunluk_saniye": 999},
                  baslangic_plani=ilk["atamalar"])
     ist = ikinci.get("cozum_istatistikleri") or {}

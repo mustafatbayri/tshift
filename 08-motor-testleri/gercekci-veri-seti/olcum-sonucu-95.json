@@ -1,0 +1,39 @@
+{
+ "olcek": 1.0,
+ "doluluk": 0.95,
+ "kisi": 500,
+ "sablon": 17,
+ "hucre": 415,
+ "kural": 40,
+ "azami_saniye": 900,
+ "kurma_sn": 50.9,
+ "degisken": 638572,
+ "kisit": 754633,
+ "cozum_sn": 1078.5,
+ "durum": "cozuldu",
+ "atama": 2493,
+ "metrikler": {
+  "sert_ihlal": 0,
+  "asgari_kapsama_yuzde": 98.55,
+  "hedef_kapsama_yuzde": 73.25,
+  "eksik_hedef_dakika": 47820,
+  "toplam_saat": 20876.75,
+  "fazla_mesai_saat": 1684.5,
+  "optimuma_uzaklik_yuzde": 98.319,
+  "cozum_suresi_sn": 903.19
+ },
+ "durma_sebebi": "butce_doldu",
+ "iki_asama": false,
+ "cozum_sayisi": 808,
+ "amac_degeri": 784458,
+ "dogrulama_sn": 1.6,
+ "ihlal": {
+  "HEDEF_KAPSAMA": 95,
+  "ADALET_DENGESI": 157,
+  "MOLA_KAPSAMASI": 63
+ },
+ "sert_ihlal": 0,
+ "yayinlanabilir": true,
+ "engelleyen": 0,
+ "kabul_bekleyen": 0
+}

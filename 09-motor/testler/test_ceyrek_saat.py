@@ -302,3 +302,47 @@ def test_saat_basinda_delinen_taban_HALA_gorulur():
     r = _iki_kisi_ayni_anda_molada(14.0, 15.0)
     kodlar = {i["kural"] for i in r["ihlaller"]}
     assert "SAHADA_ASGARI" in kodlar, "tam saatteki ihlal kayboldu: %s" % kodlar
+
+
+# ----------------------------------------------------------------------
+# Kesirli vardiya bitisi -- 29 Eylul, ZOR VERI SETI kurulurken cikti
+# ----------------------------------------------------------------------
+
+def test_KESIRLI_bitis_saati_dogrulayiciyi_COKERTMEZ():
+    """K-34 ceyrek saat izgarasini getirdi; vardiya bitisleri artik
+    7,5 / 8,25 / 15,5 gibi KESIRLI olabiliyor.
+
+    ⚠ NEDEN BU TEST VAR (29 Eylul)
+      Zor veri setinin sablonlari 45 saati tutturmak icin kesirli bitislerle
+      kuruldu (or. 07:00-15:30). Ilk cozumde dogrulayici COKTU:
+
+          ONAYLI_IZIN -> range(a["gun"], (bit - 1) // 24 + 1)
+          TypeError: 'float' object cannot be interpreted as an integer
+
+      Yani kural, bitis saatinin TAM SAYI oldugunu varsayiyordu. K-34'ten
+      beri bu varsayim yanlisti; hicbir test kesirli bitis kullanmadigi
+      icin aylarca gorunmedi. Veri seti daha kapiya baglanmadan bir hata
+      buldu -- setin var olma sebebi tam olarak bu.
+    """
+    g = {
+        "profil": "DENGELI",
+        "calisanlar": [{"id": "C1", "ekipler": ["E"],
+                        "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45},
+                        "izinler": [{"gun": 3, "tip": "yillik",
+                                     "durum": "onayli"}],
+                        "uygunluk": []}],
+        "vardiya_sablonlari": [
+            {"id": "V1", "ekip": "E", "bas": 23, "bit": 31.5, "mola_dk": 60,
+             "mola_politikasi": [{"tip": "yemek", "dakika": 60, "adet": 1,
+                                  "ucretli": False}]}],
+        "talep": [{"ekip": "E", "gun": 0, "saat": 23, "asgari": 1, "hedef": 1}],
+        "kurallar": [{"kod": "ONAYLI_IZIN", "tur": "SERT", "aktif": True,
+                      "yasal": True}],
+        "kilitler": [], "donmus_gunler": [],
+    }
+    atamalar = [{"calisan": "C1", "ekip": "E", "sablon": "V1", "gun": 0,
+                 "bas": 23, "bit": 31.5,
+                 "molalar": [{"tip": "yemek", "bas": 26, "bit": 27,
+                              "ucretli": False}]}]
+    r = degerlendir(g, atamalar)      # cokmemeli
+    assert isinstance(r.get("ihlaller"), list)

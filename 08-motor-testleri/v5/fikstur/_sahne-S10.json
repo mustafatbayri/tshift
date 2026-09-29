@@ -173,8 +173,7 @@
    "operasyonel_rol": "agent",
    "yetkinlikler": [],
    "sozlesme": {
-    "tip": "yari_zamanli",
-    "haftalik_saat": 20
+    "tip": "yari_zamanli"
    },
    "_kisit_notu": "Ogrenci: Sali gunleri tum gun ders. SERT kisit, tercih degil (K-13).",
    "izinler": [],
@@ -202,8 +201,7 @@
    "operasyonel_rol": "agent",
    "yetkinlikler": [],
    "sozlesme": {
-    "tip": "yari_zamanli",
-    "haftalik_saat": 24
+    "tip": "yari_zamanli"
    },
    "_kisit_notu": "Ikinci ogretim: 16:00'dan sonra calisamaz. V-TAM (18:00 bitis) verilemez.",
    "izinler": [],
@@ -267,8 +265,7 @@
    "operasyonel_rol": "agent",
    "yetkinlikler": [],
    "sozlesme": {
-    "tip": "yari_zamanli",
-    "haftalik_saat": 20
+    "tip": "yari_zamanli"
    },
    "izinler": [],
    "uygunluk": [],

@@ -27,7 +27,7 @@ EN IYI PLAN -- K-10
 
 from ortools.sat.python import cp_model
 
-from .model import Model, _q, _dilimler
+from .model import Model, _q, _dilimler, cekirdek_sayisi
 
 
 def ulasilamayan_hucre(girdi, kuruldu):
@@ -74,7 +74,26 @@ def ulasilamayan_hucre(girdi, kuruldu):
     return None
 
 
-def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None):
+def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
+    """Cozumsuzluk teshisi. `kesin` KANIT olup olmadigini soyler -- K-37.
+
+    ⚠ NEDEN `kesin` PARAMETRESI VAR (29 Eylul)
+      Bu fonksiyon iki ayri yerden cagriliyor:
+
+        kesin=True  -- cozucu INFEASIBLE dedi, ya da on kontrol yakaladi.
+                       "Boyle bir plan yok" cumlesinin ARKASINDA KANIT VAR.
+        kesin=False -- butce doldu, kullanici "neden oldugunu arastir"
+                       dedi. Cikan cumle bir TAHMINDIR.
+
+      Ikincisinde de aynen "su hucreyi su kural engelliyor" yaziliyor ama
+      hicbir sey kanitlanmadi: gevsetilmis modeli cozmek de 10 saniyeyle
+      sinirli. Bulunan sey "bu kurali kaldirinca 10 saniyede cozuluyor";
+      bulunamayan sey "kaldirmasam da 20 saniyede cozulecekti".
+
+      Bu yuzden ayrim CIKTIDA durur (`teshis_kesin`). Dugme arkasina
+      saklanmis yanlis bir cumle, ekranda duran yanlis cumleden daha iyi
+      degildir.
+    """
     if on_kontrol:
         # ON KONTROL yolu: hucre zaten belli, aramaya gerek yok.
         kapsam = "hucre"
@@ -107,9 +126,10 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None):
         engelleyen = _engelleyen_kurallar(girdi, kuruldu, hucre)
         en_iyi = _en_iyi_plan(girdi, ayar)
 
-    return {
-        "durum": "cozumsuz",
+    cevap = {
+        "durum": "cozumsuz" if kesin else "sure_yetmedi",
         "motor_surumu": "0.2.0-cozucu",
+        "teshis_kesin": bool(kesin),
         "teshis": {
             "kapsam": kapsam,
             "hucre": hucre,
@@ -121,6 +141,15 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None):
         "cozum_istatistikleri": istatistik,
         "uygulanmayan_notlar": kuruldu.notlar,
     }
+    if not kesin:
+        # Ekranda "imkansiz" yazmamali: sure doldu, teshis istendigi icin
+        # kosturuldu ve cikan sey bir TAHMIN.
+        cevap["aciklama"] = (
+            "Verilen surede plan bulunamadi. Asagidaki teshis bir TAHMINDIR; "
+            "boyle bir planin olmadigi KANITLANMIS degildir.")
+        cevap["verilen_saniye"] = ayar.get("azami_saniye")
+        cevap["teshis_istenebilir"] = False      # zaten kosturuldu
+    return cevap
 
 
 # ----------------------------------------------------------------------
@@ -235,7 +264,7 @@ def _cozulebilir_mi(girdi, saniye=10):
     m = Model(girdi).kur()
     c = cp_model.CpSolver()
     c.parameters.max_time_in_seconds = float(saniye)
-    c.parameters.num_search_workers = 8
+    c.parameters.num_search_workers = cekirdek_sayisi()
     return c.Solve(m.m) in (cp_model.OPTIMAL, cp_model.FEASIBLE)
 
 
@@ -257,7 +286,7 @@ def _en_iyi_plan(girdi, ayar, saniye=30):
     m = Model(gevsek).kur()
     c = cp_model.CpSolver()
     c.parameters.max_time_in_seconds = float(saniye)
-    c.parameters.num_search_workers = 8
+    c.parameters.num_search_workers = cekirdek_sayisi()
     if c.Solve(m.m) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return {"var": False,
                 "sebep": "kapsama gevsetildiginde bile cozum bulunamadi"}

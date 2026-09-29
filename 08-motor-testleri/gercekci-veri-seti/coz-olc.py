@@ -7,9 +7,10 @@ NEDEN AYRI BIR BETIK
   Bu, uzaktan calisan araclarin zaman siniriindan uzun. Olcumu bu yuzden
   senin makinende kosturuyoruz.
 
-  py coz-olc.py --olcek 0.1     ~35 kisi   -- saniyeler
-  py coz-olc.py --olcek 0.3     ~105 kisi  -- bir kac dakika
-  py coz-olc.py                 350 kisi   -- COK uzun, bellek yiyor
+  py coz-olc.py --olcek 0.1     ~49 kisi   -- bir kac dakika
+  py coz-olc.py --olcek 0.3     ~150 kisi
+  py coz-olc.py                 500 kisi   -- COK uzun, bellek yiyor
+  py coz-olc.py --doluluk 0.85  bolluk seti (varsayilan 0.95)
 
   ⚠ TAM OLCEK ICIN UYARI (28 Eylul)
     Bulut makinesinde model kurma 117 saniye olculdu ve ben bunu "beklenen
@@ -26,7 +27,7 @@ NE OLCER
   3. cozulduyse: dogrulayicidan gecen plan kac sert ihlal veriyor
 
 SONUC NEREYE YAZILIR
-  `olcum-sonucu.json` -- ayni klasore. Bir sonraki oturum onu okuyabilir.
+  `olcum-sonucu-<doluluk>.json` -- ayni klasore. Bir sonraki oturum okuyabilir.
 """
 
 import io
@@ -49,25 +50,33 @@ AZAMI_SANIYE = int(sys.argv[sys.argv.index("--saniye") + 1]) \
     if "--saniye" in sys.argv else 900
 OLCEK = float(sys.argv[sys.argv.index("--olcek") + 1]) \
     if "--olcek" in sys.argv else 1.0
+DOLULUK = float(sys.argv[sys.argv.index("--doluluk") + 1]) \
+    if "--doluluk" in sys.argv else 0.95
 
 
 def yaz(d):
-    ad = ("olcum-sonucu.json" if OLCEK == 1.0
-          else "olcum-sonucu-%g.json" % OLCEK)
+    ad = ("olcum-sonucu-%d.json" % round(DOLULUK * 100) if OLCEK == 1.0
+          else "olcum-sonucu-%g-%d.json" % (OLCEK, round(DOLULUK * 100)))
     with io.open(os.path.join(BURASI, ad), "w",
                  encoding="utf-8") as f:
         f.write(json.dumps(d, ensure_ascii=False, indent=1))
 
 
 def main():
+    # ⚠ 29 Eylul: iki set var (%85 ve %95). Varsayilan ZOR olan.
+    #   `--doluluk 0.85` ile digeri kosulur.
+    from uret_veri_seti import sahne_uret
     if OLCEK == 1.0:
-        sahne = os.path.join(BURASI, "fikstur", "_sahne-S20.json")
+        ad = "_sahne-S30-%d.json" % round(DOLULUK * 100)
+        sahne = os.path.join(BURASI, "fikstur", ad)
         g = json.load(io.open(sahne, encoding="utf-8"))
+        print("SAHNE : %s" % ad)
     else:
-        from uret_veri_seti import sahne_uret
-        g = sahne_uret(OLCEK)
-        print("OLCEK %.2f -- sahne bellekten uretildi" % OLCEK)
-    sonuc = {"olcek": OLCEK, "kisi": len(g["calisanlar"]),
+        g = sahne_uret(OLCEK, DOLULUK)
+        print("OLCEK %.2f (doluluk %%%d) -- sahne bellekten uretildi"
+              % (OLCEK, round(DOLULUK * 100)))
+    sonuc = {"olcek": OLCEK, "doluluk": DOLULUK,
+             "kisi": len(g["calisanlar"]),
              "sablon": len(g["vardiya_sablonlari"]),
              "hucre": len(g["talep"]),
              "kural": len(g["kurallar"]),
@@ -181,7 +190,9 @@ def main():
     yaz(sonuc)
 
     print("\nTOPLAM: %.0f sn" % (time.time() - t0))
-    print("Sonuc yazildi: olcum-sonucu.json")
+    print("Sonuc yazildi: %s" % ("olcum-sonucu-%d.json" % round(DOLULUK * 100)
+                                 if OLCEK == 1.0 else
+                                 "olcum-sonucu-%g-%d.json" % (OLCEK, round(DOLULUK * 100))))
 
 
 if __name__ == "__main__":

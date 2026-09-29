@@ -99,7 +99,15 @@ def onayli_izin(girdi, atamalar, tanim):
             if izin.get("durum", "onayli") != "onayli":
                 continue          # #8.3: yalniz onayli izinler motoru baglar
             # Gece vardiyasi iki gune dokunur; ikisinde de izin varsa ihlal.
-            for gun in range(a["gun"], (bit - 1) // 24 + 1):
+            #
+            # ⚠ `int(...)` -- 29 Eylul. K-34 ceyrek saat izgarasini
+            #   getirdiginden beri vardiya bitisi KESIRLI olabiliyor
+            #   (07:00-15:30 gibi) ve bu satir `range()`e float veriyordu:
+            #   "TypeError: 'float' object cannot be interpreted as an
+            #   integer". Kural, bitisin tam sayi oldugunu VARSAYIYORDU.
+            #   Hicbir test kesirli bitis kullanmadigi icin aylarca
+            #   gorunmedi; zor veri seti kurulurken ilk cozumde coktu.
+            for gun in range(a["gun"], int((bit - 1) // 24) + 1):
                 if izin.get("gun") == gun:
                     cikan.append(_ihlal("ONAYLI_IZIN", tanim,
                                         calisan=a["calisan"], gun=gun,
@@ -183,7 +191,27 @@ def gunluk_azami(girdi, atamalar, tanim):
 
 @kural("HAFTALIK_AZAMI")
 def haftalik_azami(girdi, atamalar, tanim):
-    sinir = _p(tanim, "azami_saat", 45)
+    """Haftalik TOPLAM sinir = normal calisma siniri + fazla mesai tavani.
+
+    ⚠ K-38 (Mustafa, 29 Eylul): "HAFTALIK_AZAMI normal calisma siniridir.
+      Toplam tavan degildir." 45 saati asan kisim FAZLA MESAIDIR ve kendi
+      tavanina tabidir.
+
+    ⚠ BU DUZELTME COZUCUYE UYGULANIP DOGRULAYICIYA UYGULANMAMISTI.
+      Zor veri seti yakaladi (29 Eylul): cozucu toplami 55'e kadar acti,
+      bu kural hala 45'te kesiyordu ve motorun urettigi plana bagimsiz
+      denetci "HAFTALIK_AZAMI ihlali" diyordu. 49 kisilik sahnede 9-13
+      ihlal. T-57 ile ayni aile: iki taraf ayni plan hakkinda farkli sey
+      soyluyor.
+
+    ⚠ TAVAN KALKMADI, YERI DEGISTI. Fazla mesai MIKTARINI FAZLA_MESAI_TAVANI
+      ayrica denetler (sozlesmenin ustu); bu kural MUTLAK tavandir.
+    """
+    normal = _p(tanim, "azami_saat", 45)
+    fm = next((k for k in (girdi.get("kurallar") or [])
+               if k.get("kod") == "FAZLA_MESAI_TAVANI" and k.get("aktif", True)),
+              None)
+    sinir = normal + (_p(fm, "azami_saat_hafta", 10) if fm else 0)
     toplam = {}
     for a in atamalar:
         toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
@@ -192,11 +220,149 @@ def haftalik_azami(girdi, atamalar, tanim):
             for k, v in sorted(toplam.items()) if v > sinir]
 
 
+def _borc_saat(c):
+    """Bu calisanin bu hafta DOLDURMASI GEREKEN net saat -- K-39.
+
+        gunluk norm = haftalik_saat / gun_sayisi   (gun_sayisi yoksa 6)
+        borc        = haftalik_saat - (onayli izin gunu x gunluk norm)
+
+    ⚠ AYNI HESAP COZUCUDE DE VAR VE BILEREK AYRI YAZILDI (#7.6).
+      Ortak bir module cikarmak YASAKTIR: kodu yazan testi de yazarsa ayni
+      yanlis varsayim iki yere birden gecer ve hicbir test yakalamaz.
+      Burada saat, cozucude dakika cinsinden hesaplanir.
+    """
+    soz = c.get("sozlesme") or {}
+    hafta = soz.get("haftalik_saat")
+    if hafta is None:
+        return 0.0
+    gunluk = float(hafta) / max(1, int(soz.get("gun_sayisi") or 6))
+    izin_gun = len({i["gun"] for i in (c.get("izinler") or [])
+                    if i.get("durum", "onayli") == "onayli"})
+    return max(0.0, float(hafta) - izin_gun * gunluk)
+
+
+@kural("SAAT_DENGESI")
+def saat_dengesi(girdi, atamalar, tanim):
+    """Tam zamanli calisan sozlesme saatini DOLDURMUS mu -- K-39.
+
+    ⚠ NEDEN VAR (29 Eylul)
+      Bu kuralin cozucude govdesi vardi, DOGRULAYICIDA YOKTU. Yani #7.6'nin
+      korumasi bu kuralda hic calismiyordu: motor kendi isini kendi
+      onayliyordu.
+
+      Bedeli olculdu -- 350 kisilik sahnede 45 saat sozlesmeli 17 kisiden
+      45'i tutturan SIFIR, ortalama 38,2 saat; plan yine de "0 sert ihlal,
+      yayinlanabilir: True" donuyordu. 17 kisi x ~3 saat = haftada ~51 saat,
+      sozlesmeyle odenen ama planlanmayan zaman.
+
+    ⚠ YARI ZAMANLIYA UYGULANMAZ. Onlarda kisiye ozel taban yoktur (Mustafa,
+      29 Eylul); haftalarini UYGUNLUK_TAKVIMI ve talep sekillendirir.
+
+    ⚠ PASIF CALISAN SAYILMAZ: kadroda gorunmeyen birinden saat beklenemez.
+      Cozucu de onlari modele hic almiyor.
+    """
+    tolerans = _p(tanim, "tolerans_saat", 0)
+    toplam = {}
+    for a in atamalar:
+        toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
+    cikan = []
+    for c in girdi.get("calisanlar", []) or []:
+        soz = c.get("sozlesme") or {}
+        if soz.get("tip") != "tam_zamanli" or soz.get("haftalik_saat") is None:
+            continue
+        if c.get("durum", "aktif") != "aktif":
+            continue
+        gereken = _borc_saat(c) - tolerans
+        if gereken <= 0:
+            continue
+        calisilan = toplam.get(c["id"], 0.0)
+        if calisilan + 1e-6 < gereken:
+            cikan.append(_ihlal(
+                "SAAT_DENGESI", tanim, calisan=c["id"],
+                olculen=round(calisilan, 2), gereken=round(gereken, 2),
+                mesaj=("%s sozlesmesi %s saat, planda %.1f saat var (izin "
+                       "dusuldukten sonra gereken %.1f) -- eksik planlanan "
+                       "sure, odenmis sure demektir"
+                       % (c["id"], soz.get("haftalik_saat"), calisilan,
+                          gereken))))
+    return cikan
+
+
+def _gece_sablonu(sablon):
+    """Bu sablon GECE VARDIYASI mi -- K-40. Donen: (gece_mi, tahmin_mi)
+
+    ⚠ ISARET TAHMINI EZER (Mustafa, 29 Eylul: "Bunu kullanici isaretleyecek").
+      Isaret yoksa saat araligina dusulur.
+
+    ⚠ AYNI TESPIT COZUCUDE DE VAR VE BILEREK AYRI YAZILDI (#7.6). Burada
+      dogrudan sablonun saatlerine bakilir; cozucu dilim aritmetigi kullanir.
+    """
+    if "gece_vardiyasi" in sablon:
+        return bool(sablon["gece_vardiyasi"]), False
+    bas, bit = float(sablon["bas"]), float(sablon["bit"])
+    p_bas, p_bit = GECE_PENCERESI
+    return (min(bit, p_bit) - max(bas, p_bas) > 0), True
+
+
+@kural("GECE_UYGUNLUGU")
+def gece_uygunlugu(girdi, atamalar, tanim):
+    """Gece calisamayan biri gece vardiyasina atanmis mi -- K-40.
+
+    ⚠ NEDEN VAR (Mustafa, 29 Eylul)
+        "Kullanici kartinda gece vardiyasi yapamaz gibi bir ifadeye
+         ihtiyacimiz var... gece vardiyalarina uygun olmayan calisanlari
+         ilgili vardiyadan direkt elemis olacagiz."
+
+      Bu alan hic yoktu. Bugune kadar ancak her gece icin ayri bir
+      `uygunluk` araligi yazarak taklit edilebiliyordu -- zahmetli, ve
+      unutuldugunda SESSIZ.
+    """
+    sablon = {t["id"]: t for t in (girdi.get("vardiya_sablonlari") or [])}
+    cikan = []
+    for a in atamalar:
+        c = _calisan(girdi, a["calisan"]) or {}
+        if not c.get("gece_calisamaz"):
+            continue
+        t = sablon.get(a.get("sablon"))
+        if t is None:
+            continue
+        gece, _tahmin = _gece_sablonu(t)
+        if gece:
+            cikan.append(_ihlal(
+                "GECE_UYGUNLUGU", tanim, calisan=a["calisan"], gun=a["gun"],
+                mesaj=("%s gece vardiyasi yapamaz; %s (%s-%s) vardiyasina "
+                       "atanmis" % (a["calisan"], t["id"], t["bas"], t["bit"]))))
+    return cikan
+
+
 @kural("PART_TIME_LIMIT")
 def part_time_limit(girdi, atamalar, tanim):
-    """Fazla Calisma Yon. md. 8 -- kismi sureliye fazla surelerle calisma da
-    yaptirilamaz. Bu yuzden tolerans 0 (K-25 arastirmasi)."""
+    """Kismi sureli calisma tavani -- K-39.
+
+    ⚠ TAVAN KISIDEN DEGIL MEVZUATTAN GELIR (Mustafa, 29 Eylul)
+      Onceki hali kisinin KENDI sozlesme saatini tavan sayiyordu; 20 saatlik
+      bir yari zamanli yogun bir haftada 24 saat calisamiyordu. Oysa
+      mevzuatin koydugu sinir bu degil.
+
+      SINIR (Mustafa, 29 Eylul): emsal tam surelinin TAMAMI = 45 saat.
+      "Yasa da 45 saate kadar calistirabilirsin, bu fazla mesaiye girmez
+      diyor." 30-45 arasi "fazla surelerle calisma"dir; fazla mesai ucreti
+      dogurmaz. Oran `emsal_orani` ile kiraci basina degistirilebilir.
+
+      Mustafa: "Kisi icin su kadar saat max veya min calisabilir diye kisit
+      girmemize gerek yok. Yapmamiz gereken, calisanin calisabilecegi
+      kisitli gunler veya saat araliklari varsa bunu tutmak." -- o da
+      UYGUNLUK_TAKVIMI, ayri ve SERT.
+
+    Fazla Calisma Yon. md. 8 geregi kismi sureliye fazla surelerle calisma
+    yaptirilamaz; bu yuzden tavanin toleransi 0'dir (K-25 arastirmasi).
+    """
     tolerans = _p(tanim, "tolerans_saat", 0)
+    # HAFTALIK_AZAMI sahnede tanimli olmayabilir; o zaman kanunun degeri.
+    emsal = _p(next((k for k in (girdi.get("kurallar") or [])
+                     if k.get("kod") == "HAFTALIK_AZAMI"), {}),
+               "azami_saat", 45)
+    tavan = _p(tanim, "azami_saat", emsal * _p(tanim, "emsal_orani", 1.0))
     toplam = {}
     for a in atamalar:
         toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
@@ -206,12 +372,12 @@ def part_time_limit(girdi, atamalar, tanim):
         soz = c.get("sozlesme") or {}
         if soz.get("tip") != "yari_zamanli":
             continue
-        tavan = soz.get("haftalik_saat", 0) + tolerans
-        if saat > tavan:
-            cikan.append(_ihlal("PART_TIME_LIMIT", tanim, calisan=kimlik,
-                                olculen=saat, gereken=tavan,
-                                mesaj="%s yari zamanli, sozlesmesi %s saat; %.1f saat verilmis"
-                                      % (kimlik, soz.get("haftalik_saat"), saat)))
+        if saat > tavan + tolerans:
+            cikan.append(_ihlal(
+                "PART_TIME_LIMIT", tanim, calisan=kimlik,
+                olculen=saat, gereken=tavan + tolerans,
+                mesaj=("%s yari zamanli; mevzuat tavani %.1f saat, "
+                       "%.1f saat verilmis" % (kimlik, tavan, saat))))
     return cikan
 
 

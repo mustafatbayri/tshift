@@ -4,6 +4,55 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-29 (akşam) · Veri seti baştan kuruldu · K-37 · K-38 · K-39 · K-40**
+Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı:
+*"Beni yanılttın. Konuyu çözmek için problemi daraltma bir daha!"* Ölçülünce
+haklı çıktı — 15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin
+2,3 katı, 45 saatlik sözleşme ulaşılamaz. Yerine **500 kişilik iki set**
+kuruldu (%85 ve %95 doluluk, tek fark talep tablosu; 17 şablon, 40 kural,
+19.630 kişi-saat kapasite). Dört ürün kararı verildi:
+**K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar — süre dolduğunda
+teşhis **koşmuyor**, kullanıcı *"neden olduğunu araştır"* derse koşuyor ama
+cevabın kanıtlanmadığı çıktıda yazılı (**T-23 ve T-48 kapandı**).
+**K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil —
+fazla mesai yolu vardı, hiç açılamıyordu.
+**K-39** tam zamanlının sözleşme saati **doldurulur** (izin oranında düşer,
+yeni alan `gun_sayisi`); yarı zamanlıya kişi başı saat **girilmez**, tavan
+mevzuattan gelir.
+**K-40** *"gece vardiyası yapamaz"* ve *"bu vardiya gece vardiyasıdır"*
+işaretleri — tahmin işareti **ezmez**.
+Set kurulurken üç hata buldu: çözücü ile doğrulayıcı *"net saat"*i farklı
+hesaplıyordu (geçerli planda 28 sert ihlal), kesirli vardiya bitişi
+doğrulayıcıyı **çökertiyordu**, ve K-38 doğrulayıcı tarafına uygulanmamıştı.
+⚠ Mutasyon iki kez boşluk yakaladı; ikisi de benim yazdığım `assert True`
+ile biten testlerdi. Motor **184 test** yeşil, zor set bekçileri **12** test.
+**Tam ölçek ilk kez çözüldü** (638.572 değişken, 2.493 atama, **0 sert
+ihlal**, `yayınlanabilir` True) **ama optimuma %98,3 uzak** ve 900 saniye
+istenen koşu 1.078 sürdü → **T-59** (bütçe aşımı, mekanik) ve **T-60**
+(kalite yok, önce dört ölçüm).
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-37…K-40 · `00-DEVIR/06-ACIK-RISKLER.md`
+  T-56 · T-59 · T-60 · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+
+
+**2026-09-29 · 350 kişilik set otomatik koşuya bağlandı · K-36**
+Set 28 Eylül'de bir saatte altı hata bulmuştu ama **elle** çalıştırılıyordu;
+artık her `git push`'ta koşuyor. Tam ölçekli çözüm CI'a konmadı (~16 dk):
+**çözmeden** ölçülenler 350 kişide, çözüm gerektirenler 0.1 ölçekte.
+**K-36:** arama işçisi sayısı artık makinenin çekirdek sayısından okunuyor.
+2 çekirdekte fark büyük (eski sabit 8 işçi optimuma **%23,6**, 2 işçi **%7,0**);
+küçük sahnede ise hiçbir fark ayırt edilemedi. **350 kişide kapandı:** 6
+çekirdekli makinede hem 120 hem 360 saniyede en iyi satır **çekirdek kadar
+işçi** (2 işçiye göre amaç üçte bir düşüyor), 12 işçi 6'yı geçemedi.
+`cekirdek-olc.py` artık `--tekrar` ile koşuyor, zar payını satırlar arası
+farkla karşılaştırıyor ve ayırt edemediğinde karar verdirmiyor.
+**Yeni ölçüm sorusu (T-50):** aynı sahne 900 sn'de optimuma %10, 360 sn'de
+%42 uzaktı — süre mi **iki aşama** mı, ayrılmadı.
+**T-48 hipotez olmaktan çıktı:** bütçe dolduğunda motor teşhise giriyor ve
+45 saniyelik bütçe **470 saniye** sürüyor — hem yanlış olabilecek bir cümle,
+hem on kat bekleme. Motor **146 test** yeşil.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-36 · `00-DEVIR/06-ACIK-RISKLER.md` T-48
+
+
 **2026-09-28 · Gerçekçi veri seti (350 kişi) ve K-35**
 Üç ekipli, 14 vardiya şablonlu, 39 kurallı bir sahne kuruldu ve tam ölçekte
 çalıştı: **1.757 atama, 0 sert ihlal**, %100 asgari kapsama, optimuma %10 uzak.

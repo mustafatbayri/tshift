@@ -1,232 +1,704 @@
 {
-  "senaryo": "A7",
-  "ad": "Cumartesi adaleti mi, kapsama mi",
-  "tip": "solve",
-  "sahne": "_sahne-S10.json",
-  "kabul_olcutu": "../KABUL-OLCUTLERI.md#a7--cumartesi-adaleti-mi-kapsama-mı",
-  "_aciklama": [
-    "AYNI girdi, IKI profil. Ekim ayinin ucuncu haftasi (17 Ekim Cumartesi).",
-    "Adalet penceresi takvim ayi (#6.5); ilk iki cumartesi devir yukunde.",
-    "Calisan TERCIHI yok (K-13) - gerilim adalet ile kapsama arasinda.",
-    "Kaynak: KABUL-OLCUTLERI.md #4 A7."
-  ],
-  "_duzeltme_16_eylul": [
-    "BU FIKSTUR EKSIKTI ve motor yazilana kadar eksikligi gorunmedi.",
-    "",
-    "Kabul olcutu sunu diyor: 'C01-C03 en deneyimli ve EN MUSAIT olanlar;",
-    "kapsama acisindan EN KOLAY SECIM onlar.' Fikstur bunu HIC kodlamamisti:",
-    "on calisanin hepsi ayni ekipte, ayni yetkinlikte, ayni sozlesmedeydi.",
-    "Yani cumartesiyi kime verdigin kapsamaya hicbir sey MAL OLMUYORDU.",
-    "",
-    "Sonuc: iki profil de ayni plani uretiyordu ve test '4. madde: en az biri",
-    "kesin fark gosterir' yuzunden kirmizi yaniyordu. Kirmizi HAKLIYDI ama",
-    "sebebi motor degil fiksturdu -- senaryonun anlattigi gerilim fiksturde",
-    "yoktu.",
-    "",
-    "Iki sey eklendi, ikisi de kabul olcutundeki cumlenin karsiligi:",
-    "  1. C04, C05, C06 sozlesmesi 40 saat (digerleri 45).",
-    "     5 tam gun = 40 saat; cumartesi nobeti (3.75 saat net) eklenince",
-    "     tavan asilir, bu yuzden onlardan birini cumartesiye koymak bir",
-    "     HAFTA ICI vardiyasini feda etmek demektir. C01-C03 icin 43.75 <= 45,",
-    "     yani bedava. 'En musait olanlar' cumlesinin mekanik karsiligi budur.",
-    "  2. Hafta ici 10:00-11:00 arasi zirve: hedef 8 (diger saatlerde 5).",
-    "     Feda edilen vardiya ancak kapsama SIKISIKSA olculebilir olur.",
-    "",
-    "Asgari kapsama (3) DEGISMEDI: her iki profil de %100 tutturmali.",
-    "Cumartesi nobeti hala 3 kisi -- kabul olcutu boyle diyor."
-  ],
-  "fark": {
-    "calisanlar": {
-      "C01": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 2,
-          "saat": 0,
-          "cumartesi": 2
-        }
-      },
-      "C02": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 2,
-          "saat": 0,
-          "cumartesi": 2
-        }
-      },
-      "C03": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 2,
-          "saat": 0,
-          "cumartesi": 2
-        }
-      },
-      "C07": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 1,
-          "saat": 0,
-          "cumartesi": 1
-        }
-      },
-      "C10": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 1,
-          "saat": 0,
-          "cumartesi": 1
-        }
-      },
-      "C04": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 0,
-          "saat": 0,
-          "cumartesi": 0
-        },
-        "sozlesme": {
-          "tip": "tam_zamanli",
-          "haftalik_saat": 40
-        },
-        "_not": "40 saat: 5 tam gun tavani doldurur, cumartesi ancak bir hafta ici gunu birakirsa mumkun"
-      },
-      "C05": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 0,
-          "saat": 0,
-          "cumartesi": 0
-        },
-        "sozlesme": {
-          "tip": "tam_zamanli",
-          "haftalik_saat": 40
-        }
-      },
-      "C06": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 0,
-          "saat": 0,
-          "cumartesi": 0
-        },
-        "sozlesme": {
-          "tip": "tam_zamanli",
-          "haftalik_saat": 40
-        }
-      },
-      "C08": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 0,
-          "saat": 0,
-          "cumartesi": 0
-        }
-      },
-      "C09": {
-        "devir_yuk": {
-          "gece": 0,
-          "hafta_sonu": 0,
-          "saat": 0,
-          "cumartesi": 0
-        }
-      }
-    },
-    "talep": [
-      {
-        "ekip": "E1",
-        "gunler": [0, 1, 2, 3, 4],
-        "saatler": [9, 10, 11, 12, 13, 14, 15],
-        "asgari": 3,
-        "hedef": 5,
-        "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda"
-      },
-      {
-        "ekip": "E1",
-        "gunler": [0, 1, 2, 3, 4],
-        "saatler": [16, 17],
-        "asgari": 3,
-        "hedef": 8,
-        "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor."
-      },
-      {
-        "ekip": "E1",
-        "gunler": [5],
-        "saatler": [9, 10, 11, 12],
-        "asgari": 3,
-        "hedef": 3,
-        "_not": "Cumartesi nobeti: 3 kisi. Kabul olcutu boyle diyor, degistirilmedi."
-      }
-    ]
-  },
-  "cagrilar": [
-    {
-      "ad": "kapsama",
-      "profil": "KAPSAMA"
-    },
-    {
-      "ad": "calisan",
-      "profil": "CALISAN"
+ "senaryo": "A7",
+ "ad": "Cumartesi adaleti mi, kapsama mi",
+ "tip": "solve",
+ "sahne": "_sahne-S10.json",
+ "kabul_olcutu": "../KABUL-OLCUTLERI.md#a7--cumartesi-adaleti-mi-kapsama-mı",
+ "_aciklama": [
+  "AYNI girdi, IKI profil. Ekim ayinin ucuncu haftasi (17 Ekim Cumartesi).",
+  "Adalet penceresi takvim ayi (#6.5); ilk iki cumartesi devir yukunde.",
+  "Calisan TERCIHI yok (K-13) - gerilim adalet ile kapsama arasinda.",
+  "Kaynak: KABUL-OLCUTLERI.md #4 A7.",
+  "29 Eylul (K-39 sonrasi): yari zamanlilarin sozlesme saati kalkinca sahne o kadar gevsedi ki HER ayarda iki profil ayni plani uretti (olculdu: cumartesi 3/4/5/6 kisi -> fark yok). Iki sey birlikte gerekti ve OLCULEREK secildi: cumartesi 5 kisi + yari zamanlilara gercekci uygunluk. Sonuc: KAPSAMA hedef %95,92 / sapma 2; CALISAN hedef %91,84 / sapma 1 -- iki olcut de dogru yonde ayrisiyor. Ikisi de A7'nin KENDI farkinda; paylasilan S10 sahnesine dokunulmadi."
+ ],
+ "_duzeltme_16_eylul": [
+  "BU FIKSTUR EKSIKTI ve motor yazilana kadar eksikligi gorunmedi.",
+  "",
+  "Kabul olcutu sunu diyor: 'C01-C03 en deneyimli ve EN MUSAIT olanlar;",
+  "kapsama acisindan EN KOLAY SECIM onlar.' Fikstur bunu HIC kodlamamisti:",
+  "on calisanin hepsi ayni ekipte, ayni yetkinlikte, ayni sozlesmedeydi.",
+  "Yani cumartesiyi kime verdigin kapsamaya hicbir sey MAL OLMUYORDU.",
+  "",
+  "Sonuc: iki profil de ayni plani uretiyordu ve test '4. madde: en az biri",
+  "kesin fark gosterir' yuzunden kirmizi yaniyordu. Kirmizi HAKLIYDI ama",
+  "sebebi motor degil fiksturdu -- senaryonun anlattigi gerilim fiksturde",
+  "yoktu.",
+  "",
+  "Iki sey eklendi, ikisi de kabul olcutundeki cumlenin karsiligi:",
+  "  1. C04, C05, C06 sozlesmesi 40 saat (digerleri 45).",
+  "     5 tam gun = 40 saat; cumartesi nobeti (3.75 saat net) eklenince",
+  "     tavan asilir, bu yuzden onlardan birini cumartesiye koymak bir",
+  "     HAFTA ICI vardiyasini feda etmek demektir. C01-C03 icin 43.75 <= 45,",
+  "     yani bedava. 'En musait olanlar' cumlesinin mekanik karsiligi budur.",
+  "  2. Hafta ici 10:00-11:00 arasi zirve: hedef 8 (diger saatlerde 5).",
+  "     Feda edilen vardiya ancak kapsama SIKISIKSA olculebilir olur.",
+  "",
+  "Asgari kapsama (3) DEGISMEDI: her iki profil de %100 tutturmali.",
+  "Cumartesi nobeti hala 3 kisi -- kabul olcutu boyle diyor."
+ ],
+ "fark": {
+  "calisanlar": {
+   "C01": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 2,
+     "saat": 0,
+     "cumartesi": 2
     }
-  ],
-  "beklenen": {
-    "her_iki_cagri": {
-      "durum": "cozuldu",
-      "metrikler": {
-        "sert_ihlal": {
-          "esit": 0
-        },
-        "asgari_kapsama_yuzde": {
-          "esit": 100
-        }
-      }
+   },
+   "C02": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 2,
+     "saat": 0,
+     "cumartesi": 2
+    }
+   },
+   "C03": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 2,
+     "saat": 0,
+     "cumartesi": 2
+    }
+   },
+   "C07": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 1,
+     "saat": 0,
+     "cumartesi": 1
+    }
+   },
+   "C10": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 1,
+     "saat": 0,
+     "cumartesi": 1
     },
-    "karsilastirma": [
-      {
-        "ad": "Calisan profili cumartesiyi daha adil dagitir",
-        "olcut": "adalet_sapmasi_cumartesi",
-        "yon": "calisan <= kapsama"
-      },
-      {
-        "ad": "Kapsama profili hedefi daha iyi tutturur",
-        "olcut": "hedef_kapsama_yuzde",
-        "yon": "kapsama >= calisan"
-      },
-      {
-        "ad": "En az biri KESIN fark gosterir",
-        "olcut": "-",
-        "yon": "en_az_biri_kesin_buyuk",
-        "_not": "Ikisi de esitse agirliklar calismiyor demektir -> test kirmizi"
-      }
-    ],
-    "degismezler": [
-      {
-        "ad": "Adalet YUMUSAK kuraldir",
-        "kural": "ADALET_DENGESI",
-        "kontrol": "adalet_ihlali_sert_sayilmaz",
-        "_not": "Kapsama profilinde C01'i ucuncu kez cumartesiye koymak ihlal degil, puan dusurur"
-      }
+    "uygunluk": [
+     {
+      "tip": "uygun_degil",
+      "gun": 2,
+      "bas": 0,
+      "bit": 24,
+      "_not": "hafta ici yalniz Pazartesi-Sali musait"
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 3,
+      "bas": 0,
+      "bit": 24,
+      "_not": "hafta ici yalniz Pazartesi-Sali musait"
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 4,
+      "bas": 0,
+      "bit": 24,
+      "_not": "hafta ici yalniz Pazartesi-Sali musait"
+     }
     ]
-  },
-  "turetilmis_degerler": {
-    "_not": "Adalet sapmasi = secim sonrasi cumartesi sayilarinin ANAKUTLE standart sapmasi (ddof=0).",
-    "devir_cumartesi": {
-      "C01": 2,
-      "C02": 2,
-      "C03": 2,
-      "C07": 1,
-      "C10": 1,
-      "C04": 0,
-      "C05": 0,
-      "C06": 0,
-      "C08": 0,
-      "C09": 0
+   },
+   "C04": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 0,
+     "saat": 0,
+     "cumartesi": 0
     },
-    "secim_C01_C02_C03_sonrasi_sapma": 1.3,
-    "secim_C04_C05_C06_sonrasi_sapma": 0.7,
-    "_hesap_notu": "Programatik dogrulandi; iki secim olculebilir sekilde farkli.",
-    "hafta_ici_vardiya_kapasitesi": 42,
-    "_kapasite_notu": "C01-C07 5'er (35) + C08 2 + C09 3 + C10 2 = 42. Zirve hedefi 8 kisi x 5 gun = 40 vardiya ister; 42 ile tutar, 39 ile tutmaz.",
-    "cumartesi_bedeli_40_saatlik_sozlesme": 1,
-    "_bedel_notu": "40 saatlik sozlesmede cumartesi nobeti bir hafta ici vardiyasina mal olur; 45 saatlikte olmaz. Gerilimin kaynagi bu."
+    "sozlesme": {
+     "tip": "tam_zamanli",
+     "haftalik_saat": 40
+    },
+    "_not": "40 saat: 5 tam gun tavani doldurur, cumartesi ancak bir hafta ici gunu birakirsa mumkun"
+   },
+   "C05": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 0,
+     "saat": 0,
+     "cumartesi": 0
+    },
+    "sozlesme": {
+     "tip": "tam_zamanli",
+     "haftalik_saat": 40
+    }
+   },
+   "C06": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 0,
+     "saat": 0,
+     "cumartesi": 0
+    },
+    "sozlesme": {
+     "tip": "tam_zamanli",
+     "haftalik_saat": 40
+    }
+   },
+   "C08": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 0,
+     "saat": 0,
+     "cumartesi": 0
+    },
+    "uygunluk": [
+     {
+      "tip": "uygun_degil",
+      "gun": 1,
+      "bas": 0,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 3,
+      "bas": 0,
+      "bit": 24,
+      "_not": "universite dersi"
+     }
+    ]
+   },
+   "C09": {
+    "devir_yuk": {
+     "gece": 0,
+     "hafta_sonu": 0,
+     "saat": 0,
+     "cumartesi": 0
+    },
+    "uygunluk": [
+     {
+      "tip": "uygun_degil",
+      "gun": 0,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 1,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 2,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 3,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 4,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 5,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 6,
+      "bas": 16,
+      "bit": 24
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 1,
+      "bas": 0,
+      "bit": 24,
+      "_not": "diger isinde calisiyor"
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 2,
+      "bas": 0,
+      "bit": 24,
+      "_not": "diger isinde calisiyor"
+     },
+     {
+      "tip": "uygun_degil",
+      "gun": 4,
+      "bas": 0,
+      "bit": 24,
+      "_not": "diger isinde calisiyor"
+     }
+    ]
+   }
+  },
+  "talep": [
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 12
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 13
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 14
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 0,
+    "saat": 15
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 12
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 13
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 14
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 1,
+    "saat": 15
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 12
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 13
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 14
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 2,
+    "saat": 15
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 12
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 13
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 14
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 3,
+    "saat": 15
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 12
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 13
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 14
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 5,
+    "_not": "Sahnedeki normal hafta ici talebi, zirve saatleri disinda",
+    "gun": 4,
+    "saat": 15
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 0,
+    "saat": 16
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 0,
+    "saat": 17
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 1,
+    "saat": 16
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 1,
+    "saat": 17
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 2,
+    "saat": 16
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 2,
+    "saat": 17
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 3,
+    "saat": 16
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 3,
+    "saat": 17
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 4,
+    "saat": 16
+   },
+   {
+    "ekip": "E1",
+    "asgari": 3,
+    "hedef": 8,
+    "_not": "Aksam zirvesi. Kapsamayi SIKISTIRAN sey bu. 16-17 arasini YALNIZ V-TAM (09-18) kapsiyor; V-ERKEN 16'da bitiyor. Yani zirveyi tutmak icin tam gun vardiyasi sart, ve 40 saatlik sozlesme 5 tam gun + cumartesiyi ayni anda kaldiramiyor.",
+    "gun": 4,
+    "saat": 17
+   },
+   {
+    "ekip": "E1",
+    "asgari": 5,
+    "hedef": 5,
+    "_not": "Cumartesi nobeti 3 -> 5 (Mustafa, 29 Eylul). K-39 yari zamanlilarin sozlesme saatini kaldirinca sahne gevsedi ve iki profil AYNI plani uretmeye basladi; cumartesi yeniden kit hale getirildi.",
+    "gun": 5,
+    "saat": 9
+   },
+   {
+    "ekip": "E1",
+    "asgari": 5,
+    "hedef": 5,
+    "_not": "Cumartesi nobeti 3 -> 5 (Mustafa, 29 Eylul). K-39 yari zamanlilarin sozlesme saatini kaldirinca sahne gevsedi ve iki profil AYNI plani uretmeye basladi; cumartesi yeniden kit hale getirildi.",
+    "gun": 5,
+    "saat": 10
+   },
+   {
+    "ekip": "E1",
+    "asgari": 5,
+    "hedef": 5,
+    "_not": "Cumartesi nobeti 3 -> 5 (Mustafa, 29 Eylul). K-39 yari zamanlilarin sozlesme saatini kaldirinca sahne gevsedi ve iki profil AYNI plani uretmeye basladi; cumartesi yeniden kit hale getirildi.",
+    "gun": 5,
+    "saat": 11
+   },
+   {
+    "ekip": "E1",
+    "asgari": 5,
+    "hedef": 5,
+    "_not": "Cumartesi nobeti 3 -> 5 (Mustafa, 29 Eylul). K-39 yari zamanlilarin sozlesme saatini kaldirinca sahne gevsedi ve iki profil AYNI plani uretmeye basladi; cumartesi yeniden kit hale getirildi.",
+    "gun": 5,
+    "saat": 12
+   }
+  ]
+ },
+ "cagrilar": [
+  {
+   "ad": "kapsama",
+   "profil": "KAPSAMA"
+  },
+  {
+   "ad": "calisan",
+   "profil": "CALISAN"
   }
+ ],
+ "beklenen": {
+  "her_iki_cagri": {
+   "durum": "cozuldu",
+   "metrikler": {
+    "sert_ihlal": {
+     "esit": 0
+    },
+    "asgari_kapsama_yuzde": {
+     "esit": 100
+    }
+   }
+  },
+  "karsilastirma": [
+   {
+    "ad": "Calisan profili cumartesiyi daha adil dagitir",
+    "olcut": "adalet_sapmasi_cumartesi",
+    "yon": "calisan <= kapsama"
+   },
+   {
+    "ad": "Kapsama profili hedefi daha iyi tutturur",
+    "olcut": "hedef_kapsama_yuzde",
+    "yon": "kapsama >= calisan"
+   },
+   {
+    "ad": "En az biri KESIN fark gosterir",
+    "olcut": "-",
+    "yon": "en_az_biri_kesin_buyuk",
+    "_not": "Ikisi de esitse agirliklar calismiyor demektir -> test kirmizi"
+   }
+  ],
+  "degismezler": [
+   {
+    "ad": "Adalet YUMUSAK kuraldir",
+    "kural": "ADALET_DENGESI",
+    "kontrol": "adalet_ihlali_sert_sayilmaz",
+    "_not": "Kapsama profilinde C01'i ucuncu kez cumartesiye koymak ihlal degil, puan dusurur"
+   }
+  ]
+ },
+ "turetilmis_degerler": {
+  "_not": "Adalet sapmasi = secim sonrasi cumartesi sayilarinin ANAKUTLE standart sapmasi (ddof=0).",
+  "devir_cumartesi": {
+   "C01": 2,
+   "C02": 2,
+   "C03": 2,
+   "C07": 1,
+   "C10": 1,
+   "C04": 0,
+   "C05": 0,
+   "C06": 0,
+   "C08": 0,
+   "C09": 0
+  },
+  "secim_C01_C02_C03_sonrasi_sapma": 1.3,
+  "secim_C04_C05_C06_sonrasi_sapma": 0.7,
+  "_hesap_notu": "Programatik dogrulandi; iki secim olculebilir sekilde farkli.",
+  "hafta_ici_vardiya_kapasitesi": 42,
+  "_kapasite_notu": "C01-C07 5'er (35) + C08 2 + C09 3 + C10 2 = 42. Zirve hedefi 8 kisi x 5 gun = 40 vardiya ister; 42 ile tutar, 39 ile tutmaz.",
+  "cumartesi_bedeli_40_saatlik_sozlesme": 1,
+  "_bedel_notu": "40 saatlik sozlesmede cumartesi nobeti bir hafta ici vardiyasina mal olur; 45 saatlikte olmaz. Gerilimin kaynagi bu."
+ }
 }

@@ -1557,3 +1557,289 @@ dil modeli değil. Token harcamaz.
 sınırlanması bu yüzden.
 
 → `02-spec/v1.4-master-spec.md` §9.4, §11.3 · K-28 · `09-motor/cozucu/coz.py`
+
+---
+
+## K-36 · Arama işçisi sayısı **makinenin çekirdeğine** uyar
+
+**Karar (29 Eylül).** Çözücünün arama işçisi sayısı koda sabit yazılmaz;
+çalıştığı makinenin kullanılabilir çekirdek sayısından okunur.
+
+**Nereden çıktı.** Mustafa'nın sorusu şuydu:
+
+> *"Bu 15 dk süren koşuyu daha hızlı bir makinede koşsak kısa sürer mi?
+>  Cloud ortamdan ciddi kapasitesi olan bir sunucu alsam işe yarar mı?"*
+
+Sunucu almadan önce **ücretsiz olan** düzeltme buydu.
+
+**Ölçüldü — ama iki makine iki ayrı şey söyledi.**
+
+35 kişilik sahne, her satıra aynı süre, erken durma kapalı:
+
+| işçi | **2 çekirdek** (45 sn) | **6 çekirdek** (60 sn) |
+|---|---|---|
+| 1 | **plan bulunamadı** | — |
+| 2 | %7,0 | %3,1 |
+| 4 | %24,2 | %2,9 |
+| 8 *(eski sabit)* | %23,6 | %2,3 |
+| 16 | — | %1,4 |
+
+**⚠ İlk yazımda bu madde *"makinede olmayan çekirdeği istemek planı
+kötüleştirir"* diyordu.** Yalnız **dar** makinede doğru. 6 çekirdekli
+makinede bütün satırlar optimuma %1,4–%3,1 arasında — aradaki fark, aynı
+ayarın **kendi zar payından** küçük (28 Eylül'de ölçüldü: aynı girdi, aynı
+25 saniye → 21.905 ve 22.715). Yani geniş makinede **bu sahne soruya cevap
+vermiyor**; birer koşudan genelleme çıkarmak 28 Eylül'deki *"117 saniye =
+beklenen ~2 dakika"* hatasının aynısı olurdu.
+
+**İki ölçümün ORTAK dediği şey — kararın dayanağı bu:**
+
+* Sabit sayı **dar makinede açıkça zararlı** (%7,0 → %23,6). CI'ın
+  makineleri 2 çekirdekli, yani bu bizim kendi koşumuz.
+* Sabit sayı **geniş makinede çekirdekleri israf eder**: 32 çekirdekli bir
+  sunucuda da 8 işçi koşacaktı.
+
+**Gerçekçi ölçekte ölçüldü (29 Eylül akşamı) — soru kapandı.**
+
+Mustafa 350 kişilik sahnede, 6 çekirdekli makinesinde, her satırı iki kez
+koşturdu. Amaç değerinin **ortancası** (küçük iyi):
+
+| işçi | 350 kişi · 120 sn | 350 kişi · 360 sn |
+|---|---|---|
+| 2 | 321.270 | 151.388 |
+| **6** *(= çekirdek)* | **224.007** | **119.966** |
+| 12 | 236.846 | 125.114 |
+
+**Her iki bütçede de çekirdek sayısı kadar işçi kazandı.** 2 işçi ile 6
+işçi arasındaki fark, aynı ayarın zar payından **üç kat büyük** — yani
+bu sefer ölçüm gerçekten ayırt ediyor. 12 işçi 6'yı geçemedi.
+
+**Küçük ölçek soruyu cevaplayamıyor:** aynı makinede 0.1 ve 0.3 ölçekte
+bütün satırlar zar payının içinde kaldı. Bu yüzden araç artık satır içi
+yayılmayı satırlar arası farkla karşılaştırıyor ve ayırt edemediğinde
+**karar verdirmiyor**.
+
+**Sunucu sorusunun cevabı da bu düzeltmeden önce verilemezdi:** 32 çekirdekli
+bir makinede de 8 işçi koşacaktı, yani ödenen çekirdeklerin çoğu boş dururdu.
+
+**Ölçüm aracı.** `08-motor-testleri/gercekci-veri-seti/cekirdek-olc.py` aynı
+sahneyi farklı işçi sayılarıyla, aynı süre bütçesiyle koşar ve tabloyu
+çıkarır. Sunucu kararı tahmine değil bu tabloya dayanır — 28 Eylül'de bir
+makinede ölçülen 117 saniyeyi *"beklenen ~2 dakika"* diye yazıp yanılmıştık.
+
+**Elle verilen sayı korunur.** Ölçüm aracı tam olarak buna dayanıyor; ayrıca
+bir müşteri makinesinde bilinçli olarak sınırlamak gerekebilir.
+
+→ K-28 · K-35 · `09-motor/cozucu/model.py` (`cekirdek_sayisi`, `isci_sayisi`) ·
+  `09-motor/testler/test_isci_sayisi.py`
+
+---
+
+## K-37 · *"İmkânsız"* ile *"yetiştiremedim"* ayrı cevaplardır
+
+**Karar (29 Eylül, Mustafa).** Çözücü plansız döndüğünde iki ayrı durum
+var ve artık iki ayrı cevap veriliyor:
+
+| çözücü ne dedi | motorun `durum`u | teşhis | `teshis_kesin` |
+|---|---|---|---|
+| `INFEASIBLE` — kanıtladım | `cozumsuz` | koşar | `true` |
+| ön kontrol — hücreye ulaşan vardiya yok | `cozumsuz` | (ucuz yol) | `true` |
+| `UNKNOWN` — süre doldu | **`sure_yetmedi`** | **koşmaz** | — |
+| süre doldu **+ kullanıcı istedi** | `sure_yetmedi` | koşar | **`false`** |
+
+**Neden.** Bir yöneticiye *"çözümsüz"* demek, *"bu talebi bu kadroyla
+karşılamak imkânsız"* demektir — personel alımına ya da talep düşürmeye
+kadar giden bir karar. Oysa gerçek *"biz yetiştiremedik"* olabilir.
+
+Teşhisin kendisi de ucuz değil: her sert kuralı tek tek gevşetip yeniden
+çözüyor. **Ölçüldü: 45 saniyelik bütçe, toplam 470 saniye.** Kullanıcı
+bütçesini bekledikten sonra 7 dakika daha bekliyor ve sonunda muhtemelen
+yanlış bir cümle alıyordu.
+
+**"Neden olduğunu araştır" düğmesi (Mustafa'nın onayladığı çözüm).**
+Teşhis kullanıcı isterse koşar. Böylece 7 dakikalık bekleme onun bilinçli
+seçimi olur, bizim sessizce ödetttiğimiz bir bedel değil.
+
+⚠ **İstenerek koşan teşhis de KANIT DEĞİLDİR** ve çıktıda öyle işaretlenir
+(`teshis_kesin: false`). Gevşetilmiş modeli çözmek de 10 saniyeyle sınırlı;
+bulunan şey *"bu kuralı kaldırınca 10 saniyede çözülüyor"*, bulunamayan şey
+*"kaldırmasam da 20 saniyede çözülecekti"*. Düğme arkasına saklı yanlış bir
+cümle, ekranda duran yanlış cümleden iyi değildir.
+
+**Ekranda.**
+
+* `cozumsuz` → *"Bu plan üretilemez. Engelleyen: …"*
+* `sure_yetmedi` → *"Verilen sürede plan bulunamadı."* + **süreyi uzat** +
+  **neden olduğunu araştır**
+
+**Şartname §11.3 çıktı sözleşmesi değişti**: `durum` artık üç değer alabilir.
+Yan etkisi ölçüldü: altın senaryolar (A03, A09) kanıtlanabilir çözümsüzlük
+kullandıkları için `cozumsuz` dönmeye devam ediyor — 12'si de yeşil.
+
+→ K-10 · K-35 · `09-motor/cozucu/coz.py` · `09-motor/cozucu/teshis.py`
+  (`teshis_koy(..., kesin=)`) · `09-motor/testler/test_sure_yetmedi.py`
+
+---
+
+## K-38 · `HAFTALIK_AZAMI` **normal çalışma sınırıdır**, toplam tavan değil
+
+**Karar (29 Eylül, Mustafa).** *"Normal çalışma sınırı. Toplam tavan değil.
+Yani minimum 45 saat çalışmalı."*
+
+Toplam saat 45'i **aşabilir**; aşan kısım fazla mesaidir ve kendi tavanına
+tabidir (profile bağlı: CALISAN 0 · DENGELI 10 · KAPSAMA 15), üstüne günlük
+11 saat sınırı ayrıca geçerlidir.
+
+**Ne bozuktu.** Çözücü iki kisit koyuyordu ve **bağlayıcı olan yanlışıydı**:
+
+```python
+dakika <= HAFTALIK_AZAMI                  # 45  <- toplamı burada kesiyordu
+dakika <= sozlesme + fazla_mesai_tavani   # 55
+```
+
+45 saat sözleşmeli bir çalışan zaten 45'te duruyordu: **fazla mesai
+matematiksel olarak imkânsızdı**. K-30'un *"asgari zorlarsa minimum fazla
+mesai"* dalı, ceza değişkeni ve profile bağlı tavan bu çalışanlar için **ölü
+koddu** — yani Mustafa'nın *"çözümsüzse başvururuz"* dediği kaçış yolu kapalıydı
+ve motor onun yerine *"bu talebi bu kadroyla karşılayamazsınız"* diyordu.
+
+**Ölçüldü** — aynı sahne, tek değişen parametre:
+
+| `HAFTALIK_AZAMI` | sonuç | en çok çalışan | fazla mesai |
+|---|---|---|---|
+| 45 | **çözümsüz** | — | — |
+| 55 | çözüldü | 48 saat | 48 saat *(6 kişi × 8)* |
+
+**Tavan kalkmadı, yeri değişti**: toplam hâlâ sınırlı, sınır artık
+*normal çalışma + fazla mesai tavanı*.
+
+⚠ **Mutasyon testi bir boşluk yakaladı.** Düzeltme yazıldıktan sonra haftalık
+kisit **tamamen silindiğinde bütün testler yeşil kaldı**: sözleşmesi olan bir
+çalışanda `sözleşme + tavan` kisiti zaten daha dar olduğu için haftalık tavan
+hiç bağlamıyordu. Altıncı bir test eklendi (sözleşme saati verilmemiş çalışan,
+10 net saatlik vardiya × 6 gün = 60 saat) ve mutasyon artık ölüyor.
+
+**Açık kalan (ürün kararı).** *"Minimum 45 saat çalışmalı"* kısmı
+`SAAT_DENGESI` kuralıdır ve bugün **yumuşak, tek taraflı, 2 saat toleranslı,
+doğrulayıcıda gövdesiz** (T-51). Sert yapılması %85 talepli veri setini
+tanım geregi çözümsüz kılar — çünkü orada sözleşmeleri dolduracak kadar
+talep yoktur. Bu yüzden önce **doğrulayıcı gövdesi** yazılmalı: eksik
+planlanan saat ölçülebilir ve **parası görünür** hale gelmeli.
+
+→ K-30 · T-51 · T-52 · `09-motor/cozucu/model.py` (`_sure_sinirlari`) ·
+  `09-motor/testler/test_fazla_mesai_yolu.py`
+
+---
+
+## K-39 · Sözleşme saati **doldurulur**; yarı zamanlı tavanı **mevzuattan** gelir
+
+**Karar (29 Eylül, Mustafa).** *"Haftalık 45 saati için ödeme yaptığı bir
+çalışanı 43 saat çalıştırmaz. Böyle plan yapmaz. Bunu esnetemeyiz."*
+
+Gerekçe **ticari**, yasal değil: Türkiye'de tam zamanlıya saat başına değil
+net maaş ödenir; eksik planlanan saat, ödenmiş ama kullanılmamış saattir.
+
+### Tam zamanlı — taban var, sert
+
+```
+günlük norm = haftalik_saat / gun_sayisi        (yeni alan; yoksa 6)
+gereken     = haftalik_saat - (onaylı izin günü × günlük norm)
+planlanan  >= gereken
+```
+
+⚠ **İzin borç düşürür, müsaitsizlik düşürmez.** Yıllık izin ücretlidir — o
+saatin parası zaten ödeniyor. Uygunluk takvimi (*"o gün çalışamam"*) bir
+ödeme değil bir kısıttır; borç aynen durur. İkisini aynı saymak, çalışanı
+eksik çalıştırıp *"olsun, zaten müsait değildi"* demek olurdu.
+
+⚠ **`gun_sayisi` olmadan izin saate çevrilemez**: aynı 45 saat, 6 günlük
+desende bir izin günü 7,5 saat; 5 günlük desende 9,0 saat eder. Bu, **girdi
+sözleşmesine yeni bir alan** demektir (§8.3 / §11.2).
+
+### Yarı zamanlı — kişiye özel taban yok, tavan mevzuattan
+
+Mustafa: *"Bizim çalışan için şu kadar saat max veya min çalışabilir diye
+kisıt girmemize gerek yok. Yapmamız gereken sadece çalışanın çalışabileceği
+kısıtlı günler veya saat aralıkları varsa bunu tutmak."*
+
+* taban: **yok**
+* tavan: emsal tam sürelinin **2/3'ü** = 45'in 2/3'ü = **30 saat**
+* haftayı şekillendiren: `UYGUNLUK_TAKVIMI` — zaten SERT ve **iki tarafta da
+  yazılı** (çözücü + doğrulayıcı), doğrulandı
+
+### Doğrulayıcı gövdesi yazıldı
+
+`SAAT_DENGESI`'nin çözücüde gövdesi vardı, **doğrulayıcıda yoktu** — yani
+§7.6'nın koruması bu kuralda hiç çalışmıyordu. Bedeli ölçülmüştü: 45 saat
+sözleşmeli 17 kişiden 45'i tutturan **sıfır**, ortalama 38,2 saat, plan yine de
+*"0 sert ihlal, yayınlanabilir: True"*. Borç hesabı iki tarafta **ayrı ayrı**
+yazıldı (§7.6: ortak modül yasak) — biri dakika, diğeri saat cinsinden.
+
+### Ölçüm
+
+7 yeni test; üçü kırmızı başladı. Üç mutasyon denendi (izin düşümü çözücüde,
+izin düşümü doğrulayıcıda, yarı zamanlı tavanı) — üçü de öldü.
+
+⚠ **Bir eski test tersine çevrildi:** `test_part_time_sozlesme_saati_toleranssiz`
+20 saatlik bir yarı zamanlıya 24 saat verilmesini ihlal sayarak **eski
+davranışı çiviliyordu**. Silinmedi, terse çevrildi ve neden değiştiği içine
+yazıldı. Yanına, tavanın hâlâ bağladığını gösteren ikinci bir test kondu.
+
+⚠ **İki altın senaryo kırmızıya düştü (T-53)** — A1 ve A9. Fikstürlere
+dokunulmadı: onaylanmış cümleyi değiştirmek Mustafa'nın kararı.
+
+→ K-30 · K-38 · T-51 · T-53 · `09-motor/cozucu/model.py` (`_saat_dengesi`,
+  `_borc_dakika`) · `09-motor/dogrulayici/kurallar.py` (`saat_dengesi`,
+  `part_time_limit`) · `09-motor/testler/test_sozlesme_saati.py`
+
+---
+
+## K-40 · *"Bu kişi gece vardiyası yapamaz"* — tahmin değil **işaret**
+
+**Karar (29 Eylül, Mustafa).**
+
+> *"Kullanıcı kartında gece vardiyası yapamaz gibi bir ifadeye ihtiyacımız var.
+> Vardiya planı yapılırken de vardiya gece vardiyasıdır diye bir işaret koymamız
+> gerekiyor. Bunu kullanıcı işaretleyecek."*
+
+**İki yeni alan** (girdi sözleşmesi §8.3 / §11.2):
+
+| nerede | alan | anlamı |
+|---|---|---|
+| vardiya şablonu | `gece_vardiyasi` | bu şablon gece vardiyasıdır — **kullanıcı işaretler** |
+| çalışan | `gece_calisamaz` | bu kişi gece vardiyasına atanamaz |
+
+**Yeni kural `GECE_UYGUNLUGU`, SERT.** Katalog **39 → 40**.
+
+**Ne vardı.** Motor geceyi **saat aralığından tahmin ediyordu** ve bunu yalnız
+`ADALET_DENGESI`'nin "gece" boyutunda, yani **adil dağıtım** için kullanıyordu.
+*"Gece çalışamaz"* diye bir kayıt hiçbir yerde yoktu; ancak her gece için ayrı
+bir `uygunluk` aralığı yazılarak taklit edilebilirdi — zahmetli ve
+unutulduğunda **sessiz**.
+
+**⚠ İşaret tahmini ezer.** 23:00-07:00 çoğu zaman doğru çalışır ama 22:00-06:00
+ya da 00:00-08:00 gibi sınır durumlarında firmanın kendi tanımıyla çelişebilir.
+Mustafa'nın istediği işaret: kullanıcı söyler, motor tahmin etmez.
+
+**⚠ İşaret yoksa tahmine düşülür — ama sessiz değil.** Geçişi olmayan depolar
+kırılmasın diye `gece_vardiyasi` yazılmamış bir şablon saat aralığına göre
+değerlendirilir ve **not yazılır**. İşaretlenmemiş bir gece vardiyası,
+korunması gereken birini sessizce geceye koyabilirdi.
+
+`ADALET_DENGESI`'nin "gece" boyutu da artık aynı tespiti kullanıyor — iki yerde
+iki farklı gece tanımı kalmadı.
+
+### Ölçüm
+
+8 test; dördü kırmızı başladı. Üç mutasyon denendi.
+
+⚠ **Mutasyon bir boşluk yakaladı — ikinci kez.** *"İşaret tahmini ezer"*
+testi sonunda `assert True` ile bitiyordu; işaret tamamen yok sayılıp hep
+tahmine düşüldüğünde bütün testler yeşil kaldı. Test yeniden yazıldı: sahne
+artık öyle kuruldu ki cevap tek — gece penceresindeki şablon *"gece değil"*
+işaretli ve o saati kapatabilecek tek kişi gece çalışamayan. Doğrulayıcı için
+de aynısı eklendi. Mutasyon artık ölüyor.
+
+→ T-55 · `09-motor/cozucu/model.py` (`_gece_sablonu`, `_gece_uygunlugu`) ·
+  `09-motor/dogrulayici/kurallar.py` (`gece_uygunlugu`) ·
+  `09-motor/testler/test_gece_uygunlugu.py`
