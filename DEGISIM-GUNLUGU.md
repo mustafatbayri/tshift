@@ -4,6 +4,27 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (gece, 2) · `GECE_VARDIYASI_AZAMI` — yasal gece sınırı yazıldı (K-26)**
+Mustafa kalan kurallar arasından bunu seçti: hukuki risk taşıyan tek yazılabilir
+kural. Önce kendi sözümü düzelttim — dün *"mantıklı grup üç yasal kural"*
+demiştim; üçün ikisi geçmiş hafta verisine (T-28) bağlı çıktı. Gövdesiz 12
+kural tek tek okundu: beşi bugün yazılabilir, dördü T-28'e, biri `tercihler`
+alanına bağlı, biri (`GECE_YARISI_ASAN`) şartnameye göre **zaten ihlal
+üretmez** — sayımımızda sınıflandırma hatası (T-67).
+**Kural:** gece penceresine (20:00–06:00) düşen **net** çalışma 7,5 saati
+geçemez; pencere gün sınırını aşarak hesaplanır (Z-5). **Sektör istisnası kişi
+bazlı:** turizm/özel güvenlik/sağlık/petrol **ve** çalışanın yazılı onayı varsa
+sınır o çalışan için kalkar. İki yeni girdi alanı: `sektor`,
+`gece_calisma_onayi`. 20 test, 11 mutasyon, hepsi öldü.
+**T-68:** çözücü sınırı **brüt** ölçüyor — bilerek, çünkü net ölçü mola
+yerine bağlı ve modeli ağırlaştırır (T-60). Yasal planı reddedebilir, yasadışı
+plan üretmez; ayrışma güvenli yönde ve not yazılıyor.
+⚠ **Veri seti kuralı zorlamıyor** (en uzun gece örtüşmesi 7,00 saat); zorlayan
+testler ve ihlal vakası. Sahnenin sektörü bilerek istisna dışı.
+Motor **225 test**, **29 gövde · 29 vaka · 29 kırmızı**.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-26 · `00-DEVIR/06-ACIK-RISKLER.md` T-67 · T-68
+
+
 **2026-09-30 (gece) · CI kırmızı yandı — motorun kendi metriği yanlış sayıyordu**
 Mustafa'nın koşumu: *"sert ihlal 0, asgari kapsama %99,76."* Çelişki gibi
 duruyordu, değildi — iki sayı da motorun **kendi** raporundan geliyor.

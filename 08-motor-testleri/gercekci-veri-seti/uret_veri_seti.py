@@ -481,6 +481,20 @@ def kurallar_uret():
     # K-40: gece uygunlugu.
     ek("GECE_UYGUNLUGU", "SERT", kabul=False)
 
+    # --- GECE_VARDIYASI_AZAMI: YASAL, Is K. md. 69 (K-26) ---
+    #
+    # ⚠ BU SAHNEDE KURAL IHLAL URETMEZ -- acikca yaziyorum.
+    #   En uzun gece ortusmesi S-GECE'de 7,00 saat, sinir 7,5. Yani kural
+    #   aktif ve tanimli ama veri setinin sablonlari onu ZORLAMIYOR; onu
+    #   zorlayan ihlal vakasi ve birim testleri. Sablonlari sinirin
+    #   ustune cikarmak yasadisi bir firma kurmak olurdu.
+    #
+    # ⚠ SEKTOR BILEREK ISTISNA DISI (`cagri_merkezi`, asagida). Istisnali
+    #   bir sektorde yazili onayli calisanlar icin sinir kalkar; en zor
+    #   hal sinirin herkes icin yururlukte oldugu haldir.
+    ek("GECE_VARDIYASI_AZAMI", "SERT", yasal=True, kabul=False,
+       azami_saat=7.5, pencere_bas=20, pencere_bit=6)
+
     # --- ROL_KAPSAMASI: gerceklilik satirlari (T-63, Mustafa 30 Eylul) ---
     #
     # Mustafa'nin secimi: "Yalniz gunduz saatlerinde 1 lider."
@@ -517,7 +531,6 @@ def kurallar_uret():
 
     # --- govdesi YAZILMAMIS olanlar (uygulanmayan_kurallar atessin) ---
     for kod, tur, yasal in (
-            ("GECE_VARDIYASI_AZAMI", "SERT", True),
             ("GECE_POSTASI_DEVRI", "SERT", True),
             ("GECE_YARISI_ASAN", "SERT", False),
             ("ARDISIK_GECE_LIMIT", "SERT", False),
@@ -629,11 +642,15 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
             "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
             "Hafta ici ve hafta sonu esikleri AYRI.",
             "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-            "Katalogdaki 40 kuralin TAMAMI tanimli: 26'si degerlendirilir,",
-            "14'u `uygulanmayan_kurallar` kanalini atesler.",
+            "Katalogdaki 40 kuralin TAMAMI tanimli: 29'u degerlendirilir,",
+            "11'i `uygulanmayan_kurallar` kanalini atesler.",
+            "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
             "Tohum sabit (%d) -- ayni girdi ayni dosyayi uretir." % TOHUM,
         ],
         "hafta_baslangic": "2026-10-12",
+        # K-26: GECE_VARDIYASI_AZAMI'nin sektor istisnasi buna bakar.
+        # Bilerek istisna DISI -- sinir herkes icin yururlukte (en zor hal).
+        "sektor": "cagri_merkezi",
         "_hafta_notu": "12 Ekim Pazartesi = gun 0 ... 18 Ekim Pazar = gun 6",
         "kiraci_saat_dilimi": "Europe/Istanbul",
         "profil": "DENGELI",

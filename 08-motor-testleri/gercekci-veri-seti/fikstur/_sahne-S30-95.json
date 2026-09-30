@@ -14,11 +14,13 @@
   "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
   "Hafta ici ve hafta sonu esikleri AYRI.",
   "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-  "Katalogdaki 40 kuralin TAMAMI tanimli: 26'si degerlendirilir,",
-  "14'u `uygulanmayan_kurallar` kanalini atesler.",
+  "Katalogdaki 40 kuralin TAMAMI tanimli: 29'u degerlendirilir,",
+  "11'i `uygulanmayan_kurallar` kanalini atesler.",
+  "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
   "Tohum sabit (20260928) -- ayni girdi ayni dosyayi uretir."
  ],
  "hafta_baslangic": "2026-10-12",
+ "sektor": "cagri_merkezi",
  "_hafta_notu": "12 Ekim Pazartesi = gun 0 ... 18 Ekim Pazar = gun 6",
  "kiraci_saat_dilimi": "Europe/Istanbul",
  "profil": "DENGELI",
@@ -18829,6 +18831,18 @@
    "kabul_edilebilir": false
   },
   {
+   "kod": "GECE_VARDIYASI_AZAMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat": 7.5,
+    "pencere_bas": 20,
+    "pencere_bit": 6
+   }
+  },
+  {
    "kod": "ROL_KAPSAMASI",
    "tur": "SERT",
    "aktif": true,
@@ -18911,13 +18925,6 @@
    "tur": "SERT",
    "aktif": true,
    "yasal": false,
-   "kabul_edilebilir": false
-  },
-  {
-   "kod": "GECE_VARDIYASI_AZAMI",
-   "tur": "SERT",
-   "aktif": true,
-   "yasal": true,
    "kabul_edilebilir": false
   },
   {

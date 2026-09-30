@@ -3334,6 +3334,64 @@ mı dursun. Motorun kendi metriğinin var olma sebebi doğrulayıcıyla
 
 ---
 
+## 🟡 T-67 · `GECE_YARISI_ASAN` "gövdesiz" sayılıyor ama şartnameye göre ihlal üretmez
+
+**Bulundu:** 30 Eylül, kalan gövdesiz kurallar tek tek okunurken.
+
+Şartname §6.3 satırı açık: *"Bitişi başlangıcından küçük olan vardiya ertesi
+güne taşar. **Hesaplama kuralı, ihlal üretmez.**"* Zaman modeli (Z-1…Z-7) bu
+hesabı zaten yapıyor — `zaman.aralik` Z-1'i uyguluyor.
+
+Yani bu kural *"yazılmamış"* değil *"bilerek gövdesiz"*. Ama sayımlarımızda,
+veri setinde ve `uygulanmayan_kurallar` kanalında **eksik** diye görünüyor.
+Gerçek eksik sayısı 11 değil **10**.
+
+⚠ **Düzeltmesi basit değil:** ona boş bir gövde yazmak doğruyu söyler ama ihlal
+vakası aracı artık her gövdeden bir kırmızı bekliyor (T-64) — bu kural için
+kırmızı **tanım gereği imkânsız**. Araca *"bilerek sessiz"* diye bir sınıf
+eklemek gerekiyor. Küçük ama ayrı bir iş.
+
+→ T-64 · `02-spec/v1.4-master-spec.md` §6.3
+
+---
+
+## 🟡 T-68 · Çözücü gece sınırını **brüt** ölçüyor — doğrulayıcıdan bilerek daha katı
+
+**Bulundu değil, bilerek seçildi:** 30 Eylül, `GECE_VARDIYASI_AZAMI` yazılırken.
+Kayda geçiyor çünkü iki taraf aynı kuralı **farklı ölçüyor** ve bu T-57 / T-61
+ailesinden — bu kez bilinçli.
+
+| taraf | ölçü |
+|---|---|
+| doğrulayıcı | gece penceresine düşen **net** çalışma (penceredeki mola düşülür) |
+| çözücü | şablonun penceresine düşen **brüt** saat |
+
+**Neden:** net ölçü molanın **nereye** düştüğüne bağlı ve mola yeri bir karar
+değişkeni. Onu kısıtlamak kişi × gece × çeyrek kadar terim demek — 500 kişide
+on binlerce. T-60'a göre model zaten optimuma %98,3 uzak; ona yük eklemek bugün
+yanlış yön.
+
+**Bedeli:** brütü 8, penceresindeki molayla neti 7 saat olan bir şablon
+çözücüde **yasaklanır** — oysa yasaldır. Yani çözücü yasal bir planı
+**reddedebilir**, ama hiçbir zaman yasadışı plan **üretmez**. Ayrışma güvenli
+yönde, ve olduğunda sessiz değil: çözücü not yazıyor.
+
+**Bugün etkisi yok:** veri setinde brüt örtüşmesi 7,5'i aşan şablon yok.
+
+**İkinci boşluk — iki vardiya aynı pencereyi paylaşırsa.** Çözücü **şablon
+başına** bakıyor, doğrulayıcı **pencere başına toplar.** Pazartesi 16:00–24:00
++ Salı 00:00–06:00 aynı geceye 10 saat yazar. `VARDIYA_ARASI_DINLENME` aktifken
+imkânsız (11 saat ara gerekir); kapatılırsa iki taraf ayrışır ve **doğrulayıcı
+görür**.
+
+**Ne zaman ele alınmalı:** gerçek müşteri şablonları geldiğinde. Seyahat
+acentesi verisinde 182 atama gece yarısını aşıyor; o şablonların brüt/net farkı
+ölçülmeden karar verilemez.
+
+→ K-26 · T-60 · T-61 · `09-motor/cozucu/model.py`
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış

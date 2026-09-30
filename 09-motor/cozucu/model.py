@@ -187,6 +187,61 @@ def _mola_toplam_dk(sablon):
                      for m in pol))
 
 
+# GECE_VARDIYASI_AZAMI (K-26) -- istisna kapsamindaki sektorler.
+#
+# ⚠ BU LISTE DOGRULAYICIDA DA AYRICA YAZILI ve bu BILEREK. #7.6 iki tarafin
+#   birbirini import etmesini de ortak yardimci modulu de yasakliyor
+#   (test_bagimsizlik). Iki yerde yazilan bir liste iki yerde yanlis da
+#   olabilir -- ama biri degisip digeri degismezse bagimsiz denetim o
+#   ayrismayi GORUR. Tek yerde yazilsaydi gormezdi.
+GECE_ISTISNA_SEKTORLERI = frozenset(("turizm", "ozel_guvenlik", "saglik",
+                                     "petrol"))
+
+
+def _gece_brut_ortusme(sablon, pencere_bas, pencere_bit):
+    """Sablonun EN COK ortustugu gece penceresine dusen BRUT saat.
+
+    Sablon gunune gore uc pencere yeter: onceki gece (pazar 20:00'den
+    pazartesi 06:00'ya gibi), ayni gunun gecesi, ertesi gunun gecesi.
+    Genisletilmis saatle yazilmis 23:00-32:25 gibi sablonlar dogrudan
+    karsilastirilir (Z-1).
+    """
+    tasma = 24.0 if pencere_bit <= pencere_bas else 0.0
+    en_cok = 0.0
+    for kayma in (-24.0, 0.0, 24.0):
+        w0 = pencere_bas + kayma
+        w1 = pencere_bit + tasma + kayma
+        ortusme = min(sablon["bit"], w1) - max(sablon["bas"], w0)
+        en_cok = max(en_cok, ortusme)
+    return en_cok
+
+
+def _gece_onayi_var(calisan, girdi, gun):
+    """Calisanin gece calisma yazili onayi O GECE gecerli mi (K-26).
+
+    Dogrulayicidaki `_gece_onayi_gecerli` ile AYNI kurallar, AYRI yazim
+    (#7.6). Tarihli onay + hafta tarihi yok -> GECERSIZ: dogrulanamayan bir
+    istisna yasal bir siniri acmamali.
+    """
+    onay = calisan.get("gece_calisma_onayi")
+    if onay is True:
+        return True
+    if not isinstance(onay, dict) or not onay.get("onay"):
+        return False
+    bitis = onay.get("gecerli_bitis")
+    if not bitis:
+        return True
+    hafta_bas = girdi.get("hafta_baslangic")
+    if not hafta_bas:
+        return False
+    from datetime import date, timedelta
+    try:
+        return (date.fromisoformat(bitis)
+                >= date.fromisoformat(hafta_bas) + timedelta(days=gun))
+    except (TypeError, ValueError):
+        return False
+
+
 def _net_saat(sablon):
     """CALISMA SURESI -- butun molalar dusuk. Dogrulayici ile AYNI tanim."""
     return (sablon["bit"] - sablon["bas"]) - (_mola_toplam_dk(sablon) / 60.0)
@@ -537,6 +592,7 @@ class Model(object):
         self._gunde_tek_vardiya()
         self._uygunluk()
         self._gece_uygunlugu()
+        self._gece_azami()
         self._izin()
         self._kilitler()
         self._sabit_atamalar()
@@ -737,6 +793,61 @@ class Model(object):
                 continue
             for d in self.gunler:
                 for t in geceler:
+                    if (c["id"], d, t["id"]) in self.x:
+                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+
+    def _gece_azami(self):
+        """GECE_VARDIYASI_AZAMI -- yasal 7,5 saat, sektor istisnasi (K-26).
+
+        ⚠ BU TARAF DOGRULAYICIDAN BILEREK DAHA KATI -- acikca yaziyorum.
+          Dogrulayici gece penceresine dusen NET calismayi olcer: penceredeki
+          mola dusulur. Burada ise sablonun BRUT ortusmesi siniri asiyorsa o
+          sablon, istisnasi olmayan calisana HIC verilmez.
+
+          Neden: net olcu molanin NEREYE dustugune bagli ve mola yeri bir
+          karar degiskeni. Onu kisitlamak kisi x gece x ceyrek kadar terim
+          demek -- 500 kiside on binlerce. T-60'a gore model zaten optimuma
+          %98,3 uzak; ona yuk eklemek bugun yanlis yon.
+
+          Bedeli: brutu 8, penceresindeki molayla neti 7 saat olan bir
+          sablon burada YASAKLANIR, oysa yasaldir. Yani cozucu yasal bir
+          plani REDDEDEBILIR -- ama hicbir zaman yasadisi bir plan URETMEZ.
+          Ayrisma guvenli yonde. Boyle bir sablon varsa not yazilir.
+
+          Bugunku veri setinde boyle sablon YOK: en uzun gece ortusmesi
+          S-GECE'de 7,00 saat.
+
+        ⚠ BILINEN BOSLUK -- iki vardiya ayni pencereyi paylasirsa.
+          Kontrol SABLON basinadir. Dogrulayici ise pencere basina TOPLAR.
+          Pazartesi 16:00-24:00 + Sali 00:00-06:00 ayni geceye 10 saat
+          yazar. `VARDIYA_ARASI_DINLENME` aktifken bu imkansiz (11 saat ara
+          gerekir); kapatilirsa iki taraf ayrisabilir ve dogrulayici gorur.
+        """
+        kural = _kural(self.girdi, "GECE_VARDIYASI_AZAMI")
+        if not kural:
+            return
+        azami = float(_par(kural, "azami_saat", 7.5))
+        p_bas = float(_par(kural, "pencere_bas", 20))
+        p_bit = float(_par(kural, "pencere_bit", 6))
+
+        asanlar = [(t, _gece_brut_ortusme(t, p_bas, p_bit))
+                   for t in self.sablonlar]
+        asanlar = [(t, b) for t, b in asanlar if b > azami + 1e-9]
+        if not asanlar:
+            return
+        self.notlar.append(
+            "GECE_VARDIYASI_AZAMI: su sablonlarin gece ortusmesi %s saati "
+            "asiyor ve istisnasi olmayan calisana verilmeyecek (BRUT olculdu; "
+            "penceredeki mola dusulseydi yasal olabilirdi): %s"
+            % (azami, ", ".join("%s (%.2f sa)" % (t["id"], b)
+                                for t, b in asanlar)))
+
+        istisnali = self.girdi.get("sektor") in GECE_ISTISNA_SEKTORLERI
+        for c in self.calisanlar:
+            for d in self.gunler:
+                if istisnali and _gece_onayi_var(c, self.girdi, d):
+                    continue
+                for t, _ in asanlar:
                     if (c["id"], d, t["id"]) in self.x:
                         self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 

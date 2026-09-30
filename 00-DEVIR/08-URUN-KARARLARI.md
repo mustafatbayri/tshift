@@ -817,6 +817,40 @@ değişebiliyor.
 
 → `02-spec/v1.4-master-spec.md` §6.3, §8.1, §8.3
 
+### ✅ Uygulandı — 30 Eylül 2026
+
+`GECE_VARDIYASI_AZAMI` iki tarafta da yazıldı. Mustafa bu kuralı kalan 11
+gövdesiz kural arasından seçti: *hukuki risk taşıyan tek yazılabilir kural.*
+
+**Motorun okuduğu iki yeni alan:**
+
+| alan | nerede | biçim |
+|---|---|---|
+| `sektor` | girdinin kökünde | `turizm` · `ozel_guvenlik` · `saglik` · `petrol` istisna; gerisi değil |
+| `gece_calisma_onayi` | çalışan kartında | `true`, ya da `{"onay": true, "gecerli_bitis": "YYYY-AA-GG"}` |
+
+**Ölçü net çalışma** — `GUNLUK_AZAMI` ile aynı gelenek: penceresine düşen mola
+gece çalışmasından düşülür, pencere dışındaki düşülmez. **Kanun "geçemez"
+diyor:** tam 7,5 saat ihlal değildir. **Z-5:** pencere gün sınırını aşarak
+hesaplanır — 19:00–05:00'in gecesi 9 saattir, 4 değil.
+
+**⚠ Tarihli onay + hafta tarihi yok → geçersiz sayılır.** `SOZLESME_GECERLI`
+tarih yoksa hoşgörülüdür; burada değil, **bilerek**: bu yasal bir sınırın
+kaldırılması, doğrulanamayan bir istisna o sınırı açmamalı. Tarihsiz onay
+*"süresiz"* demektir ve geçerlidir.
+
+**⚠ Çözücü doğrulayıcıdan bilerek daha katı** — T-68. Brüt ölçüyor; yasal bir
+planı reddedebilir ama yasadışı plan üretmez.
+
+**⚠ Veri seti kuralı zorlamıyor:** en uzun gece örtüşmesi 7,00 saat. Zorlayan
+testler ve ihlal vakası. Sahnenin sektörü bilerek **istisna dışı**.
+
+20 test (9 kırmızı kanıt + 6'sı kural yokken de yeşildi), 11 mutasyon, hepsi
+öldü.
+
+→ T-68 · `09-motor/dogrulayici/kurallar.py` · `09-motor/cozucu/model.py` ·
+  `09-motor/testler/test_gece_vardiyasi_azami.py`
+
 ---
 
 ## K-27 · Adalet eşiği: ortalamadan 2 fazla

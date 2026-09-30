@@ -413,3 +413,87 @@ değişsin mi, yanına *"ölçülmedi"* diyen bir kardeş alan mı gelsin.
 boşluğuydu* — ihlal vakası aracı kendi listesini sayıyordu, motorun metriği
 kesirli sınırı kırpıyordu, `sert_ihlal` hiç sayılmıyordu. **Ölçen aracın da
 bekçisi olmalı.**
+
+---
+
+# GECE (2) · Yasal gece sınırı — `GECE_VARDIYASI_AZAMI`
+
+## 11 · Önce kendi sözümü düzelttim
+
+Dün *"mantıklı grup üç yasal kural"* demiştim. Kalan 12 gövdesiz kural tek tek
+okununca yanlış çıktı:
+
+| durum | kaç | hangileri |
+|---|---|---|
+| bugün yazılabilir | 5 | asgari vardiya süresi · ardışık gece limiti · çalışma saatleri · ekip sürekliliği · vardiya rotasyon yönü |
+| yeni girdi alanı istiyor | 1 | **gece vardiyası azami** (yasal) |
+| geçmiş hafta/yıl verisine bağlı (T-28) | 4 | ardışık hafta sonu · **gece postası devri** (yasal) · **yıllık fazla mesai** (yasal) · plan kararlılığı |
+| `tercihler` alanına bağlı (T-40) | 1 | tercih karşılama |
+| **zaten ihlal üretmez** | 1 | gece yarısını aşan — şartname *"hesaplama kuralı"* diyor (T-67) |
+
+Üç yasal kuralın ikisi T-28'in arkasındaymış. Mustafa yazılabilir olan yasal
+kuralı seçti.
+
+## 12 · Kural ve istisnası
+
+İş K. md. 69: gece çalışması 7,5 saati geçemez. 6645 sayılı Kanun istisna
+getirdi — turizm, özel güvenlik, sağlık, petrolde **yazılı onayla** aşılabilir.
+
+| karar | neden |
+|---|---|
+| ölçü **net** | `GUNLUK_AZAMI` ile aynı gelenek; penceredeki mola düşülür, dışındaki düşülmez |
+| tam 7,5 ihlal değil | kanun *"geçemez"* diyor |
+| pencere gün sınırını aşar (Z-5) | 19:00–05:00'in gecesi 9 saat — takvim gününe bakan govde 4 görür ve kaçırır |
+| istisna **kişi bazlı** | aynı firmada aynı vardiyada onaylı muaf, onaysız değil — K-24'ün üçüncü biçimi |
+| tarihli onay + hafta tarihi yok → geçersiz | yasal bir sınırı doğrulanamayan istisna açmamalı; tarihsiz onay süresizdir |
+
+İki yeni girdi alanı: kökte `sektor`, çalışan kartında `gece_calisma_onayi`.
+
+**Kırmızı kanıt:** 15 doğrulayıcı testi yazıldı, **9'u** kırmızı yandı. ⚠ Altısı
+kural yokken de yeşildi (*"ihlal yok"* diyenler) — bu oturumdaki aynı tuzak,
+kayda geçiyor.
+
+**Mutasyon:** doğrulayıcıda sekiz bozma (brüt ölç · bütün molaları düş · Z-5'i
+kaldır · istisnayı kaldır · yalnız sektöre bak · yalnız onaya bak · sınırda
+eşitlik · süresi geçmiş onay) — **sekizi de öldü.** Çözücüde üç — **üçü de
+öldü.**
+
+## 13 · Çözücü bilerek daha katı — T-68
+
+Doğrulayıcı **net** ölçüyor; çözücü şablonun penceresine düşen **brüt** saate
+bakıyor. Net ölçü molanın yerine bağlı ve mola yeri bir karar değişkeni —
+onu kısıtlamak 500 kişide on binlerce terim demek, T-60'a göre model zaten
+zorlanıyor. Bedeli: çözücü yasal bir planı **reddedebilir** ama yasadışı plan
+**üretmez**. Olduğunda not yazıyor. Bugün etkisi yok.
+
+Çözücü testleri T-62'nin dersiyle kuruldu: talep öyle konuyor ki onu **yalnız**
+yasak şablon karşılayabiliyor — kısıt yazılıysa plan çözümsüz kalmak zorunda.
+*"Doğru şablonu seçti mi"* sorusu bu motorda tesadüfe açık.
+
+## 14 · Veri seti kuralı zorlamıyor — açıkça
+
+En uzun gece örtüşmesi S-GECE'de **7,00 saat**, sınır 7,5. Kural tanımlı ve
+aktif ama şablonlar onu zorlamıyor; zorlayan testler ve ihlal vakası.
+Şablonları sınırın üstüne çıkarmak **yasadışı bir firma kurmak** olurdu.
+Sahnenin sektörü bilerek **istisna dışı** (çağrı merkezi) — sınır herkese.
+
+## Gece (2) sonu
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **225** yeşil (2 dk 06 sn) |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 tutarlı |
+| Zor veri seti bekçisi | **12** yeşil (**6 dk 57 sn**) |
+| İhlal vakaları | **29 gövde · 29 vaka · 29 kırmızı** · eksik sıfır |
+| Gövdesiz | 11 — biri bilerek (T-67), gerçek eksik **10** |
+
+⚠ **İzlenecek: bekçilerin süresi büyüyor.** Bugün sabah 4 dk 31 sn, şimdi
+6 dk 57 sn. Her kural modele yük ekliyor. CI'da `motor` işinin sınırı 20 dakika
+ve CI 2 çekirdekli. Kırmızı yanarsa önce **hangi adımda** ve **süre sınırından
+mı** diye bakılmalı — bütçe aşımı kırmızısı gerçek hataya benziyor.
+
+**Sırada:** beş firma kuralı (karar gerektirmiyor) · T-28 (geçmiş veri —
+Mustafa'nın kararı, iki yasal kuralın önkoşulu) · T-66 (`sert_ihlal` — §11.3)
+· T-63'ün yetkinlik tarafı · T-67 (`GECE_YARISI_ASAN` sınıflandırması) ·
+T-59/T-60.

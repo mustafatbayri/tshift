@@ -335,6 +335,122 @@ def gece_uygunlugu(girdi, atamalar, tanim):
     return cikan
 
 
+# ----------------------------------------------------------------------
+# GECE_VARDIYASI_AZAMI -- yasal gece siniri ve sektor istisnasi (K-26)
+# ----------------------------------------------------------------------
+#
+# Is K. md. 69 / Postalar Yonetmeligi md. 7: iscinin gece calismasi 7,5
+# saati gecemez. 6645 sayili Kanun (23 Nisan 2015) istisna getirdi: turizm,
+# ozel guvenlik, saglik hizmeti ve petrol arama/sondaj islerinde, calisanin
+# YAZILI ONAYIYLA sinir asilabilir.
+#
+# ⚠ ISTISNA KISI BAZLIDIR -- K-24'un ucuncu bicimi. Orada bayrak kural
+#   SATIRINA bagliydi, burada CALISANA bagli. Ayni firmada ayni vardiyada
+#   onayli olan muaf, onaysiz olan degil.
+#
+# ⚠ OLCU NET CALISMADIR -- `GUNLUK_AZAMI` ile ayni gelenek. Penceresine
+#   dusen mola gece calismasindan DUSULUR; pencere disindaki mola dusulmez.
+#
+# ⚠ Z-5: pencere gun sinirini ASARAK hesaplanir. 19:00-05:00 vardiyasinin
+#   gece kismi 20:00-05:00 = 9 saattir. Takvim gunune bakan bir govde
+#   20:00-24:00 = 4 saat gorur ve ihlali KACIRIR.
+
+GECE_ISTISNA_SEKTORLERI = frozenset(("turizm", "ozel_guvenlik", "saglik",
+                                     "petrol"))
+
+
+def _gece_pencereleri(pencere_bas, pencere_bit):
+    """Planin gorebilecegi butun gece pencereleri -- (gun, bas, bit) mutlak.
+
+    Gun -1 de dahil: pazartesi 00:00-06:00, PAZAR gecesinin penceresidir
+    (Z-6: lookback negatif gun uretir, bu dogrudur).
+    """
+    cikan = []
+    for gun in range(-1, 8):
+        bas = zaman.mutlak(gun, pencere_bas)
+        bit = zaman.mutlak(gun + (1 if pencere_bit <= pencere_bas else 0),
+                           pencere_bit)
+        cikan.append((gun, bas, bit))
+    return cikan
+
+
+def _kesisim(a0, a1, b0, b1):
+    return max(0.0, min(a1, b1) - max(a0, b0))
+
+
+def _gece_net_saat(atama, w0, w1):
+    """Atamanin [w0, w1) penceresine dusen NET calisma saati."""
+    bas, bit = zaman.aralik(atama)
+    brut = _kesisim(bas, bit, w0, w1)
+    if brut <= 0:
+        return 0.0
+    mola = sum(_kesisim(m0, m1, w0, w1)
+               for m0, m1 in zaman.mola_araliklari(atama))
+    return brut - mola
+
+
+def _gece_onayi_gecerli(calisan, girdi, gun):
+    """Calisanin gece calisma yazili onayi O GECE gecerli mi.
+
+    Kabul edilen bicimler:
+      True / False                      -> tarihsiz; True suresiz gecerli
+      {"onay": True}                    -> tarihsiz, suresiz
+      {"onay": True, "gecerli_bitis": "YYYY-AA-GG"}
+                                        -> o geceye kadar gecerli
+
+    ⚠ TARIHLI ONAY + HAFTA TARIHI YOK -> GECERSIZ SAYILIR.
+      `SOZLESME_GECERLI` tarih yoksa hosgoruludur; burada DEGIL, bilerek.
+      Bu bir YASAL sinirin kaldirilmasidir: dogrulanamayan bir istisna,
+      yasal bir siniri acmamali. Tarihsiz onay "suresiz" demektir ve
+      gecerlidir; tarihli ama kontrol edilemeyen onay degildir.
+    """
+    onay = calisan.get("gece_calisma_onayi")
+    if onay is True:
+        return True
+    if not isinstance(onay, dict) or not onay.get("onay"):
+        return False
+    bitis = onay.get("gecerli_bitis")
+    if not bitis:
+        return True
+    hafta_bas = girdi.get("hafta_baslangic")
+    if not hafta_bas:
+        return False
+    from datetime import date, timedelta
+    try:
+        gece = date.fromisoformat(hafta_bas) + timedelta(days=gun)
+        return date.fromisoformat(bitis) >= gece
+    except (TypeError, ValueError):
+        return False
+
+
+@kural("GECE_VARDIYASI_AZAMI")
+def gece_vardiyasi_azami(girdi, atamalar, tanim):
+    """Gece penceresine dusen net calisma azami 7,5 saat -- YASAL, SERT.
+
+    Kanun "gecemez" diyor: tam 7,5 saat ihlal DEGILDIR.
+    """
+    azami = float(_p(tanim, "azami_saat", 7.5))
+    p_bas = float(_p(tanim, "pencere_bas", 20))
+    p_bit = float(_p(tanim, "pencere_bit", 6))
+    istisnali_sektor = girdi.get("sektor") in GECE_ISTISNA_SEKTORLERI
+
+    cikan = []
+    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+        c = _calisan(girdi, kimlik) or {}
+        for gun, w0, w1 in _gece_pencereleri(p_bas, p_bit):
+            if istisnali_sektor and _gece_onayi_gecerli(c, girdi, gun):
+                continue
+            gece = sum(_gece_net_saat(a, w0, w1) for a in liste)
+            if gece > azami + 1e-9:
+                cikan.append(_ihlal(
+                    "GECE_VARDIYASI_AZAMI", tanim, calisan=kimlik, gun=gun,
+                    olculen=round(gece, 2), gereken=azami,
+                    mesaj="%s gun %d gecesi %.2f saat gece calisiyor "
+                          "(azami %s; Is K. md. 69)"
+                          % (kimlik, gun, gece, azami)))
+    return cikan
+
+
 @kural("PART_TIME_LIMIT")
 def part_time_limit(girdi, atamalar, tanim):
     """Kismi sureli calisma tavani -- K-39.

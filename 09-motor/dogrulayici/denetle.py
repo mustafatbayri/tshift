@@ -82,10 +82,10 @@ def degerlendir(girdi, atamalar):
 OKUNAN_ALANLAR = {
     "": ("profil", "calisanlar", "vardiya_sablonlari", "talep", "kurallar",
          "kilitler", "sabit_atamalar", "donmus_gunler", "hafta_baslangic",
-         "agirliklar"),
+         "agirliklar", "sektor"),
     "calisanlar": ("id", "ekipler", "sozlesme", "izinler", "uygunluk",
                    "devir_yuk", "yetkinlikler", "operasyonel_rol",
-                   "gece_calisamaz", "durum"),
+                   "gece_calisamaz", "durum", "gece_calisma_onayi"),
     "calisanlar.sozlesme": ("tip", "haftalik_saat", "gun_sayisi"),
     "calisanlar.izinler": ("gun", "durum"),
     "calisanlar.uygunluk": ("tip", "gun", "bas", "bit"),

@@ -442,6 +442,31 @@ def _(g, p):
                     "yetkinlik", _yetkinlik_sec)
 
 
+@vaka("GECE_VARDIYASI_AZAMI",
+      "Bir kisiye gece penceresine 10 saat dusen molasiz vardiya yazilir")
+def _(g, p):
+    """K-26. YASAL sinir: gece penceresine dusen net calisma 7,5 saat.
+
+    ⚠ VERI SETININ SABLONLARI BU KURALI ZORLAMIYOR -- en uzun gece
+      ortusmesi 7,00 saat. Bu yuzden vaka yeni bir atama ekliyor:
+      20:00-06:00, molasiz, o gun baska isi olmayan bir kisiye.
+      Sahnenin sektoru istisna disi, yani sinir herkes icin yururlukte.
+
+    Vaka DAR: tek kisi, tek gece.
+    """
+    dolu = {(a["calisan"], a["gun"]) for a in p}
+    for c in g["calisanlar"]:
+        if c.get("durum", "aktif") != "aktif" or c.get("gece_calisamaz"):
+            continue
+        for gun in (2, 3, 4):
+            if any((c["id"], d) in dolu for d in (gun - 1, gun, gun + 1)):
+                continue
+            p.append({"calisan": c["id"], "ekip": c["ekipler"][0],
+                      "sablon": "VAKA-GECE", "gun": gun,
+                      "bas": 20, "bit": 30, "molalar": []})
+            return
+
+
 @vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")
 def _(g, p):
     """K-39. Sozlesme saati doldurulmazsa ihlal.

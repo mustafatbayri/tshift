@@ -13,6 +13,16 @@
 **⚠ 30 Eylül akşamı — kararlar alındı, iki bulgu kapandı.** **K-41:** nitelik kapsamasında mola **sahadan çıkarmaz** (Mustafa: *"sahada bir müdürün işi 15 dk mola süresini bekleyebilir"*) — ⚠ değişen taraf **doğrulayıcı** oldu, çözücü haklıydı; iki test tersine çevrildi. `SAHADA_ASGARI` molayı düşmeye devam ediyor, ayrım bilerek. **T-62 kapandı:** saat listesi yoksa açık saatlerin hepsi, ekip yoksa saha çapı, kontrol çeyrek bazında. **T-63'ün rol tarafı kapandı:** *"yalnız gündüz saatlerinde 1 lider"* — her ekibe ayrı gereklilik satırı (08:00–20:00). ⚠ Gereklilik konunca 0.1 ölçekte plan **kanıtlanarak çözümsüz** kaldı; sebebi kural değil **ölçek** çıktı (2 lider × 6 gün = 12 lider-günü, gereken 14) ve üreticiye ekip başına 4 lider tabanı kondu. Motor **202 test** yeşil, gövde **28**, açık 🔴 **sekiz**. ⚠ **Yazı borcu:** şartname §6.4'ün iki satırı hâlâ *"sahada"* diyor.
 
 **⚠ 30 Eylül gecesi — CI kırmızı yandı ve sebebi ölçümdü.** *"Sert ihlal 0, asgari kapsama %99,76"* çifti çelişki gibi duruyordu; ikisi de motorun **kendi** raporundan geliyordu. **T-65:** motorun kapsama metriği kesirli vardiya bitişini `int()` ile kırpıyordu (07:00–16:15 → saat 16 sayılmıyor) — ⚠ **T-58 ile aynı aile**, aynı varsayım 29 Eylül'de doğrulayıcıda düzeltilmişti, çözücüdeki kopyasına bakılmamıştı. Test **rastgele** yeşil yanıyordu. Düzeltildi; bekçi artık **doğrulayıcının** sayısına bakıyor ve iki tarafın anlaştığını ayrıca sınıyor. **T-66 açıldı:** `sert_ihlal` ölçülmüyor, **sabit sıfır** yazılıyor — §11.3 Mustafa'nın kararını bekliyor. Motor **205 test** yeşil.
+
+**⚠ 30 Eylül gecesi (2) — yasal gece sınırı yazıldı.** `GECE_VARDIYASI_AZAMI`
+(K-26): gece penceresine düşen **net** çalışma 7,5 saati geçemez; turizm,
+özel güvenlik, sağlık ve petrolde **yazılı onaylı** çalışan için kalkar — istisna
+**kişi bazlı**. İki yeni girdi alanı: `sektor`, `gece_calisma_onayi`. ⚠ Çözücü
+sınırı **brüt** ölçüyor (T-68) — bilerek; yasal planı reddedebilir, yasadışı
+üretmez. ⚠ Veri seti kuralı zorlamıyor (en uzun gece 7,00 saat). Kalan
+gövdesizler yeniden sayıldı: **11**, ama biri (`GECE_YARISI_ASAN`) şartnameye göre
+zaten ihlal üretmez (T-67) — gerçek eksik **10**. Motor **225 test** yeşil,
+**29 gövde · 29 vaka · 29 kırmızı**.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -183,8 +193,8 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **28** (katalogdaki **40**'ın alt kümesi) | 30 Eylül, ikisi de sayılarak |
-| Motor birim testi | **205**, hepsi yeşil | 30 Eylül gecesi, koşularak |
+| Yazılan kural gövdesi | **29** (katalogdaki **40**'ın alt kümesi) | 30 Eylül gecesi, ikisi de sayılarak |
+| Motor birim testi | **225**, hepsi yeşil | 30 Eylül gecesi, koşularak |
 | Zor veri seti bekçisi | **12**, hepsi yeşil (yaklaşık 5 dakika) | 29 Eylül |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -528,7 +538,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **28** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **205** birim testi (30 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **29** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **225** birim testi (30 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
