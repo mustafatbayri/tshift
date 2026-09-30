@@ -4,6 +4,34 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (gece) · T-78 kapandı: 20 dakikalık mola çeyreğe sığmıyordu · `ilk_cozum_sn` · K-48 sorusu**
+Mustafa tam ölçeği üç kez koşturdu: 900 sn temiz, 1.200 sn **1 sert ihlal**
+(PART_TIME_LIMIT), gece commit'inden sonra 900 sn yine temiz. Plan
+beklenmeden sebep koddan bulundu: müşteri hizmetleri şablonlarındaki **3×20 dk**
+dinlenme molası çeyrek ızgarada `round(1,33) = 1` çeyrek sayılıyordu — pencere
+aralığı, yemek–dinlenme çakışma kısıtı ve molanın kapattığı dilimler üçü de
+bu hesapla. Gerçekte iki mola **5 dk üst üste** binebiliyor (13:30–13:50 ile
+13:45–14:05; 10:45–11:05 ile 11:00 yemeği); doğrulayıcı üst üste bineni tek
+aralık sayıp (T-27) net çalışmayı 5 dk fazla görüyor; tam 45,00 saatteki yarı
+zamanlıda bu tek başına sert ihlal. Sahne şablonlarında sayıldı: M-SABAH'ta
+2.880 yerleşimin **822'sinde** ayrışma; 15 dk'lık molalı şablonlarda sıfır.
+⚠ İlk hipotez (sığmayan mola üretilmiyor) **yanlıştı**. Düzeltme
+(`09-motor/cozucu/model.py`): çeyrek sayısı **yukarı** yuvarlanır
+(`_ceyrek_yukari`); çakışma **gerçek zamanda** ölçülür (`_gercek_kesisiyor`,
+uç uca değen serbest); ardışık dinlenmeler arasına **emniyet kemeri**;
+politika vardiyaya sığmıyorsa **nota** yazılır (eskiden üst üste bindirerek
+"sığıyordu" — geçersiz plan). ⚠ Açık etki: yalnız fiziksel olarak üst üste
+binen yerleşimler gitti; 20 dk mola saha modelinde artık iki çeyrek anı
+kapatıyor (doğrulayıcıyla aynı), MOLA_KAPSAMASI cezası o şablonlarda biraz
+artabilir. 9 test (yerleşim çiftleri, dilim örneklemesi, 3–12 saat tarama,
+uçtan uca 45,00 saat, kemer, sığmayan not), **6 mutasyon hepsi öldü**
+(toplam 122). `ilk_cozum_sn` çıktıya eklendi (T-60: ana aşama ilk planı kaçıncı
+saniyede buldu; `coz-olc.py` yazıyor). **T-59'a soru:** "en fazla 900 sn"
+deyip 958 sn — model kurma bütçenin dışında; duvar saati olsun mu (K-48 adayı).
+**T-66'ya not:** motorun `toplam_saat`/`fazla_mesai_saat` metriği politikayı
+düşmüyor. Motor **416 test**, bekçi 20, 33 gövde · 33 vaka, sahte PDKS 0 habersiz.
+→ `09-motor/cozucu/model.py` · `09-motor/testler/test_net_saat_uyumu.py` · `00-DEVIR/06-ACIK-RISKLER.md` T-78, T-59, T-60, T-66
+
 **2026-09-30 (gece) · Beş karar uygulandı (K-43…K-47) · T-72, T-73, T-74, T-75, T-76, T-59 kapandı · T-78 açıldı**
 Mustafa döndü; hukukçu olmadığı için iki yasal soruyu çevrimiçi kaynaklarla
 bana bıraktı, kalanını kararlaştırdı. **K-44:** Yargıtay 9. HD 2020/17967 —

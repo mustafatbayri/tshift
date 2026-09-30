@@ -26,6 +26,7 @@ MODEL
   Sert kurallar kisit, yumusak kurallar amac fonksiyonunda ceza.
 """
 
+import math
 import os
 
 from ortools.sat.python import cp_model
@@ -477,7 +478,15 @@ def _dinlenme_baslangiclari(sablon, adet, dakika):
     #   30 dk'lik molada uc nokta esitligi bile yetmez, sure kadar bosluk
     #   gerekir -- o yuzden `- sure_q`.
     aralik_q = uzunluk / float(adet + 1) * CEYREK
-    sure_q = int(round(sure * CEYREK))
+    # ⚠ YUKARI YUVARLANIR (T-78, 1 Ekim). `round` 20 dakikayi 1 ceyrek
+    #   (15 dk) sayiyordu; pencereler o hesapla ayriliyor, mola ise gercek
+    #   suresiyle uzuyordu. 08-17 vardiyasinda ikinci molanin son adayi
+    #   13:30 (biter 13:50), ucuncunun ilk adayi 13:45 -- BES DAKIKA USTUSTE.
+    #   Dogrulayici ustuste binen molayi TEK aralik sayar (zaman.mola_
+    #   araliklari) ve net calisma 5 dk fazla cikar; 45 saatlik tavanda
+    #   duran yari zamanli icin bu tek basina SERT ihlaldir. Tam olcekte
+    #   boyle bulundu: cozucu "45,00" dedi, dogrulayici "45,08" yazdi.
+    sure_q = _ceyrek_yukari(sure)
     yaricap = max(0, int(min(PENCERE_YARICAPI_Q, (aralik_q - sure_q) // 2)))
     cikan = []
     for i in range(1, adet + 1):
@@ -504,13 +513,38 @@ def _mola_dilimleri(gun, sablon, baslangic, dakika=None):
     kadar uzun sure gorunmez kalmasinin sebebi.
 
     Artik yuvarlama YOK: 15 dk bir ceyrek, 60 dk dort ceyrek kaplar.
+
+    ⚠ CEYREGE SIGMAYAN MOLA (T-78, 1 Ekim): 20 dakikalik mola `_q`nun
+      `round`u ile 1 ceyrek kapliyordu; oysa 13:45-14:05 molasindaki kisi
+      hem 13:45 hem 14:00 aninda sahada DEGILDIR. Dogrulayici sahayi ceyrek
+      ANLARINDA orneklerken (`zaman.sahada_mi`) iki anda da yok sayar;
+      cozucu tek anda yok sayiyordu. SAHADA_ASGARI sert oldugu icin bu
+      fark bir sert ihlale donusebilirdi. Olcu artik dogrulayicininkiyle
+      AYNI: molanin icine dusen her ceyrek ANI kapali sayilir, yani bitis
+      YUKARI yuvarlanir (20 dk -> 2 ceyrek, 15 dk -> 1, 60 dk -> 4).
     """
     if baslangic is None:
         return []
     dk = sablon.get("mola_dk", 0) if dakika is None else dakika
     if dk <= 0:
         return []
-    return list(range(_q(gun, baslangic), _q(gun, baslangic + dk / 60.0)))
+    return list(range(_q(gun, baslangic),
+                      _q(gun, baslangic) + _ceyrek_yukari(dk / 60.0)))
+
+
+def _ceyrek_yukari(saat):
+    """Sure kac CEYREK kaplar -- kesirli ceyrek YUKARI yuvarlanir (T-78).
+
+    Bir molanin icine dusen her ceyrek ANI kapalidir: 20 dk = 1,33 ceyrek
+    -> 2. `round` 1 derdi; 1e-9 payi 0,25'in ikilik gosterimi icindir.
+    """
+    return int(math.ceil(saat * CEYREK - 1e-9))
+
+
+def _gercek_kesisiyor(bas1, sure1_sa, bas2, sure2_sa):
+    """Iki mola GERCEK zamanda ustuste biniyor mu -- ceyrek izgarasinda
+    degil (T-78). Ucu uca degen iki mola kesismez."""
+    return bas1 < bas2 + sure2_sa - 1e-9 and bas2 < bas1 + sure1_sa - 1e-9
 
 
 def _gece_sablonu(sablon):
@@ -736,7 +770,51 @@ class Model(object):
         """
         return self.x.get((kimlik, gun, sablon_id), 0)
 
+    def _mola_politikasi_yerlesir_mi(self, t):
+        """Yemek + BUTUN dinlenmeler bu sablona ustuste binmeden sigiyor mu?
+
+        ⚠ T-78 (1 Ekim): cakisma kisiti gercek zamana gecince, kisa bir
+          vardiyaya uzun bir politika (4 saate 60 dk yemek + 4x20 dk gibi)
+          hicbir yerlesimle sigmayabilir. O zaman sablona atama YAPILAMAZ
+          -- kisitlar bunu zaten uygular ama SESSIZCE: plan cozumsuz doner
+          ve teshis yanlis kurali gosterir. Bu kontrol sebebi nota yazar.
+          Eskiden ayni sablonlar molalari USTUSTE bindirerek "siginiyordu";
+          o plan gecerli degildi, dogrulayici fazla calisma goruyordu.
+        """
+        yemek_dk = self.yemek_dk[t["id"]]
+        yemekler = _mola_baslangiclari(t, self.mola_penceresi, yemek_dk)
+        dinl = [a for a in self._dinlenme_adaylari(t) if a]
+        _, dk = self.dinlenme_tanim[t["id"]]
+        sure, ysure = dk / 60.0, yemek_dk / 60.0
+        for sy in yemekler:
+            secim = []
+
+            def geri(i):
+                if i == len(dinl):
+                    return True
+                for s_ in dinl[i]:
+                    if sy is not None and _gercek_kesisiyor(s_, sure, sy, ysure):
+                        continue
+                    if secim and _gercek_kesisiyor(secim[-1], sure, s_, sure):
+                        continue
+                    secim.append(s_)
+                    if geri(i + 1):
+                        return True
+                    secim.pop()
+                return False
+
+            if geri(0):
+                return True
+        return False
+
     def _degiskenler(self):
+        for t in self.sablonlar:
+            if not self._mola_politikasi_yerlesir_mi(t):
+                self.notlar.append(
+                    "sablon %s: mola politikasi vardiyaya SIGMIYOR (yemek ve "
+                    "dinlenmeler ustuste binmeden yerlesemiyor); bu sablona "
+                    "atama yapilamaz -- politikayi ya da vardiyayi uzat (T-78)"
+                    % t["id"])
         for c in self.calisanlar:
             for d in self.gunler:
                 for t in self._sablonlari(c):
@@ -763,7 +841,19 @@ class Model(object):
         NEDEN MODEL BUYUMUYOR
           Aday pencereleri ESIT DAGITIMDAN geliyor ve birbirini kesmiyor
           (_dinlenme_baslangiclari). Bu yuzden dinlenme molalari arasinda
-          cakismama kisiti YAZILMIYOR -- yalniz YEMEKLE cakismama yaziliyor.
+          cakismama kisiti normalde YAZILMIYOR -- yalniz YEMEKLE cakismama
+          yaziliyor. Asagidaki ikinci dongu bir EMNIYET KEMERI: pencere
+          aritmetigi bir gun yine yanilirsa (T-78'de yanildi) ustuste binen
+          iki aday icin kisit yazar; pencereler ayriksa hic calismaz.
+
+        ⚠ CAKISMA GERCEK ZAMANDA OLCULUR, CEYREK IZGARASINDA DEGIL (T-78)
+          Eskiden iki molanin ceyrek dilim kumeleri kesisiyor mu diye
+          bakiliyordu. 20 dakikalik mola tek ceyrek sayildigi icin 10:45'te
+          baslayan dinlenme (biter 11:05) ile 11:00'de baslayan yemek
+          kesismiyor gorunuyordu. Dogrulayici gercek araliklara bakar ve
+          bes dakikayi tek mola sayar: net calisma cozucunun sandigindan
+          fazla cikar. Tam olcekte bir yari zamanli tam 45 saatte dururken
+          bu bes dakika onu 45,08'e cikardi ve plan yayinlanamadi.
 
         SIGMAYAN MOLA
           Aday listesi bosalirsa mola URETILMEZ ve `notlar`a yazilir. Olmayan
@@ -773,6 +863,9 @@ class Model(object):
         adet, dk = self.dinlenme_tanim[t["id"]]
         if adet <= 0 or dk <= 0:
             return
+        sure = dk / 60.0
+        yemek_sure = yemek_dk / 60.0
+        onceki = []          # bir onceki molanin (i, s) adaylari -- emniyet kemeri
         for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
             if not adaylar:
                 not_ = ("dinlenme molasi %d/%d sablon %s'e sigmadi"
@@ -790,13 +883,19 @@ class Model(object):
             # bir TOPLAM olarak yaziyor; iki mola ayni dilimi kapsarsa toplam
             # ikiye cikar ve sahadaki kisi sayisi eksi degere duser.
             for s in adaylar:
-                dil = set(_mola_dilimleri(d, t, s, dk))
                 for sy in yemekler:
                     if sy is None:
                         continue
-                    if dil & set(_mola_dilimleri(d, t, sy, yemek_dk)):
+                    if _gercek_kesisiyor(s, sure, sy, yemek_sure):
                         self.m.Add(self.dinlenme[(c["id"], d, t["id"], i, s)]
                                    + self.mola[(c["id"], d, t["id"], sy)] <= 1)
+                # Emniyet kemeri: bir onceki dinlenmenin gercek zamanda
+                # ustuste binen adaylariyla da cakisamaz.
+                for j, so in onceki:
+                    if _gercek_kesisiyor(s, sure, so, sure):
+                        self.m.Add(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                                   + self.dinlenme[(c["id"], d, t["id"], j, so)] <= 1)
+            onceki = [(i, s) for s in adaylar]
 
     def _calisiyor(self, e, d):
         return sum(self._X(e, d, t["id"])
@@ -1448,6 +1547,13 @@ class Model(object):
           K-34 (28 Eylul): `dilim` artik CEYREK SAAT. Aritmetik aynen
           gecerli -- degisen yalnizca izgaranin sikligi. `saat` kesirli
           gelebilir (14.25 gibi); `_q` onu dogru dilime cevirir.
+
+          T-78 (1 Ekim): "kesismiyor" GERCEK ZAMANDA saglanir
+          (_dinlenme_degiskenleri, _gercek_kesisiyor) ve bir molanin
+          kapladigi dilimler YUKARI yuvarlanir (_mola_dilimleri). Ikisi
+          birlikte bu toplamin eksiye dusmemesini garanti eder: baslangic
+          ceyrek izgarasinda oldugu icin gercek zamanda ayrik iki molanin
+          dilim kumeleri de ayriktir.
         """
         dilim = _q(gun, saat)
         cikan = []

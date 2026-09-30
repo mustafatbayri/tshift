@@ -545,6 +545,34 @@ MUTASYONLAR = [
      '    if not engelleyen and belirsiz:\n        cevap["teshis"]["not"] = (',
      '    if False:\n        cevap["teshis"]["not"] = (',
      'testler/test_rapor_ozeti_ve_teshis.py'),
+    # ---- T-78 (1 Ekim): ceyrege sigmayan mola -- her degisiklik tek tek geri
+    ('mola_t78', M, 'T-78 geri: pencere araligi round ile',
+     '    sure_q = _ceyrek_yukari(sure)\n',
+     '    sure_q = int(round(sure * CEYREK))\n',
+     'testler/test_net_saat_uyumu.py'),
+    ('mola_t78', M, 'T-78 geri: dilim kumesi bitisi round ile',
+     '    return list(range(_q(gun, baslangic),\n                      _q(gun, baslangic) + _ceyrek_yukari(dk / 60.0)))',
+     '    return list(range(_q(gun, baslangic), _q(gun, baslangic + dk / 60.0)))',
+     'testler/test_net_saat_uyumu.py'),
+    # Not: "yemek-dinlenme cakismasi ceyrek kumesiyle" mutasyonu ESDEGER
+    # cikti ve listeye alinmadi: dilim kumesi yukari yuvarlandigi icin ceyrek
+    # kesisimi ile gercek kesisim ayni cevabi veriyor (baslangiclar izgarada).
+    ('mola_t78', M, 'T-78: yemek-dinlenme kisiti hic yazilmasin',
+     '                    if _gercek_kesisiyor(s, sure, sy, yemek_sure):',
+     '                    if False:',
+     'testler/test_net_saat_uyumu.py'),
+    ('mola_t78', M, 'T-78: emniyet kemeri kaldirilsin (pencere de round)',
+     '            onceki = [(i, s) for s in adaylar]',
+     '            onceki = []',
+     'testler/test_net_saat_uyumu.py'),
+    ('mola_t78', M, 'T-78: yukari yuvarlama asagi olsun',
+     '    return int(math.ceil(saat * CEYREK - 1e-9))',
+     '    return int(math.floor(saat * CEYREK + 1e-9))',
+     'testler/test_net_saat_uyumu.py'),
+    ('mola_t78', M, 'T-78: gercek kesisim ucu uca degeni de kesisim saysin',
+     '    return bas1 < bas2 + sure2_sa - 1e-9 and bas2 < bas1 + sure1_sa - 1e-9',
+     '    return bas1 <= bas2 + sure2_sa + 1e-9 and bas2 <= bas1 + sure1_sa + 1e-9',
+     'testler/test_net_saat_uyumu.py'),
 ]
 
 

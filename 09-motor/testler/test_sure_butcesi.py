@@ -143,3 +143,15 @@ def test_butce_dolunca_DURMA_SEBEBI_dogru(monkeypatch):
         == "butce_doldu"
     assert C._durma_sebebi(None, None, {"azami_saniye": 10}, 3.0, 8.0) \
         == "bilinmiyor"
+
+
+def test_ana_asamada_ILK_PLANIN_ani_yazilir():
+    """T-60 (1 Ekim): tam olcekte birinci asama 120 saniyede plan bulamiyor,
+    ana asama buluyor -- ama kacinci saniyede bulundugu hicbir yerde
+    yazmiyordu. Sayi ana asamanin baslangicindan olculur ve cozum
+    suresini asamaz; plan yoksa None."""
+    c = C.coz(_sahne(), {"azami_saniye": 10, "durgunluk_saniye": 3})
+    ist = c["cozum_istatistikleri"]
+    assert c["durum"] == "cozuldu", c["durum"]
+    assert ist.get("ilk_cozum_sn") is not None, ist
+    assert 0 <= ist["ilk_cozum_sn"] <= ist["cozum_suresi_sn"] + 0.05, ist

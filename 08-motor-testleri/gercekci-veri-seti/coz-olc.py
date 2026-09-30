@@ -122,7 +122,8 @@ def main():
     # Bunlar olmadan "964 saniye surdu" cumlesi hicbir sey anlatmiyor.
     ist = c.get("cozum_istatistikleri") or {}
     for k in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri",
-              "model_kurma_sn", "ilk_asama_sn", "ana_asama_butce_sn"):
+              "model_kurma_sn", "ilk_asama_sn", "ana_asama_butce_sn",
+              "ilk_cozum_sn"):
         if k in ist:
             sonuc[k] = ist[k]
     print("     %.0f sn  |  durum: %s  |  %d atama"
@@ -135,6 +136,10 @@ def main():
     print("     model kurma %s sn · birinci asama %s sn · ana asamaya verilen %s sn"
           % (ist.get("model_kurma_sn"), ist.get("ilk_asama_sn"),
              ist.get("ana_asama_butce_sn")))
+    # T-60 (1 Ekim): birinci asama plan bulamiyorsa ana asama ilk plani
+    # kacinci saniyede buldu? Bu sayi olmadan "120 saniye yetmiyor" ile
+    # "hic bulamiyor" ayrilamaz.
+    print("     ana asamada ilk plan: %s sn" % ist.get("ilk_cozum_sn"))
     yaz(sonuc)
 
     if sonuc["durum"] != "cozuldu":

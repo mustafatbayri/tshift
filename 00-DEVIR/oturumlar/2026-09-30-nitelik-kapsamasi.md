@@ -987,3 +987,55 @@ DENETIM ilk koşuda 1 hata verdi: T-78 metni henüz var olmayan
 DENETIM **0 hata / 15 uyarı**, YOL-KONTROL 8 kırık yol (hepsi eski, v1–v5
 sürüm klasörleri). Gece çalışması commit edilmedi; blok sohbette, Mustafa
 sabah çalıştıracak. Oturum açık — Mustafa kapatır.
+
+## 39 · T-78 — plan beklenmeden bulundu (1 Ekim 01:30–03:15)
+
+Mustafa üç tam ölçekli koşunun çıktısını gönderdi (900 temiz · 1.200 → 1
+sert · gece commit'i sonrası 900 temiz). Sebep kuralda olsaydı her koşuda
+çıkardı; çıkmadı → çözücünün **bazen** seçtiği bir yerleşim.
+
+**Yöntem.** Planı beklemek yerine iki tarafın hesabı doğrudan karşılaştırıldı:
+sahnenin 17 şablonu için çözücünün **izin verdiği her mola yerleşimi**
+(yemek adayı × dinlenme adayları, çözücünün kendi çakışma kısıtıyla)
+sayıldı ve her biri doğrulayıcının `zaman.net_saat`ine verildi.
+
+| şablon | izinli yerleşim | net saat ayrışan |
+|---|---|---|
+| S-* (15 dk mola) | 495–4.302 | **0** |
+| B-* (15 dk mola) | 35–567 | **0** |
+| M-SABAH · M-AKSAM (3×20 dk) | 2.880 | **822** (810'u +5 dk, 12'si +10 dk) |
+| M-UZUN | 4.860 | 567 |
+| M-HSONU | 1.974 | 378 |
+| M-AKSAMK | 27 | 27 |
+
+**Sebep:** 20 dakika çeyrek ızgarada `round(1,33) = 1` çeyrek. Pencereler
+o hesapla ayrılıyor, mola gerçek süresiyle uzuyor; yemek–dinlenme kısıtı
+çeyrek kümesiyle bakıyor. ⚠ Gece yazdığım hipotez (sığmayan mola
+üretilmiyor) **yanlıştı** — her mola sığıyordu. ⚠ Üçüncü yüz: `_mola_dilimleri`
+20 dk'yı tek çeyrek kapalı sayıyordu; `SAHADA_ASGARI` sert ve sahayı çeyrek
+anlarında örnekliyor — sahnede kapalı olduğu için görünmedi.
+
+**Düzeltme** bölüm 38'in altındaki changelog kaydında; dört parça. Kanıt: 9
+test, mutasyon grubu `mola_t78` (6, hepsi öldü). ⚠ İlk mutasyon turunda 4
+yaşadı: ikisi test boşluğu (pencere ayrıklığı ve uç uca değen mola doğrudan
+sınanmıyordu — testler yazıldı), biri **eşdeğer** mutasyon (çeyrek kümesi
+yukarı yuvarlanınca çeyrek kesişimi gerçek kesişimle aynı cevabı veriyor —
+listeden çıkarıldı, yerine "kısıt hiç yazılmasın" kondu), biri emniyet
+kemeri (pencereler ayrıkken hiç çalışmıyor — adaylar elle bozularak sınandı).
+
+**Taramanın açığa çıkardığı:** 3.700 şablon biçiminden 64'ünde politika
+üst üste binmeden sığmıyor (≤4,75 sa vardiyaya 45–60 dk yemek + 3–4
+dinlenme). 41'i eskiden de sığmıyordu; 23'ü eskiden yalnız üst üste
+bindirerek "sığıyordu". Sessiz kalmasın diye nota yazılıyor.
+
+**Doğrulama:** motor 416, bekçi 20 (7 dk 45 sn), 33 gövde · 33 vaka, sahte PDKS
+14 gerçek ihlal / 109 satır / **0 habersiz** (üretici rastgele; sayılar
+koşudan koşuya değişir, sıfır değişmez).
+
+**Yan bulgular:** (1) "en fazla 900 sn" deyip 958 sn — model kurma ~55 sn
+bütçenin dışında; Mustafa'ya soru (T-59, K-48 adayı). (2) Motorun
+`toplam_saat`/`fazla_mesai_saat` metriği politikayı düşmüyor (T-66'ya not).
+(3) Üç koşuda da `iki_asama: False`; `ilk_cozum_sn` çıktıya eklendi, sabahki
+koşu T-60'ın ilk ölçümünü verir.
+
+Mustafa yatıyor; devir dosyaları güncellendi, commit bloğu sohbette.

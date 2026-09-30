@@ -3,7 +3,7 @@
 **Bilinen ama henüz kapatılmamış** maddeler. Kanıtı olmayan her şey buraya
 yazılır — `00`–`05` arası dosyalar yalnız **kanıtlanmış** bilgiyi taşır.
 
-**Son güncelleme:** 2026-09-16
+**Son güncelleme:** 2026-10-01
 
 ## Öncelik anahtarı
 
@@ -3000,7 +3000,18 @@ görünmedi. `int(...)` ile düzeltildi, kırmızı kanıtlı test eklendi
 
 ---
 
-## ✅ T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **KAPANDI (30 Eylül gecesi, tam ölçekte ölçüldü)**
+## ✅ T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **KAPANDI (30 Eylül gecesi, tam ölçekte ölçüldü)** — 🟡 bir soru kaldı
+
+**🟡 1 Ekim — Mustafa'ya soru (K-48 adayı).** Üç koşuda ekran *"en fazla
+900 sn"* deyip **958 sn** yazdı: birinci aşama + ana aşama = tam 900,
+üstüne **model kurma ~55 sn** bütçenin DIŞINDA (T-59'un tercihi buydu:
+ayrı kalem). Yönetici "15 dakika" dediğinde 16 dakika bekliyor. Öneri:
+`azami_saniye` **duvar saati** olsun — model kurma da içinden düşülsün
+(tam ölçekte ana aşamaya ~1.025 sn kalır). Karşı görüş: kurma süresi
+sahneye bağlı ve çözüme sayılmaz. Karar Mustafa'nın. (`coz-olc.py`'nin
+kendi *"1/3 Model kuruluyor"* adımı ayrıca bir kez daha kuruyor — o
+ölçüm betiğinin fazlası, ürünün değil.)
+
 
 **Ölçüldü:** 29 Eylül, Mustafa'nın makinesinde, 500 kişilik tam ölçek.
 
@@ -3106,6 +3117,14 @@ başarısız oldu**: 120 saniyede uygun bir plan bile bulamadı ve `_ipucu_ver`
 
 ⚠ **Karar vermek için henüz yeterli veri yok.** %98,3'ün kabul edilemez
 olduğu açık; sebebi açık değil.
+
+**1 Ekim ek:** üç tam ölçekli koşuda da `iki_asama: False` — birinci aşama
+120 saniyede plan bulamıyor, ana aşama buluyor (654 çözüm). Ama ana
+aşamanın **ilk planı kaçıncı saniyede** bulduğu hiçbir yerde yazmıyordu;
+"120 sn yetmiyor" ile "amaçsız modelde hiç bulamıyor" ayrılamıyordu.
+Çıktıya `ilk_cozum_sn` eklendi (`cozum_istatistikleri`; `coz-olc.py`
+*"ana asamada ilk plan: N sn"* yazıyor). Sabahki koşu bu sayıyı verecek;
+ölçüm 1 ondan sonra anlamlı.
 
 → T-50 · T-54 · T-59 · K-35 · K-39
 
@@ -3451,6 +3470,16 @@ mı dursun. Motorun kendi metriğinin var olma sebebi doğrulayıcıyla
 **karşılaştırılmak**; karşılaştırılamayan bir sayı o işi yapmıyor.
 
 → T-65 · T-18 · `09-motor/cozucu/coz.py` · `02-spec/v1.4-master-spec.md` §11.3
+
+**1 Ekim ek — aynı aile:** `_metrikler` içindeki `toplam_saat` ve
+`fazla_mesai_saat` net saati **yalnız `mola_dk`** ile hesaplıyor; mola
+politikası (dinlenme) düşülmüyor (T-57'nin düzeltmesi `_net_saat`'e
+yapıldı, bu kopyaya yapılmadı). Tam ölçekte `toplam_saat: 20.796` bu
+yüzden gerçek çalışma saatinden yüksek. Kısıt değil, motorun kendi
+raporu; doğrulayıcının `ucret_saat`/`net_saat`i doğru. Düzeltmesi tek
+satır (`_net_saat(s)`) ama altın senaryolar `fazla_mesai_saat` bekliyor —
+onlarla birlikte ele alınmalı. `teshis.py`'deki kapasite tahmini
+(`en_kisa`) da aynı eski hesabı kullanıyor.
 
 ---
 
@@ -3879,30 +3908,83 @@ sayı (%46 çağrı merkezi kayıt oranı, %53 hiç kaydı olmayan kişi) ve Mus
 
 ---
 
-## 🔴 T-78 · Tam ölçekte plan **1 sert ihlalle** döndü — yarı zamanlı tavanı; çözücü ile doğrulayıcı anlaşmıyor
+## ✅ T-78 · ~~Tam ölçekte plan **1 sert ihlalle** döndü — yarı zamanlı tavanı; çözücü ile doğrulayıcı anlaşmıyor~~ — **KAPANDI (1 Ekim gecesi, sebep koddan kanıtlandı)**
 
-**Ölçüldü:** 30 Eylül gecesi, Mustafa'nın makinesinde, 500 kişi, %95 doluluk,
-1.200 saniye. Plan çözüldü (2.494 atama, asgari kapsama %100) ama
-doğrulayıcı **PART_TIME_LIMIT 1** ihlal yazdı → `yayınlanabilir: false`.
-29 Eylül'deki tam ölçekli koşu 0 sert ihlalle bitmişti; 0.1 ölçekli bekçi
-bugün de temiz.
+**Ölçüldü:** 30 Eylül gecesi, Mustafa'nın makinesinde, 500 kişi, %95 doluluk.
+Üç koşu: 900 sn → 0 sert ihlal · 1.200 sn → **PART_TIME_LIMIT 1**,
+`yayınlanabilir: false` · gece commit'inden sonra 900 sn → 0 sert ihlal.
+Aynı sahne, aynı kurallar; ihlal yalnız bir koşuda çıktı. Yani sebep
+kuralda değil, çözücünün **bazen** seçtiği bir yerleşimde.
 
-**Ne biliniyor:** çözücü yarı zamanlının haftalık net saatini **şablondan**
-hesaplıyor (mola politikasının tamamı düşülür); doğrulayıcı **plandaki
-gerçek molalardan** (`zaman.net_saat`). Şablona sığmayan bir dinlenme
-molası üretilmez ve not yazılır — o zaman plandaki net, çözücünün sandığından
-yüksek çıkar; tavan tam 45'te ve tolerans 0 olduğu için tek çeyrek saat
-ihlal demek. **T-57'nin ailesi** (net saat iki tarafta farklı). Bu bir
-**hipotez** — plan kaydedilmediği için kim, kaç saat, hangi mola bilinmiyor.
+**Sebep — plan beklenmeden koddan bulundu ve kanıtlandı.** İlk hipotez
+(sığmayan mola üretilmiyor) yanlıştı; her şablonda her mola sığıyor. Gerçek
+sebep **çeyrek saat ızgarasına sığmayan mola**: müşteri hizmetleri
+şablonlarında dinlenme molası **20 dakika** (3×20). Çözücü molayı çeyrek
+sayısına çevirirken `round(1,33) = 1` çeyrek (15 dk) sayıyordu; üç yerde:
 
-**Yapıldı:** `coz-olc.py` artık sert ihlallerin cümlelerini ekrana ve sonuç
-dosyasına, planı da yanına **olcum-plan-95.json** adlı dosyaya yazıyor (dosya
-ilk koşuda oluşur; henüz yok). Bir sonraki tam ölçekli koşu sebebi gösterir.
+| yer | çözücü ne sanıyordu | gerçek |
+|---|---|---|
+| dinlenme pencereleri arası mesafe (`_dinlenme_baslangiclari`) | 08–17'de ikinci molanın son adayı **13:30**, üçüncünün ilk adayı **13:45** — ayrık | 13:30'da başlayan mola 13:50'de biter: **5 dk üst üste** |
+| yemek–dinlenme çakışma kısıtı (`_dinlenme_degiskenleri`) | 10:45 dinlenmesi `{10:45}` dilimi, 11:00 yemeği `{11:00…}` — kesişmiyor | 10:45–11:05 ile 11:00–11:30 **5 dk üst üste** |
+| molanın kapattığı dilimler (`_mola_dilimleri`) | 13:45 molası yalnız 13:45 dilimini kapatır | kişi 13:45'te de **14:00'da da** sahada değil |
 
-**Ne gerek:** koşu tekrarı (Mustafa'nın makinesinde, ~22 dk) ve bulgunun
-okunması. Karar gerektirmiyor.
+Doğrulayıcı üst üste binen iki molayı **tek aralık** sayar
+(`zaman.mola_araliklari`, T-27'den beri): 20 + 20 dakika yerine 35 dakika
+düşer, net çalışma **5 dakika fazla** çıkar. M-SABAH şablonu 7,50 net saat;
+altı gün = **tam 45,00** — yarı zamanlı tavanının üstünde sıfır pay
+(tolerans 0, K-25). Tek bir üst üste binme 45,08 yapar → sert ihlal.
+Çözücünün kendi sayacı 0 diyordu çünkü politika dakikasıyla hesaplıyordu.
+Sahne şablonları üzerinde **sayıldı**: eski kodda M-SABAH'ta çözücünün izin
+verdiği 2.880 yerleşimin **822'sinde** net saat ayrışıyordu (810'u +5 dk,
+12'si +10 dk); M-AKSAM aynı, M-UZUN 567, M-HSONU 378, M-AKSAMK 27. SATIŞ ve
+BACKOFFICE şablonlarında (15 dk mola) sıfır — ızgaraya sığıyorlar.
 
-→ T-57 · T-54 · `08-motor-testleri/gercekci-veri-seti/coz-olc.py`
+**Üçüncü satırın ayrı sonucu:** `SAHADA_ASGARI` (sert, K-33) sahayı
+çeyrek **anlarında** örnekler; 20 dakikalık molada çözücü kişiyi bir anda,
+doğrulayıcı iki anda yok sayıyordu. Sahnede bu kural kapalı olduğu için
+görünmedi; açık olsaydı aynı aileden bir sert ihlal daha çıkabilirdi.
+`MOLA_KAPSAMASI` (yumuşak) için de aynı fark var — koşulardaki 51–69
+ihlalin bir kısmı buradan.
+
+**Düzeltildi (1 Ekim gecesi, `09-motor/cozucu/model.py`):**
+
+1. Çeyrek sayısı **yukarı** yuvarlanır (`_ceyrek_yukari`: 20 dk → 2, 15 → 1,
+   60 → 4). Pencere aralığı ve dilim kümesi bununla hesaplanır; dilim
+   kümesi artık doğrulayıcının örneklemesiyle birebir.
+2. Yemek–dinlenme çakışması **gerçek zamanda** ölçülür (`_gercek_kesisiyor`);
+   uç uca değen iki mola çakışmaz (12:00–12:30 yemek + 12:30 dinlenme
+   serbest).
+3. **Emniyet kemeri:** ardışık iki dinlenmenin gerçek zamanda üst üste
+   binen adayları arasına da kısıt yazılır. Pencereler ayrıkken hiç
+   çalışmaz; aritmetik bir gün yine yanılırsa yakalar.
+4. Politika vardiyaya **üst üste binmeden sığmıyorsa** nota yazılır
+   (`uygulanmayan_notlar`: *"mola politikasi vardiyaya SIGMIYOR"*). Eskiden
+   böyle şablonlar molaları üst üste bindirerek "sığıyordu" — geçersiz
+   plan. Şimdi sığmaz ve **sessiz kalmaz**. Taramada 3.700 şablon
+   biçiminden 64'ü sığmıyor: hepsi ≤4,75 saatlik vardiyaya 45–60 dk yemek
+   + 3–4 dinlenme (mola toplamı vardiyanın %31'inden fazla); 41'i eskiden
+   de sığmıyordu, 23'ü eskiden yalnız üst üste binerek "sığıyordu".
+
+**Kanıt (`09-motor/testler/test_net_saat_uyumu.py`, +9 test):** çözücünün birlikte
+seçmesine izin verdiği her mola çifti gerçek zamanda ayrık; her molanın
+dilim kümesi doğrulayıcının çeyrek örneklemesiyle aynı; 3–12 saat ×
+yemek {0,30,45,60} × dinlenme {1..4} × {5,10,15,20,30} dk taraması; 45,00
+saatteki yarı zamanlı uçtan uca yayınlanabilir; uç uca değen mola serbest;
+emniyet kemeri (adaylar elle bozularak); sığmayan politika notu. Altı
+mutasyon (her değişiklik tek tek geri alınarak) — **hepsi öldü**. Motor
+**416** test, bekçi 20, ihlal vakaları 33 gövde · 33 vaka · 33 kırmızı, sahte PDKS 0 habersiz.
+
+**⚠ Açıkça söylenen etki:** çözücünün seçeneği daraldı — yalnız fiziksel
+olarak üst üste binen yerleşimler gitti. Bunlar zaten geçersizdi. 20
+dakikalık mola artık saha modelinde 30 dakika değil, doğru olan iki çeyrek
+anı kapatıyor; MOLA_KAPSAMASI cezası o şablonlarda biraz artabilir.
+
+**Ne gerek:** tam ölçek koşusunun **tekrarı** (sabah, `--saniye 900`):
+beklenen 0 sert ihlal ve `olcum-plan-95.json`'daki planda üst üste binen
+mola olmaması. Koşu betiği artık *"ana asamada ilk plan: N sn"* de yazıyor
+(T-60 için).
+
+→ T-57 · T-27 · T-44 · K-34 · `09-motor/testler/test_net_saat_uyumu.py`
 
 ---
 
@@ -3924,8 +4006,9 @@ okunması. Karar gerektirmiyor.
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
 | **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
-| **6b** 🆕 | **T-78 · tam ölçekte 1 sert ihlal** 🔴 | Yarı zamanlı tavanı; çözücü ile doğrulayıcının net saati farklı olabilir (hipotez). Plan artık kaydediliyor; **koşu tekrarı gerekiyor**, karar gerektirmiyor |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. Yönetici *"motor kötü plan yapıyor"* der. ⚠ Sebebi henüz ayrılmadı — önce dört ölçüm |
+| ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
+| **6c** 🆕 | **T-59 · süre bütçesi = duvar saati mi?** 🟡 | "En fazla 900 sn" deyip 958 sn: model kurma (~55 sn) bütçenin dışında. ✅ **Mustafa'nın kararı** (K-48 adayı) — öneri: kurma da içinden düşülsün |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. Yönetici *"motor kötü plan yapıyor"* der. ⚠ Sebebi henüz ayrılmadı — önce dört ölçüm; çıktıya `ilk_cozum_sn` eklendi (1 Ekim), sabahki koşu ilk sayıyı verir |
 | **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |
@@ -4006,3 +4089,4 @@ okunması. Karar gerektirmiyor.
 | **T-22 denetlenmeyen taslak** | **23 Eylül 2026** | Çözümsüzlükte sunulan plan artık özgün girdiyle denetleniyor; boş plan `var: False`. 4 test. A03'te T-18'i görünür kıldı |
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |
+| **T-78 tam ölçekte 1 sert ihlal** | **1 Ekim 2026** | Plan beklenmeden koddan bulundu: 20 dk mola çeyrek ızgarada 15 dk sayılıyor, molalar 5 dk üst üste biniyor, doğrulayıcı fazla çalışma görüyordu. Yukarı yuvarlama + gerçek zamanlı çakışma + emniyet kemeri + sığmayan politika notu. 9 test, 6 mutasyon öldü |

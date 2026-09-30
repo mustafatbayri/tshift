@@ -48,12 +48,19 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
         # Ilk cozumun amac degeri. Baslangic plani verildiyse ILK cozum
         # odur; boylece "nereden nereye" ciktida gosterilebilir.
         self.ilk_amac = None
+        # T-60 (1 Ekim): ana asamada ILK PLANIN bulunma ani. Tam olcekte
+        # birinci asama 120 saniyede plan bulamiyor ama ana asama buluyor;
+        # "kacinci saniyede" bilinmeden bu cozulemez. `ana_basladi` cozum
+        # baslamadan hemen once yazilir; yazilmadiysa kurulus ani esastir.
+        self.ilk_cozum_sn = None
+        self.ana_basladi = None
 
     def on_solution_callback(self):
         self.cozum_sayisi += 1
         self.son_iyilesme = time.time()
         if self.ilk_amac is None:
             self.ilk_amac = self.ObjectiveValue()
+            self.ilk_cozum_sn = time.time() - (self.ana_basladi or self.baslangic)
         sinir = self.BestObjectiveBound()
         deger = self.ObjectiveValue()
         if deger > 0 and abs(deger - sinir) / abs(deger) <= self.ayar["hedef_bosluk"]:
@@ -304,6 +311,7 @@ def coz(girdi, ayar=None, baslangic_plani=None):
     cozucu.parameters.max_time_in_seconds = ana_butce
 
     basladi = time.time()
+    geri.ana_basladi = basladi
     durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
     sure = time.time() - basladi
 
@@ -324,6 +332,9 @@ def coz(girdi, ayar=None, baslangic_plani=None):
         "model_kurma_sn": round(model_kurma, 2),
         "ilk_asama_sn": round(ilk_asama, 2),
         "ana_asama_butce_sn": round(ana_butce, 2),
+        # T-60: ana asamada ilk plan kacinci saniyede geldi (plan yoksa None).
+        "ilk_cozum_sn": (round(geri.ilk_cozum_sn, 2)
+                         if geri.ilk_cozum_sn is not None else None),
         # Kac isciyle kosuldugu. Ekranda gosterilen "degisken | kisit"
         # bilgisinin ayni ailesinden: "neden bu kadar surdu" sorusunun
         # cevabi bunsuz eksik kalir.

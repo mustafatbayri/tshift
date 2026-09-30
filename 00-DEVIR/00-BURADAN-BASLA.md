@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-09-29 · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) · **K-35** süre seçimi, kanıtlanmış optimuma yakınlık ve *İyileştir* — motor **137 test** yeşil, katalog **39**. **350 kişilik gerçekçi veri seti kuruldu** ve tam ölçekte çalıştı: 1.757 atama, **0 sert ihlal**, %100 asgari kapsama. Altı bulgu açıldı, beşi aynı gün kapandı.)* T-42 açıldı, T-43 aynı gün geri çekildi) *(**29 Eylül:** 350 kişilik set **otomatik koşuya bağlandı** — çözmeden ölçülenler tam ölçekte, çözüm gerektirenler 0.1'de · **K-36** arama işçisi sayısı makinenin çekirdeğine uyuyor: 2 çekirdekte optimuma **%23,6 yerine %7,0** uzaklık — ⚠ 6 çekirdekli makinede aynı sahne ayırt etmedi, sunucu sorusu için gerçekçi ölçek + `--tekrar` gerekiyor · motor **146 test** yeşil · **T-48 hipotez olmaktan çıktı:** 45 saniyelik bütçe çözümsüzlükte **470 saniye** sürüyor.)*
+**Son güncelleme:** 2026-10-01 · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) · **K-35** süre seçimi, kanıtlanmış optimuma yakınlık ve *İyileştir* — motor **137 test** yeşil, katalog **39**. **350 kişilik gerçekçi veri seti kuruldu** ve tam ölçekte çalıştı: 1.757 atama, **0 sert ihlal**, %100 asgari kapsama. Altı bulgu açıldı, beşi aynı gün kapandı.)* T-42 açıldı, T-43 aynı gün geri çekildi) *(**29 Eylül:** 350 kişilik set **otomatik koşuya bağlandı** — çözmeden ölçülenler tam ölçekte, çözüm gerektirenler 0.1'de · **K-36** arama işçisi sayısı makinenin çekirdeğine uyuyor: 2 çekirdekte optimuma **%23,6 yerine %7,0** uzaklık — ⚠ 6 çekirdekli makinede aynı sahne ayırt etmedi, sunucu sorusu için gerçekçi ölçek + `--tekrar` gerekiyor · motor **146 test** yeşil · **T-48 hipotez olmaktan çıktı:** 45 saniyelik bütçe çözümsüzlükte **470 saniye** sürüyor.)*
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -84,6 +84,21 @@ kapandı) ama **1 sert ihlalle** döndü — **T-78** 🔴, koşu tekrarı gerek
 Teşhis *"belirsiz"* diyebiliyor (T-76 kapandı). Motor **406 test**, **116
 mutasyon hepsi öldü**, 33 gövde · 33 vaka. Açık 🔴 **yedi**. **Şartname yazı
 borcu** birikti (§6.3, §6.5, §8.3, §11.4 — oturum kaydı bölüm 37).
+**⚠ 1 Ekim gecesi — en güncel durum budur.** Mustafa gece commit'ini push edip
+tam ölçeği üç kez koşturdu: 900 sn temiz, 1.200 sn **1 sert ihlal**, gece
+commit'inden sonra 900 sn yine temiz. **T-78 planı beklemeden koddan bulundu
+ve kanıtlandı:** müşteri hizmetleri şablonlarındaki **20 dakikalık** dinlenme
+molası çeyrek ızgarada 1 çeyrek (15 dk) sayılıyordu; pencereler o hesapla
+ayrılıyor, mola gerçek süresiyle uzuyor — iki mola **5 dk üst üste** binebiliyor,
+doğrulayıcı onu tek aralık sayıp 5 dk fazla çalışma görüyordu. Tam 45,00
+saatteki yarı zamanlıda bu tek başına sert ihlal. Sahne şablonlarında sayıldı:
+eski kod M-SABAH'ta 2.880 yerleşimin **822'sinde** ayrışıyordu. ⚠ İlk hipotezim
+(sığmayan mola) **yanlıştı**. Üç yerde düzeltildi (yukarı yuvarlama, gerçek
+zamanlı çakışma, emniyet kemeri) + sığmayan politika artık **nota** yazılıyor.
+Motor **416 test**, **122 mutasyon hepsi öldü**, bekçi 20, 33 gövde · 33 vaka, sahte
+PDKS 0 habersiz. Yeni 🟡 soru: süre bütçesi duvar saati mi (model kurma ~55 sn
+dışarıda; K-48 adayı). `ilk_cozum_sn` çıktıya eklendi (T-60 için). Açık 🔴
+**altı**. **Sabah:** commit + tam ölçek tekrarı (`--saniye 900`), beklenen 0 sert.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -255,7 +270,7 @@ A5 ertelendi (K-12).
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
 | Yazılan kural gövdesi | **33** (katalogdaki **40**'ın alt kümesi) | 30 Eylül akşamı, ikisi de sayılarak |
-| Motor birim testi | **406**, hepsi yeşil | 30 Eylül gecesi, koşularak |
+| Motor birim testi | **416**, hepsi yeşil | 1 Ekim gecesi, koşularak |
 | Zor veri seti bekçisi | **20**, hepsi yeşil (12 + sahte PDKS üreticisi 8; 6 dk 10 sn) | 30 Eylül gecesi |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -475,7 +490,8 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-75~~ | ✅ **KAPANDI 30 Eylül gecesi, K-46** — hafta sonu = iki gün de; üçüncü hafta çözüldü, 0 ihlal | — |
 > | ~~T-72~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — gece haftası = saatlerin yarısından çoğu | — |
 > | ~~T-74~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — gece postasının bütün süresi; Yargıtay 9. HD 2020/17967 | — |
-> | **T-78** 🆕 | Tam ölçekte plan **1 sert ihlalle** döndü (yarı zamanlı tavanı, `yayınlanabilir: false`); sebep plan kaydedilmediği için açık, araç artık planı yazıyor | ❌ karar gerektirmiyor — koşu tekrarı |
+> | ~~T-78~~ | ✅ **KAPANDI 1 Ekim gecesi** — 20 dk mola çeyreğe sığmıyordu, molalar 5 dk üst üste biniyordu; üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir | — |
+> | **T-59 sorusu** 🆕 | *"En fazla 900 sn"* deyip 958 sn: model kurma (~55 sn) bütçenin dışında | ✅ bütçe duvar saati mi olsun (K-48 adayı; öneri: evet) |
 > | **T-38** 🆕 | Şartnamenin **on iki alanı daha** karşılıksız. En ağırı `kural_degerleri`: kişiye özel sözleşme sınırı yok sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor | ✅ hangisi önce yazılacak |
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
@@ -603,7 +619,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **406** birim testi (30 Eylül gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **416** birim testi (1 Ekim gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
