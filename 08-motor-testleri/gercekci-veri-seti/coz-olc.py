@@ -121,7 +121,8 @@ def main():
     # (iki asama), neden durdugu (butce mi durgunluk mu), optimuma uzaklik.
     # Bunlar olmadan "964 saniye surdu" cumlesi hicbir sey anlatmiyor.
     ist = c.get("cozum_istatistikleri") or {}
-    for k in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri"):
+    for k in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri",
+              "model_kurma_sn", "ilk_asama_sn", "ana_asama_butce_sn"):
         if k in ist:
             sonuc[k] = ist[k]
     print("     %.0f sn  |  durum: %s  |  %d atama"
@@ -129,6 +130,11 @@ def main():
     print("     durma: %-14s iki asama: %-6s optimuma uzaklik: %s"
           % (ist.get("durma_sebebi"), ist.get("iki_asama"),
              (c.get("metrikler") or {}).get("optimuma_uzaklik_yuzde")))
+    # T-59 (30 Eylul aksami): sure uc kaleme ayrildi. Birinci asama +
+    # ana asama verilen butceyi GECMEMELI; model kurma ayri kalem.
+    print("     model kurma %s sn · birinci asama %s sn · ana asamaya verilen %s sn"
+          % (ist.get("model_kurma_sn"), ist.get("ilk_asama_sn"),
+             ist.get("ana_asama_butce_sn")))
     yaz(sonuc)
 
     if sonuc["durum"] != "cozuldu":

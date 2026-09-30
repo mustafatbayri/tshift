@@ -67,6 +67,12 @@ def _sahne(kisi, gun=7, asgari=3, hedef=6, saatler=(7, 23)):
         "vardiya_sablonlari": [
             {"id": "V%d" % j, "ekip": "E", "bas": b, "bit": b + 8,
              "mola_dk": 60,
+             # ⚠ 30 Eylul aksami (T-69): gece isareti ACIKCA yazildi -- 20:00'yi
+             #   asan sablon gece. Eski tahmin ("pencereye en ufak degme") bunu
+             #   kendiliginden yapiyordu; yeni tahmin (md. 7/2, "yarisindan
+             #   cogu") yapmiyor. Isaretsiz birakilsaydi ADALET_DENGESI'nin
+             #   gece terimleri kaybolur, sahne sessizce degisirdi.
+             "gece_vardiyasi": b + 8 > 20,
              "mola_politikasi": [
                  {"tip": "yemek", "dakika": 60, "adet": 1, "ucretli": False},
                  {"tip": "dinlenme", "dakika": 15, "adet": 3, "ucretli": True}]}

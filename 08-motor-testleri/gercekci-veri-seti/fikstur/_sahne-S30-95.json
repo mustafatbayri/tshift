@@ -14,8 +14,8 @@
   "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
   "Hafta ici ve hafta sonu esikleri AYRI.",
   "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-  "Katalogdaki 40 kuralin TAMAMI tanimli: 31'i degerlendirilir,",
-  "9'u `uygulanmayan_kurallar` kanalini atesler.",
+  "Katalogdaki 40 kuralin TAMAMI tanimli: 33'u degerlendirilir,",
+  "7'si `uygulanmayan_kurallar` kanalini atesler.",
   "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
   "Tohum sabit (20260928) -- ayni girdi ayni dosyayi uretir."
  ],
@@ -18952,17 +18952,23 @@
    "tur": "SERT",
    "aktif": true,
    "yasal": true,
-   "kabul_edilebilir": false
-  },
-  {
-   "kod": "GECE_YARISI_ASAN",
-   "tur": "SERT",
-   "aktif": true,
-   "yasal": false,
-   "kabul_edilebilir": false
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_ardisik_gece_haftasi": 1
+   }
   },
   {
    "kod": "ARDISIK_HAFTA_SONU_LIMIT",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "azami_ardisik": 2
+   }
+  },
+  {
+   "kod": "GECE_YARISI_ASAN",
    "tur": "SERT",
    "aktif": true,
    "yasal": false,

@@ -4,6 +4,47 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (akşam, 2) · Üç hafta: ardışık hafta sonu limiti üçüncü haftayı kilitliyor (T-75) · sahte PDKS · T-59 düzeltildi**
+Mustafa'nın iki aşamalı yolu **üç haftaya** uzatıldı. Üçüncü hafta, iki haftalık
+geçmişle **iki bağımsız koşuda da çözümsüz**; ardışık hafta sonu limiti
+kaldırılınca çözülüyor (**T-75** 🔴). Sebep yapısal: 6 günlük desende cumartesi
+ya da pazardan biri mutlaka çalışılıyor, bugünkü tanımla herkes her hafta sonu
+*"çalışmış"*; hafta hafta çözen motor gelecek haftayı görmüyor — 45 kişinin 29'u
+iki hafta sonu da çalıştı. Çözücünün kendi teşhisi *"engelleyen: yok"* dedi
+(**T-76**: 10 saniyelik deneme bu ölçekte yetmiyor). **Sahte PDKS** (Mustafa'nın
+ikinci yolu) kuruldu: PDKS gerçekleşenin %57'sini yakaladı; eksik geçmişle
+yapılan planda gerçek geçmişe göre **7 ihlal** kaçtı (beşi yasal) — **hepsi**
+raporda haber verilmişti, ama **141 satırla** (**T-77**). **T-59 düzeltildi**:
+birinci aşama süre bütçesinin içinden pay alıyor; tam ölçekte yeniden
+ölçülmedi. ⚠ `06-veri/anonim/` boş — sahte PDKS'in oranlarının çoğu varsayım,
+dosyada tek tek işaretli. Motor **359 test**, bekçiler **20**, mutasyon **88 ·
+hepsi öldü**, açık 🔴 **dokuz**.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-59 · T-75 · T-76 · T-77 · `08-motor-testleri/gercekci-veri-seti/sahte_pdks.py` · `08-motor-testleri/gercekci-veri-seti/uc-hafta-sonucu.json` · `09-motor/testler/test_sure_butcesi.py`
+
+
+**2026-09-30 (akşam) · Gece postası devri (yasal) ve ardışık hafta sonu limiti yazıldı · T-69, T-71 kapandı · T-72, T-74 🔴 açıldı**
+Mustafa dışarıdayken, soru sormadan. İki kural iki motor yarısında da yazıldı;
+geçmiş okunduğu için (T-28) artık yazılabilirdi. **Yönetmeliğin tam metni
+okundu** ve şartnamede olmayan iki fıkra çıktı: md. 8/3 iki haftalık nöbetleşmeye
+izin veriyor (**T-73**); md. 7/2 geceyi tanımlıyor — *"çalışma süresinin
+yarısından çoğu gece dönemine rastlayan"* posta. Yasal kural bu tanımı kullanıyor,
+firma işaretini (K-40) **bilerek kullanmıyor**. *"Bir iş haftası gece
+çalıştırılan"* tanımlı değil — **en sıkı okuma** uygulandı: haftada tek gece
+yeter (**T-72** 🔴, karar bekliyor). **Ölçüldü:** 49 kişide ikinci hafta geçmişsiz
+çözülünce 11 kişi iki hafta üst üste gecede, toplam 30 sert ihlal; geçmişle
+**çözüldü, 0**. **T-74** 🔴: yasal gece sınırı yalnız pencereye düşen kısmı
+ölçüyor; yönetmeliğe göre gece postasının bütün süresi 7,5 saati geçemez —
+gerçek müşteride 16:00–01:00 deseni 82 kez; bilerek değiştirilmedi.
+**T-69 + T-71 kapandı:** işaretsiz vardiyanın tahmini artık md. 7/2 (00:00–08:45
+gece, 13:00–21:00 değil); doğrulayıcının adalet boyutu işareti okuyor. ⚠ Beş eski
+testin sahnesi eski tahmine yaslanıyordu: biri kırmızı yandı, üçü **yeşil kaldı
+ama sahneleri sessizce değişmişti** — dördüne eski sonuç açıkça işaret olarak
+yazıldı, biri aynı sınırı sınayan vakaya taşındı. ⚠ Mutasyon iki boşluk daha
+yakaladı. Motor **353 test**, **33 gövde · 33 vaka · 33 kırmızı**, mutasyon
+**79 · hepsi öldü**.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-69 · T-71 · T-72 · T-73 · T-74 · `00-DEVIR/08-URUN-KARARLARI.md` K-25 · K-40 · `09-motor/testler/test_hafta_kurallari.py` · `09-motor/testler/test_gece_tespiti.py`
+
+
 **2026-09-30 (öğleden sonra) · T-28 kapandı — geçmiş veri iki tarafta da okunuyor**
 Risk listesinde birinci sıradaki madde. **Ölçüldü, Mustafa'nın önerdiği iki
 aşamalı yolla:** hafta 1'in planı hafta 2'nin geçmişi oldu; hafta 2 geçmişsiz

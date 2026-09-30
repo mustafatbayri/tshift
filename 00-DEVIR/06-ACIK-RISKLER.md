@@ -3000,7 +3000,7 @@ görünmedi. `int(...)` ile düzeltildi, kırmızı kanıtlı test eklendi
 
 ---
 
-## 🔴 T-59 · Verilen süre bütçesi **aşılıyor** — 900 saniye istendi, 1078 sürdü
+## 🟡 T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **DÜZELTİLDİ (30 Eylül akşamı); tam ölçekte yeniden ölçülmedi**
 
 **Ölçüldü:** 29 Eylül, Mustafa'nın makinesinde, 500 kişilik tam ölçek.
 
@@ -3031,6 +3031,31 @@ edilen süreden uzun sürüyorsa vaat değildir.
 kullanıcıya ayrıca gösterilmeli.
 
 → K-35 · `09-motor/cozucu/coz.py` (`_ipucu_ver`, `coz`)
+
+**Düzeltildi — 30 Eylül akşamı** (karar gerektirmiyordu, Mustafa dışarıdayken
+yapıldı). Birinci aşama artık bütçenin **içinden** pay alıyor:
+`min(ilk_asama_saniye, azami_saniye × %20)`. Ana çözüme **kalan** veriliyor:
+`azami_saniye − birinci aşamada geçen`. İkisinin toplamı verilen süreyi
+geçmiyor. Model kurma ayrı kalem olarak çıktıya yazılıyor (`model_kurma_sn`);
+çıktı üç kalemi de gösteriyor (`ilk_asama_sn`, `ana_asama_butce_sn`). Durma
+sebebi kıyası da ana aşamanın payına bağlandı — bağlanmasaydı bütçesini
+dolduran koşu *"bilinmiyor"* diye raporlanırdı.
+
+6 test, **altısı da kırmızı başladı** (biri tam sebebi gösterdi: *"birinci aşama
+120 sn aldı; pay en çok 10 × %20 = 2 sn"*). 4 mutasyon, dördü öldü. ⚠ **Testler
+saat ölçmüyor** — bilerek: CI paylaşımlı ve iki çekirdekli, *"5 saniyeden kısa
+sürdü"* diyen test yük altında rastgele kırmızı yanar. Sınanan şey bütçenin
+**bölünüşü**; birinci aşama yapay olarak yavaşlatılıyor.
+
+⚠ **Tam ölçekte yeniden ölçülmedi.** 900 saniyelik koşu Mustafa'nın
+makinesinde yapılmalı: `py coz-olc.py --saniye 900`. Beklenen: çözüm süresi
+≤ 900 sn + model kurma (~50 sn, artık ayrıca yazılıyor). **Ölçülene kadar 🟡.**
+
+⚠ **Bedeli:** 900 saniyede birinci aşama zaten 120 saniyeyle sınırlıydı; ana
+aşama artık 900 değil **900 − birinci aşama** alıyor. Bekçi bütçesinde (240 sn)
+birinci aşamanın payı 120'den **48**'e indi.
+
+→ `09-motor/testler/test_sure_butcesi.py`
 
 ---
 
@@ -3483,7 +3508,7 @@ acentesi verisinde 182 atama gece yarısını aşıyor; o şablonların brüt/ne
 
 ---
 
-## 🟡 T-69 · İşaretsiz erken saatli vardiya iki tarafta da **gece sayılmıyor**
+## ✅ T-69 · ~~İşaretsiz erken saatli vardiya iki tarafta da gece sayılmıyordu~~ — **KAPANDI (30 Eylül akşamı)**
 
 **Bulundu:** 30 Eylül, geçmiş veri yazılırken — iki motor yarısının gece
 tespiti yan yana denenince.
@@ -3507,6 +3532,22 @@ Düzeltme iki tarafta da ayrı yazılmalı ve altın senaryolarla sınanmalı �
 işaretsiz şablonu olan fikstürlerin sonucu değişebilir.
 
 → K-40 · T-28 · `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py`
+
+**Kapandı — 30 Eylül akşamı.** İşaret yoksa tahmin artık yönetmeliğin kendi
+tanımı (Postalar Yön. md. 7/2): süresinin **yarısından çoğu** 20:00–06:00'da olan
+vardiya gece. Yukarıdaki tabloya göre: 00:00–08:45 **gece** (6 / 8,75);
+23:00–08:15 gece; 04:00–12:00 ⚠ **gece değil** (2 / 8) — tablodaki *"doğrusu"*
+sütunu yalnız *"pencereye düşüyor"* diyordu, yönetmelik çoğunluk istiyor.
+Eski ölçünün öbür yüzü de düzeldi: 13:00–21:00 artık gece sayılmıyor (1 / 8);
+gece çalışamayan birine verilebiliyor. İki taraf ayrı yazıldı; aynı sonuca
+vardıklarını doğrudan sınayan test var. Altın senaryolarda etkisi yok (tek
+işaretsiz gece şablonu A04'te, 16:00–01:00 — iki ölçüyle de gece).
+
+⚠ Beş eski testin sahnesi eski tahmine yaslanıyordu; biri kırmızı yandı, üçü
+**yeşil kaldı ama sahnesi sessizce değişmişti**. Hepsine eski sonuç açıkça
+işaret olarak yazıldı — model eskisiyle aynı. Ayrıntı oturum kaydında (bölüm 26).
+
+→ T-71 · `09-motor/testler/test_gece_tespiti.py`
 
 ---
 
@@ -3542,6 +3583,273 @@ seçilmiş ama **tekrarlanabilir** bozmalar. CI'a konmadı (süre bütçesi).
 
 ---
 
+## ✅ T-71 · ~~Doğrulayıcıda adalet dengesinin *"gece"* boyutu firma işaretini yok sayıyordu~~ — **KAPANDI (30 Eylül akşamı, aynı gün)**
+
+**Bulundu:** 30 Eylül akşamı, gece postası devri yazılırken — gece tespitinin
+kullanıldığı her yer tek tek okundu.
+
+K-40'ın kaydında *"`ADALET_DENGESI`'nin 'gece' boyutu da artık aynı tespiti
+kullanıyor — iki yerde iki farklı gece tanımı kalmadı"* yazıyordu. **Yarısı
+doğruydu:** çözücü işareti okuyordu, doğrulayıcı hâlâ kendi eski ölçüsünü
+kullanıyordu — *vardiyanın herhangi bir parçası 20:00–06:00'ya değiyorsa gece.*
+
+| şablon | firma işareti | çözücü | doğrulayıcı (eski) |
+|---|---|---|---|
+| S-AKSAM 13:45–23:00 | gece değil | gece değil | **gece** |
+| B-AKSAM 15:15–24:00 | gece | gece | gece |
+
+Kural yumuşak, yayını durdurmuyordu; ama doğrulayıcı, çözücünün kaçınmaya hiç
+çalışmadığı adaletsizlikleri yazıyordu — S-AKSAM satışın en çok kullanılan akşam
+vardiyası.
+
+**Kapandı:** doğrulayıcının adalet boyutu artık ardışık gece limitiyle aynı
+tespiti kullanıyor (işaret; yoksa T-69'un tahmini). 4 test.
+
+⚠ **Mutasyon bir boşluk yakaladı:** ilk testim S-AKSAM'la kurulmuştu ve işareti
+**hiç okumayan** bir gövdeyi de geçiriyordu — yeni tahmin 13:45–23:00'ü zaten gece
+saymıyor. İşaretin gerçekten okunduğunu yalnız işaretle tahminin **ayrıştığı**
+vardiya kanıtlar (22:00–06:00 *"gece değil"*, 15:15–24:00 *"gece"*); o iki test
+eklendi, mutasyon öldü.
+
+→ K-40 · T-69 · `09-motor/testler/test_gece_tespiti.py`
+
+---
+
+## 🔴 T-72 · *"Bir iş haftası gece çalıştırılan"* yönetmelikte tanımlı değil — **en sıkı okuma uygulandı, ürün kararı bekliyor**
+
+**Bulundu:** 30 Eylül akşamı, gece postası devrinin gövdesi yazılırken.
+
+Yönetmelik (md. 8/1) *"en fazla bir iş haftası gece çalıştırılan işçilerin,
+ondan sonra gelen ikinci iş haftasında gündüz çalıştırılmaları"*nı istiyor.
+Yönetmelik **posta** düzenini varsayıyor: bir ekip bütün hafta gece, ertesi hafta
+gündüz. Bizim planımız kişi bazlı — bir hafta **iki gece üç gündüz** olabilir.
+O hafta *"gece çalıştırılan"* hafta mı? Yönetmelik söylemiyor.
+
+**Uygulanan:** en sıkı okuma — haftada **tek bir** gece çalışması o haftayı gece
+haftası yapar; ertesi hafta o kişiye gece verilmez.
+
+**Neden en sıkı:** gevşek okumalar (çoğunluk, eşik) yasanın amacını delmeye açık —
+her hafta üç gece çalışan biri hiç *"gece haftası"* yaşamamış sayılırdı. Yasal
+kuralda yanlış yöndeki hata yasa dışı plan yayınlatmaktır.
+
+**Gece ne demek — o da yönetmelikten (md. 7/2):** *"Çalışma süresinin yarısından
+çoğu gece dönemine rastlayan bir postanın çalışması, gece çalışması sayılır."*
+Bu kural firmanın gece işaretini (K-40) **bilerek kullanmıyor** — işaret bu
+yasal kuralı iki yönde de bozardı: 22:00–06:00'yı *"gece değil"* işaretleyen
+firma yasadan kaçardı (K-18); 15:15–24:00'ü *"gece"* işaretleyen firmanın yasal
+olarak serbest planı, kabul edilemez bir ihlalle kilitlenirdi (K-20). Veri
+setinde bu yüzden B-AKSAM (15:15–24:00, işaretli) **sayılmıyor**; S-GECE ve
+B-GECE sayılıyor.
+
+**Ölçüldü — iki aşamalı yol, 49 kişi (0.1 ölçek, %95 doluluk):**
+
+| hafta 2 | durum | atama | geçmişi bilen denetçiye göre sert ihlal |
+|---|---|---|---|
+| geçmişsiz | çözüldü | 215 | **30** — gece postası devri **11**, hafta tatili 7, ardışık gün 7, dinlenme 5 |
+| geçmişle | **çözüldü** | 214 | **0** |
+
+Yani bu ölçekte en sıkı okuma **çözülebilir**. Geçmiş okunmasaydı **11 kişi**
+iki hafta üst üste gece çalışıyordu — ve hiçbir şey kırmızı yanmıyordu. Geçmişle
+çözülen planda hiçbiri; gece, önceki hafta gece çalışmamış kişilere dağıldı.
+
+**⚠ Tek gerçek müşteride sonuç farklı olabilir.** Verisinde gece yarısını aşan
+182 vardiyanın **109'u** md. 7/2'ye göre gece çalışması (16:00–01:00 deseni
+tek başına 82). O ekipler her hafta aynı akşam-gece vardiyasında çalışıyorsa
+en sıkı okuma her hafta nöbetleşme ister. Ölçemedim: anonim veri klasörü boş,
+yalnız belgelenmiş desen tablosu var (B-2).
+
+**Ne gerek:** Mustafa'nın kararı — tercihen hukuk teyidiyle (A-16):
+1. Haftada bir gece o haftayı gece haftası yapar mı (bugünkü), yoksa bir eşik mi?
+2. Yasal kuralda gece tanımı yönetmeliğin 7/2'si mi (bugünkü), firma işareti mi?
+
+Karar değişirse değişecek yer iki tarafta da tek satır; testler hazır
+(`test_DEVRI_TEK_gece_bile_haftayi_gece_haftasi_yapar`).
+
+→ K-25 · K-40 · A-16 · `09-motor/testler/test_hafta_kurallari.py` ·
+`08-motor-testleri/gercekci-veri-seti/iki-hafta-olc.py`
+
+---
+
+## 🟡 T-73 · İki haftalık nöbetleşme şartnamede yok; parametrenin anlamı yönetmelikle aynı değil
+
+**Bulundu:** 30 Eylül akşamı, yönetmeliğin 8. maddesinin **tam metni** okununca.
+Şartnamede yalnız 1. fıkranın bir parçası alıntılanmıştı.
+
+> *md. 8/3: "İşin niteliği ve yürütümü, iş sağlığı ve güvenliği gözönünde
+> tutularak, gece ve gündüz postalarında iki haftalık nöbetleşme esası da
+> uygulanabilir."*
+
+**İki sorun:**
+
+1. Şartnamedeki parametre (`azami_ardisik_gece_haftasi`) *"en fazla kaç hafta
+   üst üste gece"* diyor. 2 verilince kural **gece-gece-gündüz-gece-gece**
+   dizisine izin veriyor. Yönetmeliğin *"iki haftalık nöbetleşme"*si büyük
+   olasılıkla **gece-gece-gündüz-gündüz** — gündüz bloğu da iki hafta. Bu
+   okumada 2 değeri yasanın izin verdiğinden gevşek kalır.
+2. **Üst sınır yazılı değil:** 3 ve üstü yasal değil; kural yönetimi ekranı 3'e
+   izin verirse firma yasal bir kuralı gevşetmiş olur (K-18).
+
+**Bugün etkisi yok:** varsayılan **1**, veri seti 1 kullanıyor — 1 için iki okuma
+aynı (gece-gündüz-gece-gündüz).
+
+**Ayrıca:** 14 günlük geçmiş, iki haftalık gündüz bloğunu doğrulamaya yetmez;
+K-42 gereği atlanır ve raporlanır.
+
+**Ne gerek:** Mustafa'nın kararı (tercihen hukuk teyidiyle): 2 değeri hangi
+diziyi anlatıyor; parametrenin üst sınırı 2 mi.
+
+→ K-25 · şartname §6.3 · `09-motor/dogrulayici/kurallar.py` (`gece_postasi_devri`)
+
+---
+
+## 🔴 T-74 · Yasal gece sınırı yalnız pencereye düşen kısmı ölçüyor — yönetmeliğe göre gece postasının **tamamı** gece çalışmasıdır
+
+**Bulundu:** 30 Eylül akşamı, gece postası devri için yönetmeliğin 7. maddesi
+okununca.
+
+> *md. 7/1: "...işçilerin gece postalarında 7,5 saatten çok çalıştırılmaları
+> yasaktır."*
+> *md. 7/2: "Çalışma süresinin yarısından çoğu gece dönemine rastlayan bir
+> postanın çalışması, gece çalışması sayılır."*
+
+Bizim kural (şartname §6.3, K-26) *"gece penceresine düşen net çalışma 7,5 saati
+geçemez"* diye ölçüyor. Yönetmeliğin okuması: vardiyanın yarısından çoğu
+20:00–06:00 arasındaysa **vardiyanın bütün çalışma süresi** gece çalışmasıdır ve
+7,5 saati geçemez.
+
+| vardiya | mola | bizim ölçü | yönetmelik okuması |
+|---|---|---|---|
+| 22:00–08:00 | 1 sa | pencerede 7 sa → **yasal** | gece postası; 9 sa → **yasa dışı** |
+| 16:00–01:00 | 1 sa | pencerede en çok 5 sa → **yasal** | gece postası (5/9); 8 sa → **yasa dışı** |
+| S-GECE 23:00–08:15 | 1,75 sa | pencerede ≤ 7 sa → yasal | 7,5 sa → yasal |
+
+**Neden 🔴:** hata yanlış yönde — motor yasa dışı bir planı *"yasal"* diye
+yayınlatır. **Tek gerçek müşterinin verisinde 16:00–01:00 deseni 82 kez var**
+(B-2). Firma turizmde; yazılı onayı olan çalışan için sınır zaten kalkıyor
+(K-26), onayı olmayan için kalkmıyor.
+
+**Bugün veri setinde etkisi yok:** gece vardiyalarının hepsi tam 7,5 saat net.
+
+**Bilerek değiştirmedim:** şartnamenin kural tanımı değişir ve yasal bir kuralın
+ölçüsü Mustafa'nın ve hukuk teyidinin (A-16) kararıdır. Uygulaması küçük: *"gece
+postası mı"* tespiti iki tarafta da bugün yazıldı (`_yasal_gece_postasi_mi` /
+`_yasal_gece_postasi`).
+
+→ K-26 · şartname §6.3 · A-16 · `09-motor/dogrulayici/kurallar.py`
+(`gece_vardiyasi_azami`)
+
+---
+
+## 🔴 T-75 · Ardışık hafta sonu limiti, hafta hafta planlamada **üçüncü haftayı çözümsüz** bırakıyor
+
+**Bulundu:** 30 Eylül akşamı, üç haftalık ölçümde — Mustafa'nın iki aşamalı
+yolunun üç haftaya uzatılmış hâli (`iki-hafta-olc.py --uc-hafta`).
+
+**Ölçüldü** (49 kişi, %95 doluluk; **iki bağımsız koşuda aynı sonuç**):
+
+| hafta 3 | sonuç |
+|---|---|
+| geçmişsiz | çözüldü — ama iki haftalık geçmişi bilen denetçiye göre **61 sert ihlal**, **26'sı** üçüncü ardışık hafta sonu |
+| geçmişle | **çözümsüz** |
+| geçmişle, ardışık hafta sonu limiti kaldırılınca | **çözüldü** (172 sn) |
+| geçmişle, gece postası devri kaldırılınca | yine **çözümsüz** — sebep o değil |
+
+**Sebep yapısal, kodda hata değil.** *"Hafta sonu çalıştı"* bugün cumartesi
+**ya da** pazar başlayan bir vardiya. Haftada 6 gün çalışan kişinin tek izin
+günü var; cumartesi ile pazardan birini **mutlaka** çalışır. Yani 6 günlük
+desendeki herkes **her** hafta sonu *"çalışmış"* sayılıyor; limit 2 iken her
+üçüncü hafta iki günü birden boş olmak zorunda. Hafta 1 ve 2'yi çözen motor
+bunu **bilmiyor** — gelecek haftayı görmüyor: 45 aktif kişinin **29'u** iki
+hafta sonu da çalıştı (satışta 25 kişinin 18'i). Hafta 3'te satışın 7/24 hafta
+sonunu kalan **7 kişi** karşılayamıyor.
+
+Kural **geriye** bakıyor; planlama **ileriye** bakmıyor.
+
+**Üç yol — Mustafa'nın kararı:**
+
+1. **Tanım:** *"hafta sonu çalıştı"* = **iki günü de** çalıştı. 6 günlük desenle
+   uyumlu; kural gevşer. (Bugünkü: bir günü bile yeter.)
+2. **Önden bakış:** motor bu haftayı planlarken, gelecek hafta sonunu
+   kilitleyecek atamayı (yumuşak) cezalandırsın. Kural aynı kalır; çözücüye
+   iş düşer, ölçülmeli.
+3. **Kural aynı, sonuç aynı:** firma kuralı ve *"kabul edilebilir"* — ama
+   bugün çözücü sert bir kuralı gevşeterek *"yönetici onayı bekleyen"* bir plan
+   üretemiyor; plan hiç çıkmıyor.
+
+⚠ **Aynı risk gece postası devrinde de var** (o da geriye bakıyor), ama bu
+ölçekte ısırmadı: geçmişle ikinci hafta **üç koşuda da** çözüldü.
+
+⚠ **Araç sınırı, açıkça:** üç haftalık araç adalet dengesinin **devir yükünü**
+haftadan haftaya taşımıyor (veri setinde herkesin devri 0). Gerçek üründe devir
+yükü geçmişten hesaplanırsa adalet kuralı hafta sonunu dağıtmaya çalışır;
+ama o kural yumuşak ve aylık — sert bir haftalık sınırı garanti etmez.
+
+→ K-25 · T-76 · `08-motor-testleri/gercekci-veri-seti/iki-hafta-olc.py`
+(`--uc-hafta`, `uc-hafta-planlar.json`)
+
+---
+
+## 🟡 T-76 · Çözücünün teşhisi bu ölçekte engelleyen kuralı **bulamıyor** — *"engelleyen: yok"* diyor
+
+**Bulundu:** 30 Eylül akşamı, T-75 ile aynı koşuda.
+
+Üçüncü hafta kanıtlanarak çözümsüz çıktı; teşhis *"kapsam: kural · engelleyen:
+**boş**"* döndü. Oysa deney açık: ardışık hafta sonu limiti kaldırılınca plan
+**172 saniyede** çözülüyor.
+
+**Sebep:** teşhis her sert kuralı tek tek kaldırıp **10 saniye** dener
+(`teshis._cozulebilir_mi`). 49 kişilik sahnede 10 saniye bir plan bulmaya
+yetmiyor; *"bulamadım"* sonucu *"bu kural engellemiyor"* diye okunuyor. **K-37'nin
+ailesi:** *"yetiştiremedim"* ile *"yok"* yine aynı kelimeye düşüyor — bu kez
+teşhisin içinde.
+
+**Etkisi:** yönetici sebepsiz bir *"çözümsüz"* görür. Hangi kuralı gevşetmesi
+gerektiğini bilemez.
+
+**Ne gerek:** karar gerektirmiyor, ölçüm istiyor — teşhisin kural başına
+bütçesi ölçekle büyümeli ya da *"bu kural için yetiştiremedim"* ayrı yazılmalı.
+
+→ K-37 · T-48 · `09-motor/cozucu/teshis.py` (`_engelleyen_kurallar`)
+
+---
+
+## 🟡 T-77 · Geçmiş eksik raporu gerçekçi PDKS'te **eksiksiz ama gürültülü**: 7 gerçek ihlal için 141 satır
+
+**Bulundu:** 30 Eylül akşamı, sahte PDKS ölçümünde (Mustafa'nın ikinci yolu,
+`08-motor-testleri/gercekci-veri-seti/sahte_pdks.py`).
+
+**Ölçüldü** (49 kişi): hafta 1'in planından *"plana %82,5 uyumlu"* gerçekleşme
+üretildi; PDKS gerçekleşen 209 vardiyanın **119'unu (%57)** yakaladı, çalışan 8
+kişinin hiç kaydı yok. Hafta 2 bu **eksik** geçmişle planlandı, sonra plan
+**gerçek** geçmişe göre denetlendi:
+
+| | sayı |
+|---|---|
+| eksik geçmişle bakan denetçiye göre sınır ihlali | **0** |
+| gerçek geçmişe göre sınır ihlali | **7** — hafta tatili 2 · dinlenme 1 · gece postası devri 2 · ardışık gün 2 |
+| `gecmis_eksik` raporu | **141 satır** |
+| raporda **haberi olmadan** kaçan gerçek ihlal | **0** |
+
+**İyi haber — K-42'nin sözü tutuyor:** eksik kayıt yüzünden kaçan her gerçek
+ihlal, o kişi ve o kural için raporda bir satırla haber verilmiş. Sessiz kaçak
+**yok**.
+
+**Kötü haber — okunabilir değil:** 7 gerçek sorunu bulmak için 141 satır; aşağı
+yukarı **20 satırdan biri** gerçek. Yedinin **beşi yasal** (hafta tatili,
+dinlenme, gece postası devri) ve plan bunlarla **yayınlanabilir** görünüyor —
+K-42'nin kararı buydu (*"atlansın, raporlansın"*), ama bedeli artık ölçülü.
+
+**Ne gerek — Mustafa'nın kararı:** rapor nasıl sunulsun (kişi başına mı,
+yasal olanlar önce mi), ve yayın kapısı (T-18) bu kanala bakacak mı.
+
+⚠ **Oranların çoğu varsayım:** `06-veri/anonim/` boş; yalnız belgelenmiş iki
+sayı (%46 çağrı merkezi kayıt oranı, %53 hiç kaydı olmayan kişi) ve Mustafa'nın
+%80-85'i kullanıldı. Hangisinin varsayım olduğu dosyanın başında yazılı.
+
+→ K-42 · T-18 · O-7 · `08-motor-testleri/gercekci-veri-seti/sahte-pdks-sonucu.json`
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
@@ -3552,11 +3860,14 @@ seçilmiş ama **tekrarlanabilir** bozmalar. CI'a konmadı (süre bütçesi).
 | Sıra | Madde | Gerekçe |
 |---|---|---|
 | ~~1~~ | ~~**T-28 · geçmiş vardiyalar okunmuyor**~~ | ✅ **KAPANDI 30 Eylül, K-42** — ölçüldü: geçmişsiz 27 yasal ihlal, geçmişle 0 |
+| **1a** 🆕 | **T-74 · yasal gece sınırının ölçüsü** 🔴 | **Yanlış yayın izni:** yönetmeliğe göre gece postasının **bütün** süresi 7,5 saati geçemez; bizim kural yalnız pencereye düşen kısmı ölçüyor. Gerçek müşteride 16:00–01:00 deseni 82 kez. ✅ **Mustafa'nın kararı + hukuk teyidi (A-16)** |
+| **1b** 🆕 | **T-75 · ardışık hafta sonu limiti üçüncü haftayı kilitliyor** 🔴 | Hafta hafta planlamada **iki bağımsız koşuda** üçüncü hafta çözümsüz; kural kaldırılınca çözülüyor. 6 günlük desende herkes her hafta sonu *"çalışmış"* sayılıyor. ✅ **Mustafa'nın kararı** — tanım mı (iki gün), önden bakış mı |
+| **1c** 🆕 | **T-72 · "gece haftası" tanımı** 🔴 | Yasal kural (gece postası devri) yazıldı; *"bir iş haftası gece çalıştırılan"* tanımsız, **en sıkı okuma** uygulandı. 49 kişide çözülebilir ölçüldü; gerçek müşteride ölçülemedi. ✅ **Mustafa'nın kararı** |
 | **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴⚠ | ⚠ **Seviyesi şüpheli.** İki ağır satırı da 25 Eylül'de kapsam kararına bağlandı (K-21 geri alındı, K-31 verildi). Kalanlar yazılmamış özellik ve ad uyuşmazlığı — **ölçüme göre 🟡**, onay bekliyor |
 | **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
 | **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
-| **6** | **T-59 · süre bütçesi aşılıyor** 🔴 | K-35 kullanıcıya bir süre **söz veriyor**; 900 saniye istenen koşu 1.078 sürdü. **Karar gerektirmiyor**, mekanik |
+| ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | 🟡 **DÜZELTİLDİ 30 Eylül akşamı** — birinci aşama bütçenin içinden; tam ölçekte ölçüm Mustafa'nın makinesinde bekliyor |
 | **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. Yönetici *"motor kötü plan yapıyor"* der. ⚠ Sebebi henüz ayrılmadı — önce dört ölçüm |
 | **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
@@ -3570,6 +3881,9 @@ seçilmiş ama **tekrarlanabilir** bozmalar. CI'a konmadı (süre bütçesi).
 |---|---|---|
 | ~~10~~ | ~~**T-23 · "süre yetmedi" ≠ "imkânsız"**~~ | ✅ **KAPANDI 29 Eylül, K-37** — `UNKNOWN` artık `sure_yetmedi` diyor, o yolda teşhis koşmuyor |
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
+| 10b 🆕 | **T-77 · geçmiş eksik raporu gürültülü** 🟡 | Sahte PDKS'te 7 gerçek ihlalin **hepsini** haber verdi ama 141 satırla; beşi yasal ve plan yayınlanabilir görünüyor. ✅ **Mustafa'nın kararı** — sunum ve yayın kapısı (T-18) |
+| 11a 🆕 | **T-76 · teşhis engelleyeni bulamıyor** 🟡 | 10 saniyelik deneme bu ölçekte yetmiyor; *"engelleyen: yok"* diyor, oysa kural kaldırılınca 172 sn'de çözülüyor. **Karar gerektirmiyor**, ölçüm istiyor |
+| 11b 🆕 | **T-73 · iki haftalık nöbetleşme** 🟡 | Yönetmelik md. 8/3 şartnamede yok; 2 değerinin anlamı ve üst sınırı açık. Bugün varsayılan 1 — etkisi yok |
 | 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
 | 13 | **T-40 · `tercih_karsilama_yuzde` yetim** 🟡 | Şartname çıktıda yazıyor, motor üretmiyor; A7 onsuz yeşil |
 | 14 | **T-42 · §11.2 örneği §5.2 ile çelişiyor** 🟡 | `kural_degerleri` örneği şartnamenin kendi yasakladığı iki `S` kapsamlı kuralla yazılmış. Taşıyıcı biçim sorunu T-43 ile çözüldü |

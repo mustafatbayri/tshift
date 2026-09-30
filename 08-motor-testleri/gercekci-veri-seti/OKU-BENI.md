@@ -1,5 +1,10 @@
 # Gerçekçi veri seti — S-20
 
+> ⚠ **Bu sayfa 28 Eylül'deki 350 kişilik S-20 setini anlatıyor.** 29 Eylül'den
+> beri bekçilerin kullandığı set **500 kişilik iki settir**
+> (`fikstur/_sahne-S30-85.json`, `fikstur/_sahne-S30-95.json`); tanımı ve
+> gerekçesi `uret_veri_seti.py`'nin başında. Aşağıdaki sayılar S-20'nindir.
+
 **Ne bu.** 350 kişilik, üç ekipli, on dört vardiya şablonlu bir organizasyon.
 Motorun oyuncak sahnelerde değil, **gerçek ölçekte** ne yaptığını ölçmek için.
 
@@ -18,6 +23,8 @@ bütün v5 atıflarını "bayat" sayardı (28 Eylül'de tam olarak bu oldu, 37 h
 | `fikstur/_sahne-S20.json` | üretilmiş sahne |
 | `kural-kapsamasi.py` | *"kullanmadığımız kural kalmasın"*ı **ölçer** |
 | `ihlal-vakalari.py` | her kural için birer kırmızı kanıt |
+| `sahte_pdks.py` 🆕 | **sahte PDKS** (Mustafa'nın ikinci yolu): hafta 1'in planından *"plana %80-85 uyumlu"* gerçekleşme ve **eksik kayıt** üretir, hafta 2'yi o eksik geçmişle çözer, sonra planı **gerçek** geçmişe göre denetler: K-42 raporu gerçek ihlalleri haber verdi mi. Oranların hangisinin ölçüm, hangisinin varsayım olduğu dosyanın başında. Üreticinin kendi testleri `testler/test_sahte_pdks.py` (CI'da) |
+| `iki-hafta-olc.py` 🆕 | **geçmiş veri ölçümü** (T-28): hafta 1'in planı hafta 2'nin geçmişi olur; hafta 2 geçmişsiz ve geçmişle çözülür, ikisi de geçmişi bilen denetçiye sorulur. `--uc-hafta` üçüncü haftayı iki haftalık geçmişle çözer. Uzun (10–20 dk), CI'da değil |
 
 ```
 cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\gercekci-veri-seti

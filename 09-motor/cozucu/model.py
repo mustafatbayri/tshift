@@ -274,6 +274,29 @@ def _gecmis_gece_mi(bas, bit, isaret):
     return _gece_sablonu({"bas": bas, "bit": bit})[0]
 
 
+def _yasal_gece_postasi(bas, bit):
+    """YASAL gece calismasi mi -- Postalar Yon. md. 7/2.
+
+    "Calisma suresinin yarisindan cogu gece donemine rastlayan bir
+     postanin calismasi, gece calismasi sayilir." Gece donemi 20:00-06:00
+    (Is K. md. 69/1). `bas`, `bit` o gunun genisletilmis saati.
+
+    ⚠ K-40 ISARETINE BAKILMAZ: yasal kuralda firma isareti ne kural
+      disina cikarabilir ne de yasal olarak serbest bir vardiyayi
+      kabul edilemez ihlale cevirebilir. Firma kurallari isareti kullanir.
+    ⚠ BRUT: mola yeri karar degiskeni, siniflama ona bagli olmamali.
+    ⚠ YARISI DAHIL DEGIL: 16:00-24:00 gece calismasi degil.
+    ⚠ AYNI TANIM DOGRULAYICIDA AYRICA YAZILI (#7.6).
+    """
+    bas, bit = float(bas), float(bit)
+    if bit <= bas:
+        bit += 24.0                       # Z-1: ham yazim
+    gece = 0.0
+    for w0 in (-4.0, 20.0, 44.0):         # onceki gece, bu gece, ertesi gece
+        gece += max(0.0, min(bit, w0 + 10.0) - max(bas, w0))
+    return 2 * gece > (bit - bas) + 1e-9
+
+
 def _net_saat(sablon):
     """CALISMA SURESI -- butun molalar dusuk. Dogrulayici ile AYNI tanim."""
     return (sablon["bit"] - sablon["bas"]) - (_mola_toplam_dk(sablon) / 60.0)
@@ -478,16 +501,15 @@ def _gece_sablonu(sablon):
     ⚠ ISARET YOKSA tahmine dusulur -- ama SESSIZ DEGIL. Cagiran taraf
       `tahmin_mi` bayragini nota cevirir. Isaretlenmemis bir gece
       vardiyasi, korunmasi gereken birini sessizce geceye koyabilirdi.
+
+    ⚠ TAHMIN = YONETMELIGIN TANIMI (T-69, 30 Eylul aksami): suresinin
+      yarisindan cogu 20:00-06:00'da (Postalar Yon. md. 7/2). Eskiden
+      yalniz ayni gunun penceresine "en ufak degme" araniyordu: 00:00-08:45
+      gece DEGIL, 13:00-21:00 GECE sayiliyordu.
     """
     if "gece_vardiyasi" in sablon:
         return bool(sablon["gece_vardiyasi"]), False
-    return _gece_penceresinde(sablon, 0), True
-
-
-def _gece_penceresinde(sablon, gun, pencere=(20, 30)):
-    s = set(_dilimler(gun, sablon["bas"], sablon["bit"]))
-    p = set(range(_q(gun, pencere[0]), _q(gun, pencere[1])))
-    return bool(s & p)
+    return _yasal_gece_postasi(sablon["bas"], sablon["bit"]), True
 
 
 # ----------------------------------------------------------------------
@@ -632,6 +654,8 @@ class Model(object):
         self._dinlenme()
         self._ardisik_gun()
         self._ardisik_gece()
+        self._gece_postasi_devri()
+        self._ardisik_hafta_sonu()
         self._asgari_vardiya()
         self._kapsama()
         self._yetkinlik()
@@ -1109,9 +1133,8 @@ class Model(object):
         GECE = K-40'in tespiti (`_gece_sablonu`): isaret varsa o, yoksa
         saat araligi. Dogrulayicida ayni tespit AYRI yazili (#7.6).
 
-        ⚠ YALNIZ PLAN HAFTASI (T-28): gecen haftanin son geceleri
-          gorulmuyor. Pazartesi baslayan seri, pazar gecesinin devami
-          olabilir -- motor bunu bilemez.
+        ⚠ GECMIS OKUNUR (T-28 kapandi, 30 Eylul): kayitli gecmis geceler
+          pencereye SABIT olarak girer; bilinmeyen gun 0'dir (K-42).
         """
         kural = _kural(self.girdi, "ARDISIK_GECE_LIMIT")
         if not kural:
@@ -1142,6 +1165,73 @@ class Model(object):
                          if (c["id"], d, t["id"]) in self.x]
                 if terim:
                     self.m.Add(sabit + sum(terim) <= azami)
+
+    # ---- hafta olcekli kurallar (30 Eylul) ----------------------------
+    #
+    # Ikisi de planin DISINA bakar. Cozucunun ufku tek hafta oldugu icin
+    # ikisinin kisiti da ayni bicimde: gecmisteki KANITLI seri sinira
+    # ulasmissa bu haftanin ilgili vardiyalari o kisiye kapanir.
+    # Bilinmeyen hafta seriyi kirar -- kisit yok (K-42).
+    #
+    # ⚠ HAFTA `gun // 7` ile: -1..-7 -> -1. `int(gun / 7)` -1'i 0'a
+    #   yuvarlar ve gecen pazari BU haftaya koyardi.
+    # ⚠ AYNI TANIMLAR DOGRULAYICIDA AYRICA YAZILI (#7.6).
+
+    def _gece_postasi_devri(self):
+        """GECE_POSTASI_DEVRI -- YASAL, Postalar Yon. md. 8 (K-25).
+
+        "En fazla bir is haftasi gece calistirilan iscilerin ... ikinci is
+         haftasinda gunduz calistirilmalari." md. 8/3: iki haftalik
+        nobetlesme de uygulanabilir -> `azami_ardisik_gece_haftasi` 2.
+
+        ⚠ GECE HAFTASI = en az bir gece calismasi (EN SIKI okuma; urun
+          karari bekliyor).
+        ⚠ GECE = yonetmeligin kendi tanimi (md. 7/2, `_yasal_gece_postasi`),
+          K-40 isareti DEGIL. Gecmis kaydin `gece` isareti de okunmaz.
+        """
+        kural = _kural(self.girdi, "GECE_POSTASI_DEVRI")
+        if not kural:
+            return
+        azami = int(_par(kural, "azami_ardisik_gece_haftasi", 1))
+        geceler = [t for t in self.sablonlar
+                   if _yasal_gece_postasi(t["bas"], t["bit"])]
+        if not geceler:
+            return
+        for c in self.calisanlar:
+            gece_haftalari = {g // 7 for g, b0, b1, _ in _gecmis_kayitlari(c)
+                              if _yasal_gece_postasi(b0, b1)}
+            seri = 0
+            while -(seri + 1) in gece_haftalari:
+                seri += 1
+            if seri < azami:
+                continue
+            for d in self.gunler:
+                for t in geceler:
+                    if (c["id"], d, t["id"]) in self.x:
+                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+
+    def _ardisik_hafta_sonu(self):
+        """ARDISIK_HAFTA_SONU_LIMIT -- firma kurali, SERT (#6.5).
+
+        HAFTA SONU = cumartesi ya da pazar BASLAYAN vardiya (gun 5, 6);
+        ADALET_DENGESI 'hafta_sonu' boyutuyla ayni tanim.
+        """
+        kural = _kural(self.girdi, "ARDISIK_HAFTA_SONU_LIMIT")
+        if not kural:
+            return
+        azami = int(_par(kural, "azami_ardisik", 2))
+        for c in self.calisanlar:
+            calisilan = {g // 7 for g, _, _, _ in _gecmis_kayitlari(c)
+                         if g % 7 in (5, 6)}
+            seri = 0
+            while -(seri + 1) in calisilan:
+                seri += 1
+            if seri < azami:
+                continue
+            for d in (5, 6):
+                for t in self.sablonlar:
+                    if (c["id"], d, t["id"]) in self.x:
+                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
     def _asgari_vardiya(self):
         """ASGARI_VARDIYA_SURESI -- en kisa vardiya (firma kurali, SERT).

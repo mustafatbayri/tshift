@@ -240,10 +240,38 @@ def _plan_serisi(gunler):
     return n
 
 
+def _hafta_geriye(isaretli, bos_mu, esik):
+    """Plan haftasindan (0) geriye HAFTA HAFTA yuru -- K-42, hafta olcekli.
+
+    Plan haftasi serinin ilk halkasidir (cagiran bunu garanti eder).
+    isaretli : gecmiste KANITLI isaretli haftalar (gece haftasi, calisilan
+               hafta sonu)
+    bos_mu   : hafta -> o haftanin isaretsiz oldugu KANITLI mi (ilgili
+               butun gunleri biliniyor)
+    esik     : serinin ihlal sayildigi uzunluk (azami + 1)
+
+    Donen: (durum, hafta) -- durum `_geri_yuru` ile ayni dort deger.
+    """
+    if esik <= 1:
+        return "ilgisiz", None
+    seri = 1
+    for hafta in range(-1, -esik, -1):
+        if hafta in isaretli:
+            seri += 1
+            if seri >= esik:
+                return "ihlal", None
+        elif bos_mu(hafta):
+            return "guvenli", None
+        else:
+            return "belirsiz", hafta
+    return "guvenli", None
+
+
 def _gecmis_eksik(girdi, atamalar):
     aktif = {t.get("kod"): t for t in _aktif_kurallar(girdi)}
     sinir_kurallari = ("VARDIYA_ARASI_DINLENME", "HAFTA_TATILI",
-                       "ARDISIK_CALISMA_GUNU", "ARDISIK_GECE_LIMIT")
+                       "ARDISIK_CALISMA_GUNU", "ARDISIK_GECE_LIMIT",
+                       "GECE_POSTASI_DEVRI", "ARDISIK_HAFTA_SONU_LIMIT")
     if not any(k in aktif for k in sinir_kurallari):
         return []
     sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
@@ -292,6 +320,44 @@ def _gecmis_eksik(girdi, atamalar):
             if durum == "belirsiz":
                 yaz("ARDISIK_GECE_LIMIT", kimlik, gun,
                     "ardisik gece kontrolu")
+
+        # HAFTA OLCEKLI IKI KURAL (30 Eylul). Rapor yalniz plan haftasi
+        # serinin ilk halkasiysa yazilir: bu hafta gece yoksa (hafta sonu
+        # bos ise) gecmisin ne oldugu sonucu degistiremez.
+        _hafta = kurallar._hafta
+        if "GECE_POSTASI_DEVRI" in aktif and any(
+                _hafta(a["gun"]) == 0 and kurallar._yasal_gece_postasi_mi(a)
+                for a in liste):
+            gece_haftalari = {_hafta(k["gun"]) for k in kayitlar
+                              if kurallar._yasal_gece_postasi_mi(k)}
+            azami = int(kurallar._p(aktif["GECE_POSTASI_DEVRI"],
+                                    "azami_ardisik_gece_haftasi", 1))
+            durum, hafta = _hafta_geriye(
+                gece_haftalari,
+                lambda h: all(d in bilinen for d in range(7 * h, 7 * h + 7)),
+                azami + 1)
+            if durum == "belirsiz":
+                yaz("GECE_POSTASI_DEVRI", kimlik,
+                    max(d for d in range(7 * hafta, 7 * hafta + 7)
+                        if d not in bilinen),
+                    "gece postasi devri kontrolu")
+
+        if "ARDISIK_HAFTA_SONU_LIMIT" in aktif and any(
+                _hafta(a["gun"]) == 0 and kurallar._hafta_sonu_mu(a["gun"])
+                for a in liste):
+            hs_haftalari = {_hafta(k["gun"]) for k in kayitlar
+                            if kurallar._hafta_sonu_mu(k["gun"])}
+            azami = int(kurallar._p(aktif["ARDISIK_HAFTA_SONU_LIMIT"],
+                                    "azami_ardisik", 2))
+            durum, hafta = _hafta_geriye(
+                hs_haftalari,
+                lambda h: 7 * h + 5 in bilinen and 7 * h + 6 in bilinen,
+                azami + 1)
+            if durum == "belirsiz":
+                yaz("ARDISIK_HAFTA_SONU_LIMIT", kimlik,
+                    max(d for d in (7 * hafta + 5, 7 * hafta + 6)
+                        if d not in bilinen),
+                    "ardisik hafta sonu kontrolu")
     return cikan
 
 

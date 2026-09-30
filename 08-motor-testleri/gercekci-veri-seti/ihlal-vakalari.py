@@ -502,6 +502,55 @@ def _(g, p):
                   "bas": gece["bas"], "bit": gece["bit"], "molalar": []})
 
 
+@vaka("GECE_POSTASI_DEVRI",
+      "Bu hafta gece calisan birine gecen hafta da bir gece kaydi eklenir")
+def _(g, p):
+    """YASAL -- Postalar Yon. md. 8 (K-25).
+
+    Sahne TEK HAFTA ve gecmissiz: kural temel planda ISIRAMAZ. Bu yuzden
+    vaka PLANA degil GECMISE dokunur: bu hafta gece vardiyasi olan bir
+    kisiye gecen PERSEMBE gecesi (gun -4) eklenir. Persembe bilerek:
+    pazartesi sinirindaki dinlenme ve ardisik gece kurallari etkilenmesin.
+
+    DAR: tek kisi, tek gecmis kaydi.
+
+    ⚠ GECE = YONETMELIGIN TANIMI (md. 7/2), firma isareti DEGIL: suresinin
+      yarisindan cogu 20:00-06:00'da olan vardiya. Isarete baksaydik
+      B-AKSAM'i (15:15-24:00, isaretli) secebilirdik -- o yasal olarak gece
+      degil ve kural hakli olarak susardi. Secim burada, dogrulayicidan
+      bagimsiz hesaplanir.
+    """
+    def _yasal_gece(t):
+        bas, bit = float(t["bas"]), float(t["bit"])
+        gece = sum(max(0.0, min(bit, w + 10) - max(bas, w))
+                   for w in (-4.0, 20.0, 44.0))
+        return 2 * gece > bit - bas
+
+    geceler = {t["id"] for t in g["vardiya_sablonlari"] if _yasal_gece(t)}
+    a = next((a for a in p if a.get("sablon") in geceler), None)
+    if a is None:
+        return
+    c = next(c for c in g["calisanlar"] if c["id"] == a["calisan"])
+    c.setdefault("gecmis_vardiyalar", []).append(
+        {"gun": -4, "bas": 23, "bit": 31, "gece": True})
+
+
+@vaka("ARDISIK_HAFTA_SONU_LIMIT",
+      "Bu hafta sonu calisan birine onceki iki cumartesi eklenir")
+def _(g, p):
+    """Azami 2: bu hafta sonu UCUNCU olur. Vaka yine GECMISE dokunur.
+
+    Cumartesi 10:00-18:00 bilerek: pazar bos kalir, pazartesi sinirindaki
+    dinlenme ve hafta tatili kurallari etkilenmez. DAR: tek kisi.
+    """
+    a = next((a for a in p if a["gun"] in (5, 6)), None)
+    if a is None:
+        return
+    c = next(c for c in g["calisanlar"] if c["id"] == a["calisan"])
+    c.setdefault("gecmis_vardiyalar", []).extend(
+        [{"gun": -9, "bas": 10, "bit": 18}, {"gun": -2, "bas": 10, "bit": 18}])
+
+
 @vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")
 def _(g, p):
     """K-39. Sozlesme saati doldurulmazsa ihlal.

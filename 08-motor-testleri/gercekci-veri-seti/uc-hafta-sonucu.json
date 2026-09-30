@@ -1,0 +1,113 @@
+{
+ "_not": [
+  "30 Eylul aksami, iki bagimsiz kosu (CP-SAT her kosuda baska plan uretir).",
+  "kosu_1: py iki-hafta-olc.py --uc-hafta  (gecmissiz ve gecmisle)",
+  "kosu_2: py iki-hafta-olc.py --uc-hafta --yalniz-gecmisle  (hafta 3 cozumsuz",
+  "        kalinca aday kurallar tek tek kaldirildi: hafta_3_neden)",
+  "Iki kosuda da hafta 3 gecmisle COZUMSUZ; ardisik hafta sonu limiti",
+  "kaldirilinca cozuluyor (T-75). Cozucunun kendi teshisi bos dondu (T-76)."
+ ],
+ "kosu_1": {
+  "hafta_2": {
+   "gecmissiz": {
+    "durum": "cozuldu",
+    "atama": 220,
+    "sinir": {
+     "HAFTA_TATILI": 9,
+     "VARDIYA_ARASI_DINLENME": 4,
+     "ARDISIK_CALISMA_GUNU": 9,
+     "GECE_POSTASI_DEVRI": 13
+    },
+    "sert": 35,
+    "gecmis_eksik": 30,
+    "gecmis_eksik_kural": {
+     "ARDISIK_HAFTA_SONU_LIMIT": 30
+    },
+    "sn": 186
+   },
+   "gecmisle": {
+    "durum": "cozuldu",
+    "atama": 213,
+    "sinir": {},
+    "sert": 0,
+    "gecmis_eksik": 27,
+    "gecmis_eksik_kural": {
+     "ARDISIK_HAFTA_SONU_LIMIT": 27
+    },
+    "sn": 176
+   }
+  },
+  "hafta_3": {
+   "gecmissiz": {
+    "durum": "cozuldu",
+    "atama": 217,
+    "sinir": {
+     "HAFTA_TATILI": 12,
+     "VARDIYA_ARASI_DINLENME": 4,
+     "ARDISIK_CALISMA_GUNU": 12,
+     "ARDISIK_GECE_LIMIT": 1,
+     "GECE_POSTASI_DEVRI": 6,
+     "ARDISIK_HAFTA_SONU_LIMIT": 26
+    },
+    "sert": 61,
+    "gecmis_eksik": 0,
+    "gecmis_eksik_kural": {},
+    "sn": 153
+   },
+   "gecmisle": {
+    "durum": "cozumsuz",
+    "atama": 0,
+    "sinir": {},
+    "sert": 1424,
+    "gecmis_eksik": 0,
+    "gecmis_eksik_kural": {},
+    "sn": 300
+   }
+  }
+ },
+ "kosu_2": {
+  "hafta_2": {
+   "gecmisle": {
+    "durum": "cozuldu",
+    "atama": 217,
+    "sinir": {},
+    "sert": 0,
+    "gecmis_eksik": 29,
+    "gecmis_eksik_kural": {
+     "ARDISIK_HAFTA_SONU_LIMIT": 29
+    },
+    "sn": 195
+   }
+  },
+  "hafta_3": {
+   "gecmisle": {
+    "durum": "cozumsuz",
+    "atama": 0,
+    "sinir": {},
+    "sert": 1424,
+    "gecmis_eksik": 0,
+    "gecmis_eksik_kural": {},
+    "sn": 293,
+    "teshis": {
+     "kapsam": "kural",
+     "hucre": null,
+     "engelleyen": []
+    }
+   }
+  },
+  "hafta_3_neden": {
+   "ARDISIK_HAFTA_SONU_LIMIT": {
+    "durum": "cozuldu",
+    "sn": 172
+   },
+   "GECE_POSTASI_DEVRI": {
+    "durum": "cozumsuz",
+    "sn": 290
+   },
+   "ARDISIK_HAFTA_SONU_LIMIT + GECE_POSTASI_DEVRI": {
+    "durum": "cozuldu",
+    "sn": 259
+   }
+  }
+ }
+}

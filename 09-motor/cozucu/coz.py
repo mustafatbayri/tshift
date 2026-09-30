@@ -26,7 +26,9 @@ VARSAYILAN = {
     "hedef_bosluk": 0.02,         # optimuma %2
     "durgunluk_saniye": 120,      # 2 dk iyilesme yoksa bitir
     "iki_asama_esigi": 50000,     # bu kadar degiskenden sonra ONCE gecerli plan
-    "ilk_asama_saniye": 120,      # gecerli plan aramasina ayrilan sure
+    "ilk_asama_saniye": 120,      # gecerli plan aramasina ayrilan sure --
+                                  # BUTCENIN ICINDEN (T-59), en cok:
+    "ilk_asama_orani": 0.2,       # azami_saniye'nin bu kadari
     # None = MAKINENIN cekirdek sayisi. Burada sabit 8 yaziyordu ve iki
     # cekirdekli makinelerde plani kotulestiriyordu (bkz. model.isci_sayisi).
     "isci_sayisi": None,
@@ -124,6 +126,24 @@ def _plandan_ipucu(kuruldu, plan):
     return True
 
 
+def _ilk_asama_payi(ayar):
+    """Birinci asamanin payi -- BUTCENIN ICINDEN (T-59, 30 Eylul aksami).
+
+    ⚠ NE VARDI: birinci asama `ilk_asama_saniye` (120 sn) kadar sure aliyor,
+      ana cozum ayrica `azami_saniye`nin TAMAMINI aliyordu. 900 saniye
+      istenen tam olcekli kosu 1078 saniye surdu (29 Eylul, olculdu).
+      K-35 kullaniciya sure sectiriyor; vaat edilen sure asiliyordu.
+
+    Pay: min(ilk_asama_saniye, azami_saniye x ilk_asama_orani). %20 bir
+    KALIBRASYON: 900 sn'de eski 120 sn aynen kalir; 240 sn'lik bekci
+    butcesinde 48 sn olur (0.1 olcekte gecerli plan saniyeler icinde
+    bulunuyor).
+    """
+    return float(min(float(ayar.get("ilk_asama_saniye", 120)),
+                     float(ayar["azami_saniye"])
+                     * float(ayar.get("ilk_asama_orani", 0.2))))
+
+
 def _ipucu_ver(kuruldu, ayar):
     """Once GECERLI bir plan bul, sonra onu cozucuye baslangic olarak ver.
 
@@ -159,7 +179,7 @@ def _ipucu_ver(kuruldu, ayar):
     kuruldu.m.ClearObjective()
     try:
         c = cp_model.CpSolver()
-        c.parameters.max_time_in_seconds = float(ayar.get("ilk_asama_saniye", 120))
+        c.parameters.max_time_in_seconds = _ilk_asama_payi(ayar)
         c.parameters.num_search_workers = isci_sayisi(ayar)
         if c.Solve(kuruldu.m) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
@@ -227,7 +247,11 @@ def coz(girdi, ayar=None, baslangic_plani=None):
     CAGIRMAZ -- cagirsaydi "motor kendi isini kendi onaylar" olurdu.
     """
     ayar = dict(VARSAYILAN, **(ayar or {}))
+    # T-59: model kurma AYRI bir kalemdir -- tam olcekte ~50 sn. Kullaniciya
+    # ayrica gosterilebilsin diye olculur; cozum butcesinden dusulmez.
+    kurma_basladi = time.time()
     kuruldu = Model(girdi).kur()
+    model_kurma = time.time() - kurma_basladi
 
     # ON KONTROL -- cozucuyu calistirmadan once (28 Eylul)
     #
@@ -263,6 +287,7 @@ def coz(girdi, ayar=None, baslangic_plani=None):
     #   iki asama       -> cozucu hic plan bulamiyorsa ona bir tane ver
     baslangic_kullanildi = False
     iki_asama = False
+    ilk_basladi = time.time()
     if baslangic_plani:
         baslangic_kullanildi = _plandan_ipucu(kuruldu, baslangic_plani)
         if not baslangic_kullanildi:
@@ -271,6 +296,12 @@ def coz(girdi, ayar=None, baslangic_plani=None):
     if not baslangic_kullanildi:
         iki_asama = (len(kuruldu.m.Proto().variables) >= ayar["iki_asama_esigi"]
                      and _ipucu_ver(kuruldu, ayar))
+
+    # T-59: ana cozume KALAN verilir. Iki asamanin toplami azami_saniye'yi
+    # gecmez. En az 1 saniye: sifir sure CP-SAT'e "hic arama" demek olurdu.
+    ilk_asama = time.time() - ilk_basladi
+    ana_butce = max(1.0, float(ayar["azami_saniye"]) - ilk_asama)
+    cozucu.parameters.max_time_in_seconds = ana_butce
 
     basladi = time.time()
     durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
@@ -285,8 +316,14 @@ def coz(girdi, ayar=None, baslangic_plani=None):
         "amac_degeri": _amac_degeri(cozucu, durum),
         # Oranin diger tarafi. Bkz. _alt_sinir: plan mi duzeldi, kanit mi.
         "alt_sinir": _alt_sinir(cozucu, durum),
-        "durma_sebebi": geri.durma_sebebi or _durma_sebebi(durum, cozucu, ayar, sure),
+        "durma_sebebi": (geri.durma_sebebi
+                         or _durma_sebebi(durum, cozucu, ayar, sure, ana_butce)),
         "cozum_suresi_sn": round(sure, 2),
+        # T-59: sure uc kaleme ayrildi. Toplam bekleme = model kurma +
+        # birinci asama + ana asama; son ikisi azami_saniye'yi gecmez.
+        "model_kurma_sn": round(model_kurma, 2),
+        "ilk_asama_sn": round(ilk_asama, 2),
+        "ana_asama_butce_sn": round(ana_butce, 2),
         # Kac isciyle kosuldugu. Ekranda gosterilen "degisken | kisit"
         # bilgisinin ayni ailesinden: "neden bu kadar surdu" sorusunun
         # cevabi bunsuz eksik kalir.
@@ -402,12 +439,17 @@ def _alt_sinir(cozucu, durum):
         return None
 
 
-def _durma_sebebi(durum, cozucu, ayar, sure):
+def _durma_sebebi(durum, cozucu, ayar, sure, butce=None):
+    """⚠ T-59: kiyas ANA ASAMANIN PAYIYLA yapilir. Pay artik azami_saniye'den
+    kucuk olabilir; eski kiyas (`azami_saniye x 0,95`) o zaman hic tutmaz
+    ve butcesini dolduran kosu 'bilinmiyor' diye raporlanirdi."""
     if durum == cp_model.OPTIMAL:
         return "optimum"
     if durum == cp_model.INFEASIBLE:
         return "cozumsuz"
-    if sure >= ayar["azami_saniye"] * 0.95:
+    if butce is None:
+        butce = ayar["azami_saniye"]
+    if sure >= butce * 0.95:
         return "butce_doldu"
     return "bilinmiyor"
 

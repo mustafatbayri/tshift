@@ -791,6 +791,42 @@ diğeri firmanın daha sıkı uyku sağlığı politikası.
 
 → `02-spec/v1.4-master-spec.md` §6.2, §6.3 · `02-spec/v1.4-hazirlik/02-mevzuat-arastirmasi.md`
 
+### ✅ Uygulandı — 30 Eylül 2026 akşamı
+
+İki motor yarısında da yazıldı; geçmiş okunduğu için (T-28, K-42) artık
+yazılabilirdi. Yanında `ARDISIK_HAFTA_SONU_LIMIT` de yazıldı.
+
+**Yönetmeliğin tam metni okundu** — şartnamede yalnız 1. fıkranın bir parçası
+vardı. İki fıkra daha kuralı ilgilendiriyor:
+
+> *md. 8/3: "İşin niteliği ve yürütümü, iş sağlığı ve güvenliği gözönünde
+> tutularak, gece ve gündüz postalarında iki haftalık nöbetleşme esası da
+> uygulanabilir."* → `azami_ardisik_gece_haftasi` 2 yasal; parametrenin anlamı
+> ve üst sınırı açık (**T-73**).
+>
+> *md. 7/2: "Çalışma süresinin yarısından çoğu gece dönemine rastlayan bir
+> postanın çalışması, gece çalışması sayılır."*
+
+**Uygulanan üç okuma:**
+
+| soru | uygulanan | durum |
+|---|---|---|
+| hangi vardiya gece | **md. 7/2** — süresinin yarısından çoğu 20:00–06:00'da (brüt). Firma işareti (K-40) **bilerek kullanılmıyor**: yasal kuralı iki yönde de bozardı | Mustafa'nın onayı bekliyor (**T-72**) |
+| hangi hafta gece haftası | **en sıkı:** haftada tek bir gece çalışması yeter | ürün kararı bekliyor (**T-72**) |
+| hafta | plan haftası; vardiya başladığı günün haftasına yazılır | — |
+
+**Ölçüldü** (iki aşamalı yol, 49 kişi): geçmişsiz çözülen ikinci haftada
+**11 kişi** iki hafta üst üste gece çalışıyordu; geçmişle çözülen plan temiz ve
+çözülebilir.
+
+**Aynı okumada bulunan:** yasal gece sınırı (K-26) yalnız pencereye düşen
+kısmı ölçüyor; md. 7'ye göre gece postasının **bütün** çalışma süresi 7,5 saati
+geçemez (**T-74** 🔴). Kural bilerek değiştirilmedi — şartnamenin tanımı değişir.
+
+→ `09-motor/dogrulayici/kurallar.py` (`gece_postasi_devri`,
+`_yasal_gece_postasi_mi`) · `09-motor/cozucu/model.py` (`_gece_postasi_devri`) ·
+`09-motor/testler/test_hafta_kurallari.py`
+
 ---
 
 ## K-26 · Gece sınırının sektör istisnası
@@ -1877,6 +1913,31 @@ de aynısı eklendi. Mutasyon artık ölüyor.
 → T-55 · `09-motor/cozucu/model.py` (`_gece_sablonu`, `_gece_uygunlugu`) ·
   `09-motor/dogrulayici/kurallar.py` (`gece_uygunlugu`) ·
   `09-motor/testler/test_gece_uygunlugu.py`
+
+### ⚠ Tahmin değişti — 30 Eylül akşamı (T-69, T-71)
+
+**İşaret hâlâ tahmini ezer; değişen yalnız işaret yokken yapılan tahmin.**
+
+Eski tahmin: *aynı günün 20:00–06:00 penceresine en ufak değme.* İki yönde
+yanlıştı — 00:00–08:45 **gece değil**, 13:00–21:00 **gece** sayılıyordu. Gece
+çalışamayan birine 13:00–21:00 verilemiyordu; PDKS'ten gelen (işaretsiz)
+00:00–08:00 kaydı ardışık geceye sayılmıyordu.
+
+Yeni tahmin **yönetmeliğin kendi tanımı** (Postalar Yön. md. 7/2): süresinin
+**yarısından çoğu** 20:00–06:00'da olan vardiya gece. Tam yarısı gece değil
+(16:00–24:00).
+
+**Yarım kalan cümle de tamamlandı (T-71):** yukarıdaki *"`ADALET_DENGESI`'nin
+'gece' boyutu da artık aynı tespiti kullanıyor"* cümlesi yalnız çözücü için
+doğruydu; doğrulayıcı işareti hiç okumuyordu. Artık iki tarafta da aynı.
+
+**Veri setinde etkisi yok** — bütün şablonlar işaretli. Dört eski test sahnesi
+işaretsiz şablonlarla kurulmuştu ve zorluğu adaletin gece teriminden geliyordu;
+o sahnelere eski tahminin sonucu **açıkça işaret olarak** yazıldı, model aynı
+kaldı. Bir eski test (gece penceresinin sınırı) yeni tanıma göre aynı sınırı
+sınayan bir vakaya taşındı.
+
+→ `09-motor/testler/test_gece_tespiti.py`
 
 ---
 

@@ -47,9 +47,18 @@ def _zor_sahne(kisi=60, gun=7):
              "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45},
              "izinler": [], "uygunluk": []} for i in range(1, kisi + 1)
         ],
+        # ⚠ 30 Eylul aksami (T-69): 15:00-23:00 ARTIK ACIKCA gece isaretli.
+        #   Bu sahnenin zorlugu ADALET_DENGESI'nin "gece" boyutundan geliyordu
+        #   ve o boyut isaretsiz sablonu TAHMINLE sayiyordu: eski tahmin
+        #   ("pencereye en ufak degme") 15-23'u gece sayiyordu, yeni tahmin
+        #   (md. 7/2, "yarisindan cogu") saymiyor. Isaret konmadan sahne
+        #   kolaylasti, cozucu optimumu kanitladi ve bu test 'hedef_bosluk'
+        #   gordu -- yani durgunlugu hic sinamadi. Isaretle model eskisiyle
+        #   AYNI kaldi.
         "vardiya_sablonlari": [
             {"id": "V%d" % j, "ekip": "E", "bas": b, "bit": b + 8,
-             "mola_dk": 60} for j, b in enumerate((6, 9, 12, 15))
+             "mola_dk": 60, "gece_vardiyasi": b == 15}
+            for j, b in enumerate((6, 9, 12, 15))
         ],
         # ⚠ Sahne BILEREK tikaniyor: asgari 10 / hedef 30 ile cozucu
         #   hedef boslugunu kapatamiyor ve butcenin tamamini kullaniyor.

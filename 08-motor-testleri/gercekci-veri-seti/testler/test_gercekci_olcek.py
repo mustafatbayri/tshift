@@ -211,7 +211,10 @@ def test_HER_KURAL_kirmizi_yanabiliyor():
     assert eksik == 0, (
         "%d kural kendi ihlal vakasinda kirmizi YANMADI ya da vakasi hic "
         "YOK -- ayrinti icin `py ihlal-vakalari.py -v`" % eksik)
-    assert basarili >= 28, "beklenen en az 28 kural, %d geldi" % basarili
+    # 30 Eylul: 31 -> 33 (gece postasi devri, ardisik hafta sonu). Ikisinin
+    # vakasi GECMISE dokunur -- sahne gecmissiz oldugu icin temel planda
+    # isiramazlar.
+    assert basarili >= 33, "beklenen en az 33 kural, %d geldi" % basarili
 
 
 # ----------------------------------------------------------------------

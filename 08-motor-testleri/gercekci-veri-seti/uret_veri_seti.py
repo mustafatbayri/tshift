@@ -426,8 +426,8 @@ def talep_uret(olcek, carpan=1.0):
 def kurallar_uret():
     """Katalogdaki 40 kuralin TAMAMI.
 
-    GOVDESI YAZILI 28 -> gercekten degerlendirilir.
-    YAZILMAMIS 12     -> aktif tanimlanir ki `uygulanmayan_kurallar` kanali
+    GOVDESI YAZILI 33 -> gercekten degerlendirilir.
+    YAZILMAMIS 7      -> aktif tanimlanir ki `uygulanmayan_kurallar` kanali
                          gercekten atessin. Sessizce dislamak, kanali test
                          etmemek demektir (T-18 tam bu kapida bekliyor).
 
@@ -538,11 +538,23 @@ def kurallar_uret():
     #   diye bildiriyor. T-63'un acik kalan yarisi bu.
     ek("YETKINLIK_KAPSAMASI", "SERT", kabul=False)
 
+    # --- Hafta olcekli iki kural (30 Eylul) -- katalogun varsayilanlariyla ---
+    #
+    # ⚠ BU SAHNEDE IKISI DE ISIRMAZ -- acikca yaziyorum. Sahne TEK HAFTA
+    #   ve GECMISSIZ; ikisi de planin DISINA bakar ("gecen hafta da gece
+    #   calisti mi", "gecen iki hafta sonu da calisti mi"). Bilinmeyen
+    #   gecmis kisit yaratmaz (K-42); yalniz `gecmis_eksik` raporu yazilir.
+    #   Ikisini zorlayan: ihlal vakalari (gecmis ekleyerek) ve
+    #   `iki-hafta-olc.py` (hafta 1'in plani hafta 2'nin gecmisi olur).
+    # ⚠ ARDISIK_HAFTA_SONU_LIMIT 30 Eylul'e kadar burada "kabul edilemez"
+    #   tanimliydi; sartname #6.5 KABUL EDILEBILIR diyor. Duzeltildi.
+    ek("GECE_POSTASI_DEVRI", "SERT", yasal=True, kabul=False,
+       azami_ardisik_gece_haftasi=1)
+    ek("ARDISIK_HAFTA_SONU_LIMIT", "SERT", kabul=True, azami_ardisik=2)
+
     # --- govdesi YAZILMAMIS olanlar (uygulanmayan_kurallar atessin) ---
     for kod, tur, yasal in (
-            ("GECE_POSTASI_DEVRI", "SERT", True),
             ("GECE_YARISI_ASAN", "SERT", False),
-            ("ARDISIK_HAFTA_SONU_LIMIT", "SERT", False),
             ("CALISMA_SAATLERI", "SERT", False),
             ("EKIP_SUREKLILIGI", "YUMUSAK", False),
             ("PLAN_KARARLILIGI", "YUMUSAK", False),
@@ -649,8 +661,8 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
             "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
             "Hafta ici ve hafta sonu esikleri AYRI.",
             "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-            "Katalogdaki 40 kuralin TAMAMI tanimli: 31'i degerlendirilir,",
-            "9'u `uygulanmayan_kurallar` kanalini atesler.",
+            "Katalogdaki 40 kuralin TAMAMI tanimli: 33'u degerlendirilir,",
+            "7'si `uygulanmayan_kurallar` kanalini atesler.",
             "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
             "Tohum sabit (%d) -- ayni girdi ayni dosyayi uretir." % TOHUM,
         ],

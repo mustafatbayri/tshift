@@ -557,11 +557,19 @@ def test_gece_penceresinin_SINIRI_civilenir():
 
     C1 dort aksam vardiyasi, C2 hic -> ortalama 2, C1'in sapmasi tam 2.
     Pencere bozulursa C1 hic gece calismamis sayilir ve ihlal kaybolur.
+
+    ⚠ 30 Eylul aksami (T-69): VAKA 18:00-21:00'DAN 19:00-23:00'A DEGISTI.
+      Isaretsiz vardiyanin tahmini artik "pencereye en ufak degme" degil,
+      yonetmeligin kendi tanimi (Postalar Yon. md. 7/2): suresinin
+      YARISINDAN COGU 20:00-06:00'da. 18:00-21:00'in 1/3'u pencerede --
+      yeni tanimla gece degil. Testin amaci (pencere 20'de mi basliyor)
+      ayni kaldi: 19:00-23:00'un 3/4'u pencere 20'de baslarsa gece doneminde,
+      22'de baslarsa 1/4'u -- sinir yine ayirt edici.
     """
-    at = [atama("C1", g, 18, 21) for g in (0, 1, 2, 3)]
+    at = [atama("C1", g, 19, 23) for g in (0, 1, 2, 3)]
     s = degerlendir(adalet_sahnesi(kisi_sayisi=2), at)
     assert kodlar(s, "YUMUSAK") == ["ADALET_DENGESI"], (
-        "18:00-21:00 gece penceresine (20:00 sonrasi) dokunuyor, gece sayilmali")
+        "19:00-23:00'un 3/4'u gece doneminde (20:00 sonrasi), gece sayilmali")
 
 
 def test_gunduz_vardiyasi_gece_SAYILMAZ():

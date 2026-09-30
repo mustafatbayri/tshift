@@ -1,0 +1,46 @@
+{
+ "oranlar": {
+  "uyum": 0.825,
+  "devamsizlik": 0.05,
+  "kaydirma_dk": [
+   15,
+   30,
+   45,
+   60
+  ],
+  "ek_vardiya": 0.03,
+  "kayitsiz": 0.3,
+  "kayit_orani": 0.66
+ },
+ "tohum": 20260930,
+ "hafta_1": {
+  "durum": "cozuldu",
+  "atama": 218
+ },
+ "pdks": {
+  "gerceklesen": 209,
+  "yakalanan": 119,
+  "kayitsiz_kisi": 8
+ },
+ "hafta_2": {
+  "durum": "cozuldu",
+  "atama": 217
+ },
+ "eksik_gecmisle_gorulen_sinir_ihlali": {},
+ "gercek_gecmise_gore_sinir_ihlali": {
+  "HAFTA_TATILI": 2,
+  "VARDIYA_ARASI_DINLENME": 1,
+  "ARDISIK_CALISMA_GUNU": 2,
+  "GECE_POSTASI_DEVRI": 2
+ },
+ "gecmis_eksik": {
+  "HAFTA_TATILI": 34,
+  "ARDISIK_CALISMA_GUNU": 34,
+  "GECE_POSTASI_DEVRI": 13,
+  "ARDISIK_HAFTA_SONU_LIMIT": 33,
+  "VARDIYA_ARASI_DINLENME": 24,
+  "ARDISIK_GECE_LIMIT": 3
+ },
+ "haber_verilmeden_kacan": {},
+ "sn": 406
+}

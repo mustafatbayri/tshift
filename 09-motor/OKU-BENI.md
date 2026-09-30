@@ -91,7 +91,7 @@ py -m pytest testler -v
 | `09-motor/servis.py` | HTTP ucları. `/health`, `/evaluate`, `/solve`; `/suggest` → 501 |
 | `09-motor/orkestra.py` | §11.7 onarım döngüsü: üret → bağımsız denetle → en fazla 2 onarım |
 | `09-motor/dogrulayici/zaman.py` | Zaman modeli (Z-1…Z-6), doğrulayıcı tarafı |
-| `09-motor/dogrulayici/kurallar.py` | **19** kural gövdesi. Her biri ihlal listesi döndürür |
+| `09-motor/dogrulayici/kurallar.py` | **33** kural gövdesi *(30 Eylül akşamı; bu tablonun geri kalanı 16–23 Eylül'den)*. Her biri ihlal listesi döndürür |
 | `09-motor/dogrulayici/denetle.py` | Denetim + metrikler + yayın kapısı |
 | `09-motor/cozucu/model.py` | CP-SAT modeli, ağırlık tablosu (§5.4), zaman aritmetiğinin **ikinci** yazımı |
 | `09-motor/cozucu/coz.py` | `/solve` gövdesi, K-28 erken durma |
@@ -99,6 +99,9 @@ py -m pytest testler -v
 | `09-motor/testler/test_kurallar.py` | **48** birim testi. Her biri bir K-kararını sabitler. Sekizi T-27'nin bekçisi: mola vardiyaya kırpılır, gece yarısını aşanda kaydırılır, üst üste binenler birleşir |
 | `09-motor/testler/test_profiller.py` | **20** birim testi. Plan profilleri, adalet gradyanı, onarım döngüsü, fazla mesai (K-30). Dördü T-22'nin bekçisi: çözümsüzlükte sunulan taslak da denetlenir |
 | `09-motor/testler/test_bagimsizlik.py` | 4 birim testi. §7.6 bağımsızlığını korur |
+| `09-motor/testler/test_hafta_kurallari.py` 🆕 | Gece postası devri (yasal) ve ardışık hafta sonu limiti — iki taraf, K-42 raporu, iki aşamalı test *(30 Eylül akşamı)* |
+| `09-motor/testler/test_gece_tespiti.py` 🆕 | İşaretsiz vardiyanın gece tahmini (T-69) ve adaletin gece boyutu (T-71); iki tarafın aynı sınıflamayı yaptığını doğrudan sınar *(30 Eylül akşamı)* |
+| `09-motor/mutasyon_kostur.py` | Elle seçilmiş bozmaları **tekrarlanabilir** koşturur: önbellek silinir, özgün kod başta ve sonda yeşil olmalı, dosya md5 ile geri doğrulanır (T-70). `py mutasyon_kostur.py [grup]` |
 | `09-motor/requirements.txt` | Sabitlenmiş bağımlılıklar. Doğrulayıcı hiçbirini kullanmaz |
 
 ### CI 🆕 *(16 Eylül)*
@@ -114,6 +117,11 @@ kapalıysa `exit=1`, sağlık beklemesi 20 sn'de cevap alamazsa adım durur.
 kapatıldı (T-17): checkout v7, setup-python v7, setup-dotnet v6.
 
 ## 4. Şu an hangi kurallar yazıldı
+
+> ⚠ **30 Eylül akşamı: 33 kural gövdesi** (katalog 40). Aşağıdaki başlık ve
+> tablo 16 Eylül'den kaldı ve **eski** — güncel liste doğrulayıcının kural
+> kaydıdır (`dogrulayici.kurallar.KAYIT`); vaka aracı her gövdeyi oradan sayar
+> (`08-motor-testleri/gercekci-veri-seti/ihlal-vakalari.py`).
 
 **19 kural.** Katalogdaki 35'in hepsi değil — şu an gereken alt küme.
 

@@ -634,3 +634,229 @@ işaretli), ama PDKS kaydının işareti olmayacak.
 okunduğu için artık yazılabilir · T-69 (erken saatli gece tespiti) · sahte
 PDKS (Mustafa'nın ikinci yolu; oranlar anonim gerçek veriden ölçülerek) ·
 T-66 · T-59/T-60.
+
+
+---
+
+# Akşam · Mustafa dışarıda — soru sormadan ilerleme
+
+Mustafa T-28'in CI koşusunu yeşil görüp *"yeşil devam"* dedi; biraz sonra:
+*"Ben şimdi 2 saatliğine dışarı çıkıyorum, ben yokken benden cevap beklemeden
+yapabileceklerini ilerletip, geldiğimde test v.s neyse devam edelim."*
+Karar gerektiren her şey bölüm 29'da biriktirildi.
+
+## 23 · Gece postası devri ve ardışık hafta sonu limiti — iki tarafta
+
+Geçmiş okunduğu için (T-28) ikisi de yazılabilir olmuştu. **Testler gövdeden
+önce:** 56 test, **27'si gerçekten kırmızı** başladı (yedisi çözücüde). Kalan
+29 test *"ihlal yok / çözülür"* diyen testlerdi — gövdesiz de yeşildiler;
+değerleri mutasyonda ortaya çıkar (bozulan bir gövde fazladan yasak koyarsa
+onlar yakalar).
+
+Üç tanım, üçü de açıkça yazıldı:
+
+| | uygulanan |
+|---|---|
+| hafta | plan haftası; gün −1…−7 geçen hafta. Taban bölme — `int(gün / 7)` geçen pazarı bu haftaya koyar (mutasyonla sınandı, öldü) |
+| hafta sonu çalıştı | cumartesi **ya da** pazar **başlayan** vardiya. Cuma gecesi cumartesiye taşsa da sayılmaz — **seçim**, adaletin hafta sonu boyutuyla aynı |
+| bilinmeyen hafta | kısıt yaratmaz (K-42); rapor yalnız sonucu değiştirebilecekse |
+
+`ARDISIK_HAFTA_SONU_LIMIT` veri setinde *"kabul edilemez"* tanımlıydı; şartname
+§6.5 **kabul edilebilir** diyor — düzeltildi.
+
+## 24 · Yönetmeliğin tam metni — iki fıkra şartnamede yoktu
+
+Şartnamede md. 8'in yalnız 1. fıkrasının bir parçası alıntılanmıştı. Tam
+metin okundu (Lexpera konsolide metni; RG 07.04.2004/25426, son değişiklik
+29.06.2024):
+
+> *md. 8/3: "...gece ve gündüz postalarında iki haftalık nöbetleşme esası da
+> uygulanabilir."* → parametrenin 2 değeri yasal; ama anlamı ve üst sınırı
+> açık (**T-73**).
+>
+> *md. 7/2: "Çalışma süresinin yarısından çoğu gece dönemine rastlayan bir
+> postanın çalışması, gece çalışması sayılır."*
+
+**İlk yazımda gece = K-40 işaretiydi** (ardışık gece limitindeki gibi). md. 7/2
+okununca değişti: yasal kuralda firma işareti iki yönde de bozar —
+22:00–06:00'yı *"gece değil"* işaretleyen firma yasadan kaçar (K-18);
+15:15–24:00'ü *"gece"* işaretleyen firmanın yasal olarak serbest planı kabul
+edilemez bir ihlalle kilitlenir (K-20). Veri setinde B-AKSAM tam bu ikinci
+durum: işaretli ama 8,75 saatin 4'ü gece döneminde — yasal kural onu **saymıyor**.
+Firma kuralları (ardışık gece, gece uygunluğu, adalet) işareti kullanmaya
+devam ediyor.
+
+Aynı okumada **T-74** 🔴 çıktı (bölüm 27).
+
+## 25 · Ölçüm — iki aşamalı yol, yeni kurallarla
+
+49 kişi, %95 doluluk. Hafta 1'in planı hafta 2'nin geçmişi:
+
+| hafta 2 | durum | atama | geçmişi bilen denetçiye göre sert ihlal |
+|---|---|---|---|
+| geçmişsiz | çözüldü | 215 | **30** — gece postası devri **11** · hafta tatili 7 · ardışık gün 7 · dinlenme 5 |
+| geçmişle | **çözüldü** | 214 | **0** |
+
+En sıkı okuma bu ölçekte **çözülebiliyor**. Geçmiş okunmasaydı 11 kişi iki
+hafta üst üste gece çalışıyordu.
+
+⚠ Öğleden sonraki ölçümde bu satır **27** idi; fark yeni kuralın kendisi
+(gece postası devri 11) ve çözücünün her koşuda farklı plan üretmesi.
+
+`gecmis_eksik` her iki koşuda **30** satır — iki haftalık ölçümde hafta −2
+bilinmiyor; ardışık hafta sonu limiti iki önceki hafta sonunu istiyor.
+**Üç haftalık ölçüm** bunun için eklendi (`--uc-hafta`, bölüm 30).
+
+## 26 · T-69 ve T-71 kapandı — işaretsiz tahmin yönetmeliğe bağlandı
+
+**T-69:** işaret yoksa iki taraf da yalnız **aynı günün** 20:00–06:00
+penceresine *"en ufak değme"* arıyordu. İki yönde yanlıştı: 00:00–08:45 gece
+**değil**, 13:00–21:00 **gece** sayılıyordu. Gece çalışamayan birine 13:00–21:00
+verilemiyordu; PDKS'ten gelen işaretsiz 00:00–08:00 kaydı ardışık geceye
+girmiyordu. **Yeni tahmin md. 7/2** — yasal kuralla aynı ölçü.
+
+**T-71:** doğrulayıcıda adaletin *"gece"* boyutu işareti **hiç okumuyordu**;
+K-40'ın *"iki yerde iki gece tanımı kalmadı"* cümlesi yalnız çözücü için
+doğruydu. Artık iki tarafta aynı.
+
+14 test, 8'i gerçek kırmızı. ⚠ **Mutasyon bir boşluk daha yakaladı:** adaletin
+işareti okuduğunu sınayan ilk testim 13:45–23:00 ile kurulmuştu; yeni tahmin onu
+zaten gece saymadığı için işareti **hiç okumayan** gövde de geçiyordu. İşaretle
+tahminin **ayrıştığı** iki vardiya eklendi (22:00–06:00 *"gece değil"*,
+15:15–24:00 *"gece"*); mutasyon öldü.
+
+**Yan etki, açıkça:** beş eski testin sahnesi işaretsiz şablonlarla kuruluydu.
+
+| test | ne oldu | ne yapıldı |
+|---|---|---|
+| durgunluk | sahnenin zorluğu adaletin gece teriminden geliyordu; yeni tahminle kolaylaştı, çözücü optimumu **kanıtladı** ve test *"durgunluk"* yerine *"hedef boşluk"* gördü — **kırmızı yandı** | eski tahminin sonucu şablona **açıkça işaret** olarak yazıldı; model eskisiyle aynı |
+| iki aşama · iyileştir · süre yetmedi | yeşil kaldılar — ama sahneleri sessizce değişmişti | aynı işaret; model eskisiyle aynı |
+| gece penceresinin sınırı (16 Eylül) | 18:00–21:00'ün gece sayılmasını çiviliyordu; yeni tanımla 1/3 gece, sayılmaz | vaka 19:00–23:00 oldu — testin amacı (pencere 20'de mi başlıyor) aynı kaldı |
+
+⚠ Üç testin yeşil kalması **bir şey kanıtlamıyordu**: sahneleri değişmişti ve
+ben bunu yalnız kırmızı yanan dördüncüsü yüzünden aradım.
+
+## 27 · T-74 🔴 — yasal gece sınırının ölçüsü yönetmelikle aynı değil
+
+Bizim kural *"gece penceresine düşen net çalışma 7,5 saati geçemez"* diye ölçüyor.
+md. 7/1–7/2'nin okuması: vardiyanın yarısından çoğu gecedeyse **bütün**
+çalışma süresi gece çalışmasıdır ve 7,5 saati geçemez. 22:00–08:00 (1 saat
+mola): bizde 7 saat, yasal; yönetmelikte 9 saat, **yasa dışı**. Tek gerçek
+müşterinin verisinde 16:00–01:00 deseni **82 kez** var.
+
+**Bilerek değiştirmedim:** şartnamenin kural tanımı değişir, hukuk teyidi (A-16)
+gerekir. Uygulaması küçük — *"gece postası mı"* tespiti bugün iki tarafta da
+yazıldı.
+
+## 28 · Veri notu — anonim veri klasörü boş
+
+Sahte PDKS için oranları *"anonim gerçek veriden ölçerek"* kuracağımı
+yazmıştım. `06-veri/anonim/` **boş**; `06-veri/ham/`'a bakılmadı ve
+bakılmayacak. Elde yalnız belgelenmiş türetilmiş istatistikler var
+(`07-GERCEK-VERI-BULGULARI.md`: kayıtların %18'i dolu, çağrı merkezinde %46;
+gece yarısını aşan 182 vardiyanın desen tablosu). Sahte PDKS bunlarla ve
+Mustafa'nın *"plana %80-85 uyumlu"* cümlesiyle kurulacak; geri kalan her
+oran **varsayım** olarak yazılacak.
+
+## 29 · Mustafa'yı bekleyen kararlar
+
+| # | soru | neden önemli |
+|---|---|---|
+| 1 | **T-74** · Yasal gece sınırı: pencereye düşen kısım mı (bugünkü), gece postasının bütün süresi mi (md. 7/2)? | Yanlış yönde hata — yasa dışı planı yasal gösterebilir. Gerçek müşteride 82 vardiya |
+| 1b | **T-75** · *"Hafta sonu çalıştı"* = bir günü yeter mi (bugünkü) yoksa **iki günü de** mi? Ya da motor gelecek haftayı mı gözetsin? | Bugünkü tanımla üçüncü hafta **iki koşuda da çözümsüz** (bölüm 30) |
+| 2 | **T-72** · Haftada tek gece o haftayı gece haftası yapar mı (bugünkü) yoksa bir eşik mi? | Yasal kural; 49 kişide çözülebilir ölçüldü, gerçek müşteride ölçülemedi |
+| 3 | **T-72** · Yasal kuralda gece: yönetmeliğin tanımı (bugünkü) mı, firma işareti mi? | İşaret yasal kuralı iki yönde bozabiliyor |
+| 4 | **T-73** · İki haftalık nöbetleşmede 2 değeri gece-gece-gündüz-gündüz mü; üst sınır 2 mi? | Bugün varsayılan 1, etkisi yok |
+| 5 | Cuma gecesi cumartesiye taşan vardiya hafta sonu sayılsın mı? (bugün: sayılmıyor) | Firma kuralı; seçim açıkça yazıldı |
+| 6 | İşaretsiz vardiyanın tahmini artık md. 7/2 (T-69) — onay | Veri setinde etkisi yok |
+
+Önceden bekleyenler: T-66 (§11.3 `sert_ihlal`) · T-63 (yetkinlik gerekliliği,
+`SAHADA_ASGARI` tabanı) · T-54 · T-18 · T-38 · T-29 · T-21.
+
+## 30 · Üç hafta — ardışık hafta sonu limiti tam veriyle, ve üçüncü hafta kilitlendi (T-75)
+
+İki haftalık ölçümde hafta −2 bilinmiyordu; ardışık hafta sonu limiti (azami
+2) iki önceki hafta sonunu istediği için K-42 gereği atlanıyordu (`gecmis_eksik`
+satırlarının **hepsi** bu kuraldı). Araca `--uc-hafta` eklendi: üçüncü hafta iki
+haftalık geçmişle çözülüyor. **İki bağımsız koşu:**
+
+| | koşu 1 | koşu 2 |
+|---|---|---|
+| hafta 2 geçmişle | çözüldü · 0 ihlal | çözüldü · 0 ihlal |
+| hafta 3 geçmişsiz | çözüldü · **61** sert ihlal (26'sı üçüncü ardışık hafta sonu, 6'sı gece postası devri) | — |
+| hafta 3 geçmişle | **çözümsüz** | **çözümsüz** |
+| … hafta sonu limiti kaldırılınca | | **çözüldü** (172 sn) |
+| … gece postası devri kaldırılınca | | yine **çözümsüz** |
+| … ikisi de kaldırılınca | | çözüldü (259 sn) |
+
+**Sebep:** 6 günlük desende tek izin günü var; cumartesi ya da pazardan biri
+**mutlaka** çalışılıyor. Bugünkü tanımla (*bir gün yeter*) herkes her hafta
+sonu *"çalışmış"*. Hafta 1 ve 2'yi çözen motor gelecek haftayı görmüyor: 45
+aktif kişinin **29'u** iki hafta sonu da çalıştı, satışta 25'in 18'i. Hafta 3'te
+satışın 7/24 hafta sonunu kalan 7 kişi karşılayamıyor.
+
+⚠ **Çözücünün kendi teşhisi boş döndü (T-76):** *"engelleyen kural: yok"*.
+Her kuralı 10 saniyeyle deniyor; bu ölçekte yetmiyor. Kullanıcı sebepsiz bir
+*"çözümsüz"* görürdü. Sebebi ancak kuralları **tam bütçeyle** tek tek kaldıran
+deney buldu.
+
+⚠ Araç adaletin devir yükünü haftadan haftaya taşımıyor — açıkça yazıldı (T-75).
+
+## 31 · T-59 düzeltildi — süre bütçesi artık aşılmıyor (karar gerektirmiyordu)
+
+Birinci aşama bütçenin **içinden** pay alıyor: `min(ilk_asama_saniye,
+azami_saniye × %20)`; ana çözüme **kalan** veriliyor. Model kurma ayrı kalem
+olarak çıktıda. Durma sebebi kıyası da ana aşamanın payına bağlandı. 6 test,
+altısı kırmızı başladı; 4 mutasyon öldü. **Testler saat ölçmüyor** — CI yükünde
+rastgele kırmızı yanmasınlar diye bütçenin **bölünüşü** sınanıyor.
+
+⚠ **Tam ölçekte yeniden ölçülmedi** — 900 saniyelik koşu Mustafa'nın
+makinesinde yapılmalı (`py coz-olc.py --saniye 900`); araç artık üç kalemi de
+yazıyor. Ölçülene kadar 🟡.
+
+## 32 · Sahte PDKS — Mustafa'nın ikinci yolu (T-77)
+
+`sahte_pdks.py`: hafta 1'in planından *"plana %80-85 uyumlu"* gerçekleşme
+(%82,5 aynen · %5 gelmedi · kalanı 15–60 dk geç giriş/çıkış · %3 çağrılma) ve
+**eksik kayıt** üretir (%30 kişinin hiç kaydı yok, kalanlarda günlerin %66'sı
+okutulmuş). Bilinen gün = kaydı olan gün (K-42). Hafta 2 bu eksik geçmişle
+planlanır, sonra plan **gerçek** geçmişe göre denetlenir.
+
+| | sayı |
+|---|---|
+| PDKS'in yakaladığı | gerçekleşen 209 vardiyanın **119'u (%57)**; çalışan 8 kişinin hiç kaydı yok |
+| eksik geçmişle bakan denetçi | **0** sınır ihlali |
+| gerçek geçmişle bakan denetçi | **7** — hafta tatili 2 · dinlenme 1 · gece postası devri 2 · ardışık gün 2 |
+| `gecmis_eksik` | **141 satır** |
+| raporda haberi olmadan kaçan | **0** |
+
+**K-42'nin sözü tutuyor** — her gerçek ihlal raporda o kişi ve kural için
+haber verilmiş. **Ama 141 satır**: yaklaşık 20 satırdan biri gerçek; yedinin
+beşi yasal ve plan yayınlanabilir görünüyor.
+
+Üreticinin kendi 8 testi CI'da koşuyor
+(`08-motor-testleri/gercekci-veri-seti/testler/test_sahte_pdks.py`); 5
+mutasyon, beşi de öldü. Oranların hangisinin ölçüm, hangisinin varsayım olduğu
+dosyanın başında (bölüm 28).
+
+## 29'a ek — iki soru daha
+
+| # | soru | neden önemli |
+|---|---|---|
+| 7 | **T-77** · Geçmiş eksik raporu nasıl sunulsun (kişi başına mı, yasal olanlar önce mi)? Yayın kapısı ona bakacak mı (T-18)? | 7 gerçek ihlal için 141 satır |
+| 8 | **T-59** · 900 saniyelik tam ölçek koşusu senin makinende: `py coz-olc.py --saniye 900` | Düzeltme kodda ve testte kanıtlı, tam ölçekte ölçülmedi |
+
+## Akşam sonu
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **359** yeşil (274'ten) |
+| Zor veri seti bekçisi | **20** yeşil (12 + sahte PDKS üreticisi 8) · 6 dk 02 sn |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 tutarlı |
+| İhlal vakaları | **33 gövde · 33 vaka · 33 kırmızı** |
+| Mutasyonlar | **88 · hepsi öldü · atlanan yok** (42'den) |
+| Açık 🔴 | **dokuz** — yeni: T-72, T-74, T-75 · 🟡'ye inen: T-59 |
+| Kapanan | T-69, T-71 |
+
+**Mustafa'yı bekleyen sorular:** bölüm 29 ve eki.

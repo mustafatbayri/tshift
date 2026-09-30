@@ -1,22 +1,23 @@
 {
  "gecmissiz": {
   "durum": "cozuldu",
-  "atama": 217,
+  "atama": 215,
   "sinir": {
-   "HAFTA_TATILI": 10,
-   "VARDIYA_ARASI_DINLENME": 7,
-   "ARDISIK_CALISMA_GUNU": 10
+   "HAFTA_TATILI": 7,
+   "VARDIYA_ARASI_DINLENME": 5,
+   "ARDISIK_CALISMA_GUNU": 7,
+   "GECE_POSTASI_DEVRI": 11
   },
-  "sert": 27,
-  "gecmis_eksik": 0,
-  "sn": 213
+  "sert": 30,
+  "gecmis_eksik": 30,
+  "sn": 195
  },
  "gecmisle": {
   "durum": "cozuldu",
-  "atama": 217,
+  "atama": 214,
   "sinir": {},
   "sert": 0,
-  "gecmis_eksik": 0,
-  "sn": 144
+  "gecmis_eksik": 30,
+  "sn": 224
  }
 }
