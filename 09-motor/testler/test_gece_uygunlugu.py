@@ -19,16 +19,19 @@ IKI YENI ALAN (girdi sozlesmesi)
     vardiya_sablonlari[].gece_vardiyasi : bu sablon gece vardiyasidir
     calisanlar[].gece_calisamaz         : bu kisi gece vardiyasi yapamaz
 
-⚠ ISARET, TAHMINI EZER
-  23:00-07:00 tahmini cogu zaman dogru calisir ama 22:00-06:00 ya da
-  00:00-08:00 gibi sinir durumlarinda firmanin kendi tanimiyla celisebilir.
-  Mustafa'nin istedigi ISARET: kullanici soyler, motor tahmin etmez.
+⚠ ISARET YALNIZ EKLER -- K-43 (Mustafa, 30 Eylul gecesi)
+  29 Eylul'de karar "isaret tahmini ezer"di (K-40). 30 Eylul gecesi
+  degisti: gece isareti yonetmeligin tanimindan OTOMATIK gelir (md. 7/2,
+  suresinin yarisindan cogu 20:00-06:00'da) ve TABANDIR. Firma ustune
+  ekleyebilir ("15:15-24:00 bizde gece sayilir"), altina inemez ("22:00-
+  06:00 gece degil" korumayi delerdi). Mustafa: "Vardiya icin secilen saat
+  sonrasi sistem otomatik isaretlesin ... calisan sozlesmesinde gece
+  calisamaz isaretini de eklersek ... arka planda yakalariz."
 
-⚠ ISARET YOKSA TAHMINE DUSULUR -- ve BILDIRILIR
-  Gecisi olmayan depolar kirilmasin diye: `gece_vardiyasi` yazilmamis bir
-  sablon, saat araligina gore degerlendirilir. Ama bu SESSIZ OLMAZ; not
-  yazilir. Isaretlenmemis bir gece vardiyasi, korunmasi gereken birini
-  sessizce geceye koyabilirdi.
+⚠ ISARET YOKSA otomatik belirlenir -- ve BILDIRILIR
+  `gece_vardiyasi` yazilmamis bir sablon yonetmelik tanimina gore
+  degerlendirilir; not yazilir. Firma "gece degil" demis ama yonetmelige
+  gore geceyse o da not yazilir.
 
 KOSTURMA
   cd C:\\Users\\PC\\Desktop\\Tshift\\09-motor
@@ -124,33 +127,51 @@ def test_TEK_KISI_gece_calisamiyorsa_plan_URETILMEZ():
         % _kimler(c, "V-GECE"))
 
 
-def test_ISARET_TAHMINI_EZER():
-    """Saat araligi geceye giriyor ama kullanici "gece degil" demis.
+def test_ISARET_yasal_geceyi_INKAR_EDEMEZ():
+    """⚠ K-43 (Mustafa, 30 Eylul gecesi) -- BU TEST TERSINE DONDU.
 
-    ⚠ ILK YAZIMI HICBIR SEY OLCMUYORDU
-      Sonu `assert True` ile bitiyordu. Mutasyon yakaladi: isaret tamamen
-      yok sayilip hep tahmine dusuldugunde butun testler YESIL kaldi.
-      "Isaret tahmini ezer" cumlesini hicbir satir kanitlamiyordu.
+      30 Eylul aksamina kadar adi `test_ISARET_TAHMINI_EZER` idi ve
+      "kullanici 'gece degil' dediyse 23:00-07:00 gece degildir" diyordu
+      (K-40). Mustafa'nin yeni karari: gece isareti yonetmelik tanimindan
+      OTOMATIK gelir ve TABANDIR; firma ustune ekler, altina inemez.
+      Inebilseydi gece calisamayan biri 22:00-06:00'ya yazilabilirdi --
+      koruma, firmanin bir isaretiyle delinirdi.
 
-      Simdi sahne oyle kuruldu ki cevap TEK: 23:00-07:00 araligindaki
-      sablon "gece degil" diye isaretli ve o saati kapatabilecek TEK kisi
-      gece calisamayan C1. Isaret gecerliyse plan cikar; tahmin galip
-      gelirse C1 elenir ve plan cozumsuz olur.
+      Sahne ayni: 23:00-07:00 "gece degil" isaretli, o saati kapatabilecek
+      TEK kisi gece calisamayan C1. Artik dogru cevap COZUMSUZ.
     """
     gece_degil = dict(GECE, id="V-SAYILMAZ", gece_vardiyasi=False)
     g = _sahne([gece_degil], gece_talebi=True, talep_saatleri=(23, 24),
                gece_calisamaz=("C1",), kisi=1)
     c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 8})
-    assert c["durum"] == "cozuldu", (
-        "kullanici 'gece degil' dedigi halde sablon gece sayildi: %s"
-        % c["durum"])
-    assert "C1" in _kimler(c, "V-SAYILMAZ"), (
-        "isaret yok sayildi, C1 elendi: %r" % (c.get("atamalar") or []))
+    assert c["durum"] != "cozuldu", (
+        "firma 'gece degil' dedi diye gece calisamayan C1 geceye yazildi: %r"
+        % (c.get("atamalar") or []))
+    notlar = " ".join(c.get("uygulanmayan_notlar") or [])
+    assert "gece degil" in notlar and "V-SAYILMAZ" in notlar, (
+        "isaretin ezildigi not olarak yazilmadi: %r"
+        % (c.get("uygulanmayan_notlar") or []))
 
 
-def test_DOGRULAYICI_da_ISARETE_uyar():
-    """Ayni kural dogrulayicida da isarete uymali -- yoksa motor ile
-    denetci ayni plan hakkinda farkli sey soyler."""
+def test_ISARET_EKLER_yasal_olmayan_aksami_gece_yapar():
+    """Firma 15:15-24:00'u gece sayiyorsa (B-AKSAM) gece calisamayan C1'e
+    verilemez -- yonetmelik saymasa da. 16:00 talebini yalniz o sablon
+    kapatir; tek kisi C1 -> cozumsuz. Isaretsiz ayni sablon -> cozulur."""
+    aksam = dict(GECE, id="V-AKSAM", bas=15.25, bit=24, gece_vardiyasi=True)
+    g = _sahne([aksam], gece_talebi=False, talep_saatleri=(16, 17),
+               gece_calisamaz=("C1",), kisi=1)
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 8})
+    assert c["durum"] != "cozuldu", "firmanin 'gece' isareti okunmadi"
+    isaretsiz = dict(aksam)
+    del isaretsiz["gece_vardiyasi"]
+    g2 = _sahne([isaretsiz], gece_talebi=False, talep_saatleri=(16, 17),
+                gece_calisamaz=("C1",), kisi=1)
+    assert coz(g2, {"azami_saniye": 20, "durgunluk_saniye": 8})["durum"] == "cozuldu"
+
+
+def test_DOGRULAYICI_da_yasal_geceyi_INKAR_ETMEZ():
+    """Ayni kural dogrulayicida da: 'gece degil' isaretli 23:00-07:00
+    vardiyasina yazilan gece calisamayan C1 ihlaldir (K-43)."""
     gece_degil = dict(GECE, id="V-SAYILMAZ", gece_vardiyasi=False)
     g = _sahne([gece_degil], gece_talebi=True, talep_saatleri=(23, 24),
                gece_calisamaz=("C1",), kisi=1)
@@ -160,8 +181,9 @@ def test_DOGRULAYICI_da_ISARETE_uyar():
                               "ucretli": False}]}]
     r = degerlendir(g, atamalar)
     gece = [i for i in r["ihlaller"] if i["kural"] == "GECE_UYGUNLUGU"]
-    assert not gece, (
-        "dogrulayici 'gece degil' isaretini yok saydi: %r" % gece)
+    assert len(gece) == 1, (
+        "dogrulayici firmanin 'gece degil' isaretine uyup yasal geceyi acti: %r"
+        % r["ihlaller"])
 
 
 def test_ISARET_YOKSA_SAAT_ARALIGINDAN_tahmin_edilir_ve_BILDIRILIR():

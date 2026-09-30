@@ -233,11 +233,24 @@ def test_GECE_cuma_cumartesi_pazar_ve_PAZARTESI_dorduncu():
     assert len(ih) == 1 and ih[0]["olculen"] == 4, ih
 
 
-def test_GECE_gecmis_kaydin_ISARETI_saati_ezer():
-    """K-40 kaydin kendisine de uyar: `gece: false` diyorsa gece degildir."""
+def test_GECE_gecmis_kaydin_gece_DEGIL_isareti_yasal_geceyi_INKAR_EDEMEZ():
+    """K-43 (30 Eylul gecesi): otomatik isaret tabandir, kaydin isareti yalniz
+    EKLER. 23:00-07:00 kaydi `gece: false` dese de gece; dorduncu gece
+    ihlaldir. (30 Eylul aksamina kadar bu test tersini bekliyordu, K-40.)"""
     g = _sahne([ARD_GECE],
                gecmis=[_g(d, 23, 31, gece=False) for d in (-3, -2, -1)])
-    assert not _ih(g, [_p(0, GECE)], "ARDISIK_GECE_LIMIT")
+    ih = _ih(g, [_p(0, GECE)], "ARDISIK_GECE_LIMIT")
+    assert len(ih) == 1 and ih[0]["olculen"] == 4, ih
+
+
+def test_GECE_gecmis_kaydin_gece_isareti_EKLER():
+    """15:15-24:00 kaydi yonetmelige gore gece degil; `gece: true` diyorsa
+    firma kurali icin gecedir."""
+    g = _sahne([ARD_GECE],
+               gecmis=[_g(d, 15.25, 24, gece=True) for d in (-3, -2, -1)])
+    assert _ih(g, [_p(0, GECE)], "ARDISIK_GECE_LIMIT")
+    g2 = _sahne([ARD_GECE], gecmis=[_g(d, 15.25, 24) for d in (-3, -2, -1)])
+    assert not _ih(g2, [_p(0, GECE)], "ARDISIK_GECE_LIMIT")
 
 
 # ----------------------------------------------------------------------
@@ -375,11 +388,24 @@ def test_COZUCU_gecmisle_DORDUNCU_geceyi_yazmaz():
     assert c["durum"] != "cozuldu", "gecmisle dorduncu gece yazildi"
 
 
-def test_COZUCU_gecmis_kaydin_GECE_ISARETI_saati_ezer():
+def test_COZUCU_gecmis_kaydin_gece_DEGIL_isareti_yasal_geceyi_INKAR_EDEMEZ():
+    """K-43: `gece: false` isaretli 23-07 kayitlari yine gecedir -> dorduncu
+    gece yazilamaz -> cozumsuz."""
     g = _cozucu_sahnesi([ARD_GECE],
                         gecmis=[_g(d, 23, 31, gece=False) for d in (-3, -2, -1)],
                         sablonlar=[GECE], talep=[(0, 23)])
-    assert _coz(g)["durum"] == "cozuldu"
+    assert _coz(g)["durum"] != "cozuldu"
+
+
+def test_COZUCU_gecmis_kaydin_gece_isareti_EKLER():
+    g = _cozucu_sahnesi([ARD_GECE],
+                        gecmis=[_g(d, 15.25, 24, gece=True) for d in (-3, -2, -1)],
+                        sablonlar=[GECE], talep=[(0, 23)])
+    assert _coz(g)["durum"] != "cozuldu", "kaydin 'gece' isareti okunmadi"
+    g2 = _cozucu_sahnesi([ARD_GECE],
+                         gecmis=[_g(d, 15.25, 24) for d in (-3, -2, -1)],
+                         sablonlar=[GECE], talep=[(0, 23)])
+    assert _coz(g2)["durum"] == "cozuldu"
 
 
 def test_UCTAN_UCA_gecmisli_plan_DENETIMDEN_gecer():

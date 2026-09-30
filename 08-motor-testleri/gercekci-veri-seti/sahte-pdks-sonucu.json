@@ -15,32 +15,32 @@
  "tohum": 20260930,
  "hafta_1": {
   "durum": "cozuldu",
-  "atama": 218
+  "atama": 217
  },
  "pdks": {
-  "gerceklesen": 209,
-  "yakalanan": 119,
-  "kayitsiz_kisi": 8
+  "gerceklesen": 205,
+  "yakalanan": 94,
+  "kayitsiz_kisi": 15
  },
  "hafta_2": {
   "durum": "cozuldu",
-  "atama": 217
+  "atama": 216
  },
  "eksik_gecmisle_gorulen_sinir_ihlali": {},
  "gercek_gecmise_gore_sinir_ihlali": {
   "HAFTA_TATILI": 2,
-  "VARDIYA_ARASI_DINLENME": 1,
+  "VARDIYA_ARASI_DINLENME": 3,
   "ARDISIK_CALISMA_GUNU": 2,
   "GECE_POSTASI_DEVRI": 2
  },
  "gecmis_eksik": {
-  "HAFTA_TATILI": 34,
-  "ARDISIK_CALISMA_GUNU": 34,
-  "GECE_POSTASI_DEVRI": 13,
-  "ARDISIK_HAFTA_SONU_LIMIT": 33,
-  "VARDIYA_ARASI_DINLENME": 24,
-  "ARDISIK_GECE_LIMIT": 3
+  "HAFTA_TATILI": 33,
+  "ARDISIK_CALISMA_GUNU": 33,
+  "ARDISIK_HAFTA_SONU_LIMIT": 7,
+  "ARDISIK_GECE_LIMIT": 5,
+  "VARDIYA_ARASI_DINLENME": 25,
+  "GECE_POSTASI_DEVRI": 3
  },
  "haber_verilmeden_kacan": {},
- "sn": 406
+ "sn": 358
 }

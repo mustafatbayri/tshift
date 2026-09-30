@@ -860,3 +860,130 @@ dosyanın başında (bölüm 28).
 | Kapanan | T-69, T-71 |
 
 **Mustafa'yı bekleyen sorular:** bölüm 29 ve eki.
+
+---
+
+# Gece · Mustafa döndü, kararlar alındı ve uygulandı
+
+Mustafa dokuz soruyu okudu; 1, 2, 5, 6'yı anlamadığını söyledi, açıldı.
+Cevapları: hukukçu yok, yasal iki soru (1 ve 3) çevrimiçi kaynaklarla bana
+bırakıldı; 2, 4, 5, 6, 7 kabul; 8'in cevabı 4'te; 9 için kod dizini verildi,
+push yapıldı ve tam ölçek koşusu makinesinde başlatıldı.
+
+## 33 · Araştırma — iki yasal soru, çevrimiçi kaynaklarla
+
+**Yasal gece sınırı (T-74).** Yargıtay 9. HD 2016/36126 E., 2020/17967 K.
+tam bizim soruyu çözüyor: 20:00–08:00 vardiyasında bilirkişi gece hesabını
+06:00'da kesmiş, Yargıtay bozmuş — hesap fiili bitiş 08:00'e kadar,
+*"yarısından fazlası gece dönemine denk gelince tüm çalışma gece kurallarına
+tabi."* Doktrin ekliyor: bu okuma vardiyalı (postalar hâlinde) işyerleri
+için; vardiyasızda yalnız 20:00 sonrası sayılır. Biz vardiya ürünüyüz.
+**Karar K-44.**
+
+**Gece haftası (T-72).** Hiçbir kaynak karma haftayı ele almıyor. Hepsi
+kuralın amacını aynı cümleyle veriyor: sürekli gece çalıştırma yasağı
+(Yargıtay 22. HD 2019/18396: bir ay aralıksız gece = ihlal, haklı fesih).
+**Karar K-45:** yönetmeliğin tek vardiya ölçüsü haftaya uygulandı —
+haftanın çalışma saatlerinin yarısından çoğu gece postasındaysa gece
+haftası. Sıkı okuma ayar olarak kaldı, yalnız ekler.
+
+Kaynaklar ve madde metinleri mevzuat araştırması bölüm 3b'ye yazıldı.
+
+## 34 · Beş karar, iki motor yarısında (K-43…K-47)
+
+| karar | ne değişti |
+|---|---|
+| **K-43** işaret tabandır | otomatik işaret yönetmelikten; firma ekler, altına inemez. ⚠ K-40'ın üç bekçi testi **tersine döndü**, gerekçesi testlerin içinde |
+| **K-44** yasal gece sınırı | gece postasının bütün net süresi ≤ 7,5; pencere ölçüsü yanında (aynı geceyi paylaşan iki vardiya için) |
+| **K-45** gece haftası | çoğunluk; pencere 2×azami haftada ≤ azami gece haftası; üst sınır 2, fazlası kırpılır ve bildirilir; geçmiş hafta tam bilinmeden hesaplanmaz |
+| **K-46** hafta sonu | iki gün de; gün = saatlerin yarısından çoğu |
+| **K-47** rapor | kişi başına özet, yasal önde; kapı engellemez |
+| T-76 | teşhis üç cevap: engelliyor · engellemiyor · **belirsiz** (süre doldu) |
+
+**Testler:** motor **406** (274 → 359 → 406). Tanımlar değiştiği için hafta
+kurallarının test dosyası baştan yazıldı (80 test). **Mutasyon: 116, hepsi
+öldü** — ilk turda **10 yaşadı**, hepsi test boşluğuydu:
+
+| yaşayan | boşluk | eklenen |
+|---|---|---|
+| pencere ölçüsünde istisna (2) | posta ölçüsü önce ateşlediği için pencere ölçüsü hiç çalışmıyordu | aynı geceyi paylaşan iki vardiya sahnesi — pencere ölçüsünün hâlâ gerekli olduğu tek durum |
+| çözücü K-44 brüt ölçsün | brüt ile net aynı sonucu veriyordu | 16:00–01:00 + 1,5 sa mola = 7,5 net → **yasal**, çözülmeli |
+| geçmiş hafta vardiya sayısıyla / yarısı yeter (2) | sahnelerde saat ve sayı aynı yöndeydi | 2 uzun gece + 3 kısa gündüz; 3 gece + 3 gündüz (tam yarı) |
+| en ufak taşma ertesi gün | cuma akşamı çözücü tarafında sınanmıyordu | cuma 16:00–01:00 + pazar → çözülür |
+| adalet hafta sonu boyutu (2 taraf) | boyut testi yoktu | cuma gecesini cumartesi sayan adalet testi; iki tarafın sınıflaması yan yana |
+| rapor: bilinmeyen yetmese de | kenar durum | azami 2, tek bilinmeyen hafta → rapor yok |
+
+⚠ Bir tuzak daha (T-54'ün ailesi): çoğunluk-gece çözücü testinde motor
+talepte olmayan bir gündüz vardiyası daha ekleyip dengeyi 24–24'e getirdi
+ve *"gece haftası değil"* diye çözdü. Haftalık tavan (40 saat = beş vardiya)
+altıncı vardiyayı kapatınca sahne doğru ölçtü. Karşı kanıt her sahneye
+eklendi: geçmişsiz çözülür.
+
+⚠ Karma haftalı sahnelerde gündüz ile gece arasına boş gün gerekti:
+çözücü 11 saatlik dinlenmeyi kural yokken de varsayılan uyguluyor; ilk
+sahne bu yüzden kendiliğinden çözümsüzdü ve hiçbir şey ölçmüyordu.
+
+## 35 · Ölçümler — yeni tanımlarla, aynı üç haftalık yol
+
+| | eski tanımlar (akşam) | yeni tanımlar (gece) |
+|---|---|---|
+| hafta 1'de gece haftası yaşayan | 11 (tek gece yeter) | **1** (çoğunluk; çözücü geceleri adaletle dağıtıyor) |
+| hafta 2 geçmişsiz → kaçan sert ihlal | 30 | 24 (gece postası devri 0) |
+| hafta 2 geçmişle | çözüldü, 0 | çözüldü, 0; rapor 3 satır (30'du) |
+| hafta 3 geçmişsiz → kaçan sert ihlal | 61 | 36 (2 gece postası devri, 2 ardışık hafta sonu) |
+| **hafta 3 geçmişle** | **çözümsüz** (iki koşu) | **çözüldü, 213 atama, 0 ihlal** — T-75 kapandı |
+
+Rapor satırlarının 30'dan 3'e inmesi tanımdan: hafta sonu iki gün de
+çalışılmadıkça geçmişin ne olduğu sonucu değiştiremez, satır yazılmaz.
+
+**Tam ölçek (Mustafa'nın makinesi, 1.200 sn, 500 kişi):** birinci aşama 121,8
++ ana aşamaya verilen 1.078,2 = **1.200,0 sn** — T-59 kapandı. Model kurma
+54,9 sn ayrı. İki yan bulgu: birinci aşama 120 saniyede geçerli plan
+**bulamadı** (`iki_asama: false`, süre boşa gitti — T-60'ın konusu) ve plan
+**1 sert ihlalle** döndü: yarı zamanlı tavanı, `yayınlanabilir: false`
+(**T-78** 🔴). Plan kaydedilmediği için sebebi araştırılamadı; araç artık
+sert ihlal cümlelerini ve planı yazıyor. Hipotez: şablona sığmayan dinlenme
+molası çözücünün net saatini doğrulayıcınınkinden düşük gösteriyor (T-57
+ailesi). Koşu tekrarı gerekiyor.
+
+## 36 · Sahte PDKS — yeni tanımlarla
+
+| | akşam | gece |
+|---|---|---|
+| PDKS'in yakaladığı | %57 | %46 (başka plan, aynı oranlar) |
+| gerçek geçmişe göre kaçan ihlal | 7 | 9 (3 dinlenme, 2 hafta tatili, 2 ardışık gün, 2 gece postası devri) |
+| rapor satırı | 141 | **106** |
+| haberi olmadan kaçan | 0 | **0** |
+
+K-42'nin sözü yeni tanımlarla da tutuyor. Rapor artık kişi başına özetle
+geliyor (K-47); satırın kendisi hâlâ uzun — asıl çözüm PDKS'teki *"çalışma
+günü değil"* satırlarının bilinen boş gün sayılması (açık).
+
+## 37 · Gece sonu
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **406** yeşil (akşam 359) |
+| Zor veri seti bekçisi | 20 yeşil · 6 dk 10 sn |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 tutarlı |
+| İhlal vakaları | 33 gövde · 33 vaka · 33 kırmızı |
+| Mutasyonlar | **116 · hepsi öldü** (ilk turda 10 yaşadı, hepsi test boşluğu — bölüm 34) |
+| Açık 🔴 | **yedi** — kapanan: T-72, T-73, T-74, T-75, T-76, T-59 · açılan: **T-78** |
+| Kararlar | K-43 · K-44 · K-45 · K-46 · K-47 |
+
+**Yazı borcu (şartname):** §6.3 gece sınırının ölçüsü (K-44), gece haftası
+tanımı ve parametre üst sınırı (K-45); §6.5 hafta sonu tanımı (K-46); §8.3
+gece işaretinin anlamı (K-43); §11.4 çıktıya `gecmis_eksik_ozet` ve teşhise
+`belirsiz_kurallar`.
+
+**Sırada:** T-78 (tam ölçek koşusunu tekrarla, planı oku) · T-60 (birinci
+aşama 120 saniyede plan bulamıyor) · T-66 · T-63 · T-54 · T-18.
+
+## 38 · Kapanış (1 Ekim 01:20)
+
+DENETIM ilk koşuda 1 hata verdi: T-78 metni henüz var olmayan
+*olcum-plan-95* dosyasını yol gibi anıyordu; cümle düzeltildi. Son durum:
+DENETIM **0 hata / 15 uyarı**, YOL-KONTROL 8 kırık yol (hepsi eski, v1–v5
+sürüm klasörleri). Gece çalışması commit edilmedi; blok sohbette, Mustafa
+sabah çalıştıracak. Oturum açık — Mustafa kapatır.

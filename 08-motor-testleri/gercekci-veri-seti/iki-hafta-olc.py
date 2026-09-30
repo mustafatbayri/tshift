@@ -121,8 +121,9 @@ def main():
     print("  pazar gecesi pazartesiye tasan vardiya: %d" % pazar_gecesi)
 
     # GECE_POSTASI_DEVRI icin: ekip basina gece calisabilen kac kisi var,
-    # hafta 1'de kaci gece calisti. Hafta 2'de geceyi yalniz KALANLAR
-    # calisabilir (siki okuma: tek gece haftayi gece haftasi yapar).
+    # hafta 1'de kaci GECE HAFTASI yasadi (K-45: calisma saatlerinin
+    # yarisindan cogu gece postasinda). Hafta 2'de gece haftasini yalniz
+    # kalanlar yasayabilir.
     # ⚠ GECE = YONETMELIGIN TANIMI (md. 7/2: suresinin yarisindan cogu
     #   20:00-06:00'da), firma isareti DEGIL -- B-AKSAM isaretli ama sayilmaz.
     def _yasal_gece(t):
@@ -133,17 +134,25 @@ def main():
 
     gece_sablon = {t["id"] for t in g1["vardiya_sablonlari"]
                    if _yasal_gece(t)}
-    gececi = collections.defaultdict(set)
+    saat = collections.defaultdict(lambda: [0.0, 0.0])      # kisi -> [gece, toplam]
+    ekibi = {}
     for a in c1["atamalar"]:
+        sure = a["bit"] - a["bas"]
+        saat[a["calisan"]][1] += sure
         if a["sablon"] in gece_sablon:
-            gececi[a["ekip"]].add(a["calisan"])
+            saat[a["calisan"]][0] += sure
+        ekibi[a["calisan"]] = a["ekip"]
+    gececi = collections.defaultdict(set)
+    for kisi, (gece, toplam) in saat.items():
+        if 2 * gece > toplam:
+            gececi[ekibi[kisi]].add(kisi)
     for ekip in sorted({t["ekip"] for t in g1["vardiya_sablonlari"]
                         if t["id"] in gece_sablon}):
         uygun = [c for c in g1["calisanlar"]
                  if ekip in (c.get("ekipler") or [])
                  and not c.get("gece_calisamaz")
                  and c.get("durum", "aktif") == "aktif"]
-        print("  %-10s gece calisabilen %2d kisi · hafta 1'de gece calisan %2d"
+        print("  %-10s gece calisabilen %2d kisi · hafta 1'de gece haftasi yasayan %2d"
               % (ekip, len(uygun), len(gececi[ekip])))
 
     g2 = gecmis_ekle(U.sahne_uret(0.1, 0.95), c1["atamalar"])

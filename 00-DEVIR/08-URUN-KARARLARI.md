@@ -2080,3 +2080,197 @@ kaydı olan gün bilinir.
 **Geçmiş tam verildiğinde kanal boş** — iki aşamalı ölçümde de öyle çıktı.
 
 → T-28 · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_gecmis_veri.py`
+
+---
+
+## K-43 · Gece işareti **yönetmelikten otomatik gelir ve tabandır**; firma yalnız ekler
+
+**Karar (30 Eylül 2026 gecesi, Mustafa).**
+
+> *"Vardiya için seçilen saat sonrası sistem otomatik işaretlesin. Bunu bir
+> işaretle tutarsak, çalışan sözleşmesinde gece çalışamaz işaretini de
+> eklersek sanki daha rahat arka planda yakalarız."*
+
+K-40 *"kullanıcı işaretler, motor tahmin etmez"* demişti. Yeni karar onu
+değiştiriyor:
+
+| | K-40 (29 Eylül) | K-43 (30 Eylül) |
+|---|---|---|
+| işaret nereden gelir | kullanıcı koyar | **yönetmelik tanımından otomatik** (Postalar Yön. md. 7/2: süresinin yarısından çoğu 20:00–06:00'da) |
+| işaret yoksa | saat aralığından **tahmin**, not yazılır | otomatik belirlenir, not yazılır |
+| firma "gece" derse | gece | gece (**ekler**) |
+| firma "gece değil" derse | gece değil (işaret tahmini ezer) | yasal olarak geceyse **yine gece** (altına inemez), not yazılır |
+
+**Neden altına inemez:** *"22:00–06:00 gece değil"* diyen bir firma, gece
+çalışamayan birini o vardiyaya yazabilirdi — koruma tek işaretle delinirdi.
+**Neden üstüne ekleyebilir:** daha sıkı olmak her zaman serbest (K-18'in
+diğer yüzü); *"15:15–24:00 bizde gece sayılır"* meşru bir firma tercihi.
+
+**Yasal kurallar işareti hiç kullanmaz** (K-44, K-45): işaret yasal kuralı
+iki yönde de bozardı — kaçırır ya da yasal planı kilitler.
+
+**Uygulandı:** iki motor yarısında da. Üç eski test tersine döndü (K-40'ın
+*"işaret tahmini ezer"* bekçileri) ve gerekçesi testin içinde yazılı.
+Veri setinde etkisi yok — hiçbir şablon yasal geceyi inkâr etmiyor.
+
+→ K-40 · `09-motor/testler/test_gece_uygunlugu.py` · `test_gece_tespiti.py`
+
+---
+
+## K-44 · Yasal gece sınırı **gece postasının bütün süresine** uygulanır
+
+**Karar (30 Eylül 2026 gecesi).** Mustafa: *"Hukuk teyidini alabileceğimiz bir
+hukukçu yok, online kaynaklardan elde ederek karar vermeliyiz. Sana
+bırakıyorum."* Araştırıldı, karar verildi.
+
+**Yönetmelik (Postalar Yön. md. 7):** *"...işçilerin gece postalarında 7,5
+saatten çok çalıştırılmaları yasaktır."* ve md. 7/2: *"Çalışma süresinin
+yarısından çoğu gece dönemine rastlayan bir postanın çalışması, gece
+çalışması sayılır."*
+
+**Yargıtay (9. HD, 2016/36126 E., 2020/17967 K.):** 20:00–08:00 vardiyasında
+gece hesabı 06:00'da kesilmez, fiili bitiş 08:00'e kadar yapılır —
+*"çalışmanın yarısından fazlası gece dönemine denk gelince tüm çalışma gece
+kurallarına tabi"*. Doktrin aynı: bu okuma **postalar hâlinde** (vardiyalı)
+işyerleri içindir; vardiyasız işyerinde yalnız 20:00 sonrası sayılır. Biz
+vardiya ürünüyüz.
+
+**Kural artık iki ölçü birden:**
+
+| ölçü | ne |
+|---|---|
+| **gece postası** (yeni) | vardiyanın yarısından çoğu 20:00–06:00'daysa **bütün net çalışma** ≤ 7,5 |
+| pencere (eski) | 20:00–06:00'a düşen net çalışma ≤ 7,5 — tek başına asla ateş almaz ama ayrıca aynı geceyi paylaşan **iki** vardiyayı toplar |
+
+Aynı vardiya iki kez yazılmaz. Sektör istisnası (K-26) ikisinde de geçerli.
+
+| vardiya | eski | yeni |
+|---|---|---|
+| 22:00–08:00, 1 sa mola | 7 sa → yasal | 9 sa → **yasa dışı** |
+| 16:00–01:00, 1 sa mola (gerçek müşteri, 82 kez) | 5 sa → yasal | 8 sa → **yasa dışı** (yazılı onay yoksa) |
+| 16:00–01:00, 1,5 sa mola | yasal | 7,5 → yasal |
+
+Eski ölçü hiçbir durumda yönetmelikten sıkı değildi; fark hep *"yasa dışıya
+yasal deme"* yönündeydi (T-74).
+
+**Uygulandı:** iki yarıda; çözücü net süreyi şablondan kesin hesaplar, bu
+ölçüde doğrulayıcıyla aynı (brüt pencere ölçüsü T-68 olarak kalıyor).
+Veri setinde etkisi yok — bütün gece şablonları tam 7,5 saat net.
+
+→ T-74 · K-26 · şartname §6.3 (yazı borcu) ·
+`02-spec/v1.4-hazirlik/02-mevzuat-arastirmasi.md` bölüm 3b
+
+---
+
+## K-45 · "Gece haftası" = haftanın çalışma saatlerinin **yarısından çoğu** gece postasında; üst sınır 2, anlamı "iki hafta gece, iki hafta gündüz"
+
+**Karar (30 Eylül 2026 gecesi).** Mustafa: *"Online araştırıp karar
+vereceğiz. Sana bırakıyorum."* Parametrenin üst sınırı ve anlamı için:
+*"Sana katılıyorum."*
+
+**Kanun ve yönetmelik:** İş K. md. 69 ve Postalar Yön. md. 8 — *"bir
+çalışma haftası gece çalıştırılan işçilerin, ondan sonra gelen ikinci
+çalışma haftası gündüz çalıştırılmaları suretiyle postalar sıraya konur.
+Gece ve gündüz postalarında iki haftalık nöbetleşme esası da
+uygulanabilir."*
+
+**Araştırma:** hiçbir kaynak *"haftanın bir kısmı gece"* durumunu
+tanımlamıyor. Kaynakların hepsi kuralın amacını aynı cümleyle veriyor —
+**sürekli gece çalıştırma yasağı** (Yargıtay 22. HD 2017/24339 E.,
+2019/18396 K.: bir ay aralıksız gece vardiyası ihlal; işçi haklı fesih
+hakkı kazandı). Kural posta düzenini varsayıyor: kişi o hafta gece
+postasındadır ya da gündüz.
+
+**Karar:** kişi bazlı karma haftaya en tutarlı çeviri, yönetmeliğin **tek
+vardiya** için kullandığı ölçüyü **haftaya** uygulamak — haftanın çalışma
+saatlerinin yarısından çoğu gece postasındaysa o hafta gece haftasıdır.
+Tam yarısı değildir. Ölçü brüt saat (PDKS kaydında mola yok).
+
+**Sıkı okuma seçenek olarak kaldı:** `gece_haftasi_asgari_gece` (yasal
+işaretli): *"haftada N gece de haftayı gece haftası yapar"* — yalnız
+**ekler**, gevşetemez (K-18).
+
+**Parametre:** `azami_ardisik_gece_haftasi` — art arda 2×azami haftalık
+her pencerede en fazla azami gece haftası. 1: gece-gündüz-gece-gündüz.
+2: gece-gece-gündüz-gündüz; **gece-gece-gündüz-gece yasak** (dörtte üç).
+**Üst sınır 2** — 3 verilirse 2 uygulanır ve `eksik_boyutlar`da bildirilir
+(çözücü not yazar).
+
+**Geçmişte yalnız tam bilinen hafta değerlendirilir** (K-42): çoğunluk
+yarım bilgiyle hesaplanamaz; bir günü bilinmeyen hafta kısıt yaratmaz,
+raporlanır. Gerçek PDKS'te (kayıtların %57'si) bu, kuralın çoğunlukla
+*"raporladı"* demesi anlamına gelir — dürüst durum; PDKS'teki *"çalışma günü
+değil"* satırlarının bilinen boş gün sayılması (entegrasyon kararı, açık)
+bunu büyük ölçüde çözer.
+
+**Ölçüldü** (49 kişi, %95 doluluk, üç hafta): çözücü geceleri adaletle
+dağıttığı için birinci haftada gece haftası yaşayan **1 kişi** çıktı (sıkı
+okumada 11'di); ikinci ve üçüncü hafta geçmişle çözüldü, gece postası devri
+ihlali 0. Geçmişsiz çözülen üçüncü haftada 2 kişi üst üste gece haftası
+yaşardı — okunan geçmiş bunu engelledi. Yani bu ölçekte kural, sürekli
+gece çalıştırma **niyetini** yakalar, adil dağıtılmış planı zorlamaz.
+
+**Gerçek müşteri notu:** 16:00–01:00 deseni yönetmeliğe göre gece
+postasıdır (9 saatin 5'i gecede). O vardiyada çoğunlukla çalışan ekip her
+hafta gündüz ekibiyle yer değiştirmek zorunda; **sektör istisnası bu kuralı
+kapsamıyor** (istisna yalnız 7,5 saat sınırı için).
+
+→ T-72 · T-73 · K-25 · `09-motor/testler/test_hafta_kurallari.py`
+
+---
+
+## K-46 · "Hafta sonu çalıştı" = **hem cumartesi hem pazar**; gün, saatlerinin **yarısından çoğu**nun düştüğü gündür
+
+**Karar (30 Eylül 2026 gecesi, Mustafa).** İki parça:
+
+**Tanım — "Katılıyorum":** *"hafta sonu çalıştı" = hem cumartesi hem pazar
+çalıştı. 6 gün çalışan biri izin gününü cumartesi-pazar arasında dönüşümlü
+alırsa hiç birikmez; kural yalnız iki günü de üst üste çalışanları yakalar.
+Yöneticinin kastettiği: "üç hafta üst üste tam hafta sonu çalışmasın."*
+
+Önceki tanım (bir gün yeter) hafta hafta planlamada **üçüncü haftayı
+çözümsüz** bırakıyordu (T-75): 6 günlük desende herkes her hafta sonu
+*"çalışmış"* sayılıyor, motor gelecek haftayı görmüyor, 45 kişinin 29'u
+üçüncü haftada yasaklı kalıyordu.
+
+**Gün — "Katılıyorum, ben de bunu dedim":** Mustafa'nın sorusu *"ne kadar
+sarktığına bağlı olmaz mı, eşik mi vermeliyiz?"* — eşik yüzde elli, yani
+yönetmeliğin gece için kullandığı ölçünün aynısı:
+
+| vardiya | hangi gün |
+|---|---|
+| cuma 23:00–06:00 | 7 saatin 6'sı cumartesi → **cumartesi** |
+| cuma 16:00–01:00 | 9 saatin 1'i cumartesi → cuma |
+| pazar 23:00–06:00 | pazartesi |
+| tam yarısı | başladığı gün |
+
+**Yalnız hafta sonu kurallarında:** ardışık hafta sonu limiti ve adalet
+dengesinin hafta sonu boyutu (iki tarafta). Motorun genel kuralı — vardiya
+başladığı güne yazılır (Z-2) — ardışık gün, hafta tatili ve diğerlerinde
+olduğu gibi kalır.
+
+**Geçmişte yalnız kanıtlı (iki günü de kayıtlı) hafta sonu sayılır** (K-42).
+
+→ T-75 · şartname §6.5 (yazı borcu) · `09-motor/testler/test_hafta_kurallari.py`
+
+---
+
+## K-47 · Geçmiş eksik raporuna **yönetici bakar**; kapı engellemez
+
+**Karar (30 Eylül 2026 gecesi, Mustafa):** *"Yönetici baksın."*
+
+Sahte PDKS ölçümünde (T-77) 49 kişilik plan için `gecmis_eksik` 141 satır
+yazdı; 7 gerçek ihlalin hepsi haberliydi ama satır satır okunmaz.
+
+**Uygulanan:** doğrulayıcı çıktısına `gecmis_eksik_ozet` eklendi — kişi
+başına gruplanmış, **yasal** kontrolü yapılamayanlar önde, tepede sayılar
+(satır · kişi · yasal kontrolü yapılamayan kişi). Yayın kapısı bunu
+**engellemez** (K-42: atlanır, raporlanır).
+
+**Arayüz/backend işi (yazılmadı):** yayından önce özet gösterilir, yönetici
+*"gördüm"* der. **Veri işi (açık):** PDKS dosyasında her çalışan×gün satırı
+var ve planlanan süre `00:00` ise o gün çalışma günü değil — bu satır
+*"bilinen boş gün"* sayılırsa bilinmeyen gün sayısı ciddi düşer. PDKS'in o
+alanı gerçekten böyle kullanıp kullanmadığı doğrulanmalı.
+
+→ T-77 · T-18 · K-42 · `09-motor/testler/test_rapor_ozeti_ve_teshis.py`

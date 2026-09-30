@@ -157,6 +157,81 @@ daha sıkı kuralını koyabilir.
 
 ---
 
+---
+
+## 3b. 30 Eylül gecesi — md. 7 ve md. 8'in **tam metni** ve iki karar *(hukukçu yok; çevrimiçi kaynaklarla)*
+
+16 Eylül'de md. 8'in yalnız birinci fıkrasının bir parçası alıntılanmıştı.
+30 Eylül'de yönetmeliğin tamamı okundu (Lexpera konsolide metni; RG
+07.04.2004/25426, son değişiklik 29.06.2024). Üç fıkra kuralları değiştirdi.
+
+### md. 7/2 — "gece çalışması" neyin sayıldığı
+
+> *"Çalışma süresinin yarısından çoğu gece dönemine rastlayan bir postanın
+> çalışması, gece çalışması sayılır."*
+
+**Sonuç 1 — `GECE_VARDIYASI_AZAMI`'nin ölçüsü değişti (K-44, T-74).**
+Şartname *"gece penceresine düşen çalışma 7,5'i geçemez"* diyordu. Yargıtay
+9. HD, 2016/36126 E., 2020/17967 K.: 20:00–08:00 vardiyasında bilirkişi gece
+hesabını 06:00'da kesmişti; Yargıtay bozdu — hesap fiili bitiş 08:00'e kadar
+yapılır, *"çalışmanın yarısından fazlası gece dönemine denk gelince tüm
+çalışma gece kurallarına tabi."* Doktrin (Baysal): bu okuma **postalar
+hâlinde** çalışılan işyerleri içindir; vardiyasız işyerinde yalnız 20:00
+sonrası sayılır; örnek: *"17:00–01:00 çalışan işçinin çalışmasının tamamı gece
+sayılır."* Biz vardiya ürünüyüz → gece postasının **bütün** net süresi 7,5'i
+geçemez. 22:00–08:00 (1 sa mola) artık yasa dışı; 16:00–01:00 (1 sa mola,
+ilk müşteride 82 kez) yazılı onaysız yasa dışı.
+
+**Sonuç 2 — işaretsiz vardiyanın gece tahmini bu tanıma bağlandı (T-69).**
+Eski tahmin *"pencereye en ufak değme"* idi: 13:00–21:00'ü gece sayıyor,
+00:00–08:45'i saymıyordu.
+
+**Sonuç 3 — işaret tabandır (K-43).** Firma işareti yasal kuralları iki
+yönde de bozabiliyordu; artık yasal kurallar yönetmelik tanımını kullanır,
+firma işareti firma kurallarında yalnız **ekler**.
+
+### md. 8 — postaların değişme süresi, tam metin
+
+> *(1) "Gece ve gündüz işletilen ve nöbetleşe işçi postaları çalıştırılarak
+> yürütülen işlerde postalar; en fazla bir iş haftası gece çalıştırılan
+> işçilerin, ondan sonra gelen ikinci iş haftasında gündüz çalıştırılmaları
+> suretiyle ve postalar birbirlerinin yerini alacak şekilde düzenlenir."*
+>
+> *(3) "İşin niteliği ve yürütümü, iş sağlığı ve güvenliği gözönünde
+> tutularak, gece ve gündüz postalarında iki haftalık nöbetleşme esası da
+> uygulanabilir."*
+
+Aynı hüküm İş K. md. 69'da da var (*"…postalar sıraya konur. Gece ve gündüz
+postalarında iki haftalık nöbetleşme esası da uygulanabilir."*).
+
+**Ne tanımlı değil:** *"bir iş haftası gece çalıştırılan"* — haftanın bir
+kısmı gece bir kısmı gündüz çalışan kişi için hiçbir kaynak bir şey
+söylemiyor. Kaynakların ortak cümlesi kuralın amacı: **sürekli gece
+çalıştırma yasağı.** Yargıtay 22. HD, 2017/24339 E., 2019/18396 K.: işçi son
+bir ay aralıksız gece vardiyasında çalıştırılmış — yönetmeliğe aykırı, haklı
+fesih.
+
+**Karar (K-45):** yönetmeliğin tek vardiya için kullandığı ölçü haftaya
+uygulanır — haftanın çalışma saatlerinin yarısından çoğu gece postasındaysa
+gece haftasıdır. Daha sıkısı ayarla mümkün, gevşeği değil. Parametre 2'ye
+kadar (md. 8/3); 2 = iki hafta gece, iki hafta gündüz.
+
+**⚠ Sektör istisnası (6645 s. K.) bu maddeyi kapsamıyor** — yalnız 7,5 saat
+sınırı için. İlk müşterinin 16:00–01:00 ekibi (yönetmeliğe göre gece
+postası) yazılı onayla 7,5 saati aşabilir ama **haftalık nöbetleşmeden
+kurtulamaz.**
+
+### Kaynaklar (30 Eylül)
+
+- [Postalar Hâlinde İşçi Çalıştırılarak Yürütülen İşlerde Çalışmalara İlişkin Özel Usul ve Esaslar Hakkında Yönetmelik — Lexpera konsolide metin](https://www.lexpera.com.tr/mevzuat/yonetmelikler/postalar-halinde-isci-calistirilarak-yurutulen-islerde-calismalara-iliskin-ozel-usul-ve-esaslar)
+- [Yargıtay 9. HD 2016/36126 E., 2020/17967 K. — "çalışmaların tamamı gece çalışması olarak değerlendirilmelidir" (Musa Çakmakçı, muhasebetr.com)](https://www.muhasebetr.com/yazarlarimiz/musacakmakci/0160/)
+- [Yargıtay 7. HD 2013/3898 E., 2013/12354 K. — haftalık 45 saat aşılmasa da gece 7,5 saati aşan çalışma fazla çalışmadır (muhasebetr.com)](https://www.muhasebetr.com/yazarlarimiz/musacakmakci/0106/)
+- [Mustafa Baysal — "yarısından çoğu" kuralı postalar hâlinde işyerleri içindir; 17:00–01:00 örneği](https://mustafabaysal.com/gece-calismasi-nedir/)
+- [Harbiye Hukuk — işçi sürekli gece vardiyasında çalıştırılabilir mi (22. HD 2019/18396)](https://www.harbiyehukuk.com/isci-surekli-gece-vardiyasinda/)
+- [Mimoza Hukuk — sürekli gece vardiyası, nöbetleşme zorunluluğu](https://www.mimozahukuk.com/isci-surekli-gece-vardiyasinda-calistirilabilir-mi/)
+- [SMS Hukuk — gece kavramı ve gece çalışmasına ilişkin düzenlemeler](https://www.smshukuk.com/post/i%CC%87%C5%9F-hukukunda-gece-kavram%C4%B1-ve-gece-%C3%A7al%C4%B1%C5%9Fmas%C4%B1na-i%CC%87li%C5%9Fkin-d%C3%BCzenlemeler)
+- [Nevzat Erdağ — postalar hâlinde (vardiyalı) çalışma; iki haftalık nöbetleşme](https://www.nevzaterdag.com/is-kanununa-gore-postalar-halinde-vardiyali-calisma/)
+
 ## 4. Yeni bulgu 2 — gece sınırının sektör istisnası · **ilk müşterini ilgilendiriyor**
 
 `GECE_VARDIYASI_AZAMI` = 7,5 saat doğru, ama **mutlak değil.**

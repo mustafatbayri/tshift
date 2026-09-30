@@ -296,17 +296,23 @@ def _gece_sablonu(sablon):
 
     ⚠ AYNI TESPIT COZUCUDE DE VAR VE BILEREK AYRI YAZILDI (#7.6).
 
-    ⚠ TAHMIN = YONETMELIGIN TANIMI (T-69, 30 Eylul aksami). Postalar Yon.
-      md. 7/2: suresinin YARISINDAN COGU 20:00-06:00'da olan vardiya gece
-      calismasidir. Eskiden yalniz AYNI gunun 20:00-06:00 penceresine
-      "en ufak degme" araniyordu: 00:00-08:45 gece DEGIL, 13:00-21:00 GECE
-      sayiliyordu -- ikisi de yanlis. Yasal gece postasi devri ayni olcuyu
-      kullaniyor (`_yasal_gece_postasi_mi`).
+    ⚠ OTOMATIK ISARET = YONETMELIGIN TANIMI (T-69, 30 Eylul aksami).
+      Postalar Yon. md. 7/2: suresinin YARISINDAN COGU 20:00-06:00'da olan
+      vardiya gece calismasidir. Eskiden yalniz AYNI gunun 20:00-06:00
+      penceresine "en ufak degme" araniyordu: 00:00-08:45 gece DEGIL,
+      13:00-21:00 GECE sayiliyordu -- ikisi de yanlis.
+
+    ⚠ K-43 (Mustafa, 30 Eylul gecesi): OTOMATIK ISARET TABANDIR. Firma
+      ustune EKLEYEBILIR ("15:15-24:00 bizde gece sayilir"), altina
+      INEMEZ ("22:00-06:00 gece degil" yasal olarak gece olan vardiyayi
+      gece calisamayan birine acamaz). Isaret yalniz ekler. Ikinci donen
+      deger: isaret YOK, otomatik belirlendi (cozucu bunu nota cevirir).
     """
+    yasal = _yasal_gece_postasi_mi(
+        {"gun": 0, "bas": sablon["bas"], "bit": sablon["bit"]})
     if "gece_vardiyasi" in sablon:
-        return bool(sablon["gece_vardiyasi"]), False
-    return _yasal_gece_postasi_mi(
-        {"gun": 0, "bas": sablon["bas"], "bit": sablon["bit"]}), True
+        return (yasal or bool(sablon["gece_vardiyasi"])), False
+    return yasal, True
 
 
 @kural("GECE_UYGUNLUGU")
@@ -430,8 +436,21 @@ def _gece_onayi_gecerli(calisan, girdi, gun):
 
 @kural("GECE_VARDIYASI_AZAMI")
 def gece_vardiyasi_azami(girdi, atamalar, tanim):
-    """Gece penceresine dusen net calisma azami 7,5 saat -- YASAL, SERT.
+    """Gece calismasi azami 7,5 saat -- YASAL, SERT. Iki olcu birden:
 
+    1. GECE POSTASI (K-44, 30 Eylul gecesi): vardiya yasal anlamda gece
+       calismasiysa (`_yasal_gece_postasi_mi` -- suresinin yarisindan cogu
+       20:00-06:00'da) BUTUN net calisma suresi 7,5 saati gecemez.
+       Yargitay 9. HD 2016/36126 E., 2020/17967 K.: 20:00-08:00
+       vardiyasinda hesap 06:00'da kesilmez, 08:00'e kadar yapilir.
+       22:00-08:00 (1 sa mola): eskiden 7 sa -> yasal; simdi 9 sa -> ihlal.
+    2. PENCERE (30 Eylul gecesine kadarki tek olcu): 20:00-06:00'a dusen
+       net calisma 7,5'i gecemez. Tek basina hicbir zaman ates almaz
+       (pencerede 7,5'ten cogu olan vardiya zaten gece postasidir) -- ama
+       durmasi kurali eskisinden hicbir durumda GEVSEK yapmaz.
+
+    Ayni olay iki kez yazilmaz (V-1): posta olcusuyle yazilan vardiyanin
+    kestigi pencereler ayrica yazilmaz.
     Kanun "gecemez" diyor: tam 7,5 saat ihlal DEGILDIR.
     """
     azami = float(_p(tanim, "azami_saat", 7.5))
@@ -442,9 +461,27 @@ def gece_vardiyasi_azami(girdi, atamalar, tanim):
     cikan = []
     for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
         c = _calisan(girdi, kimlik) or {}
+        yazilan = []                    # posta olcusuyle yazilan araliklar
+        for a in liste:
+            if not _yasal_gece_postasi_mi(a):
+                continue
+            if istisnali_sektor and _gece_onayi_gecerli(c, girdi, a["gun"]):
+                continue
+            net = zaman.net_saat(a)
+            if net > azami + 1e-9:
+                yazilan.append(zaman.aralik(a))
+                cikan.append(_ihlal(
+                    "GECE_VARDIYASI_AZAMI", tanim, calisan=kimlik, gun=a["gun"],
+                    olculen=round(net, 2), gereken=azami,
+                    mesaj="%s gun %d: gece postasinda %.2f saat calisiyor "
+                          "(azami %s; vardiyanin yarisindan cogu gecede -- "
+                          "Is K. md. 69, Postalar Yon. md. 7)"
+                          % (kimlik, a["gun"], net, azami)))
         for gun, w0, w1 in _gece_pencereleri(p_bas, p_bit):
             if istisnali_sektor and _gece_onayi_gecerli(c, girdi, gun):
                 continue
+            if any(_kesisim(b0, b1, w0, w1) > 0 for b0, b1 in yazilan):
+                continue                # V-1: ayni vardiya zaten yazildi
             gece = sum(_gece_net_saat(a, w0, w1) for a in liste)
             if gece > azami + 1e-9:
                 cikan.append(_ihlal(
@@ -567,13 +604,14 @@ def _kisiye_gore_gecmisli(girdi, atamalar):
 def _atama_gece_mi(girdi, a, sablonlar=None):
     """Bir atama ya da gecmis kaydi GECE mi -- K-40.
 
-    Plan atamasi: sablonun isareti (yoksa saatten tahmin).
-    Gecmis kaydi: kaydin kendi `gece` isareti (yoksa saatten tahmin).
+    Plan atamasi: yonetmelik tanimi, ustune sablonun isareti (K-43).
+    Gecmis kaydi: yonetmelik tanimi, ustune kaydin `gece` isareti.
     """
     if a.get("_gecmis"):
+        yasal = _yasal_gece_postasi_mi(a)
         if "_gece" in a:
-            return a["_gece"]
-        return _gece_sablonu({"bas": a["bas"], "bit": a["bit"]})[0]
+            return yasal or bool(a["_gece"])
+        return yasal
     if sablonlar is None:
         sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
     t = sablonlar.get(a.get("sablon")) or {"bas": a["bas"], "bit": a["bit"]}
@@ -775,24 +813,55 @@ def ardisik_gece_limit(girdi, atamalar, tanim):
 
 # ----------------------------------------------------------------------
 # Hafta olcekli kurallar -- GECE_POSTASI_DEVRI, ARDISIK_HAFTA_SONU_LIMIT
-# (30 Eylul; T-28 kapaninca yazilabilir oldular)
+# (30 Eylul; T-28 kapaninca yazilabilir oldular; tanimlar 30 Eylul
+#  gecesi Mustafa'nin kararlariyla K-45 ve K-46 oldu)
 # ----------------------------------------------------------------------
 #
 # HAFTA = plan haftasi. Gun 0..6 -> hafta 0, -7..-1 -> -1, -14..-8 -> -2.
 # ⚠ `gun // 7` TABAN BOLMEDIR ve bilerek boyle: `int(gun / 7)` sifira
 #   dogru yuvarlar ve -1'i (gecen pazar) BU haftaya koyar.
-# ⚠ Vardiya BASLADIGI gunun haftasina yazilir (Z-2).
-# ⚠ Bilinmeyen hafta seriyi KIRAR (K-42): kaydin yoklugu calisilmadigini
-#   kanitlamaz ama kisit da yaratmaz. Raporu `denetle._gecmis_eksik` yazar.
+# ⚠ Bilinmeyen hafta kisit yaratmaz (K-42): kaydin yoklugu calisilmadigini
+#   kanitlamaz. Raporu `denetle._gecmis_eksik` yazar.
 
 
 def _hafta(gun):
     return gun // 7
 
 
-def _hafta_sonu_mu(gun):
-    """Cumartesi ya da pazar -- ADALET_DENGESI 'hafta_sonu' ile ayni tanim."""
-    return gun % 7 in (5, 6)
+def _cogunluk_gunu(a):
+    """Vardiya, saatlerinin YARISINDAN COGU hangi gune dusuyorsa o gunun
+    vardiyasidir -- K-46 (Mustafa, 30 Eylul gecesi).
+
+    Cuma 23:00-06:00 -> 7 saatin 6'si cumartesi -> CUMARTESI.
+    Cuma 16:00-01:00 -> 9 saatin 1'i cumartesi -> cuma.
+    Tam yari -> basladigi gun. Yonetmeligin gece icin kullandigi olcuyle
+    ayni esik (md. 7/2); iki ayri esik icat edilmedi.
+
+    ⚠ YALNIZ HAFTA SONU KURALLARINDA kullanilir (ardisik hafta sonu
+      limiti, adaletin hafta sonu boyutu). Motorun genel kurali -- vardiya
+      BASLADIGI gune yazilir (Z-2) -- ardisik gun, hafta tatili gibi
+      kurallarda oldugu gibi kalir.
+    """
+    bas, bit = zaman.aralik(a)
+    ertesi = zaman.mutlak(a["gun"] + 1, 0)
+    tasan = max(0.0, bit - max(bas, ertesi))
+    return a["gun"] + 1 if 2 * tasan > (bit - bas) + 1e-9 else a["gun"]
+
+
+def _hafta_sonu_gunu(a):
+    """5 (cumartesi), 6 (pazar) ya da None -- cogunluk gunune gore."""
+    g = _cogunluk_gunu(a)
+    return g % 7 if g % 7 in (5, 6) else None
+
+
+def _calisilan_hafta_sonu_gunleri(liste):
+    """{hafta: {5, 6} alt kumesi} -- o hafta cumartesi/pazar calisilanlar."""
+    cikan = {}
+    for a in liste:
+        hg = _hafta_sonu_gunu(a)
+        if hg is not None:
+            cikan.setdefault(_hafta(_cogunluk_gunu(a)), set()).add(hg)
+    return cikan
 
 
 # Postalar Yon. md. 7/2 (TAM METIN, 30 Eylul'de okundu):
@@ -805,9 +874,10 @@ YASAL_GECE_DONEMI = (20, 6)
 def _yasal_gece_postasi_mi(a):
     """Bu atama (ya da gecmis kaydi) YASAL anlamda gece calismasi mi.
 
-    ⚠ K-40 ISARETINE BAKILMAZ -- bilerek. Isaret FIRMANIN tanimidir ve
-      firma kurallarinda (ARDISIK_GECE_LIMIT, GECE_UYGUNLUGU) gecerlidir.
-      Yasal kuralda isaret iki yonde de yanlis sonuc verirdi:
+    ⚠ K-40 ISARETINE BAKILMAZ -- bilerek (K-43). Isaret FIRMANIN ek
+      tanimidir ve firma kurallarinda (ARDISIK_GECE_LIMIT, GECE_UYGUNLUGU)
+      yasal tanimin USTUNE eklenir. Yasal kuralda isaret iki yonde de
+      yanlis sonuc verirdi:
         * 22:00-06:00'yi "gece degil" isaretleyen firma yasadan kacardi
           (K-18: firma kanunu esnetemez);
         * 15:15-24:00'u "gece" isaretleyen firmanin yasal olarak serbest
@@ -817,8 +887,11 @@ def _yasal_gece_postasi_mi(a):
       yazar (#7.6).
     ⚠ YARISI DAHIL DEGIL ("yarisindan cogu"): 16:00-24:00 tam yari --
       gece calismasi DEGIL. 00:00-08:45 (6 / 8,75) gece calismasidir;
-      onceki gecenin 00:00-06:00 kismi da sayilir (T-69'un bu kuraldaki
-      karsiligi burada yok).
+      onceki gecenin 00:00-06:00 kismi da sayilir.
+    ⚠ YARGITAY BUNU BOYLE OKUYOR: 9. HD 2016/36126 E., 2020/17967 K. --
+      20:00-08:00 vardiyasinda gece hesabi 06:00'da kesilmez, fiili bitis
+      08:00'e kadar yapilir; "yarisindan fazlasi gece donemine denk gelince
+      tum calisma gece kurallarina tabi" (K-44).
     """
     bas, bit = zaman.aralik(a)
     gun = a["gun"]
@@ -831,6 +904,117 @@ def _yasal_gece_postasi_mi(a):
     return 2 * gece > (bit - bas) + 1e-9
 
 
+# Yonetmelik md. 8/3 iki haftalik nobetlesmeye izin veriyor; ucu vermiyor.
+# Kural yonetimi ekrani 3 yazdirmamali; motor yine de savunur (K-45).
+GECE_HAFTASI_YASAL_UST_SINIR = 2
+
+
+def _gece_haftasi_azami(tanim):
+    """Parametre, yasal ust sinira KIRPILMIS. Kirpildiysa ikinci deger
+    verilen sayidir (denetle bunu `eksik_boyutlar`da bildirir)."""
+    verilen = int(_p(tanim, "azami_ardisik_gece_haftasi", 1))
+    return max(1, min(verilen, GECE_HAFTASI_YASAL_UST_SINIR)), verilen
+
+
+def _gece_haftasi_mi(hafta_listesi, asgari_gece=None):
+    """Bu hafta GECE HAFTASI mi -- K-45 (Mustafa, 30 Eylul gecesi):
+    haftanin calisma saatlerinin YARISINDAN COGU gece postasindaysa.
+
+    Yonetmeligin tek vardiya icin kullandigi olcunun haftaya uygulanmis
+    hali (md. 7/2). "Bir is haftasi gece calistirilan"i hicbir kaynak
+    karma hafta icin tanimlamiyor; kaynaklarin hepsi kuralin amacini ayni
+    cumleyle veriyor -- SUREKLI gece calistirma yasagi (Yargitay 22. HD
+    2017/24339 E., 2019/18396 K.: bir ay aralıksız gece = ihlal).
+
+    `asgari_gece` (istege bagli, `gece_haftasi_asgari_gece`): haftada bu
+    kadar gece vardiyasi da haftayi gece haftasi yapar -- YALNIZ EKLER,
+    cogunluk olcusunu gevsetemez (K-18).
+
+    Olcu BRUT saat: gecmis (PDKS) kaydinda mola olmayabilir.
+    """
+    if not hafta_listesi:
+        return False
+    gece = [a for a in hafta_listesi if _yasal_gece_postasi_mi(a)]
+    if asgari_gece is not None and len(gece) >= int(asgari_gece) > 0:
+        return True
+    gece_saat = sum(zaman.brut_saat(a) for a in gece)
+    toplam = sum(zaman.brut_saat(a) for a in hafta_listesi)
+    return 2 * gece_saat > toplam + 1e-9
+
+
+def _haftaya_gore(liste):
+    cikan = {}
+    for a in liste:
+        cikan.setdefault(_hafta(a["gun"]), []).append(a)
+    return cikan
+
+
+def _hafta_tam_bilinen_mi(hafta, bilinen):
+    return all(d in bilinen for d in range(7 * hafta, 7 * hafta + 7))
+
+
+def _gecmis_gece_haftalari(girdi, kimlik, haftalar, asgari_gece=None):
+    """Gecmiste KANITLI gece haftalari -- K-42: yalniz TAM bilinen hafta
+    degerlendirilir. Bir gunu bile bilinmeyen haftada cogunluk
+    hesaplanamaz; o hafta kisit yaratmaz, raporlanir."""
+    bilinen = _bilinen_gunler(girdi, kimlik)
+    return {h for h, hl in haftalar.items()
+            if h < 0 and _hafta_tam_bilinen_mi(h, bilinen)
+            and _gece_haftasi_mi(hl, asgari_gece)}
+
+
+@kural("GECE_POSTASI_DEVRI")
+def gece_postasi_devri(girdi, atamalar, tanim):
+    """Is K. md. 69 / Postalar Yon. md. 8 -- gece haftasindan sonra gunduz.
+
+    YASAL, kabul edilemez (#6.3, K-25). Madde metni (tam, 30 Eylul):
+      (1) "...en fazla bir is haftasi gece calistirilan iscilerin, ondan
+           sonra gelen ikinci is haftasinda gunduz calistirilmalari
+           suretiyle ve postalar birbirlerinin yerini alacak sekilde
+           duzenlenir."
+      (3) "...gece ve gunduz postalarinda iki haftalik nobetlesme esasi da
+           uygulanabilir."
+
+    KURAL (K-45): art arda 2 x azami haftalik her pencerede en fazla
+    `azami` gece haftasi.
+      azami 1 -> gece, gunduz, gece, gunduz
+      azami 2 -> gece, gece, gunduz, gunduz (iki haftalik nobetlesme);
+                 gece, gece, gunduz, gece YASAK (dortte uc)
+    Ust sinir 2 (`GECE_HAFTASI_YASAL_UST_SINIR`).
+
+    GECE HAFTASI = `_gece_haftasi_mi` (cogunluk). GECE = yonetmeligin
+    tanimi (`_yasal_gece_postasi_mi`), K-40 isareti degil.
+    Yalniz PLAN haftasi yazilir; gecmisin kendi ihlali plana yazilmaz.
+    Bilinmeyen gecmis hafta 0 sayilir (K-42) -- rapor denetle'de.
+    """
+    azami, _ = _gece_haftasi_azami(tanim)
+    asgari_gece = _p(tanim, "gece_haftasi_asgari_gece", None)
+    pencere = 2 * azami
+    cikan = []
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
+        haftalar = _haftaya_gore(liste)
+        kanitli = _gecmis_gece_haftalari(girdi, kimlik, haftalar, asgari_gece)
+        plan_haftalari = sorted(h for h in haftalar if h >= 0)
+        for hafta in plan_haftalari:
+            if not _gece_haftasi_mi(haftalar[hafta], asgari_gece):
+                continue
+            gece_haftalari = kanitli | {h for h in plan_haftalari
+                                        if _gece_haftasi_mi(haftalar[h], asgari_gece)}
+            sayi = sum(1 for h in range(hafta - pencere + 1, hafta + 1)
+                       if h in gece_haftalari)
+            if sayi > azami:
+                geceler = [a for a in haftalar[hafta]
+                           if _yasal_gece_postasi_mi(a)]
+                cikan.append(_ihlal(
+                    "GECE_POSTASI_DEVRI", tanim, calisan=kimlik,
+                    gun=min(a["gun"] for a in geceler),
+                    olculen=sayi, gereken=azami,
+                    mesaj="%s son %d haftanin %d'inde gece haftasi (en fazla "
+                          "%d; gece haftasindan sonra gunduz -- Is K. md. 69, "
+                          "Postalar Yon. md. 8)" % (kimlik, pencere, sayi, azami)))
+    return cikan
+
+
 def _geriye_seri(haftalar, hafta):
     """`hafta`dan geriye kesintisiz isaretli hafta sayisi (kendisi dahil)."""
     n = 0
@@ -839,72 +1023,39 @@ def _geriye_seri(haftalar, hafta):
     return n
 
 
-@kural("GECE_POSTASI_DEVRI")
-def gece_postasi_devri(girdi, atamalar, tanim):
-    """Postalar Yon. md. 8 -- en fazla bir is haftasi gece, sonra gunduz.
-
-    YASAL, kabul edilemez (#6.3, K-25). Madde metni (tam, 30 Eylul):
-      (1) "...en fazla bir is haftasi gece calistirilan iscilerin, ondan
-           sonra gelen ikinci is haftasinda gunduz calistirilmalari
-           suretiyle ve postalar birbirlerinin yerini alacak sekilde
-           duzenlenir."
-      (3) "...gece ve gunduz postalarinda iki haftalik nobetlesme esasi da
-           uygulanabilir."  -> `azami_ardisik_gece_haftasi` 2 yasaldir.
-
-    ⚠ "GECE HAFTASI" = o hafta EN AZ BIR gece calismasi. EN SIKI okuma;
-      yonetmelik "bir is haftasi gece calistirilan"i tanimlamiyor. Gevsek
-      okumalar (cogunluk, esik) her hafta birkac gece calismayi hic "gece
-      haftasi" saymayabilir. URUN KARARI BEKLIYOR -- degisirse degisecek
-      tek yer asagidaki `haftalar` kumesinin tanimi.
-    ⚠ GECE = YONETMELIGIN KENDI TANIMI (md. 7/2, `_yasal_gece_postasi_mi`):
-      calisma suresinin yarisindan cogu 20:00-06:00'da. K-40 isareti
-      BILEREK kullanilmaz -- gerekcesi yardimcinin icinde.
-    ⚠ Yalniz PLAN haftasindaki gece haftasi yazilir; seri gecmise uzanir.
-      Gecmisin kendi ihlali plana yazilmaz.
-    """
-    azami = int(_p(tanim, "azami_ardisik_gece_haftasi", 1))
-    cikan = []
-    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
-        geceler = [a for a in liste if _yasal_gece_postasi_mi(a)]
-        haftalar = {_hafta(a["gun"]) for a in geceler}
-        for hafta in sorted(h for h in haftalar if h >= 0):
-            seri = _geriye_seri(haftalar, hafta)
-            if seri > azami:
-                ilk = min(a["gun"] for a in geceler
-                          if not a.get("_gecmis") and _hafta(a["gun"]) == hafta)
-                cikan.append(_ihlal(
-                    "GECE_POSTASI_DEVRI", tanim, calisan=kimlik, gun=ilk,
-                    olculen=seri, gereken=azami,
-                    mesaj="%s ust uste %d is haftasi gece calisiyor (en fazla "
-                          "%d; sonraki hafta gunduz olmali -- Postalar Yon. "
-                          "md. 8)" % (kimlik, seri, azami)))
-    return cikan
-
-
 @kural("ARDISIK_HAFTA_SONU_LIMIT")
 def ardisik_hafta_sonu_limit(girdi, atamalar, tanim):
     """Ust uste azami hafta sonu -- SERT, firma kurali, kabul edilebilir (#6.5).
 
-    ⚠ "HAFTA SONU CALISTI" = cumartesi YA DA pazar BASLAYAN bir vardiya.
-      Cuma gecesi cumartesiye tassa da cumaya yazilir (Z-2) ve SAYILMAZ --
-      bu bir secim, ADALET_DENGESI'nin 'hafta_sonu' boyutuyla ayni.
-    ⚠ Iki gunu de calisilan hafta sonu TEK hafta sonudur.
+    K-46 (Mustafa, 30 Eylul gecesi):
+      * "HAFTA SONU CALISTI" = HEM cumartesi HEM pazar calisildi. Tek gun
+        yetmez. Haftada 6 gun calisan kisi izin gununu iki gun arasinda
+        donusumlu alirsa hic birikmez; kural yalniz iki gunu de ust uste
+        calisanlari yakalar -- "uc hafta ust uste tam hafta sonu calismasin".
+        ⚠ Onceki tanim (bir gun yeter) hafta hafta planlamada UCUNCU
+          haftayi cozumsuz birakiyordu (T-75): 6 gunluk desende herkes her
+          hafta sonu "calismis" sayiliyordu.
+      * Gun = vardiyanin saatlerinin yarisindan cogunun dustugu gun
+        (`_cogunluk_gunu`): cuma 23:00-06:00 cumartesidir.
+    Gecmiste yalniz KANITLI (iki gunu de kayitli) hafta sonu sayilir (K-42).
     """
     azami = int(_p(tanim, "azami_ardisik", 2))
     cikan = []
     for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
-        hafta_sonlari = [a for a in liste if _hafta_sonu_mu(a["gun"])]
-        haftalar = {_hafta(a["gun"]) for a in hafta_sonlari}
-        for hafta in sorted(h for h in haftalar if h >= 0):
-            seri = _geriye_seri(haftalar, hafta)
+        gunler = _calisilan_hafta_sonu_gunleri(liste)
+        tam = {h for h, g in gunler.items() if g >= {5, 6}}
+        for hafta in sorted(h for h in tam if h >= 0):
+            seri = _geriye_seri(tam, hafta)
             if seri > azami:
-                ilk = min(a["gun"] for a in hafta_sonlari
-                          if not a.get("_gecmis") and _hafta(a["gun"]) == hafta)
+                ilk = min(_cogunluk_gunu(a) for a in liste
+                          if not a.get("_gecmis")
+                          and _hafta_sonu_gunu(a) is not None
+                          and _hafta(_cogunluk_gunu(a)) == hafta)
                 cikan.append(_ihlal(
                     "ARDISIK_HAFTA_SONU_LIMIT", tanim, calisan=kimlik, gun=ilk,
                     olculen=seri, gereken=azami,
-                    mesaj="%s ust uste %d hafta sonu calisiyor (azami %d)"
-                          % (kimlik, seri, azami)))
+                    mesaj="%s ust uste %d hafta sonu (cumartesi ve pazar) "
+                          "calisiyor (azami %d)" % (kimlik, seri, azami)))
     return cikan
 
 
@@ -1531,10 +1682,12 @@ def _boyut_sayaci(boyut, girdi=None):
         girdi = girdi or {}
         sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
         return lambda a: _atama_gece_mi(girdi, a, sablonlar)
+    # K-46: gun = saatlerinin yarisindan cogunun dustugu gun (cuma
+    # 23:00-06:00 cumartesidir). Hafta sonu kurallariyla ayni tanim.
     if boyut == "hafta_sonu":
-        return lambda a: a["gun"] in (5, 6)
+        return lambda a: _hafta_sonu_gunu(a) is not None
     if boyut == "cumartesi":
-        return lambda a: a["gun"] == 5
+        return lambda a: _hafta_sonu_gunu(a) == 5
     return None          # 'saat' sayilabilir bir boyut degil -- asagiya bak
 
 

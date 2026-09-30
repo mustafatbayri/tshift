@@ -193,7 +193,24 @@ def main():
         print("\n     ihlal dagilimi:")
         for kod, n in sorted(sayi.items(), key=lambda x: -x[1]):
             print("       %-26s %d" % (kod, n))
+    # SERT ihlallerin cumleleri ekrana ve dosyaya: 30 Eylul gecesi tam
+    # olcekli kosu 1 sert ihlal (PART_TIME_LIMIT) verdi ve sebebi
+    # arastirilamadi -- ne kisi ne saat kaydedilmisti (T-78).
+    sertler = [i for i in r.get("ihlaller", []) if i.get("agirlik") == "SERT"]
+    if sertler:
+        print("\n     SERT ihlaller:")
+        for i in sertler[:20]:
+            print("       %s" % i.get("mesaj", i))
+        sonuc["sert_ihlal_cumleleri"] = [i.get("mesaj", str(i)) for i in sertler]
     yaz(sonuc)
+    # PLAN da yazilir: bir ihlalin sebebi ancak planla arastirilabilir.
+    plan_yolu = os.path.join(BURASI, "olcum-plan-%d.json" % round(DOLULUK * 100)) \
+        if OLCEK == 1.0 else os.path.join(BURASI, "olcum-plan-%s.json" % OLCEK)
+    with io.open(plan_yolu, "w", encoding="utf-8") as f:
+        json.dump({"atamalar": c["atamalar"], "ihlaller": r.get("ihlaller", []),
+                   "uygulanmayan_notlar": c.get("uygulanmayan_notlar")},
+                  f, ensure_ascii=False)
+    print("     plan yazildi: %s" % os.path.basename(plan_yolu))
 
     print("\nTOPLAM: %.0f sn" % (time.time() - t0))
     print("Sonuc yazildi: %s" % ("olcum-sonucu-%d.json" % round(DOLULUK * 100)

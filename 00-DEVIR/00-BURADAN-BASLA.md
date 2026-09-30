@@ -69,6 +69,21 @@ yapılan planda gerçek geçmişe göre 7 ihlal kaçtı, **hepsi** raporda haber
 verilmişti — ama 141 satırla (**T-77**). Motor **359 test**, bekçiler **20**,
 **88 mutasyon, hepsi öldü**. Açık 🔴 **dokuz**. **Mustafa'yı bekleyen sorular:**
 oturum kaydı `oturumlar/2026-09-30-nitelik-kapsamasi.md` bölüm 29 ve eki.
+
+**⚠ 30 Eylül gecesi — en güncel durum budur.** Mustafa döndü; hukukçu olmadığı
+için iki yasal soruyu çevrimiçi kaynaklarla bana bıraktı, kalanını
+kararlaştırdı — **beş karar, iki motor yarısında:** **K-43** gece işareti
+yönetmelikten otomatik gelir ve tabandır, firma yalnız ekler (K-40'ın üç
+bekçisi tersine döndü) · **K-44** yasal gece sınırı gece postasının **bütün**
+süresine (Yargıtay 9. HD 2020/17967) · **K-45** gece haftası = saatlerin
+yarısından çoğu; üst sınır 2 = iki hafta gece, iki hafta gündüz · **K-46**
+hafta sonu = iki gün de, gün = saatlerin yarısından çoğu · **K-47** geçmiş
+eksik raporuna yönetici bakar. **Ölçüldü:** üçüncü hafta artık **çözülüyor,
+0 ihlal** (T-75 kapandı); tam ölçek 1.200 sn koşusu süre sözünü tuttu (T-59
+kapandı) ama **1 sert ihlalle** döndü — **T-78** 🔴, koşu tekrarı gerekiyor.
+Teşhis *"belirsiz"* diyebiliyor (T-76 kapandı). Motor **406 test**, **116
+mutasyon hepsi öldü**, 33 gövde · 33 vaka. Açık 🔴 **yedi**. **Şartname yazı
+borcu** birikti (§6.3, §6.5, §8.3, §11.4 — oturum kaydı bölüm 37).
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -240,8 +255,8 @@ A5 ertelendi (K-12).
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
 | Yazılan kural gövdesi | **33** (katalogdaki **40**'ın alt kümesi) | 30 Eylül akşamı, ikisi de sayılarak |
-| Motor birim testi | **359**, hepsi yeşil | 30 Eylül akşamı, koşularak |
-| Zor veri seti bekçisi | **20**, hepsi yeşil (12 + sahte PDKS üreticisi 8; 6 dk 02 sn) | 30 Eylül akşamı |
+| Motor birim testi | **406**, hepsi yeşil | 30 Eylül gecesi, koşularak |
+| Zor veri seti bekçisi | **20**, hepsi yeşil (12 + sahte PDKS üreticisi 8; 6 dk 10 sn) | 30 Eylül gecesi |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
 
@@ -457,9 +472,10 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-22~~ | ✅ **KAPANDI 23 Eylül** — çözümsüzlükteki taslak artık **özgün** girdiyle denetleniyor; boş plan `var: False`. 4 test | — |
 > | ~~T-19~~ | ✅ **KAPANDI 23 Eylül** — şartname biçimi kazandı; talep beş yerde hücre başına okunuyor. Yeni kanal `okunmayan_alanlar`. 5 test, **beşi de kırmızı yandı** | — |
 > | ~~T-28~~ | ✅ **KAPANDI 30 Eylül, K-42** — iki taraf da geçmişi okuyor; ölçüldü: geçmişsiz 27 yasal ihlal, geçmişle 0 | — |
-> | **T-74** 🆕 | Yasal gece sınırı yalnız pencereye düşen kısmı ölçüyor; yönetmeliğe (md. 7) göre gece postasının **bütün** süresi 7,5 saati geçemez — motor yasa dışı bir planı yasal gösterebilir | ✅ ölçü hangisi (hukuk teyidiyle) |
-> | **T-75** 🆕 | Ardışık hafta sonu limiti hafta hafta planlamada **üçüncü haftayı çözümsüz** bırakıyor (iki koşuda da); kural kaldırılınca çözülüyor | ✅ tanım (iki gün mü) ya da önden bakış |
-> | **T-72** 🆕 | Gece postası devri yazıldı; *"bir iş haftası gece çalıştırılan"* yönetmelikte tanımsız — en sıkı okuma uygulandı, 49 kişide çözülebilir ölçüldü | ✅ tanım |
+> | ~~T-75~~ | ✅ **KAPANDI 30 Eylül gecesi, K-46** — hafta sonu = iki gün de; üçüncü hafta çözüldü, 0 ihlal | — |
+> | ~~T-72~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — gece haftası = saatlerin yarısından çoğu | — |
+> | ~~T-74~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — gece postasının bütün süresi; Yargıtay 9. HD 2020/17967 | — |
+> | **T-78** 🆕 | Tam ölçekte plan **1 sert ihlalle** döndü (yarı zamanlı tavanı, `yayınlanabilir: false`); sebep plan kaydedilmediği için açık, araç artık planı yazıyor | ❌ karar gerektirmiyor — koşu tekrarı |
 > | **T-38** 🆕 | Şartnamenin **on iki alanı daha** karşılıksız. En ağırı `kural_degerleri`: kişiye özel sözleşme sınırı yok sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor | ✅ hangisi önce yazılacak |
 > | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
@@ -587,7 +603,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **359** birim testi (30 Eylül akşamı). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **406** birim testi (30 Eylül gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

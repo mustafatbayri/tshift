@@ -503,22 +503,24 @@ def _(g, p):
 
 
 @vaka("GECE_POSTASI_DEVRI",
-      "Bu hafta gece calisan birine gecen hafta da bir gece kaydi eklenir")
+      "Bu hafta gece calisan birinin haftasi geceye cevrilir, gecen hafta "
+      "tam bilinen bir gece haftasi eklenir")
 def _(g, p):
-    """YASAL -- Postalar Yon. md. 8 (K-25).
+    """YASAL -- Is K. md. 69 / Postalar Yon. md. 8 (K-25, K-45).
 
-    Sahne TEK HAFTA ve gecmissiz: kural temel planda ISIRAMAZ. Bu yuzden
-    vaka PLANA degil GECMISE dokunur: bu hafta gece vardiyasi olan bir
-    kisiye gecen PERSEMBE gecesi (gun -4) eklenir. Persembe bilerek:
-    pazartesi sinirindaki dinlenme ve ardisik gece kurallari etkilenmesin.
+    Sahne TEK HAFTA ve gecmissiz: kural temel planda ISIRAMAZ. Vaka iki
+    seye dokunur:
+      1. Gecen hafta: bes gece kaydi (pazartesi-cuma) ve haftanin TAMAMI
+         bilinen -- K-45 cogunluk olcusu yarim bilinen haftada hesaplanmaz.
+      2. Bu hafta: kisinin gece disi atamalari silinir ki bu hafta da gece
+         haftasi olsun (calisma saatlerinin yarisindan cogu gece).
+    Cuma gecesi (gun -3) pazartesiye 48+ saat uzak: pazartesi sinirindaki
+    dinlenme ve ardisik gece kurallari etkilenmez.
 
-    DAR: tek kisi, tek gecmis kaydi.
-
-    ⚠ GECE = YONETMELIGIN TANIMI (md. 7/2), firma isareti DEGIL: suresinin
-      yarisindan cogu 20:00-06:00'da olan vardiya. Isarete baksaydik
-      B-AKSAM'i (15:15-24:00, isaretli) secebilirdik -- o yasal olarak gece
-      degil ve kural hakli olarak susardi. Secim burada, dogrulayicidan
-      bagimsiz hesaplanir.
+    ⚠ GECE = YONETMELIGIN TANIMI (md. 7/2), firma isareti DEGIL. Isarete
+      baksaydik B-AKSAM'i (15:15-24:00, isaretli) secebilirdik -- o yasal
+      olarak gece degil ve kural hakli olarak susardi. Secim burada,
+      dogrulayicidan bagimsiz hesaplanir.
     """
     def _yasal_gece(t):
         bas, bit = float(t["bas"]), float(t["bit"])
@@ -530,25 +532,40 @@ def _(g, p):
     a = next((a for a in p if a.get("sablon") in geceler), None)
     if a is None:
         return
-    c = next(c for c in g["calisanlar"] if c["id"] == a["calisan"])
-    c.setdefault("gecmis_vardiyalar", []).append(
-        {"gun": -4, "bas": 23, "bit": 31, "gece": True})
+    kimlik = a["calisan"]
+    p[:] = [x for x in p if x["calisan"] != kimlik or x.get("sablon") in geceler]
+    c = next(c for c in g["calisanlar"] if c["id"] == kimlik)
+    c["gecmis_vardiyalar"] = [{"gun": d, "bas": 23, "bit": 31}
+                              for d in (-7, -6, -5, -4, -3)]
+    c["gecmis_bilinen_gunler"] = list(range(-7, 0))
 
 
 @vaka("ARDISIK_HAFTA_SONU_LIMIT",
-      "Bu hafta sonu calisan birine onceki iki cumartesi eklenir")
+      "Bu hafta cumartesi ve pazari calisan birine onceki iki TAM hafta "
+      "sonu eklenir")
 def _(g, p):
-    """Azami 2: bu hafta sonu UCUNCU olur. Vaka yine GECMISE dokunur.
+    """Azami 2: bu hafta sonu UCUNCU tam hafta sonu olur (K-46: iki gun de).
 
-    Cumartesi 10:00-18:00 bilerek: pazar bos kalir, pazartesi sinirindaki
-    dinlenme ve hafta tatili kurallari etkilenmez. DAR: tek kisi.
+    Kisinin plandaki cumartesi ve pazar atamalari yoksa eklenir (kendi
+    ekibinin gunduz sablonuyla, 10:00-18:00). Gecmis: iki onceki hafta
+    sonunun dort gunu, 10:00-18:00 -- pazartesi sinirina 14+ saat, dinlenme
+    ve hafta tatili etkilenmez. DAR: tek kisi.
     """
-    a = next((a for a in p if a["gun"] in (5, 6)), None)
-    if a is None:
-        return
-    c = next(c for c in g["calisanlar"] if c["id"] == a["calisan"])
+    hs = {}
+    for a in p:
+        if a["gun"] in (5, 6):
+            hs.setdefault(a["calisan"], set()).add(a["gun"])
+    kimlik = next((k for k, gunler in hs.items() if gunler >= {5, 6}), None)
+    if kimlik is None:
+        kimlik = next(iter(hs))
+        ekip = next(a["ekip"] for a in p if a["calisan"] == kimlik)
+        for d in (5, 6):
+            if d not in hs[kimlik]:
+                p.append({"calisan": kimlik, "ekip": ekip, "sablon": "VAKA-HS",
+                          "gun": d, "bas": 10, "bit": 18, "molalar": []})
+    c = next(c for c in g["calisanlar"] if c["id"] == kimlik)
     c.setdefault("gecmis_vardiyalar", []).extend(
-        [{"gun": -9, "bas": 10, "bit": 18}, {"gun": -2, "bas": 10, "bit": 18}])
+        [{"gun": d, "bas": 10, "bit": 18} for d in (-9, -8, -2, -1)])
 
 
 @vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")

@@ -173,16 +173,35 @@ def test_GECE_ARADA_GUNDUZ_vardiyasi_da_seriyi_KIRAR():
     assert not _ih(_sahne([GECE_KURAL]), atamalar, "ARDISIK_GECE_LIMIT")
 
 
-def test_GECE_ISARET_tahmini_ezer():
-    """⚠ K-40: sablon "gece degil" isaretliyse, saati gece olsa da sayilmaz.
+def test_GECE_ISARET_yalniz_EKLER_yasal_geceyi_inkar_edemez():
+    """⚠ K-43 (30 Eylul gecesi): otomatik isaret TABANDIR. 23:00-07:00
+    yonetmelige gore gece; firma "gece degil" dese de gece sayilir.
 
-    Isaretsiz bir govde 23:00'u gorup gece sayardi.
+    ⚠ Bu test 30 Eylul aksamina kadar TERSINI bekliyordu (K-40: "isaret
+      tahmini ezer"). Mustafa'nin karari degistirdi: isaret yalniz ekler,
+      altina inemez -- inebilseydi gece calisamayan biri 22:00-06:00'ya
+      yazilabilirdi.
     """
-    isaretsiz_gece_degil = dict(GECE, id="V-X", gece_vardiyasi=False)
-    g = _sahne([GECE_KURAL], sablonlar=[isaretsiz_gece_degil, GUNDUZ])
+    inkar = dict(GECE, id="V-X", gece_vardiyasi=False)
+    g = _sahne([GECE_KURAL], sablonlar=[inkar, GUNDUZ])
     atamalar = [_a(d, "V-X", 23, 31) for d in (0, 1, 2, 3)]
-    assert not _ih(g, atamalar, "ARDISIK_GECE_LIMIT"), (
-        "isaret 'gece degil' diyor, govde saate bakmis")
+    assert _ih(g, atamalar, "ARDISIK_GECE_LIMIT"), (
+        "firma 'gece degil' dedi diye yasal gece sayilmadi (K-43)")
+
+
+def test_GECE_ISARET_ekler_yasal_olmayan_aksami_gece_yapar():
+    """Firma 15:15-24:00'u gece sayiyorsa (veri setindeki B-AKSAM) firma
+    kurali icin gecedir -- yonetmelik saymasa da. Daha siki olmak serbest."""
+    aksam = dict(GECE, id="V-A", bas=15.25, bit=24, gece_vardiyasi=True)
+    g = _sahne([GECE_KURAL], sablonlar=[aksam, GUNDUZ])
+    atamalar = [_a(d, "V-A", 15.25, 24) for d in (0, 1, 2, 3)]
+    assert _ih(g, atamalar, "ARDISIK_GECE_LIMIT"), (
+        "firmanin 'gece' isareti okunmadi")
+    isaretsiz = dict(aksam, id="V-B")
+    del isaretsiz["gece_vardiyasi"]
+    g2 = _sahne([GECE_KURAL], sablonlar=[isaretsiz, GUNDUZ])
+    assert not _ih(g2, [_a(d, "V-B", 15.25, 24) for d in (0, 1, 2, 3)],
+                   "ARDISIK_GECE_LIMIT"), "isaretsiz 15:15-24:00 gece sayildi"
 
 
 def test_GECE_isaretsiz_sablon_SAATTEN_tahmin_edilir():

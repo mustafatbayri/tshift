@@ -4,6 +4,26 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (gece) · Beş karar uygulandı (K-43…K-47) · T-72, T-73, T-74, T-75, T-76, T-59 kapandı · T-78 açıldı**
+Mustafa döndü; hukukçu olmadığı için iki yasal soruyu çevrimiçi kaynaklarla
+bana bıraktı, kalanını kararlaştırdı. **K-44:** Yargıtay 9. HD 2020/17967 —
+gece postasının (yarısından çoğu 20:00–06:00'da) **bütün** net süresi 7,5
+saati geçemez; 22:00–08:00 artık yasa dışı. **K-45:** gece haftası =
+haftanın saatlerinin yarısından çoğu gece postasında; üst sınır 2 = iki
+hafta gece, iki hafta gündüz; sıkı okuma ayar olarak kaldı. **K-43:** gece
+işareti yönetmelikten otomatik, firma yalnız ekler — K-40'ın üç bekçi testi
+tersine döndü. **K-46:** hafta sonu = iki gün de; gün = saatlerin yarısından
+çoğu. **K-47:** geçmiş eksik raporuna yönetici bakar, kişi başına özet.
+**Ölçüldü:** üçüncü hafta iki haftalık geçmişle artık **çözülüyor, 0 ihlal**
+(eski tanımla iki koşuda çözümsüzdü); tam ölçek 1.200 sn koşusu süre sözünü
+tuttu (121,8 + 1.078,2 = 1.200,0) ama **1 sert ihlalle** döndü (**T-78** 🔴,
+yarı zamanlı tavanı; plan kaydedilmediği için sebep açık, araç artık planı
+yazıyor). Teşhis üç cevap veriyor (T-76). ⚠ 116 mutasyonun ilk turunda 10
+yaşadı — hepsi test boşluğu, hepsi kapatıldı; ⚠ T-54'ün tuzağı çözücü
+testinde bir kez daha ısırdı (bedava altıncı vardiya). Motor **406 test**.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-43…K-47 · `00-DEVIR/06-ACIK-RISKLER.md` T-78 · `02-spec/v1.4-hazirlik/02-mevzuat-arastirmasi.md` bölüm 3b · `09-motor/testler/test_hafta_kurallari.py` · `test_rapor_ozeti_ve_teshis.py`
+
+
 **2026-09-30 (akşam, 2) · Üç hafta: ardışık hafta sonu limiti üçüncü haftayı kilitliyor (T-75) · sahte PDKS · T-59 düzeltildi**
 Mustafa'nın iki aşamalı yolu **üç haftaya** uzatıldı. Üçüncü hafta, iki haftalık
 geçmişle **iki bağımsız koşuda da çözümsüz**; ardışık hafta sonu limiti

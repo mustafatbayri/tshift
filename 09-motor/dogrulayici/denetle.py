@@ -48,13 +48,15 @@ def degerlendir(girdi, atamalar):
             continue
         ihlaller.extend(govde(girdi, atamalar, tanim))
 
+    gecmis_eksik = _gecmis_eksik(girdi, atamalar)
     return {
         "ihlaller": ihlaller,
         "metrikler": _metrikler(girdi, atamalar, ihlaller),
         "uygulanmayan_kurallar": uygulanmayan,
         "eksik_boyutlar": _eksik_boyutlar(girdi),
         "okunmayan_alanlar": _okunmayan_alanlar(girdi),
-        "gecmis_eksik": _gecmis_eksik(girdi, atamalar),
+        "gecmis_eksik": gecmis_eksik,
+        "gecmis_eksik_ozet": _gecmis_eksik_ozet(girdi, gecmis_eksik),
         "yayin_kapisi": yayin_kapisi(ihlaller),
     }
 
@@ -240,33 +242,6 @@ def _plan_serisi(gunler):
     return n
 
 
-def _hafta_geriye(isaretli, bos_mu, esik):
-    """Plan haftasindan (0) geriye HAFTA HAFTA yuru -- K-42, hafta olcekli.
-
-    Plan haftasi serinin ilk halkasidir (cagiran bunu garanti eder).
-    isaretli : gecmiste KANITLI isaretli haftalar (gece haftasi, calisilan
-               hafta sonu)
-    bos_mu   : hafta -> o haftanin isaretsiz oldugu KANITLI mi (ilgili
-               butun gunleri biliniyor)
-    esik     : serinin ihlal sayildigi uzunluk (azami + 1)
-
-    Donen: (durum, hafta) -- durum `_geri_yuru` ile ayni dort deger.
-    """
-    if esik <= 1:
-        return "ilgisiz", None
-    seri = 1
-    for hafta in range(-1, -esik, -1):
-        if hafta in isaretli:
-            seri += 1
-            if seri >= esik:
-                return "ihlal", None
-        elif bos_mu(hafta):
-            return "guvenli", None
-        else:
-            return "belirsiz", hafta
-    return "guvenli", None
-
-
 def _gecmis_eksik(girdi, atamalar):
     aktif = {t.get("kod"): t for t in _aktif_kurallar(girdi)}
     sinir_kurallari = ("VARDIYA_ARASI_DINLENME", "HAFTA_TATILI",
@@ -321,44 +296,79 @@ def _gecmis_eksik(girdi, atamalar):
                 yaz("ARDISIK_GECE_LIMIT", kimlik, gun,
                     "ardisik gece kontrolu")
 
-        # HAFTA OLCEKLI IKI KURAL (30 Eylul). Rapor yalniz plan haftasi
-        # serinin ilk halkasiysa yazilir: bu hafta gece yoksa (hafta sonu
-        # bos ise) gecmisin ne oldugu sonucu degistiremez.
+        # HAFTA OLCEKLI IKI KURAL (30 Eylul; tanimlar K-45, K-46). Rapor
+        # yalniz plan haftasi sonucu DEGISTIREBILECEKSE yazilir: bu hafta
+        # gece haftasi degilse (hafta sonu tam calisilmadiysa) gecmisin ne
+        # oldugu sonucu degistiremez.
         _hafta = kurallar._hafta
-        if "GECE_POSTASI_DEVRI" in aktif and any(
-                _hafta(a["gun"]) == 0 and kurallar._yasal_gece_postasi_mi(a)
-                for a in liste):
-            gece_haftalari = {_hafta(k["gun"]) for k in kayitlar
-                              if kurallar._yasal_gece_postasi_mi(k)}
-            azami = int(kurallar._p(aktif["GECE_POSTASI_DEVRI"],
-                                    "azami_ardisik_gece_haftasi", 1))
-            durum, hafta = _hafta_geriye(
-                gece_haftalari,
-                lambda h: all(d in bilinen for d in range(7 * h, 7 * h + 7)),
-                azami + 1)
-            if durum == "belirsiz":
-                yaz("GECE_POSTASI_DEVRI", kimlik,
-                    max(d for d in range(7 * hafta, 7 * hafta + 7)
-                        if d not in bilinen),
-                    "gece postasi devri kontrolu")
+        haftalar = kurallar._haftaya_gore(liste + kayitlar)
+        if "GECE_POSTASI_DEVRI" in aktif:
+            tanim = aktif["GECE_POSTASI_DEVRI"]
+            asgari_gece = kurallar._p(tanim, "gece_haftasi_asgari_gece", None)
+            if kurallar._gece_haftasi_mi(haftalar.get(0, []), asgari_gece):
+                azami, _ = kurallar._gece_haftasi_azami(tanim)
+                kanitli = kurallar._gecmis_gece_haftalari(
+                    girdi, kimlik, haftalar, asgari_gece)
+                bilinmeyen = [h for h in range(-(2 * azami - 1), 0)
+                              if not kurallar._hafta_tam_bilinen_mi(h, bilinen)]
+                # Kanitli gece haftalari zaten esige ulastiysa ihlal kanali
+                # soyler; bilinmeyen haftalar eklenince ulasabiliyorsa rapor.
+                if (len(kanitli) < azami
+                        and len(kanitli) + len(bilinmeyen) >= azami):
+                    en_yakin = max(bilinmeyen)
+                    yaz("GECE_POSTASI_DEVRI", kimlik,
+                        max(d for d in range(7 * en_yakin, 7 * en_yakin + 7)
+                            if d not in bilinen),
+                        "gece postasi devri kontrolu (gece haftasi mi, "
+                        "haftanin tamami bilinmeden hesaplanamaz)")
 
-        if "ARDISIK_HAFTA_SONU_LIMIT" in aktif and any(
-                _hafta(a["gun"]) == 0 and kurallar._hafta_sonu_mu(a["gun"])
-                for a in liste):
-            hs_haftalari = {_hafta(k["gun"]) for k in kayitlar
-                            if kurallar._hafta_sonu_mu(k["gun"])}
-            azami = int(kurallar._p(aktif["ARDISIK_HAFTA_SONU_LIMIT"],
-                                    "azami_ardisik", 2))
-            durum, hafta = _hafta_geriye(
-                hs_haftalari,
-                lambda h: 7 * h + 5 in bilinen and 7 * h + 6 in bilinen,
-                azami + 1)
-            if durum == "belirsiz":
-                yaz("ARDISIK_HAFTA_SONU_LIMIT", kimlik,
-                    max(d for d in (7 * hafta + 5, 7 * hafta + 6)
-                        if d not in bilinen),
-                    "ardisik hafta sonu kontrolu")
+        if "ARDISIK_HAFTA_SONU_LIMIT" in aktif:
+            gunler = kurallar._calisilan_hafta_sonu_gunleri(liste + kayitlar)
+            if gunler.get(0, set()) >= {5, 6}:
+                azami = int(kurallar._p(aktif["ARDISIK_HAFTA_SONU_LIMIT"],
+                                        "azami_ardisik", 2))
+                # Geriye `azami` hafta sonu yurunur: hepsi tam calisilmissa
+                # ihlal kanali soyler; bilinen ve tam calisilmamis olan
+                # seriyi kirar; ILK bilinmeyen hafta sonu rapordur --
+                # kalan hafta sonlari calisilmis olsa esige ulasilirdi.
+                for h in range(-1, -azami - 1, -1):
+                    if gunler.get(h, set()) >= {5, 6}:
+                        continue                # kanitli
+                    if 7 * h + 5 in bilinen and 7 * h + 6 in bilinen:
+                        break                   # bilinen, tam calisilmamis
+                    yaz("ARDISIK_HAFTA_SONU_LIMIT", kimlik,
+                        max(d for d in (7 * h + 5, 7 * h + 6)
+                            if d not in bilinen),
+                        "ardisik hafta sonu kontrolu")
+                    break
     return cikan
+
+
+def _gecmis_eksik_ozet(girdi, gecmis_eksik):
+    """K-47 (Mustafa, 30 Eylul gecesi): "Yonetici baksin."
+
+    Sahte PDKS olcumunde 49 kisilik plan icin 141 satir cikti; icinde 7
+    gercek ihlal vardi (T-77). Satir satir okunmaz; KISI BASINA gruplanir,
+    YASAL kontrolu yapilamayanlar one alinir. Yayin kapisi bunu ENGELLEMEZ
+    (K-42: atlanir, raporlanir); ekran yoneticiye gosterir ve "gordum"
+    onayi ister -- o kisim backend/arayuzun isi.
+    """
+    yasal = {t.get("kod"): bool(t.get("yasal")) for t in _aktif_kurallar(girdi)}
+    kisiler = {}
+    for x in gecmis_eksik:
+        k = kisiler.setdefault(x["calisan"], {"calisan": x["calisan"],
+                                             "kurallar": set(), "yasal": False})
+        k["kurallar"].add(x["kural"])
+        if yasal.get(x["kural"]):
+            k["yasal"] = True
+    liste = [dict(k, kurallar=sorted(k["kurallar"])) for k in kisiler.values()]
+    liste.sort(key=lambda k: (not k["yasal"], k["calisan"]))
+    return {
+        "satir": len(gecmis_eksik),
+        "kisi": len(liste),
+        "yasal_kontrol_yapilamayan_kisi": sum(1 for k in liste if k["yasal"]),
+        "kisiler": liste,
+    }
 
 
 def _eksik_boyutlar(girdi):
@@ -379,6 +389,17 @@ def _eksik_boyutlar(girdi):
                 if kurallar._boyut_sayaci(boyut) is None:
                     eksik.append({"kural": "ADALET_DENGESI", "boyut": boyut,
                                   "sebep": "sayilabilir boyut degil; T-13"})
+
+        # K-45: yasal ust sinir 2. Fazlasi verildiyse 2 uygulanir ve bu
+        # SESSIZ GECMEZ -- firma yasal kurali gevsetmis gibi gorunurdu.
+        if kod == "GECE_POSTASI_DEVRI":
+            azami, verilen = kurallar._gece_haftasi_azami(tanim)
+            if verilen != azami:
+                eksik.append({
+                    "kural": kod, "boyut": "azami_ardisik_gece_haftasi",
+                    "sebep": "verilen %d yasal ust siniri (%d) asiyor; %d "
+                             "uygulandi -- firma yasal kurali gevsetemez "
+                             "(K-18, K-45)" % (verilen, azami, azami)})
 
         # ROL_KAPSAMASI / YETKINLIK_KAPSAMASI: gereklilik satirinda hangi
         # nitelik arandigi yazilmamissa kural DENETLENEMEZ. Govde bos liste

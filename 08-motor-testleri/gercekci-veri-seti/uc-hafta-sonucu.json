@@ -1,13 +1,13 @@
 {
  "_not": [
-  "30 Eylul aksami, iki bagimsiz kosu (CP-SAT her kosuda baska plan uretir).",
-  "kosu_1: py iki-hafta-olc.py --uc-hafta  (gecmissiz ve gecmisle)",
-  "kosu_2: py iki-hafta-olc.py --uc-hafta --yalniz-gecmisle  (hafta 3 cozumsuz",
-  "        kalinca aday kurallar tek tek kaldirildi: hafta_3_neden)",
-  "Iki kosuda da hafta 3 gecmisle COZUMSUZ; ardisik hafta sonu limiti",
-  "kaldirilinca cozuluyor (T-75). Cozucunun kendi teshisi bos dondu (T-76)."
+  "30 Eylul. Uc kosu; CP-SAT her kosuda baska plan uretir.",
+  "kosu_1, kosu_2: ESKI tanimlar (hafta sonu = bir gun yeter; gece haftasi = tek gece yeter).",
+  "  Ikisinde de hafta 3 gecmisle COZUMSUZ; ardisik hafta sonu limiti kaldirilinca cozuluyor (T-75).",
+  "  Cozucunun kendi teshisi bos dondu (T-76).",
+  "kosu_3_yeni_tanimlar: K-45 (gece haftasi = cogunluk) ve K-46 (hafta sonu = iki gun de) ile.",
+  "  Hafta 3 gecmisle COZULDU, 0 ihlal (T-75 kapandi)."
  ],
- "kosu_1": {
+ "kosu_1_eski_tanim": {
   "hafta_2": {
    "gecmissiz": {
     "durum": "cozuldu",
@@ -65,7 +65,7 @@
    }
   }
  },
- "kosu_2": {
+ "kosu_2_eski_tanim": {
   "hafta_2": {
    "gecmisle": {
     "durum": "cozuldu",
@@ -107,6 +107,64 @@
    "ARDISIK_HAFTA_SONU_LIMIT + GECE_POSTASI_DEVRI": {
     "durum": "cozuldu",
     "sn": 259
+   }
+  }
+ },
+ "kosu_3_yeni_tanimlar": {
+  "hafta_2": {
+   "gecmissiz": {
+    "durum": "cozuldu",
+    "atama": 220,
+    "sinir": {
+     "CAKISMA_YOK": 1,
+     "HAFTA_TATILI": 8,
+     "VARDIYA_ARASI_DINLENME": 7,
+     "ARDISIK_CALISMA_GUNU": 8
+    },
+    "sert": 24,
+    "gecmis_eksik": 1,
+    "gecmis_eksik_kural": {
+     "ARDISIK_HAFTA_SONU_LIMIT": 1
+    },
+    "sn": 142
+   },
+   "gecmisle": {
+    "durum": "cozuldu",
+    "atama": 219,
+    "sinir": {},
+    "sert": 0,
+    "gecmis_eksik": 3,
+    "gecmis_eksik_kural": {
+     "ARDISIK_HAFTA_SONU_LIMIT": 3
+    },
+    "sn": 248
+   }
+  },
+  "hafta_3": {
+   "gecmissiz": {
+    "durum": "cozuldu",
+    "atama": 220,
+    "sinir": {
+     "CAKISMA_YOK": 2,
+     "HAFTA_TATILI": 13,
+     "VARDIYA_ARASI_DINLENME": 4,
+     "ARDISIK_CALISMA_GUNU": 13,
+     "GECE_POSTASI_DEVRI": 2,
+     "ARDISIK_HAFTA_SONU_LIMIT": 2
+    },
+    "sert": 36,
+    "gecmis_eksik": 0,
+    "gecmis_eksik_kural": {},
+    "sn": 165
+   },
+   "gecmisle": {
+    "durum": "cozuldu",
+    "atama": 213,
+    "sinir": {},
+    "sert": 0,
+    "gecmis_eksik": 0,
+    "gecmis_eksik_kural": {},
+    "sn": 167
    }
   }
  }

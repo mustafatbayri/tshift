@@ -268,10 +268,35 @@ def _gecmis_kayitlari(calisan):
 
 
 def _gecmis_gece_mi(bas, bit, isaret):
-    """Gecmis kayit gece mi: kaydin kendi isareti, yoksa saat (K-40)."""
-    if isaret is not None:
-        return bool(isaret)
-    return _gece_sablonu({"bas": bas, "bit": bit})[0]
+    """Gecmis kayit gece mi: yonetmelik tanimi, ustune kaydin isareti (K-43).
+    Isaret yalniz EKLER -- "gece degil" isareti yasal olarak gece olan
+    kaydi gece olmaktan cikaramaz."""
+    return _yasal_gece_postasi(bas, bit) or bool(isaret)
+
+
+def _cogunluk_gunu_kaymasi(bas, bit):
+    """K-46: vardiya saatlerinin yarisindan cogu ERTESI gune tasiyorsa 1,
+    yoksa 0. `bas`, `bit` genisletilmis saat. Cuma 23-30 -> 1 (cumartesi);
+    cuma 16-25 -> 0. Tam yari -> 0. Yalniz hafta sonu kurallarinda.
+    AYNI TANIM DOGRULAYICIDA AYRICA YAZILI (#7.6)."""
+    bas, bit = float(bas), float(bit)
+    if bit <= bas:
+        bit += 24.0                       # Z-1
+    tasan = max(0.0, bit - max(bas, 24.0))
+    return 1 if 2 * tasan > (bit - bas) + 1e-9 else 0
+
+
+def _hafta_sonu_gunu(gun, bas, bit):
+    """5, 6 ya da None -- cogunluk gunune gore (K-46)."""
+    g = gun + _cogunluk_gunu_kaymasi(bas, bit)
+    return g % 7 if g % 7 in (5, 6) else None
+
+
+def _bilinen_gunler(calisan):
+    """Kaydi TAM olan gecmis gunler -- dogrulayicidakiyle ayni tanim, ayri
+    yazim (#7.6): `gecmis_bilinen_gunler` + kaydi olan gunler."""
+    return ({int(g) for g in (calisan.get("gecmis_bilinen_gunler") or []) if g < 0}
+            | {g for g, _, _, _ in _gecmis_kayitlari(calisan)})
 
 
 def _yasal_gece_postasi(bas, bit):
@@ -502,14 +527,21 @@ def _gece_sablonu(sablon):
       `tahmin_mi` bayragini nota cevirir. Isaretlenmemis bir gece
       vardiyasi, korunmasi gereken birini sessizce geceye koyabilirdi.
 
-    ⚠ TAHMIN = YONETMELIGIN TANIMI (T-69, 30 Eylul aksami): suresinin
-      yarisindan cogu 20:00-06:00'da (Postalar Yon. md. 7/2). Eskiden
-      yalniz ayni gunun penceresine "en ufak degme" araniyordu: 00:00-08:45
-      gece DEGIL, 13:00-21:00 GECE sayiliyordu.
+    ⚠ OTOMATIK ISARET = YONETMELIGIN TANIMI (T-69, 30 Eylul aksami):
+      suresinin yarisindan cogu 20:00-06:00'da (Postalar Yon. md. 7/2).
+      Eskiden yalniz ayni gunun penceresine "en ufak degme" araniyordu:
+      00:00-08:45 gece DEGIL, 13:00-21:00 GECE sayiliyordu.
+
+    ⚠ K-43 (Mustafa, 30 Eylul gecesi): OTOMATIK ISARET TABANDIR, firma
+      ustune EKLER, altina INEMEZ. "gece_vardiyasi: false" yasal olarak
+      gece olan sablonu gece olmaktan cikaramaz -- cikarsaydi gece
+      calisamayan biri 22:00-06:00'ya yazilabilirdi. Ikinci deger: isaret
+      yok, otomatik belirlendi (nota cevrilir).
     """
+    yasal = _yasal_gece_postasi(sablon["bas"], sablon["bit"])
     if "gece_vardiyasi" in sablon:
-        return bool(sablon["gece_vardiyasi"]), False
-    return _yasal_gece_postasi(sablon["bas"], sablon["bit"]), True
+        return (yasal or bool(sablon["gece_vardiyasi"])), False
+    return yasal, True
 
 
 # ----------------------------------------------------------------------
@@ -833,17 +865,25 @@ class Model(object):
         """
         if not _kural(self.girdi, "GECE_UYGUNLUGU"):
             return
-        geceler, tahminler = [], []
+        geceler, tahminler, ezilenler = [], [], []
         for t in self.sablonlar:
             gece, tahmin = _gece_sablonu(t)
             if gece:
                 geceler.append(t)
             if tahmin:
                 tahminler.append(t["id"])
+            elif gece and not t.get("gece_vardiyasi"):
+                ezilenler.append(t["id"])
         if tahminler:
             self.notlar.append(
-                "gece_vardiyasi isareti yok, saat araligindan tahmin edildi: "
+                "gece_vardiyasi isareti yok, yonetmelik tanimiyla (md. 7/2, "
+                "yarisindan cogu 20:00-06:00) belirlendi: "
                 + ", ".join(sorted(tahminler)))
+        if ezilenler:
+            self.notlar.append(
+                "firma 'gece degil' isaretlemis ama yonetmelige gore gece; "
+                "yasal tanim uygulandi (K-43, isaret yalniz ekler): "
+                + ", ".join(sorted(ezilenler)))
         if not geceler:
             return
         for c in self.calisanlar:
@@ -891,14 +931,32 @@ class Model(object):
         asanlar = [(t, _gece_brut_ortusme(t, p_bas, p_bit))
                    for t in self.sablonlar]
         asanlar = [(t, b) for t, b in asanlar if b > azami + 1e-9]
+        if asanlar:
+            self.notlar.append(
+                "GECE_VARDIYASI_AZAMI: su sablonlarin gece ortusmesi %s saati "
+                "asiyor ve istisnasi olmayan calisana verilmeyecek (BRUT "
+                "olculdu; penceredeki mola dusulseydi yasal olabilirdi): %s"
+                % (azami, ", ".join("%s (%.2f sa)" % (t["id"], b)
+                                    for t, b in asanlar)))
+        # K-44 (30 Eylul gecesi): GECE POSTASI olan sablonun (suresinin
+        # yarisindan cogu 20:00-06:00'da) BUTUN net suresi 7,5'i gecemez --
+        # Yargitay 9. HD 2020/17967. 16:00-01:00, 1 sa mola: 8 sa -> yasak.
+        # Burada net sure sablondan kesin hesaplanir (mola politikasi
+        # sablonda), bu yuzden bu olcu dogrulayiciyla AYNI, daha kati degil.
+        yasal_asanlar = [t for t in self.sablonlar
+                         if _yasal_gece_postasi(t["bas"], t["bit"])
+                         and _net_saat(t) > azami + 1e-9
+                         and all(t is not u for u, _ in asanlar)]
+        if yasal_asanlar:
+            self.notlar.append(
+                "GECE_VARDIYASI_AZAMI: su sablonlar gece postasi ve net "
+                "suresi %s saati asiyor; istisnasi olmayan calisana "
+                "verilmeyecek (K-44): %s"
+                % (azami, ", ".join("%s (%.2f sa)" % (t["id"], _net_saat(t))
+                                    for t in yasal_asanlar)))
+        asanlar = asanlar + [(t, _net_saat(t)) for t in yasal_asanlar]
         if not asanlar:
             return
-        self.notlar.append(
-            "GECE_VARDIYASI_AZAMI: su sablonlarin gece ortusmesi %s saati "
-            "asiyor ve istisnasi olmayan calisana verilmeyecek (BRUT olculdu; "
-            "penceredeki mola dusulseydi yasal olabilirdi): %s"
-            % (azami, ", ".join("%s (%.2f sa)" % (t["id"], b)
-                                for t, b in asanlar)))
 
         istisnali = self.girdi.get("sektor") in GECE_ISTISNA_SEKTORLERI
         for c in self.calisanlar:
@@ -1166,72 +1224,141 @@ class Model(object):
                 if terim:
                     self.m.Add(sabit + sum(terim) <= azami)
 
-    # ---- hafta olcekli kurallar (30 Eylul) ----------------------------
+    # ---- hafta olcekli kurallar (30 Eylul; tanimlar K-45, K-46) ----------
     #
     # Ikisi de planin DISINA bakar. Cozucunun ufku tek hafta oldugu icin
-    # ikisinin kisiti da ayni bicimde: gecmisteki KANITLI seri sinira
-    # ulasmissa bu haftanin ilgili vardiyalari o kisiye kapanir.
-    # Bilinmeyen hafta seriyi kirar -- kisit yok (K-42).
+    # ikisinin kisiti da ayni bicimde: gecmisteki KANITLI haftalar sinira
+    # ulasmissa bu haftaya ilgili kisit yazilir. Bilinmeyen hafta 0 sayilir
+    # -- kisit yok (K-42); raporu dogrulayici yazar.
     #
     # ⚠ HAFTA `gun // 7` ile: -1..-7 -> -1. `int(gun / 7)` -1'i 0'a
     #   yuvarlar ve gecen pazari BU haftaya koyardi.
     # ⚠ AYNI TANIMLAR DOGRULAYICIDA AYRICA YAZILI (#7.6).
 
+    def _gece_haftasi_gecmiste(self, c, hafta, asgari_gece):
+        """Gecmis hafta KANITLI gece haftasi mi -- K-45 + K-42.
+
+        Yalniz TAM bilinen hafta degerlendirilir (yedi gunu de
+        `gecmis_bilinen_gunler`de ya da kayitli). Cogunluk olcusu yarim
+        bilgiyle hesaplanamaz: bir gunu bilinmeyen haftada "gece" demek,
+        kaydin yoklugundan kisit uretmek olurdu.
+        Olcu BRUT saat (PDKS kaydinda mola yok).
+        """
+        bilinen = _bilinen_gunler(c)
+        if not all(d in bilinen for d in range(7 * hafta, 7 * hafta + 7)):
+            return False
+        kayitlar = [(g, b0, b1) for g, b0, b1, _ in _gecmis_kayitlari(c)
+                    if g // 7 == hafta]
+        if not kayitlar:
+            return False
+        gece = [(b0, b1) for _, b0, b1 in kayitlar
+                if _yasal_gece_postasi(b0, b1)]
+        if asgari_gece is not None and len(gece) >= int(asgari_gece) > 0:
+            return True
+        gece_saat = sum(b1 - b0 for b0, b1 in gece)
+        toplam = sum(b1 - b0 for _, b0, b1 in kayitlar)
+        return 2 * gece_saat > toplam + 1e-9
+
     def _gece_postasi_devri(self):
-        """GECE_POSTASI_DEVRI -- YASAL, Postalar Yon. md. 8 (K-25).
+        """GECE_POSTASI_DEVRI -- YASAL, Is K. md. 69 / Postalar Yon. md. 8.
 
-        "En fazla bir is haftasi gece calistirilan iscilerin ... ikinci is
-         haftasinda gunduz calistirilmalari." md. 8/3: iki haftalik
-        nobetlesme de uygulanabilir -> `azami_ardisik_gece_haftasi` 2.
+        K-45 (Mustafa, 30 Eylul gecesi):
+          * GECE HAFTASI = haftanin calisma saatlerinin YARISINDAN COGU gece
+            postasinda (yonetmeligin tek vardiya olcusu haftaya uygulandi).
+            `gece_haftasi_asgari_gece` verildiyse o kadar gece de yeter --
+            yalniz EKLER.
+          * KURAL: art arda 2 x azami haftada en fazla azami gece haftasi.
+            azami 1: gece-gunduz-gece-gunduz; azami 2: gece-gece-gunduz-
+            gunduz (md. 8/3). Ust sinir 2 -- fazlasi 2'ye kirpilir, not.
+          * GECE = yonetmeligin tanimi (`_yasal_gece_postasi`), K-40
+            isareti DEGIL; gecmis kaydin isareti de okunmaz.
 
-        ⚠ GECE HAFTASI = en az bir gece calismasi (EN SIKI okuma; urun
-          karari bekliyor).
-        ⚠ GECE = yonetmeligin kendi tanimi (md. 7/2, `_yasal_gece_postasi`),
-          K-40 isareti DEGIL. Gecmis kaydin `gece` isareti de okunmaz.
+        Plan haftasina kisit: son (2 x azami - 1) haftada KANITLI gece
+        haftasi sayisi azami'ye ulastiysa bu hafta gece haftasi OLAMAZ:
+            2 x (gece postasi saatleri) <= (butun saatler)   [ceyrek dilim]
+        ve varsa: gece postasi sayisi <= asgari_gece - 1.
         """
         kural = _kural(self.girdi, "GECE_POSTASI_DEVRI")
         if not kural:
             return
-        azami = int(_par(kural, "azami_ardisik_gece_haftasi", 1))
+        verilen = int(_par(kural, "azami_ardisik_gece_haftasi", 1))
+        azami = max(1, min(verilen, 2))
+        if verilen != azami:
+            self.notlar.append(
+                "GECE_POSTASI_DEVRI: azami_ardisik_gece_haftasi %d verildi, "
+                "yasal ust sinir %d uygulandi (K-45)" % (verilen, azami))
+        asgari_gece = _par(kural, "gece_haftasi_asgari_gece", None)
         geceler = [t for t in self.sablonlar
                    if _yasal_gece_postasi(t["bas"], t["bit"])]
         if not geceler:
             return
+        gece_kimlik = {t["id"] for t in geceler}
         for c in self.calisanlar:
-            gece_haftalari = {g // 7 for g, b0, b1, _ in _gecmis_kayitlari(c)
-                              if _yasal_gece_postasi(b0, b1)}
-            seri = 0
-            while -(seri + 1) in gece_haftalari:
-                seri += 1
-            if seri < azami:
+            kanitli = sum(1 for h in range(-(2 * azami - 1), 0)
+                          if self._gece_haftasi_gecmiste(c, h, asgari_gece))
+            if kanitli < azami:
                 continue
+            gece_terim, toplam_terim, gece_sayi = [], [], []
             for d in self.gunler:
-                for t in geceler:
-                    if (c["id"], d, t["id"]) in self.x:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                for t in self._calisan_sablonlari(c["id"]):
+                    x = self.x.get((c["id"], d, t["id"]))
+                    if x is None:
+                        continue
+                    sure = len(_dilimler(d, t["bas"], t["bit"]))
+                    toplam_terim.append(sure * x)
+                    if t["id"] in gece_kimlik:
+                        gece_terim.append(sure * x)
+                        gece_sayi.append(x)
+            if gece_terim:
+                self.m.Add(2 * sum(gece_terim) <= sum(toplam_terim))
+                if asgari_gece is not None and int(asgari_gece) > 0:
+                    self.m.Add(sum(gece_sayi) <= int(asgari_gece) - 1)
+
+    def _hafta_sonu_gecmiste_tam(self, c, hafta):
+        """Gecmis hafta sonu KANITLI olarak iki gunu de calisilmis mi
+        (K-46, cogunluk gunuyle). Kaydin yoklugu calisilmadigini kanitlamaz
+        ama burada yalniz "kanitli calisildi" sayilir (K-42)."""
+        gunler = set()
+        for g, b0, b1, _ in _gecmis_kayitlari(c):
+            hg = _hafta_sonu_gunu(g, b0, b1)
+            if hg is not None and (g + _cogunluk_gunu_kaymasi(b0, b1)) // 7 == hafta:
+                gunler.add(hg)
+        return gunler >= {5, 6}
 
     def _ardisik_hafta_sonu(self):
         """ARDISIK_HAFTA_SONU_LIMIT -- firma kurali, SERT (#6.5).
 
-        HAFTA SONU = cumartesi ya da pazar BASLAYAN vardiya (gun 5, 6);
-        ADALET_DENGESI 'hafta_sonu' boyutuyla ayni tanim.
+        K-46 (Mustafa, 30 Eylul gecesi): "hafta sonu calisti" = HEM
+        cumartesi HEM pazar; gun = saatlerinin yarisindan cogunun dustugu
+        gun (cuma 23:00-06:00 cumartesidir). Onceki tanim (bir gun yeter)
+        ucuncu haftayi cozumsuz birakiyordu (T-75).
+
+        Gecmiste son `azami` hafta sonu KANITLI olarak tam calisildiysa bu
+        hafta sonu tam calisilamaz: cumartesi-vardiyasi ile pazar-vardiyasi
+        ciftlerinden en fazla biri.
         """
         kural = _kural(self.girdi, "ARDISIK_HAFTA_SONU_LIMIT")
         if not kural:
             return
         azami = int(_par(kural, "azami_ardisik", 2))
         for c in self.calisanlar:
-            calisilan = {g // 7 for g, _, _, _ in _gecmis_kayitlari(c)
-                         if g % 7 in (5, 6)}
-            seri = 0
-            while -(seri + 1) in calisilan:
-                seri += 1
-            if seri < azami:
+            if not all(self._hafta_sonu_gecmiste_tam(c, h)
+                       for h in range(-1, -azami - 1, -1)):
                 continue
-            for d in (5, 6):
-                for t in self.sablonlar:
-                    if (c["id"], d, t["id"]) in self.x:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+            cumartesi, pazar = [], []
+            for d in self.gunler:
+                for t in self._calisan_sablonlari(c["id"]):
+                    x = self.x.get((c["id"], d, t["id"]))
+                    if x is None:
+                        continue
+                    hg = _hafta_sonu_gunu(d, t["bas"], t["bit"])
+                    if hg == 5:
+                        cumartesi.append(x)
+                    elif hg == 6:
+                        pazar.append(x)
+            for x1 in cumartesi:
+                for x2 in pazar:
+                    self.m.Add(x1 + x2 <= 1)
 
     def _asgari_vardiya(self):
         """ASGARI_VARDIYA_SURESI -- en kisa vardiya (firma kurali, SERT).
@@ -1614,10 +1741,11 @@ class Model(object):
     def _boyut_sayaci(self, boyut):
         if boyut == "gece":
             return lambda t, d: _gece_sablonu(t)[0]
+        # K-46: gun = saatlerinin yarisindan cogunun dustugu gun.
         if boyut == "hafta_sonu":
-            return lambda t, d: d in (5, 6)
+            return lambda t, d: _hafta_sonu_gunu(d, t["bas"], t["bit"]) is not None
         if boyut == "cumartesi":
-            return lambda t, d: d == 5
+            return lambda t, d: _hafta_sonu_gunu(d, t["bas"], t["bit"]) == 5
         return None
 
     def _saat_dengesi(self):

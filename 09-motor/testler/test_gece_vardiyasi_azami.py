@@ -152,7 +152,16 @@ def test_PENCERE_DISINDAKI_mola_gece_saatini_azaltmaz():
     ih = _ihlaller(_sahne(), [_atama(19, 29, molalar=[
         {"tip": "dinlenme", "bas": 19, "bit": 19.5, "ucretli": True}])])
     assert len(ih) == 1, "ihlal bekleniyordu: %r" % ih
-    assert abs(ih[0]["olculen"] - 9.0) < 1e-6, ih[0]
+    # K-44 (30 Eylul gecesi): 19:00-05:00 gece postasidir (9/10); ihlal
+    # BUTUN net sureyle yazilir: 10 - 0,5 = 9,5. Pencere olcusu (9,0) ayni
+    # vardiya icin ikinci kez yazilmaz (V-1). Pencere hesabinin kendisi
+    # asagida ayrica sinaniyor.
+    assert abs(ih[0]["olculen"] - 9.5) < 1e-6, ih[0]
+    from dogrulayici import kurallar as K
+    w0, w1 = [(b, e) for g, b, e in K._gece_pencereleri(20, 6) if g == 0][0]
+    assert abs(K._gece_net_saat(_atama(19, 29, molalar=[
+        {"tip": "dinlenme", "bas": 19, "bit": 19.5, "ucretli": True}]),
+        w0, w1) - 9.0) < 1e-6, "pencere disindaki mola pencereden dusuldu"
 
 
 # ----------------------------------------------------------------------
@@ -173,9 +182,112 @@ def test_Z5_pencere_GUN_SINIRINI_asarak_hesaplanir():
     ih = _ihlaller(_sahne(), [_atama(19, 29)])
     assert len(ih) == 1, (
         "gun sinirini asan pencere hesaplanmamis -- ihlal kacirildi")
-    assert abs(ih[0]["olculen"] - 9.0) < 1e-6, (
-        "gece saati %.2f olculmus, 9,00 bekleniyordu (20:00-05:00)"
-        % ih[0]["olculen"])
+    # K-44: gece postasi -> butun sure (10 sa). Z-5'in kendisi pencere
+    # hesabinda sinanir: 20:00-05:00 = 9 saat, takvim gunune bakan bir
+    # hesap 4 gorurdu.
+    assert abs(ih[0]["olculen"] - 10.0) < 1e-6, ih[0]
+    from dogrulayici import kurallar as K
+    w0, w1 = [(b, e) for g, b, e in K._gece_pencereleri(20, 6) if g == 0][0]
+    assert abs(K._gece_net_saat(_atama(19, 29), w0, w1) - 9.0) < 1e-6, (
+        "pencere gun sinirini asarak hesaplanmadi (Z-5)")
+
+
+# ----------------------------------------------------------------------
+# 4b. K-44 -- GECE POSTASININ BUTUN SURESI (30 Eylul gecesi)
+# ----------------------------------------------------------------------
+#
+# Postalar Yon. md. 7/2: "Calisma suresinin yarisindan cogu gece donemine
+# rastlayan bir postanin calismasi, gece calismasi sayilir." Yargitay 9. HD
+# 2016/36126 E., 2020/17967 K.: 20:00-08:00 vardiyasinda gece hesabi
+# 06:00'da kesilmez, fiili bitis 08:00'e kadar yapilir.
+#
+# 30 Eylul gecesine kadar yalniz pencereye dusen kisim olculuyordu; bu olcu
+# hicbir durumda yonetmelikten SIKI degildi -- 22:00-08:00'i yasal sayiyordu.
+
+def test_K44_gece_postasinin_BUTUN_suresi_sayilir_22_08():
+    """22:00-08:00, 1 saat mola: pencerede 7 sa (eski olcu: yasal), butun
+    net sure 9 sa -> IHLAL. Yargitay'in okumasi."""
+    ih = _ihlaller(_sahne(), [_atama(22, 32, molalar=[
+        {"tip": "yemek", "bas": 26, "bit": 27, "ucretli": False}])])
+    assert len(ih) == 1, "gece postasinin gunduze tasan kismi sayilmadi (K-44)"
+    assert abs(ih[0]["olculen"] - 9.0) < 1e-6, ih[0]
+    assert "yarisindan cogu" in ih[0]["mesaj"], ih[0]["mesaj"]
+
+
+def test_K44_gercek_musterinin_16_01_deseni_IHLAL():
+    """16:00-01:00, 1 saat mola: 9 saatin 5'i gecede -> gece postasi ->
+    8 saat net > 7,5. Gercek veride 82 kez (B-2); yazili onaysiz yasa disi."""
+    ih = _ihlaller(_sahne(), [_atama(16, 25, molalar=[
+        {"tip": "yemek", "bas": 20, "bit": 21, "ucretli": False}])])
+    assert len(ih) == 1 and abs(ih[0]["olculen"] - 8.0) < 1e-6, ih
+
+
+def test_K44_yarisi_gecede_olan_posta_GECE_DEGIL_sinir_yok():
+    """15:00-01:00 (10 sa, tam yarisi gecede): gece postasi degil; 9 saat
+    net calisma bu kurala takilmaz (GUNLUK_AZAMI'ye takilir, o ayri)."""
+    ih = _ihlaller(_sahne(), [_atama(15, 25, molalar=[
+        {"tip": "yemek", "bas": 19, "bit": 20, "ucretli": False}])])
+    assert not ih, ih
+
+
+def test_K44_gece_postasi_tam_7_5_saat_IHLAL_DEGIL():
+    """23:00-07:30, 1 saat mola: 7,5 net -- kanun 'gecemez' diyor."""
+    assert not _ihlaller(_sahne(), [_atama(23, 31.5, molalar=[
+        {"tip": "yemek", "bas": 26, "bit": 27, "ucretli": False}])])
+
+
+def test_K44_ayni_vardiya_IKI_KEZ_yazilmaz():
+    """20:00-08:00, 1,5 sa mola: posta olcusu 10,5 sa ihlal; pencere olcusu
+    (20-06: 10 sa - mola) de asar. Tek ihlal yazilir (V-1)."""
+    ih = _ihlaller(_sahne(), [_atama(20, 32, molalar=[
+        {"tip": "yemek", "bas": 24, "bit": 25.5, "ucretli": False}])])
+    assert len(ih) == 1, ih
+    assert abs(ih[0]["olculen"] - 10.5) < 1e-6, ih[0]
+
+
+def test_K44_istisnali_calisan_gece_postasinda_da_MUAF():
+    """Turizm + yazili onay: 22:00-08:00 (9 sa net) serbest."""
+    g = _sahne(sektor="turizm", calisanlar=[_c(onay=True)])
+    assert not _ihlaller(g, [_atama(22, 32, molalar=[
+        {"tip": "yemek", "bas": 26, "bit": 27, "ucretli": False}])])
+
+
+def test_K44_firmanin_gece_DEGIL_isareti_yasal_kurali_delemez():
+    """Sablon 'gece degil' isaretli olsa da 22:00-08:00 yonetmelige gore
+    gece postasidir (K-43 + K-44)."""
+    g = _sahne()
+    g["vardiya_sablonlari"][0]["gece_vardiyasi"] = False
+    assert _ihlaller(g, [_atama(22, 32, molalar=[
+        {"tip": "yemek", "bas": 26, "bit": 27, "ucretli": False}])])
+
+
+# ----------------------------------------------------------------------
+# 4c. PENCERE olcusu hala gerekli: ayni geceyi paylasan IKI vardiya
+# ----------------------------------------------------------------------
+#
+# Posta olcusu vardiya basinadir. Pazartesi 16:00-24:00 (4/8, gece postasi
+# degil) + sali 00:00-06:00 (6/6 gece postasi ama 6 sa) -- ikisi de tek
+# basina yasal, ayni geceye 10 saat. Bunu yalniz PENCERE olcusu gorur.
+# (Dinlenme kurali aktifken bu iki vardiya zaten yan yana gelemez; bu
+#  test yalniz gece sinirini calistirir.)
+
+def _bolunmus_gece(kimlik="C1"):
+    return [_atama(16, 24, gun=0, kimlik=kimlik), _atama(0, 6, gun=1, kimlik=kimlik)]
+
+
+def test_PENCERE_bolunmus_geceyi_toplar():
+    ih = _ihlaller(_sahne(), _bolunmus_gece())
+    assert len(ih) == 1 and abs(ih[0]["olculen"] - 10.0) < 1e-6, ih
+
+
+def test_PENCERE_istisna_sektor_VE_onay_ister():
+    """Istisnanin iki sarti pencere olcusunde de birlikte aranir."""
+    assert not _ihlaller(_sahne(sektor="turizm", calisanlar=[_c(onay=True)]),
+                         _bolunmus_gece())
+    assert _ihlaller(_sahne(sektor="turizm", calisanlar=[_c()]),
+                     _bolunmus_gece()), "yalniz sektorle pencere olcusu kalkti"
+    assert _ihlaller(_sahne(sektor="cagri_merkezi", calisanlar=[_c(onay=True)]),
+                     _bolunmus_gece()), "yalniz onayla pencere olcusu kalkti"
 
 
 # ----------------------------------------------------------------------
@@ -333,6 +445,72 @@ def test_COZUCU_yasakladigini_NOT_olarak_soyler():
     assert "V-UZUN" in notlar and "BRUT" in notlar, (
         "sablon yasagi not olarak yazilmamis: %r"
         % (c.get("uygulanmayan_notlar"),))
+
+
+GUNDUZE_TASAN = {"id": "V-TASAN", "ekip": "E", "bas": 22, "bit": 32, "mola_dk": 60}
+YARIM = {"id": "V-YARIM", "ekip": "E", "bas": 15, "bit": 25, "mola_dk": 60}
+
+
+def _posta_sahnesi(sablon, saatler, sektor=None, onay=None):
+    g = _cozucu_sahnesi(sektor=sektor, onay=onay)
+    g["vardiya_sablonlari"] = [dict(sablon)]
+    g["talep"] = [{"ekip": "E", "gun": 0, "saat": h, "asgari": 1, "hedef": 1}
+                  for h in saatler]
+    return g
+
+
+MUSTERI_DESENI = {"id": "V-16-01", "ekip": "E", "bas": 16, "bit": 25, "mola_dk": 60}
+
+
+def test_COZUCU_K44_gece_postasinin_butun_suresi_sinira_girer():
+    """16:00-01:00, 1 sa mola (gercek musterinin deseni): pencerede BRUT 5
+    sa -- eski olcu (T-68) serbest birakirdi; ama 9 saatin 5'i gecede ->
+    gece postasi -> 8 sa net > 7,5 -> yasak. Talep 16:00 ve 00:00; tek
+    sablon, tek kisi -> cozumsuz ZORUNLU. Not K-44'u anmali."""
+    from cozucu.coz import coz
+    c = coz(_posta_sahnesi(MUSTERI_DESENI, (16, 24)),
+            {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] != "cozuldu", "8 saatlik gece postasi yazildi (K-44)"
+    notlar = " ".join(c.get("uygulanmayan_notlar") or [])
+    assert "V-16-01" in notlar and "K-44" in notlar, notlar
+
+
+MUSTERI_DESENI_YASAL = {"id": "V-16-01-Y", "ekip": "E", "bas": 16, "bit": 25,
+                        "mola_dk": 90}
+
+
+def test_COZUCU_K44_net_olcer_1_5_saat_molali_16_01_YASAL():
+    """16:00-01:00, 1,5 sa mola: net 7,5 -> yasal. Brut (9 sa) olcen bir
+    govde bunu yasaklardi; plan cozulmeli."""
+    from cozucu.coz import coz
+    c = coz(_posta_sahnesi(MUSTERI_DESENI_YASAL, (16, 24)),
+            {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c.get("durum")
+
+
+def test_COZUCU_K44_22_08_de_yasak():
+    """22:00-08:00: brut pencere olcusu (8 sa) zaten yakalar; K-44 ile ayni
+    sonuc. Iki olcu birbirini bozmuyor."""
+    from cozucu.coz import coz
+    c = coz(_posta_sahnesi(GUNDUZE_TASAN, (22, 31)),
+            {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] != "cozuldu"
+
+
+def test_COZUCU_K44_istisnali_calisana_ayni_sablon_serbest():
+    from cozucu.coz import coz
+    c = coz(_posta_sahnesi(MUSTERI_DESENI, (16, 24), sektor="turizm", onay=True),
+            {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c.get("durum")
+
+
+def test_COZUCU_K44_yarisi_gecede_olan_posta_serbest():
+    """15:00-01:00 (10 sa, tam yari): gece postasi degil -> bu kural
+    kisitlamaz (ne posta ne pencere olcusu asiliyor)."""
+    from cozucu.coz import coz
+    c = coz(_posta_sahnesi(YARIM, (15, 24)),
+            {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c.get("durum")
 
 
 def test_UCTAN_UCA_cozucunun_plani_DENETIMDEN_gecer():

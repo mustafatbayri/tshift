@@ -115,13 +115,20 @@ def test_IKI_TARAF_isaretsiz_sablonu_AYNI_siniflar():
         assert d == (gece, True), ("dogrulayici", t["id"], d)
 
 
-def test_ISARET_tahmini_EZER_iki_tarafta_da():
+def test_ISARET_yalniz_EKLER_iki_tarafta_da():
+    """K-43 (30 Eylul gecesi): otomatik isaret TABAN. Firma "gece" derse
+    gece olur (ekler); yasal olarak gece olan sablona "gece degil" derse
+    yine gecedir (altina inemez). 30 Eylul aksamina kadar bu test isaretin
+    her iki yonde ezdigini bekliyordu (K-40)."""
     from cozucu import model
     from dogrulayici import kurallar
     for t, gece in BEKLENEN:
-        ters = dict(t, gece_vardiyasi=not gece)
-        assert model._gece_sablonu(ters) == (not gece, False), t["id"]
-        assert kurallar._gece_sablonu(ters) == (not gece, False), t["id"]
+        ekle = dict(t, gece_vardiyasi=True)
+        assert model._gece_sablonu(ekle) == (True, False), t["id"]
+        assert kurallar._gece_sablonu(ekle) == (True, False), t["id"]
+        inkar = dict(t, gece_vardiyasi=False)
+        assert model._gece_sablonu(inkar) == (gece, False), t["id"]
+        assert kurallar._gece_sablonu(inkar) == (gece, False), t["id"]
 
 
 # ----------------------------------------------------------------------
@@ -215,12 +222,12 @@ def test_ADALET_gece_ISARETLI_vardiya_SAYILIR():
 #   isaret yok sayildiginda o test yesil kaldi. Isaretin GERCEKTEN okundugunu
 #   yalniz isaretle tahminin AYRISTIGI vardiya kanitlar:
 
-def test_ADALET_ISARET_gece_degil_diyorsa_22_06_SAYILMAZ():
-    """Tahmin 'gece' der (8/8), firma 'gece degil' der -- firma kurali
-    firmanin tanimini kullanir (K-40)."""
+def test_ADALET_ISARET_gece_degil_dese_de_22_06_SAYILIR():
+    """K-43: 22:00-06:00 yonetmelige gore gece; firmanin 'gece degil'
+    isareti altina inemez. (Ilk yazimda tersi bekleniyordu, K-40.)"""
     g, plan = _adalet_sahnesi(_sablon("V-22", 22, 30, isaret=False))
-    assert not _ih(g, plan, "ADALET_DENGESI"), (
-        "firmanin 'gece degil' isareti adalet boyutunda okunmadi")
+    assert _ih(g, plan, "ADALET_DENGESI"), (
+        "firmanin 'gece degil' isareti yasal geceyi adaletten dusurdu")
 
 
 def test_ADALET_ISARET_gece_diyorsa_15_24_SAYILIR():
@@ -234,3 +241,27 @@ def test_ADALET_ISARET_gece_diyorsa_15_24_SAYILIR():
 def test_ADALET_isaretsiz_sabah_ERKEN_vardiya_SAYILIR():
     g, plan = _adalet_sahnesi(ERKEN)
     assert _ih(g, plan, "ADALET_DENGESI"), "00:00-08:45 adalette gece sayilmadi"
+
+
+# ----------------------------------------------------------------------
+# 5. K-46 -- adaletin "hafta_sonu" boyutu cogunluk gunuyle sayar
+# ----------------------------------------------------------------------
+
+def test_ADALET_hafta_sonu_boyutu_cuma_gecesini_CUMARTESI_sayar():
+    """Esik 1. C1: cuma 23:00-07:00 (cumartesi sayilir) + pazar = 2;
+    ortalama 2/3, sapma 1,33 >= 1 -> ihlal. Baslangic gunuyle sayan govde
+    1 gorur, sapma 0,67 -> ihlal yok."""
+    adalet = {"kod": "ADALET_DENGESI", "tur": "YUMUSAK", "aktif": True,
+              "yasal": False, "parametreler": {"boyutlar": ["hafta_sonu"],
+                                               "adaletsizlik_esigi": 1}}
+    g = _sahne([GECE, _sablon("V-GUN", 8, 16)], [adalet],
+               kisiler=[_kisi("C%d" % i) for i in (1, 2, 3)])
+    plan = [_p(4, GECE, "C1"), _p(6, _sablon("V-GUN", 8, 16), "C1")]
+    ih = _ih(g, plan, "ADALET_DENGESI")
+    assert len(ih) == 1 and ih[0]["calisan"] == "C1", ih
+    # Karsi kanit: cuma AKSAMI (16:00-01:00) cumadir -> 1 -> ihlal yok.
+    aksam = _sablon("V-CA", 16, 25)
+    g2 = _sahne([aksam, _sablon("V-GUN", 8, 16)], [adalet],
+                kisiler=[_kisi("C%d" % i) for i in (1, 2, 3)])
+    plan2 = [_p(4, aksam, "C1"), _p(6, _sablon("V-GUN", 8, 16), "C1")]
+    assert not _ih(g2, plan2, "ADALET_DENGESI")

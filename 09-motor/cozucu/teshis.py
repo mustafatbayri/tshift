@@ -116,6 +116,7 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
                       for k in (girdi.get("kurallar") or [])
                       if k.get("kod") == "ASGARI_KAPSAMA"
                       and k.get("aktif", True)]
+        belirsiz = []
         # `_en_iyi_plan` BILEREK atlanir: kurallari gevseterek bir taslak
         # uretir ama bu hucreyi HICBIR gevsetme kapatamaz -- kapatabilecek
         # vardiya YOK. Tam cozum suresini odeyip ayni cevabi almak olurdu.
@@ -123,7 +124,7 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
                   "sebep": "on kontrol: hucreye ulasan vardiya sablonu yok"}
     else:
         kapsam, hucre, gereken, mumkun = _nerede_tikaniyor(girdi, kuruldu)
-        engelleyen = _engelleyen_kurallar(girdi, kuruldu, hucre)
+        engelleyen, belirsiz = _engelleyen_kurallar(girdi, kuruldu, hucre, ayar)
         en_iyi = _en_iyi_plan(girdi, ayar)
 
     cevap = {
@@ -136,11 +137,20 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
             "gereken": gereken,
             "mumkun": mumkun,
             "engelleyen_kurallar": engelleyen,
+            # T-76: denemesi sureye yetmeyen kurallar. "Engelleyen yok"
+            # cumlesi ancak bu liste de bossa kanittir.
+            "belirsiz_kurallar": belirsiz,
         },
         "en_iyi_plan": en_iyi,
         "cozum_istatistikleri": istatistik,
         "uygulanmayan_notlar": kuruldu.notlar,
     }
+    if not engelleyen and belirsiz:
+        cevap["teshis"]["not"] = (
+            "Engelleyen kural KANITLANAMADI: %d sert kuralin denemesi %s "
+            "saniyeye yetmedi (T-76). Daha uzun deneme icin "
+            "`teshis_kural_saniye` verin." % (len(belirsiz),
+                                             belirsiz[0]["deneme_saniye"]))
     if not kesin:
         # Ekranda "imkansiz" yazmamali: sure doldu, teshis istendigi icin
         # kosturuldu ve cikan sey bir TAHMIN.
@@ -238,34 +248,57 @@ def _hafta_toplami(girdi, kuruldu):
 # 2. Hangi kural engelliyor
 # ----------------------------------------------------------------------
 
-def _engelleyen_kurallar(girdi, kuruldu, hucre):
+def _engelleyen_kurallar(girdi, kuruldu, hucre, ayar=None):
     """Sert kurallari TEKER TEKER gevsetip hangisinin cozumu actigina bakar.
 
     Yavas ama dogru: "muhtemelen sudur" tahmini yerine kanit uretir.
     Yalniz SERT kurallar denenir; yumusak zaten engellemez.
+
+    ⚠ T-76 (30 Eylul aksami, 49 kisilik uc haftalik olcumde):
+      Her deneme 10 saniyeydi ve o olcekte 10 saniye plan bulmaya
+      yetmiyordu; "bulamadim" sonucu "bu kural engellemiyor" diye
+      okunuyor, teshis "engelleyen: yok" donuyordu. Oysa kural
+      kaldirilinca plan 172 saniyede cozuluyordu. K-37'nin ailesi:
+      "yetistiremedim" ile "yok" ayni kelimeye dusuyordu -- teshisin
+      icinde. Artik uc cevap var:
+        cozuldu     -> ENGELLIYOR (kanit)
+        cozumsuz    -> engellemiyor (kanit)
+        sure doldu  -> BELIRSIZ (kanit yok; ayri listede)
+      Deneme butcesi `teshis_kural_saniye` ile ayarlanabilir.
+
+    Donen: (engelleyen, belirsiz)
     """
+    saniye = float((ayar or {}).get("teshis_kural_saniye", 10))
     sert = [k for k in girdi.get("kurallar", []) or []
             if k.get("tur") == "SERT" and k.get("aktif", True)]
-    cikan = []
+    engelleyen, belirsiz = [], []
     for k in sert:
         kalan = [x for x in girdi["kurallar"] if x is not k]
         deneme = dict(girdi, kurallar=kalan)
-        if _cozulebilir_mi(deneme):
-            cikan.append({
-                "kod": k["kod"],
-                "yasal": k.get("yasal", False),
-                "kabul_edilebilir": k.get("kabul_edilebilir", False),
-                "etkilenen_hucre": hucre,
-            })
-    return cikan
+        satir = {"kod": k["kod"],
+                 "yasal": k.get("yasal", False),
+                 "kabul_edilebilir": k.get("kabul_edilebilir", False),
+                 "etkilenen_hucre": hucre}
+        durum = _cozulebilir_mi(deneme, saniye)
+        if durum is True:
+            engelleyen.append(satir)
+        elif durum is None:
+            belirsiz.append(dict(satir, deneme_saniye=saniye))
+    return engelleyen, belirsiz
 
 
 def _cozulebilir_mi(girdi, saniye=10):
+    """True: plan var (kanit) · False: plan yok (kanit) · None: sure doldu."""
     m = Model(girdi).kur()
     c = cp_model.CpSolver()
     c.parameters.max_time_in_seconds = float(saniye)
     c.parameters.num_search_workers = cekirdek_sayisi()
-    return c.Solve(m.m) in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+    durum = c.Solve(m.m)
+    if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return True
+    if durum == cp_model.INFEASIBLE:
+        return False
+    return None
 
 
 # ----------------------------------------------------------------------
