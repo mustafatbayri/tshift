@@ -3240,6 +3240,100 @@ Bekçisi `test_HER_KURAL_kirmizi_yanabiliyor`; eşik 26'dan **28**'e çıkarıld
 
 ---
 
+## ✅ T-65 · ~~Motorun kendi kapsama metriği kesirli vardiya bitişini kırpıyordu~~ — **KAPANDI (30 Eylül, aynı gün)**
+
+**Bulundu:** 30 Eylül, **CI kırmızı yandı.** Mustafa'nın koşumu:
+
+```
+sert_ihlal: 0   ·   asgari_kapsama_yuzde: 99.76
+```
+
+İlk bakışta çelişki gibi duruyor — `ASGARI_KAPSAMA` SERT bir kural, ihlal yoksa
+kapsama %100 olmalı. **Çelişki değil:** iki sayının ikisi de motorun **kendi**
+raporundan geliyor ve ikisi de yanıltıcı.
+
+### Sebep
+
+`09-motor/cozucu/coz.py::_metrikler` kapsamayı şöyle sayıyordu:
+
+```python
+range(a["gun"] * 24 + int(a["bas"]), a["gun"] * 24 + int(a["bit"]))
+```
+
+Vardiya 07:00–16:15 ise `int(16.25)` = 16 ve `range(7, 16)` **saat 16'yı
+dışarıda bırakıyor**. Oysa vardiya 16:00–16:15 arası sahada ve kısıt tarafı
+(`_atanmis` → `_dilimler` → `_q`) o çeyreği sayıyor. Yani **kısıt sağlanmış,
+metrik "kapanmadı" diyor.**
+
+K-34 çeyrek ızgarasından beri şablonların çoğu kesirli bitiyor (16.25, 16.75,
+18.25, 18.75, 20.25…) — yani bu kırpma istisna değil **kural**. 415 talep
+hücreli sahnede **bir** hücre bu yüzden eksik sayıldı: 414/415 = %99,76.
+
+### ⚠ T-58 ile aynı aile — ve aynı hata iki yerde duruyordu
+
+29 Eylül'de kesirli vardiya bitişi **doğrulayıcıyı çökertiyordu** (`range()`e
+float gidiyordu) ve orada düzeltildi. Çözücüdeki bu **kopyasına kimse bakmadı.**
+Şartname §7.6 iki tarafı bilerek ayırıyor; bedeli de bu: bir hatayı bulmak, onu
+**iki yerde** aramak demek.
+
+### Neden benim makinemde geçti, CI'da yandı
+
+Hangi hücrenin eksik sayılacağı **plana** bağlı. Benim koşumda her hücreyi
+`int(bit)`'i o saati hâlâ kapsayan biri örtüyordu; CI'nın 2 çekirdekli
+makinesinde çözücü başka bir plan buldu ve bir hücre açıkta kaldı.
+⚠ Yani test **rastgele** yeşil yanıyordu. Bulunması Mustafa'nın koşumuna kaldı.
+
+### Düzeltildi
+
+Karşılaştırma artık mutlak zamanda ve **kesirli** yapılıyor — doğrulayıcının
+`zaman.atanmis_mi`si de böyle çalışıyor. Üç test
+(`09-motor/testler/test_motor_metrigi.py`), ikisi kırmızı başladı; mutasyon
+(`int()` geri kondu) ikisini birden öldürdü.
+
+**Bekçi de değişti:** `test_KUCULTULMUS_olcekte_kapsama_TAM` artık motorun
+kendi sayısına değil **doğrulayıcının** sayısına bakıyor, ve ayrıca ikisinin
+**anlaştığını** sınıyor. Komşu test (`test_TAM_ZAMANLI_sozlesme_saatini_DOLDURUYOR`)
+bu dersi zaten öğrenmişti; burada atlanmıştı.
+
+→ T-58 · T-66 · `09-motor/cozucu/coz.py` · `09-motor/testler/test_motor_metrigi.py`
+
+---
+
+## 🟡 T-66 · `sert_ihlal` ölçülmüyor, **sabit yazılıyor**
+
+**Bulundu:** 30 Eylül, T-65 araştırılırken — yanındaki satırda.
+
+`coz.py::_metrikler` şunu döndürüyor:
+
+```python
+"sert_ihlal": 0,   # kisitlar sert; cozum varsa hepsi saglanmistir
+```
+
+**Cümle mantık olarak doğru** ama alan adı bir **ölçüm** vaat ediyor. Ekranda
+*"0 sert ihlal"* yazdığında yönetici bunu sayılmış sanır. Sayılmadı.
+
+**İki ayrı sınırı var:**
+
+1. Yalnız **motorun kendi kurduğu** kısıtları kapsar. Gövdesi yalnız
+   doğrulayıcıda olan bir kural — ya da gövdesi hiç yazılmamış **12** kural —
+   bu sıfıra girmez.
+2. Sıfır, *"ihlal yok"* değil *"kendi kısıtlarımı çiğnemedim"* demek. T-65'in
+   yanıltıcı çifti (*"sert ihlal 0, kapsama %99,76"*) tam olarak bu yüzden
+   mümkün oldu.
+
+Gerçek sayı `dogrulayici.degerlendir`den gelir ve bekçiler 30 Eylül'den beri
+oraya bakıyor. Ama **çıktı sözleşmesi (§11.3) hâlâ bu alanı barındırıyor** ve
+ekranı yazan taraf onu okuyacak.
+
+**Karar Mustafa'da** (§11.3 değişir): alan kaldırılsın mı, adı değişsin mi
+(*"kendi_kisitlarim"* gibi), yoksa yanında *"ölçülmedi"* diyen bir kardeş alan
+mı dursun. Motorun kendi metriğinin var olma sebebi doğrulayıcıyla
+**karşılaştırılmak**; karşılaştırılamayan bir sayı o işi yapmıyor.
+
+→ T-65 · T-18 · `09-motor/cozucu/coz.py` · `02-spec/v1.4-master-spec.md` §11.3
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
@@ -3260,6 +3354,7 @@ Bekçisi `test_HER_KURAL_kirmizi_yanabiliyor`; eşik 26'dan **28**'e çıkarıld
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |
 | **9** | **T-63 · yetkinlik gerekliliği yok** 🟡 | Rol tarafı kapandı (gündüz 1 lider). Yetkinlik kapsaması hâlâ parametresiz, `SAHADA_ASGARI` hâlâ 0. ✅ **Mustafa'nın kararı** |
+| **9b** | **T-66 · `sert_ihlal` ölçülmüyor** 🟡 | Sabit sıfır yazılıyor; ekranda ölçüm gibi görünüyor. ✅ **Mustafa'nın kararı** — §11.3 çıktı sözleşmesi değişir |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 

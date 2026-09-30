@@ -330,3 +330,86 @@ elverişli görünüyor ama koşulmadı.
 4. Kalan **12 gövde**. Mantıklı grup: üç yasal kural (gece vardiyası azami,
    gece postası devri, yıllık fazla mesai tavanı).
 5. T-59 (süre bütçesi aşımı) ve T-60'ın dört ölçümü.
+
+---
+
+# GECE · CI kırmızı yandı — ve sebebi planda değil ölçümde
+
+Mustafa'nın koşumu:
+
+```
+sert_ihlal: 0   ·   asgari_kapsama_yuzde: 99.76
+```
+
+Çelişki gibi duruyor: `ASGARI_KAPSAMA` SERT, ihlal yoksa kapsama %100 olmalı.
+Çelişki değil — **iki sayının ikisi de motorun kendi raporundan geliyor.**
+
+## 9 · T-65 · Kesirli vardiya bitişi metrikte kırpılıyordu
+
+`coz.py::_metrikler` kapsamayı `range(... int(a["bas"]), ... int(a["bit"]))`
+ile sayıyordu. Vardiya 07:00–16:15 ise `int(16.25)` = 16 ve saat 16 **dışarıda**
+kalıyor — oysa vardiya 16:00–16:15 arası sahada ve kısıt tarafı o çeyreği
+sayıyor. **Kısıt sağlanmış, metrik "kapanmadı" diyor.**
+
+K-34 çeyrek ızgarasından beri şablonların çoğu kesirli bitiyor (16.25, 18.75,
+20.25…), yani bu kırpma istisna değil kural. 415 hücrenin **biri** eksik
+sayıldı: 414/415 = %99,76.
+
+⚠ **T-58 ile aynı aile, ve aynı hata iki yerde duruyordu.** 29 Eylül'de aynı
+`int()` varsayımı doğrulayıcıyı çökertmişti ve orada düzeltildi. Çözücüdeki
+**kopyasına kimse bakmadı.** Şartname §7.6 iki tarafı bilerek ayırıyor; bedeli
+de bu: bir hatayı bulmak, onu **iki yerde** aramak demek. Bunu dün de yaşadık
+(K-38 çözücüde düzeltildi, doğrulayıcıda değil).
+
+⚠ **Test rastgele yeşil yanıyordu.** Hangi hücrenin açıkta kalacağı **plana**
+bağlı: benim koşumda her hücreyi `int(bit)`'i o saati hâlâ kapsayan biri
+örtüyordu, CI'nın 2 çekirdekli makinesinde çözücü başka bir plan buldu.
+Bulunması Mustafa'nın koşumuna kaldı — bir test yeşil yandığında bunun
+tesadüf olup olmadığını sormak gerekiyor.
+
+**Düzeltildi.** Üç test, ikisi kırmızı başladı; mutasyon (`int()` geri kondu)
+ikisini birden öldürdü.
+
+**Bekçi de değişti:** `test_KUCULTULMUS_olcekte_kapsama_TAM` artık motorun
+kendi sayısına değil **doğrulayıcının** sayısına bakıyor ve ayrıca ikisinin
+**anlaştığını** sınıyor. Komşu test bu dersi zaten öğrenmişti
+(*"çözücünün kendi ölçüsüyle bakmak kendi işini kendi onaylamak olurdu"*);
+burada atlanmıştı.
+
+## 10 · T-66 · `sert_ihlal` ölçülmüyor, sabit yazılıyor
+
+Aynı fonksiyonun yanındaki satır:
+
+```python
+"sert_ihlal": 0,   # kisitlar sert; cozum varsa hepsi saglanmistir
+```
+
+Cümle mantık olarak doğru, ama alan adı bir **ölçüm** vaat ediyor. İki sınırı
+var: yalnız motorun **kendi kurduğu** kısıtları kapsar (gövdesi yazılmamış 12
+kural o sıfıra girmez), ve *"ihlal yok"* değil *"kendi kısıtlarımı çiğnemedim"*
+demek. T-65'in yanıltıcı çifti tam bu yüzden mümkün oldu.
+
+§11.3 çıktı sözleşmesi Mustafa'nın kararını bekliyor: alan kaldırılsın mı, adı
+değişsin mi, yanına *"ölçülmedi"* diyen bir kardeş alan mı gelsin.
+
+## Gece sonu
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **205** yeşil (2 dk 06 sn) |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 fikstür tutarlı |
+| Zor veri seti bekçisi | **12** yeşil (6 dk 25 sn) |
+| İhlal vakaları | 28 gövde · 28 vaka · 28 kırmızı · eksik sıfır |
+| `DENETIM.py` | 0 hata |
+
+**Bugün kapanan:** T-64 · T-61 (K-41) · T-62 · T-65 · T-63'ün rol tarafı
+**Bugün açılan:** T-61 · T-62 · T-63 · T-64 · T-65 · T-66
+**Karara bağlanan:** K-41
+**Açık 🔴:** sekiz
+
+⚠ **Günün toplamı:** bağımsız denetim iki kural için ilk kez var oldu ve
+**altı bulgu** açtı; beşi aynı gün kapandı. Beşinin üçü *ölçüm aracının kendi
+boşluğuydu* — ihlal vakası aracı kendi listesini sayıyordu, motorun metriği
+kesirli sınırı kırpıyordu, `sert_ihlal` hiç sayılmıyordu. **Ölçen aracın da
+bekçisi olmalı.**

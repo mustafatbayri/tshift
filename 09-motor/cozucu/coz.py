@@ -458,10 +458,29 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
     girdi = kuruldu.girdi
     asgari_tut = asgari_top = hedef_tut = hedef_top = eksik_dk = 0
     for t, gun, saat in kuruldu._hucreler():
+        # ⚠ BURADA `int()` VARDI VE KESIRLI VARDIYA SINIRINI KIRPIYORDU (T-65)
+        #   Eski satir: `gun*24 + saat in range(... int(a["bas"]), ... int(a["bit"]))`
+        #   Vardiya 07:00-16:15 ise `int(16.25)` = 16 ve `range(7, 16)` saat
+        #   16'yi DISARIDA birakiyordu -- oysa vardiya 16:00-16:15 arasi
+        #   sahada ve kisit tarafi (`_atanmis` -> `_dilimler` -> `_q`) o
+        #   ceyregi sayiyor. Sonuc: kisit saglanmis, metrik "kapanmadi"
+        #   diyor. 415 hucreli sahnede BIR hucre bu yuzden eksik sayildi
+        #   ve CI kirmizi yandi (%99,76).
+        #
+        #   K-34 ceyrek izgarasindan beri sablonlarin cogu kesirli bitiyor
+        #   (16.25, 18.75, 20.25...), yani bu kirpma artik istisna degil
+        #   kural. Karsilastirma mutlak zamanda ve KESIRLI yapilir --
+        #   dogrulayicinin `zaman.atanmis_mi`si de boyle calisiyor.
+        #
+        #   ⚠ T-58 ILE AYNI AILE: 29 Eylul'de ayni `int()` varsayimi
+        #   dogrulayiciyi cokertiyordu, orada duzeltildi, buradaki
+        #   kopyasina bakilmadi. Ayni hatayi iki yerde aramak gerekiyor --
+        #   #7.6'nin bedeli bu.
+        an = gun * 24 + saat
         sayi = sum(1 for a in atamalar
                    if a["ekip"] == t.get("ekip")
-                   and gun * 24 + saat in range(a["gun"] * 24 + int(a["bas"]),
-                                                a["gun"] * 24 + int(a["bit"])))
+                   and a["gun"] * 24 + a["bas"] <= an
+                   < a["gun"] * 24 + a["bit"])
         if t.get("asgari") is not None:
             asgari_top += 1
             asgari_tut += 1 if sayi >= t["asgari"] else 0
@@ -485,7 +504,16 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
 
     yuzde = lambda tut, top: 100.0 if top == 0 else round(100.0 * tut / top, 2)
     return {
-        "sert_ihlal": 0,          # kisitlar sert; cozum varsa hepsi saglanmistir
+        # ⚠ BU SAYI OLCULMUYOR, SABIT YAZILIYOR -- T-66.
+        #   Mantik dogru (kisitlar sert, cozum varsa saglanmislar) ama alan
+        #   adi bir OLCUM vaat ediyor: ekranda "0 sert ihlal" yazdiginda
+        #   insan bunu sayilmis sanir. Sayilmadi. Ustelik yalniz MOTORUN
+        #   KENDI kurdugu kisitlari kapsar; govdesi yalniz dogrulayicida
+        #   olan bir kural (ya da hic yazilmamis 12 kural) bu sifira
+        #   girmez. Gercek sayi `dogrulayici.degerlendir`den gelir.
+        #   #11.3 cikti sozlesmesini degistirmek Mustafa'nin karari; o
+        #   karara kadar bekciler DOGRULAYICININ sayisina bakiyor.
+        "sert_ihlal": 0,
         "asgari_kapsama_yuzde": yuzde(asgari_tut, asgari_top),
         "hedef_kapsama_yuzde": yuzde(hedef_tut, hedef_top),
         "eksik_hedef_dakika": eksik_dk,

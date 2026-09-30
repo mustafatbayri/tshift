@@ -4,6 +4,25 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (gece) · CI kırmızı yandı — motorun kendi metriği yanlış sayıyordu**
+Mustafa'nın koşumu: *"sert ihlal 0, asgari kapsama %99,76."* Çelişki gibi
+duruyordu, değildi — iki sayı da motorun **kendi** raporundan geliyor.
+**T-65:** `coz.py::_metrikler` kapsamayı `int(a["bit"])` ile sayıyordu; vardiya
+07:00–16:15 ise `int(16.25)` = 16 ve saat 16 **dışarıda** kalıyordu. K-34'ten
+beri şablonların çoğu kesirli bittiği için bu istisna değil kural: 415 hücrenin
+biri eksik sayıldı. ⚠ **T-58 ile aynı aile** — aynı `int()` varsayımı 29
+Eylül'de doğrulayıcıyı çökertmişti, orada düzeltildi, **çözücüdeki kopyasına
+bakılmadı.** ⚠ Test rastgele yeşil yanıyordu: hangi hücrenin açıkta kalacağı
+plana bağlı, benim makinemde geçti CI'da yandı. Düzeltildi; üç test, ikisi
+kırmızı başladı, mutasyon ikisini birden öldürdü. **Bekçi de değişti:**
+kapsama artık **doğrulayıcının** sayısıyla ölçülüyor ve iki tarafın anlaştığı
+ayrıca sınanıyor. **T-66 açıldı:** `sert_ihlal` ölçülmüyor, **sabit sıfır**
+yazılıyor — yalnız motorun kendi kısıtlarını kapsar, gövdesi olmayan 12 kural
+o sıfıra girmez. §11.3 çıktı sözleşmesi Mustafa'nın kararını bekliyor.
+Motor **205 test** yeşil.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-65 · T-66
+
+
 **2026-09-30 (akşam) · K-41 · Molada olan sayılır · T-61, T-62, T-63'ün rol tarafı kapandı**
 **K-41:** nitelik kapsamasında mola **sahadan çıkarmaz** — Mustafa: *"Sahada bir
 müdürün işi 15 dk mola süresini bekleyebilir."* ⚠ Değişen taraf **doğrulayıcı**

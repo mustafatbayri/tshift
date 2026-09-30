@@ -258,12 +258,34 @@ def test_KUCULTULMUS_olcekte_plan_uretilir_ve_TEMIZ(kucuk_plan):
 
 
 def test_KUCULTULMUS_olcekte_kapsama_TAM(kucuk_plan):
-    """Asgari kapsama %100 olmali -- sert kural, tavizi yok."""
+    """Asgari kapsama %100 olmali -- sert kural, tavizi yok.
+
+    ⚠ OLCU MOTORUN DEGIL, DOGRULAYICININ -- 30 Eylul'de degistirildi (T-65)
+      Bu test eskiden `c["metrikler"]`e, yani MOTORUN KENDI raporuna
+      bakiyordu. Motorun kendi isini kendi onaylamasi #7.6'nin yasakladigi
+      sey ve bedeli olculdu: CI'da "sert_ihlal 0, asgari kapsama %99,76"
+      diye bir cift cikti. Celiski gibi duruyordu, degildi -- iki sayinin
+      ikisi de ayni yaniltici rapordan geliyordu.
+
+      Gercek sebep motorun metriginde `int()` ile kirpilan kesirli vardiya
+      bitisiydi (07:00-16:15 -> saat 16 sayilmiyor). Plan dogruydu, sayi
+      yanlisti. Komsu test (`test_TAM_ZAMANLI_sozlesme_saatini_DOLDURUYOR`)
+      bu dersi zaten ogrenmisti ve dogrulayicinin olcusune bakiyordu;
+      burada atlanmisti.
+
+      Ayrica iki tarafin ANLASMASI da ayrica siniyor: ayrisirlarsa sapan
+      taraf hangisi olursa olsun gorunur.
+    """
     g, c = kucuk_plan
     assert c["durum"] == "cozuldu"
-    m = c.get("metrikler") or {}
-    assert m.get("asgari_kapsama_yuzde") == 100.0, (
-        "asgari kapsama %%100 degil: %s" % m.get("asgari_kapsama_yuzde"))
+    r = degerlendir(g, c["atamalar"])
+    denetci = (r.get("metrikler") or {}).get("asgari_kapsama_yuzde")
+    assert denetci == 100.0, (
+        "bagimsiz denetciye gore asgari kapsama %%100 degil: %s" % denetci)
+    motor = (c.get("metrikler") or {}).get("asgari_kapsama_yuzde")
+    assert motor == denetci, (
+        "motor %%%s diyor, denetci %%%s -- iki taraf ayni plan hakkinda "
+        "ayrisiyor (T-65 ailesi)" % (motor, denetci))
 
 
 def test_TAM_ZAMANLI_sozlesme_saatini_DOLDURUYOR(kucuk_plan):
