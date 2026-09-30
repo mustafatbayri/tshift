@@ -41,6 +41,7 @@ for y in (MOTOR, BURASI):
         sys.path.insert(0, y)
 
 from dogrulayici import degerlendir                           # noqa: E402
+from dogrulayici import kurallar as _K                        # noqa: E402
 
 VAKALAR = []
 
@@ -342,6 +343,105 @@ def _(g, p):
               "molalar": []})
 
 
+def _nitelik_vakasi(g, p, kod, alan, parametre_adi, aranan_secici):
+    """ROL_KAPSAMASI / YETKINLIK_KAPSAMASI vakalarinin ortak govdesi.
+
+    ⚠ VERI SETINDE GEREKLILIK SATIRI YOK -- VAKA ONU KENDISI YAZIYOR
+      Iki kural sahnede `parametreler` alani OLMADAN tanimli: yani aktif
+      ama hicbir sey istemiyor. Govde de haklı olarak hicbir sey
+      denetlemiyor. Bu, "40 kuralin hepsi tanimli" cumlesinin sinirini
+      gosteriyor: TANIMLI olmak ISTEMEK degildir.
+
+      Bu yuzden vaka iki isi birden yapiyor: gereklilik satirini yaziyor
+      ve sonra onu bozuyor. Yani su an olculen sey GOVDENIN ATESLENDIGI,
+      veri setinin bu kurali ZORLADIGI degil. Ikincisi acik is.
+
+      Ayni tuzak `SAHADA_ASGARI`'de de var: sahnede `asgari_sahada` 0,
+      yani o kural da aktif ama hicbir sey istemiyor.
+    """
+    kural = _kural(g, kod)
+    if kural is None:
+        return
+    hucre = next((t for t in g.get("talep", [])
+                  if t.get("ekip") and t.get("gun") is not None
+                  and t.get("saat") is not None), None)
+    if hucre is None:
+        return
+    ekip, gun, saat = hucre["ekip"], hucre["gun"], hucre["saat"]
+
+    aranan = aranan_secici(g, ekip)
+    if aranan is None:
+        return
+    tasiyanlar = {c["id"] for c in g["calisanlar"]
+                  if ekip in (c.get("ekipler") or [])
+                  and (aranan in (c.get(alan) or []) if alan == "yetkinlikler"
+                       else c.get(alan) == aranan)}
+    if not tasiyanlar:
+        return
+
+    kural["parametreler"] = {parametre_adi: aranan, "ekip": ekip,
+                             "gun": gun, "saatler": [saat], "asgari": 1}
+
+    # O saati kapsayabilecek butun atamalari kaldir. `gun-1` de dahil:
+    # gece yarisini asan bir vardiya onceki gunde baslar ama bu saati
+    # kapsayabilir (Z-2).
+    p[:] = [a for a in p
+            if not (a.get("calisan") in tasiyanlar
+                    and a.get("ekip") == ekip
+                    and a.get("gun") in (gun - 1, gun))]
+
+
+@vaka("ROL_KAPSAMASI",
+      "Sahnenin KENDI gerekliliginden bir gunun liderleri cikarilir")
+def _(g, p):
+    """⚠ BU VAKA ARTIK GEREKLILIGI KENDISI YAZMIYOR (T-63 sonrasi).
+
+    30 Eylul'e kadar sahnede gereklilik satiri yoktu, bu yuzden vaka onu
+    kendisi yaziyordu -- yani "govde atesliyor mu" olculuyordu, "veri seti
+    bu kurali zorluyor mu" degil. Mustafa'nin karariyla sahneye gercek bir
+    satir kondu ("gunduz saatlerinde 1 lider"), dolayisiyla vaka artik
+    yalnizca PLANI bozuyor: bir gunun liderlerini plandan cikarir.
+
+    Vaka DAR: tek gun, tek ekip. Butun haftaya dokunmak, ihlali gurultuye
+    bogar ve vakanin ne olctugunu belirsizlestirir.
+    """
+    kural = next((k for k in g.get("kurallar", [])
+                  if k.get("kod") == "ROL_KAPSAMASI"
+                  and (k.get("parametreler") or {}).get("rol")), None)
+    if kural is None:
+        return
+    par = kural["parametreler"]
+    ekip, rol = par.get("ekip"), par["rol"]
+    tasiyanlar = {c["id"] for c in g["calisanlar"]
+                  if c.get("operasyonel_rol") == rol
+                  and (ekip is None or ekip in (c.get("ekipler") or []))}
+    if not tasiyanlar:
+        return
+    gunler = sorted({a["gun"] for a in p
+                     if a.get("calisan") in tasiyanlar
+                     and (ekip is None or a.get("ekip") == ekip)})
+    if not gunler:
+        return
+    gun = gunler[0]
+    p[:] = [a for a in p
+            if not (a.get("calisan") in tasiyanlar
+                    and (ekip is None or a.get("ekip") == ekip)
+                    and a.get("gun") in (gun - 1, gun))]
+
+
+@vaka("YETKINLIK_KAPSAMASI",
+      "Yetkinlik gerekliligi yazilir, o saatte sahada tasiyan birakilmaz")
+def _(g, p):
+    def _yetkinlik_sec(g, ekip):
+        for c in g["calisanlar"]:
+            if ekip in (c.get("ekipler") or []):
+                for y in (c.get("yetkinlikler") or []):
+                    return y
+        return None
+    _nitelik_vakasi(g, p, "YETKINLIK_KAPSAMASI", "yetkinlikler",
+                    "yetkinlik", _yetkinlik_sec)
+
+
 @vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")
 def _(g, p):
     """K-39. Sozlesme saati doldurulmazsa ihlal.
@@ -440,14 +540,32 @@ def kostur(g0, temel_plan, ayrintili=False):
             if ornek:
                 print("      mesaj: %s" % ornek.get("mesaj", "")[:90])
 
+    # ⚠ 30 Eylul -- BU ARACIN KENDI BOSLUGU
+    #   Ozet eskiden `basarili / len(VAKALAR)` yaziyordu: yani "yazdigim
+    #   vakalarin kaci atesledi". Govdesi yazili ama VAKASI OLMAYAN bir kural
+    #   bu paydada hic gorunmuyordu -- arac "EKSIK: 0" diyordu ve kapsama
+    #   tam sanilyordu. 29 Eylul'de "26 kuralin tamami kendi vakasinda
+    #   kirmizi yaniyor, eksik sifir" diye yazdigim cumlenin dayanagi buydu.
+    #
+    #   Evren artik dogrulayicinin KAYIT sozlugu: govdesi yazili her kural.
+    #   Vakasi olmayan bir govde de bir bosluktur, cunku o kural icin
+    #   "kirmizi yanabiliyor mu" sorusu hic sorulmamis olur.
+    vakasiz = sorted(set(_K.KAYIT) - {k for k, _, _ in VAKALAR})
+    for kod in vakasiz:
+        print("%-26s %-9s %-9s VAKASI YOK -- hic sinanmadi" % (kod, "-", "-"))
+        eksik += 1
+
     print("-" * 74)
-    print("KIRMIZI YANAN : %d / %d" % (basarili, len(VAKALAR)))
-    print("EKSIK         : %d" % eksik)
+    print("GOVDESI YAZILI KURAL : %d" % len(_K.KAYIT))
+    print("VAKASI OLAN          : %d" % len({k for k, _, _ in VAKALAR}))
+    print("KIRMIZI YANAN        : %d" % basarili)
+    print("EKSIK                : %d" % eksik)
     if eksik:
         print()
         print("⚠ 'SESSIZ' olan her satir bir bosluktur: kural tanimli, govdesi")
         print("  yazili, ama bu bozmayi gormuyor. 'zaten kirmiziydi' ise vakanin")
         print("  DAR olmadigini soyler -- temel plan o kurali zaten ciginiyor.")
+        print("  'VAKASI YOK' ise soru hic sorulmamis.")
     return basarili, eksik
 
 

@@ -18829,6 +18829,91 @@
    "kabul_edilebilir": false
   },
   {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "SATIS",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "BACKOFFICE",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
    "kod": "GECE_VARDIYASI_AZAMI",
    "tur": "SERT",
    "aktif": true,
@@ -18888,20 +18973,6 @@
    "tur": "YUMUSAK",
    "aktif": true,
    "yasal": false
-  },
-  {
-   "kod": "ROL_KAPSAMASI",
-   "tur": "SERT",
-   "aktif": true,
-   "yasal": false,
-   "kabul_edilebilir": false
-  },
-  {
-   "kod": "YETKINLIK_KAPSAMASI",
-   "tur": "SERT",
-   "aktif": true,
-   "yasal": false,
-   "kabul_edilebilir": false
   },
   {
    "kod": "TERCIH_KARSILAMA",

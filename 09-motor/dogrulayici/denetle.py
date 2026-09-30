@@ -195,13 +195,27 @@ def _eksik_boyutlar(girdi):
     """
     eksik = []
     for tanim in _aktif_kurallar(girdi):
-        if tanim.get("kod") != "ADALET_DENGESI":
-            continue
-        for boyut in (tanim.get("parametreler") or {}).get(
-                "boyutlar", ["gece", "hafta_sonu", "saat"]):
-            if kurallar._boyut_sayaci(boyut) is None:
-                eksik.append({"kural": "ADALET_DENGESI", "boyut": boyut,
-                              "sebep": "sayilabilir boyut degil; T-13"})
+        kod = tanim.get("kod")
+        p = tanim.get("parametreler") or {}
+
+        if kod == "ADALET_DENGESI":
+            for boyut in p.get("boyutlar", ["gece", "hafta_sonu", "saat"]):
+                if kurallar._boyut_sayaci(boyut) is None:
+                    eksik.append({"kural": "ADALET_DENGESI", "boyut": boyut,
+                                  "sebep": "sayilabilir boyut degil; T-13"})
+
+        # ROL_KAPSAMASI / YETKINLIK_KAPSAMASI: gereklilik satirinda hangi
+        # nitelik arandigi yazilmamissa kural DENETLENEMEZ. Govde bos liste
+        # donuyor -- yani "ihlal yok" gibi gorunuyor. Ayrimi burada yapmak
+        # zorunlu: "ihlal yok" ile "bakamadim" ayni sey degil.
+        for k, ad in (("ROL_KAPSAMASI", "rol"),
+                      ("YETKINLIK_KAPSAMASI", "yetkinlik")):
+            if kod == k and p.get(ad) is None:
+                eksik.append({
+                    "kural": k, "boyut": ad,
+                    "sebep": "gereklilik satirinda `%s` yazili degil; hangi "
+                             "niteligin arandigi bilinmiyor -- denetlenemedi"
+                             % ad})
     return eksik
 
 

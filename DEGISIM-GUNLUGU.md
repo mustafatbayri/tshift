@@ -4,6 +4,51 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (akşam) · K-41 · Molada olan sayılır · T-61, T-62, T-63'ün rol tarafı kapandı**
+**K-41:** nitelik kapsamasında mola **sahadan çıkarmaz** — Mustafa: *"Sahada bir
+müdürün işi 15 dk mola süresini bekleyebilir."* ⚠ Değişen taraf **doğrulayıcı**
+oldu; ben şartnamenin harfine bakıp çözücünün düzeltileceğini varsaymıştım
+(T-57 refleksi), yanlıştı. İki test **tersine çevrildi**, silinmedi.
+`SAHADA_ASGARI` molayı düşmeye devam ediyor — ayrım bilerek.
+**T-62 kapandı:** saat listesi yoksa açık saatlerin hepsi, `ekip` yoksa saha
+çapı, kontrol çeyrek bazında; niteliği taşıyan kimse yoksa kısıt değil **not**.
+⚠ Bir testim mutasyondan sağ kurtuldu: *"atandı mı"* sorusu bu motorda hiçbir
+şey kanıtlamıyor (fazladan atamanın maliyeti yok, T-54). İmkânsız gereklilikle
+yeniden yazıldı.
+**T-63'ün rol tarafı kapandı:** Mustafa *"yalnız gündüz saatlerinde 1 lider"*
+dedi; her ekibe ayrı gereklilik satırı kondu (08:00–20:00). ⚠ Gereklilik konunca
+0.1 ölçekte plan **kanıtlanarak çözümsüz** kaldı — 2 lider × 6 gün = 12
+lider-günü, gereken 14. Sayıyı 4'e çıkarmak da yetmedi; taban *"4 kişi"* değil
+**"gündüz vardiyası yazılabilecek 4 kişi"**. Üreticiye ekip başına 4 lider
+tabanı kondu; tam ölçekte hiçbir şey değişmiyor. Motor **202 test** yeşil.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-41 · `00-DEVIR/06-ACIK-RISKLER.md` T-61…T-63
+
+
+**2026-09-30 · Rol ve yetkinlik kapsaması doğrulayıcıya bağlandı**
+Gövdesiz 14 kuralın ikisi **çözücüde vardı, doğrulayıcıda yoktu**: motor o iki
+kural için kendi işini kendi onaylıyordu (#7.6'nın tam tersi). Gövdeler
+şartnameden okunarak yazıldı — çözücü kodu bilerek okunmadı (T-19'un dersi).
+14 test, 9'u kırmızı yandı; beş mutasyon denendi, biri ilk turda **yaşadı**
+(ekip süzgeci) ve yeni bir testle öldürüldü. Parametresiz gereklilik satırı
+artık `eksik_boyutlar` kanalından bildiriliyor: *"hangi niteliğin arandığı
+bilinmiyor — denetlenemedi."*
+**Bağımsız denetim ilk gününde iki bulgu buldu.** **T-61:** şartname *"sahada"*
+diyor, çözücü **atanmış** kişiyi sayıyor — üç kişinin yemeği aynı saate düştü,
+o saatte sahada takım lideri kalmadı, çözücü kendi ölçüsüne göre kuralı
+sağlıyor (T-57'nin aynı ailesi). **T-62:** `saatler` yazılmazsa çözücünün iç
+döngüsü hiç çalışmıyor — aktif bir SERT kural modele **tek kısıt koymuyor**;
+`ekip` yazılmazsa tersine plan **çözümsüz** kalıyor. Ölçüldü: 49 kişide aynı
+plan, gereklilik konunca **1.238 sert ihlal** ve `yayınlanabilir` False.
+**T-63:** veri setinde rol/yetkinlik kapsaması `parametreler` **olmadan**
+tanımlı, `SAHADA_ASGARI` ise 0 — üç kural aktif ama hiçbir şey istemiyor.
+**T-64 kapandı (aynı gün):** ihlal vakası aracı `basarili / len(VAKALAR)`
+yazıyordu, yani kendi listesini sayıyordu; vakası olmayan gövde paydada hiç
+görünmüyordu. Evren artık doğrulayıcının kural kayıt sözlüğü —
+**28 gövde · 28 vaka · 28 kırmızı · eksik sıfır**. Motor **198 test** yeşil.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-61…T-64 ·
+  `00-DEVIR/oturumlar/2026-09-30-nitelik-kapsamasi.md`
+
+
 **2026-09-29 (akşam) · Veri seti baştan kuruldu · K-37 · K-38 · K-39 · K-40**
 Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı:
 *"Beni yanılttın. Konuyu çözmek için problemi daraltma bir daha!"* Ölçülünce

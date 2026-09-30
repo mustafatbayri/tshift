@@ -144,6 +144,10 @@ MOLA_POLITIKALARI = {
 }
 
 # Yemek penceresi de ekibe gore ayri (MOLA_YERLESIMI, kapsam K/D)
+# Gunduz penceresi -- ROL_KAPSAMASI gereklilik satirlari bunu kullanir.
+# 08:00-20:00. Gece postasinda takim lideri zorunlu degil (T-63).
+GUNDUZ_BAS, GUNDUZ_BIT = 8, 20
+
 YEMEK_PENCERESI = {
     "SATIS":      {"en_az_saat": 3, "en_gec_saat": 5},
     "BACKOFFICE": {"en_az_saat": 3, "en_gec_saat": 6},
@@ -222,6 +226,68 @@ def _sec(rnd, dagilim):
         if x <= top:
             return deger
     return dagilim[-1][0]
+
+
+# Gereklilik satiri "gunduz boyunca 1 takim lideri" istiyor (T-63). Kac
+# lider gerekir, sayarak:
+#
+#   gunduz penceresi 12 saat, en uzun vardiya ~10,5 saat
+#     -> bir gunu kapatmak icin EN AZ 2 lider
+#   HAFTA_TATILI her calisana 1 gun tatil verir
+#     -> haftada 2x7 = 14 lider-gunu gerekiyor, kisi basina 6 gun var
+#     -> ceil(14/6) = 3 lider
+#   izin/rapor payi
+#     -> +1  =>  EKIP BASINA 4
+#
+# ⚠ BU BIR ORAN DEGIL, TABAN. Rol dagilimi %8 lider veriyor; 500 kiside
+#   bu 21/15/6 ediyor ve taban zaten asiliyor. Ama 0.1 olcekte 2/2/0
+#   ediyor ve gereklilik KANITLANARAK cozumsuz kaliyor: 2 lider x 6 gun =
+#   12 lider-gunu, gereken 14.
+#
+# ⚠ OLCULDU (30 Eylul): 0.1 olcekte ekip basina 4 TAM ZAMANLI ve izinsiz
+#   lider varken sahne 79 saniyede cozuldu. Yalniz sayiyi 4'e cikarmak
+#   YETMEDI -- promosyon yari zamanliya ya da izinliye denk gelince plan
+#   yine cozumsuz kaldi. Yani taban "4 kisi" degil, "gunduz vardiyasi
+#   yazilabilecek 4 kisi".
+#
+# ⚠ KUCUK OLCEKTE BU ORANI BOZAR: 7 kisilik MHIZMET ekibinde 4 lider
+#   demek kisilerin yarisindan fazlasi lider demektir. Gercekci degil --
+#   ama 7 kisiyle 7/24 kapsama da gercekci degil; o sahne zaten bir
+#   kucultme yapisidir. Alternatif, firmanin kendi kuralini tutamayan bir
+#   veri seti olurdu.
+LIDER_TABANI = 4
+
+
+def _lider_tabani_uygula(calisanlar):
+    """Her ekipte gunduz vardiyasi yazilabilecek en az LIDER_TABANI lider.
+
+    Aday sirasi bilerek dar: tam zamanli, aktif, izinsiz. Boyle bir aday
+    kalmazsa taban tutulmaz -- sessizce zorlamak yerine eksik birakilir ve
+    sahne kendi sinirini gosterir.
+    """
+    ekipler = {}
+    for c in calisanlar:
+        for e in (c.get("ekipler") or []):
+            ekipler.setdefault(e, []).append(c)
+    for kisiler in ekipler.values():
+        lider = [c for c in kisiler
+                 if c.get("operasyonel_rol") == "takim_lideri"
+                 and c.get("durum", "aktif") == "aktif"
+                 and not c.get("izinler")
+                 and (c.get("sozlesme") or {}).get("tip") == "tam_zamanli"]
+        if len(lider) >= LIDER_TABANI:
+            continue
+        adaylar = [c for c in kisiler
+                   if c.get("operasyonel_rol") != "takim_lideri"
+                   and c.get("durum", "aktif") == "aktif"
+                   and not c.get("izinler")
+                   and (c.get("sozlesme") or {}).get("tip") == "tam_zamanli"]
+        for c in adaylar:
+            if len(lider) >= LIDER_TABANI:
+                break
+            c["operasyonel_rol"] = "takim_lideri"
+            lider.append(c)
+    return calisanlar
 
 
 def calisanlar_uret(rnd, olcek):
@@ -360,10 +426,20 @@ def talep_uret(olcek, carpan=1.0):
 def kurallar_uret():
     """Katalogdaki 40 kuralin TAMAMI.
 
-    GOVDESI YAZILI 26 -> gercekten degerlendirilir.
-    YAZILMAMIS 14     -> aktif tanimlanir ki `uygulanmayan_kurallar` kanali
+    GOVDESI YAZILI 28 -> gercekten degerlendirilir.
+    YAZILMAMIS 12     -> aktif tanimlanir ki `uygulanmayan_kurallar` kanali
                          gercekten atessin. Sessizce dislamak, kanali test
                          etmemek demektir (T-18 tam bu kapida bekliyor).
+
+    ⚠ TANIMLI OLMAK, ISTEMEK DEGILDIR -- T-63 (30 Eylul)
+      30 Eylul'e kadar `ROL_KAPSAMASI` ve `YETKINLIK_KAPSAMASI` burada
+      `parametreler` ALANI OLMADAN tanimliydi: aktif, ama hicbir sey
+      istemiyor. Govdeleri yazildiginda bekciler yesil kaldi ve sebebi
+      buydu. `SAHADA_ASGARI` de ayni durumda (asgari_sahada 0).
+
+      Yani "40 kuralin hepsi tanimli" cumlesi dogruydu ve HICBIR SEY
+      soylemiyordu. Bu, 29 Eylul'de kod tarafinda yapilan hatanin veri
+      tarafindaki ayni hali.
     """
     K = []
 
@@ -405,6 +481,40 @@ def kurallar_uret():
     # K-40: gece uygunlugu.
     ek("GECE_UYGUNLUGU", "SERT", kabul=False)
 
+    # --- ROL_KAPSAMASI: gerceklilik satirlari (T-63, Mustafa 30 Eylul) ---
+    #
+    # Mustafa'nin secimi: "Yalniz gunduz saatlerinde 1 lider."
+    #
+    # ⚠ SAAT ARALIGI BENIM SECIMIM, MUSTAFA SAAT VERMEDI -- acikca yaziyorum.
+    #   GUNDUZ = 08:00-20:00, yani saat 8'den 19'a kadarki hucreler.
+    #   Gece postasinda takim lideri ZORUNLU DEGIL; 7/24 kapsamada her
+    #   saate lider istemek 42 liderle tutulamazdi ve olculmeden
+    #   varsayilmis bir gereklilik olurdu.
+    #
+    # ⚠ HER EKIP AYRI SATIR. K-24: bu kuralda gereklilik SATIR bazlidir ve
+    #   her satir kendi `yasal` bayragini tasir. "Ekipte lider olsun" ticari
+    #   bir tercihtir, yasal degil -- bu yuzden kabul edilebilir isaretli:
+    #   yonetici gorup onaylayabilir, plan bu yuzden yayindan dusmez.
+    #
+    # ⚠ OLCU ATANMIS OLMAKTIR, SAHADA OLMAK DEGIL -- K-41. Molada olan
+    #   lider de sayilir.
+    for e in EKIPLER:
+        ek("ROL_KAPSAMASI", "SERT", kabul=True,
+           rol="takim_lideri", ekip=e["id"], asgari=1,
+           saatler=list(range(GUNDUZ_BAS, GUNDUZ_BIT)))
+
+    # --- YETKINLIK_KAPSAMASI: gereklilik satiri HENUZ YOK ---
+    #
+    # ⚠ BILEREK PARAMETRESIZ. Mustafa 30 Eylul'de yalniz rol tarafina
+    #   gereklilik verdi; yetkinlik tarafi ("musteri hizmetlerinde her saat
+    #   ingilizce" gibi) karara baglanmadi. Sahnede veri DURUYOR: teknik,
+    #   almanca, ingilizce, iade yetkinlikleri dagitilmis.
+    #
+    #   Parametresiz birakmak SESSIZ DEGIL: dogrulayici `eksik_boyutlar`
+    #   kanalindan "hangi niteligin arandigi bilinmiyor -- denetlenemedi"
+    #   diye bildiriyor. T-63'un acik kalan yarisi bu.
+    ek("YETKINLIK_KAPSAMASI", "SERT", kabul=False)
+
     # --- govdesi YAZILMAMIS olanlar (uygulanmayan_kurallar atessin) ---
     for kod, tur, yasal in (
             ("GECE_VARDIYASI_AZAMI", "SERT", True),
@@ -416,8 +526,6 @@ def kurallar_uret():
             ("CALISMA_SAATLERI", "SERT", False),
             ("EKIP_SUREKLILIGI", "YUMUSAK", False),
             ("PLAN_KARARLILIGI", "YUMUSAK", False),
-            ("ROL_KAPSAMASI", "SERT", False),
-            ("YETKINLIK_KAPSAMASI", "SERT", False),
             ("TERCIH_KARSILAMA", "YUMUSAK", False),
             ("VARDIYA_ROTASYON_YONU", "YUMUSAK", False),
             ("YILLIK_FAZLA_MESAI_TAVANI", "SERT", True)):
@@ -439,7 +547,7 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
       soylenemez.
     """
     rnd = random.Random(TOHUM)
-    calisanlar = calisanlar_uret(rnd, olcek)
+    calisanlar = _lider_tabani_uygula(calisanlar_uret(rnd, olcek))
 
     # Talep, kapasitenin `doluluk` katina gelecek sekilde olceklenir.
     kapasite = kapasite_saat(calisanlar)

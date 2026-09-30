@@ -195,15 +195,23 @@ def test_HER_KURAL_kirmizi_yanabiliyor():
     ⚠ 29 Eylul'de iki kez isirdi: K-40 yeni kural ekledi (vakasi yoktu) ve
       K-39 `PART_TIME_LIMIT`'in tavanini degistirdi (eski vaka artik
       ihlal uretmiyordu, SESSIZ kaldi).
+
+    ⚠ 30 Eylul -- BU TESTIN KENDI BOSLUGU KAPANDI
+      `eksik` eskiden yalniz "yazdigim vakalarin kaci sessiz kaldi"
+      sayiyordu. Govdesi yazili ama VAKASI OLMAYAN bir kural bu sayida
+      hic gorunmuyordu; yani yeni bir kural govdesi yazmak bu testi
+      kirmizi yakmiyordu. ROL_KAPSAMASI ve YETKINLIK_KAPSAMASI govdeleri
+      yazilinca bu gorundu: arac "EKSIK: 0" demeye devam etti.
+      Arac artik evreni dogrulayicinin KAYIT sozlugunden aliyor.
     """
     kk = _yukle("kural-kapsamasi.py")
     iv = _yukle("ihlal-vakalari.py")
     g = _diskten(0.95)
     basarili, eksik = iv.kostur(g, kk.kaba_plan(g))
     assert eksik == 0, (
-        "%d kural kendi ihlal vakasinda kirmizi YANMADI -- ayrinti icin "
-        "`py ihlal-vakalari.py -v`" % eksik)
-    assert basarili >= 26, "beklenen en az 26 kural, %d geldi" % basarili
+        "%d kural kendi ihlal vakasinda kirmizi YANMADI ya da vakasi hic "
+        "YOK -- ayrinti icin `py ihlal-vakalari.py -v`" % eksik)
+    assert basarili >= 28, "beklenen en az 28 kural, %d geldi" % basarili
 
 
 # ----------------------------------------------------------------------

@@ -1,0 +1,332 @@
+# 2026-09-30 · Rol ve yetkinlik kapsaması doğrulayıcıya bağlandı · dört yeni bulgu
+
+**Kim.** Mustafa + Claude
+**Nereden devam.** 29 Eylül gecesi commit edildi, push edildi, CI'ın iki işi de
+yeşil yandı. Mustafa: *"iki iş te yeşil :) nerede kaldık devam ediyoruz"*
+
+**Sıra.** Mustafa'nın 29 Eylül'de kurduğu sıra: gece işareti → iki veri seti →
+**eksik kurallar** → testleri tekrarla. İlk ikisi bitmişti; bugün eksik kurallar.
+
+---
+
+## 0 · Gövdesiz 14 kural üçe ayrıldı, hepsi aynı anlamda "yok" değildi
+
+Listeyi alfabetik okumak yanlış sonuç veriyor. Ölçülünce üç ayrı durum çıktı:
+
+| durum | kaç | hangi kurallar |
+|---|---|---|
+| **çözücüde var, doğrulayıcıda yok** | 2 | rol kapsaması, yetkinlik kapsaması |
+| ağırlığı tanımlı, gövdesi hiçbir yerde yok | 4 | ekip sürekliliği, tercih karşılama, vardiya rotasyon yönü, plan kararlılığı |
+| hiçbir yerde yok | 8 | üçü **yasal**: gece vardiyası azami, gece postası devri, yıllık fazla mesai tavanı |
+
+Mustafa ilk grubu seçti. Gerekçe en ağır olanıydı: o iki kural için **bağımsız
+denetim hiç yoktu**. Çözücü kısıtı kendi kuruyor, plan zorunlu olarak uyuyor,
+doğrulayıcı da *"ihlal yok"* diyor — **hiç bakmadan**. Şartname #7.6 iki yarıyı
+tam olarak bunu engellemek için ayırıyor.
+
+⚠ **Dünün cümlesinin sınırı burada görüldü.** 29 Eylül tam ölçekli koşumda
+*"0 sert ihlal, yayınlanabilir True"* yazıyordu ve ben bunu iyi haber diye
+aktardım. Doğru ama eksik: denetçi o iki kurala bakmadı. Motor bunu kendisi
+bildiriyordu (`uygulanmayan_kurallar`), yayın kapısı o kanalı görmüyor (T-18).
+
+---
+
+## 1 · İki gövde yazıldı — şartnameden, çözücü kodundan değil
+
+Çözücünün kısıt kodu **bilerek okunmadı**. T-19'un dersi: iki taraf aynı yanlış
+geleneği paylaşırsa ikisi birbiriyle tutarlı ve ikisi de yanlış olur; bağımsız
+denetim de o yanlışı göremez.
+
+Şartname §6.4'ten üç kelime belirleyici çıktı:
+
+| kelime | ne demek |
+|---|---|
+| **sahada** | molada olan sayılmaz — `SAHADA_ASGARI` ile aynı ölçü (K-33) |
+| **açık saat** | talep hücresi olan saat; kapalı dönemde saha yoktur |
+| **saatlerde** | yetkinlikte liste parametreden gelir; rolde liste yoksa açık saatlerin hepsi |
+
+Ayrıca K-24: bu iki kuralda `yasal` bayrağı **satırın** özelliği. *"Her vardiyada
+1 ilk yardım sertifikalı kişi"* muhtemelen yasaldır, *"kahvaltıda 1 barista"*
+ticari tercihtir. Ek bir iş gerekmedi — her gereklilik satırı girdide ayrı bir
+kural tanımı olduğu için her ihlal kendi bayrağını taşıyor.
+
+**Kırmızı kanıt:** 14 test yazıldı, **9'u** kırmızı yandı.
+
+⚠ **Üçü kırmızı YANMADI ve bunu kayda geçiriyorum.** *"Sahadaysa ihlal yok"*
+diyen testler, kural **hiç yokken** de yeşil yanar — yani gövde yazılmadan önce
+hiçbir şey ölçmüyorlardı. Bu oturumda aynı tuzağa iki kez düşülmüştü
+(`assert True` ile biten testler). Üçü de gövde yazıldıktan **sonra** anlam
+kazanıyor (fazla ihlal yazılmasını engelliyorlar), ama kırmızı kanıt sayısı
+14 değil **9**.
+
+**Mutasyon: beş bozma denendi, beşi de öldü** — ama biri ilk turda **yaşadı**:
+
+| mutasyon | sonuç |
+|---|---|
+| molayı düşme (çözücü gibi atanmışı say) | iki test kırmızı |
+| yalnız tam saate bak, çeyreği atla | beş test kırmızı |
+| saat listesini yok say | üç test kırmızı |
+| satırın yasal bayrağını yok say | bir test kırmızı |
+| ekip süzgecini yok say | ⚠ **hepsi yeşil kaldı** |
+
+Son satır bir boşluktu: ekip süzgeci iki yerde uygulanıyor ve her sahnede
+ikincisi zaten yetiyordu. Fark ancak şu veride ortaya çıkıyor: kişi ekip
+kadrosunda **değil** ama o ekibe atanmış. Yeni test yazıldı, mutasyon öldü.
+
+---
+
+## 2 · Parametresiz gereklilik satırı artık sessiz geçmiyor
+
+Hangi rolün arandığı yazılmamışsa kural **denetlenemez**. Gövde boş liste
+dönüyor, yani *"ihlal yok"* gibi görünüyor. `denetle.py`'nin ilkesi bunu
+yasaklıyor: *"ihlal yok"* ile *"bakamadım"* aynı şey değil.
+
+`eksik_boyutlar` kanalı genişletildi — kanal zaten *"kural yazılı, bir parçası
+eksik"* için vardı (T-13'ün adalet boyutu). Artık şunu da yazıyor:
+
+> *"gereklilik satırında `rol` yazılı değil; hangi niteliğin arandığı bilinmiyor
+> — denetlenemedi"*
+
+Bu bir ihlal **değil**: veri eksikliği plan hatası değildir.
+
+---
+
+## 3 · Ölçüm aracının kendi boşluğu — T-64
+
+İhlal vakası aracı özetinde `basarili / len(VAKALAR)` yazıyordu: *"yazdığım
+vakaların kaçı ateşledi."* Gövdesi yazılı ama **vakası olmayan** bir kural bu
+paydada hiç görünmüyordu.
+
+İki yeni gövde yazıldı, vakaları yoktu, araç **"EKSIK: 0"** demeye devam etti.
+
+⚠ **29 Eylül'de yazdığım cümlenin dayanağı buydu:** *"gövdesi yazılı 26 kuralın
+tamamı kendi vakasında kırmızı yanıyor, eksik sıfır."* Cümle doğruydu ama
+aracın sorduğu soru yanlıştı.
+
+Evren artık doğrulayıcının kural kayıt sözlüğü. Vakası olmayan gövde
+*"VAKASI YOK — hiç sınanmadı"* diye ayrı satır alıyor ve eksik sayısına giriyor.
+İki vaka yazıldı; şimdi **28 gövde · 28 vaka · 28 kırmızı · eksik sıfır**.
+
+⚠ **Bu oturumda ölçüm aracının kendi payı ikinci kez boşluk çıktı.** İlki
+çekirdek ölçüm aracıydı (tek koşuyu genel kural saymak). Ortak ders:
+**ölçen aracın da bekçisi olmalı.**
+
+---
+
+## 4 · Bağımsız denetim ilk gününde iki bulgu buldu
+
+Gövdeler yazılınca ortaya çıkan şey, gövdelerin kendisinden daha önemli.
+
+### T-61 · Çözücü *"atanmış"*, doğrulayıcı *"sahada"* sayıyor
+
+Şartname iki kuralı da *"sahada"* diye tanımlıyor; çözücü atama değişkenini
+sayıyor, molayı düşmüyor.
+
+**Ölçülen (3 kişi, tek takım lideri, 8–16 vardiyası):** çözücü planı üretti ve
+**üçünün yemeği de aynı saate düştü** (11:00–12:00). O saatte sahada takım
+lideri kalmadı. Denetçi o saatin **dört çeyreğinde** ihlal yazdı; çözücü kendi
+ölçüsüne göre kuralı sağlıyor.
+
+**T-57'nin aynı ailesi** — orada da doğrulayıcı haklı çıktı ve çözücü
+düzeltildi. Karar Mustafa'da, çünkü bedeli plana yansıyor: çözücü de *"sahada"*
+sayarsa nitelikli kişilerin molaları kaydırılmak zorunda kalır.
+
+Ayrışma test paketinde **ölçülüyor, sabitlenmiyor** — ayrı bir test olarak
+duruyor ve karar verilince silinecek ya da tersine çevrilecek.
+
+### T-62 · Saat listesi yoksa çözücü hiçbir şey kısıtlamıyor
+
+`saatler` verilmezse çözücünün iç döngüsü hiç çalışmıyor: aktif bir **SERT**
+kural modele tek kısıt koymuyor. Şartname rol kuralını *"her açık saatte"* diye
+tanımlıyor — yani liste yoksa **hepsi** geçerli olmalı, hiçbiri değil.
+
+Aynı fonksiyonun ikinci yarısı ters yönde bozuk: `ekip` yazılmazsa hiç kimse
+uygun sayılmıyor ve modele *"boş toplam en az 1 olsun"* kısıtı giriyor →
+**plan çözümsüz**. Yöneticinin göreceği cümle *"bu kadroyla imkânsız"* olur;
+sebebi bir eksik parametredir.
+
+**Ölçülen (49 kişi, %95 seti, 180 saniye):** her ekibe *"en az 1 takım lideri
+sahada"* gerekliliği kondu, `saatler` bilerek verilmedi.
+
+| | gereklilik yok | gereklilik var, saat listesi yok |
+|---|---|---|
+| durum | çözüldü | çözüldü |
+| atama | 221 | 221 — **aynı plan** |
+| sert ihlal | 0 | **1.238** |
+| yayınlanabilir | True | **False** |
+
+⚠ **Bu sayının bir kısmı kodun değil ölçeğin sonucu.** 0.1 ölçekte ekip başına
+yalnız **2** takım lideri var, talep 7/24. İki kişi 168 saati kapatamaz. Tam
+ölçekte 42 takım lideri var; oradaki gerçek sayı **ölçülmedi**. Yani 1.238
+*"çözücü kuralı görmüyor"*un kanıtıdır, *"gereklilik imkânsız"*ın ölçüsü
+değildir.
+
+---
+
+## 5 · Veri seti tarafında dünün dersi tekrar etti — T-63
+
+Yeni gövdeler bağlanınca zor veri seti bekçileri **yeşil kaldı**. Sebebi
+araştırıldı:
+
+| kural | sahnedeki hâli |
+|---|---|
+| rol kapsaması | `parametreler` alanı **yok** — hiçbir rol istenmiyor |
+| yetkinlik kapsaması | `parametreler` alanı **yok** — hiçbir yetkinlik istenmiyor |
+| sahada asgari | `asgari_sahada: 0` — saha tabanı yok |
+
+Üçü de aktif. *"40 kuralın hepsi tanımlı"* cümlesi doğru ama **tanımlı olmak,
+istemek değildir.**
+
+Veri duruyor: sahnede 42 takım lideri, 302 agent, 118 kıdemli agent, 38 uzman;
+yetkinlikler teknik, almanca, ingilizce, iade. Gereklilik yazılabilir,
+yazılmamış.
+
+⚠ **Dün kod tarafında aynı hatayı yapmıştım** (*"39 kuralın hepsi uygulanıyor"*,
+15'inin gövdesi yoktu). Bugün aynısı veri tarafında çıktı. **Sayı saymak
+yetmiyor; sayılan şeyin ne işe yaradığına bakmak gerekiyor.**
+
+---
+
+## Gün sonu durumu
+
+| ne | sayı | nasıl |
+|---|---|---|
+| Motor birim testi | **198** yeşil | koşuldu (2 dk 13 sn) |
+| Altın senaryolar | **12 geçti, 4 atlandı** | koşuldu |
+| Fikstür tutarlılığı | 11 fikstürün hepsi tutarlı | koşuldu |
+| Zor veri seti bekçisi | **12** yeşil (~4,5 dk) | koşuldu |
+| İhlal vakaları | **28 gövde · 28 vaka · 28 kırmızı · eksik sıfır** | koşuldu |
+| Kural kataloğu | **40** | sayıldı |
+| Yazılı kural gövdesi | **28** (dün 26) | sayıldı |
+| Gövdesi yazılmamış | **12** (dün 14) | sayıldı |
+
+**Bugün kapanan:** T-64 (aynı gün)
+**Bugün açılan:** T-61 · T-62 · T-63
+**Açık 🔴:** on
+
+**Gövdesi yazılmamış 12 kural:** ardışık gece limiti · ardışık hafta sonu
+limiti · asgari vardiya süresi · çalışma saatleri · ekip sürekliliği · gece
+postası devri · gece vardiyası azami · gece yarısını aşan · plan kararlılığı ·
+tercih karşılama · vardiya rotasyon yönü · yıllık fazla mesai tavanı.
+
+---
+
+## Sırada
+
+1. **T-62** — mekanik, karar gerektirmiyor. Saat listesi yoksa açık saatlerin
+   hepsi; `ekip` yoksa sessizce çözümsüz kalmak yerine açık davranış.
+2. **T-61** — Mustafa'nın kararı: çözücü de *"sahada"* mı sayacak?
+3. **T-63** — Mustafa'nın kararı: gereklilik satırları ne olacak? Bu bir veri
+   modeli sorusu değil, **işin nasıl yürüdüğü** sorusu.
+4. Kalan 12 gövde. Sıradaki mantıklı grup **üç yasal kural** (gece vardiyası
+   azami, gece postası devri, yıllık fazla mesai tavanı); ilk ikisi K-40'ın
+   gece işareti sayesinde artık yazılabilir, üçüncüsü geçmiş veri istiyor.
+5. T-59 (süre bütçesi aşımı) ve T-60'ın dört ölçümü hâlâ açık.
+
+---
+
+# AKŞAM · Kararlar alındı, üç bulgunun ikisi kapandı
+
+Mustafa iki soruyu da cevapladı ve biri beklediğimin tersi çıktı.
+
+## 6 · K-41 · Mola sahadan çıkarmaz — **değişen taraf doğrulayıcı oldu**
+
+> *"Sahada bir müdürün işi 15 dk mola süresini bekleyebilir. Bu 'sahada olmalı'
+>  kuralını bozmaz. Molalar sahada sayılır olarak geçebilir. Zaten mola öneri
+>  gibi bir kurgu olacağından bu kadar derine inmemize gerek yok."*
+
+Ben şartnamenin harfine bakıp doğrulayıcıyı *"sahada"* diye yazmıştım ve
+T-57'nin refleksiyle çözücünün düzeltileceğini varsaymıştım. **Yanlış varsayım:**
+hangi tarafın değişeceği şartnamenin kelimesine değil işin nasıl yürüdüğüne
+bakılarak belirleniyor. Çözücü haklıydı.
+
+İki test **tersine çevrildi**, silinmedi — gerekçeleri testlerin başına yazıldı.
+K-33'te aynısı yapılmıştı: kararla çelişen test silinirse altı ay sonra
+*"acaba neden böyle?"* diye sorulur ve kimse bilemez.
+
+⚠ **Ayrım bilerek bırakıldı:** `SAHADA_ASGARI` molayı düşmeye devam ediyor.
+Saha tabanı *"tezgâhta kaç kişi var"*dır, nitelik kapsaması *"o nitelik
+ulaşılabilir mi"*dir.
+
+⚠ **Şartname borcu:** §6.4'ün iki satırı hâlâ *"sahada"* diyor.
+⚠ **Açık kalan:** yasal bayraklı bir satırda (*"her vardiyada 1 ilk yardım
+sertifikalı kişi"*) molanın sayılması hukuken tartışılabilir. Mustafa daha
+derine inilmemesini istedi.
+
+## 7 · T-62 kapandı — ve bir testim mutasyondan sağ kurtuldu
+
+Çözücüde üç şey düzeltildi: saat listesi yoksa **açık saatlerin hepsi**; `ekip`
+yoksa **saha çapı**; kontrol artık **çeyrek** bazında. Dördüncüsü yeni bir
+davranış: niteliği taşıyan kimse yoksa **kısıt yazılmaz, not yazılır** — kısıt
+yazmak planı sessizce çözümsüz yapardı.
+
+⚠ **Kırmızı kanıtlar mutasyonla üretildi**, çünkü gövdeyi testlerden önce
+yazdım. Kırmızı önce kuralı burada uygulanmadı; kayda geçiyor.
+
+⚠ **Bir test ilk turda mutasyondan sağ kurtuldu ve dersi ağır.** Test *"kural
+iki lider istiyor, ikisi de atanmış mı"* diye soruyordu. Kısıt tamamen
+kaldırıldığında test **yine yeşil** kaldı: fazladan atamanın maliyeti yok
+(T-54), çözücü iki lideri zaten kendiliğinden atıyordu. **Bu motorda "atandı
+mı" sorusu hiçbir şey kanıtlamıyor.** Yerine imkânsız bir gereklilik konuldu —
+iki lider varken üç lider isteniyor; kısıt yazılıysa plan çözümsüz kalmak
+zorunda. Cevap tek, tesadüfe kapalı.
+
+Bugün mutasyon **iki kez** boşluk yakaladı (ekip süzgeci ve bu).
+
+## 8 · T-63'ün rol tarafı kapandı — gereklilik konunca sahne çözümsüz kaldı
+
+Mustafa'nın seçimi: *"Yalnız gündüz saatlerinde 1 lider."* Her ekip için ayrı
+gereklilik satırı kondu (K-24), saatler **08:00–20:00**.
+⚠ Saat aralığı benim seçimim, Mustafa saat vermedi.
+
+**İlk deneme çözümsüz — ve `teshis_kesin` True, yani kanıtlandı, zaman aşımı
+değil.** Sayarak:
+
+| | |
+|---|---|
+| gündüz penceresi | 12 saat; en uzun vardiya ~10,5 saat → günü kapatmak için **2 lider** |
+| hafta | 2 × 7 = **14 lider-günü** gerekiyor |
+| eldeki | 2 lider × 6 gün (`HAFTA_TATILI`) = **12 lider-günü** |
+
+Gereklilik değil **ölçek** imkânsızdı: %8 lider oranı 500 kişide 21/15/6 ediyor,
+0.1 ölçekte 2/2/**0**.
+
+⚠ **Yalnız sayıyı 4'e çıkarmak yetmedi** — 323 saniye sonra yine çözümsüz.
+Promosyon yarı zamanlıya ya da izinliye denk gelince tutmuyor. Taban *"4 kişi"*
+değil, **"gündüz vardiyası yazılabilecek 4 kişi"**: tam zamanlı, aktif, izinsiz.
+O hâliyle **79 saniyede** çözüldü.
+
+**Konulan:** üreticide ekip başına 4 lider tabanı. Tam ölçekte hiçbir şey
+değişmiyor; 0.1 ölçekte 5/5/4.
+
+⚠ **Küçük ölçekte oranı bozuyor:** 7 kişilik ekipte 4 lider. Gerçekçi değil —
+ama 7 kişiyle 7/24 kapsama da gerçekçi değil. Alternatifi, firmanın kendi
+kuralını tutamayan bir veri seti olurdu. Problemi daraltmak yerine ölçeğin
+kendi sınırını yazıya geçirdim.
+
+⚠ **Tam ölçekte gereklilik ÖLÇÜLMEDİ.** 0.1'de çözülüyor; 500 kişide sayı
+elverişli görünüyor ama koşulmadı.
+
+## Gün sonu — akşam
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **202** yeşil (2 dk 22 sn) |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 fikstür tutarlı |
+| Zor veri seti bekçisi | **12** yeşil (~6 dk) |
+| İhlal vakaları | 28 gövde · 28 vaka · 28 kırmızı · eksik sıfır |
+| Yazılı kural gövdesi | **28** / katalog 40 |
+
+**Bugün kapanan:** T-64 · T-61 (K-41) · T-62 · T-63'ün rol tarafı
+**Bugün karara bağlanan:** K-41
+**Açık 🔴:** sekiz
+
+## Sırada
+
+1. **Şartname §6.4'ün iki satırı** — K-41 ile güncellenmeli (yazı borcu).
+2. **T-63'ün yetkinlik tarafı** ve `SAHADA_ASGARI`'nin tabanı — Mustafa'nın kararı.
+3. **Tam ölçekte gündüz lider gerekliliği** ölçülmeli.
+4. Kalan **12 gövde**. Mantıklı grup: üç yasal kural (gece vardiyası azami,
+   gece postası devri, yıllık fazla mesai tavanı).
+5. T-59 (süre bütçesi aşımı) ve T-60'ın dört ölçümü.

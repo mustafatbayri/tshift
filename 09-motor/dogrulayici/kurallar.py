@@ -837,6 +837,177 @@ def mola_kapsamasi(girdi, atamalar, tanim):
 
 
 # ----------------------------------------------------------------------
+# 6.4 Kapsama -- NITELIK bazli (ROL / YETKINLIK)
+# ----------------------------------------------------------------------
+#
+# BU IKI KURAL COZUCUDE VARDI, BURADA YOKTU (30 Eylul)
+#   Sonucu: cozucu kisiti kendi kuruyordu, plan zorunlu olarak uyuyordu,
+#   ve bu dosyada govde olmadigi icin denetci "ihlal yok" diyordu -- HIC
+#   BAKMADAN. Motor kendi isini kendi onayliyordu, yani #7.6'nin iki
+#   yariyi ayirma sebebi bu iki kural icin islemiyordu.
+#
+#   29 Eylul'deki tam olcekli kosumda "0 sert ihlal, yayinlanabilir True"
+#   yaziyordu. Dogru ama eksik: denetci bu iki kurala bakmadi.
+#
+# SARTNAMEDEN OKUNARAK YAZILDI -- COZUCU KODUNDAN DEGIL
+#   #6.4 katalogu iki kuralin isini soyle tanimliyor:
+#     ROL_KAPSAMASI        "Belirli operasyonel rolun her ACIK saatte
+#                           SAHADA bulunmasi"
+#     YETKINLIK_KAPSAMASI  "Belirli SAATLERDE belirli yetkinligin SAHADA
+#                           olmasi"
+#   Iki kelime belirleyici:
+#     ACIK SAAT  -> talep hucresi olan saat. Kapali donemde saha yoktur.
+#     SAATLERDE  -> yetkinlik kuralinda saat listesi parametreden gelir;
+#                   rol kuralinda liste yoksa ACIK SAATLERIN HEPSI gecerlidir.
+#
+# MOLA BU IKI KURALDA SAHADAN CIKARMAZ -- K-41 (Mustafa, 30 Eylul)
+#   Sartname §6.4 iki kuralda da "SAHADA" diyor ve govde ilk yazilista bunu
+#   `zaman.sahada_mi` ile uyguladi. Olculdu: cozucu ATANMIS kisiyi sayiyordu,
+#   yani iki taraf ayrisiyordu (T-61). Karar Mustafa'ya soruldu ve olcu
+#   DEGISTI -- cozucu hakliydi:
+#
+#     "Sahada bir mudurun isi 15 dk mola suresini bekleyebilir. Bu 'sahada
+#      olmali' kuralini bozmaz. Molalar sahada sayilir olarak gecebilir.
+#      Zaten mola oneri gibi bir kurgu olacagindan bu kadar derine inmemize
+#      gerek yok."
+#
+#   Yani bu iki kural "o saatte o nitelik VARDIYADA mi" diye sorar.
+#   ⚠ AYRIM BILEREK BIRAKILDI: `SAHADA_ASGARI` (K-33) molayi DUSMEYE devam
+#     ediyor. Ikisi farkli sey soyluyor ve bu celiski degil: saha tabani
+#     "tezgahta kac kisi var" sorusudur (musteri gorur), nitelik kapsamasi
+#     "o nitelik o saat icinde ulasilabilir mi" sorusudur.
+#   ⚠ ACIK KALAN: yasal bayrakli bir satirda (ornek: "her vardiyada 1 ilk
+#     yardim sertifikali kisi") molanin sayilmasi hukuken tartisilabilir.
+#     Mustafa bugun daha derine inilmemesini istedi; gerekirse gereklilik
+#     satirina kendi secenegi eklenir (K-41'in ucuncu secenegi).
+#
+#   Cozucunun kisit kodu bilerek okunmadi. T-19'un dersi: iki taraf ayni
+#   yanlis gelenegi paylasirsa ikisi birbiriyle tutarli ve ikisi de yanlis
+#   olur; bagimsiz denetim de o yanlisi goremez.
+#
+# TEK MEKANIZMA, IKI KURAL -- #6.4 notu
+#   Ikisi ayni isi yapar; tek fark calisanin hangi niteligine bakildigidir
+#   (`operasyonel_rol` tek deger, `yetkinlikler` liste). Kullanici icin iki
+#   ayri kavram oldugu icin katalogda iki satir olarak gorunur.
+#
+# BAYRAK SATIR BAZLI -- K-24, #5.3
+#   Bu iki kuralda `yasal` kuralin degil SATIRIN ozelligidir: "her vardiyada
+#   1 ilk yardim sertifikali kisi" muhtemelen yasaldir, "kahvaltida 1
+#   barista" ticari tercihtir. Burada ek bir is gerekmiyor: her gereklilik
+#   satiri girdide ayri bir kural tanimi oldugu icin `_ihlal` her satirin
+#   kendi bayragini tasir (denetle.degerlendir her tanimi ayri cagirir).
+
+
+def _nitelik_anlari(girdi, ekip, gun, saat_kumesi):
+    """Denetlenecek (gun, an) ciftleri. Talep hucrelerinden turetilir.
+
+    Hucreler CEYREK olarak orneklenir (K-34): 14:15'te nitelik sahadan
+    cikip 14:00'de duruyorsa kural tutmus sayilmaz. `SAHADA_ASGARI` ile
+    ayni gerekce -- `_talep_anlari`nin basindaki kayda bakin.
+
+    Ayni (gun, an) birden fazla ekip hucresinden gelebilir; kume ile
+    tekillestirilir, yoksa ayni acik icin ekip sayisi kadar satir yazilirdi.
+    """
+    anlar = set()
+    for t, g, an in _talep_anlari(girdi):
+        if ekip is not None and t.get("ekip") != ekip:
+            continue
+        if gun is not None and g != gun:
+            continue
+        if saat_kumesi is not None and int(an) not in saat_kumesi:
+            continue
+        anlar.add((g, an))
+    return sorted(anlar)
+
+
+def _nitelik_tasiyanlar(girdi, alan, aranan, ekip):
+    """Aranan niteligi tasiyan calisan kimlikleri."""
+    kimlikler = set()
+    for c in girdi.get("calisanlar", []) or []:
+        if ekip is not None and ekip not in (c.get("ekipler") or []):
+            continue
+        if alan == "yetkinlikler":
+            if aranan in (c.get("yetkinlikler") or []):
+                kimlikler.add(c.get("id"))
+        elif c.get(alan) == aranan:
+            kimlikler.add(c.get("id"))
+    return kimlikler
+
+
+def _nitelik_kapsamasi(girdi, atamalar, tanim, kod, alan, parametre_adi):
+    """ROL_KAPSAMASI / YETKINLIK_KAPSAMASI -- ortak govde.
+
+    `ekip` YAZILMAMISSA kural SAHA CAPINDA okunur: hangi ekipte olursa
+    olsun niteligi tasiyan ve o an sahada olan herkes sayilir. Satir bir
+    ekip adi vermiyorsa kelimenin duz anlami budur. Ekip adi verilirse hem
+    denetlenen saatler hem sayilan kisiler o ekibe daralir.
+
+    Parametre yoksa govde SESSIZ GECMEZ ama ihlal de YAZMAZ: hangi rolun
+    arandigi bilinmiyorsa plan hakkinda bir sey soylenemez. Bildiren kanal
+    `denetle._eksik_boyutlar` -- "kural yazili, bir parcasi eksik".
+
+    Olcu ATANMIS olmaktir, sahada olmak degil -- K-41. Gerekcesi dosyanin
+    bu bolumunun basindaki kayitta.
+
+    CEYREK ORNEKLEME MOLA ICIN DEGIL, VARDIYA SINIRI ICIN GEREKLI
+      Mola artik dusulmedigine gore saat icinde tek degisen sey vardiyanin
+      baslamasi/bitmesidir -- ve K-34'ten beri bunlar ceyrekli olabiliyor
+      (07:00-15:30). 15:30'da biten tek lider, saat 15'in ilk iki ceyregini
+      kapatir, son ikisini kapatmaz. Yalniz tam saate bakan bir govde bunu
+      goremez.
+    """
+    p = tanim.get("parametreler") or {}
+    aranan = p.get(parametre_adi)
+    if aranan is None:
+        return []
+    asgari = p.get("asgari", 1)
+    if asgari <= 0:
+        return []
+    ekip = p.get("ekip")
+    saatler = p.get("saatler")
+    saat_kumesi = None if saatler is None else {int(s) for s in saatler}
+
+    tasiyanlar = _nitelik_tasiyanlar(girdi, alan, aranan, ekip)
+    ilgili = [a for a in atamalar
+              if a.get("calisan") in tasiyanlar
+              and (ekip is None or a.get("ekip") == ekip)]
+
+    cikan = []
+    for gun, an in _nitelik_anlari(girdi, ekip, p.get("gun"), saat_kumesi):
+        varlik = sum(1 for a in ilgili if zaman.atanmis_mi(a, gun, an))
+        if varlik < asgari:
+            cikan.append(_ihlal(
+                kod, tanim, ekip=ekip, gun=gun, saat=an, nitelik=aranan,
+                olculen=varlik, gereken=asgari,
+                mesaj="gun %d saat %s: '%s' niteligini tasiyan %d kisi "
+                      "vardiyada (en az %d olmali; molada olan sayilir "
+                      "-- K-41)" % (gun, _ss(an), aranan, varlik, asgari)))
+    return cikan
+
+
+@kural("ROL_KAPSAMASI")
+def rol_kapsamasi(girdi, atamalar, tanim):
+    """Belirli operasyonel rol her acik saatte sahada -- SERT.
+
+    Ornek: "her acik saatte en az 1 takim lideri sahada olsun".
+    Saat listesi verilmezse talep hucresi olan BUTUN saatler denetlenir.
+    """
+    return _nitelik_kapsamasi(girdi, atamalar, tanim,
+                              "ROL_KAPSAMASI", "operasyonel_rol", "rol")
+
+
+@kural("YETKINLIK_KAPSAMASI")
+def yetkinlik_kapsamasi(girdi, atamalar, tanim):
+    """Belirli saatlerde belirli yetkinlik sahada -- SERT.
+
+    Ornek: "on buroda her saat yabanci dil", "kahvaltida en az 1 barista".
+    """
+    return _nitelik_kapsamasi(girdi, atamalar, tanim,
+                              "YETKINLIK_KAPSAMASI", "yetkinlikler",
+                              "yetkinlik")
+
+
+# ----------------------------------------------------------------------
 # 6.6 Duzenleme
 # ----------------------------------------------------------------------
 

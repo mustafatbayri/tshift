@@ -1843,3 +1843,56 @@ de aynısı eklendi. Mutasyon artık ölüyor.
 → T-55 · `09-motor/cozucu/model.py` (`_gece_sablonu`, `_gece_uygunlugu`) ·
   `09-motor/dogrulayici/kurallar.py` (`gece_uygunlugu`) ·
   `09-motor/testler/test_gece_uygunlugu.py`
+
+---
+
+## K-41 · Nitelik kapsamasında mola **sahadan çıkarmaz**
+
+**Karar:** 30 Eylül 2026, Mustafa.
+
+`ROL_KAPSAMASI` ve `YETKINLIK_KAPSAMASI` *"o saatte o nitelik **vardiyada** mı"*
+diye sorar. Molada olan kişi de sayılır.
+
+> *"Sahada bir müdürün işi 15 dk mola süresini bekleyebilir. Bu 'sahada olmalı'
+>  kuralını bozmaz. Molalar sahada sayılır olarak geçebilir. Zaten mola öneri
+>  gibi bir kurgu olacağından bu kadar derine inmemize gerek yok."*
+
+### Nasıl çıktı
+
+Doğrulayıcı gövdeleri şartnameden okunarak yazıldı ve şartname §6.4 iki kuralda
+da *"sahada"* diyor — gövde molayı düştü. Ölçülünce çözücünün **atanmış** kişiyi
+saydığı görüldü: iki taraf aynı kelimeye farklı anlam veriyordu (T-61).
+
+**Ölçülen:** 3 kişilik sahnede çözücü planı üretti, üçünün yemeği de aynı saate
+düştü (11:00–12:00), o saatte sahada takım lideri kalmadı. Denetçi dört çeyrekte
+ihlal yazdı. Çözücü kendi ölçüsüne göre kuralı sağlıyordu.
+
+**Karar sorulduğunda değişen taraf doğrulayıcı oldu — çözücü haklıydı.** T-57'de
+tersi olmuştu (doğrulayıcı haklıydı, çözücü düzeltildi); hangisinin değişeceği
+şartnamenin harfine değil **işin nasıl yürüdüğüne** bakılarak belirleniyor.
+
+### Ayrım bilerek bırakıldı
+
+| kural | molada olan |
+|---|---|
+| `SAHADA_ASGARI` (K-33) | **sayılmaz** — *"firma sahada en az 5 diyecek"* |
+| `ROL_KAPSAMASI` · `YETKINLIK_KAPSAMASI` (K-41) | **sayılır** |
+
+Bu çelişki değil, iki farklı soru: saha tabanı *"tezgâhta kaç kişi var"*dır
+(müşteri görür), nitelik kapsaması *"o nitelik o saat içinde ulaşılabilir mi"*dir.
+
+### ⚠ Açık kalan
+
+Yasal bayraklı bir gereklilik satırında (*"her vardiyada 1 ilk yardım
+sertifikalı kişi"*) molanın sayılması hukuken tartışılabilir. Mustafa bugün daha
+derine inilmemesini istedi. Gerekirse gereklilik satırına kendi seçeneği
+eklenir — karar föyünde konuşulan üçüncü seçenek buydu.
+
+### Ölçüm
+
+İki test **tersine çevrildi** (silinmedi): mola testi ve uçtan uca ayrışma
+ölçümü. Gerekçeleri testlerin başına yazıldı — K-33'te aynısı yapılmıştı.
+Şartname §6.4'ün iki satırı bu kararla güncellenmeli.
+
+→ T-61 · T-57 · K-33 · `09-motor/dogrulayici/kurallar.py` ·
+  `09-motor/testler/test_nitelik_kapsamasi.py`

@@ -1072,7 +1072,52 @@ class Model(object):
                                >= taban_kisi)
 
     def _yetkinlik(self):
-        """ROL_KAPSAMASI / YETKINLIK_KAPSAMASI -- satir bazli gereklilikler."""
+        """ROL_KAPSAMASI / YETKINLIK_KAPSAMASI -- satir bazli gereklilikler.
+
+        Olcu ATANMIS olmaktir, sahada olmak degil -- K-41 (Mustafa,
+        30 Eylul): "Sahada bir mudurun isi 15 dk mola suresini bekleyebilir."
+        Dogrulayici tarafi da ayni olcuyu kullanir.
+
+        ⚠ 30 Eylul -- BU GOVDEDE IKI AYRI SESSIZLIK VARDI (T-62)
+          Ikisi de bagimsiz dogrulayici yazilinca gorundu; o gune kadar
+          bu kural icin denetci yoktu, yani kimse fark edemezdi.
+
+          1. `saatler` YAZILMAMISSA HICBIR KISIT YAZILMIYORDU.
+             Eski satir `for saat in p.get("saatler", [])` idi: liste yoksa
+             dongu hic calismiyor, aktif bir SERT kural modele TEK kisit
+             koymuyordu. Sartname rol kuralini "her ACIK saatte" diye
+             tanimliyor -- yani liste yoksa acik saatlerin HEPSI gecerli
+             olmali, hicbiri degil. Olculdu: 49 kisilik sahnede gereklilik
+             konunca plan DEGISMEDI (ayni 221 atama) ve bagimsiz denetci
+             1.238 sert ihlal yazdi.
+
+          2. `ekip` YAZILMAMISSA PLAN COZUMSUZ KALIYORDU.
+             Eski suzgec `p.get("ekip") in (c.get("ekipler") or [])` idi:
+             ekip yoksa karsilastirma None ile yapiliyor, hic kimse uygun
+             sayilmiyor ve modele "bos toplam >= 1" kisiti giriyordu.
+             Yoneticinin gordugu cumle "bu talebi bu kadroyla karsilamak
+             imkansiz" olurdu; sebebi bir eksik parametre.
+             Artik ekip yoksa kural SAHA CAPINDA okunur -- dogrulayici
+             govdesi de boyle okuyor.
+
+          3. Kontrol artik CEYREK bazinda. K-34'ten beri vardiya 15:30'da
+             bitebiliyor; yalniz tam saate bakmak, saatin son yarisinda
+             niteligin sahada olmadigini goremez. `_talep_anlari`nin
+             gerekcesiyle ayni.
+
+        ⚠ NITELIGI TASIYAN KIMSE YOKSA KISIT YAZILMAZ, NOT YAZILIR.
+          Kisit yazmak plani sessizce cozumsuz yapardi ve sebebi
+          gorunmezdi. Karsiligini dogrulayici soyler: gereklilik
+          tutulmuyorsa ihlal yazar. Yuksek sesle yanlis, sessizce
+          cozumsuzdan iyidir (#7.6).
+
+        ⚠ COK EKIPLI CALISAN -- T-21'in kapsami, burada COZULMEDI.
+          Bu govde kisiyi `ekipler` uyeligine gore suzuyor (`_atanmis` ile
+          ayni gelenek). Cikti tarafinda atamanin `ekip` alani kisinin
+          ILK ekibi olarak yaziliyor (coz.py), yani cok ekipli bir kiside
+          iki taraf ayrisabilir. Bugunku veri setinde 500 calisanin
+          hepsi TEK ekipte, yani ayrisma teorik. Karar T-21'de bekliyor.
+        """
         for kod, alan in (("YETKINLIK_KAPSAMASI", "yetkinlikler"),
                           ("ROL_KAPSAMASI", "operasyonel_rol")):
             for k in self.girdi.get("kurallar", []) or []:
@@ -1083,19 +1128,56 @@ class Model(object):
                 if aranan is None:
                     self.notlar.append("%s parametresiz, atlandi" % kod)
                     continue
+                asgari = p.get("asgari", 1)
+                if asgari <= 0:
+                    self.notlar.append(
+                        "%s asgari %r, kisit yazilmadi" % (kod, asgari))
+                    continue
+                ekip = p.get("ekip")
                 uygun = [c for c in self.calisanlar
                          if (aranan in (c.get(alan) or [])
-                             if alan == "yetkinlikler" else c.get(alan) == aranan)]
-                for gun in ([p["gun"]] if "gun" in p else self.gunler):
-                    for saat in p.get("saatler", []):
-                        dilim = _q(gun, saat)
-                        var = [self._X(c["id"], d, t["id"])
-                               for c in uygun
-                               if p.get("ekip") in (c.get("ekipler") or [])
-                               for d in self.gunler
-                               for t in self._sablonlari(c)
-                               if dilim in _dilimler(d, t["bas"], t["bit"])]
-                        self.m.Add(sum(var) >= p.get("asgari", 1))
+                             if alan == "yetkinlikler"
+                             else c.get(alan) == aranan)
+                         and (ekip is None
+                              or ekip in (c.get("ekipler") or []))]
+                if not uygun:
+                    self.notlar.append(
+                        "%s: '%s' niteligini tasiyan uygun calisan yok, "
+                        "kisit yazilmadi" % (kod, aranan))
+                    continue
+
+                saatler = p.get("saatler")
+                saat_kumesi = (None if saatler is None
+                               else {int(x) for x in saatler})
+                gun_suzgeci = p.get("gun")
+
+                # Denetlenecek dilimler talep hucrelerinden turetilir:
+                # "acik saat" = talep hucresi olan saat.
+                dilimler = set()
+                for t, gun, saat in self._hucreler():
+                    if ekip is not None and t.get("ekip") != ekip:
+                        continue
+                    if gun_suzgeci is not None and gun != gun_suzgeci:
+                        continue
+                    if saat_kumesi is not None and int(saat) not in saat_kumesi:
+                        continue
+                    for ceyrek in range(CEYREK):
+                        dilimler.add(_q(gun, saat + ceyrek / float(CEYREK)))
+
+                if not dilimler:
+                    self.notlar.append(
+                        "%s: '%s' icin denetlenecek acik saat yok "
+                        "(ekip/gun/saat suzgeci hic hucre birakmadi)"
+                        % (kod, aranan))
+                    continue
+
+                for dilim in sorted(dilimler):
+                    var = [self._X(c["id"], d, t["id"])
+                           for c in uygun
+                           for d in self.gunler
+                           for t in self._sablonlari(c)
+                           if dilim in _dilimler(d, t["bas"], t["bit"])]
+                    self.m.Add(sum(var) >= asgari)
 
     # ---- amac ---------------------------------------------------------
 
