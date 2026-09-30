@@ -54,6 +54,7 @@ def degerlendir(girdi, atamalar):
         "uygulanmayan_kurallar": uygulanmayan,
         "eksik_boyutlar": _eksik_boyutlar(girdi),
         "okunmayan_alanlar": _okunmayan_alanlar(girdi),
+        "gecmis_eksik": _gecmis_eksik(girdi, atamalar),
         "yayin_kapisi": yayin_kapisi(ihlaller),
     }
 
@@ -85,7 +86,10 @@ OKUNAN_ALANLAR = {
          "agirliklar", "sektor"),
     "calisanlar": ("id", "ekipler", "sozlesme", "izinler", "uygunluk",
                    "devir_yuk", "yetkinlikler", "operasyonel_rol",
-                   "gece_calisamaz", "durum", "gece_calisma_onayi"),
+                   "gece_calisamaz", "durum", "gece_calisma_onayi",
+                   "gecmis_vardiyalar", "gecmis_bilinen_gunler"),
+    # T-28 (30 Eylul): gecmis kayit PDKS bicimindedir -- sablon yok.
+    "calisanlar.gecmis_vardiyalar": ("gun", "bas", "bit", "molalar", "gece"),
     "calisanlar.sozlesme": ("tip", "haftalik_saat", "gun_sayisi"),
     "calisanlar.izinler": ("gun", "durum"),
     "calisanlar.uygunluk": ("tip", "gun", "bas", "bit"),
@@ -110,7 +114,7 @@ OKUNAN_ALANLAR = {
 #
 # Asagidaki adlarin cogu tek bir bulgunun uyeleri: T-38 (sartnamenin
 # karsiligi yazilmamis alanlari). Ayri numarasi olan ikisi: talep bicimi
-# T-19 (kapandi), gecmis_vardiyalar T-28 (acik, oncelik 1).
+# T-19 (kapandi), gecmis_vardiyalar T-28 (30 Eylul'de okunur oldu).
 SEBEPLER = {
     ("talep", "gunler"):
         "gruplu talep kisayolu; sartname #11.2 hucre basina bir satir ister (T-19)",
@@ -120,8 +124,6 @@ SEBEPLER = {
         "sartname #11.2'de tanimli, motorda tek satiri yok -- tercih plana etki etmez",
     ("calisanlar", "kural_degerleri"):
         "kisiye ozel kural degeri okunmuyor; herkese genel kural uygulanir",
-    ("calisanlar", "gecmis_vardiyalar"):
-        "lookback okunmuyor; hafta sinirini asan dinlenme ihlali gorulmez (T-28)",
     ("sabit_atamalar", "bas"):
         "motor sabit atamayi `sablon` kimliginden esliyor; bas/bit okunmuyor",
     ("sabit_atamalar", "bit"):
@@ -182,6 +184,114 @@ def _okunmayan_alanlar(girdi):
             gez((kap + "." + ad) if kap else ad, dugum[ad])
 
     gez("", girdi)
+    return cikan
+
+
+# ----------------------------------------------------------------------
+# Gecmis veri eksik -- K-42 (Mustafa, 30 Eylul)
+# ----------------------------------------------------------------------
+#
+# KARAR: "Gecmis veri yoksa ... gecmise dayanan kriterleri dikkate almadan
+# ilerlemek." Yasal kurallar DAHIL -- ayni gun ayrica soruldu ve boyle
+# kararlastirildi. Motor durmaz, bilinmeyen gun kisit yaratmaz.
+#
+# AMA SESSIZ GECMEZ: bu kanal hangi kontrolun kimin icin yapilamadigini
+# yazar. Yalniz RAPOR -- ihlal degil, yayin kapisina girmez (T-18).
+#
+# ⚠ GURULTU DEGIL, KESIN SATIR. Gercek veride kayitlarin yalniz %18'i dolu
+#   (P-1). Her pazartesi calisani icin dort satir yazan bir kanal okunmaz
+#   olurdu (O-7). Bu yuzden satir yalniz SONUCU GERCEKTEN DEGISTIREBILECEK
+#   bilinmeyen gun icin yazilir:
+#     * pazartesi bossa sinir kurallari etkilenemez -> satir yok
+#     * geriye yururken BILINEN bos gun gorulurse seri orada kirilir -> yok
+#     * gecmisle birlikte ihlal ZATEN kanitliysa -> ihlal kanali soyler, yok
+#     * ilk BILINMEYEN gun, seri hala esige yetisebilecekken -> SATIR
+
+def _geri_yuru(dolu, bilinen, plan_serisi, esik):
+    """Pazartesiden geriye yuru. Donen: (durum, gun).
+
+    dolu         : gecmiste "sayilan" gunler (calisilan ya da gece olan)
+    bilinen      : kaydi tam olan gecmis gunler
+    plan_serisi  : pazartesiden baslayan planli seri uzunlugu
+    esik         : serinin ihlal sayildigi uzunluk
+
+    durum -- "ilgisiz" · "ihlal" (kanitli) · "guvenli" · "belirsiz"
+    """
+    if plan_serisi == 0 or plan_serisi >= esik:
+        return "ilgisiz", None
+    k = 0
+    for d in range(-1, -esik, -1):
+        if d in dolu:
+            k += 1
+            if k + plan_serisi >= esik:
+                return "ihlal", None
+        elif d in bilinen:
+            return "guvenli", None
+        else:
+            return "belirsiz", d
+    return "guvenli", None
+
+
+def _plan_serisi(gunler):
+    """Pazartesiden (gun 0) baslayan kesintisiz seri."""
+    n = 0
+    while n in gunler:
+        n += 1
+    return n
+
+
+def _gecmis_eksik(girdi, atamalar):
+    aktif = {t.get("kod"): t for t in _aktif_kurallar(girdi)}
+    sinir_kurallari = ("VARDIYA_ARASI_DINLENME", "HAFTA_TATILI",
+                       "ARDISIK_CALISMA_GUNU", "ARDISIK_GECE_LIMIT")
+    if not any(k in aktif for k in sinir_kurallari):
+        return []
+    sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
+    cikan = []
+
+    def yaz(kod, kimlik, gun, ne):
+        cikan.append({"kural": kod, "calisan": kimlik, "gun": gun,
+                      "mesaj": "%s icin %s yapilamadi -- gun %d icin gecmis "
+                               "kayit yok (K-42: atlandi)" % (kimlik, ne, gun)})
+
+    for kimlik, liste in sorted(kurallar._kisiye_gore(atamalar).items()):
+        kayitlar = kurallar._gecmis_kayitlari(girdi, kimlik)
+        bilinen = kurallar._bilinen_gunler(girdi, kimlik, kayitlar)
+        plan_gunleri = {a["gun"] for a in liste}
+
+        if ("VARDIYA_ARASI_DINLENME" in aktif and 0 in plan_gunleri
+                and -1 not in bilinen):
+            yaz("VARDIYA_ARASI_DINLENME", kimlik, -1,
+                "pazartesi dinlenme kontrolu")
+
+        gecmis_gunler = {k["gun"] for k in kayitlar}
+        seri = _plan_serisi(plan_gunleri)
+        for kod, esik, ne in (
+                ("HAFTA_TATILI",
+                 kurallar._p(aktif.get("HAFTA_TATILI") or {}, "pencere_gun", 7),
+                 "hafta tatili kontrolu (kayan pencere)"),
+                ("ARDISIK_CALISMA_GUNU",
+                 kurallar._p(aktif.get("ARDISIK_CALISMA_GUNU") or {},
+                             "azami_gun", 6) + 1,
+                 "ardisik calisma gunu kontrolu")):
+            if kod not in aktif:
+                continue
+            durum, gun = _geri_yuru(gecmis_gunler, bilinen, seri, esik)
+            if durum == "belirsiz":
+                yaz(kod, kimlik, gun, ne)
+
+        if "ARDISIK_GECE_LIMIT" in aktif:
+            plan_geceler = {a["gun"] for a in liste
+                            if kurallar._atama_gece_mi(girdi, a, sablonlar)}
+            gecmis_geceler = {k["gun"] for k in kayitlar
+                              if kurallar._atama_gece_mi(girdi, k, sablonlar)}
+            esik = int(kurallar._p(aktif["ARDISIK_GECE_LIMIT"],
+                                   "azami_gece", 3)) + 1
+            durum, gun = _geri_yuru(gecmis_geceler, bilinen,
+                                    _plan_serisi(plan_geceler), esik)
+            if durum == "belirsiz":
+                yaz("ARDISIK_GECE_LIMIT", kimlik, gun,
+                    "ardisik gece kontrolu")
     return cikan
 
 

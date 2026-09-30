@@ -1266,7 +1266,7 @@ altın senaryo** yeşil, fikstür denetleyicisi 0 döndü.
 
 ---
 
-## 🔴 T-28 · Geçmiş vardiyalar hiç okunmuyor
+## ✅ T-28 · ~~Geçmiş vardiyalar hiç okunmuyor~~ — **KAPANDI (30 Eylül, K-42)**
 
 **Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Doğrulandı:** `09-motor/`
 altında `gecmis_vardiyalar` **hiçbir dosyada geçmiyor**
@@ -1321,6 +1321,61 @@ sessizce kaçırır"* dediği durum.
 ⚠ 30 Eylül'de *"dördü T-28'e bağlı"* diye yazılmıştı — yanlış: ikisi ayrı
 girdiye bağlı.
 
+
+### ✅ Kapanış — 30 Eylül
+
+**Ölçülen — Mustafa'nın önerdiği iki aşamalı yolla** (`08-motor-testleri/gercekci-veri-seti/iki-hafta-olc.py`,
+%95 seti, 49 kişi): hafta 1 çözüldü, hafta 1'in planı hafta 2'nin geçmişi
+oldu, hafta 2 iki kez çözüldü ve ikisi de **geçmişi bilen** denetçiye soruldu.
+
+| hafta 2 | atama | geçmişi bilen denetçiye göre sert ihlal |
+|---|---|---|
+| geçmişsiz (30 Eylül'e kadarki motor) | 217 | **27** — 10 hafta tatili · 7 vardiya arası dinlenme · 10 ardışık çalışma günü |
+| geçmişle | 217 | **0** |
+
+Yani 49 kişilik tek bir haftada 27 **yasal** ihlal vardı ve **hiçbiri görünmüyordu**
+— eski denetçi de geçmişe bakmıyordu.
+
+**Ne yapıldı:**
+
+* İki motor yarısı da `gecmis_vardiyalar`'ı okuyor (ayrı ayrı, §7.6).
+  Biçim şartnamedeki gibi: şablonsuz aralık, negatif gün — PDKS'e uygun.
+* **Beş kural** pazartesi 00:00'da artık kör değil: vardiya arası dinlenme,
+  çakışma (pazar gecesi pazartesiye taşıyorsa), hafta tatili, ardışık çalışma
+  günü, ardışık gece limiti. Çözücüde geçmiş günler kayan pencerelerde
+  **sabit** olarak sayılıyor.
+* **Geçmişin kendi ihlali plana yazılmıyor** — geçmiş yeniden planlanamaz.
+* **K-42:** kayıtlı aralık çalışıldığını kanıtlar, kaydın yokluğu hiçbir şey
+  kanıtlamaz. Bilinmeyen gün kısıt yaratmaz; `gecmis_eksik` kanalı hangi
+  kontrolün kimin için yapılamadığını yazar — **yalnız sonucu değiştirebilecek**
+  bilinmeyen gün için (gürültü değil; ayrıntısı K-42'de).
+* Yeni isteğe bağlı alan: `gecmis_bilinen_gunler` — kaydı tam olan günler.
+
+**32 test, 19'u kırmızı kanıt.** 18 mutasyon, hepsi öldü.
+
+⚠ **İki aşamalı testin ilk hâli hiçbir şey ölçmüyordu.** Çözücü geçmişi **hiç
+okumayacak** şekilde bozuldu, test **yine yeşil** kaldı — sahnede boşluk çoktu.
+Yerine sabit atamalı bir hafta 1 kondu (C1 cuma-cumartesi-pazar gecesi) ve
+hafta 2'de geceyi yalnız C1 çalışabiliyor: geçmiş okunuyorsa plan çözümsüz
+kalmak **zorunda**.
+
+⚠ **Gerçek ölçekli iki hafta testi CI'a konmadı** — ilk koşuda zamanlamadan
+kırmızı yandı (aynı hafta 144, 178 sn; bekçide 240 sn'ye sığmadı) ve bekçileri
+9,5 dakikaya çıkardı. Gerçek ölçek elle koşulan araçta; CI'da küçük,
+deterministik sürüm var.
+
+**Açık kalanlar — ayrı işler:**
+
+| | ne gerekiyor |
+|---|---|
+| gece postası devri (**yasal**) · ardışık hafta sonu limiti | gövdeleri artık yazılabilir |
+| yıllık fazla mesai tavanı (**yasal**) | yıl içi **toplam** (tek sayı) — yeni girdi |
+| plan kararlılığı | **aynı haftanın** yayındaki planı — yeni girdi |
+| adalet devir yükü (`devir_yuk`) | geçmişten hesaplanabilir; bugün elle geliyor |
+| sahte PDKS (Mustafa'nın ikinci yolu) | boşluk ve sapma oranları **anonim gerçek veriden ölçülerek** |
+| erken saatli gece kaydı | T-69 |
+
+→ K-42 · T-69 · T-70 · `09-motor/testler/test_gecmis_veri.py`
 ---
 
 ## 🔴 T-29 · `DONMUS_GUN` hiç ateşlenemez
@@ -3428,6 +3483,65 @@ acentesi verisinde 182 atama gece yarısını aşıyor; o şablonların brüt/ne
 
 ---
 
+## 🟡 T-69 · İşaretsiz erken saatli vardiya iki tarafta da **gece sayılmıyor**
+
+**Bulundu:** 30 Eylül, geçmiş veri yazılırken — iki motor yarısının gece
+tespiti yan yana denenince.
+
+| vardiya (işaretsiz) | çözücü | doğrulayıcı | doğrusu |
+|---|---|---|---|
+| 00:00–08:45 | gece değil | gece değil | 00:00–06:00 gece penceresinde |
+| 04:00–12:00 | gece değil | gece değil | 04:00–06:00 gece penceresinde |
+| 23:00–08:15 | gece | gece | gece |
+
+İki taraf da tahmini yalnız **aynı günün** 20:00–06:00 penceresine bakarak
+yapıyor; bir önceki gecenin 00:00–06:00 kısmını görmüyor. **İkisi tutarlı,
+ikisi de yanlış** — T-19'un ailesi; bağımsız denetim tam bu yüzden yakalayamaz.
+
+**Bugün etkisi yok:** veri setinde gece şablonlarının hepsi **işaretli** (K-40
+— işaret tahmini ezer), B-GECE (00:00–08:45) işaretli olduğu için doğru.
+
+**Neden artık önemli:** PDKS kaydının şablonu ve işareti yok. Geçmişte
+pazar 00:00–08:00 çalışmış biri ardışık gece sayımında **görünmez**.
+Düzeltme iki tarafta da ayrı yazılmalı ve altın senaryolarla sınanmalı —
+işaretsiz şablonu olan fikstürlerin sonucu değişebilir.
+
+→ K-40 · T-28 · `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py`
+
+---
+
+## ✅ T-70 · Mutasyon denemeleri **eski bytecode** ile koşabiliyordu — **KAPANDI (30 Eylül, aynı gün)**
+
+**Bulundu:** 30 Eylül, doğru bir test kırmızı yandığında.
+
+**Ne.** Python derlenmiş kodu (`__pycache__`) geçerli sayarken kaynağın
+**değişiklik zamanına (saniye)** ve **boyutuna** bakar. Mutasyonların çoğu
+**aynı uzunlukta** bir değişiklik (`plan_geceler` → `plan_gunleri`, ikisi de
+12 harf) ve dosya **aynı saniyede** geri yazılıyor. Sonuç: mutasyonlu bytecode
+özgün kaynak için de geçerli sayıldı. Diskteki kod doğruydu, Python on ikinci
+mutasyonun kodunu çalıştırıyordu, doğru bir test kırmızı yandı.
+
+⚠ **Ters yön de mümkündü:** bir mutasyon bir öncekinin bytecode'uyla koşup
+sahte *"öldü"* ya da sahte *"yaşadı"* verebilirdi. Yani bu oturumdaki **bütün
+mutasyon sonuçları** şüpheliydi.
+
+**Düzeltildi:** `09-motor/mutasyon_kostur.py` — her koşudan önce önbellek
+silinir, bytecode hiç yazılmaz, özgün kod **başta ve sonda** yeşil olmak
+zorunda, her mutasyondan sonra dosya md5 ile doğrulanır, çapası bulunmayan
+mutasyon *"ATLANDI"* yazar.
+
+**Yeniden doğrulandı:** bu oturumun bütün mutasyonları (nitelik kapsaması,
+motor metriği, gece sınırı, firma sınırları, geçmiş veri) — **42 mutasyon,
+42'si de öldü, atlanan yok.** Önceki sonuçlar geçerliydi; tuzak yalnız son
+geri yazmada ısırmıştı.
+
+**Yan kazanç:** A-6 (*"otomatik mutasyon hâlâ yok"*) için ilk adım — elle
+seçilmiş ama **tekrarlanabilir** bozmalar. CI'a konmadı (süre bütçesi).
+
+→ A-6 · `09-motor/mutasyon_kostur.py`
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
@@ -3437,7 +3551,7 @@ acentesi verisinde 182 atama gece yarısını aşıyor; o şablonların brüt/ne
 
 | Sıra | Madde | Gerekçe |
 |---|---|---|
-| **1** | **T-28 · geçmiş vardiyalar okunmuyor** 🔴 | Yasal dinlenme kuralı önceki haftaya kör |
+| ~~1~~ | ~~**T-28 · geçmiş vardiyalar okunmuyor**~~ | ✅ **KAPANDI 30 Eylül, K-42** — ölçüldü: geçmişsiz 27 yasal ihlal, geçmişle 0 |
 | **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴⚠ | ⚠ **Seviyesi şüpheli.** İki ağır satırı da 25 Eylül'de kapsam kararına bağlandı (K-21 geri alındı, K-31 verildi). Kalanlar yazılmamış özellik ve ad uyuşmazlığı — **ölçüme göre 🟡**, onay bekliyor |
 | **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
 | **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |

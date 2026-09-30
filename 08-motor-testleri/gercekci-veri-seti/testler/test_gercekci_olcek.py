@@ -312,3 +312,27 @@ def test_TAM_ZAMANLI_sozlesme_saatini_DOLDURUYOR(kucuk_plan):
     assert not eksik, (
         "%d tam zamanli sozlesme saatini doldurmadi (ilk bes: %s)"
         % (len(eksik), eksik[:5]))
+
+
+# ----------------------------------------------------------------------
+# 3 · IKI HAFTA -- bilerek BURADA DEGIL (30 Eylul)
+# ----------------------------------------------------------------------
+#
+# Mustafa'nin onerisiyle (once bir hafta, sonra onu gecmis sayarak ikinci
+# hafta) gercekci olcekte uc test yazildi ve ILK KOSUDA KIRMIZI yandi --
+# kod yuzunden degil, ZAMANLAMA yuzunden:
+#
+#   * ayni ikinci hafta bir kosuda 144 sn, bir kosuda 178 sn surdu; bekci
+#     kosusunda 240 sn'lik butceye SIGMADI. Cok iscili CP-SAT deterministik
+#     degil ve hafta 1'in plani her kosuda farkli -> hafta 2'nin gecmisi de.
+#   * bekcileri 5 dk 54 sn'den 9 dk 31 sn'ye cikardi; CI 2 cekirdekli ve
+#     `motor` isinin siniri 20 dakika.
+#
+# "Butce asimindan gelen kirmizi, gercek hatadan gelen kirmiziya benzer."
+# Bu yuzden ikiye ayrildi:
+#   * GERCEKCI OLCEK -> elle: `py iki-hafta-olc.py`. 30 Eylul olcumu:
+#       hafta 2 gecmissiz -> gecmisi bilen denetciye gore 27 SERT ihlal
+#                            (10 hafta tatili, 7 dinlenme, 10 ardisik gun)
+#       hafta 2 gecmisle  -> 0
+#   * CI -> kucuk ve deterministik iki asamali test:
+#       `09-motor/testler/test_gecmis_veri.py`, bolum 8

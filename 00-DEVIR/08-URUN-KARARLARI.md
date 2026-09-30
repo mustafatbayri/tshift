@@ -1930,3 +1930,92 @@ eklenir — karar föyünde konuşulan üçüncü seçenek buydu.
 
 → T-61 · T-57 · K-33 · `09-motor/dogrulayici/kurallar.py` ·
   `09-motor/testler/test_nitelik_kapsamasi.py`
+
+---
+
+## K-42 · Geçmiş veri yoksa motor **durmaz**; geçmişe dayanan ölçütler atlanır
+
+**Karar:** 30 Eylül 2026, Mustafa.
+
+> *"Geçmiş veri yoksa adalet kavramı gibi geçmiş veriye dayanan kriterleri
+>  dikkate almadan ilerlemek."*
+
+Aynı gün verilen ürün cümlesi: *"Realitede geçmiş datayı PDKS v.b.
+sistemlerden alacağız, plan datası olmayacak."*
+
+### Neden soruldu
+
+Şartname §11.2 *"Lookback verisi eksikse motor çalışmaz"* diyordu. Gerçek veri
+(`07-GERCEK-VERI-BULGULARI.md` P-1) bunun uygulanamayacağını gösteriyor:
+giriş/çıkış kaydı satırların yalnız **%18'inde** var, 781 çalışanın **411'inde**
+hiç kayıt yok. Kural uygulansaydı motor gerçek koşumların çoğunda dururdu.
+
+### Ne değişiyor
+
+| önce (şartname) | şimdi (K-42) |
+|---|---|
+| geçmiş eksikse motor çalışmaz | motor çalışır |
+| — | geçmişe dayanan ölçüt, geçmişi olmayan kişi için **atlanır** |
+
+**⚠ Atlanan ölçüt sessiz geçmez** — projenin her atlamasındaki ilke
+(`uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar`). Hangi ölçütün
+kimin için atlandığı çıktıda yazılır. Bu, kararın uygulanış biçimidir; kararın
+kendisini değiştirmez.
+
+### ⚠ Açık kalan — yasal kurallar
+
+Geçmişe dayanan ölçütlerin üçü **yasal**:
+
+| kural | geçmiş neden gerekiyor |
+|---|---|
+| vardiya arası dinlenme (11 saat) | pazartesi sabahı, pazar gecesinin bitişini bilmeden denetlenemez |
+| hafta tatili (kayan 7 gün) | pencere geçen haftaya uzanıyor |
+| gece postası devri | *"geçen hafta gece çalıştı mı"* |
+
+Mustafa'nın örneği (*adalet*) yumuşak bir kural. Yasal kurallar da aynı
+şekilde atlanırsa, kaydı olmayan bir kişi pazar 23:00'e kadar çalışmış olabilir
+ve pazartesi 07:00'ye yazılabilir.
+
+**✅ Karar (aynı gün, Mustafa): yasal kurallar da atlanır ve raporlanır.**
+
+Üç seçenek soruldu: yayındaki planı varsayım olarak kullanmak, atlayıp
+raporlamak, geçmişi bilinmeyen kişinin pazartesi sabahını kapatmak. Seçilen
+ikincisi. Sonucu açıkça:
+
+* Motor bu durumda o kişi için hafta sınırında **yasal garanti vermez**.
+* Çıktı bunu **kişi ve kural adıyla** söyler (*"C0123 için pazartesi dinlenme
+  kontrolü yapılamadı — geçmiş kayıt yok"*); yönetici görür.
+* Sorumluluk gerçekleşen verinin yüklenmesinde — `07-GERCEK-VERI-BULGULARI.md`
+  kapsam kararı: *"Gerçekleşen veri ve izinlerin doğru formatta yüklenmesi
+  müşterinin sorumluluğu."*
+
+⚠ **Yayın kapısıyla ilişkisi açık (T-18):** bu rapor da bugünkü üç sessizlik
+kanalı gibi yalnız rapor olacak; kapının ona ne yapacağı T-18'in kararı.
+
+→ T-28 · §11.2 · `07-GERCEK-VERI-BULGULARI.md` P-1
+
+### ✅ Uygulandı — 30 Eylül
+
+**Rapor kanalı:** `gecmis_eksik` — doğrulayıcı çıktısında, diğer üç sessizlik
+kanalının yanında. Her satır: kural, çalışan, eksik gün, cümle
+(*"C0123 için pazartesi dinlenme kontrolü yapılamadı — gün -1 için geçmiş
+kayıt yok (K-42: atlandı)"*). Yalnız rapor; ihlal değil, yayın kapısına girmez.
+
+**⚠ Gürültü değil, kesin satır.** Gerçek veride kişilerin çoğunun pazarı
+bilinmiyor; her pazartesi çalışanı için dört satır yazan bir kanal okunmaz
+olurdu. Satır yalnız **sonucu değiştirebilecek** bilinmeyen gün için yazılır:
+
+| durum | satır |
+|---|---|
+| pazartesi boş | yok — sınır kuralları etkilenemez |
+| geriye yürürken **bilinen boş** gün | yok — seri orada kırılır |
+| geçmişle birlikte ihlal **kanıtlı** | yok — ihlal kanalı söyler, iki kez yazılmaz |
+| ilk **bilinmeyen** gün, seri hâlâ eşiğe yetişebilecekken | **var** |
+
+**Yeni isteğe bağlı alan:** `gecmis_bilinen_gunler` — kaydı tam olan günler.
+Bilinen ama kaydı olmayan gün **çalışılmamış** sayılır. Alan gelmezse yalnız
+kaydı olan gün bilinir.
+
+**Geçmiş tam verildiğinde kanal boş** — iki aşamalı ölçümde de öyle çıktı.
+
+→ T-28 · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_gecmis_veri.py`

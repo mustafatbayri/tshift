@@ -1,0 +1,22 @@
+{
+ "gecmissiz": {
+  "durum": "cozuldu",
+  "atama": 217,
+  "sinir": {
+   "HAFTA_TATILI": 10,
+   "VARDIYA_ARASI_DINLENME": 7,
+   "ARDISIK_CALISMA_GUNU": 10
+  },
+  "sert": 27,
+  "gecmis_eksik": 0,
+  "sn": 213
+ },
+ "gecmisle": {
+  "durum": "cozuldu",
+  "atama": 217,
+  "sinir": {},
+  "sert": 0,
+  "gecmis_eksik": 0,
+  "sn": 144
+ }
+}

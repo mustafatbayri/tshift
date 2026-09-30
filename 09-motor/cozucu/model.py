@@ -242,6 +242,38 @@ def _gece_onayi_var(calisan, girdi, gun):
         return False
 
 
+def _gecmis_kayitlari(calisan):
+    """Calisanin gecmis kayitlari -- (gun, bas, bit, gece_isareti) -- T-28.
+
+    #11.2 bicimi: `gecmis_vardiyalar: [{"gun": -1, "bas": 23, "bit": 31}]`.
+    Gun NEGATIF, saat genisletilmis, SABLON YOK (PDKS gibi gerceklesen).
+    Gunu negatif olmayan kayit atlanir: plan haftasi gecmis degildir.
+
+    ⚠ AYNI OKUMA DOGRULAYICIDA AYRICA YAZILI (#7.6).
+
+    K-42: kayitli aralik calisildigini KANITLAR; kaydin yoklugu hicbir sey
+    kanitlamaz. Bu yuzden cozucu YALNIZ kayitli araliktan kisit yazar --
+    bilinmeyen gun kendiliginden kisitsiz kalir.
+    """
+    cikan = []
+    for k in calisan.get("gecmis_vardiyalar") or []:
+        gun, bas, bit = k.get("gun"), k.get("bas"), k.get("bit")
+        if gun is None or bas is None or bit is None or gun >= 0:
+            continue
+        bas, bit = float(bas), float(bit)
+        if bit <= bas:
+            bit += 24.0                     # Z-1
+        cikan.append((int(gun), bas, bit, k.get("gece")))
+    return cikan
+
+
+def _gecmis_gece_mi(bas, bit, isaret):
+    """Gecmis kayit gece mi: kaydin kendi isareti, yoksa saat (K-40)."""
+    if isaret is not None:
+        return bool(isaret)
+    return _gece_sablonu({"bas": bas, "bit": bit})[0]
+
+
 def _net_saat(sablon):
     """CALISMA SURESI -- butun molalar dusuk. Dogrulayici ile AYNI tanim."""
     return (sablon["bit"] - sablon["bas"]) - (_mola_toplam_dk(sablon) / 60.0)
@@ -1023,6 +1055,19 @@ class Model(object):
         Cakisan cift de burada yakalanir: ara negatif olur, esigin altindadir.
         """
         asgari = _par(_kural(self.girdi, "VARDIYA_ARASI_DINLENME"), "asgari_saat", 11)
+
+        # T-28: gecmis kaydin BITISINDEN sonra `asgari` saat dolmadan
+        # baslayan plan vardiyasi yazilamaz. Ortusen (hala calisiyorken
+        # baslayan) vardiya da burada yakalanir: ara negatif olur.
+        for c in self.calisanlar:
+            for gun, _, bit, _ in _gecmis_kayitlari(c):
+                bitis = gun * 24 + bit
+                for d in self.gunler:
+                    for t in self.sablonlar:
+                        if (d * 24 + t["bas"] - bitis < asgari
+                                and (c["id"], d, t["id"]) in self.x):
+                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+
         for c in self.calisanlar:
             for d in self.gunler[:-1]:
                 for t1 in self.sablonlar:
@@ -1044,6 +1089,16 @@ class Model(object):
             for bas in range(0, HAFTA_GUN - azami):
                 self.m.Add(sum(self._calisiyor(c["id"], d)
                                for d in range(bas, bas + azami + 1)) <= azami)
+            # T-28: gecmise uzanan pencere. Kayitli gecmis gunleri SABIT
+            # olarak sayilir; bilinmeyen gun 0'dir (K-42).
+            gecmis = {g for g, _, _, _ in _gecmis_kayitlari(c)}
+            for bas in range(-azami, 0):
+                sabit = sum(1 for d in range(bas, 0) if d in gecmis)
+                if not sabit:
+                    continue
+                plan = range(0, min(HAFTA_GUN, bas + azami + 1))
+                self.m.Add(sabit + sum(self._calisiyor(c["id"], d)
+                                       for d in plan) <= azami)
 
     def _ardisik_gece(self):
         """ARDISIK_GECE_LIMIT -- ust uste azami gece (firma kurali, SERT).
@@ -1073,6 +1128,20 @@ class Model(object):
                          if (c["id"], d, t["id"]) in self.x]
                 if terim:
                     self.m.Add(sum(terim) <= azami)
+            # T-28: cuma-cumartesi-pazar gecesi kayitliysa pazartesi gecesi
+            # dorduncudur. Kayitli gecmis geceler SABIT sayilir (K-42).
+            gecmis_geceler = {g for g, b0, b1, isaret in _gecmis_kayitlari(c)
+                              if _gecmis_gece_mi(b0, b1, isaret)}
+            for bas in range(-azami, 0):
+                sabit = sum(1 for d in range(bas, 0) if d in gecmis_geceler)
+                if not sabit:
+                    continue
+                terim = [self.x[(c["id"], d, t["id"])]
+                         for d in range(0, min(HAFTA_GUN, bas + azami + 1))
+                         for t in geceler
+                         if (c["id"], d, t["id"]) in self.x]
+                if terim:
+                    self.m.Add(sabit + sum(terim) <= azami)
 
     def _asgari_vardiya(self):
         """ASGARI_VARDIYA_SURESI -- en kisa vardiya (firma kurali, SERT).

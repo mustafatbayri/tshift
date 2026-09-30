@@ -558,3 +558,79 @@ Değerlendirme ve öneri Mustafa'ya yazıldı; karar bekleniyor.
 | Zor veri seti bekçisi | 12 yeşil (5 dk 54 sn) |
 | İhlal vakaları | **31 gövde · 31 vaka · 31 kırmızı** |
 | Gövdesiz | **9** — biri bilerek (T-67) |
+
+---
+
+# ÖĞLEDEN SONRA · T-28 kapandı — geçmiş veri
+
+## 18 · İki karar (K-42)
+
+1. Geçmiş veri yoksa motor **durmaz**; geçmişe dayanan ölçütler atlanır.
+   Mustafa: *"Geçmiş veri yoksa adalet kavramı gibi geçmiş veriye dayanan
+   kriterleri dikkate almadan ilerlemek."*
+2. **Yasal kurallar dahil** — ayrıca soruldu; seçilen *"atlansın,
+   raporlansın"*. Motor o kişi için hafta sınırında yasal garanti vermez,
+   çıktı bunu kişi ve kural adıyla söyler.
+
+Şartnamenin *"lookback eksikse motor çalışmaz"* kuralının yerine geçiyor:
+gerçek veride kayıtların yalnız %18'i dolu (P-1), o kural motoru çoğu koşumda
+durdururdu.
+
+## 19 · Temel ilke ve rapor
+
+**Kayıtlı aralık çalışıldığını kanıtlar; kaydın yokluğu hiçbir şey
+kanıtlamaz.** Bilinmeyen gün kısıt yaratmaz. `gecmis_eksik` kanalı yalnız
+**sonucu değiştirebilecek** bilinmeyen günü yazar — pazartesi boşsa, bilinen
+boş gün seriyi kırıyorsa ya da ihlal zaten kanıtlıysa satır yok. Gerçek veride
+her pazartesi çalışanı için dört satır yazan bir kanal okunmaz olurdu.
+
+## 20 · Ölçüm — Mustafa'nın iki aşamalı yolu
+
+| hafta 2 | atama | geçmişi bilen denetçiye göre sert ihlal |
+|---|---|---|
+| geçmişsiz | 217 | **27** (10 hafta tatili · 7 dinlenme · 10 ardışık gün) |
+| geçmişle | 217 | **0** |
+
+49 kişilik tek bir hafta. 27 yasal ihlal ve **hiçbiri görünmüyordu** — eski
+denetçi de geçmişe bakmıyordu.
+
+## 21 · Üç tuzak, üçü de yakalandı
+
+**1 · İki aşamalı testin ilk hâli hiçbir şey ölçmüyordu.** *"Hafta 2 geçmişle
+temiz mi"* diye soruyordu; çözücü geçmişi **hiç okumayacak** şekilde
+bozuldu, test yine yeşil kaldı — sahnede boşluk çoktu. Bu kez mutasyonu
+koşmadan önce **sordum**. Sabit atamalı deterministik sahneyle yeniden
+yazıldı: geçmiş okunuyorsa plan çözümsüz kalmak zorunda.
+
+**2 · Gerçek ölçekli iki hafta testi CI'da zamanlamadan kırmızı yandı.** Aynı
+hafta 144 ve 178 sn sürdü, bekçide 240 sn'ye sığmadı; bekçileri 9,5 dakikaya
+çıkardı. Elle koşulan araca taşındı.
+
+**3 · T-70 — mutasyonlar eski bytecode ile koşabiliyordu.** Diskteki kod
+doğruydu, Python on ikinci mutasyonun derlenmiş hâlini çalıştırıyordu (aynı
+uzunlukta değişiklik, aynı saniyede geri yazma). Bu oturumdaki **bütün**
+mutasyon sonuçlarını şüpheli yapıyordu. `mutasyon_kostur.py` yazıldı ve
+**42 mutasyon yeniden koşuldu: hepsi öldü.** Önceki sonuçlar geçerliydi.
+
+## 22 · T-69 — iki taraf aynı hatayı yapıyor
+
+İşaretsiz 00:00–08:45 vardiyası iki motor yarısında da **gece sayılmıyor**;
+ikisi tutarlı, ikisi yanlış. Bugün veri setinde etkisi yok (şablonlar
+işaretli), ama PDKS kaydının işareti olmayacak.
+
+## Öğleden sonra sonu
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **274** yeşil |
+| Altın senaryolar | 12 geçti, 4 atlandı |
+| Fikstür tutarlılığı | 11 tutarlı |
+| Zor veri seti bekçisi | 12 yeşil (7 dk 11 sn) |
+| İhlal vakaları | 31 gövde · 31 vaka · 31 kırmızı |
+| Mutasyonlar | **42 · hepsi öldü · atlanan yok** |
+| Açık 🔴 | **yedi** |
+
+**Sırada:** gece postası devri (yasal) ve ardışık hafta sonu limiti — geçmiş
+okunduğu için artık yazılabilir · T-69 (erken saatli gece tespiti) · sahte
+PDKS (Mustafa'nın ikinci yolu; oranlar anonim gerçek veriden ölçülerek) ·
+T-66 · T-59/T-60.

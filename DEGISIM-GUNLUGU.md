@@ -4,6 +4,26 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (öğleden sonra) · T-28 kapandı — geçmiş veri iki tarafta da okunuyor**
+Risk listesinde birinci sıradaki madde. **Ölçüldü, Mustafa'nın önerdiği iki
+aşamalı yolla:** hafta 1'in planı hafta 2'nin geçmişi oldu; hafta 2 geçmişsiz
+çözülünce geçmişi bilen denetçi **27 sert ihlal** gördü (10 hafta tatili, 7
+vardiya arası dinlenme, 10 ardışık gün) — 49 kişilik tek haftada, hepsi
+bugüne kadar **görünmez**. Geçmişle: **0**. Beş kural pazartesi 00:00'da artık
+kör değil; geçmişin kendi ihlali plana yazılmıyor; K-42'nin rapor kanalı
+(`gecmis_eksik`) yalnız sonucu değiştirebilecek bilinmeyen günü yazıyor.
+⚠ İki aşamalı testin ilk hâli çözücü geçmişi hiç okumasa da yeşildi —
+sabit atamalı, deterministik bir sahneyle yeniden yazıldı. ⚠ Gerçek ölçekli
+sürüm CI'da zamanlamadan kırmızı yandı; elle koşulan araçta kaldı.
+**T-70 (aynı gün kapandı):** mutasyon denemeleri eski bytecode ile
+koşabiliyordu (aynı uzunlukta değişiklik, aynı saniye). `mutasyon_kostur.py`
+yazıldı; bu oturumun **42 mutasyonu yeniden koşuldu, hepsi öldü.**
+**T-69:** işaretsiz erken saatli vardiya (00:00–08:45) iki tarafta da gece
+sayılmıyor — PDKS kaydında işaret olmayacağı için artık önemli.
+Motor **274 test** yeşil.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-28 · T-69 · T-70 · `08-motor-testleri/gercekci-veri-seti/iki-hafta-olc.py`
+
+
 **2026-09-30 (gece, 3) · İki firma sınırı: asgari vardiya süresi, ardışık gece limiti**
 Önce kendi sınıflandırmamı düzelttim: *"karar gerektirmeyen beş firma kuralı"*
 dediklerimin yalnız **ikisi** öyleydi. Üçü karar istiyor: çalışma saatleri

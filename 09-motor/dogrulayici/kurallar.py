@@ -497,19 +497,130 @@ def part_time_limit(girdi, atamalar, tanim):
     return cikan
 
 
+# ----------------------------------------------------------------------
+# Gecmis veri -- T-28, K-42 (30 Eylul)
+# ----------------------------------------------------------------------
+#
+# #11.2 bicimi: calisanlar[].gecmis_vardiyalar = [{"gun": -1, "bas", "bit"}]
+# Gun NEGATIF, saat genisletilmis, SABLON YOK -- PDKS gibi gerceklesen kayit.
+#
+# TEMEL ILKE (K-42): kayitli bir aralik calisildigini KANITLAR; kaydin
+# yoklugu HICBIR SEY kanitlamaz. Bilinmeyen gun kisit yaratmaz --
+# calisilmamis gibi davranir. Hangi kontrolun yapilamadigini
+# `denetle._gecmis_eksik` soyler.
+#
+# GECMISIN KENDI IHLALI PLANA YAZILMAZ. Asagidaki kurallar yalniz en az
+# bir PLAN atamasinin karistigi ihlali yazar: gecmis yeniden planlanamaz.
+
+
+def _gecmis_kayitlari(girdi, kimlik):
+    """Kisinin gecmis kayitlari -- atama bicimine cevrilmis, `_gecmis` isaretli.
+
+    Gunu negatif olmayan kayit ATLANIR: plan haftasi gecmis degildir.
+    """
+    c = _calisan(girdi, kimlik) or {}
+    cikan = []
+    for k in c.get("gecmis_vardiyalar") or []:
+        gun, bas, bit = k.get("gun"), k.get("bas"), k.get("bit")
+        if gun is None or bas is None or bit is None or gun >= 0:
+            continue
+        a = {"calisan": kimlik, "ekip": None, "sablon": None, "gun": gun,
+             "bas": bas, "bit": bit, "molalar": k.get("molalar") or [],
+             "_gecmis": True}
+        if "gece" in k:
+            a["_gece"] = bool(k["gece"])
+        cikan.append(a)
+    return cikan
+
+
+def _bilinen_gunler(girdi, kimlik, kayitlar=None):
+    """Kaydi TAM olan gecmis gunler.
+
+    `gecmis_bilinen_gunler` verildiyse o gunler bilinir (kaydi olmayan
+    bilinen gun = CALISILMAMIS). Kaydi olan gun her durumda bilinir.
+    """
+    c = _calisan(girdi, kimlik) or {}
+    if kayitlar is None:
+        kayitlar = _gecmis_kayitlari(girdi, kimlik)
+    return ({g for g in (c.get("gecmis_bilinen_gunler") or []) if g < 0}
+            | {k["gun"] for k in kayitlar})
+
+
+def _kisiye_gore_gecmisli(girdi, atamalar):
+    """`_kisiye_gore` + o kisilerin gecmis kayitlari.
+
+    Yalniz PLANDA atamasi olan kisiler: gecmisi olup plani olmayan kisinin
+    butun ihlalleri gecmistedir ve plana yazilmaz.
+    """
+    g = _kisiye_gore(atamalar)
+    for kimlik, liste in g.items():
+        liste.extend(_gecmis_kayitlari(girdi, kimlik))
+        liste.sort(key=lambda a: zaman.aralik(a)[0])
+    return g
+
+
+def _atama_gece_mi(girdi, a, sablonlar=None):
+    """Bir atama ya da gecmis kaydi GECE mi -- K-40.
+
+    Plan atamasi: sablonun isareti (yoksa saatten tahmin).
+    Gecmis kaydi: kaydin kendi `gece` isareti (yoksa saatten tahmin).
+    """
+    if a.get("_gecmis"):
+        if "_gece" in a:
+            return a["_gece"]
+        return _gece_sablonu({"bas": a["bas"], "bit": a["bit"]})[0]
+    if sablonlar is None:
+        sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
+    t = sablonlar.get(a.get("sablon")) or {"bas": a["bas"], "bit": a["bit"]}
+    return _gece_sablonu(t)[0]
+
+
+def _en_uzun_plan_serisi(gunler):
+    """En uzun ardisik gun serisi -- YALNIZ bir plan gununu (>= 0) iceren.
+
+    Donen: (uzunluk, baslangic_gunu). Tamamen gecmiste kalan seri sayilmaz.
+    """
+    if not gunler:
+        return 0, None
+    en_uzun, en_bas = 0, None
+    seri, bas = 0, None
+    for g in range(min(gunler), max(gunler) + 2):
+        if g in gunler:
+            if seri == 0:
+                bas = g
+            seri += 1
+        else:
+            if seri and g - 1 >= 0 and seri > en_uzun:
+                en_uzun, en_bas = seri, bas
+            seri = 0
+    return en_uzun, en_bas
+
+
 @kural("CAKISMA_YOK")
 def cakisma_yok(girdi, atamalar, tanim):
-    """Z-3: mutlak zamanda olculur, gun sinirini asan vardiyalar dahil."""
+    """Z-3: mutlak zamanda olculur, gun sinirini asan vardiyalar dahil.
+
+    T-28 (30 Eylul): GECMIS KAYITLAR DA bakilir. Pazar 23:00 - pazartesi
+    07:00 calismis kisi pazartesi 06:00'da hala calisiyor. Bu cakismayi
+    `VARDIYA_ARASI_DINLENME` bilerek bu kurala birakiyor (V-1); bu kural
+    gecmisi gormeseydi ikisi birden susardi.
+    Iki GECMIS kaydi arasindaki cakisma plana yazilmaz.
+    """
     cikan = []
-    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
         for i in range(len(liste)):
             for j in range(i + 1, len(liste)):
+                if liste[i].get("_gecmis") and liste[j].get("_gecmis"):
+                    continue
                 ort = zaman.ortusme(liste[i], liste[j])
                 if ort > 0:
+                    plan = liste[i] if liste[j].get("_gecmis") else liste[j]
+                    gecmisle = liste[i].get("_gecmis") or liste[j].get("_gecmis")
                     cikan.append(_ihlal("CAKISMA_YOK", tanim, calisan=kimlik,
-                                        gun=liste[j]["gun"], olculen=ort,
-                                        mesaj="%s'in iki vardiyasi %s saat cakisiyor"
-                                              % (kimlik, ort)))
+                                        gun=plan["gun"], olculen=ort,
+                                        mesaj="%s'in iki vardiyasi %s saat cakisiyor%s"
+                                              % (kimlik, ort,
+                                                 " (biri gecmis kayit)" if gecmisle else "")))
     return cikan
 
 
@@ -523,8 +634,13 @@ def vardiya_arasi_dinlenme(girdi, atamalar, tanim):
     """
     asgari = _p(tanim, "asgari_saat", 11)
     cikan = []
-    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+    # T-28: gecmis kayitlar da siraya girer -- pazar aksami ile pazartesi
+    # sabahi arasi artik gorunur. Sonraki de gecmisse (ikisi de gecmis)
+    # plana yazilmaz.
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
         for onceki, sonraki in zip(liste, liste[1:]):
+            if sonraki.get("_gecmis"):
+                continue                      # gecmis kendi icinde
             if zaman.ortusuyor_mu(onceki, sonraki):
                 continue                      # V-1
             ara = zaman.ara_saat(onceki, sonraki)
@@ -551,12 +667,16 @@ def hafta_tatili(girdi, atamalar, tanim):
     """
     pencere = _p(tanim, "pencere_gun", 7)
     cikan = []
-    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+    # T-28: gecmis kayitlarin gunleri de dolu sayilir; bilinmeyen gun
+    # SAYILMAZ (K-42). Tamamen gecmiste kalan pencere plana yazilmaz.
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
         dolu = zaman.calisilan_gunler(liste)
         gunler = sorted(dolu)
         if not gunler:
             continue
         for bas in range(min(gunler), max(gunler) - pencere + 2):
+            if bas + pencere - 1 < 0:
+                continue                      # tamamen gecmiste
             dilim = set(range(bas, bas + pencere))
             if dilim <= dolu:
                 cikan.append(_ihlal("HAFTA_TATILI", tanim, calisan=kimlik,
@@ -571,21 +691,13 @@ def hafta_tatili(girdi, atamalar, tanim):
 def ardisik_calisma_gunu(girdi, atamalar, tanim):
     sinir = _p(tanim, "azami_gun", 6)
     cikan = []
-    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+    # T-28: seri gecmise uzanabilir; yalniz bir PLAN gununu iceren seri
+    # sayilir (`_en_uzun_plan_serisi`). Bilinmeyen gun seriyi KIRAR (K-42).
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
         dolu = zaman.calisilan_gunler(liste)
         if not dolu:
             continue
-        seri = en_uzun = 0
-        basladi = None
-        for g in range(min(dolu), max(dolu) + 1):
-            if g in dolu:
-                if seri == 0:
-                    basladi = g
-                seri += 1
-                if seri > en_uzun:
-                    en_uzun, en_uzun_bas = seri, basladi
-            else:
-                seri = 0
+        en_uzun, en_uzun_bas = _en_uzun_plan_serisi(dolu)
         if en_uzun > sinir:
             cikan.append(_ihlal("ARDISIK_CALISMA_GUNU", tanim, calisan=kimlik,
                                 gun=en_uzun_bas, olculen=en_uzun, gereken=sinir,
@@ -638,26 +750,15 @@ def ardisik_gece_limit(girdi, atamalar, tanim):
     azami = int(_p(tanim, "azami_gece", 3))
     sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
     cikan = []
-    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
-        geceler = set()
-        for a in liste:
-            t = sablonlar.get(a.get("sablon")) or {"bas": a["bas"],
-                                                    "bit": a["bit"]}
-            if _gece_sablonu(t)[0]:
-                geceler.add(a["gun"])
+    # T-28: gecmis geceler de sayilir -- cuma, cumartesi, pazar gecesi
+    # calismis kisinin pazartesi gecesi DORDUNCUDUR. Gecmis kaydin kendi
+    # `gece` isareti saati ezer (K-40).
+    for kimlik, liste in sorted(_kisiye_gore_gecmisli(girdi, atamalar).items()):
+        geceler = {a["gun"] for a in liste
+                   if _atama_gece_mi(girdi, a, sablonlar)}
         if not geceler:
             continue
-        seri = en_uzun = 0
-        bas_gun = en_bas = None
-        for g in range(min(geceler), max(geceler) + 1):
-            if g in geceler:
-                if seri == 0:
-                    bas_gun = g
-                seri += 1
-                if seri > en_uzun:
-                    en_uzun, en_bas = seri, bas_gun
-            else:
-                seri = 0
+        en_uzun, en_bas = _en_uzun_plan_serisi(geceler)
         if en_uzun > azami:
             cikan.append(_ihlal(
                 "ARDISIK_GECE_LIMIT", tanim, calisan=kimlik, gun=en_bas,

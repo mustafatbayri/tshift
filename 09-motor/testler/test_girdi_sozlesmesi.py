@@ -21,6 +21,9 @@ OKUNMAYAN ALANLAR -- ayni ailenin geri kalani
   gecmis_vardiyalar). Cagiran taraf onlari gonderiyor, motor bakmiyor,
   ve kimse bilmiyor.
 
+  ⚠ 30 Eylul: `gecmis_vardiyalar` artik OKUNUYOR (T-28, K-42) --
+  bkz. `testler/test_gecmis_veri.py`.
+
   Motor bunu KURALLAR icin zaten bildiriyor (`uygulanmayan_kurallar`).
   Girdi alanlari icin ayni kanal yoktu. Karar: bildirilsin, isi durdurmasin.
 
