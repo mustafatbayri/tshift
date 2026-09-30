@@ -467,6 +467,41 @@ def _(g, p):
             return
 
 
+@vaka("ASGARI_VARDIYA_SURESI", "Bir atama 3 saate kisaltilir")
+def _(g, p):
+    """Veri setinde en kisa sablon tam 4 saat; kural isirmaz. Vaka bir
+    atamanin bitisini baslangicindan 3 saat sonraya ceker. DAR: tek atama."""
+    a = next((a for a in p if a["bit"] - a["bas"] >= 4), None)
+    if a is None:
+        return
+    a["bit"] = a["bas"] + 3
+    a["molalar"] = []
+
+
+@vaka("ARDISIK_GECE_LIMIT", "Bir kisiye dort gece ust uste yazilir")
+def _(g, p):
+    """Gece isaretli bir sablonla, gecesi olmayan bir kisiye 0-3. gunler.
+
+    DAR: tek kisi. Kisinin o gunlerdeki baska atamalari silinir ki
+    `CAKISMA_YOK` gibi yan ihlaller vakayi bulandirmasin.
+    """
+    gece = next((t for t in g["vardiya_sablonlari"]
+                 if t.get("gece_vardiyasi")), None)
+    if gece is None:
+        return
+    kisi = next((c for c in g["calisanlar"]
+                 if c.get("durum", "aktif") == "aktif"
+                 and not c.get("gece_calisamaz") and not c.get("izinler")
+                 and gece["ekip"] in (c.get("ekipler") or [])), None)
+    if kisi is None:
+        return
+    p[:] = [a for a in p if not (a["calisan"] == kisi["id"] and a["gun"] <= 4)]
+    for d in range(4):
+        p.append({"calisan": kisi["id"], "ekip": gece["ekip"],
+                  "sablon": gece["id"], "gun": d,
+                  "bas": gece["bas"], "bit": gece["bit"], "molalar": []})
+
+
 @vaka("SAAT_DENGESI", "Tam zamanli calisanin vardiyalarinin yarisi silinir")
 def _(g, p):
     """K-39. Sozlesme saati doldurulmazsa ihlal.

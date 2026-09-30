@@ -599,6 +599,8 @@ class Model(object):
         self._sure_sinirlari()
         self._dinlenme()
         self._ardisik_gun()
+        self._ardisik_gece()
+        self._asgari_vardiya()
         self._kapsama()
         self._yetkinlik()
         self._amac()
@@ -1042,6 +1044,68 @@ class Model(object):
             for bas in range(0, HAFTA_GUN - azami):
                 self.m.Add(sum(self._calisiyor(c["id"], d)
                                for d in range(bas, bas + azami + 1)) <= azami)
+
+    def _ardisik_gece(self):
+        """ARDISIK_GECE_LIMIT -- ust uste azami gece (firma kurali, SERT).
+
+        Kayan pencere: her `azami+1` gunluk dilimde en fazla `azami` gece.
+        `_ardisik_gun` ile ayni kalip.
+
+        GECE = K-40'in tespiti (`_gece_sablonu`): isaret varsa o, yoksa
+        saat araligi. Dogrulayicida ayni tespit AYRI yazili (#7.6).
+
+        ⚠ YALNIZ PLAN HAFTASI (T-28): gecen haftanin son geceleri
+          gorulmuyor. Pazartesi baslayan seri, pazar gecesinin devami
+          olabilir -- motor bunu bilemez.
+        """
+        kural = _kural(self.girdi, "ARDISIK_GECE_LIMIT")
+        if not kural:
+            return
+        azami = int(_par(kural, "azami_gece", 3))
+        geceler = [t for t in self.sablonlar if _gece_sablonu(t)[0]]
+        if not geceler or azami >= HAFTA_GUN:
+            return
+        for c in self.calisanlar:
+            for bas in range(0, HAFTA_GUN - azami):
+                terim = [self.x[(c["id"], d, t["id"])]
+                         for d in range(bas, bas + azami + 1)
+                         for t in geceler
+                         if (c["id"], d, t["id"]) in self.x]
+                if terim:
+                    self.m.Add(sum(terim) <= azami)
+
+    def _asgari_vardiya(self):
+        """ASGARI_VARDIYA_SURESI -- en kisa vardiya (firma kurali, SERT).
+
+        Sablonlar sabit oldugu icin bu bir SABLON suzgecidir: asgarinin
+        altindaki sablon HIC atanmaz ve bunu not olarak soyler -- firma
+        kendi sablonunun neden kullanilmadigini gormeli.
+
+        Olcu BRUT (vardiya suresi). Gerekcesi dogrulayicida.
+        """
+        kural = _kural(self.girdi, "ASGARI_VARDIYA_SURESI")
+        if not kural:
+            return
+        asgari = float(_par(kural, "asgari_saat", 4))
+        kisalar = []
+        for t in self.sablonlar:
+            sure = float(t["bit"]) - float(t["bas"])
+            if sure <= 0:
+                sure += 24.0          # Z-1: ham yazimli gece yarisi tasmasi
+            if sure < asgari - 1e-9:
+                kisalar.append((t, sure))
+        if not kisalar:
+            return
+        self.notlar.append(
+            "ASGARI_VARDIYA_SURESI: su sablonlar %s saatten kisa ve "
+            "kullanilmayacak: %s"
+            % (asgari, ", ".join("%s (%.2f sa)" % (t["id"], s)
+                                 for t, s in kisalar)))
+        for c in self.calisanlar:
+            for d in self.gunler:
+                for t, _ in kisalar:
+                    if (c["id"], d, t["id"]) in self.x:
+                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
 
     # ---- kapsama ------------------------------------------------------
 

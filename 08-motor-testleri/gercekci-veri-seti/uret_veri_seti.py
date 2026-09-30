@@ -481,6 +481,15 @@ def kurallar_uret():
     # K-40: gece uygunlugu.
     ek("GECE_UYGUNLUGU", "SERT", kabul=False)
 
+    # --- Firma sinirlari (30 Eylul) -- katalogun varsayilanlariyla ---
+    #
+    # ⚠ ASGARI_VARDIYA_SURESI veri setinde ISIRMAZ: en kisa sablonlar
+    #   (B-YARIM 09-13, M-AKSAMK 17-21) tam 4 saat. Zorlayan ihlal vakasi.
+    # ⚠ ARDISIK_GECE_LIMIT ISIRABILIR: B-AKSAM (15:15-24:00) gece isaretli;
+    #   backoffice'te ust uste 4 aksam artik yazilamaz.
+    ek("ASGARI_VARDIYA_SURESI", "SERT", kabul=True, asgari_saat=4)
+    ek("ARDISIK_GECE_LIMIT", "SERT", kabul=True, azami_gece=3)
+
     # --- GECE_VARDIYASI_AZAMI: YASAL, Is K. md. 69 (K-26) ---
     #
     # ⚠ BU SAHNEDE KURAL IHLAL URETMEZ -- acikca yaziyorum.
@@ -533,9 +542,7 @@ def kurallar_uret():
     for kod, tur, yasal in (
             ("GECE_POSTASI_DEVRI", "SERT", True),
             ("GECE_YARISI_ASAN", "SERT", False),
-            ("ARDISIK_GECE_LIMIT", "SERT", False),
             ("ARDISIK_HAFTA_SONU_LIMIT", "SERT", False),
-            ("ASGARI_VARDIYA_SURESI", "SERT", False),
             ("CALISMA_SAATLERI", "SERT", False),
             ("EKIP_SUREKLILIGI", "YUMUSAK", False),
             ("PLAN_KARARLILIGI", "YUMUSAK", False),
@@ -642,8 +649,8 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
             "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
             "Hafta ici ve hafta sonu esikleri AYRI.",
             "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-            "Katalogdaki 40 kuralin TAMAMI tanimli: 29'u degerlendirilir,",
-            "11'i `uygulanmayan_kurallar` kanalini atesler.",
+            "Katalogdaki 40 kuralin TAMAMI tanimli: 31'i degerlendirilir,",
+            "9'u `uygulanmayan_kurallar` kanalini atesler.",
             "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
             "Tohum sabit (%d) -- ayni girdi ayni dosyayi uretir." % TOHUM,
         ],

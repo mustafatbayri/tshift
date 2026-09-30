@@ -594,6 +594,79 @@ def ardisik_calisma_gunu(girdi, atamalar, tanim):
     return cikan
 
 
+@kural("ASGARI_VARDIYA_SURESI")
+def asgari_vardiya_suresi(girdi, atamalar, tanim):
+    """En kisa vardiya -- SERT, firma kurali, kabul edilebilir (#6.2).
+
+    ⚠ OLCU BRUT: vardiyanin suresi, molalar DUSULMEDEN. Bilerek.
+      Kaygi calisanin kisa bir is icin yola cikmasi -- sahada GECIRDIGI
+      sure. `GUNLUK_AZAMI` net olcer cunku orada kaygi YORGUNLUK.
+
+      Olculdu: net olcseydik firmanin KENDI 4 saatlik sablonlari (09-13,
+      17-21) firmanin KENDI 4 saat kuralini her kullanimda cigneyecekti --
+      ekip mola politikasi 4 saatlik vardiyaya 1,25-1,5 saat mola yaziyor.
+
+    Tam asgaride ihlal YOK: "en kisa 4 saat" 4 saati kapsar.
+    """
+    asgari = float(_p(tanim, "asgari_saat", 4))
+    cikan = []
+    for a in atamalar:
+        bas, bit = zaman.aralik(a)
+        sure = bit - bas
+        if sure < asgari - 1e-9:
+            cikan.append(_ihlal(
+                "ASGARI_VARDIYA_SURESI", tanim, calisan=a["calisan"],
+                gun=a["gun"], olculen=round(sure, 2), gereken=asgari,
+                mesaj="%s gun %d: %.2f saatlik vardiya (en kisa %s saat)"
+                      % (a["calisan"], a["gun"], sure, asgari)))
+    return cikan
+
+
+@kural("ARDISIK_GECE_LIMIT")
+def ardisik_gece_limit(girdi, atamalar, tanim):
+    """Ust uste azami gece -- SERT, firma kurali, kabul edilebilir (#6.2).
+
+    ⚠ GECE = K-40'IN ISARETI (`_gece_sablonu`). Sablonda `gece_vardiyasi`
+      varsa o gecerli; yoksa saat araligindan tahmin edilir. ADALET_DENGESI
+      ile ayni tespit -- iki yerde iki gece tanimi olmasin.
+    ⚠ Z-2: vardiya BASLADIGI gune yazilir.
+    ⚠ SERI GECE SERISIDIR: arada gunduz vardiyasi da seriyi kirar.
+      Calisma gunlerini sayan bir govde yanlis ihlal yazardi.
+    ⚠ YALNIZ PLAN HAFTASI -- gecen haftanin son geceleri gorulmuyor
+      (T-28). `ARDISIK_CALISMA_GUNU` ile ayni sinir.
+    """
+    azami = int(_p(tanim, "azami_gece", 3))
+    sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
+    cikan = []
+    for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
+        geceler = set()
+        for a in liste:
+            t = sablonlar.get(a.get("sablon")) or {"bas": a["bas"],
+                                                    "bit": a["bit"]}
+            if _gece_sablonu(t)[0]:
+                geceler.add(a["gun"])
+        if not geceler:
+            continue
+        seri = en_uzun = 0
+        bas_gun = en_bas = None
+        for g in range(min(geceler), max(geceler) + 1):
+            if g in geceler:
+                if seri == 0:
+                    bas_gun = g
+                seri += 1
+                if seri > en_uzun:
+                    en_uzun, en_bas = seri, bas_gun
+            else:
+                seri = 0
+        if en_uzun > azami:
+            cikan.append(_ihlal(
+                "ARDISIK_GECE_LIMIT", tanim, calisan=kimlik, gun=en_bas,
+                olculen=en_uzun, gereken=azami,
+                mesaj="%s gun %d'den itibaren %d gece ust uste (azami %s)"
+                      % (kimlik, en_bas, en_uzun, azami)))
+    return cikan
+
+
 # Is K. md. 68 -- BRUT sureye uygulanir (K-4, hukuk teyidi bekliyor: A-16)
 MOLA_TABLOSU = ((4, 15), (7.5, 30), (float("inf"), 60))
 

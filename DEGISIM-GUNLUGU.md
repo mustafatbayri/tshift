@@ -4,6 +4,27 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-09-30 (gece, 3) · İki firma sınırı: asgari vardiya süresi, ardışık gece limiti**
+Önce kendi sınıflandırmamı düzelttim: *"karar gerektirmeyen beş firma kuralı"*
+dediklerimin yalnız **ikisi** öyleydi. Üçü karar istiyor: çalışma saatleri
+(departman açılış/kapanış saatleri §11.2 girdisinde yok), ekip sürekliliği
+(anlamı belirsiz — 500 kişinin hepsi tek ekipte, *"aynı ekip"* okuması boş
+kalır), vardiya rotasyon yönü (çözücüde yüz binlerce kısıt; T-60 açıkken ağır).
+**Asgari vardiya süresi:** ölçü **brüt** — bilerek; net ölçülseydi firmanın kendi
+4 saatlik şablonları (09–13, 17–21) kendi 4 saat kuralını her kullanımda
+çiğneyecekti. **Ardışık gece limiti:** gece = K-40'ın işareti; arada gündüz
+vardiyası seriyi kırar; yalnız plan haftası (T-28). Bu kez testler gövdeden
+**önce** yazıldı: 17 test, 10 gerçek kırmızı; 8 mutasyon, sekizi de öldü.
+Veri setinde ardışık gece limiti **ısırabilir** (B-AKSAM gece işaretli) —
+küçük ölçekte plan yine temiz çıktı. Motor **242 test**, **31 gövde · 31 vaka ·
+31 kırmızı**.
+**T-28'e ek:** Mustafa geçmiş verinin gerçekte **PDKS'ten** geleceğini söyledi
+ve iki test yolu önerdi. ⚠ Gerçek veri P-1: kayıtların yalnız %18'i dolu — baskın
+sorun sapma değil **eksik kayıt**; ve şartname *"lookback eksikse motor
+çalışmaz"* diyor.
+→ `00-DEVIR/06-ACIK-RISKLER.md` T-28 · `09-motor/testler/test_firma_sinirlari.py`
+
+
 **2026-09-30 (gece, 2) · `GECE_VARDIYASI_AZAMI` — yasal gece sınırı yazıldı (K-26)**
 Mustafa kalan kurallar arasından bunu seçti: hukuki risk taşıyan tek yazılabilir
 kural. Önce kendi sözümü düzelttim — dün *"mantıklı grup üç yasal kural"*

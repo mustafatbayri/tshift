@@ -1285,6 +1285,42 @@ gönderilse bile kullanılmıyor**.
 önceki pazar vardiyası eklenmeden ve eklenerek değerlendirilmeli; sonuç
 değişmeli.
 
+
+### Ek — 30 Eylül: Mustafa'nın test önerisi ve gerçek verinin söylediği
+
+**Mustafa'nın ürün cümlesi:** *"Realitede geçmiş datayı PDKS vb. sistemlerden
+alacağız, plan datası olmayacak."* Şartnamenin lookback biçimi
+(`{"gun": -1, "bas": 23, "bit": 31}` — şablonsuz aralık) gerçekleşen veriye
+zaten uygun.
+
+**Test önerisi (iki yol):** (A) önce bir hafta planla, sonraki haftayı onu geçmiş
+sayarak planla; (B) plana %80–85 uyumlu sahte bir PDKS üret, yeni planı onun
+üzerine kur.
+
+**⚠ Gerçek veri (B)'nin varsayımını değiştiriyor** — `07-GERCEK-VERI-BULGULARI.md`
+P-1: giriş/çıkış kaydı satırların yalnız **%18'inde** var; 781 çalışanın
+**411'inde** hiç kayıt yok; kişi başına dönemin ~**%58'i** kayıtlı. Yani baskın
+sorun plandan **sapma** değil, **eksik kayıt**. Sahte PDKS boşluk içermezse
+gerçeği temsil etmez.
+
+**⚠ Şartnameyle çarpışma:** §11.2 *"Lookback verisi eksikse motor çalışmaz"*
+diyor. Gerçek PDKS'te eksik kayıt **normal durum** — bu kural uygulanırsa motor
+çoğu gerçek koşumda durur. Bugün ise tersi oluyor: motor geçmişi hiç okumuyor
+ve her koşumda çalışıyor, yani üretilen her plan şartnamenin *"dinlenme ihlalini
+sessizce kaçırır"* dediği durum.
+
+**Geçmişin ne açtığı — kesin liste:**
+
+| | kurallar | gereken |
+|---|---|---|
+| bugün hafta sınırında **kör** olan yazılı kurallar | vardiya arası dinlenme · hafta tatili (kayan pencere) · ardışık çalışma günü · ardışık gece limiti | son 14 gün |
+| gövdesi yazılabilecek hale gelenler | gece postası devri (**yasal**) · ardışık hafta sonu limiti | son 14 gün |
+| haftalık geçmişle **açılmayanlar** | yıllık fazla mesai tavanı (**yasal**) | yıl içi **toplam** (tek sayı) |
+| | plan kararlılığı | **aynı haftanın** yayındaki planı (yeniden planlama) |
+
+⚠ 30 Eylül'de *"dördü T-28'e bağlı"* diye yazılmıştı — yanlış: ikisi ayrı
+girdiye bağlı.
+
 ---
 
 ## 🔴 T-29 · `DONMUS_GUN` hiç ateşlenemez

@@ -497,3 +497,64 @@ mı** diye bakılmalı — bütçe aşımı kırmızısı gerçek hataya benziyo
 Mustafa'nın kararı, iki yasal kuralın önkoşulu) · T-66 (`sert_ihlal` — §11.3)
 · T-63'ün yetkinlik tarafı · T-67 (`GECE_YARISI_ASAN` sınıflandırması) ·
 T-59/T-60.
+
+---
+
+# GECE (3) · İki firma sınırı · ve geçmiş veri için Mustafa'nın önerisi
+
+## 15 · Sınıflandırmamı bir kez daha düzelttim
+
+*"Karar gerektirmeyen beş firma kuralı"* demiştim. Şartnameye bakınca yalnız
+**ikisi** öyle çıktı:
+
+| kural | neden karar istiyor |
+|---|---|
+| çalışma saatleri | departmanın açılış/kapanış saati veritabanı şemasında var (`departments.acilis_saat`), **motorun girdisinde yok** (§11.2) |
+| ekip sürekliliği | *"aynı kişiler aynı ekiple"* iki türlü okunuyor; 500 kişinin hepsi tek ekipte, *"aynı ekip"* okuması boş kalır |
+| vardiya rotasyon yönü | anlamı net ama çözücüde yüz binlerce kısıt demek; T-60 açıkken model ağırlaşır |
+
+Bugün üçüncü kez aynı hata: sınıflandırmayı **okumadan** yaptım.
+
+## 16 · Asgari vardiya süresi · ardışık gece limiti
+
+**Asgari süre — ölçü brüt, bilerek.** Kaygı çalışanın kısa bir iş için yola
+çıkması. Ölçüldü: net ölçülseydi firmanın kendi 4 saatlik şablonları (09–13,
+17–21) kendi 4 saat kuralını her kullanımda çiğneyecekti — ekip mola politikası
+4 saatlik vardiyaya 1,25–1,5 saat mola yazıyor.
+
+⚠ **Yan gözlem:** 4 saatlik vardiyaya 1,5 saat mola veri setinin bir
+yapaylığı — mola politikası ekip bazında, vardiya uzunluğuna bakmıyor.
+
+**Ardışık gece — gece = K-40'ın işareti**, arada gündüz vardiyası seriyi kırar,
+yalnız plan haftası (T-28).
+
+**Bu kez testler gövdeden önce yazıldı:** 17 test, **10 gerçek kırmızı** (üç
+çözücü testi dahil); yedisi kural yokken de yeşildi. **Sekiz mutasyon, sekizi de
+öldü.**
+
+**Veri setinde:** asgari süre ısırmıyor (en kısa şablon tam 4 saat); ardışık
+gece **ısırabilir** (B-AKSAM gece işaretli) — küçük ölçekte plan yine temiz.
+
+## 17 · Mustafa'nın önerisi — geçmiş veri nasıl test edilir
+
+> *"Geçmiş datayı test etmek amaçlı test planını iki aşamalı yaparsak… önce 1
+>  hafta sonrasını ve ondan sonra diğer haftayı… Veya bir PDKS verisi üretiriz,
+>  plana %80-85 uyumlu olarak gerçekleşmiş, ve bunun üzerine yeni bir plan
+>  yaparız."*
+
+Ve bir ürün cümlesi: *"Realitede geçmiş datayı PDKS v.b. sistemlerden alacağız,
+plan datası olmayacak."*
+
+⚠ **Gerçek veri önerinin ikinci yolunu değiştiriyor** (P-1): kayıtların yalnız
+**%18'i** dolu, 781 kişinin **411'inde** hiç kayıt yok. Baskın sorun sapma değil
+**eksik kayıt**. Ve şartname *"lookback eksikse motor çalışmaz"* diyor — gerçek
+PDKS'le bu kural motoru çoğu koşumda durdurur.
+
+Değerlendirme ve öneri Mustafa'ya yazıldı; karar bekleniyor.
+
+| ne | sayı |
+|---|---|
+| Motor birim testi | **242** yeşil |
+| Zor veri seti bekçisi | 12 yeşil (5 dk 54 sn) |
+| İhlal vakaları | **31 gövde · 31 vaka · 31 kırmızı** |
+| Gövdesiz | **9** — biri bilerek (T-67) |

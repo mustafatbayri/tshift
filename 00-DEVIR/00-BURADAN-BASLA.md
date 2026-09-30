@@ -23,6 +23,15 @@ sınırı **brüt** ölçüyor (T-68) — bilerek; yasal planı reddedebilir, ya
 gövdesizler yeniden sayıldı: **11**, ama biri (`GECE_YARISI_ASAN`) şartnameye göre
 zaten ihlal üretmez (T-67) — gerçek eksik **10**. Motor **225 test** yeşil,
 **29 gövde · 29 vaka · 29 kırmızı**.
+
+**⚠ 30 Eylül gecesi (3) — iki firma sınırı.** Asgari vardiya süresi (**brüt**,
+bilerek) ve ardışık gece limiti (K-40'ın gece işareti) iki tarafta da yazıldı.
+⚠ *"Karar gerektirmeyen beş kural"* dediğimin yalnız ikisi öyleydi; çalışma
+saatleri, ekip sürekliliği ve rotasyon yönü karar istiyor. Motor **242 test**,
+**31 gövde · 31 vaka · 31 kırmızı**; gövdesiz **9** (biri bilerek, T-67).
+**T-28:** Mustafa geçmişin PDKS'ten geleceğini söyledi; gerçek veride kayıtların
+yalnız %18'i dolu — şartnamenin *"lookback eksikse motor çalışmaz"* kuralıyla
+çarpışıyor.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -193,8 +202,8 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **29** (katalogdaki **40**'ın alt kümesi) | 30 Eylül gecesi, ikisi de sayılarak |
-| Motor birim testi | **225**, hepsi yeşil | 30 Eylül gecesi, koşularak |
+| Yazılan kural gövdesi | **31** (katalogdaki **40**'ın alt kümesi) | 30 Eylül gecesi, ikisi de sayılarak |
+| Motor birim testi | **242**, hepsi yeşil | 30 Eylül gecesi, koşularak |
 | Zor veri seti bekçisi | **12**, hepsi yeşil (yaklaşık 5 dakika) | 29 Eylül |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -538,7 +547,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **29** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **225** birim testi (30 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **31** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **242** birim testi (30 Eylül). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |
