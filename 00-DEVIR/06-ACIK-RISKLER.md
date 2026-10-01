@@ -849,7 +849,7 @@ görüldü**, sonra `main`'e alındı.
 
 ---
 
-## 🔴 T-18 · Denetlenmeyen kural yayın kapısını kapatmıyor
+## ✅ T-18 · ~~Denetlenmeyen kural yayın kapısını kapatmıyor~~ — **KAPANDI (1 Ekim 2026, K-49)**
 
 **Bulundu:** 16 Eylül 2026, **dış inceleme** (GPT) · **Yeniden üretildi:** evet
 
@@ -881,6 +881,33 @@ edilirse, plan o kurallara **hiç bakılmadan** yayınlanabilir görünür.
 **Ürün kararı gerekiyor:** gövdesi olmayan aktif bir kural varken kapı ne
 yapmalı? Seçenekler: (a) yayını engelle, (b) `kabul_bekleyen` gibi davran —
 yetkili gerekçeyle onaylasın, (c) yalnız SERT olanlarda engelle. Uydurulmadı.
+
+### ✅ Kapanış — 1 Ekim, K-49 (Mustafa: "onaylıyorum")
+
+Üç kademe: kontrol edilemeyen kural **sert ve yasal** ise yayın engellenir
+(firma kanunun kontrolünü onaylayarak geçemez); **sert ve firma kuralı** ise
+plan kabul bekler — yetkili gerekçe yazarak kabul eder (`girdi.denetim_disi_
+kabul`, gerekçesiz kabul kabul değildir); **yumuşak** ise yalnız raporlanır.
+İki kanal kapıya bağlandı: `uygulanmayan_kurallar` ve `eksik_boyutlar` içinde
+`denetlenemedi: true` olanlar (parametresiz yetkinlik/rol kapsaması, adaletin
+yazılmamış `saat` boyutu). Kırpma raporları (`denetlenemedi: false`, K-45)
+kapıyı etkilemez. `okunmayan_alanlar` (T-19) bağlanmadı — girdi alanı
+meselesi, kural denetimi değil; rapor olarak kalır.
+
+Çıktı: `yayin_kapisi.denetlenemeyen_kurallar` — her satırda kod, tür, yasal,
+`etki` (*engelliyor · kabul_bekliyor · kabul_edildi · rapor*) ve okunur cümle.
+13 test, 6 mutasyon öldü. **Kapı kapanınca veri seti üç yerden ısırdı:**
+`YETKINLIK_KAPSAMASI` parametresiz (T-63) → gerekçeli kabul kaydı;
+`CALISMA_SAATLERI` sert firma kuralı, gövdesi ve parametre biçimi hiç
+kararlaştırılmamış → 7/24 çağrı merkezi için gerekçeli kabul kaydı (kuralın
+kendisi karar bekliyor, T-38); `YILLIK_FAZLA_MESAI_TAVANI` **yasal** ve
+gövdesiz → yayın engellendi, kapatmak yerine **gövdesi yazıldı** (iki motor
+yarısı: yıl içi toplam `calisanlar[].yil_ici_fazla_mesai_saat`; biliniyorsa
+bu haftanın fazla mesaisi kalan payı aşamaz; bilinmiyorsa K-42 ile atlanır
+ve `gecmis_eksik` bildirir). 12 test, 9 mutasyon; veri setinde her 50
+kişiden biri tavanın kıyısında, kural orada gerçekten kısıyor.
+Gövdesiz kalan: `CALISMA_SAATLERI` (sert, kabul kaydıyla) ve dört yumuşak
+kural (yalnız rapor).
 
 ---
 
@@ -991,7 +1018,7 @@ düzeltilmeli.
 
 ---
 
-## 🔴 T-21 · Çok ekipli çalışan iki ekibi aynı anda dolduruyor
+## ✅ T-21 · ~~Çok ekipli çalışan iki ekibi aynı anda dolduruyor~~ — **KAPANDI (1 Ekim 2026, K-50) — teşhis tersine döndü**
 
 **Bulundu:** 16 Eylül 2026, dış inceleme · **Yeniden üretildi:** evet
 
@@ -1021,6 +1048,28 @@ Motor bir kişinin aynı anda iki yerde olabileceğini varsayıyor. Sonuçları:
 **Ürün kararı gerekiyor:** bir çalışan bir vardiyada **tek bir ekibe** mi
 sayılır (o zaman değişken `x[calisan, gun, sablon, ekip]` olur), yoksa ekipler
 iç içe geçebilir mi? Şartname §8'de `ekipler` çoğul; anlamı tanımlı değil.
+
+### ✅ Kapanış — 1 Ekim, K-50 (Mustafa'nın sahası)
+
+⚠ **Bu kaydın teşhisi yanlıştı.** *"Bir kişi aynı anda iki yerde olamaz"*
+sahada doğru değil: Mustafa — *"hem satış hem backoffice yapabilen elemanlar
+var; o saatte o eleman iki birim elemanı için yer doldurmuş sayılır. Gece
+12'den sonra backoffice talebi yok denecek kadar azalıyor; oraya asıl işi
+satış ama backoffice yeteneği olan bir eleman konuyor, sorun sahada çözülmüş
+oluyor."* Talep sayısı *"hazır bulunan kişi"*dir, *"adanmış beden"* değil.
+Modelin inancı doğruydu; **değişen taraf doğrulayıcı** oldu: atama, çalışanın
+üye olduğu bütün ekiplere sayılır (kişi sayısı ve nitelik kapsamalarında).
+Çıktıdaki `ekip` alanı vardiyanın ekibidir (eskiden kişinin ilk ekibi).
+Görünürlük: `metrikler.baska_ekipten_kapsama` (kaç hücre, kaç kişi-saat).
+Kiracı `cok_ekipli_sayim: "tek"` derse eski "tek ekibe sayılır" davranışı —
+o da yazıldı ve sınandı. 13 test, 11 mutasyon öldü. Ön kontrol de buna göre
+bakıyor: gece 00–06'da yalnız satış vardiyası varsa ve çift üyeli biri varsa
+backoffice hücresi *"ulaşılamaz"* değildir.
+
+İlk yazdığım düzeltme tersiydi (atama yalnız şablonun ekibine sayılsın);
+Mustafa'nın örneğiyle geri alındı, `"tek"` modu olarak kaldı. **Ders:** bir
+dış incelemenin *"model yanlış"* bulgusu sahada doğrulanmadan karar
+sayılmaz.
 
 ---
 
@@ -1674,7 +1723,7 @@ Mevcut testler işlemleri **sırayla** yapıyor; bu yolu sınamıyor.
 
 ---
 
-## 🔴 T-38 · Şartnamenin on iki alanı daha motorda karşılıksız
+## 🟡 T-38 · Şartnamenin on iki alanı daha motorda karşılıksız — **seviye 🟡, sıra verildi (1 Ekim)**
 
 **Bulundu:** 23 Eylül 2026, T-19 kapatılırken · **Ölçüldü:** evet — her ad
 `09-motor/` içinde tek tek arandı
@@ -1781,6 +1830,23 @@ listesinde 2. sırada duruyor ve gerekçesi buydu. Kalan en ağır satır
 Mustafa'da**; ölçüm değişti diye sırayı tek taraflı değiştirmedim.
 
 **Ne gerek:** on iki satır, on iki ürün kararı. Hepsi aynı anda gerekmiyor.
+
+### Sıra — 1 Ekim (Mustafa: "sen karar ver")
+
+Seviye 🟡'ya indi (25 Eylül'deki ölçüme göre; Mustafa sırayı bana bıraktı).
+Ölçüt: kullanıcıya görünen yanlış önce, sessiz eksik sonra, kaldırılacak
+olan en sona.
+
+| Sıra | Alan | Karar | Durum |
+|---|---|---|---|
+| 1 | `sure_butcesi_sn` | Çağıranın süre bütçesi arama bütçesi olur (K-35, K-48) | ✅ **yazıldı 1 Ekim** (`servis.py`) |
+| 2 | `istek_id` | Çıktıya aynen geri yazılır (§11.3) | ✅ **yazıldı 1 Ekim** |
+| 3 | `sabit_atamalar[].bas/.bit/.ekip` | Şablon kimliği yoksa saat+ekip ile şablon eşlenir; eşleşmezse not | 🟡 sırada |
+| 4 | `devir_kapsama` | Anlamı tanımlanmalı (önceki haftadan devreden kapsama borcu?) — Mustafa'ya soru | 🟡 |
+| 5 | `tercihler` | K-13: çalışan tercih belirtmez → §11.2 örneğinden **kaldırılacak** | 📝 şartname temizliği |
+| 6 | `kural_degerleri` | K-39: kişiye özel saat sınırı yok; `S` kapsamlı kural ezilemez → **kaldırılacak** | 📝 şartname temizliği |
+| 7 | `mola_tek_blok` | K-32 ile kalktı → **kaldırılacak** | 📝 şartname temizliği |
+| 8 | `izinler[].tum_gun` | K-31: yarım gün elle; alan gelirse bütün gün + bildirim (bugünkü davranış) | ✅ karar var |
 
 ---
 
@@ -2732,7 +2798,7 @@ yeşil"* kuralı.
 
 ---
 
-## 🔴 T-54 · Yarı zamanlı saatinin **maliyeti yok** — çözücü onları bedava sanıyor
+## ✅ T-54 · ~~Yarı zamanlı saatinin **maliyeti yok** — çözücü onları bedava sanıyor~~ — **KAPANDI (1 Ekim 2026, K-53)**
 
 **Bulundu:** 29 Eylül, yarı zamanlı tavanı 45'e çıkarıldıktan hemen sonra,
 kendi testim kırmızı yanınca.
@@ -2764,8 +2830,20 @@ sonrası**: asgariyi tutturduktan sonra dur diyen bir şey yok.
 (ör. `HEDEF_ASIMI`, yumuşak). Bugün katalogda **yok**. Alternatifi, saat
 başına maliyet terimi — ama o, ücret verisini motora sokmak demek.
 
-→ K-39 · `09-motor/cozucu/model.py` (`_sure_sinirlari`) ·
-  `09-motor/testler/test_sozlesme_saati.py`
+### ✅ Kapanış — 1 Ekim, K-53 (Mustafa: "Ceza ile ilerleyelim. Ücret tarafı hiç gelmeyebilir.")
+
+Katalogda yeni yumuşak kural **`HEDEF_ASIMI`**: hücreye hedeften fazla
+atanan her kişi için ceza; ağırlık profilden (dengeli 3, kapsama 1, çalışan
+4), hedefin altında kalmak her profilde daha pahalı. Kaydın sahnesi test
+oldu: 4 yarı zamanlı, 1 kişilik talep → artık gün başına 1 atama. Sert
+tabanları ezmez: 45 saatlik tam zamanlılar yine 45'e dolar, ceza fazlalığı
+en az hücreye yayar (ölçüldü: iki kişi tatillerini farklı güne koyup 32
+hücre aşımla bitiriyor, aynı güne koysalar 40 olurdu). Doğrulayıcı aynı
+hücreleri yumuşak ihlal sayar. 6 test, 4 mutasyon öldü. Veri setine
+eklendi (katalog 41).
+
+→ K-39 · K-53 · `09-motor/cozucu/model.py` (`_sure_sinirlari`, `_kapsama`) ·
+  `09-motor/testler/test_hedef_asimi.py`
 
 ---
 
@@ -3167,7 +3245,10 @@ tablosunun aynısı. Yarım ipucu CP-SAT'e hiçbir şey vermiyormuş.
 **Tam ölçek (1 Ekim öğlen, 500 kişi, 6 çekirdek, 900 sn):** birinci aşama
 **10,3 sn** (üç önceki koşuda 120 sn'de başarısız), ana aşamada ilk plan
 **48,9 sn** (dün 778 sn'de yok), 2.476 atama, 0 sert. Plan bulma tarafı
-**kapandı**. Kalite tarafı aynı yerde: optimuma uzaklık %98,99 (alt sınır
+**kapandı**. İkinci koşu (22:50, 19:15 sürümü): birinci aşama 100,6 sn, ilk
+plan 87,8 sn, 0 sert — makine o sırada iki kat yavaştı (model kurma 98 sn),
+birinci aşamanın 10 → 100 sn sıçraması ölçülmeden yorumlanmadı; sonraki
+koşuda bakılacak. Kalite tarafı aynı yerde: optimuma uzaklık %98,99 (alt sınır
 zayıf — sayı, planın kötülüğünü değil kanıtın zayıflığını da taşıyor, bkz.
 `alt_sinir`); yumuşak ihlaller HEDEF 96 · ADALET 126 · MOLA 38, önceki
 koşularla aynı bantta.
@@ -3314,7 +3395,7 @@ plan çözümsüz kalmak zorunda.
 
 ---
 
-## 🟡 T-63 · Veri setinde üç kural aktif ama hiçbir şey istemiyor — **ROL TARAFI KAPANDI (30 Eylül)**
+## ✅ T-63 · ~~Veri setinde üç kural aktif ama hiçbir şey istemiyor~~ — **KAPANDI (1 Ekim 2026, K-52)**
 
 **Bulundu:** 30 Eylül, yeni gövdeler bağlanınca zor veri seti bekçileri
 **yeşil kaldı** — ve sebebi araştırılınca.
@@ -3388,18 +3469,14 @@ kendi kuralını tutamayan bir veri seti olurdu.
 **Bekçiler yeşil:** 12 test. İhlal vakası artık gerekliliği kendisi yazmıyor,
 yalnız **planı** bozuyor — bir günün liderlerini plandan çıkarıyor.
 
-### 🟡 Açık kalan
+### ✅ Kapanış — 1 Ekim, K-52
 
-* **Yetkinlik tarafı.** `YETKINLIK_KAPSAMASI` hâlâ parametresiz. Veri duruyor
-  (`teknik`, `almanca`, `ingilizce`, `iade`); gereklilik karara bağlanmadı.
-  Sessiz değil: `eksik_boyutlar` kanalı *"hangi niteliğin arandığı bilinmiyor
-  — denetlenemedi"* diye bildiriyor.
-* **`SAHADA_ASGARI` hâlâ 0.** Saha tabanı yok.
-* **Tam ölçekte gereklilik ölçülmedi.** 0.1'de çözülüyor; 500 kişide
-  (21/15/6 lider) sayı elverişli görünüyor ama **koşulmadı**.
-
-→ T-61 · T-62 · T-18 · K-24 · K-41 ·
-  `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+Mustafa: *"her birim için tanımlamalıyız bu İngilizce kuralını… veri setinde
+olabildiğince kompleks kurgu."* Dört gereklilik satırı (satış 2 İngilizce
+08–20, back office 1 İngilizce 08–18, müşteri hizmetleri 1 İngilizce 08–22
+ve 1 Almanca 10–16), her biri ayrı kural satırı; üretici lider tabanıyla
+aynı hesapla taşıyıcı tabanı koyuyor (8/3/4/3). `SAHADA_ASGARI` tabanı bu
+sette hâlâ 0 — ayrı bir soru olarak kaldı, kural gövdesi ve testi var.
 
 ---
 
@@ -3494,7 +3571,7 @@ bu dersi zaten öğrenmişti; burada atlanmıştı.
 
 ---
 
-## 🟡 T-66 · `sert_ihlal` ölçülmüyor, **sabit yazılıyor**
+## ✅ T-66 · ~~`sert_ihlal` ölçülmüyor, **sabit yazılıyor**~~ — **KAPANDI (1 Ekim 2026, K-51 — alan kaldırıldı)**
 
 **Bulundu:** 30 Eylül, T-65 araştırılırken — yanındaki satırda.
 
@@ -3527,6 +3604,10 @@ mı dursun. Motorun kendi metriğinin var olma sebebi doğrulayıcıyla
 
 → T-65 · T-18 · `09-motor/cozucu/coz.py` · `02-spec/v1.4-master-spec.md` §11.3
 
+**✅ 1 Ekim, K-51:** Mustafa — *"Kaldıralım; birinin saptaması yeterli."*
+Alan çözücü çıktısından çıkarıldı; altın senaryo testi beklentiyi bağımsız
+denetimin sayısından okuyor. Aşağıdaki yan bulgu (toplam saat metriği) açık.
+
 **1 Ekim ek — aynı aile:** `_metrikler` içindeki `toplam_saat` ve
 `fazla_mesai_saat` net saati **yalnız `mola_dk`** ile hesaplıyor; mola
 politikası (dinlenme) düşülmüyor (T-57'nin düzeltmesi `_net_saat`'e
@@ -3539,7 +3620,7 @@ onlarla birlikte ele alınmalı. `teshis.py`'deki kapasite tahmini
 
 ---
 
-## 🟡 T-67 · `GECE_YARISI_ASAN` "gövdesiz" sayılıyor ama şartnameye göre ihlal üretmez
+## ✅ T-67 · ~~`GECE_YARISI_ASAN` "gövdesiz" sayılıyor ama şartnameye göre ihlal üretmez~~ — **KAPANDI (1 Ekim 2026)**
 
 **Bulundu:** 30 Eylül, kalan gövdesiz kurallar tek tek okunurken.
 
@@ -3555,6 +3636,15 @@ Gerçek eksik sayısı 11 değil **10**.
 vakası aracı artık her gövdeden bir kırmızı bekliyor (T-64) — bu kural için
 kırmızı **tanım gereği imkânsız**. Araca *"bilerek sessiz"* diye bir sınıf
 eklemek gerekiyor. Küçük ama ayrı bir iş.
+
+### ✅ Kapanış — 1 Ekim
+
+K-49 kapıyı kapatınca bu kural *"kontrol edilemedi, kabul bekliyor"* diye
+göründü — yanlış cümle. Gövdesi yazıldı: *"bakacak bir şey yok, zaman modeli
+uyguladı"* (boş liste döner, docstring'i sebebini anlatır). İhlal vakası
+aracına *"bilerek vakasız"* sınıfı eklendi (`IHLAL_URETMEZ`): bu kural
+listede sebebiyle görünür, eksik sayılmaz. Gövdesi yazılı kural 35
+(biri ihlal üretmez), 34 vaka, 34 kırmızı.
 
 → T-64 · `02-spec/v1.4-master-spec.md` §6.3
 
@@ -4072,19 +4162,19 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 | ~~1b~~ | ~~**T-75 · ardışık hafta sonu limiti üçüncü haftayı kilitliyor**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-46** — iki gün de; üçüncü hafta çözüldü, 0 ihlal |
 | ~~1c~~ | ~~**T-72 · "gece haftası" tanımı**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — çoğunluk; sıkı okuma ayar olarak kaldı |
 | ~~1a~~ | ~~**T-74 · yasal gece sınırının ölçüsü**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — Yargıtay 9. HD 2020/17967; gece postasının bütün süresi |
-| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🔴⚠ | ⚠ **Seviyesi şüpheli.** İki ağır satırı da 25 Eylül'de kapsam kararına bağlandı (K-21 geri alındı, K-31 verildi). Kalanlar yazılmamış özellik ve ad uyuşmazlığı — **ölçüme göre 🟡**, onay bekliyor |
+| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🟡 | Seviye 🟡'ya indi, sıra verildi (1 Ekim): `sure_butcesi_sn` ve `istek_id` yazıldı; sırada sabit atama eşlemesi, `devir_kapsama` tanımı, üç alanın şartnameden kaldırılması |
 | **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
-| **4** | **T-21 · çok ekipli çalışan** 🔴 | Modelin kendi inancı yanlış: bir kişi iki ekibi birden dolduruyor |
-| **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
+| ~~4~~ | ~~**T-21 · çok ekipli çalışan**~~ | ✅ **KAPANDI 1 Ekim, K-50** — teşhis tersine döndü: sahada çift yetenekli kişi iki ekibe de sayılır; doğrulayıcı değişti, görünürlük metriği eklendi |
+| ~~5~~ | ~~**T-18 · yayın kapısı**~~ | ✅ **KAPANDI 1 Ekim, K-49** — üç kademe: yasal+sert engeller, firma+sert kabul bekler, yumuşak rapor; iki kanal kapıya bağlı |
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
 | **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). Kalan: kalite — dört ölçüm (ilk aşama payı, iki aşama açık/kapalı, SAAT_DENGESI'siz, %85 seti) |
-| **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
+| ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |
-| **9** | **T-63 · yetkinlik gerekliliği yok** 🟡 | Rol tarafı kapandı (gündüz 1 lider). Yetkinlik kapsaması hâlâ parametresiz, `SAHADA_ASGARI` hâlâ 0. ✅ **Mustafa'nın kararı** |
-| **9b** | **T-66 · `sert_ihlal` ölçülmüyor** 🟡 | Sabit sıfır yazılıyor; ekranda ölçüm gibi görünüyor. ✅ **Mustafa'nın kararı** — §11.3 çıktı sözleşmesi değişir |
+| ~~9~~ | ~~**T-63 · yetkinlik gerekliliği yok**~~ | ✅ **KAPANDI 1 Ekim, K-52** — dört gereklilik satırı, tabanlar üreticide. `SAHADA_ASGARI` tabanı ayrı soru |
+| ~~9b~~ | ~~**T-66 · `sert_ihlal` ölçülmüyor**~~ | ✅ **KAPANDI 1 Ekim, K-51** — alan kaldırıldı, tek sayı doğrulayıcının |
 
 ### Sonra — doğruluğu değil, güveni bozanlar
 
@@ -4161,3 +4251,9 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 | **T-27 olmayan mola** | **16 Eylül 2026** | Mola vardiyaya kırpılıyor + üst üste binenler birleşiyor. 8 test. Dış incelemenin 1 numaralı bulgusu |
 | **T-17 Actions eylemleri** | **16 Eylül 2026** | checkout v7, setup-python v7, setup-dotnet v6. Önce `ci/node24` dalında denendi, yeşil görülünce `main`'e alındı |
 | **T-78 tam ölçekte 1 sert ihlal** | **1 Ekim 2026** | Plan beklenmeden koddan bulundu: 20 dk mola çeyrek ızgarada 15 dk sayılıyor, molalar 5 dk üst üste biniyor, doğrulayıcı fazla çalışma görüyordu. Yukarı yuvarlama + gerçek zamanlı çakışma + emniyet kemeri + sığmayan politika notu. 9 test, 6 mutasyon öldü |
+| **T-18 denetlenemeyen kural kapıyı geçiyordu** | **1 Ekim 2026** | K-49 üç kademe; `denetlenemeyen_kurallar` çıktıda, kabul kaydı `denetim_disi_kabul`. 13 test, 6 mutasyon |
+| **T-21 çok ekipli çalışan** | **1 Ekim 2026** | K-50: teşhis tersine döndü, doğrulayıcı üye olduğu bütün ekiplere sayıyor; `baska_ekipten_kapsama` metriği; `"tek"` modu seçenek. 13 test, 11 mutasyon |
+| **T-54 saatin maliyeti yok** | **1 Ekim 2026** | K-53 `HEDEF_ASIMI` yumuşak kural; 6 test, 4 mutasyon |
+| **T-63 yetkinlik gerekliliği** | **1 Ekim 2026** | K-52 dört gereklilik satırı + taşıyıcı tabanı; `CALISMA_SAATLERI` departman saatleriyle yazıldı (12 test, 8 mutasyon) |
+| **T-66 sabit sert ihlal sayısı** | **1 Ekim 2026** | K-51 alan kaldırıldı |
+| **T-67 gece yarısı kuralı gövdesiz** | **1 Ekim 2026** | "İhlal üretmez" diye kayıtlı; vaka aracında bilerek vakasız sınıfı |

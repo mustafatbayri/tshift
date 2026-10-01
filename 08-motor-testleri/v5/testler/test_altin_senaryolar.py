@@ -79,8 +79,14 @@ def _solve_dogrula(cikti, girdi, bek, etiket):
         for alan, kosul in (bek.get(blok) or {}).items():
             if alan.startswith("_"):
                 continue
-            tamam, mesaj = karsilastir(
-                (cikti.get(blok) or {}).get(alan), kosul, "%s.%s" % (blok, alan))
+            deger = (cikti.get(blok) or {}).get(alan)
+            # K-51 (1 Ekim): cozucunun kendi `metrikler.sert_ihlal` sayisi
+            # KALDIRILDI (sabit sifir yaziyordu, olculmuyordu). Fiksturdeki
+            # beklenti artik BAGIMSIZ DENETIMIN sayisindan okunur -- zaten
+            # tek dogru sayi oydu (#16.1).
+            if blok == "metrikler" and alan == "sert_ihlal":
+                deger = (cikti.get("bagimsiz_denetim") or {}).get("sert_ihlal")
+            tamam, mesaj = karsilastir(deger, kosul, "%s.%s" % (blok, alan))
             if not tamam:
                 hatalar.append(mesaj)
 

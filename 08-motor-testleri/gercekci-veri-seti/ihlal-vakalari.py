@@ -45,6 +45,12 @@ from dogrulayici import kurallar as _K                        # noqa: E402
 
 VAKALAR = []
 
+# Govdesi var ama IHLAL URETMEYEN kurallar: vakasi olamaz, bu bir bosluk
+# degil. Her satir sebebini soyler.
+IHLAL_URETMEZ = {
+    "GECE_YARISI_ASAN": "hesaplama kurali (Z-1), zaman modeli uygular; ihlal uretmez (T-67)",
+}
+
 
 def vaka(kod, aciklama):
     """Bir kural icin ihlal vakasi kaydeder."""
@@ -150,6 +156,45 @@ def _(g, p):
     for gun in range(7):
         p.append({"calisan": c, "ekip": ekip, "sablon": "X", "gun": gun,
                   "bas": 9, "bit": 19, "molalar": []})
+
+
+@vaka("YILLIK_FAZLA_MESAI_TAVANI",
+      "Yil ici 268 saat fazla mesaisi olana 6 gun 10'ar saat yazilir (+9 > 270)")
+def _(g, p):
+    c = p[0]["calisan"]
+    ekip = p[0]["ekip"]
+    for k in g["calisanlar"]:
+        if k["id"] == c:
+            k["yil_ici_fazla_mesai_saat"] = 268
+    p[:] = [a for a in p if a["calisan"] != c]
+    for gun in range(6):
+        p.append({"calisan": c, "ekip": ekip, "sablon": "X", "gun": gun,
+                  "bas": 9, "bit": 19, "molalar": [{"bas": 13, "bit": 14, "tip": "yemek"}]})
+
+
+@vaka("CALISMA_SAATLERI",
+      "Musteri hizmetleri calisanina cumartesi 13-22 yazilir (departman 19'da kapanir)")
+def _(g, p):
+    a = _bul(p, lambda x: x.get("ekip") == "MHIZMET")
+    if a is None:
+        raise RuntimeError("temel planda MHIZMET atamasi yok")
+    c = a["calisan"]
+    p[:] = [x for x in p if not (x["calisan"] == c and x["gun"] == 5)]
+    p.append({"calisan": c, "ekip": "MHIZMET", "sablon": "M-AKSAM", "gun": 5,
+              "bas": 13, "bit": 22, "molalar": [{"bas": 17, "bit": 17.5, "tip": "yemek"}]})
+
+
+@vaka("HEDEF_ASIMI", "Hedefi 1 olan hucreye ikinci kisi yazilir")
+def _(g, p):
+    # Hedefi en kucuk hucreyi bul, oraya temel planda olmayan birini ekle.
+    hucre = min((t for t in g["talep"] if t.get("hedef")), key=lambda t: t["hedef"])
+    ekip, gun, saat = hucre["ekip"], hucre["gun"], hucre["saat"]
+    kisiler = [c for c in g["calisanlar"] if ekip in c["ekipler"]
+               and c.get("durum", "aktif") == "aktif"]
+    mesgul = {a["calisan"] for a in p if a["gun"] == gun}
+    bos = next(c for c in kisiler if c["id"] not in mesgul)
+    p.append({"calisan": bos["id"], "ekip": ekip, "sablon": "X", "gun": gun,
+              "bas": max(0, saat - 4), "bit": saat + 4, "molalar": []})
 
 
 @vaka("HAFTA_TATILI", "Bir kisi yedi gunun yedisinde de calisir")
@@ -678,11 +723,17 @@ def kostur(g0, temel_plan, ayrintili=False):
     #   "kirmizi yanabiliyor mu" sorusu hic sorulmamis olur.
     vakasiz = sorted(set(_K.KAYIT) - {k for k, _, _ in VAKALAR})
     for kod in vakasiz:
+        if kod in IHLAL_URETMEZ:
+            # Bilerek vakasiz: kural hesaplama kuralidir, kirmizi yanamaz.
+            print("%-26s %-9s %-9s bilerek vakasiz -- %s"
+                  % (kod, "-", "-", IHLAL_URETMEZ[kod]))
+            continue
         print("%-26s %-9s %-9s VAKASI YOK -- hic sinanmadi" % (kod, "-", "-"))
         eksik += 1
 
     print("-" * 74)
-    print("GOVDESI YAZILI KURAL : %d" % len(_K.KAYIT))
+    print("GOVDESI YAZILI KURAL : %d  (ihlal uretmeyen %d)"
+          % (len(_K.KAYIT), len([k for k in _K.KAYIT if k in IHLAL_URETMEZ])))
     print("VAKASI OLAN          : %d" % len({k for k, _, _ in VAKALAR}))
     print("KIRMIZI YANAN        : %d" % basarili)
     print("EKSIK                : %d" % eksik)

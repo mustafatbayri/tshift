@@ -100,9 +100,21 @@ class Ucler(BaseHTTPRequestHandler):
         if yol == "/solve":
             ayar = govde.pop("_cozucu_ayari", None)
             govde.pop("atamalar", None)          # /solve atama ALMAZ, URETIR
+            # T-38 (1 Ekim): sartname #11.2'nin iki alani artik okunuyor.
+            #   sure_butcesi_sn -> arama butcesi (K-35 sure secimi, K-48:
+            #   model kurma disinda). `_cozucu_ayari.azami_saniye` varsa
+            #   o kazanir (olcum araclari icin).
+            #   istek_id -> ciktiya aynen geri yazilir (#11.3).
+            istek_id = govde.get("istek_id")
+            if govde.get("sure_butcesi_sn") is not None:
+                ayar = dict(ayar or {})
+                ayar.setdefault("azami_saniye", float(govde["sure_butcesi_sn"]))
             try:
                 # Cozucu + bagimsiz dogrulayici + onarim dongusu (#11.7).
-                return self._cevap(200, coz_ve_onar(govde, ayar))
+                cevap = coz_ve_onar(govde, ayar)
+                if istek_id is not None:
+                    cevap["istek_id"] = istek_id
+                return self._cevap(200, cevap)
             except (KeyError, TypeError, ValueError) as e:
                 return self._cevap(400, {
                     "hata": "girdi eksik ya da bicimi yanlis",

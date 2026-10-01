@@ -561,8 +561,10 @@ def _atamalari_cikar(kuruldu, cozucu):
                                     "bit": s + dinlenme_dk / 60.0,
                                     "tip": "dinlenme"})
         molalar.sort(key=lambda mm: mm["bas"])
-        ekip = next((c.get("ekipler", [None])[0]
-                     for c in kuruldu.calisanlar if c["id"] == e), None)
+        # K-50 (T-21): atamanin ekibi SABLONUN ekibidir, yoksa kisinin ilk
+        # ekibi -- modelin kapsama sayimiyla (Model._atama_ekibi) AYNI.
+        kisi = next((c for c in kuruldu.calisanlar if c["id"] == e), None)
+        ekip = kuruldu._atama_ekibi(kisi or {}, sablon)
         cikan.append({"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,
                       "bas": sablon["bas"], "bit": sablon["bit"], "molalar": molalar})
     return cikan
@@ -578,6 +580,7 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
     """
     girdi = kuruldu.girdi
     asgari_tut = asgari_top = hedef_tut = hedef_top = eksik_dk = 0
+    kisiler = {c["id"]: c for c in kuruldu.calisanlar}
     for t, gun, saat in kuruldu._hucreler():
         # ⚠ BURADA `int()` VARDI VE KESIRLI VARDIYA SINIRINI KIRPIYORDU (T-65)
         #   Eski satir: `gun*24 + saat in range(... int(a["bas"]), ... int(a["bit"]))`
@@ -598,8 +601,10 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         #   kopyasina bakilmadi. Ayni hatayi iki yerde aramak gerekiyor --
         #   #7.6'nin bedeli bu.
         an = gun * 24 + saat
+        # K-50: kim sayilir -- modelle ayni olcu (`hepsi`: uyelik).
         sayi = sum(1 for a in atamalar
-                   if a["ekip"] == t.get("ekip")
+                   if kuruldu._sayilir(kisiler.get(a["calisan"], {}),
+                                       kuruldu.sablon[a["sablon"]], t.get("ekip"))
                    and a["gun"] * 24 + a["bas"] <= an
                    < a["gun"] * 24 + a["bit"])
         if t.get("asgari") is not None:
@@ -625,16 +630,12 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
 
     yuzde = lambda tut, top: 100.0 if top == 0 else round(100.0 * tut / top, 2)
     return {
-        # ⚠ BU SAYI OLCULMUYOR, SABIT YAZILIYOR -- T-66.
-        #   Mantik dogru (kisitlar sert, cozum varsa saglanmislar) ama alan
-        #   adi bir OLCUM vaat ediyor: ekranda "0 sert ihlal" yazdiginda
-        #   insan bunu sayilmis sanir. Sayilmadi. Ustelik yalniz MOTORUN
-        #   KENDI kurdugu kisitlari kapsar; govdesi yalniz dogrulayicida
-        #   olan bir kural (ya da hic yazilmamis 12 kural) bu sifira
-        #   girmez. Gercek sayi `dogrulayici.degerlendir`den gelir.
-        #   #11.3 cikti sozlesmesini degistirmek Mustafa'nin karari; o
-        #   karara kadar bekciler DOGRULAYICININ sayisina bakiyor.
-        "sert_ihlal": 0,
+        # ⚠ `sert_ihlal` BURADAN KALDIRILDI -- K-51 (Mustafa, 1 Ekim):
+        #   "Kaldiralim; ihlaller degisken degil sonucta, birinin saptamasi
+        #   bizim icin yeterlidir." Alan sabit sifir yaziyordu, olculmuyordu
+        #   (T-66). Tek dogru sayi bagimsiz dogrulayicininki
+        #   (`dogrulayici.degerlendir` -> metrikler.sert_ihlal / yayin_kapisi).
+        #   Motorun kendi isini kendi onaylamasi #7.6'nin yasakladigi sey.
         "asgari_kapsama_yuzde": yuzde(asgari_tut, asgari_top),
         "hedef_kapsama_yuzde": yuzde(hedef_tut, hedef_top),
         "eksik_hedef_dakika": eksik_dk,

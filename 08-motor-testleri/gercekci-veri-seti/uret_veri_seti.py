@@ -27,6 +27,7 @@ KULLANIM
   py uret_veri_seti.py --olcek 0.1     -> ayni bicim, 35 kisi (olcekleme olcumu)
 """
 
+import copy
 import json
 import random
 import sys
@@ -37,9 +38,30 @@ TOHUM = 20260928
 # Organizasyon -- Mustafa'nin verdigi dagilim
 # ----------------------------------------------------------------------
 EKIPLER = [
-    {"id": "SATIS",      "ad": "Satis",              "kisi": 285, "yedi_yirmidort": True},
-    {"id": "BACKOFFICE", "ad": "Back Office",        "kisi": 145, "yedi_yirmidort": True},
-    {"id": "MHIZMET",    "ad": "Musteri Hizmetleri", "kisi": 70,  "yedi_yirmidort": False},
+    {"id": "SATIS",      "ad": "Satis",              "kisi": 285, "yedi_yirmidort": True,  "departman": "D-SATIS"},
+    {"id": "BACKOFFICE", "ad": "Back Office",        "kisi": 145, "yedi_yirmidort": True,  "departman": "D-BACK"},
+    {"id": "MHIZMET",    "ad": "Musteri Hizmetleri", "kisi": 70,  "yedi_yirmidort": False, "departman": "D-MHIZMET"},
+]
+
+# DEPARTMANLAR -- CALISMA_SAATLERI icin (K-52, Mustafa 1 Ekim: "Sistemde
+# departman tanimi lazim ve ilgili departmana calisma gunleri ile saatlerini
+# tanimlamaliyiz").
+#
+#   Satis ve back office 7/24 (cagri merkezi). Musteri hizmetleri hafta ici
+#   07:00-23:00, hafta sonu 08:00-19:00 -- yani hafta sonu M-AKSAM (13-22) ve
+#   M-AKSAMK (17-21) KAPALI SAATE tasar, kural orada gercekten isirir;
+#   hafta sonu talebi (10-18) M-SABAH, M-UZUN ve M-HSONU ile karsilanir.
+#
+#   Pencere `bit` 24'u asabilir (31 = ertesi gun 07:00): gece yarisini
+#   asan vardiya acik sayilsin diye.
+DEPARTMANLAR = [
+    {"id": "D-SATIS",   "ad": "Satis Departmani",     "ekipler": ["SATIS"],
+     "acik": "7/24"},
+    {"id": "D-BACK",    "ad": "Back Office",           "ekipler": ["BACKOFFICE"],
+     "acik": "7/24"},
+    {"id": "D-MHIZMET", "ad": "Musteri Hizmetleri",    "ekipler": ["MHIZMET"],
+     "acik": [{"gunler": [0, 1, 2, 3, 4], "bas": 7, "bit": 23},
+              {"gunler": [5, 6], "bas": 8, "bit": 19}]},
 ]
 # ⚠ 500 KISI (Mustafa: "350-500"). Oran 200/100/50 ile ayni; en zor ucu
 #   secildi. 28 Eylul setinde 350 kisi vardi.
@@ -290,8 +312,53 @@ def _lider_tabani_uygula(calisanlar):
     return calisanlar
 
 
-def calisanlar_uret(rnd, olcek):
+# YETKINLIK GEREKLILIKLERI (K-52'nin yetkinlik yarisi, Mustafa 1 Ekim:
+# "her birim icin tanimlamaliyiz bu ingilizce kuralini... olabildigince
+# kompleks kurgu"). Her satir: ekip, yetkinlik, saatler, asgari, taban.
+#
+#   Taban hesabi liderdekiyle ayni: pencere / en uzun vardiya -> gunde kac
+#   kisi; x7 gun / 6 is gunu; +1 izin payi; asgari ile carp.
+#     SATIS   ingilizce 08-20 asgari 2 : 2 kisi/gun -> 14/6 -> 3+1 = 4, x2 = 8
+#     BACK    ingilizce 08-18 asgari 1 : 1 kisi/gun ->  7/6 -> 2+1 = 3
+#     MHIZMET ingilizce 08-22 asgari 1 : 2 kisi/gun -> 14/6 -> 3+1 = 4
+#     MHIZMET almanca   10-16 asgari 1 : 1 kisi/gun ->  7/6 -> 2+1 = 3
+YETKINLIK_GEREKLILIKLERI = [
+    {"ekip": "SATIS",      "yetkinlik": "ingilizce", "saatler": list(range(8, 20)),  "asgari": 2, "taban": 8},
+    {"ekip": "BACKOFFICE", "yetkinlik": "ingilizce", "saatler": list(range(8, 18)),  "asgari": 1, "taban": 3},
+    {"ekip": "MHIZMET",    "yetkinlik": "ingilizce", "saatler": list(range(8, 22)),  "asgari": 1, "taban": 4},
+    {"ekip": "MHIZMET",    "yetkinlik": "almanca",   "saatler": list(range(10, 16)), "asgari": 1, "taban": 3},
+]
+
+
+def _yetkinlik_tabani_uygula(calisanlar):
+    """Her gereklilik icin ekipte gunduz yazilabilecek en az `taban` kisi o
+    yetkinligi tasisin -- lider tabaniyla ayni mantik ve ayni dar aday
+    sirasi (tam zamanli, aktif, izinsiz). Var olan tasiyici sayilir; eksik
+    kalirsa adaylara yetkinlik EKLENIR (listeye; var olanlar silinmez)."""
+    ekipler = {}
+    for c in calisanlar:
+        for e in (c.get("ekipler") or []):
+            ekipler.setdefault(e, []).append(c)
+    for g in YETKINLIK_GEREKLILIKLERI:
+        kisiler = ekipler.get(g["ekip"], [])
+        uygun = [c for c in kisiler
+                 if c.get("durum", "aktif") == "aktif" and not c.get("izinler")
+                 and (c.get("sozlesme") or {}).get("tip") == "tam_zamanli"]
+        tasiyan = [c for c in uygun if g["yetkinlik"] in (c.get("yetkinlikler") or [])]
+        if len(tasiyan) >= g["taban"]:
+            continue
+        for c in uygun:
+            if len(tasiyan) >= g["taban"]:
+                break
+            if g["yetkinlik"] not in (c.get("yetkinlikler") or []):
+                c["yetkinlikler"] = list(c.get("yetkinlikler") or []) + [g["yetkinlik"]]
+                tasiyan.append(c)
+    return calisanlar
+
+
+def calisanlar_uret(rnd, olcek, rnd_yil=None):
     """Calisan listesi -- sozlesme, rol, yetkinlik, izin, uygunluk, devir yuku."""
+    rnd_yil = rnd_yil or random.Random(TOHUM + 1)
     cikan = []
     sira = 1
     for ekip in EKIPLER:
@@ -309,6 +376,17 @@ def calisanlar_uret(rnd, olcek):
                 "uygunluk": [],
                 "devir_yuk": {"gece": 0, "hafta_sonu": 0, "saat": 0, "cumartesi": 0},
                 "gecmis_vardiyalar": [],
+                # YILLIK_FAZLA_MESAI_TAVANI (1 Ekim, K-49 ile govdesi yazildi):
+                # yil ici fazla mesai toplami. Ekim ortasi icin cogunluk 0-150
+                # saat (tavana uzak, kural zorlanmaz); her 50 kisiden biri
+                # 262-269 saatte -- tavana 1-8 saat kalmis, kural ISIRIR.
+                # ⚠ VARSAYIM: gercek dagilim bilinmiyor (06-veri/anonim bos).
+                # Ayri tohumlu uretecle: ana uretecin sirasi bozulmasin, 30
+                # Eylul'den beri uretilen sahne (izin, yetkinlik, uygunluk)
+                # AYNEN kalsin.
+                "yil_ici_fazla_mesai_saat": (rnd_yil.randint(262, 269)
+                                             if rnd_yil.random() < 0.02
+                                             else rnd_yil.randint(0, 150)),
             }
 
             # PART_TIME_LIMIT + UYGUNLUK_TAKVIMI: part-time'lerin bir kisminin
@@ -526,17 +604,15 @@ def kurallar_uret():
            rol="takim_lideri", ekip=e["id"], asgari=1,
            saatler=list(range(GUNDUZ_BAS, GUNDUZ_BIT)))
 
-    # --- YETKINLIK_KAPSAMASI: gereklilik satiri HENUZ YOK ---
+    # --- YETKINLIK_KAPSAMASI: her gereklilik AYRI satir (1 Ekim, T-63 kapandi) ---
     #
-    # ⚠ BILEREK PARAMETRESIZ. Mustafa 30 Eylul'de yalniz rol tarafina
-    #   gereklilik verdi; yetkinlik tarafi ("musteri hizmetlerinde her saat
-    #   ingilizce" gibi) karara baglanmadi. Sahnede veri DURUYOR: teknik,
-    #   almanca, ingilizce, iade yetkinlikleri dagitilmis.
-    #
-    #   Parametresiz birakmak SESSIZ DEGIL: dogrulayici `eksik_boyutlar`
-    #   kanalindan "hangi niteligin arandigi bilinmiyor -- denetlenemedi"
-    #   diye bildiriyor. T-63'un acik kalan yarisi bu.
-    ek("YETKINLIK_KAPSAMASI", "SERT", kabul=False)
+    # Mustafa: "her birim icin tanimlamaliyiz bu ingilizce kuralini."
+    # Satirlar YETKINLIK_GEREKLILIKLERI'nde; ticari tercih, kabul edilebilir
+    # (K-24 satir bazli bayrak). Olcu atanmis olmaktir (K-41).
+    for g in YETKINLIK_GEREKLILIKLERI:
+        ek("YETKINLIK_KAPSAMASI", "SERT", kabul=True,
+           yetkinlik=g["yetkinlik"], ekip=g["ekip"], asgari=g["asgari"],
+           saatler=list(g["saatler"]))
 
     # --- Hafta olcekli iki kural (30 Eylul) -- katalogun varsayilanlariyla ---
     #
@@ -552,15 +628,30 @@ def kurallar_uret():
        azami_ardisik_gece_haftasi=1)
     ek("ARDISIK_HAFTA_SONU_LIMIT", "SERT", kabul=True, azami_ardisik=2)
 
+    # --- 1 Ekim'de govdesi yazilanlar (K-49 kapiyi kapatinca) ---
+    # YILLIK_FAZLA_MESAI_TAVANI: yasal, 270 saat; calisanlarda yil ici toplam
+    # var, her 50 kisiden biri tavanin kiyisinda. GECE_YARISI_ASAN: hesaplama
+    # kurali, govdesi "ihlal uretmez" diye kayitli (T-67).
+    ek("YILLIK_FAZLA_MESAI_TAVANI", "SERT", yasal=True, kabul=False,
+       azami_saat_yil=270)
+    ek("GECE_YARISI_ASAN", "SERT", kabul=False)
+
+    # HEDEF_ASIMI (K-53, 1 Ekim, T-54): hedefi asan kisi-saat ceza --
+    # YUMUSAK; agirlik profilden (#5.4). Bir saatin bedeli artik var.
+    ek("HEDEF_ASIMI", "YUMUSAK")
+
+    # CALISMA_SAATLERI (K-52, 1 Ekim): departman calisma saatleri
+    # DEPARTMANLAR'da; kapali saate tasan vardiya yazilamaz. Firma kurali,
+    # kabul edilebilir.
+    ek("CALISMA_SAATLERI", "SERT", kabul=True)
+
     # --- govdesi YAZILMAMIS olanlar (uygulanmayan_kurallar atessin) ---
+    # Dort yumusak kural: K-49 ile yalniz raporlanir, kapiyi etkilemez.
     for kod, tur, yasal in (
-            ("GECE_YARISI_ASAN", "SERT", False),
-            ("CALISMA_SAATLERI", "SERT", False),
             ("EKIP_SUREKLILIGI", "YUMUSAK", False),
             ("PLAN_KARARLILIGI", "YUMUSAK", False),
             ("TERCIH_KARSILAMA", "YUMUSAK", False),
-            ("VARDIYA_ROTASYON_YONU", "YUMUSAK", False),
-            ("YILLIK_FAZLA_MESAI_TAVANI", "SERT", True)):
+            ("VARDIYA_ROTASYON_YONU", "YUMUSAK", False)):
         ek(kod, tur, yasal=yasal, kabul=False)
     return K
 
@@ -579,7 +670,9 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
       soylenemez.
     """
     rnd = random.Random(TOHUM)
-    calisanlar = _lider_tabani_uygula(calisanlar_uret(rnd, olcek))
+    rnd_yil = random.Random(TOHUM + 1)       # yil ici fazla mesai icin ayri akis
+    calisanlar = _yetkinlik_tabani_uygula(
+        _lider_tabani_uygula(calisanlar_uret(rnd, olcek, rnd_yil)))
 
     # Talep, kapasitenin `doluluk` katina gelecek sekilde olceklenir.
     kapasite = kapasite_saat(calisanlar)
@@ -661,8 +754,14 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
             "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
             "Hafta ici ve hafta sonu esikleri AYRI.",
             "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-            "Katalogdaki 40 kuralin TAMAMI tanimli: 33'u degerlendirilir,",
-            "7'si `uygulanmayan_kurallar` kanalini atesler.",
+            "Katalogdaki 41 kuralin TAMAMI tanimli: 37'si degerlendirilir,",
+            "4 yumusak kural `uygulanmayan_kurallar` kanalini atesler (yalniz",
+            "rapor -- K-49).",
+            "Departman calisma saatleri: satis ve back office 7/24, musteri",
+            "hizmetleri hafta ici 07-23, hafta sonu 08-19 (K-52).",
+            "Yetkinlik gereklilikleri: satis 2 ingilizce (08-20), back office",
+            "1 ingilizce (08-18), musteri hizmetleri 1 ingilizce (08-22) ve",
+            "1 almanca (10-16) -- tabanlar lider tabaniyla ayni hesapla.",
             "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
             "Tohum sabit (%d) -- ayni girdi ayni dosyayi uretir." % TOHUM,
         ],
@@ -681,6 +780,16 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
         "kilitler": kilitler,
         "sabit_atamalar": [],
         "devir_kapsama": [],
+        # K-49 / T-18: kontrol edilemeyen kural kapidan gecemez. Bu sette
+        # artik kabul kaydi GEREKMIYOR -- yetkinlik gereklilikleri yazildi
+        # (T-63), calisma saatleri departman tanimiyla geldi (K-52). Alan
+        # bos ama acikca yazili: okuyan "yok" ile "unutulmus"u ayirsin.
+        "denetim_disi_kabul": [],
+        # K-52: departmanlar ve calisma saatleri.
+        "departmanlar": copy.deepcopy(DEPARTMANLAR),
+        # K-50: cok ekipli calisan sayimi. Bu sette herkes TEK ekipte;
+        # varsayilan (`hepsi`) acikca yazili ki okuyan bilsin.
+        "cok_ekipli_sayim": "hepsi",
         "_olcek": olcek,
     }
 

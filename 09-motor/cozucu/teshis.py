@@ -52,16 +52,26 @@ def ulasilamayan_hucre(girdi, kuruldu):
     bu, gec cevap vermekten daha kotu olurdu.
     """
     gunler = list(kuruldu.gunler)
+    # K-50 `hepsi`: baska ekibin sablonu da bu hucreye ulasabilir -- o
+    # sablona girebilen VE bu ekibe uye bir calisan varsa. (Gece 00-06
+    # satis vardiyasindaki cok ekipli kisi backoffice talebini kapatir.)
+    hepsi = kuruldu.cok_ekipli_sayim == "hepsi"
     for t, gun, saat in kuruldu._hucreler():
         if not t.get("asgari"):
             continue
         hedef = _q(gun, saat)
         for sablon in kuruldu.sablonlar:
             if sablon.get("ekip") is not None and sablon.get("ekip") != t.get("ekip"):
-                continue
+                if not hepsi or not any(
+                        t.get("ekip") in (c.get("ekipler") or [])
+                        and sablon.get("ekip") in (c.get("ekipler") or [])
+                        for c in kuruldu.calisanlar):
+                    continue
             izinli = sablon.get("gunler", gunler)
             for d in gunler:
                 if d not in izinli:
+                    continue
+                if kuruldu._departman_kapali_mi(sablon, d):     # K-52
                     continue
                 if hedef in _dilimler(d, sablon["bas"], sablon["bit"]):
                     break
@@ -183,6 +193,10 @@ def _uygun_kisiler(girdi, kuruldu, ekip, gun, saat):
             continue
         uygun_mu = False
         for t in kuruldu.sablonlar:
+            # K-50: yalniz bu ekibe SAYILAN sablonlar -- cozucunun kapsama
+            # sayimiyla ayni olcu (`hepsi`: uyelik; `tek`: vardiyanin ekibi).
+            if not kuruldu._sayilir(c, t, ekip):
+                continue
             kapsiyor = gun * 24 + int(t["bas"]) <= dilim < gun * 24 + int(t["bit"])
             if not kapsiyor:
                 continue

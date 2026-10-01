@@ -4,6 +4,48 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (gece) · K-51 sahte sert ihlal sayısı kaldırıldı · K-52 departman çalışma saatleri + her birim için yetkinlik · K-53 hedefi aşan saate ceza · T-38 sıralandı**
+Mustafa'nın dört kararı. **K-51:** çözücü çıktısındaki `metrikler.sert_ihlal`
+(hep sıfır, ölçülmüyordu) kaldırıldı; altın senaryo testi beklentiyi bağımsız
+denetimden okuyor. **K-52:** girdiye `departmanlar[]` (ekipler + `acik`:
+"7/24" ya da gün gün pencereler); `CALISMA_SAATLERI` gövdesi iki yarıda —
+çözücü kapalı saate taşan şablon-gün çiftlerini kapatıp not düşüyor, ön
+kontrol kapalı şablonu ulaşıyor saymıyor, doğrulayıcı ihlal yazıyor, tanımsız
+departman "denetlenemedi"; veri setinde müşteri hizmetleri hafta içi 07–23,
+hafta sonu 08–19. Her birim için yetkinlik gerekliliği (4 satır) ve üreticide
+taşıyıcı tabanı; iki kabul kaydı kalktı (T-63 kapandı). **K-53:** `HEDEF_ASIMI`
+yumuşak kural, ağırlık profilden (3/1/4), hedefin altı her profilde daha
+pahalı; T-54 kapandı. **T-38:** seviye 🟡, sıra verildi; `sure_butcesi_sn`
+arama bütçesi, `istek_id` çıktıya geri — servis testi gerçek HTTP ile.
+Motor **481 test**, mutasyon **166** (yeni gruplar: çalışma saatleri 8, hedef
+aşımı 4 — hepsi öldü), vaka aracı 37 gövde · 36 vaka · 36 kırmızı, bekçi 20
+(7 dk 41 sn), altın senaryolar 12. ⚠ Tam ölçek bu değişikliklerden sonra
+yeniden koşulmalı.
+→ `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py` · `denetle.py` · `09-motor/servis.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-51…K-53 · `02-spec/v1.4-master-spec.md` değişiklik 39–42
+
+**2026-10-01 (akşam) · K-49 yayın kapısı "bakamadım"ı görüyor · K-50 çok yetenekli çalışan bütün ekiplerine sayılır · yıllık fazla mesai tavanının gövdesi yazıldı · T-18, T-21, T-67 kapandı**
+Mustafa iki kararı verdi. **K-49 (T-18):** motorun kontrol edemediği aktif
+kural kapıdan geçemez — yasal+sert **engeller**, firma+sert yetkili gerekçe
+yazarak kabul edene kadar **bekler** (`girdi.denetim_disi_kabul`), yumuşak
+yalnız **raporlanır**; iki kanal kapıya bağlı (`uygulanmayan_kurallar`,
+`eksik_boyutlar[denetlenemedi]`), kırpma raporları hariç. Kapı kapanınca
+veri seti üç yerden ısırdı: parametresiz yetkinlik kuralı ve gövdesiz
+çalışma saatleri kuralı için gerekçeli kabul kaydı; **yıllık fazla mesai
+tavanı yasal ve gövdesizdi → gövdesi yazıldı** (iki yarıda: yıl içi toplam
+`yil_ici_fazla_mesai_saat`, biliniyorsa bu haftanın fazla mesaisi kalan payı
+aşamaz, bilinmiyorsa K-42 ile atlanır ve bildirilir; veri setinde her 50
+kişiden biri tavanın kıyısında). Gece yarısını aşan vardiya kuralı *"ihlal
+üretmez"* diye kayıtlı, vaka aracına *"bilerek vakasız"* sınıfı (T-67).
+**K-50 (T-21):** sabah önerdiğimin tersi — Mustafa'nın sahasında hem satış
+hem backoffice yapabilen kişi o saatte iki birim için de yer doldurur; atama
+üye olduğu **bütün ekiplere** sayılır (kişi sayısı ve nitelik), çıktıdaki
+`ekip` vardiyanın ekibi, görünürlük `metrikler.baska_ekipten_kapsama`,
+kiracı seçeneği `cok_ekipli_sayim: "tek"`. Değişen taraf doğrulayıcı.
+Motor **459 test**, mutasyon **154** (yeni gruplar kapı 6, çok ekipli 11,
+yıllık 9 — hepsi öldü), 35 gövde · 34 vaka · 34 kırmızı. Şartname: §4.5,
+§6.2, §8.2, §11.2, §11.4; değişiklik listesi 36–38.
+→ `09-motor/dogrulayici/denetle.py` · `kurallar.py` · `09-motor/cozucu/model.py` · `coz.py` · `teshis.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-49, K-50
+
 **2026-10-01 (öğlen) · Tam ölçek sınavı geçti · şartname yazı borcu ödendi · mutasyon 128/128**
 Mustafa'nın 900 sn koşusu: birinci aşama **10,3 sn** (üç koşudur 120 sn'de
 başarısızdı), ana aşamada ilk plan **48,9 sn**, 2.476 atama, 0 sert,

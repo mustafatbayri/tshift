@@ -112,6 +112,13 @@ AGIRLIK_TABLOSU = {
     "PLAN_KARARLILIGI":      {"DENGELI": 6, "KAPSAMA": 6,  "CALISAN": 6},
     "MOLA_KAPSAMASI":        {"DENGELI": 7, "KAPSAMA": 9,  "CALISAN": 6},
     "VARDIYA_ROTASYON_YONU": {"DENGELI": 3, "KAPSAMA": 1,  "CALISAN": 6},
+    # HEDEF_ASIMI -- K-53 (Mustafa, 1 Ekim: "Ceza ile ilerleyelim. Ucret
+    # tarafi hic gelmeyebilir."). Hedefin USTUNE cikan her kisi-saat ceza.
+    # Hedefin ALTINDA kalmak (HEDEF_KAPSAMA) her profilde daha pahali:
+    # eksik kisi musteri kaybidir, fazla kisi paradir; ikisi ayni kefede
+    # degil. CALISAN profilinde fazlalik daha pahali (gereksiz saat
+    # yazilmasin), KAPSAMA profilinde neredeyse bedava.
+    "HEDEF_ASIMI":           {"DENGELI": 3, "KAPSAMA": 1,  "CALISAN": 4},
 }
 
 # #6 FAZLA_MESAI_TAVANI.azami_saat_hafta de profile baglidir (#5.2 tablosu):
@@ -532,6 +539,11 @@ def _mola_dilimleri(gun, sablon, baslangic, dakika=None):
                       _q(gun, baslangic) + _ceyrek_yukari(dk / 60.0)))
 
 
+def _ss(saat):
+    """Genisletilmis saati HH:MM yazar (25.5 -> 25:30)."""
+    return "%02d:%02d" % (int(saat), int(round((saat - int(saat)) * 60)))
+
+
 def _ceyrek_yukari(saat):
     """Sure kac CEYREK kaplar -- kesirli ceyrek YUKARI yuvarlanir (T-78).
 
@@ -589,6 +601,51 @@ def _kural(girdi, kod):
     return None
 
 
+# ----------------------------------------------------------------------
+# Departman calisma saatleri -- CALISMA_SAATLERI, K-52 (Mustafa, 1 Ekim)
+# ----------------------------------------------------------------------
+#
+# "Sistemde departman tanimi lazim ve ilgili departmana calisma gunleri ile
+#  saatlerini tanimlamaliyiz." Girdi:
+#
+#   "departmanlar": [
+#     {"id": "D-SATIS", "ekipler": ["SATIS"], "acik": "7/24"},
+#     {"id": "D-MH", "ekipler": ["MHIZMET"],
+#      "acik": [{"gunler": [0,1,2,3,4], "bas": 7, "bit": 23},
+#               {"gunler": [5, 6], "bas": 8, "bit": 19}]}]
+#
+# Pencere `bit` 24'u asabilir (31 = ertesi gun 07:00). Vardiya acik sayilir
+# <=> basladigi gunun BIR penceresi vardiyanin tamamini kapsar. Ekibin
+# departmani ya da departmanin saatleri yoksa TANIMSIZ: kisit yazilmaz,
+# dogrulayici `eksik_boyutlar` ile "denetlenemedi" der (K-49 kapiya tasir).
+#
+# ⚠ Dogrulayicida AYNI mantik ayrica yazili (kurallar.py, departman_acik_mi)
+#   -- #7.6 iki tarafin ortak modul kullanmasini yasakliyor.
+
+def departman_saatleri(girdi):
+    """ekip -> "7/24" | [ {gunler, bas, bit}, ... ] | None (tanimsiz)."""
+    cikan = {}
+    for d in girdi.get("departmanlar", []) or []:
+        acik = d.get("acik")
+        for e in d.get("ekipler") or []:
+            cikan[e] = acik
+    return cikan
+
+
+def departman_acik_mi(saatler, ekip, gun, bas, bit):
+    """True/False, ya da None (ekibin saatleri tanimsiz)."""
+    acik = saatler.get(ekip)
+    if acik is None:
+        return None
+    if acik == "7/24":
+        return True
+    for pencere in acik:
+        if gun % 7 in (pencere.get("gunler") or range(7)) \
+                and pencere["bas"] - 1e-9 <= bas and bit <= pencere["bit"] + 1e-9:
+            return True
+    return False
+
+
 def _par(kural, ad, varsayilan):
     if not kural:
         return varsayilan
@@ -624,6 +681,16 @@ class Model(object):
         self.notlar = []     # uygulanmayan/atlanan seyler -- sessiz gecmemek icin
         self.profil = self._profil_sec(girdi.get("profil"))
         self.mola_penceresi = self._mola_penceresi_sec()
+        # K-52: departman calisma saatleri (CALISMA_SAATLERI aktifse).
+        self._calisma_saatleri_aktif = _kural(girdi, "CALISMA_SAATLERI") is not None
+        self._departman_saatleri = departman_saatleri(girdi)
+        # K-50: cok ekipli calisan sayimi -- "hepsi" (varsayilan) | "tek".
+        # Dogrulayici ayni alani ayni varsayilanla okur (kurallar.cok_ekipli_sayim).
+        mod = girdi.get("cok_ekipli_sayim") or "hepsi"
+        self.cok_ekipli_sayim = mod if mod in ("hepsi", "tek") else "hepsi"
+        if girdi.get("cok_ekipli_sayim") not in (None, "hepsi", "tek"):
+            self.notlar.append("cok_ekipli_sayim %r taninmadi; 'hepsi' uygulandi"
+                               % (girdi.get("cok_ekipli_sayim"),))
         self.yemek_dk = {t["id"]: self._yemek_dk_sec(t) for t in self.sablonlar}
         self.dinlenme_tanim = {t["id"]: self._dinlenme_sec(t) for t in self.sablonlar}
         self.dinlenme = {}   # (e,d,t,i,s) -> BoolVar
@@ -843,6 +910,18 @@ class Model(object):
         return sy, secim
 
     def _degiskenler(self):
+        # K-50 `tek` sayimda ekibi yazilmamis sablon cok ekipli calisanda
+        # kisinin ILK ekibine sayilir -- sessiz degil, nota yazilir.
+        cok_ekipli = [c["id"] for c in self.calisanlar
+                      if len(c.get("ekipler") or []) > 1]
+        if self.cok_ekipli_sayim == "tek":
+            for t in self.sablonlar:
+                if t.get("ekip") is None and cok_ekipli:
+                    self.notlar.append(
+                        "sablon %s ekipsiz; cok ekipli calisan (%s) bu sablonda "
+                        "yalniz ILK ekibine sayilir (K-50, tek sayim)"
+                        % (t["id"], ", ".join(cok_ekipli[:5])
+                           + (" ..." if len(cok_ekipli) > 5 else "")))
         for t in self.sablonlar:
             if not self._mola_politikasi_yerlesir_mi(t):
                 self.notlar.append(
@@ -960,6 +1039,43 @@ class Model(object):
                     if d not in izinli:
                         if (c["id"], d, t["id"]) in self.x:
                             self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+        self._kapali_saatleri_kapat()
+
+    def _departman_kapali_mi(self, t, d):
+        """Bu sablon bu gun departmanin KAPALI saatine tasiyor mu (K-52).
+        Ekibin saatleri tanimsizsa False -- kisit yazilmaz, dogrulayici
+        bildirir. Sablonun ekibi yoksa kural bakamaz (False)."""
+        if not self._calisma_saatleri_aktif:
+            return False
+        ekip = t.get("ekip")
+        if ekip is None:
+            return False
+        acik = departman_acik_mi(self._departman_saatleri, ekip, d, t["bas"], t["bit"])
+        return acik is False
+
+    def _kapali_saatleri_kapat(self):
+        """CALISMA_SAATLERI (K-52): departman kapaliyken atama yapilamaz.
+        Sablon x gun ciftleri kapatilir, her cift icin bir not yazilir."""
+        kapali = set()
+        for t in self.sablonlar:
+            for d in self.gunler:
+                if self._departman_kapali_mi(t, d):
+                    kapali.add((t["id"], d))
+                    self.notlar.append(
+                        "sablon %s gun %d: departman kapali (%s ekibi, %s-%s), "
+                        "atama yapilamaz (CALISMA_SAATLERI)"
+                        % (t["id"], d, t.get("ekip"), _ss(t["bas"]), _ss(t["bit"])))
+        for (e, d, tid), v in self.x.items():
+            if (tid, d) in kapali:
+                self.m.Add(v == 0)
+        tanimsiz = sorted({t.get("ekip") for t in self.sablonlar
+                           if self._calisma_saatleri_aktif
+                           and t.get("ekip") is not None
+                           and t.get("ekip") not in self._departman_saatleri})
+        for ekip in tanimsiz:
+            self.notlar.append(
+                "%s ekibinin departman calisma saatleri tanimsiz; "
+                "CALISMA_SAATLERI bu ekip icin kisit yazamadi (K-52)" % ekip)
 
     def _gunde_tek_vardiya(self):
         """CAKISMA_YOK + gunde tek vardiya.
@@ -1161,6 +1277,12 @@ class Model(object):
         # #5.2: tavan profile baglidir. Kuralin kendi parametresi DENGELI
         # sutununun yazili halidir; profil onu ezer (bkz. _agirlik notu).
         fm_tavan = FAZLA_MESAI_PROFIL[self.profil]
+        # YILLIK_FAZLA_MESAI_TAVANI (Is K. md. 41, 270 saat) -- 1 Ekim, K-49
+        # ile yazildi. Yil ici toplami BILINEN calisanda bu haftanin fazla
+        # mesaisi kalan payi asamaz; bilinmeyende kisit yok, dogrulayici
+        # `gecmis_eksik` ile bildirir (K-42).
+        yillik_kural = _kural(self.girdi, "YILLIK_FAZLA_MESAI_TAVANI")
+        yillik_azami = _par(yillik_kural, "azami_saat_yil", 270)
 
         for c in self.calisanlar:
             for d in self.gunler:
@@ -1172,6 +1294,19 @@ class Model(object):
             # Dakika cinsinden tam sayi calisilir; float kisit CP-SAT'e girmez.
             dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
                          for d in self.gunler for t in self._sablonlari(c))
+            # Bu kisinin fazla mesai payi: profil tavani, yillik kalanla kirpilir.
+            fm_pay = fm_tavan if fm_kural else 0
+            if yillik_kural and c.get("yil_ici_fazla_mesai_saat") is not None:
+                kalan = max(0.0, float(yillik_azami)
+                            - float(c["yil_ici_fazla_mesai_saat"]))
+                if kalan < fm_pay:
+                    fm_pay = kalan
+                    self.notlar.append(
+                        "%s: yil ici fazla mesai %.1f saat, yillik tavana %.1f "
+                        "saat kaldi; bu hafta fazla mesai payi %.1f saate "
+                        "indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+                        % (c["id"], float(c["yil_ici_fazla_mesai_saat"]),
+                           kalan, fm_pay))
 
             # K-38 -- HAFTALIK_AZAMI *NORMAL CALISMA* SINIRIDIR, TOPLAM TAVAN DEGIL
             #
@@ -1198,7 +1333,7 @@ class Model(object):
             #
             # ⚠ TAVAN KALKMADI, YERI DEGISTI: toplam hala sinirli, ama sinir
             #   artik "normal calisma + fazla mesai tavani".
-            self.m.Add(dakika <= int((haftalik + (fm_tavan if fm_kural else 0)) * 60))
+            self.m.Add(dakika <= int(round((haftalik + fm_pay) * 60)))
 
             soz = c.get("sozlesme") or {}
             tavan = soz.get("haftalik_saat")
@@ -1238,7 +1373,7 @@ class Model(object):
                 #   gelene kadar bu acik durur (bkz. 06-ACIK-RISKLER T-54).
                 self.m.Add(dakika <= int(pt_tavan * 60))
             elif tavan is not None:
-                self.m.Add(dakika <= int((tavan + (fm_tavan if fm_kural else 0)) * 60))
+                self.m.Add(dakika <= int(round((tavan + fm_pay) * 60)))
                 # Fazla mesai YUMUSAK cezayla sifira itilir (A1: esit 0).
                 #
                 # K-30 (Mustafa, 16 Eylul): "Zaten hedef hic gitmemek.
@@ -1549,15 +1684,55 @@ class Model(object):
                 continue
             yield t, gun, saat
 
+    def _atama_ekibi(self, c, t):
+        """Atamanin VARDIYA EKIBI -- ciktidaki `ekip` alani (K-50, 1 Ekim).
+
+        Sablonun ekibi varsa o; yoksa calisanin ILK ekibi. Bu alan atamanin
+        hangi vardiyada oldugunu soyler; KAPSAMAYA KIMIN SAYILDIGINI
+        `_sayilir` soyler, ikisi ayri sey.
+        """
+        ekip = t.get("ekip")
+        if ekip is not None:
+            return ekip
+        ekipler = c.get("ekipler") or []
+        return ekipler[0] if ekipler else None
+
+    def _sayilir(self, c, t, ekip):
+        """Bu kisi bu sablondayken BU EKIBIN kapsamasina sayilir mi -- K-50.
+
+        MUSTAFA (1 Ekim): "Sahada hem satis hem backoffice yapabilen
+          elemanlar var. O saatte o eleman iki birim elemani icin yer
+          doldurmus sayilir. Gece 12'den sonra backoffice talebi yok denecek
+          kadar azaliyor; oraya asil isi satis ama backoffice yetenegi olan
+          bir eleman konuyor, sorun sahada cozulmus oluyor."
+
+        Varsayilan `hepsi`: kisi uye oldugu BUTUN ekiplere sayilir -- talep
+        sayisi "o yetenekte hazir bulunan kisi"dir, adanmis beden degil.
+        Kiraci `tek` derse (girdi.cok_ekipli_sayim) atama yalniz vardiyanin
+        ekibine sayilir (ekipsiz sablonda kisinin ilk ekibine).
+
+        ⚠ T-21 (16 Eylul dis incelemesi) bunu "modelin inanci yanlis" diye
+          acmisti: cozucu `hepsi` gibi sayiyor, dogrulayici `tek` gibi
+          sayiyordu; iki taraf ayni plan icin farkli konusuyordu. Karar
+          cozucuyu degil dogrulayiciyi degistirdi. Gorunurluk dogrulayicida:
+          `metrikler.baska_ekipten_kapsama`.
+        """
+        if self.cok_ekipli_sayim == "tek":
+            return self._atama_ekibi(c, t) == ekip
+        return ekip in (c.get("ekipler") or [])
+
     def _atanmis(self, ekip, gun, saat):
-        """O hucreye ATANMIS kisiler -- mola DUSULMEZ (ASGARI/HEDEF_KAPSAMA)."""
+        """O hucreye ATANMIS kisiler -- mola DUSULMEZ (ASGARI/HEDEF_KAPSAMA).
+
+        K-50: kim sayilir, `_sayilir` soyler."""
         dilim = _q(gun, saat)
         return [self._X(c["id"], d, t["id"])
                 for c in self.calisanlar
                 if ekip in (c.get("ekipler") or [])
                 for d in self.gunler
                 for t in self._sablonlari(c)
-                if dilim in _dilimler(d, t["bas"], t["bit"])]
+                if self._sayilir(c, t, ekip)
+                and dilim in _dilimler(d, t["bas"], t["bit"])]
 
     def _sahada(self, ekip, gun, saat):
         """O hucrede SAHADA olanlar -- BUTUN molalar dusulur (MOLA_KAPSAMASI).
@@ -1597,6 +1772,8 @@ class Model(object):
                 continue
             for d in self.gunler:
                 for t in self._sablonlari(c):
+                    if not self._sayilir(c, t, ekip):        # K-50
+                        continue
                     if dilim not in _dilimler(d, t["bas"], t["bit"]):
                         continue
                     yemek_dk = self.yemek_dk[t["id"]]
@@ -1623,6 +1800,12 @@ class Model(object):
         mola_kural = _kural(self.girdi, "MOLA_KAPSAMASI")
         hedef_agirlik = self._agirlik("HEDEF_KAPSAMA", hedef_kural)
         mola_agirlik = self._agirlik("MOLA_KAPSAMASI", mola_kural)
+        # HEDEF_ASIMI (K-53, T-54): hedefi ASAN kisi-saat ceza. Bu olmadan
+        # bir saatin bedeli yoktu; 4 yari zamanli, 1 kisilik talep icin
+        # dordu de 45 saate dolduruluyordu (29 Eylul'de olculdu).
+        asim_kural = _kural(self.girdi, "HEDEF_ASIMI")
+        asim_agirlik = self._agirlik("HEDEF_ASIMI", asim_kural) if asim_kural else 0
+        kisi_sayisi = max(1, len(self.calisanlar))
         # SAHADA_ASGARI (K-33): firmanin "sahada en az N kisi" cumlesi.
         # Talep tablosunun `asgari`si ile SINIRLANMAZ -- ikisi ayri sey
         # soyler, ikisi de SERT, kati olan baglar. Ayrintisi ve bir kez
@@ -1638,6 +1821,10 @@ class Model(object):
                 eksik = self.m.NewIntVar(0, t["hedef"], "he_%d_%d" % (gun, saat))
                 self.m.Add(eksik >= t["hedef"] - sum(atanmis))
                 self.cezalar.append((hedef_agirlik, eksik))
+            if asim_kural and t.get("hedef") is not None:
+                asim = self.m.NewIntVar(0, kisi_sayisi, "ha_%d_%d" % (gun, saat))
+                self.m.Add(asim >= sum(atanmis) - t["hedef"])
+                self.cezalar.append((asim_agirlik, asim))
             # MOLA_KAPSAMASI (yumusak) -- K-34: hucrenin DORT ceyregi ayri
             # ayri olculur ama CEZA DEGISKENI TEK KALIR ve hucrenin EN KOTU
             # anini tasir.
@@ -1713,12 +1900,9 @@ class Model(object):
           tutulmuyorsa ihlal yazar. Yuksek sesle yanlis, sessizce
           cozumsuzdan iyidir (#7.6).
 
-        ⚠ COK EKIPLI CALISAN -- T-21'in kapsami, burada COZULMEDI.
-          Bu govde kisiyi `ekipler` uyeligine gore suzuyor (`_atanmis` ile
-          ayni gelenek). Cikti tarafinda atamanin `ekip` alani kisinin
-          ILK ekibi olarak yaziliyor (coz.py), yani cok ekipli bir kiside
-          iki taraf ayrisabilir. Bugunku veri setinde 500 calisanin
-          hepsi TEK ekipte, yani ayrisma teorik. Karar T-21'de bekliyor.
+        ⚠ COK EKIPLI CALISAN -- T-21, K-50 (1 Ekim) ile KAPANDI.
+          Kim sayilir, `_sayilir` soyler (varsayilan: uye oldugu butun
+          ekiplere); dogrulayici ayni olcuyu kullanir.
         """
         for kod, alan in (("YETKINLIK_KAPSAMASI", "yetkinlikler"),
                           ("ROL_KAPSAMASI", "operasyonel_rol")):
@@ -1774,11 +1958,13 @@ class Model(object):
                     continue
 
                 for dilim in sorted(dilimler):
+                    # K-50: ekip verildiyse yalniz o ekibe SAYILAN atamalar.
                     var = [self._X(c["id"], d, t["id"])
                            for c in uygun
                            for d in self.gunler
                            for t in self._sablonlari(c)
-                           if dilim in _dilimler(d, t["bas"], t["bit"])]
+                           if (ekip is None or self._sayilir(c, t, ekip))
+                           and dilim in _dilimler(d, t["bas"], t["bit"])]
                     self.m.Add(sum(var) >= asgari)
 
     # ---- amac ---------------------------------------------------------

@@ -2300,3 +2300,152 @@ bekleme"* ikisinin toplamıdır. ⚠ `coz-olc.py` ölçüm betiği modeli bir ke
 daha kuruyor (sayım için) — betiğin fazlası, ürünün değil.
 
 → T-59 · T-60 · K-35
+
+
+## K-49 · Denetlenemeyen kural yayın kapısından geçemez — üç kademe
+
+**Soru (T-18, 16 Eylül dış incelemesi):** doğrulayıcıda gövdesi yazılmamış
+ama aktif bir kural varken cevap aynı anda *"bu kuralı kontrol edemedim"* ve
+*"yayınlayabilirsin"* diyordu. Kapı yalnız bulunan ihlallere bakıyordu;
+*"bakamadım"* kapıyı geçiyordu.
+
+**Karar (1 Ekim 2026, Mustafa: "onaylıyorum"):** kontrol edilemeyen bir
+kuralın kapıdaki etkisi kuralın türüne göre üç kademedir:
+
+1. Kural **sert ve yasal** ise (örneğin gece sınırı): plan **yayınlanamaz**.
+   Firma, kanunun kontrolünü "kabul ediyorum" diyerek geçemez — K-18 ve K-20
+   ile aynı ilke.
+2. Kural **sert ama firmanın kendi kuralı** ise (örneğin "her saat bir takım
+   lideri"): plan **kabul bekler**. Yetkili bir gerekçe yazarak kabul eder;
+   kabul edilene kadar yayınlanamaz. Gerekçesiz kabul, kabul sayılmaz.
+3. Kural **yumuşak** ise: yalnız **raporlanır**, yayın etkilenmez.
+
+**Hangi durumlar "bakamadım" sayılır:** (a) gövdesi hiç yazılmamış aktif
+kural (`uygulanmayan_kurallar`); (b) yazılmış bir kuralın bakılamayan parçası
+(`eksik_boyutlar` içinde `denetlenemedi: true` olanlar — örneğin gereklilik
+satırı olmayan yetkinlik kapsaması, adalet dengesinin yazılmamış `saat`
+boyutu). Bir kuralın yasal sınıra **kırpılması** (örneğin nöbetleşme 3
+verildi, 2 uygulandı — K-45) kural **denetlendiği** için kapıyı etkilemez.
+
+**Kabul kaydı nasıl gelir:** girdide `denetim_disi_kabul` listesi —
+`{"kod": ..., "gerekce": ..., "onaylayan": ...}`. Bu plan başına bir kabuldür
+(kural tanımına yazılmaz). Yasal kural için kabul kaydı gelse de kapı açılmaz.
+
+**Görünen sonuç:** çıktıdaki `yayin_kapisi.denetlenemeyen_kurallar` her
+satırda kuralı, türünü, etkisini (*engelliyor · kabul bekliyor · kabul
+edildi · rapor*) ve okunur bir cümleyi taşır. Arayüz kabul düğmesini bu
+satırlara göre gösterir.
+
+**Veri setine etkisi:** 500 kişilik ölçüm setinde `YETKINLIK_KAPSAMASI`
+aktif, sert ama parametresiz (T-63'ün açık yarısı). Bu kararla tam ölçek
+planı *"kabul bekliyor"*a düşer. Ölçüm setine **gerekçeli kabul kaydı**
+kondu ("yetkinlik gerekliliği henüz tanımlanmadı, T-63"); gereklilik
+tanımlanınca kayıt kalkar.
+
+→ T-18 · T-63 · K-18 · K-20 · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_yayin_kapisi_denetlenemeyen.py`
+
+## K-50 · Çok ekipli çalışan, üye olduğu **bütün ekiplere** sayılır — talep "adanmış beden" değil "hazır bulunan kişi"dir
+
+**Soru (T-21, 16 Eylül dış incelemesi):** iki ekibe üye bir çalışan tek
+vardiyayla iki ekibin kapsamasına birden giriyordu; kayıt bunu *"modelin
+inancı yanlış — bir kişi aynı anda iki yerde olamaz"* diye açmıştı.
+Doğrulayıcı ise atamayı yalnız bir ekibe sayıyordu: aynı plan için çözücü
+*"%100"*, doğrulayıcı *"%50"* diyordu.
+
+**Mustafa (1 Ekim 2026):** *"Sahada hem satış hem backoffice yapabilen
+elemanlar var. Bu elemanlar iki yetkinlik grubuna da ait sayılır: o saatte
+o eleman iki birim elemanı için yer doldurmuş sayılır. Gece 12'den sonra
+backoffice talepleri yok denecek kadar azalıyor; buraya bir eleman koymak
+yerine asıl işi satış ama backoffice yeteneği olan bir eleman konuyor ve
+sorun sahada çözülmüş oluyor. Zaten firmalar da eleman açığını böyle
+yapıyor."*
+
+**Karar:** modelin inancı doğruymuş; **değişen taraf doğrulayıcı** oldu.
+Talep tablosundaki sayı *"o saatte o yetenekte hazır bulunan kişi"*
+demektir, *"o işe adanmış beden"* değil. Bir atama, çalışanın üye olduğu
+bütün ekiplerin kapsamasına sayılır: hem kişi sayısı (asgari ve hedef
+kapsama, mola sırasındaki kapsama, saha tabanı) hem nitelik (rol ve
+yetkinlik kapsaması) için. Çıktıdaki atamanın `ekip` alanı **vardiyanın
+ekibidir** (şablonun ekibi; şablon ekipsizse kişinin ilk ekibi) — hangi
+vardiyada olduğunu söyler, sayımı sınırlamaz.
+
+**Görünürlük:** başka ekibin vardiyasındaki kişiyle kapatılan hücreler
+sessiz kalmaz: `metrikler.baska_ekipten_kapsama` kaç hücrenin ve kaç
+kişi-saatin böyle kapandığını söyler. Yönetici gündüz yoğunluğunda bu sayı
+büyüyorsa görür.
+
+**Kiracı seçimi:** girdide `cok_ekipli_sayim: "tek"` denirse atama yalnız
+vardiyanın ekibine sayılır (ekipsiz şablonda kişinin ilk ekibine; bu durum
+nota yazılır). Varsayılan `"hepsi"`. İki motor yarısı aynı alanı aynı
+varsayılanla okur.
+
+**Veri setine etkisi:** 500 kişilik sette herkes tek ekipte; davranış
+değişmedi, alan açıkça `"hepsi"` yazıldı.
+
+→ T-21 · K-41 · `09-motor/cozucu/model.py` (`_sayilir`) · `09-motor/dogrulayici/kurallar.py` (`ekibe_sayilir`) · `09-motor/testler/test_cok_ekipli.py`
+
+
+## K-51 · Çözücünün kendi "sert ihlal" sayısı çıktıdan kaldırıldı
+
+**Soru (T-66):** çözücü çıktısındaki `metrikler.sert_ihlal` hep sıfır
+yazıyordu; ölçülmüyordu. Ekranda "0 sert ihlal" görünce insan sayılmış
+sanıyordu.
+
+**Karar (1 Ekim 2026, Mustafa):** *"Kaldıralım; ihlaller değişken değil
+sonuçta, birinin saptaması bizim için yeterlidir."* Alan çözücü çıktısından
+kaldırıldı. Tek doğru sayı bağımsız doğrulayıcınınki (`/evaluate` →
+`metrikler.sert_ihlal` ve `yayin_kapisi`). Çözücünün kendi işini kendi
+onaylaması zaten yasaktı (§7.6). Şartname §11.3 çıktı örneğinden de alan
+çıkarıldı.
+
+→ T-66 · `09-motor/cozucu/coz.py` · `09-motor/testler/test_motor_metrigi.py`
+
+## K-52 · Departman tanımı ve çalışma saatleri; her birim için yetkinlik gerekliliği
+
+**Mustafa (1 Ekim 2026):** *"Sistemde departman tanımı lazım ve ilgili
+departmana çalışma günleri ile saatlerini tanımlamalıyız."* ve *"her birim
+için tanımlamalıyız bu İngilizce kuralını — veri setinde olabildiğince
+kompleks kurgu istediğimi unutma."*
+
+**Çalışma saatleri (CALISMA_SAATLERI, gövdesi yazıldı):** girdiye
+`departmanlar` listesi geldi: her departmanın ekipleri ve açık saatleri —
+ya `"7/24"` ya da gün gün pencereler (`{"gunler": [0..4], "bas": 7,
+"bit": 23}`; `bit` 24'ü aşabilir, gece yarısını aşan pencere için). Bir
+vardiya **başladığı günün bir penceresine tamamen sığıyorsa** açıktır.
+Çözücü kapalı saate taşan şablon-gün çiftlerine atama yazmaz ve her
+çift için not düşer; ön kontrol kapalı şablonu "ulaşıyor" saymaz;
+doğrulayıcı kapalı saate taşan atamaya ihlal yazar (sert, firma kuralı,
+kabul edilebilir). Ekibin departman saatleri **tanımsızsa** kural o ekip
+için kontrol edilemez: çözücü kısıt yazmaz ve not düşer, doğrulayıcı
+"denetlenemedi" der, yayın kapısı kabul bekler (K-49).
+
+**Veri setinde:** satış ve back office 7/24; müşteri hizmetleri hafta içi
+07:00–23:00, hafta sonu 08:00–19:00 — hafta sonu akşam şablonları kapalı
+saate taştığı için kural gerçekten kısıyor.
+
+**Yetkinlik gereklilikleri (T-63 kapandı):** her satır ayrı kural (K-24,
+satır bazlı bayrak): satışta 08–20 arası en az 2 İngilizce bilen; back
+office'te 08–18 en az 1 İngilizce; müşteri hizmetlerinde 08–22 en az 1
+İngilizce **ve** 10–16 en az 1 Almanca. Üretici, lider tabanıyla aynı
+hesapla her ekipte yeterli sayıda tam zamanlı, izinsiz taşıyıcı olmasını
+sağlıyor (8 / 3 / 4 / 3). Veri setindeki iki kabul kaydı (yetkinlik ve
+çalışma saatleri) kalktı.
+
+→ T-63 · T-38 · `09-motor/cozucu/model.py` (`_kapali_saatleri_kapat`) · `09-motor/dogrulayici/kurallar.py` (`calisma_saatleri`) · `09-motor/testler/test_calisma_saatleri.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+
+## K-53 · Hedefi aşan saate yumuşak ceza (`HEDEF_ASIMI`) — ücret terimi yok
+
+**Soru (T-54):** modelde bir saatin bedeli yoktu; 1 kişilik talep için 4
+yarı zamanlı 45'er saate dolduruluyor, 350 kişilik sahnede hedefin 2 katı
+kişi sahaya konuyordu.
+
+**Karar (1 Ekim 2026, Mustafa):** *"Ceza ile ilerleyelim. Ücret tarafı hiç
+gelmeyebilir."* Katalogda yeni yumuşak kural **`HEDEF_ASIMI`** (katalog
+41): bir talep hücresine hedeften fazla kişi atanmışsa fazla kişi başına
+ceza. Ağırlık profilden: dengeli 3, kapsama 1, çalışan 4 — hedefin
+**altında** kalmak (`HEDEF_KAPSAMA`: 9 / 20 / 5) her profilde aşmaktan
+pahalı; eksik kişi müşteri kaybıdır, fazla kişi paradır. Sert tabanları
+ezmez: 45 saatlik tam zamanlı yine 45'e dolar, ceza fazlalığı en az
+hücreye yayar. Doğrulayıcı aynı hücreleri yumuşak ihlal olarak sayar.
+
+→ T-54 · `09-motor/cozucu/model.py` (`AGIRLIK_TABLOSU`, `_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) · `09-motor/testler/test_hedef_asimi.py`

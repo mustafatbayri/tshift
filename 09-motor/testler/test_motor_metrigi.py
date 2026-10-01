@@ -132,3 +132,23 @@ def test_ASGARI_KAPSAMA_kurali_da_ihlal_YAZMIYOR():
     r = degerlendir(g, c["atamalar"])
     ak = [i for i in r["ihlaller"] if i["kural"] == "ASGARI_KAPSAMA"]
     assert not ak, [i.get("mesaj") for i in ak][:3]
+
+
+def test_K51_cozucu_ciktisinda_sert_ihlal_alani_YOK():
+    """K-51 (Mustafa, 1 Ekim): "Kaldiralim; birinin saptamasi yeterli."
+    Alan sabit sifir yaziyordu, olculmuyordu (T-66). Tek dogru sayi
+    bagimsiz dogrulayicininki."""
+    g = {"profil": "DENGELI",
+         "calisanlar": [{"id": "C1", "ekipler": ["E"],
+                         "sozlesme": {"tip": "tam_zamanli"},
+                         "izinler": [], "uygunluk": []}],
+         "vardiya_sablonlari": [SABLON],
+         "talep": [{"ekip": "E", "gun": 0, "saat": 9, "asgari": 1, "hedef": 1}],
+         "kurallar": [{"kod": "ASGARI_KAPSAMA", "tur": "SERT", "aktif": True,
+                       "yasal": False}],
+         "kilitler": [], "donmus_gunler": []}
+    c = coz(g, {"azami_saniye": 10, "durgunluk_saniye": 3})
+    assert c["durum"] == "cozuldu", c["durum"]
+    assert "sert_ihlal" not in c["metrikler"], c["metrikler"]
+    r = degerlendir(g, c["atamalar"])
+    assert "sert_ihlal" in r["metrikler"]          # dogrulayici sayar

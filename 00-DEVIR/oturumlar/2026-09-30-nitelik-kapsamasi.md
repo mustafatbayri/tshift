@@ -1114,3 +1114,70 @@ atlandı, fikstür tutarlı. ⚠ T-18 veri setindeki parametresiz
 YETKINLIK_KAPSAMASI yüzünden 0.1 bekçisini ve tam ölçek planını *"kabul
 bekliyor"*a düşürür; Mustafa'ya söylendi, çözüm onun seçimi (kabul kaydı
 ya da T-63 parametresi). Devir dosyaları ve proje notu güncel.
+
+## 44 · İki karar uygulandı (1 Ekim 17:30–19:15)
+
+Mustafa: T-18 *"onaylıyorum"*; T-21 için saha örneği — çift yetenekli
+eleman o saatte iki birim için yer doldurur. ⚠ Önerim tersti; geri alındı,
+`"tek"` modu seçenek olarak kaldı. ⚠ Mustafa kısaltmalardan yakındı
+(*"k-48 diyip bırakma"*): bundan sonra her kod cümlesiyle yazılır.
+
+**Kapı kapanınca ne oldu:** 0.1 bekçisi kırmızı — veri setinde
+YILLIK_FAZLA_MESAI_TAVANI (yasal, gövdesiz) yayını engelledi,
+CALISMA_SAATLERI (sert firma, gövdesiz) kabul bekledi, GECE_YARISI_ASAN
+(hesaplama kuralı) *"kontrol edilemedi"* göründü, dört yumuşak kural rapor.
+Yapılan: yıllık tavanın gövdesi iki yarıda yazıldı (`yil_ici_fazla_mesai_
+saat`; K-42 ile bilinmeyen atlanır), gece yarısı kuralı *"ihlal üretmez"*
+diye kayıtlı + vaka aracında `IHLAL_URETMEZ`, çalışma saatleri ve yetkinlik
+için veri setine gerekçeli kabul kaydı. Veri setine yıl içi toplam ayrı
+tohumlu üreteçle kondu — ana üretecin sırası bozulmadı (ilk denemede
+bozuldu, fark edildi, düzeltildi; NameError'lu bir koşu da sessizce
+atlanmıştı — çıkış kodu okunmadan sonuç okunmaz).
+
+**Çok ekipli:** `_sayilir` (çözücü) ve `ekibe_sayilir` (doğrulayıcı) aynı
+alanı aynı varsayılanla okur; ön kontrol çift üyeli kişiyi görür; çıktı
+`ekip` = vardiyanın ekibi; `baska_ekipten_kapsama` metriği.
+
+Sayılar: motor 459, mutasyon gruplarında kapı 6/6, çok ekipli 11/11,
+yıllık 9/9; vaka aracı 35 gövde · 34 vaka · 34 kırmızı · 1 bilerek vakasız.
+
+## 45 · Dört karar daha (1 Ekim 19:30–22:30)
+
+Mustafa'nın cevapları: 1 departman tanımı + çalışma saatleri (katılıyor);
+2 her birim için İngilizce, veri seti karmaşık olsun; 3 ceza ile ilerle,
+ücret hiç gelmeyebilir; 4 dondurulmuş gün — onayladı, ekiyle (geçmiş gün
+yönetici bilgisiyle düzenlenebilir, gelecek günler kilitlenir, toplu seçim);
+5 şartname alanlarının sırası bana bırakıldı; 6 sahte sayı kaldırılsın;
+7 PDKS 00:00 — ham veriye bakmadan makinesinde çalışacak sayım betiği
+yazıldı (`06-veri/pdks-gece-yarisi-kontrolu.py`), sonuç bekleniyor.
+Mustafa ayrıca: 0,1 ölçek testini kabul ölçütü sayma, tam ölçek koşusuna
+göre kabul edelim → sıra: koşu → sonuç → commit/push.
+
+Yapılan: K-51 (çıktıdan `sert_ihlal` kalktı; altın senaryo testi bağımsız
+denetimden okuyor), K-52 (`departmanlar[]`, `CALISMA_SAATLERI` iki yarıda,
+ön kontrol, `eksik_boyutlar`; yetkinlik gereklilikleri 4 satır + taban),
+K-53 (`HEDEF_ASIMI`), T-38 sırası + `sure_butcesi_sn`/`istek_id`.
+⚠ İlk bekçi koşusu kırmızı: gövdesi yazılan `HEDEF_ASIMI` sahnede tanımlı
+değildi — üreticiye eklendi. ⚠ Altın senaryolar 4 kırmızı: fikstürler
+`metrikler.sert_ihlal` bekliyordu; test bağımsız denetimden okuyacak
+şekilde değişti (fikstürlere dokunulmadı). Mutasyon gruplarında
+`calisma`da 2 eşdeğer mutant çıktı: biri test boşluğuydu (kapatıldı:
+tek seçenekli kapalı şablon → çözümsüz testi), biri çift koruma —
+koruma tekleştirildi, mutant yeniden hedeflendi. Sayılar: motor 481,
+mutasyon 166, vaka 36/36+1, bekçi 20, altın 12.
+
+## 46 · İkinci tam ölçek koşusu (1 Ekim 22:50) — akşam 19:15'teki kodla
+
+Mustafa'nın koşusu (sahne 42 kurallı, yani yıllık fazla mesai toplamı ve
+kabul kayıtlı 19:15 sürümü; departman saatleri ve yetkinlik gereklilikleri
+henüz yok): model kurma 98,5 sn, birinci aşama 100,6 sn (sabah 10,3),
+ana aşamada ilk plan 87,8 sn (sabah 48,9), 2.513 atama, **0 sert ihlal,
+yayınlanabilir**, optimuma uzaklık %99,14, yumuşak: adalet 154 · hedef
+128 · mola 62. Toplam 1.008 sn. Model kurma da iki katına çıktığı (54 →
+98 sn) için makine o sırada yavaştı; birinci aşamanın 10 → 100 sn
+sıçraması buna yorulabilir ama **ölçülmedi** — sonraki koşuda tekrar
+bakılacak. Yayın kapısı yeni kademeleriyle (K-49) bu planı geçirdi:
+yıllık tavan gövdeli, iki kabul kaydı yerinde.
+
+Karar: 19:15 sürümü tam ölçekte kabul. 22:40 sürümü (K-51…K-53, T-38)
+için koşu tekrarı gerekiyor; commit önce, push koşu sonrası.

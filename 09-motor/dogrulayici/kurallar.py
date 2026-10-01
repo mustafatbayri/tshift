@@ -53,6 +53,53 @@ def _calisan(girdi, kimlik):
     return None
 
 
+# ----------------------------------------------------------------------
+# Cok ekipli calisan -- K-50 (Mustafa, 1 Ekim)
+# ----------------------------------------------------------------------
+#
+# "Sahada hem satis hem backoffice yapabilen elemanlar var. Bu elemanlar iki
+#  yetkinlik grubuna da ait sayilir: o saatte o eleman iki birim elemani icin
+#  yer doldurmus sayilir. Gece 12'den sonra backoffice talebi yok denecek
+#  kadar azaliyor; oraya bir eleman koymak yerine asil isi satis ama
+#  backoffice yetenegi olan bir eleman konuyor ve sorun sahada cozulmus
+#  oluyor." -- Mustafa, 1 Ekim
+#
+# Yani talep sayisi "o yetenekte hazir bulunan kisi" demektir, "o ise
+# adanmis beden" degil. Varsayilan sayim bu: `hepsi` -- bir atama, kisinin
+# uye oldugu BUTUN ekiplerin kapsamasina sayilir (atamanin `ekip` alani
+# vardiyanin ekibidir, sayimi sinirlamaz). Kiraci isterse `tek`: atama
+# yalniz vardiyanin ekibine sayilir (ekipsiz sablonda kisinin ilk ekibine).
+#
+# ⚠ T-21 (16 Eylul dis incelemesi) bunu "modelin inanci yanlis" diye
+#   acmisti: cozucu zaten `hepsi` gibi sayiyordu, dogrulayici `tek` gibi.
+#   Iki taraf ayni plan hakkinda farkli konusuyordu. Karar cozucuyu degil
+#   DOGRULAYICIYI degistirdi; ayrisma kapandi. Gorunurluk: baska ekibin
+#   vardiyasiyla kapatilan hucreler `metrikler.baska_ekipten_kapsama`da.
+
+COK_EKIPLI_SAYIM_VARSAYILAN = "hepsi"
+
+
+def cok_ekipli_sayim(girdi):
+    mod = (girdi or {}).get("cok_ekipli_sayim") or COK_EKIPLI_SAYIM_VARSAYILAN
+    return mod if mod in ("hepsi", "tek") else COK_EKIPLI_SAYIM_VARSAYILAN
+
+
+def uyelik_haritasi(girdi):
+    """calisan -> ekip kumesi. Kural basina BIR kez kurulur; hucre dongusu
+    icinde `_calisan` taramasi 2.500 atama x 415 hucrede milyonlarca olurdu."""
+    return {c.get("id"): set(c.get("ekipler") or [])
+            for c in (girdi or {}).get("calisanlar", []) or []}
+
+
+def ekibe_sayilir(atama, ekip, uyelik, mod):
+    """Bu atama bu ekibin kapsamasina sayilir mi -- K-50."""
+    if ekip is None or atama.get("ekip") == ekip:
+        return True
+    if mod != "hepsi":
+        return False
+    return ekip in uyelik.get(atama.get("calisan"), ())
+
+
 def _p(tanim, ad, varsayilan):
     return (tanim.get("parametreler") or {}).get(ad, varsayilan)
 
@@ -187,6 +234,127 @@ def gunluk_azami(girdi, atamalar, tanim):
                    olculen=v, gereken=sinir,
                    mesaj="%s gun %d'de %.1f saat net calisiyor (azami %s)" % (k, g, v, sinir))
             for (k, g), v in sorted(toplam.items()) if v > sinir]
+
+
+@kural("YILLIK_FAZLA_MESAI_TAVANI")
+def yillik_fazla_mesai_tavani(girdi, atamalar, tanim):
+    """Yillik fazla mesai 270 saati gecemez -- Is K. md. 41, Fazla Calisma
+    Yon. md. 5. SERT, YASAL, kabul edilemez (K-20).
+
+    NEDEN SIMDI YAZILDI (1 Ekim, K-49)
+      Kapi artik "bakamadim"i goruyor: govdesi olmayan yasal bir kural
+      yayini ENGELLIYOR (dogru olan bu). Olcum setinde bu kural aktif ve
+      govdesizdi; plan yayinlanamaz oldu. Kurali deaktive etmek yerine
+      govdesi yazildi.
+
+    OLCU
+      Bu haftanin fazla mesaisi = haftalik net calisma - normal sinir
+      (HAFTALIK_AZAMI, K-38: 45). Yil ici toplam `calisanlar[].yil_ici_
+      fazla_mesai_saat` (takvim yili, bu haftadan onceki). Toplam + bu
+      hafta > 270 ise ihlal. Yil ici toplam BILINMIYORSA kontrol atlanir ve
+      `gecmis_eksik` bildirir (K-42) -- yillik toplam da bir gecmis veridir.
+
+    Yil ici toplam tek basina 270'i asmis ve bu hafta fazla mesai YOKSA
+    ihlal yazilmaz: plan durumu kotulestirmiyor; asim gecmiste olmus.
+    """
+    azami = _p(tanim, "azami_saat_yil", 270)
+    normal = _p(next((k for k in (girdi.get("kurallar") or [])
+                      if k.get("kod") == "HAFTALIK_AZAMI"), {}),
+                "azami_saat", 45)
+    toplam = {}
+    for a in atamalar:
+        toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
+    cikan = []
+    for kimlik, saat in sorted(toplam.items()):
+        c = _calisan(girdi, kimlik) or {}
+        yil = c.get("yil_ici_fazla_mesai_saat")
+        if yil is None:
+            continue                      # K-42: gecmis_eksik bildirir
+        fazla = max(0.0, saat - normal)
+        if fazla > 0 and float(yil) + fazla > azami + 1e-9:
+            cikan.append(_ihlal(
+                "YILLIK_FAZLA_MESAI_TAVANI", tanim, calisan=kimlik,
+                olculen=round(float(yil) + fazla, 2), gereken=azami,
+                mesaj=("%s yil icinde %.1f saat fazla mesai yapmis; bu hafta "
+                       "%.1f saat daha veriliyor, toplam %.1f -- yillik tavan "
+                       "%s saat (Is K. md. 41)"
+                       % (kimlik, float(yil), fazla, float(yil) + fazla, azami))))
+    return cikan
+
+
+# ----------------------------------------------------------------------
+# Departman calisma saatleri -- CALISMA_SAATLERI, K-52 (Mustafa, 1 Ekim)
+# ----------------------------------------------------------------------
+#
+# Girdi `departmanlar[]`: {"id", "ekipler": [...], "acik": "7/24" | [
+#   {"gunler": [0..6], "bas", "bit"}, ...]}. Pencere `bit` 24'u asabilir.
+# Vardiya ACIK sayilir <=> basladigi gunun bir penceresi tamamini kapsar.
+# Ekibin saatleri tanimsizsa kontrol YAPILAMAZ: `eksik_boyutlar` bildirir
+# (denetlenemedi: True), K-49 kapiya tasir.
+#
+# ⚠ Cozucuda ayni mantik ayrica yazili (model.departman_acik_mi) -- #7.6.
+
+def departman_saatleri(girdi):
+    cikan = {}
+    for d in girdi.get("departmanlar", []) or []:
+        for e in d.get("ekipler") or []:
+            cikan[e] = d.get("acik")
+    return cikan
+
+
+def departman_acik_mi(saatler, ekip, gun, bas, bit):
+    """True/False, ya da None (tanimsiz)."""
+    acik = saatler.get(ekip)
+    if acik is None:
+        return None
+    if acik == "7/24":
+        return True
+    for pencere in acik:
+        if gun % 7 in (pencere.get("gunler") or range(7)) \
+                and pencere["bas"] - 1e-9 <= bas and bit <= pencere["bit"] + 1e-9:
+            return True
+    return False
+
+
+@kural("CALISMA_SAATLERI")
+def calisma_saatleri(girdi, atamalar, tanim):
+    """Departman kapaliyken atama yapilamaz -- SERT, firma kurali (K-52).
+
+    Olcu: atamanin (bas, bit) araligi, atamanin EKIBININ departmanindaki
+    o gunun bir acik penceresine sigiyor mu. Gece yarisini asan vardiya
+    genisletilmis saatle (23 -> 31) karsilastirilir; pencere de oyle
+    yazilir. Ekibin saatleri tanimsizsa atama ATLANIR (kontrol yapilamadi;
+    `eksik_boyutlar` soyler).
+    """
+    saatler = departman_saatleri(girdi)
+    cikan = []
+    for a in atamalar:
+        ekip = a.get("ekip")
+        bas, bit = zaman.aralik(a)
+        bas, bit = bas - a["gun"] * 24, bit - a["gun"] * 24
+        acik = departman_acik_mi(saatler, ekip, a["gun"], bas, bit)
+        if acik is None or acik:
+            continue
+        cikan.append(_ihlal(
+            "CALISMA_SAATLERI", tanim, calisan=a.get("calisan"), ekip=ekip,
+            gun=a["gun"], olculen=0, gereken=1,
+            mesaj="%s gun %d %s-%s: %s ekibinin departmani bu saatlerde kapali"
+                  % (a.get("calisan"), a["gun"], _ss(bas), _ss(bit), ekip)))
+    return cikan
+
+
+@kural("GECE_YARISI_ASAN")
+def gece_yarisi_asan(girdi, atamalar, tanim):
+    """HESAPLAMA KURALI -- ihlal uretmez (T-67, sartname #6.3).
+
+    "Bitisi baslangicindan kucuk olan vardiya ertesi gune tasar." Bunu
+    zaman modeli her yerde uygular (zaman.aralik, Z-1); ayri bir denetim
+    yoktur, cunku denetlenecek bir sey yoktur. Govdenin burada olmasinin
+    tek sebebi K-49: kapi artik govdesiz aktif kurali "bakamadim" sayiyor;
+    bu kural icin dogru cevap "bakacak bir sey yok, uygulandi"dir, "bakamadim"
+    degil.
+    """
+    return []
 
 
 @kural("HAFTALIK_AZAMI")
@@ -1210,11 +1378,12 @@ def sahada_asgari(girdi, atamalar, tanim):
     if taban <= 0:
         return []
     cikan = []
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
     # CEYREK bazinda (K-34): 14:15'te cokup 14:00'de duran bir saha,
     # tabani tutmus SAYILMAZ. Gerekcesi `_talep_anlari`da.
     for t, gun, saat in _talep_anlari(girdi):
         sahada = sum(1 for a in atamalar
-                     if a.get("ekip") == t.get("ekip")
+                     if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                      and zaman.sahada_mi(a, gun, saat))
         if sahada < taban:
             cikan.append(_ihlal("SAHADA_ASGARI", tanim, ekip=t.get("ekip"),
@@ -1358,10 +1527,11 @@ def asgari_kapsama(girdi, atamalar, tanim):
     kac kisi var'.
     """
     cikan = []
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
     for t, gun, saat in _talep_hucreleri(girdi):
         asgari = t.get("asgari", 0)
         sayi = sum(1 for a in atamalar
-                   if a.get("ekip") == t.get("ekip")
+                   if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                    and zaman.atanmis_mi(a, gun, saat))
         if sayi < asgari:
             cikan.append(_ihlal("ASGARI_KAPSAMA", tanim, ekip=t.get("ekip"),
@@ -1374,18 +1544,46 @@ def asgari_kapsama(girdi, atamalar, tanim):
 @kural("HEDEF_KAPSAMA")
 def hedef_kapsama(girdi, atamalar, tanim):
     cikan = []
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
     for t, gun, saat in _talep_hucreleri(girdi):
         hedef = t.get("hedef")
         if hedef is None:
             continue
         sayi = sum(1 for a in atamalar
-                   if a.get("ekip") == t.get("ekip")
+                   if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                    and zaman.atanmis_mi(a, gun, saat))
         if sayi < hedef:
             cikan.append(_ihlal("HEDEF_KAPSAMA", tanim, ekip=t.get("ekip"),
                                 gun=gun, saat=saat, olculen=sayi, gereken=hedef,
                                 mesaj="gun %d saat %d: %d kisi (hedef %d)"
                                       % (gun, saat, sayi, hedef)))
+    return cikan
+
+
+@kural("HEDEF_ASIMI")
+def hedef_asimi(girdi, atamalar, tanim):
+    """YUMUSAK (K-53, 1 Ekim). Hucreye hedeften FAZLA kisi atanmissa puan
+    duser -- plan gecersiz OLMAZ. Fazla kisi paradir: bir saatin bedeli
+    olmayinca cozucu gereksiz yere kisi yaziyordu (T-54).
+
+    Hucre basina tek satir, `olculen` atanan kisi, `gereken` hedef; fazla
+    kisi sayisi mesajda. Kim sayilir: K-50 (`ekibe_sayilir`).
+    """
+    cikan = []
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    for t, gun, saat in _talep_hucreleri(girdi):
+        hedef = t.get("hedef")
+        if hedef is None:
+            continue
+        sayi = sum(1 for a in atamalar
+                   if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
+                   and zaman.atanmis_mi(a, gun, saat))
+        if sayi > hedef:
+            cikan.append(_ihlal("HEDEF_ASIMI", tanim, ekip=t.get("ekip"),
+                                gun=gun, saat=saat, olculen=sayi, gereken=hedef,
+                                mesaj="gun %d saat %d: %d kisi atanmis, hedef %d "
+                                      "(%d kisi fazla)" % (gun, saat, sayi, hedef,
+                                                           sayi - hedef)))
     return cikan
 
 
@@ -1397,13 +1595,14 @@ def mola_kapsamasi(girdi, atamalar, tanim):
     # CEYREK bazinda olculur (K-34) ama hucre basina TEK ihlal yazilir:
     # o saatin EN KOTU ceyregi. Dort ayri satir yazmak ayni bosuluğu dort
     # kez sayar ve puani sessizce dort katina cikarirdi.
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
     for t, gun, saat in _talep_hucreleri(girdi):
         asgari = t.get("asgari", 0)
         en_kotu, en_kotu_an = None, saat
         for ceyrek in range(CEYREK):
             an = saat + ceyrek / float(CEYREK)
             sahada = sum(1 for a in atamalar
-                         if a.get("ekip") == t.get("ekip")
+                         if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                          and zaman.sahada_mi(a, gun, an))
             if en_kotu is None or sahada < en_kotu:
                 en_kotu, en_kotu_an = sahada, an
@@ -1549,9 +1748,12 @@ def _nitelik_kapsamasi(girdi, atamalar, tanim, kod, alan, parametre_adi):
     saat_kumesi = None if saatler is None else {int(s) for s in saatler}
 
     tasiyanlar = _nitelik_tasiyanlar(girdi, alan, aranan, ekip)
+    uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    # K-50: `hepsi`de niteligi tasiyan cok ekipli kisi, baska ekibin
+    # vardiyasindayken de bu ekibin gerekliligini karsilar.
     ilgili = [a for a in atamalar
               if a.get("calisan") in tasiyanlar
-              and (ekip is None or a.get("ekip") == ekip)]
+              and ekibe_sayilir(a, ekip, uyelik, mod)]
 
     cikan = []
     for gun, an in _nitelik_anlari(girdi, ekip, p.get("gun"), saat_kumesi):

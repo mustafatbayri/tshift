@@ -14,8 +14,14 @@
   "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
   "Hafta ici ve hafta sonu esikleri AYRI.",
   "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
-  "Katalogdaki 40 kuralin TAMAMI tanimli: 33'u degerlendirilir,",
-  "7'si `uygulanmayan_kurallar` kanalini atesler.",
+  "Katalogdaki 41 kuralin TAMAMI tanimli: 37'si degerlendirilir,",
+  "4 yumusak kural `uygulanmayan_kurallar` kanalini atesler (yalniz",
+  "rapor -- K-49).",
+  "Departman calisma saatleri: satis ve back office 7/24, musteri",
+  "hizmetleri hafta ici 07-23, hafta sonu 08-19 (K-52).",
+  "Yetkinlik gereklilikleri: satis 2 ingilizce (08-20), back office",
+  "1 ingilizce (08-18), musteri hizmetleri 1 ingilizce (08-22) ve",
+  "1 almanca (10-16) -- tabanlar lider tabaniyla ayni hesapla.",
   "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
   "Tohum sabit (20260928) -- ayni girdi ayni dosyayi uretir."
  ],
@@ -51,7 +57,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 74
   },
   {
    "id": "C0002",
@@ -97,6 +104,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37,
    "_calisabilir_gunler": [
     3,
     5,
@@ -126,6 +134,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93,
    "gece_calisamaz": true
   },
   {
@@ -149,6 +158,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 17,
    "durum": "ayrildi"
   },
   {
@@ -203,6 +213,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 79,
    "_calisabilir_gunler": [
     1,
     4
@@ -238,7 +249,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
   },
   {
    "id": "C0007",
@@ -263,7 +275,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
   },
   {
    "id": "C0008",
@@ -288,7 +301,8 @@
     "saat": 6,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 128
   },
   {
    "id": "C0009",
@@ -310,7 +324,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 33
   },
   {
    "id": "C0010",
@@ -350,6 +365,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 14,
    "_calisabilir_gunler": [
     0,
     2,
@@ -408,6 +424,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
    "_calisabilir_gunler": [
     1,
     3
@@ -435,7 +452,8 @@
     "saat": 37,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
   },
   {
    "id": "C0013",
@@ -460,7 +478,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80
   },
   {
    "id": "C0014",
@@ -481,7 +500,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37
   },
   {
    "id": "C0015",
@@ -506,7 +526,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 33
   },
   {
    "id": "C0016",
@@ -528,7 +549,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 139
   },
   {
    "id": "C0017",
@@ -550,7 +572,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
   },
   {
    "id": "C0018",
@@ -590,6 +613,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 95,
    "_calisabilir_gunler": [
     1,
     2,
@@ -620,7 +644,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51
   },
   {
    "id": "C0020",
@@ -644,7 +669,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 48
   },
   {
    "id": "C0021",
@@ -692,6 +718,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147,
    "_calisabilir_gunler": [
     0,
     2,
@@ -726,7 +753,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106
   },
   {
    "id": "C0023",
@@ -749,6 +777,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133,
    "durum": "ayrildi"
   },
   {
@@ -774,7 +803,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147
   },
   {
    "id": "C0025",
@@ -799,7 +829,8 @@
     "saat": 16,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 111
   },
   {
    "id": "C0026",
@@ -824,7 +855,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125
   },
   {
    "id": "C0027",
@@ -847,6 +879,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
    "gece_calisamaz": true
   },
   {
@@ -871,7 +904,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0029",
@@ -893,7 +927,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0030",
@@ -918,7 +953,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 144
   },
   {
    "id": "C0031",
@@ -966,6 +1002,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 23,
    "_calisabilir_gunler": [
     0,
     4,
@@ -992,7 +1029,8 @@
     "saat": 16,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
   },
   {
    "id": "C0033",
@@ -1040,6 +1078,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42,
    "_calisabilir_gunler": [
     1,
     4,
@@ -1075,7 +1114,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0035",
@@ -1100,7 +1140,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 50
   },
   {
    "id": "C0036",
@@ -1154,6 +1195,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
    "_calisabilir_gunler": [
     1,
     4
@@ -1179,7 +1221,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 104
   },
   {
    "id": "C0038",
@@ -1201,7 +1244,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77
   },
   {
    "id": "C0039",
@@ -1225,7 +1269,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 38
   },
   {
    "id": "C0040",
@@ -1254,6 +1299,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 24,
    "durum": "pasif"
   },
   {
@@ -1300,6 +1346,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 144,
    "_calisabilir_gunler": [
     3,
     4,
@@ -1347,6 +1394,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36,
    "_calisabilir_gunler": [
     2,
     3,
@@ -1400,6 +1448,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
    "_calisabilir_gunler": [
     0,
     1,
@@ -1428,7 +1477,8 @@
     "saat": 7,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124
   },
   {
    "id": "C0045",
@@ -1453,7 +1503,8 @@
     "saat": 33,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
   },
   {
    "id": "C0046",
@@ -1477,7 +1528,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
   },
   {
    "id": "C0047",
@@ -1499,7 +1551,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
   },
   {
    "id": "C0048",
@@ -1522,6 +1575,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 60,
    "gece_calisamaz": true
   },
   {
@@ -1564,6 +1618,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
    "_calisabilir_gunler": [
     1,
     2,
@@ -1594,7 +1649,8 @@
     "saat": 5,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107
   },
   {
    "id": "C0051",
@@ -1618,7 +1674,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 64
   },
   {
    "id": "C0052",
@@ -1670,6 +1727,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
    "_calisabilir_gunler": [
     2,
     3
@@ -1719,6 +1777,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107,
    "_calisabilir_gunler": [
     2,
     5,
@@ -1747,7 +1806,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 22
   },
   {
    "id": "C0055",
@@ -1770,7 +1830,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62
   },
   {
    "id": "C0056",
@@ -1792,7 +1853,8 @@
     "saat": 29,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18
   },
   {
    "id": "C0057",
@@ -1812,7 +1874,8 @@
     "saat": 32,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 141
   },
   {
    "id": "C0058",
@@ -1836,7 +1899,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
   },
   {
    "id": "C0059",
@@ -1864,7 +1928,8 @@
     "saat": 26,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 88
   },
   {
    "id": "C0060",
@@ -1890,6 +1955,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37,
    "durum": "pasif"
   },
   {
@@ -1914,7 +1980,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
   },
   {
    "id": "C0062",
@@ -1939,7 +2006,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 52
   },
   {
    "id": "C0063",
@@ -1994,6 +2062,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 76,
    "_calisabilir_gunler": [
     0,
     1
@@ -2021,7 +2090,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0065",
@@ -2045,7 +2115,8 @@
     "saat": 18,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 4
   },
   {
    "id": "C0066",
@@ -2069,7 +2140,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 267
   },
   {
    "id": "C0067",
@@ -2092,7 +2164,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 140
   },
   {
    "id": "C0068",
@@ -2114,7 +2187,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45
   },
   {
    "id": "C0069",
@@ -2168,6 +2242,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45,
    "_calisabilir_gunler": [
     0,
     6
@@ -2193,7 +2268,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81
   },
   {
    "id": "C0071",
@@ -2242,6 +2318,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 40,
    "_calisabilir_gunler": [
     0,
     3,
@@ -2266,7 +2343,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0073",
@@ -2288,6 +2366,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 69,
    "durum": "pasif"
   },
   {
@@ -2312,7 +2391,8 @@
     "saat": 8,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 9
   },
   {
    "id": "C0075",
@@ -2336,7 +2416,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
   },
   {
    "id": "C0076",
@@ -2361,6 +2442,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 12,
    "gece_calisamaz": true
   },
   {
@@ -2385,7 +2467,8 @@
     "saat": 18,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
   },
   {
    "id": "C0078",
@@ -2410,6 +2493,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
    "gece_calisamaz": true
   },
   {
@@ -2434,7 +2518,8 @@
     "saat": 25,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
   },
   {
    "id": "C0080",
@@ -2457,7 +2542,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
   },
   {
    "id": "C0081",
@@ -2479,7 +2565,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54
   },
   {
    "id": "C0082",
@@ -2503,7 +2590,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
   },
   {
    "id": "C0083",
@@ -2545,6 +2633,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
    "_calisabilir_gunler": [
     2,
     4,
@@ -2573,6 +2662,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80,
    "gece_calisamaz": true
   },
   {
@@ -2597,7 +2687,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
   },
   {
    "id": "C0086",
@@ -2623,7 +2714,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 9
   },
   {
    "id": "C0087",
@@ -2645,7 +2737,8 @@
     "saat": 10,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
   },
   {
    "id": "C0088",
@@ -2665,7 +2758,8 @@
     "saat": 5,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 266
   },
   {
    "id": "C0089",
@@ -2695,7 +2789,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
   },
   {
    "id": "C0090",
@@ -2725,7 +2820,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 10
   },
   {
    "id": "C0091",
@@ -2747,7 +2843,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106
   },
   {
    "id": "C0092",
@@ -2769,7 +2866,8 @@
     "saat": 11,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0093",
@@ -2815,6 +2913,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 13,
    "_calisabilir_gunler": [
     0,
     2,
@@ -2844,7 +2943,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62
   },
   {
    "id": "C0095",
@@ -2892,6 +2992,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147,
    "_calisabilir_gunler": [
     4,
     5,
@@ -2920,7 +3021,8 @@
     "saat": 6,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115
   },
   {
    "id": "C0097",
@@ -2942,7 +3044,8 @@
     "saat": 21,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
   },
   {
    "id": "C0098",
@@ -2991,6 +3094,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 59,
    "_calisabilir_gunler": [
     1,
     3,
@@ -3018,7 +3122,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 123
   },
   {
    "id": "C0100",
@@ -3040,7 +3145,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
   },
   {
    "id": "C0101",
@@ -3088,6 +3194,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32,
    "_calisabilir_gunler": [
     1,
     3,
@@ -3116,7 +3223,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32
   },
   {
    "id": "C0103",
@@ -3146,7 +3254,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
   },
   {
    "id": "C0104",
@@ -3168,7 +3277,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0105",
@@ -3193,7 +3303,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 66
   },
   {
    "id": "C0106",
@@ -3239,6 +3350,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 146,
    "_calisabilir_gunler": [
     0,
     1,
@@ -3265,7 +3377,8 @@
     "saat": 10,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0108",
@@ -3287,7 +3400,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0109",
@@ -3312,6 +3426,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102,
    "gece_calisamaz": true
   },
   {
@@ -3338,6 +3453,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
    "gece_calisamaz": true
   },
   {
@@ -3365,7 +3481,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 84
   },
   {
    "id": "C0112",
@@ -3387,7 +3504,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
   },
   {
    "id": "C0113",
@@ -3442,6 +3560,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
    "_calisabilir_gunler": [
     2,
     3
@@ -3470,7 +3589,8 @@
     "saat": 39,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5
   },
   {
    "id": "C0115",
@@ -3492,7 +3612,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
   },
   {
    "id": "C0116",
@@ -3512,7 +3633,8 @@
     "saat": 38,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 83
   },
   {
    "id": "C0117",
@@ -3536,7 +3658,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
   },
   {
    "id": "C0118",
@@ -3560,7 +3683,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 0
   },
   {
    "id": "C0119",
@@ -3588,7 +3712,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 49
   },
   {
    "id": "C0120",
@@ -3619,7 +3744,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 74
   },
   {
    "id": "C0121",
@@ -3643,7 +3769,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 30
   },
   {
    "id": "C0122",
@@ -3665,7 +3792,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 2
   },
   {
    "id": "C0123",
@@ -3689,6 +3817,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 46,
    "durum": "pasif"
   },
   {
@@ -3711,7 +3840,8 @@
     "saat": 20,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43
   },
   {
    "id": "C0125",
@@ -3735,7 +3865,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
   },
   {
    "id": "C0126",
@@ -3759,7 +3890,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 128
   },
   {
    "id": "C0127",
@@ -3782,6 +3914,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15,
    "gece_calisamaz": true
   },
   {
@@ -3806,7 +3939,8 @@
     "saat": 9,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 44
   },
   {
    "id": "C0129",
@@ -3834,7 +3968,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 141
   },
   {
    "id": "C0130",
@@ -3856,7 +3991,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 149
   },
   {
    "id": "C0131",
@@ -3905,6 +4041,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125,
    "_calisabilir_gunler": [
     2,
     5,
@@ -3933,7 +4070,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 85
   },
   {
    "id": "C0133",
@@ -3954,7 +4092,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91
   },
   {
    "id": "C0134",
@@ -4008,6 +4147,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7,
    "_calisabilir_gunler": [
     1,
     3
@@ -4036,7 +4176,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
   },
   {
    "id": "C0136",
@@ -4061,6 +4202,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106,
    "gece_calisamaz": true
   },
   {
@@ -4085,7 +4227,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54
   },
   {
    "id": "C0138",
@@ -4110,7 +4253,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91
   },
   {
    "id": "C0139",
@@ -4135,7 +4279,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 16
   },
   {
    "id": "C0140",
@@ -4160,6 +4305,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 17,
    "gece_calisamaz": true
   },
   {
@@ -4185,7 +4331,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 85
   },
   {
    "id": "C0142",
@@ -4207,7 +4354,8 @@
     "saat": 17,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7
   },
   {
    "id": "C0143",
@@ -4231,7 +4379,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
   },
   {
    "id": "C0144",
@@ -4286,6 +4435,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39,
    "_calisabilir_gunler": [
     1,
     2,
@@ -4312,7 +4462,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0146",
@@ -4336,7 +4487,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147
   },
   {
    "id": "C0147",
@@ -4385,6 +4537,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 137,
    "_calisabilir_gunler": [
     2,
     3,
@@ -4410,7 +4563,8 @@
     "saat": 16,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 262
   },
   {
    "id": "C0149",
@@ -4458,6 +4612,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54,
    "_calisabilir_gunler": [
     0,
     1,
@@ -4484,7 +4639,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 132
   },
   {
    "id": "C0151",
@@ -4536,6 +4692,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102,
    "_calisabilir_gunler": [
     4,
     5
@@ -4565,6 +4722,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115,
    "durum": "pasif"
   },
   {
@@ -4590,6 +4748,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43,
    "gece_calisamaz": true
   },
   {
@@ -4614,7 +4773,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
   },
   {
    "id": "C0155",
@@ -4663,6 +4823,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
    "_calisabilir_gunler": [
     2,
     3,
@@ -4692,6 +4853,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 63,
    "gece_calisamaz": true
   },
   {
@@ -4717,7 +4879,8 @@
     "saat": 36,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 72
   },
   {
    "id": "C0158",
@@ -4739,7 +4902,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
   },
   {
    "id": "C0159",
@@ -4764,7 +4928,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0160",
@@ -4789,7 +4954,8 @@
     "saat": 3,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 111
   },
   {
    "id": "C0161",
@@ -4813,7 +4979,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
   },
   {
    "id": "C0162",
@@ -4835,7 +5002,8 @@
     "saat": 39,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 104
   },
   {
    "id": "C0163",
@@ -4858,6 +5026,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 110,
    "gece_calisamaz": true
   },
   {
@@ -4883,7 +5052,8 @@
     "saat": 7,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18
   },
   {
    "id": "C0165",
@@ -4903,7 +5073,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
   },
   {
    "id": "C0166",
@@ -4927,7 +5098,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 98
   },
   {
    "id": "C0167",
@@ -4951,7 +5123,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
   },
   {
    "id": "C0168",
@@ -4974,7 +5147,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5
   },
   {
    "id": "C0169",
@@ -4996,7 +5170,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 21
   },
   {
    "id": "C0170",
@@ -5020,7 +5195,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 138
   },
   {
    "id": "C0171",
@@ -5043,7 +5219,8 @@
     "saat": 1,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 264
   },
   {
    "id": "C0172",
@@ -5067,7 +5244,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 130
   },
   {
    "id": "C0173",
@@ -5113,6 +5291,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
    "_calisabilir_gunler": [
     2,
     3,
@@ -5166,6 +5345,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58,
    "_calisabilir_gunler": [
     1,
     5,
@@ -5193,6 +5373,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 86,
    "gece_calisamaz": true
   },
   {
@@ -5233,6 +5414,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 131,
    "_calisabilir_gunler": [
     0,
     1,
@@ -5262,7 +5444,8 @@
     "saat": 30,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45
   },
   {
    "id": "C0178",
@@ -5282,7 +5465,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
   },
   {
    "id": "C0179",
@@ -5306,7 +5490,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 38
   },
   {
    "id": "C0180",
@@ -5331,7 +5516,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0181",
@@ -5379,6 +5565,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 10,
    "_calisabilir_gunler": [
     2,
     5,
@@ -5408,7 +5595,8 @@
     "saat": 35,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
   },
   {
    "id": "C0183",
@@ -5430,7 +5618,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 112
   },
   {
    "id": "C0184",
@@ -5479,6 +5668,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 269,
    "_calisabilir_gunler": [
     1,
     3,
@@ -5505,7 +5695,8 @@
     "saat": 36,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
   },
   {
    "id": "C0186",
@@ -5527,7 +5718,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 142
   },
   {
    "id": "C0187",
@@ -5552,7 +5744,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
   },
   {
    "id": "C0188",
@@ -5594,6 +5787,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133,
    "_calisabilir_gunler": [
     2,
     3,
@@ -5621,7 +5815,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115
   },
   {
    "id": "C0190",
@@ -5644,6 +5839,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
    "gece_calisamaz": true
   },
   {
@@ -5666,7 +5862,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 35
   },
   {
    "id": "C0192",
@@ -5689,6 +5886,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 137,
    "gece_calisamaz": true,
    "durum": "pasif"
   },
@@ -5714,7 +5912,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 31
   },
   {
    "id": "C0194",
@@ -5745,6 +5944,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 70,
    "gece_calisamaz": true
   },
   {
@@ -5769,7 +5969,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 130
   },
   {
    "id": "C0196",
@@ -5817,6 +6018,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 90,
    "_calisabilir_gunler": [
     0,
     3,
@@ -5843,7 +6045,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
   },
   {
    "id": "C0198",
@@ -5867,7 +6070,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0199",
@@ -5910,6 +6114,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97,
    "_calisabilir_gunler": [
     0,
     2,
@@ -5940,7 +6145,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
   },
   {
    "id": "C0201",
@@ -5971,7 +6177,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
   },
   {
    "id": "C0202",
@@ -5995,7 +6202,8 @@
     "saat": 30,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 139
   },
   {
    "id": "C0203",
@@ -6017,7 +6225,8 @@
     "saat": 1,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
   },
   {
    "id": "C0204",
@@ -6065,6 +6274,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 79,
    "_calisabilir_gunler": [
     0,
     3,
@@ -6091,7 +6301,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42
   },
   {
    "id": "C0206",
@@ -6122,6 +6333,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 76,
    "gece_calisamaz": true
   },
   {
@@ -6151,6 +6363,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 78,
    "gece_calisamaz": true
   },
   {
@@ -6182,6 +6395,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36,
    "gece_calisamaz": true
   },
   {
@@ -6206,7 +6420,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
   },
   {
    "id": "C0210",
@@ -6261,6 +6476,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80,
    "_calisabilir_gunler": [
     1,
     4,
@@ -6290,6 +6506,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 35,
    "gece_calisamaz": true
   },
   {
@@ -6332,6 +6549,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 1,
    "_calisabilir_gunler": [
     2,
     4,
@@ -6383,6 +6601,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42,
    "_calisabilir_gunler": [
     1,
     3,
@@ -6411,7 +6630,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 46
   },
   {
    "id": "C0215",
@@ -6434,6 +6654,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 127,
    "gece_calisamaz": true
   },
   {
@@ -6460,6 +6681,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125,
    "gece_calisamaz": true
   },
   {
@@ -6482,7 +6704,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 24
   },
   {
    "id": "C0218",
@@ -6506,7 +6729,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 144
   },
   {
    "id": "C0219",
@@ -6528,7 +6752,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 123
   },
   {
    "id": "C0220",
@@ -6552,7 +6777,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 118
   },
   {
    "id": "C0221",
@@ -6600,6 +6826,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 119,
    "_calisabilir_gunler": [
     2,
     3,
@@ -6653,6 +6880,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19,
    "_calisabilir_gunler": [
     3,
     4,
@@ -6681,7 +6909,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 13
   },
   {
    "id": "C0224",
@@ -6701,7 +6930,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 129
   },
   {
    "id": "C0225",
@@ -6723,7 +6953,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 82
   },
   {
    "id": "C0226",
@@ -6745,7 +6976,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 6
   },
   {
    "id": "C0227",
@@ -6787,6 +7019,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 20,
    "_calisabilir_gunler": [
     0,
     1,
@@ -6817,7 +7050,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62
   },
   {
    "id": "C0229",
@@ -6841,7 +7075,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81
   },
   {
    "id": "C0230",
@@ -6865,7 +7100,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 126
   },
   {
    "id": "C0231",
@@ -6887,7 +7123,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 126
   },
   {
    "id": "C0232",
@@ -6907,7 +7144,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 126
   },
   {
    "id": "C0233",
@@ -6931,7 +7169,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 86
   },
   {
    "id": "C0234",
@@ -6971,6 +7210,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 94,
    "_calisabilir_gunler": [
     0,
     1,
@@ -6999,7 +7239,8 @@
     "saat": 30,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 138
   },
   {
    "id": "C0236",
@@ -7026,7 +7267,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 138
   },
   {
    "id": "C0237",
@@ -7050,7 +7292,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 118
   },
   {
    "id": "C0238",
@@ -7075,6 +7318,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97,
    "gece_calisamaz": true
   },
   {
@@ -7100,7 +7344,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
   },
   {
    "id": "C0240",
@@ -7125,7 +7370,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43
   },
   {
    "id": "C0241",
@@ -7147,7 +7393,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51
   },
   {
    "id": "C0242",
@@ -7169,7 +7416,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 67
   },
   {
    "id": "C0243",
@@ -7224,6 +7472,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 263,
    "_calisabilir_gunler": [
     4,
     6
@@ -7249,7 +7498,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 22
   },
   {
    "id": "C0245",
@@ -7271,7 +7521,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 131
   },
   {
    "id": "C0246",
@@ -7295,7 +7546,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 267
   },
   {
    "id": "C0247",
@@ -7318,6 +7570,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
    "gece_calisamaz": true
   },
   {
@@ -7342,7 +7595,8 @@
     "saat": 15,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 72
   },
   {
    "id": "C0249",
@@ -7367,6 +7621,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 57,
    "gece_calisamaz": true
   },
   {
@@ -7389,7 +7644,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
   },
   {
    "id": "C0251",
@@ -7429,6 +7685,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 55,
    "_calisabilir_gunler": [
     3,
     4,
@@ -7456,7 +7713,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 22
   },
   {
    "id": "C0253",
@@ -7486,7 +7744,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42
   },
   {
    "id": "C0254",
@@ -7509,7 +7768,8 @@
     "saat": 25,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36
   },
   {
    "id": "C0255",
@@ -7532,7 +7792,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
   },
   {
    "id": "C0256",
@@ -7561,6 +7822,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 66,
    "durum": "pasif"
   },
   {
@@ -7586,7 +7848,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0258",
@@ -7640,6 +7903,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
    "_calisabilir_gunler": [
     1,
     4,
@@ -7666,7 +7930,8 @@
     "saat": 15,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36
   },
   {
    "id": "C0260",
@@ -7690,7 +7955,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 29
   },
   {
    "id": "C0261",
@@ -7714,7 +7980,8 @@
     "saat": 37,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 21
   },
   {
    "id": "C0262",
@@ -7740,6 +8007,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 127,
    "gece_calisamaz": true
   },
   {
@@ -7764,7 +8032,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 98
   },
   {
    "id": "C0264",
@@ -7788,7 +8057,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32
   },
   {
    "id": "C0265",
@@ -7810,7 +8080,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91
   },
   {
    "id": "C0266",
@@ -7834,7 +8105,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 94
   },
   {
    "id": "C0267",
@@ -7858,7 +8130,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 131
   },
   {
    "id": "C0268",
@@ -7881,7 +8154,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 40
   },
   {
    "id": "C0269",
@@ -7935,6 +8209,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28,
    "_calisabilir_gunler": [
     2,
     6
@@ -7960,7 +8235,8 @@
     "saat": 9,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 53
   },
   {
    "id": "C0271",
@@ -7982,7 +8258,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 20
   },
   {
    "id": "C0272",
@@ -8008,6 +8285,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 112,
    "gece_calisamaz": true
   },
   {
@@ -8054,6 +8332,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
    "_calisabilir_gunler": [
     1,
     4,
@@ -8081,7 +8360,8 @@
     "saat": 14,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 104
   },
   {
    "id": "C0275",
@@ -8103,7 +8383,8 @@
     "saat": 15,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 31
   },
   {
    "id": "C0276",
@@ -8132,7 +8413,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 1
   },
   {
    "id": "C0277",
@@ -8154,7 +8436,8 @@
     "saat": 22,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
   },
   {
    "id": "C0278",
@@ -8176,7 +8459,8 @@
     "saat": 24,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
   },
   {
    "id": "C0279",
@@ -8201,7 +8485,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 267
   },
   {
    "id": "C0280",
@@ -8226,7 +8511,8 @@
     "saat": 7,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
   },
   {
    "id": "C0281",
@@ -8251,6 +8537,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107,
    "gece_calisamaz": true
   },
   {
@@ -8275,7 +8562,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 53
   },
   {
    "id": "C0283",
@@ -8297,7 +8585,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0284",
@@ -8319,7 +8608,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 140
   },
   {
    "id": "C0285",
@@ -8373,6 +8663,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108,
    "_calisabilir_gunler": [
     0,
     1,
@@ -8399,7 +8690,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0287",
@@ -8424,7 +8716,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
   },
   {
    "id": "C0288",
@@ -8479,6 +8772,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62,
    "_calisabilir_gunler": [
     1,
     3,
@@ -8505,7 +8799,8 @@
     "saat": 10,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 117
   },
   {
    "id": "C0290",
@@ -8530,7 +8825,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 61
   },
   {
    "id": "C0291",
@@ -8555,7 +8851,8 @@
     "saat": 27,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
   },
   {
    "id": "C0292",
@@ -8577,7 +8874,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 99
   },
   {
    "id": "C0293",
@@ -8607,7 +8905,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 27
   },
   {
    "id": "C0294",
@@ -8629,6 +8928,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 87,
    "gece_calisamaz": true
   },
   {
@@ -8660,6 +8960,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 96,
    "gece_calisamaz": true
   },
   {
@@ -8712,6 +9013,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 67,
    "_calisabilir_gunler": [
     0,
     4
@@ -8738,6 +9040,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 99,
    "gece_calisamaz": true
   },
   {
@@ -8762,7 +9065,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 16
   },
   {
    "id": "C0299",
@@ -8790,7 +9094,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77
   },
   {
    "id": "C0300",
@@ -8814,7 +9119,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
   },
   {
    "id": "C0301",
@@ -8835,6 +9141,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 16,
    "gece_calisamaz": true
   },
   {
@@ -8857,7 +9164,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 63
   },
   {
    "id": "C0303",
@@ -8879,7 +9187,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 1
   },
   {
    "id": "C0304",
@@ -8903,7 +9212,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 10
   },
   {
    "id": "C0305",
@@ -8952,6 +9262,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 139,
    "_calisabilir_gunler": [
     2,
     4,
@@ -8987,7 +9298,8 @@
     "saat": 11,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 143
   },
   {
    "id": "C0307",
@@ -9009,7 +9321,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 134
   },
   {
    "id": "C0308",
@@ -9039,7 +9352,8 @@
     "saat": 33,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54
   },
   {
    "id": "C0309",
@@ -9065,6 +9379,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97,
    "gece_calisamaz": true
   },
   {
@@ -9090,7 +9405,8 @@
     "saat": 34,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 20
   },
   {
    "id": "C0311",
@@ -9112,7 +9428,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97
   },
   {
    "id": "C0312",
@@ -9160,6 +9477,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 69,
    "_calisabilir_gunler": [
     1,
     4,
@@ -9195,7 +9513,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80
   },
   {
    "id": "C0314",
@@ -9241,6 +9560,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56,
    "_calisabilir_gunler": [
     2,
     3,
@@ -9267,7 +9587,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 61
   },
   {
    "id": "C0316",
@@ -9291,7 +9612,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
   },
   {
    "id": "C0317",
@@ -9345,6 +9667,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
    "_calisabilir_gunler": [
     0,
     4,
@@ -9374,6 +9697,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125,
    "gece_calisamaz": true
   },
   {
@@ -9399,7 +9723,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 114
   },
   {
    "id": "C0320",
@@ -9424,7 +9749,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0321",
@@ -9449,7 +9775,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 64
   },
   {
    "id": "C0322",
@@ -9473,7 +9800,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
   },
   {
    "id": "C0323",
@@ -9497,7 +9825,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
   },
   {
    "id": "C0324",
@@ -9523,6 +9852,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 86,
    "gece_calisamaz": true
   },
   {
@@ -9546,7 +9876,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0326",
@@ -9588,6 +9919,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 38,
    "_calisabilir_gunler": [
     1,
     2,
@@ -9615,7 +9947,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 52
   },
   {
    "id": "C0328",
@@ -9638,7 +9971,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 24
   },
   {
    "id": "C0329",
@@ -9661,7 +9995,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 17
   },
   {
    "id": "C0330",
@@ -9686,7 +10021,8 @@
     "saat": 6,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42
   },
   {
    "id": "C0331",
@@ -9708,7 +10044,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 117
   },
   {
    "id": "C0332",
@@ -9732,7 +10069,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
   },
   {
    "id": "C0333",
@@ -9756,7 +10094,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 78
   },
   {
    "id": "C0334",
@@ -9780,7 +10119,8 @@
     "saat": 7,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43
   },
   {
    "id": "C0335",
@@ -9811,6 +10151,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32,
    "gece_calisamaz": true
   },
   {
@@ -9833,7 +10174,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 70
   },
   {
    "id": "C0337",
@@ -9858,7 +10200,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 100
   },
   {
    "id": "C0338",
@@ -9883,7 +10226,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 40
   },
   {
    "id": "C0339",
@@ -9903,7 +10247,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 13
   },
   {
    "id": "C0340",
@@ -9949,6 +10294,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 123,
    "_calisabilir_gunler": [
     0,
     2,
@@ -9978,7 +10324,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 123
   },
   {
    "id": "C0342",
@@ -10000,7 +10347,8 @@
     "saat": 35,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0343",
@@ -10024,7 +10372,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 60
   },
   {
    "id": "C0344",
@@ -10049,7 +10398,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0345",
@@ -10070,7 +10420,8 @@
     "saat": 36,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 84
   },
   {
    "id": "C0346",
@@ -10098,7 +10449,8 @@
     "saat": 16,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 69
   },
   {
    "id": "C0347",
@@ -10124,7 +10476,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 114
   },
   {
    "id": "C0348",
@@ -10149,7 +10502,8 @@
     "saat": 30,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7
   },
   {
    "id": "C0349",
@@ -10174,7 +10528,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
   },
   {
    "id": "C0350",
@@ -10205,7 +10560,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 99
   },
   {
    "id": "C0351",
@@ -10235,7 +10591,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 23
   },
   {
    "id": "C0352",
@@ -10265,7 +10622,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 75
   },
   {
    "id": "C0353",
@@ -10289,7 +10647,8 @@
     "saat": 20,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 60
   },
   {
    "id": "C0354",
@@ -10313,7 +10672,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34
   },
   {
    "id": "C0355",
@@ -10335,7 +10695,8 @@
     "saat": 33,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 55
   },
   {
    "id": "C0356",
@@ -10359,7 +10720,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34
   },
   {
    "id": "C0357",
@@ -10399,6 +10761,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 44,
    "_calisabilir_gunler": [
     1,
     3,
@@ -10435,7 +10798,8 @@
     "saat": 24,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 111
   },
   {
    "id": "C0359",
@@ -10457,7 +10821,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 88
   },
   {
    "id": "C0360",
@@ -10485,7 +10850,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 118
   },
   {
    "id": "C0361",
@@ -10507,7 +10873,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 103
   },
   {
    "id": "C0362",
@@ -10531,7 +10898,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 86
   },
   {
    "id": "C0363",
@@ -10555,7 +10923,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 75
   },
   {
    "id": "C0364",
@@ -10577,7 +10946,8 @@
     "saat": 16,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124
   },
   {
    "id": "C0365",
@@ -10601,7 +10971,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51
   },
   {
    "id": "C0366",
@@ -10623,7 +10994,8 @@
     "saat": 12,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 61
   },
   {
    "id": "C0367",
@@ -10672,6 +11044,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 89,
    "_calisabilir_gunler": [
     0,
     3,
@@ -10701,7 +11074,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 68
   },
   {
    "id": "C0369",
@@ -10726,7 +11100,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
   },
   {
    "id": "C0370",
@@ -10749,7 +11124,8 @@
     "saat": 27,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 90
   },
   {
    "id": "C0371",
@@ -10773,7 +11149,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
   },
   {
    "id": "C0372",
@@ -10796,6 +11173,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
    "gece_calisamaz": true
   },
   {
@@ -10842,6 +11220,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
    "_calisabilir_gunler": [
     0,
     3,
@@ -10870,7 +11249,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 103
   },
   {
    "id": "C0375",
@@ -10895,6 +11275,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
    "durum": "pasif"
   },
   {
@@ -10920,6 +11301,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113,
    "gece_calisamaz": true,
    "durum": "pasif"
   },
@@ -10943,7 +11325,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102
   },
   {
    "id": "C0378",
@@ -10967,7 +11350,8 @@
     "saat": 29,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 129
   },
   {
    "id": "C0379",
@@ -10992,7 +11376,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0380",
@@ -11041,6 +11426,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5,
    "_calisabilir_gunler": [
     1,
     3,
@@ -11068,6 +11454,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 85,
    "gece_calisamaz": true
   },
   {
@@ -11090,7 +11477,8 @@
     "saat": 3,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
   },
   {
    "id": "C0383",
@@ -11112,7 +11500,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
   },
   {
    "id": "C0384",
@@ -11166,6 +11555,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 55,
    "_calisabilir_gunler": [
     3,
     5
@@ -11201,7 +11591,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102
   },
   {
    "id": "C0386",
@@ -11225,7 +11616,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 117
   },
   {
    "id": "C0387",
@@ -11250,6 +11642,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 120,
    "durum": "pasif"
   },
   {
@@ -11274,7 +11667,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5
   },
   {
    "id": "C0389",
@@ -11298,7 +11692,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
   },
   {
    "id": "C0390",
@@ -11320,7 +11715,8 @@
     "saat": 6,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 71
   },
   {
    "id": "C0391",
@@ -11344,7 +11740,8 @@
     "saat": 37,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 87
   },
   {
    "id": "C0392",
@@ -11366,7 +11763,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101
   },
   {
    "id": "C0393",
@@ -11414,6 +11812,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 0,
    "_calisabilir_gunler": [
     1,
     3,
@@ -11444,7 +11843,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 29
   },
   {
    "id": "C0395",
@@ -11468,7 +11868,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 95
   },
   {
    "id": "C0396",
@@ -11492,7 +11893,8 @@
     "saat": 35,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34
   },
   {
    "id": "C0397",
@@ -11535,6 +11937,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 44,
    "_calisabilir_gunler": [
     0,
     1,
@@ -11565,7 +11968,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 89
   },
   {
    "id": "C0399",
@@ -11595,7 +11999,8 @@
     "saat": 1,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101
   },
   {
    "id": "C0400",
@@ -11647,6 +12052,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106,
    "_calisabilir_gunler": [
     0,
     1,
@@ -11675,7 +12081,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7
   },
   {
    "id": "C0402",
@@ -11706,6 +12113,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116,
    "gece_calisamaz": true
   },
   {
@@ -11730,7 +12138,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 95
   },
   {
    "id": "C0404",
@@ -11755,7 +12164,8 @@
     "saat": 21,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107
   },
   {
    "id": "C0405",
@@ -11777,7 +12187,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
   },
   {
    "id": "C0406",
@@ -11799,7 +12210,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 57
   },
   {
    "id": "C0407",
@@ -11845,6 +12257,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125,
    "_calisabilir_gunler": [
     1,
     4,
@@ -11873,7 +12286,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
   },
   {
    "id": "C0409",
@@ -11899,7 +12313,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 137
   },
   {
    "id": "C0410",
@@ -11953,6 +12368,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37,
    "_calisabilir_gunler": [
     2,
     3
@@ -11978,7 +12394,8 @@
     "saat": 34,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 119
   },
   {
    "id": "C0412",
@@ -12021,6 +12438,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 70,
    "_calisabilir_gunler": [
     0,
     2,
@@ -12050,7 +12468,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 9
   },
   {
    "id": "C0414",
@@ -12098,6 +12517,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81,
    "_calisabilir_gunler": [
     1,
     3,
@@ -12133,6 +12553,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 16,
    "gece_calisamaz": true,
    "durum": "pasif"
   },
@@ -12176,6 +12597,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 136,
    "_calisabilir_gunler": [
     1,
     4,
@@ -12206,7 +12628,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43
   },
   {
    "id": "C0418",
@@ -12255,6 +12678,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 119,
    "_calisabilir_gunler": [
     1,
     2,
@@ -12281,7 +12705,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36
   },
   {
    "id": "C0420",
@@ -12333,6 +12758,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 68,
    "_calisabilir_gunler": [
     0,
     6
@@ -12357,7 +12783,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97
   },
   {
    "id": "C0422",
@@ -12382,7 +12809,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
   },
   {
    "id": "C0423",
@@ -12436,6 +12864,7 @@
     "cumartesi": 3
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 31,
    "_calisabilir_gunler": [
     2,
     4
@@ -12464,7 +12893,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 27
   },
   {
    "id": "C0425",
@@ -12484,7 +12914,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36
   },
   {
    "id": "C0426",
@@ -12506,7 +12937,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 78
   },
   {
    "id": "C0427",
@@ -12530,7 +12962,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
   },
   {
    "id": "C0428",
@@ -12561,7 +12994,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 33
   },
   {
    "id": "C0429",
@@ -12589,7 +13023,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80
   },
   {
    "id": "C0430",
@@ -12613,7 +13048,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 96
   },
   {
    "id": "C0431",
@@ -12638,7 +13074,8 @@
     "saat": 31,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147
   },
   {
    "id": "C0432",
@@ -12663,7 +13100,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 140
   },
   {
    "id": "C0433",
@@ -12685,7 +13123,8 @@
     "saat": 37,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
   },
   {
    "id": "C0434",
@@ -12708,6 +13147,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91,
    "gece_calisamaz": true
   },
   {
@@ -12730,7 +13170,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 88
   },
   {
    "id": "C0436",
@@ -12750,7 +13191,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
   },
   {
    "id": "C0437",
@@ -12772,7 +13214,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
   },
   {
    "id": "C0438",
@@ -12796,7 +13239,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18
   },
   {
    "id": "C0439",
@@ -12850,6 +13294,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 94,
    "_calisabilir_gunler": [
     2,
     4
@@ -12877,7 +13322,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45
   },
   {
    "id": "C0441",
@@ -12898,7 +13344,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 14
   },
   {
    "id": "C0442",
@@ -12922,7 +13369,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 119
   },
   {
    "id": "C0443",
@@ -12945,6 +13393,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18,
    "gece_calisamaz": true
   },
   {
@@ -12967,7 +13416,8 @@
     "saat": 16,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 105
   },
   {
    "id": "C0445",
@@ -12991,7 +13441,8 @@
     "saat": 38,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 27
   },
   {
    "id": "C0446",
@@ -13015,7 +13466,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102
   },
   {
    "id": "C0447",
@@ -13038,7 +13490,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
   },
   {
    "id": "C0448",
@@ -13062,7 +13515,8 @@
     "saat": 31,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 262
   },
   {
    "id": "C0449",
@@ -13088,6 +13542,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 150,
    "gece_calisamaz": true
   },
   {
@@ -13113,7 +13568,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
   },
   {
    "id": "C0451",
@@ -13153,6 +13609,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
    "_calisabilir_gunler": [
     1,
     4,
@@ -13183,6 +13640,7 @@
     "cumartesi": 2
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 118,
    "gece_calisamaz": true
   },
   {
@@ -13206,7 +13664,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 131
   },
   {
    "id": "C0454",
@@ -13232,6 +13691,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58,
    "gece_calisamaz": true
   },
   {
@@ -13262,7 +13722,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 1
   },
   {
    "id": "C0456",
@@ -13286,7 +13747,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 76
   },
   {
    "id": "C0457",
@@ -13334,6 +13796,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 114,
    "_calisabilir_gunler": [
     2,
     3,
@@ -13362,6 +13825,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 135,
    "gece_calisamaz": true
   },
   {
@@ -13386,7 +13850,8 @@
     "saat": 21,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
   },
   {
    "id": "C0460",
@@ -13410,7 +13875,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 120
   },
   {
    "id": "C0461",
@@ -13432,7 +13898,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 75
   },
   {
    "id": "C0462",
@@ -13456,7 +13923,8 @@
     "saat": 39,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 48
   },
   {
    "id": "C0463",
@@ -13478,7 +13946,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7
   },
   {
    "id": "C0464",
@@ -13501,6 +13970,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 129,
    "gece_calisamaz": true
   },
   {
@@ -13526,7 +13996,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 65
   },
   {
    "id": "C0466",
@@ -13551,7 +14022,8 @@
     "saat": 17,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 14
   },
   {
    "id": "C0467",
@@ -13581,7 +14053,8 @@
     "saat": 5,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 67
   },
   {
    "id": "C0468",
@@ -13629,6 +14102,7 @@
     "cumartesi": 1
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 70,
    "_calisabilir_gunler": [
     1,
     2,
@@ -13657,7 +14131,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
   },
   {
    "id": "C0470",
@@ -13679,7 +14154,8 @@
     "saat": 24,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97
   },
   {
    "id": "C0471",
@@ -13701,7 +14177,8 @@
     "saat": 33,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 87
   },
   {
    "id": "C0472",
@@ -13723,7 +14200,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 148
   },
   {
    "id": "C0473",
@@ -13745,7 +14223,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51
   },
   {
    "id": "C0474",
@@ -13769,7 +14248,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
   },
   {
    "id": "C0475",
@@ -13793,7 +14273,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 30
   },
   {
    "id": "C0476",
@@ -13821,7 +14302,8 @@
     "saat": 30,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
   },
   {
    "id": "C0477",
@@ -13861,6 +14343,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 22,
    "_calisabilir_gunler": [
     2,
     3,
@@ -13896,7 +14379,8 @@
     "saat": 39,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81
   },
   {
    "id": "C0479",
@@ -13921,7 +14405,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 82
   },
   {
    "id": "C0480",
@@ -13949,7 +14434,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 103
   },
   {
    "id": "C0481",
@@ -13973,7 +14459,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
   },
   {
    "id": "C0482",
@@ -13995,7 +14482,8 @@
     "saat": 36,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 55
   },
   {
    "id": "C0483",
@@ -14020,7 +14508,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 136
   },
   {
    "id": "C0484",
@@ -14044,7 +14533,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 4
   },
   {
    "id": "C0485",
@@ -14068,7 +14558,8 @@
     "saat": 21,
     "cumartesi": 1
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81
   },
   {
    "id": "C0486",
@@ -14090,7 +14581,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
   },
   {
    "id": "C0487",
@@ -14115,6 +14607,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54,
    "gece_calisamaz": true
   },
   {
@@ -14167,6 +14660,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51,
    "_calisabilir_gunler": [
     0,
     2
@@ -14216,6 +14710,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41,
    "_calisabilir_gunler": [
     3,
     4,
@@ -14248,7 +14743,8 @@
     "saat": 15,
     "cumartesi": 2
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 71
   },
   {
    "id": "C0491",
@@ -14272,7 +14768,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 117
   },
   {
    "id": "C0492",
@@ -14297,7 +14794,8 @@
     "saat": 1,
     "cumartesi": 3
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 74
   },
   {
    "id": "C0493",
@@ -14322,7 +14820,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115
   },
   {
    "id": "C0494",
@@ -14351,7 +14850,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 99
   },
   {
    "id": "C0495",
@@ -14373,7 +14873,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106
   },
   {
    "id": "C0496",
@@ -14395,7 +14896,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 0
   },
   {
    "id": "C0497",
@@ -14417,7 +14919,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
   },
   {
    "id": "C0498",
@@ -14439,7 +14942,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 117
   },
   {
    "id": "C0499",
@@ -14464,6 +14968,7 @@
     "cumartesi": 0
    },
    "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 134,
    "gece_calisamaz": true
   },
   {
@@ -14486,7 +14991,8 @@
     "saat": 0,
     "cumartesi": 0
    },
-   "gecmis_vardiyalar": []
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
   }
  ],
  "vardiya_sablonlari": [
@@ -18945,7 +19451,98 @@
    "tur": "SERT",
    "aktif": true,
    "yasal": false,
-   "kabul_edilebilir": false
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "SATIS",
+    "asgari": 2,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "BACKOFFICE",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "almanca",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
   },
   {
    "kod": "GECE_POSTASI_DEVRI",
@@ -18968,6 +19565,16 @@
    }
   },
   {
+   "kod": "YILLIK_FAZLA_MESAI_TAVANI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat_yil": 270
+   }
+  },
+  {
    "kod": "GECE_YARISI_ASAN",
    "tur": "SERT",
    "aktif": true,
@@ -18975,11 +19582,17 @@
    "kabul_edilebilir": false
   },
   {
+   "kod": "HEDEF_ASIMI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
    "kod": "CALISMA_SAATLERI",
    "tur": "SERT",
    "aktif": true,
    "yasal": false,
-   "kabul_edilebilir": false
+   "kabul_edilebilir": true
   },
   {
    "kod": "EKIP_SUREKLILIGI",
@@ -19004,13 +19617,6 @@
    "tur": "YUMUSAK",
    "aktif": true,
    "yasal": false
-  },
-  {
-   "kod": "YILLIK_FAZLA_MESAI_TAVANI",
-   "tur": "SERT",
-   "aktif": true,
-   "yasal": true,
-   "kabul_edilebilir": false
   }
  ],
  "donmus_gunler": [
@@ -19058,5 +19664,53 @@
  ],
  "sabit_atamalar": [],
  "devir_kapsama": [],
+ "denetim_disi_kabul": [],
+ "departmanlar": [
+  {
+   "id": "D-SATIS",
+   "ad": "Satis Departmani",
+   "ekipler": [
+    "SATIS"
+   ],
+   "acik": "7/24"
+  },
+  {
+   "id": "D-BACK",
+   "ad": "Back Office",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "acik": "7/24"
+  },
+  {
+   "id": "D-MHIZMET",
+   "ad": "Musteri Hizmetleri",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "acik": [
+    {
+     "gunler": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "bas": 7,
+     "bit": 23
+    },
+    {
+     "gunler": [
+      5,
+      6
+     ],
+     "bas": 8,
+     "bit": 19
+    }
+   ]
+  }
+ ],
+ "cok_ekipli_sayim": "hepsi",
  "_olcek": 1.0
 }

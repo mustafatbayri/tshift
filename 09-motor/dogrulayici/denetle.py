@@ -49,15 +49,17 @@ def degerlendir(girdi, atamalar):
         ihlaller.extend(govde(girdi, atamalar, tanim))
 
     gecmis_eksik = _gecmis_eksik(girdi, atamalar)
+    eksik_boyutlar = _eksik_boyutlar(girdi)
     return {
         "ihlaller": ihlaller,
         "metrikler": _metrikler(girdi, atamalar, ihlaller),
         "uygulanmayan_kurallar": uygulanmayan,
-        "eksik_boyutlar": _eksik_boyutlar(girdi),
+        "eksik_boyutlar": eksik_boyutlar,
         "okunmayan_alanlar": _okunmayan_alanlar(girdi),
         "gecmis_eksik": gecmis_eksik,
         "gecmis_eksik_ozet": _gecmis_eksik_ozet(girdi, gecmis_eksik),
-        "yayin_kapisi": yayin_kapisi(ihlaller),
+        # T-18 / K-49: kapi artik "bakamadim"i da gorur.
+        "yayin_kapisi": yayin_kapisi(ihlaller, girdi, uygulanmayan, eksik_boyutlar),
     }
 
 
@@ -85,11 +87,13 @@ def degerlendir(girdi, atamalar):
 OKUNAN_ALANLAR = {
     "": ("profil", "calisanlar", "vardiya_sablonlari", "talep", "kurallar",
          "kilitler", "sabit_atamalar", "donmus_gunler", "hafta_baslangic",
-         "agirliklar", "sektor"),
+         "agirliklar", "sektor", "denetim_disi_kabul", "cok_ekipli_sayim",
+         "departmanlar", "istek_id", "sure_butcesi_sn"),
     "calisanlar": ("id", "ekipler", "sozlesme", "izinler", "uygunluk",
                    "devir_yuk", "yetkinlikler", "operasyonel_rol",
                    "gece_calisamaz", "durum", "gece_calisma_onayi",
-                   "gecmis_vardiyalar", "gecmis_bilinen_gunler"),
+                   "gecmis_vardiyalar", "gecmis_bilinen_gunler",
+                   "yil_ici_fazla_mesai_saat"),
     # T-28 (30 Eylul): gecmis kayit PDKS bicimindedir -- sablon yok.
     "calisanlar.gecmis_vardiyalar": ("gun", "bas", "bit", "molalar", "gece"),
     "calisanlar.sozlesme": ("tip", "haftalik_saat", "gun_sayisi"),
@@ -101,6 +105,11 @@ OKUNAN_ALANLAR = {
     "talep": ("ekip", "gun", "saat", "asgari", "hedef"),
     "kurallar": ("kod", "tur", "aktif", "yasal", "kabul_edilebilir",
                  "parametreler", "agirlik"),
+    # T-18 / K-49: yetkilinin "denetlenemeyen kurali kabul ediyorum" kaydi.
+    "denetim_disi_kabul": ("kod", "gerekce", "onaylayan"),
+    # K-52: departman ve calisma saatleri (CALISMA_SAATLERI).
+    "departmanlar": ("id", "ad", "ekipler", "acik"),
+    "departmanlar.acik": ("gunler", "bas", "bit"),
     "kilitler": ("calisan", "gun", "tip", "bas", "bit"),
     # Motor sabit atamayi SABLON kimliginden esliyor (cozucu.model
     # ._sabit_atamalar). Sartname #11.2 ornegi `sablon` yazmiyor, `bas`/`bit`
@@ -144,10 +153,6 @@ SEBEPLER = {
         "sartname duz alan yaziyor, motor mola_penceresi.en_gec_bitis okuyor",
     ("", "devir_kapsama"):
         "sartname #11.2'de tanimli, motorda karsiligi yok",
-    ("", "istek_id"):
-        "motor istek kimligini okumuyor ve ciktiya GERI YAZMIYOR (#11.3 yaziyor)",
-    ("", "sure_butcesi_sn"):
-        "motor sureyi _cozucu_ayari'ndan aliyor; bu alan etkisiz (T-38)",
 }
 
 
@@ -246,7 +251,8 @@ def _gecmis_eksik(girdi, atamalar):
     aktif = {t.get("kod"): t for t in _aktif_kurallar(girdi)}
     sinir_kurallari = ("VARDIYA_ARASI_DINLENME", "HAFTA_TATILI",
                        "ARDISIK_CALISMA_GUNU", "ARDISIK_GECE_LIMIT",
-                       "GECE_POSTASI_DEVRI", "ARDISIK_HAFTA_SONU_LIMIT")
+                       "GECE_POSTASI_DEVRI", "ARDISIK_HAFTA_SONU_LIMIT",
+                       "YILLIK_FAZLA_MESAI_TAVANI")
     if not any(k in aktif for k in sinir_kurallari):
         return []
     sablonlar = {t["id"]: t for t in girdi.get("vardiya_sablonlari", []) or []}
@@ -257,10 +263,28 @@ def _gecmis_eksik(girdi, atamalar):
                       "mesaj": "%s icin %s yapilamadi -- gun %d icin gecmis "
                                "kayit yok (K-42: atlandi)" % (kimlik, ne, gun)})
 
+    normal = kurallar._p(aktif.get("HAFTALIK_AZAMI") or {}, "azami_saat", 45)
     for kimlik, liste in sorted(kurallar._kisiye_gore(atamalar).items()):
         kayitlar = kurallar._gecmis_kayitlari(girdi, kimlik)
         bilinen = kurallar._bilinen_gunler(girdi, kimlik, kayitlar)
         plan_gunleri = {a["gun"] for a in liste}
+
+        # Yillik fazla mesai (K-49 ile yazildi): yil ici toplam bilinmiyorsa
+        # ve bu hafta fazla mesai VARSA kontrol yapilamadi. Fazla mesai
+        # yoksa bilinmeyen toplam bir sey degistirmez -- satir yazilmaz.
+        if "YILLIK_FAZLA_MESAI_TAVANI" in aktif:
+            c = kurallar._calisan(girdi, kimlik) or {}
+            if c.get("yil_ici_fazla_mesai_saat") is None:
+                hafta_net = sum(zaman.net_saat(a) for a in liste)
+                if hafta_net > normal + 1e-9:
+                    cikan.append({
+                        "kural": "YILLIK_FAZLA_MESAI_TAVANI", "calisan": kimlik,
+                        "gun": None,
+                        "mesaj": "%s icin yillik fazla mesai kontrolu yapilamadi"
+                                 " -- yil ici fazla mesai toplami bilinmiyor "
+                                 "(yil_ici_fazla_mesai_saat yok), bu hafta %.1f "
+                                 "saat fazla mesai var (K-42: atlandi)"
+                                 % (kimlik, hafta_net - normal)})
 
         if ("VARDIYA_ARASI_DINLENME" in aktif and 0 in plan_gunleri
                 and -1 not in bilinen):
@@ -388,7 +412,8 @@ def _eksik_boyutlar(girdi):
             for boyut in p.get("boyutlar", ["gece", "hafta_sonu", "saat"]):
                 if kurallar._boyut_sayaci(boyut) is None:
                     eksik.append({"kural": "ADALET_DENGESI", "boyut": boyut,
-                                  "sebep": "sayilabilir boyut degil; T-13"})
+                                  "sebep": "sayilabilir boyut degil; T-13",
+                                  "denetlenemedi": True})
 
         # K-45: yasal ust sinir 2. Fazlasi verildiyse 2 uygulanir ve bu
         # SESSIZ GECMEZ -- firma yasal kurali gevsetmis gibi gorunurdu.
@@ -399,7 +424,26 @@ def _eksik_boyutlar(girdi):
                     "kural": kod, "boyut": "azami_ardisik_gece_haftasi",
                     "sebep": "verilen %d yasal ust siniri (%d) asiyor; %d "
                              "uygulandi -- firma yasal kurali gevsetemez "
-                             "(K-18, K-45)" % (verilen, azami, azami)})
+                             "(K-18, K-45)" % (verilen, azami, azami),
+                    # Kural DENETLENDI (yasal degerle); bu bir kirpma raporu.
+                    "denetlenemedi": False})
+
+        # CALISMA_SAATLERI (K-52): ekibin departman saatleri tanimsizsa o
+        # ekip icin kontrol YAPILAMAZ -- "ihlal yok" degil, "bakamadim".
+        if kod == "CALISMA_SAATLERI":
+            saatler = kurallar.departman_saatleri(girdi)
+            ekipler = sorted({t.get("ekip") for t in girdi.get("talep", []) or []
+                              if t.get("ekip") is not None}
+                             | {t.get("ekip") for t in girdi.get("vardiya_sablonlari", []) or []
+                                if t.get("ekip") is not None})
+            for ekip in ekipler:
+                if ekip not in saatler or saatler[ekip] is None:
+                    eksik.append({
+                        "kural": kod, "boyut": "departman:%s" % ekip,
+                        "sebep": "%s ekibinin departman calisma saatleri "
+                                 "tanimsiz (`departmanlar`); kapali saat "
+                                 "kontrolu yapilamadi" % ekip,
+                        "denetlenemedi": True})
 
         # ROL_KAPSAMASI / YETKINLIK_KAPSAMASI: gereklilik satirinda hangi
         # nitelik arandigi yazilmamissa kural DENETLENEMEZ. Govde bos liste
@@ -412,7 +456,8 @@ def _eksik_boyutlar(girdi):
                     "kural": k, "boyut": ad,
                     "sebep": "gereklilik satirinda `%s` yazili degil; hangi "
                              "niteligin arandigi bilinmiyor -- denetlenemedi"
-                             % ad})
+                             % ad,
+                    "denetlenemedi": True})
     return eksik
 
 
@@ -452,6 +497,7 @@ def _metrikler(girdi, atamalar, ihlaller):
         "asgari_kapsama_yuzde": hucre["asgari_yuzde"],
         "hedef_kapsama_yuzde": hucre["hedef_yuzde"],
         "eksik_hedef_dakika": hucre["eksik_hedef_dakika"],
+        "baska_ekipten_kapsama": hucre["baska_ekipten_kapsama"],   # K-50
         "toplam_saat": toplam_net,
         "ucret_saat": toplam_ucret,
         "brut_saat": toplam_brut,
@@ -472,13 +518,22 @@ def kapsama_yuzdeleri(girdi, atamalar):
     """
     asgari_tut = asgari_top = hedef_tut = hedef_top = 0
     eksik_dk = 0
+    uyelik, mod = kurallar.uyelik_haritasi(girdi), kurallar.cok_ekipli_sayim(girdi)
+    # K-50 gorunurlugu: baska ekibin vardiyasiyla kapatilan hucreler.
+    baska_hucre = baska_kisi_saat = 0
     for t in girdi.get("talep", []) or []:
         gun, saat = t.get("gun"), t.get("saat")
         if gun is None or saat is None:
             continue                      # T-19: bildirmek okunmayan_alanlar'in isi
+        kendi = sum(1 for a in atamalar
+                    if a.get("ekip") == t.get("ekip")
+                    and zaman.atanmis_mi(a, gun, saat))
         sayi = sum(1 for a in atamalar
-                   if a.get("ekip") == t.get("ekip")
+                   if kurallar.ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                    and zaman.atanmis_mi(a, gun, saat))
+        if sayi > kendi:
+            baska_hucre += 1
+            baska_kisi_saat += sayi - kendi
         if t.get("asgari") is not None:
             asgari_top += 1
             if sayi >= t["asgari"]:
@@ -494,6 +549,10 @@ def kapsama_yuzdeleri(girdi, atamalar):
         "asgari_yuzde": yuzde(asgari_tut, asgari_top),
         "hedef_yuzde": yuzde(hedef_tut, hedef_top),
         "eksik_hedef_dakika": eksik_dk,
+        # K-50: kac hucre baska ekibin vardiyasindaki (cok ekipli) kisiyle
+        # kapatildi, toplam kac kisi-saat. Sessiz kalmasin diye.
+        "baska_ekipten_kapsama": {"mod": mod, "hucre": baska_hucre,
+                                  "kisi_saat": baska_kisi_saat},
     }
 
 
@@ -501,20 +560,103 @@ def kapsama_yuzdeleri(girdi, atamalar):
 # Yayin kapisi -- #4.5, K-16 / K-20 / K-24
 # ----------------------------------------------------------------------
 
-def yayin_kapisi(ihlaller):
+def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
     """Bu plan yayinlanabilir mi, yayinlanamazsa neden.
 
     Kapi `kabul_edilebilir` alanina bakar, `yasal`a DEGIL. Sebep K-24:
     CAKISMA_YOK yasal bir kural degil (hicbir kanun cakismayi yasaklamiyor)
     ama kabul de edilemez -- imkansizliktir.
+
+    ⚠ "BAKAMADIM" DA KAPIDAN GECEMEZ (T-18, K-49, 1 Ekim)
+      16 Eylul'den beri kapi yalniz `ihlaller`e bakiyordu: aktif ama govdesi
+      yazilmamis SERT bir kural varken cevap ayni anda "bu kurali kontrol
+      edemedim" ve "yayinlayabilirsin" diyordu. Ilke bu dosyanin basinda
+      yazili, kapiya bagli degildi. Artik iki kanal daha kapidan gecer:
+
+        uygulanmayan_kurallar       -- govdesi yazilmamis aktif kural
+        eksik_boyutlar[denetlenemedi] -- yazilmis kuralin bakilamayan parcasi
+
+      UC KADEME (Mustafa, 1 Ekim):
+        SERT + yasal  -> ENGELLER. Firma yasal kontrolu onaylayarak gecemez
+                         (K-18, K-20).
+        SERT + firma  -> KABUL BEKLER. Yetkili gerekce yazarak kabul eder;
+                         kabul `girdi.denetim_disi_kabul` listesinde gelir
+                         ({"kod", "gerekce", "onaylayan"}); gerekcesiz kabul
+                         kabul degildir.
+        YUMUSAK       -> yalniz RAPOR; kapiyi etkilemez.
+
+      `okunmayan_alanlar` (T-19) kapiya BAGLANMADI: o bir girdi alani
+      meselesidir, kural denetimi degil; rapor olarak kalir.
     """
     acik_sert = [i for i in ihlaller
                  if i.get("agirlik") == "SERT" and i.get("durum") != "kabul_edildi"]
     engelleyen = [i for i in acik_sert if not i.get("kabul_edilebilir")]
     kabul_bekleyen = [i for i in acik_sert if i.get("kabul_edilebilir")]
+
+    denetlenemeyen = _denetlenemeyen_kurallar(girdi, uygulanmayan, eksik_boyutlar)
+    d_engelleyen = [d for d in denetlenemeyen if d["etki"] == "engelliyor"]
+    d_bekleyen = [d for d in denetlenemeyen if d["etki"] == "kabul_bekliyor"]
     return {
-        "yayinlanabilir": not acik_sert,
+        "yayinlanabilir": not acik_sert and not d_engelleyen and not d_bekleyen,
         "engelleyen_ihlaller": engelleyen,       # kabul secenegi SUNULMAZ
         "kabul_bekleyen_ihlaller": kabul_bekleyen,  # gerekceyle kabul edilebilir
-        "kabul_secenegi_sunulur": bool(kabul_bekleyen) and not engelleyen,
+        # T-18: "bakamadim" satirlari -- her birinde `etki` ve cumle var
+        "denetlenemeyen_kurallar": denetlenemeyen,
+        "kabul_secenegi_sunulur": (bool(kabul_bekleyen) or bool(d_bekleyen))
+                                  and not engelleyen and not d_engelleyen,
     }
+
+
+def _denetlenemeyen_kurallar(girdi, uygulanmayan, eksik_boyutlar):
+    """T-18: bakilamayan kural/parca satirlari, kapidaki etkisiyle."""
+    if not girdi:
+        return []
+    tanimlar = {k.get("kod"): k for k in girdi.get("kurallar", []) or []}
+    kabuller = {}
+    for k in girdi.get("denetim_disi_kabul", []) or []:
+        if (k.get("gerekce") or "").strip():
+            kabuller[k.get("kod")] = k
+    satirlar = []
+    for kod in (uygulanmayan or []):
+        satirlar.append(_denetlenemeyen_satir(
+            tanimlar.get(kod, {"kod": kod}), kabuller, parca=None,
+            sebep="dogrulayicida govdesi yok"))
+    for e in (eksik_boyutlar or []):
+        if not e.get("denetlenemedi"):
+            continue
+        satirlar.append(_denetlenemeyen_satir(
+            tanimlar.get(e["kural"], {"kod": e["kural"]}), kabuller,
+            parca=e.get("boyut"), sebep=e.get("sebep", "")))
+    return satirlar
+
+
+def _denetlenemeyen_satir(tanim, kabuller, parca, sebep):
+    kod = tanim.get("kod")
+    sert = (tanim.get("tur") or "SERT").upper() == "SERT"
+    yasal = bool(tanim.get("yasal"))
+    ne = "%s kurali%s" % (kod, (" (%s parcasi)" % parca) if parca else "")
+    if not sert:
+        etki = "rapor"
+        mesaj = ("%s aktif ama denetlenemedi (%s); kural yumusak, yayin "
+                 "etkilenmez -- yalniz bildirilir" % (ne, sebep))
+    elif yasal:
+        etki = "engelliyor"
+        mesaj = ("%s aktif, SERT ve YASAL ama denetlenemedi (%s): plan bu "
+                 "kural icin kontrol edilmedi; yasal kural onaylanarak "
+                 "gecilemez, yayin engellendi (T-18, K-49)" % (ne, sebep))
+    elif kod in kabuller:
+        etki = "kabul_edildi"
+        k = kabuller[kod]
+        mesaj = ("%s denetlenemedi (%s); yetkili kabul etti: %s"
+                 % (ne, sebep, k.get("gerekce")))
+    else:
+        etki = "kabul_bekliyor"
+        mesaj = ("%s aktif ve SERT ama denetlenemedi (%s): plan bu kural icin "
+                 "kontrol edilmedi; firma kurali -- yetkili gerekce yazarak "
+                 "kabul edebilir, kabul edilene kadar yayinlanamaz (T-18, K-49)"
+                 % (ne, sebep))
+    satir = {"kod": kod, "parca": parca, "tur": "SERT" if sert else "YUMUSAK",
+             "yasal": yasal, "etki": etki, "mesaj": mesaj}
+    if etki == "kabul_edildi":
+        satir["kabul"] = kabuller[kod]
+    return satir
