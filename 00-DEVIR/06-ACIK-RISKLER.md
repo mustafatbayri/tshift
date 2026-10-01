@@ -3164,6 +3164,14 @@ Eski kodda ipucu **eldeyken** ana aşama 265 saniyede tek plan bulamadı —
 tam ölçekteki *"birinci aşama geçti/geçmedi, ana aşama 778 sn'de 0 atama"*
 tablosunun aynısı. Yarım ipucu CP-SAT'e hiçbir şey vermiyormuş.
 
+**Tam ölçek (1 Ekim öğlen, 500 kişi, 6 çekirdek, 900 sn):** birinci aşama
+**10,3 sn** (üç önceki koşuda 120 sn'de başarısız), ana aşamada ilk plan
+**48,9 sn** (dün 778 sn'de yok), 2.476 atama, 0 sert. Plan bulma tarafı
+**kapandı**. Kalite tarafı aynı yerde: optimuma uzaklık %98,99 (alt sınır
+zayıf — sayı, planın kötülüğünü değil kanıtın zayıflığını da taşıyor, bkz.
+`alt_sinir`); yumuşak ihlaller HEDEF 96 · ADALET 126 · MOLA 38, önceki
+koşularla aynı bantta.
+
 ⚠ Amaç değeri tek koşuda 56 bin ile 104 bin arasında oynuyor — **kalite
 sonucu çıkarılamaz**, bu tablo yalnız *plan bulma* için. ⚠ Sabit molalı
 başlangıç planı kalitesiz olabilir (aynı şablondaki herkes aynı dakikada
@@ -4039,10 +4047,13 @@ arıyor ve ipucu tam yazılıyor — T-60'ın altında. 0.2 ölçekte ölçüld�
 birinci aşama 18 sn → **1,7 sn**, ana aşamanın ilk planı 57–101 sn →
 **21 sn**. ⚠ Tam ölçekte henüz ölçülmedi — sabahki koşu bunun sınavı.
 
-**Ne gerek:** tam ölçek koşusunun **tekrarı** (sabah, `--saniye 900`):
-beklenen `iki asama: True`, ilk plan erken, 0 sert ihlal ve
-`olcum-plan-95.json`'daki planda üst üste binen mola olmaması. Koşu betiği
-*"ana asamada ilk plan: N sn"* yazıyor.
+**✅ Sahada doğrulandı (1 Ekim öğlen, Mustafa'nın makinesi, 900 sn):**
+`iki asama: True` (birinci aşama **10,3 sn**), ana aşamada ilk plan **48,9 sn**,
+2.476 atama, **0 sert ihlal**, yayınlanabilir. Kaydedilen plan okundu:
+9.171 mola, **üst üste binen sıfır**; bir yarı zamanlı yine tam 45,00 saatte
+duruyor (dün ihlal yazdıran sınır durumu) — bu kez temiz. 374 müşteri
+hizmetleri ataması (20 dk molalı), 56 uç uca değen mola çifti (serbest,
+beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 
 → T-57 · T-27 · T-44 · T-60 · K-34 · `09-motor/testler/test_net_saat_uyumu.py`
 
@@ -4068,7 +4079,7 @@ beklenen `iki asama: True`, ilk plan erken, 0 sert ihlal ve
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. ⚠ 1 Ekim: T-78 düzeltmesi tam ölçekte planı götürdü; birinci aşama molaları sabitleyerek arıyor, ipucu tam (0.2'de 18 → 1,7 sn). **Tam ölçekte ölçülmedi** — sabahki koşu önce plan bulma, sonra kalite |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). Kalan: kalite — dört ölçüm (ilk aşama payı, iki aşama açık/kapalı, SAAT_DENGESI'siz, %85 seti) |
 | **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

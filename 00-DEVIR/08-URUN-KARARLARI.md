@@ -2276,7 +2276,7 @@ alanı gerçekten böyle kullanıp kullanmadığı doğrulanmalı.
 → T-77 · T-18 · K-42 · `09-motor/testler/test_rapor_ozeti_ve_teshis.py`
 
 
-## K-48 · Süre bütçesi **arama süresidir**; model kurma **ayrı kalem** olarak gösterilir — ⚠ sabah onayı bekliyor
+## K-48 · Süre bütçesi **arama süresidir**; model kurma **ayrı kalem** olarak gösterilir — 1 Ekim öğlen: itiraz gelmedi, kesinleşti
 
 **Soru (1 Ekim gecesi):** üç tam ölçekli koşu *"en fazla 900 sn"* deyip
 958 sn sürdü — birinci aşama + ana aşama = tam 900, model kurma (~55–78 sn)

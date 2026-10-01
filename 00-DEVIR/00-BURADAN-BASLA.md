@@ -115,8 +115,11 @@ yeni kod 2,5 sn + ilk plan 25 sn. ⚠ **Tam ölçekte ölçülmedi** — sabahki
 bunun sınavı. Ana aşama molaları serbest arıyor (K-32 değişmedi). **K-48** (sabah
 onayı bekliyor): bütçe = arama, model kurma ayrı gösterilir. Ölçüm betiği
 modeli artık bir kez kuruyor (55–80 sn tasarruf). Motor **421 test**,
-**128 mutasyon**. **Sabah:** commit + `py coz-olc.py --saniye 900`; beklenen
-`iki asama: True`, ilk plan erken, 0 sert.
+**128 mutasyon hepsi öldü** (1 Ekim 15:35, tam koşu). **Sabah:** commit + `py coz-olc.py --saniye 900`; beklenen
+`iki asama: True`, ilk plan erken, 0 sert. **→ 1 Ekim 15:20, ölçüldü ve geçti:**
+birinci aşama 10,3 sn, ilk plan 48,9 sn, 0 sert, yayınlanabilir; planda üst
+üste binen mola yok. T-78 sahada kapandı; T-60'ın plan bulma yarısı kapandı,
+kalite yarısı (%99 uzaklık) duruyor. K-48 kesinleşti. **Şartname yazı borcu ödendi** (16:30): §6.3, §6.4, §6.5, §8.4, §11.2–11.4 ve değişiklik listesi 29–35; T-18 ve T-21 karar bekliyor.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 

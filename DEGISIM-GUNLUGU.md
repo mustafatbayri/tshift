@@ -4,6 +4,20 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (öğlen) · Tam ölçek sınavı geçti · şartname yazı borcu ödendi · mutasyon 128/128**
+Mustafa'nın 900 sn koşusu: birinci aşama **10,3 sn** (üç koşudur 120 sn'de
+başarısızdı), ana aşamada ilk plan **48,9 sn**, 2.476 atama, 0 sert,
+yayınlanabilir; kaydedilen planda 9.171 mola, üst üste binen sıfır; bir yarı
+zamanlı tam 45,00'de, temiz. T-78 sahada kapandı, T-60'ın plan bulma yarısı
+kapandı (kalite %99 uzaklıkta duruyor). K-48 kesinleşti. Mutasyon tam koşusu
+**128 · hepsi öldü**. Şartname v1.4 yerinde güncellendi: §6.3 (K-44, K-45),
+§6.4 (K-41, T-62/T-63), §6.5 (K-46), §8.4 (`gece_vardiyasi`, K-40/K-43),
+§11.2 (K-42 lookback), §11.3 (süre kalemleri, `ilk_cozum_sn`, `belirsiz_
+kurallar`, K-48), §11.4 (çıktı kanalları); değişiklik listesi 29–35.
+Mustafa'ya iki karar soruldu: T-18 (üç kademeli yayın kapısı; kodu hazır,
+13 test) ve T-21 (şablon tek ekibe ait).
+→ `02-spec/v1.4-master-spec.md` · `00-DEVIR/06-ACIK-RISKLER.md` T-60, T-78 · `08-motor-testleri/gercekci-veri-seti/olcum-sonucu-95.json`
+
 **2026-10-01 (gece, 2) · T-78'in bedeli: tam ölçekte plan yok · birinci aşama molaları sabitleyerek arıyor, ipucu tam · K-48**
 Mustafa düzeltmeyi push edip tam ölçeği koşturdu: **plan bulunamadı**
 (`sure_yetmedi`, 0 atama; dün 654 çözüm). Model çözümsüz değil (her şablonda

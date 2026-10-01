@@ -1076,3 +1076,41 @@ vermiyormuş; asıl kaldıraç ipucunun tam yazılması + sabit molalı aramayd�
 
 **K-48** yazıldı (sabah onayı). Devir dosyaları güncellendi; commit bloğu
 sohbette. Mustafa 03:40'tan sonra yazmadı — uyuyor varsayıldı.
+
+## 41 · Sabah: tam ölçek sınavı geçti (1 Ekim 15:20)
+
+Mustafa commit'i push etti (CI yeşil) ve 900 sn koşturdu: birinci aşama
+**10,3 sn**, ana aşamada ilk plan **48,9 sn**, 2.476 atama, 0 sert,
+yayınlanabilir, toplam 958 sn (54 kurma + 900 arama + 2 doğrulama + 2).
+Plan dosyası okundu: 9.171 mola, üst üste binen sıfır; bir yarı zamanlı
+tam 45,00'de, temiz. T-78 sahada kapandı; T-60'ın plan bulma yarısı
+kapandı, kalite yarısı duruyor (%98,99). K-48 kesinleşmiş sayıldı
+(itiraz gelmedi). Mustafa'ya iki karar soruldu: T-18 (üç kademeli kapı) ve
+T-21 (şablon tek ekibe ait). Mutasyon tam koşusu bitti: **128 · hepsi öldü · atlanan 0** (15:35).
+
+## 42 · Şartname yazı borcu ödendi (1 Ekim 16:30)
+
+Mustafa'nın cevabı beklenirken `02-spec/v1.4-master-spec.md` güncellendi
+(yerinde, tarihli eklerle — v1.4 canlı sürüm): §6.3 K-44 ve K-45 alt
+bölümleri + tablo satırları; §6.4 K-41 (atanmış ölçüsü) ve T-62/T-63
+notları; §6.5 K-46 alt bölümü; §8.4 `gece_vardiyasi` satırı (K-40/K-43);
+§11.2 lookback kuralı K-42 ile değişti (eski cümle üstü çizili);
+§11.3 süre kalemleri tablosu (K-48, `ilk_cozum_sn`, `iki_asama`,
+`belirsiz_kurallar`); §11.4 çıktı kanalları tablosu; değişiklik listesine
+29–35. satırlar. T-18 ve T-21 karar gelince yazılacak. DENETIM 0 hata.
+
+## 43 · İki karar için kod hazırlandı, makineye yazılmadı (1 Ekim 17:15)
+
+Mustafa 15:20'den beri yazmadı. T-18 (üç kademeli kapı, K-49 adayı) ve
+T-21 (atama tek ekibe sayılır, K-50 adayı) için kod **oturum aynasında**
+hazır, makineye **yazılmadı** — karar gelmeden davranış değiştirmemek için.
+İçerik: `denetle.py` kapısı `uygulanmayan_kurallar` ve `eksik_boyutlar
+[denetlenemedi]` kanallarını görüyor, kabul kaydı `girdi.denetim_disi_kabul`
+(gerekçesiz kabul kabul değil; yasal kural kabulle açılamaz); `model.py`
+`_atama_ekibi` (şablonun ekibi, yoksa ilk ekip) `_atanmis`/`_sahada`/
+nitelik toplamında, `coz.py` çıktı ekibi, `teshis.py` ulaşılabilirlik;
+22 test, 13 mutasyon hepsi öldü; motor 443, altın senaryolar 12 geçti 4
+atlandı, fikstür tutarlı. ⚠ T-18 veri setindeki parametresiz
+YETKINLIK_KAPSAMASI yüzünden 0.1 bekçisini ve tam ölçek planını *"kabul
+bekliyor"*a düşürür; Mustafa'ya söylendi, çözüm onun seçimi (kabul kaydı
+ya da T-63 parametresi). Devir dosyaları ve proje notu güncel.
