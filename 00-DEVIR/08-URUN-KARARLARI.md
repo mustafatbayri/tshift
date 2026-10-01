@@ -2273,16 +2273,27 @@ var ve planlanan süre `00:00` ise o gün çalışma günü değil — bu satır
 *"bilinen boş gün"* sayılırsa bilinmeyen gün sayısı ciddi düşer. PDKS'in o
 alanı gerçekten böyle kullanıp kullanmadığı doğrulanmalı.
 
+🆕 **1 Ekim 18:00 — doğrulandı, cevap HAYIR** (`07-GERCEK-VERI-BULGULARI.md`
+§7): PDKS'in `00:00`'ı plan değil, takvim — hafta sonu satırı kişi kart
+okutunca **sonradan** `07:30`'a dönüyor (günden önce `00:00` olup sonra
+`07:30` olan 1.084 satırın hepsinde kart var; `00:00` kalan 6.014'ün hiçbirinde
+yok). Gelecek günler için hiçbir şey söylemiyor, geçmiş için *"kart yok"*un
+tekrarı. **Öneri (karar bekliyor):** bilinen boş günün kaynağı TShift'in
+kendi yayınladığı önceki planlar + PDKS izin satırları; giriş/çıkış yalnız
+ham saat olarak alınır (gece vardiyası başladığı günde tek satır — motorla
+aynı, düzeltme yok); yıl içi fazla mesai toplamı PDKS'in `FM` kolonundan
+değil bordrodan.
+
 → T-77 · T-18 · K-42 · `09-motor/testler/test_rapor_ozeti_ve_teshis.py`
 
 
-## K-48 · Süre bütçesi **arama süresidir**; model kurma **ayrı kalem** olarak gösterilir — 1 Ekim öğlen: itiraz gelmedi, kesinleşti
+## K-48 · Süre bütçesi **arama süresidir**; model kurma **ayrı kalem** olarak gösterilir — 1 Ekim 16:00: itiraz gelmedi, kesinleşti
 
 **Soru (1 Ekim gecesi):** üç tam ölçekli koşu *"en fazla 900 sn"* deyip
 958 sn sürdü — birinci aşama + ana aşama = tam 900, model kurma (~55–78 sn)
 bütçenin dışında.
 
-**Mustafa (1 Ekim 03:40):** *"Zaman en önemli kaynağımız… 'Ekranda modelleme
+**Mustafa (1 Ekim 13:05):** *"Zaman en önemli kaynağımız… 'Ekranda modelleme
 58, plan 900 sn' gibi belirtsek zamandan da kazanmış olmaz mıyız? Yahut
 900'e sığdıralım, kayıp var mı yok mu testlerde anlar öyle ilerleyebiliriz."*
 

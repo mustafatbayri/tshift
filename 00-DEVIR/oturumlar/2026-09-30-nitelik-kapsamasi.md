@@ -1040,7 +1040,7 @@ koşu T-60'ın ilk ölçümünü verir.
 
 Mustafa yatıyor; devir dosyaları güncellendi, commit bloğu sohbette.
 
-## 40 · Düzeltmenin bedeli ve birinci aşama (1 Ekim 03:40–05:00)
+## 40 · Düzeltmenin bedeli ve birinci aşama (1 Ekim 13:05–14:00)
 
 Mustafa düzeltmeyi push etti (CI yeşil), tam ölçek 900 sn: **plan yok** —
 `sure_yetmedi`, 0 atama, `ilk_cozum_sn: None`. Dün aynı sahnede 654 çözüm.
@@ -1075,9 +1075,10 @@ tam ölçeğin hastalığı burada yeniden üretildi. Yeni kod: birinci aşama
 vermiyormuş; asıl kaldıraç ipucunun tam yazılması + sabit molalı aramaydı.
 
 **K-48** yazıldı (sabah onayı). Devir dosyaları güncellendi; commit bloğu
-sohbette. Mustafa 03:40'tan sonra yazmadı — uyuyor varsayıldı.
+sohbette. ⚠ Saat etiketi 18:15'te düzeltildi: bu bölüm 13:05–14:00 arasında
+yazıldı, gece değil — koşu gece bitmiş, Mustafa sonucunu öğlen göndermişti.
 
-## 41 · Sabah: tam ölçek sınavı geçti (1 Ekim 15:20)
+## 41 · Öğleden sonra: tam ölçek sınavı geçti (1 Ekim 15:20)
 
 Mustafa commit'i push etti (CI yeşil) ve 900 sn koşturdu: birinci aşama
 **10,3 sn**, ana aşamada ilk plan **48,9 sn**, 2.476 atama, 0 sert,
@@ -1088,7 +1089,7 @@ kapandı, kalite yarısı duruyor (%98,99). K-48 kesinleşmiş sayıldı
 (itiraz gelmedi). Mustafa'ya iki karar soruldu: T-18 (üç kademeli kapı) ve
 T-21 (şablon tek ekibe ait). Mutasyon tam koşusu bitti: **128 · hepsi öldü · atlanan 0** (15:35).
 
-## 42 · Şartname yazı borcu ödendi (1 Ekim 16:30)
+## 42 · Şartname yazı borcu ödendi (1 Ekim 15:45)
 
 Mustafa'nın cevabı beklenirken `02-spec/v1.4-master-spec.md` güncellendi
 (yerinde, tarihli eklerle — v1.4 canlı sürüm): §6.3 K-44 ve K-45 alt
@@ -1099,7 +1100,7 @@ notları; §6.5 K-46 alt bölümü; §8.4 `gece_vardiyasi` satırı (K-40/K-43);
 `belirsiz_kurallar`); §11.4 çıktı kanalları tablosu; değişiklik listesine
 29–35. satırlar. T-18 ve T-21 karar gelince yazılacak. DENETIM 0 hata.
 
-## 43 · İki karar için kod hazırlandı, makineye yazılmadı (1 Ekim 17:15)
+## 43 · İki karar için kod hazırlandı, makineye yazılmadı (1 Ekim 15:45)
 
 Mustafa 15:20'den beri yazmadı. T-18 (üç kademeli kapı, K-49 adayı) ve
 T-21 (atama tek ekibe sayılır, K-50 adayı) için kod **oturum aynasında**
@@ -1115,7 +1116,7 @@ YETKINLIK_KAPSAMASI yüzünden 0.1 bekçisini ve tam ölçek planını *"kabul
 bekliyor"*a düşürür; Mustafa'ya söylendi, çözüm onun seçimi (kabul kaydı
 ya da T-63 parametresi). Devir dosyaları ve proje notu güncel.
 
-## 44 · İki karar uygulandı (1 Ekim 17:30–19:15)
+## 44 · İki karar uygulandı (1 Ekim 16:00–16:45)
 
 Mustafa: T-18 *"onaylıyorum"*; T-21 için saha örneği — çift yetenekli
 eleman o saatte iki birim için yer doldurur. ⚠ Önerim tersti; geri alındı,
@@ -1141,7 +1142,7 @@ alanı aynı varsayılanla okur; ön kontrol çift üyeli kişiyi görür; çık
 Sayılar: motor 459, mutasyon gruplarında kapı 6/6, çok ekipli 11/11,
 yıllık 9/9; vaka aracı 35 gövde · 34 vaka · 34 kırmızı · 1 bilerek vakasız.
 
-## 45 · Dört karar daha (1 Ekim 19:30–22:30)
+## 45 · Dört karar daha (1 Ekim 16:56–17:27)
 
 Mustafa'nın cevapları: 1 departman tanımı + çalışma saatleri (katılıyor);
 2 her birim için İngilizce, veri seti karmaşık olsun; 3 ceza ile ilerle,
@@ -1166,12 +1167,12 @@ tek seçenekli kapalı şablon → çözümsüz testi), biri çift koruma —
 koruma tekleştirildi, mutant yeniden hedeflendi. Sayılar: motor 481,
 mutasyon 166, vaka 36/36+1, bekçi 20, altın 12.
 
-## 46 · İkinci tam ölçek koşusu (1 Ekim 22:50) — akşam 19:15'teki kodla
+## 46 · İkinci tam ölçek koşusu (1 Ekim 17:37) — 16:45'teki kodla
 
 Mustafa'nın koşusu (sahne 42 kurallı, yani yıllık fazla mesai toplamı ve
-kabul kayıtlı 19:15 sürümü; departman saatleri ve yetkinlik gereklilikleri
-henüz yok): model kurma 98,5 sn, birinci aşama 100,6 sn (sabah 10,3),
-ana aşamada ilk plan 87,8 sn (sabah 48,9), 2.513 atama, **0 sert ihlal,
+kabul kayıtlı 16:45 sürümü; departman saatleri ve yetkinlik gereklilikleri
+henüz yok): model kurma 98,5 sn, birinci aşama 100,6 sn (öğlen 10,3),
+ana aşamada ilk plan 87,8 sn (öğlen 48,9), 2.513 atama, **0 sert ihlal,
 yayınlanabilir**, optimuma uzaklık %99,14, yumuşak: adalet 154 · hedef
 128 · mola 62. Toplam 1.008 sn. Model kurma da iki katına çıktığı (54 →
 98 sn) için makine o sırada yavaştı; birinci aşamanın 10 → 100 sn
@@ -1179,5 +1180,38 @@ sıçraması buna yorulabilir ama **ölçülmedi** — sonraki koşuda tekrar
 bakılacak. Yayın kapısı yeni kademeleriyle (K-49) bu planı geçirdi:
 yıllık tavan gövdeli, iki kabul kaydı yerinde.
 
-Karar: 19:15 sürümü tam ölçekte kabul. 22:40 sürümü (K-51…K-53, T-38)
+Karar: 16:45 sürümü tam ölçekte kabul. 17:27 sürümü (K-51…K-53, T-38)
 için koşu tekrarı gerekiyor; commit önce, push koşu sonrası.
+
+## 47 · PDKS ham verisi incelendi — `MS 00:00` bilinen boş gün değil (1 Ekim 17:50–18:15)
+
+Mustafa üç PDKS klasörünü (Temmuz, Ağustos, Eylül ihracatları) bağladı ve
+*"ham veriye bakabilirsin"* dedi. Bakış: dosyalar makinesinde kaldı, betik
+orada koştu, bana yalnız sayılar geldi; isim, sicil, firma ve bölüm adı
+hiçbir çıktıya yazılmadı, hiçbir dosya buluta kopyalanmadı. Betik repoya
+girdi: `07-motor/pdks-ms-gece-yarisi.py` (yalnız sayı yazar; raporu
+`06-veri/` altına, git dışına bırakır).
+
+Bulgular `07-GERCEK-VERI-BULGULARI.md` §7'de (P-2…P-5): `MS` plan değil
+takvim — hafta sonu satırı kart okutulunca sonradan `00:00`→`07:30` oluyor
+(1.084/1.084 kartlı; `00:00` kalan 6.014'te kart yok); gece yarısını aşan
+vardiya başladığı güne tek satırda yazılıyor (1.392 satır; bölünmüş satır 0)
+— motorla aynı, düzeltme yok; PDKS'in NM/EM/FM kovaları vardiyalı çalışan
+için yanlış (17:46–00:01'e "eksik 9:16, fazla 5:31"), 22–23 saatlik sahte
+satırlar var; izinler ve resmi tatil işareti güvenilir. 13 Eylül'deki `MS`
+tablosu düzeltme notuyla işaretlendi.
+
+Öneri Mustafa'ya yazıldı, karar bekliyor: bilinen boş gün = TShift'in kendi
+plan geçmişi + PDKS izin satırları; giriş/çıkış ham saat; yıl içi fazla
+mesai bordrodan. Motor kodu değişmedi.
+
+Aynı saatlerde beş kararın commit bloğu verildi (öğleden sonraki iki kararlık
+blok geçersiz sayıldı); tam ölçek koşusu 17:27 koduyla bekleniyor, push
+ondan sonra.
+
+⚠ **Saat etiketleri düzeltildi (18:15):** 40–46. bölümlerin başlıkları
+yanlış saatler taşıyordu (03:40–05:00, 17:15, 17:30–19:15, 19:30–22:30,
+22:50; sürümler "19:15" ve "22:40" diye anılıyordu). Gerçek saatler sohbet
+kaydından alındı: 13:05–14:00, 15:45, 16:00–16:45, 16:56–17:27, 17:37;
+sürümler 16:45 ve 17:27. Diğer devir dosyalarındaki aynı etiketler de
+düzeltildi; gece (01:20–02:17) etiketleri doğruydu, kaldı.

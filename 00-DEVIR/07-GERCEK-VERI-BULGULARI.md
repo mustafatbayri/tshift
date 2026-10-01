@@ -58,6 +58,12 @@ takvim ızgarası** (boş günler dahil).
 | `00:00` | 6.277 | Çalışma günü değil |
 | `07:30` | 1.463 | Standart ofis mesaisi |
 
+> 🆕 **1 Ekim düzeltmesi (bkz. §7):** bu okuma eksikti. `00:00` *"çalışma günü
+> değil"* demek değil, *"takvimde hafta sonu ve henüz kart okutulmadı"* demek;
+> kişi hafta sonu gelip kart okutunca PDKS satırı **sonradan** `07:30`'a
+> çeviriyor. `10:00` hafta içi takvimi; `07:30` ya altı günlük takvim ya da
+> sonradan işlenmiş hafta sonu çalışması. `MS` bir plan değil, PDKS'in takvimi.
+
 `NM, AS, FM, FAS, OFM, IZS, EM` süre kovaları (HH:MM); `GV, GZ, RM` her
 satırda `00:00` — **kullanılmıyor.**
 
@@ -456,3 +462,96 @@ otel CC ekibi ile 97 kişilik çağrı merkezi aynı veri kümesinde.
 doğrulayıcı daha yazıldığı gün gerçek veriyle sınanabilir. Bu, motorun ilk
 gerçek parçasıdır; bu yüzden `06-veri` altında değil **`07-motor/`** altında
 duruyor: kod git'e girer, veri girmez.
+
+---
+
+## 7. 1 Ekim eki — PDKS'in `MS` alanı ve gece yarısı (K-47'nin açık sorusu)
+
+**Soru (Mustafa, 1 Ekim):** PDKS'te planlanan süresi `00:00` olan satır
+*"bilinen boş gün"* sayılabilir mi? Gece yarısını aşan vardiyayı PDKS önceki
+güne mi yazıyor; öyleyse motorun mantığı düzeltilmeli mi?
+
+**Nasıl bakıldı:** 47 dışa aktarma dosyası (1 Haziran – 6 Eylül; günlük,
+haftalık ve aylık ihracatlar üst üste biniyor), aynı çalışan×gün satırı en
+son ihracat kazanacak şekilde tekilleştirildi: 249.996 ham satır → **82.823
+çalışan×gün**, 936 kişi, 7 firma. Betik: `07-motor/pdks-ms-gece-yarisi.py`
+— yalnız sayı yazar; isim, sicil, firma ve bölüm adı yazmaz. Dosyalar
+Mustafa'nın makinesinde kaldı, hiçbir şey kopyalanmadı.
+
+### P-2 · `MS` plan değil, takvim — ve hafta sonu satırı **sonradan** değişiyor
+
+| Gün | MS `10:00` | MS `07:30` | MS `00:00` |
+|---|---|---|---|
+| Pazartesi–Cuma | 56.574 | 2.176 | **0** |
+| Cumartesi | 0 | 1.860 | 9.739 |
+| Pazar | 0 | 1.213 | 11.261 |
+
+`00:00` yalnız hafta sonunda var; hafta içi herkes `10:00` (altı günlük
+*"09:00 - 18:00"* takvimindekiler `07:30`). Aynı hafta sonu gününün **günden
+önce** alınmış ihracattaki değeri ile **günden sonra** alınmış son
+ihracattaki değeri karşılaştırıldı:
+
+| Önce → sonra | Satır | Kart kaydı olan |
+|---|---|---|
+| `00:00` → `00:00` | 6.014 | **0** |
+| `00:00` → `07:30` | 1.084 | **1.084 (hepsi)** |
+| `07:30` → `07:30` | 56 | 7 |
+
+Yani PDKS hafta sonunu önce *"boş"* yazıyor, kişi gelip kart okutunca satırı
+`07:30`'a çeviriyor. Önceden `07:30` yazan hafta sonu satırı 112 ve hepsi altı
+günlük takvimdekiler. Hafta içi değer hiç değişmiyor (`10:00` → `10:00`
+27.617 satır; kart olsa da olmasa da).
+
+**Sonuç:** *"MS 00:00 = bilinen boş gün"* **yanlış olur.** Gelecek günler için
+PDKS o gün kimin çalışacağını bilmiyor (takvim hafta sonu diyor, o kadar);
+geçmiş günler için `00:00` yeni bilgi değil, zaten *"kart okutulmadı"* demek —
+onu `Giriş` boşluğundan biliyoruz. K-42'deki *"kayıt yokluğu ile boş gün
+ayrılsın"* ihtiyacını PDKS'in bu alanı karşılamıyor.
+
+### P-3 · Gece yarısını aşan vardiya **başladığı güne**, tek satırda yazılıyor
+
+Giriş-çıkışı tam 20.247 satırın **1.392**'sinde çıkış saati girişten küçük
+(`14:48–00:01`, `15:48–01:13`, `17:46–00:01` gibi). *"Giriş boş, çıkış dolu"*
+satır **sıfır**: PDKS vardiyayı ertesi güne bölmüyor. En sık desenler
+14→00 (313), 12→00 (117), 15→01 (112), 16→00 (105), 17→00 (80). Bu, motorun
+kuralıyla aynı (vardiya başladığı güne sayılır, Z-2) — **düzeltilecek mantık
+yok.** B-2'deki 182 gece yarısı vardiyası plan dosyasındandı; PDKS tarafı da
+aynı yönde.
+
+### P-4 · PDKS'in saat kovaları vardiyalı çalışan için **yanlış**; kaynak alınamaz
+
+`NM / EM / FM` (normal, eksik, fazla mesai) sabit gündüz şablonuna göre
+hesaplanıyor. Çıkışı girişten küçük 1.132 akşam/gece satırında ortalama
+NM 4,5 · EM 5,3 · FM 4,7 saat; 08–10 arası giren 12.199 gündüz satırında NM 9,1
+· EM 0,8 · FM 0,3. Örnek: `17:46–00:01` çalışan birine *"normal 0:44, eksik
+9:16, fazla 5:31"* yazılmış. Ayrıca gece vardiyası sonrası çift kart
+okutmalar 22–23 saatlik sahte satırlar üretiyor (`01:12 – ertesi gün 00:57`
+gibi; ~350 satır); giriş saati 00:00–01:59 olan 851 satırın 458'inin önceki
+günü de aynı türden, 259'unun önceki günü gerçek bir akşam vardiyası.
+
+**Sonuç:** PDKS'ten alınacak şey **ham giriş/çıkış saati**; süre, fazla mesai
+ve dinlenme hesabını ürün kendisi yapar. **Yıllık fazla mesai toplamı**
+(`calisanlar[].yil_ici_fazla_mesai_saat`, `YILLIK_FAZLA_MESAI_TAVANI`) PDKS'in
+`FM` kolonundan **alınmaz**; bordrodan gelmeli.
+
+### P-5 · PDKS'in güvenilir verdiği: izinler ve resmi tatil
+
+Önceden girilmiş kayıtlar: yıllık izin (1.643 satır), uzaktan çalışma (222),
+telafi çalışma izni (75), geçici görevlendirme (73), ücretsiz izin (37);
+daha seyrek evlenme, doğum günü, taşınma ve saatlik izin; resmi tatil
+işareti (*15 Temmuz* 902, *Zafer Bayramı* 882). Hafta sonu çalışması var ama
+azınlık: cumartesi 1.782, pazar 1.123 kart kaydı (çoğu çağrı merkezi satış).
+
+### Öneri (karar Mustafa'da; 1 Ekim 18:00'de soruldu)
+
+1. `gecmis_bilinen_gunler`'in kaynağı PDKS'in `00:00`'ı **değil**: (a) TShift'in
+   kendi yayınladığı önceki planlar — ilk haftalardan sonra geçmiş zaten
+   elimizde, geçmiş-eksik raporunun gürültüsü (T-77) kendiliğinden düşer —
+   ve (b) PDKS'teki izin satırları (*"o gün izinli"* = bilinen boş gün).
+2. `gecmis_vardiyalar` PDKS'ten yalnız ham giriş/çıkış ile gelir: çıkışı
+   girişten küçük satır gece vardiyası (başladığı güne), 16 saati aşan ya da
+   00:00–02:00 arası *"giriş"*li satır **bilinmeyen** sayılır.
+3. Yıl içi fazla mesai toplamı bordrodan.
+4. Motor tarafında değişiklik yok; bunlar içe aktarma (entegrasyon) kuralları.
+
+→ K-42 · K-47 · T-77 · `07-motor/pdks-ms-gece-yarisi.py` · şartname §11.2

@@ -100,7 +100,7 @@ PDKS 0 habersiz. Yeni 🟡 soru: süre bütçesi duvar saati mi (model kurma ~55
 dışarıda; K-48 adayı). `ilk_cozum_sn` çıktıya eklendi (T-60 için). Açık 🔴
 **altı**.
 
-**⚠ 1 Ekim 03:40 — düzeltmenin bedeli ve cevabı (en güncel durum budur).**
+**⚠ 1 Ekim 13:05 — düzeltmenin bedeli ve cevabı (en güncel durum budur).**
 Mustafa T-78 düzeltmesini push edip (CI yeşil) tam ölçeği koşturdu: **plan
 bulunamadı** — `sure_yetmedi`, 0 atama, 778 saniyede ilk plan yok (dün 654
 çözüm vardı). Model çözümsüz değil, arama ağırlaştı; çözücü zaten sınırdaydı
@@ -111,7 +111,7 @@ plan bulma tarafı):** birinci aşama molaları ideale en yakın tek noktaya
 bırakıyordu). 0.2 ölçekte: birinci aşama 18 → **1,7 sn**, ana aşamanın ilk
 planı 57–101 → **21 sn**; 0.3 ölçekte (151 kişi) tam ölçeğin hastalığı yeniden
 üretildi — eski kod ipucu eldeyken ana aşamada **hiç plan bulamadı** (265 sn),
-yeni kod 2,5 sn + ilk plan 25 sn. ⚠ **Tam ölçekte ölçülmedi** — sabahki koşu
+yeni kod 2,5 sn + ilk plan 25 sn. ⚠ **Tam ölçekte ölçülmedi** — 15:20 koşusu
 bunun sınavı. Ana aşama molaları serbest arıyor (K-32 değişmedi). **K-48** (sabah
 onayı bekliyor): bütçe = arama, model kurma ayrı gösterilir. Ölçüm betiği
 modeli artık bir kez kuruyor (55–80 sn tasarruf). Motor **421 test**,
@@ -121,7 +121,7 @@ birinci aşama 10,3 sn, ilk plan 48,9 sn, 0 sert, yayınlanabilir; planda üst
 üste binen mola yok. T-78 sahada kapandı; T-60'ın plan bulma yarısı kapandı,
 kalite yarısı (%99 uzaklık) duruyor. K-48 kesinleşti. **Şartname yazı borcu ödendi** (16:30): §6.3, §6.4, §6.5, §8.4, §11.2–11.4 ve değişiklik listesi 29–35.
 
-**⚠ 1 Ekim akşamı — iki karar daha, en güncel durum budur.** Mustafa iki 🔴'yı
+**⚠ 1 Ekim 16:45 — iki karar daha, en güncel durum budur.** Mustafa iki 🔴'yı
 kararlaştırdı. **K-49 (onayladı):** motorun kontrol edemediği aktif kural kapıdan
 geçemez — yasal+sert engeller, firma+sert yetkili gerekçeyle kabul edene kadar
 bekler, yumuşak yalnız raporlanır. Kapı kapanınca veri seti üç yerden ısırdı:
@@ -135,7 +135,7 @@ sahası):** çok yetenekli çalışan üye olduğu **bütün ekiplere** sayılı
 **459 test**, **154 mutasyon hepsi öldü**, 35 gövde · 34 vaka · 34 kırmızı (+1
 bilerek vakasız). Açık 🔴 **dört** (T-29, T-38, T-54, T-60).
 
-**⚠ 1 Ekim gece — dört karar daha uygulandı, en güncel durum budur.**
+**⚠ 1 Ekim 17:27 — dört karar daha uygulandı, en güncel durum budur.**
 **K-51:** çözücünün sabit "0 sert ihlal" sayısı çıktıdan kaldırıldı.
 **K-52:** departman tanımı ve çalışma saatleri geldi (`departmanlar[].acik`),
 `CALISMA_SAATLERI` iki yarıda yazıldı; her birim için yetkinlik gerekliliği
@@ -143,11 +143,24 @@ bilerek vakasız). Açık 🔴 **dört** (T-29, T-38, T-54, T-60).
 1 Almanca), üretici taşıyıcı tabanı koyuyor; veri setindeki kabul kayıtları
 kalktı. **K-53:** hedefi aşan kişi-saate yumuşak ceza (`HEDEF_ASIMI`, katalog
 **41**). **T-38** 🟡'ya indi ve sıralandı; `sure_butcesi_sn` ve `istek_id`
-servise bağlandı. Kapananlar: T-54, T-63, T-66 (+ sabah T-18, T-21, T-67,
+servise bağlandı. Kapananlar: T-54, T-63, T-66 (+ bugün daha önce T-18, T-21, T-67,
 T-78). Motor **481 test**, mutasyon **166 hepsi öldü**, 37 gövde · 36 vaka ·
 36 kırmızı (+1 bilerek vakasız), bekçi 20, altın senaryolar 12 geçti. Açık 🔴
 **iki**: T-29 (dondurulmuş gün — Mustafa onayladı, yazılacak), T-60 (kalite).
 ⚠ Bugünkü değişikliklerden sonra tam ölçek **yeniden** koşulmalı.
+
+**⚠ 1 Ekim 18:15 — PDKS ham verisi ölçüldü, en güncel durum budur.** Mustafa
+ham PDKS'i açtı; betik makinesinde koştu, yalnız sayı döndü
+(`07-motor/pdks-ms-gece-yarisi.py`). **K-47'nin açık sorusu cevaplandı:**
+PDKS'in `00:00`'ı plan değil, kart okutulunca sonradan değişen takvim —
+*"bilinen boş gün"* kaynağı **olamaz**; gece yarısını aşan vardiya PDKS'te de
+başladığı günde (motorla aynı, düzeltme yok); PDKS'in normal/eksik/fazla
+mesai kovaları vardiyalı çalışan için yanlış, yıl içi fazla mesai bordrodan
+gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; öneri karar bekliyor.
+İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
+commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
+⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
+19:15, 22:40, 22:50" yanlıştı; öğleden sonra ve akşam işiydi).
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -318,8 +331,8 @@ A5 ertelendi (K-12).
 
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
-| Yazılan kural gövdesi | **37** (katalogdaki **41**'in alt kümesi; biri ihlal üretmez) | 1 Ekim gecesi, ikisi de sayılarak |
-| Motor birim testi | **481**, hepsi yeşil | 1 Ekim gecesi, koşularak |
+| Yazılan kural gövdesi | **37** (katalogdaki **41**'in alt kümesi; biri ihlal üretmez) | 1 Ekim akşamı, ikisi de sayılarak |
+| Motor birim testi | **481**, hepsi yeşil | 1 Ekim akşamı, koşularak |
 | Zor veri seti bekçisi | **20**, hepsi yeşil (12 + sahte PDKS üreticisi 8; 6 dk 10 sn) | 30 Eylül gecesi |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -668,7 +681,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **37** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **481** birim testi (1 Ekim gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **37** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **481** birim testi (1 Ekim akşamı). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

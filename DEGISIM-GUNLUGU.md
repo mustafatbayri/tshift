@@ -4,7 +4,17 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
-**2026-10-01 (gece) · K-51 sahte sert ihlal sayısı kaldırıldı · K-52 departman çalışma saatleri + her birim için yetkinlik · K-53 hedefi aşan saate ceza · T-38 sıralandı**
+**2026-10-01 (18:15) · PDKS ham verisi: `MS 00:00` bilinen boş gün değil · gece yarısı başladığı günde · saat kovaları güvenilmez**
+Mustafa ham PDKS'i açtı; betik makinesinde koştu, yalnız sayı döndü.
+Bulgular `00-DEVIR/07-GERCEK-VERI-BULGULARI.md` §7 (P-2…P-5); 13 Eylül'deki
+`MS` okuması düzeltildi. K-47'nin açık sorusu cevaplandı: PDKS'in `00:00`'ı
+plan değil, kart okutulunca sonradan değişen takvim (1.084/1.084). Gece
+yarısını aşan vardiya PDKS'te de başladığı günde — motorla aynı. Öneri karar
+bekliyor (bilinen boş gün = TShift'in kendi plan geçmişi + izin satırları;
+yıl içi fazla mesai bordrodan, PDKS `FM`'den değil). Motor kodu değişmedi.
+→ `07-motor/pdks-ms-gece-yarisi.py` · `00-DEVIR/07-GERCEK-VERI-BULGULARI.md` · `08-URUN-KARARLARI.md` K-47 · `06-ACIK-RISKLER.md` T-77 · şartname §11.2
+
+**2026-10-01 (17:27) · K-51 sahte sert ihlal sayısı kaldırıldı · K-52 departman çalışma saatleri + her birim için yetkinlik · K-53 hedefi aşan saate ceza · T-38 sıralandı**
 Mustafa'nın dört kararı. **K-51:** çözücü çıktısındaki `metrikler.sert_ihlal`
 (hep sıfır, ölçülmüyordu) kaldırıldı; altın senaryo testi beklentiyi bağımsız
 denetimden okuyor. **K-52:** girdiye `departmanlar[]` (ekipler + `acik`:
@@ -23,7 +33,7 @@ aşımı 4 — hepsi öldü), vaka aracı 37 gövde · 36 vaka · 36 kırmızı,
 yeniden koşulmalı.
 → `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py` · `denetle.py` · `09-motor/servis.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-51…K-53 · `02-spec/v1.4-master-spec.md` değişiklik 39–42
 
-**2026-10-01 (akşam) · K-49 yayın kapısı "bakamadım"ı görüyor · K-50 çok yetenekli çalışan bütün ekiplerine sayılır · yıllık fazla mesai tavanının gövdesi yazıldı · T-18, T-21, T-67 kapandı**
+**2026-10-01 (16:45) · K-49 yayın kapısı "bakamadım"ı görüyor · K-50 çok yetenekli çalışan bütün ekiplerine sayılır · yıllık fazla mesai tavanının gövdesi yazıldı · T-18, T-21, T-67 kapandı**
 Mustafa iki kararı verdi. **K-49 (T-18):** motorun kontrol edemediği aktif
 kural kapıdan geçemez — yasal+sert **engeller**, firma+sert yetkili gerekçe
 yazarak kabul edene kadar **bekler** (`girdi.denetim_disi_kabul`), yumuşak
@@ -46,7 +56,7 @@ yıllık 9 — hepsi öldü), 35 gövde · 34 vaka · 34 kırmızı. Şartname: 
 §6.2, §8.2, §11.2, §11.4; değişiklik listesi 36–38.
 → `09-motor/dogrulayici/denetle.py` · `kurallar.py` · `09-motor/cozucu/model.py` · `coz.py` · `teshis.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-49, K-50
 
-**2026-10-01 (öğlen) · Tam ölçek sınavı geçti · şartname yazı borcu ödendi · mutasyon 128/128**
+**2026-10-01 (15:45) · Tam ölçek sınavı geçti · şartname yazı borcu ödendi · mutasyon 128/128**
 Mustafa'nın 900 sn koşusu: birinci aşama **10,3 sn** (üç koşudur 120 sn'de
 başarısızdı), ana aşamada ilk plan **48,9 sn**, 2.476 atama, 0 sert,
 yayınlanabilir; kaydedilen planda 9.171 mola, üst üste binen sıfır; bir yarı
@@ -60,7 +70,7 @@ Mustafa'ya iki karar soruldu: T-18 (üç kademeli yayın kapısı; kodu hazır,
 13 test) ve T-21 (şablon tek ekibe ait).
 → `02-spec/v1.4-master-spec.md` · `00-DEVIR/06-ACIK-RISKLER.md` T-60, T-78 · `08-motor-testleri/gercekci-veri-seti/olcum-sonucu-95.json`
 
-**2026-10-01 (gece, 2) · T-78'in bedeli: tam ölçekte plan yok · birinci aşama molaları sabitleyerek arıyor, ipucu tam · K-48**
+**2026-10-01 (14:00) · T-78'in bedeli: tam ölçekte plan yok · birinci aşama molaları sabitleyerek arıyor, ipucu tam · K-48**
 Mustafa düzeltmeyi push edip tam ölçeği koşturdu: **plan bulunamadı**
 (`sure_yetmedi`, 0 atama; dün 654 çözüm). Model çözümsüz değil (her şablonda
 geçerli yerleşim var), arama ağırlaştı: +12 bin kısıt, 20 dk'lık mola iki

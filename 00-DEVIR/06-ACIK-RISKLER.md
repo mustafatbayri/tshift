@@ -3080,7 +3080,7 @@ görünmedi. `int(...)` ile düzeltildi, kırmızı kanıtlı test eklendi
 
 ## ✅ T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **KAPANDI (30 Eylül gecesi, tam ölçekte ölçüldü)** — K-48 ile tamamlandı (1 Ekim, sabah onayı bekliyor)
 
-**1 Ekim — K-48:** bütçe = **arama süresi**, model kurma **ayrı kalem** olarak gösterilir (Mustafa'nın ilk önerisi: *"ekranda modelleme 58, plan 900 sn gibi belirtsek"*; 03:40'ta benim seçimim, sabah onayı bekliyor). Aşağısı sorunun kendisi:
+**1 Ekim — K-48:** bütçe = **arama süresi**, model kurma **ayrı kalem** olarak gösterilir (Mustafa'nın ilk önerisi: *"ekranda modelleme 58, plan 900 sn gibi belirtsek"*; 13:30'da benim seçimim, 16:00'da Mustafa kesinleştirdi). Aşağısı sorunun kendisi:
 
 **🟡 1 Ekim — Mustafa'ya soru (K-48 adayı).** Üç koşuda ekran *"en fazla
 900 sn"* deyip **958 sn** yazdı: birinci aşama + ana aşama = tam 900,
@@ -3205,7 +3205,7 @@ aşamanın **ilk planı kaçıncı saniyede** bulduğu hiçbir yerde yazmıyordu
 Çıktıya `ilk_cozum_sn` eklendi (`cozum_istatistikleri`; `coz-olc.py`
 *"ana asamada ilk plan: N sn"* yazıyor).
 
-**1 Ekim 04:00 — birinci aşama yeniden yazıldı (plan bulma tarafı).**
+**1 Ekim 13:30 — birinci aşama yeniden yazıldı (plan bulma tarafı).**
 T-78 düzeltmesi tam ölçekte planı tamamen götürünce (778 sn, 0 atama)
 iki şey ölçüldü ve değiştirildi (`cozucu/coz.py::_ipucu_ver`):
 
@@ -3245,7 +3245,7 @@ tablosunun aynısı. Yarım ipucu CP-SAT'e hiçbir şey vermiyormuş.
 **Tam ölçek (1 Ekim öğlen, 500 kişi, 6 çekirdek, 900 sn):** birinci aşama
 **10,3 sn** (üç önceki koşuda 120 sn'de başarısız), ana aşamada ilk plan
 **48,9 sn** (dün 778 sn'de yok), 2.476 atama, 0 sert. Plan bulma tarafı
-**kapandı**. İkinci koşu (22:50, 19:15 sürümü): birinci aşama 100,6 sn, ilk
+**kapandı**. İkinci koşu (17:37, 16:45 sürümü): birinci aşama 100,6 sn, ilk
 plan 87,8 sn, 0 sert — makine o sırada iki kat yavaştı (model kurma 98 sn),
 birinci aşamanın 10 → 100 sn sıçraması ölçülmeden yorumlanmadı; sonraki
 koşuda bakılacak. Kalite tarafı aynı yerde: optimuma uzaklık %98,99 (alt sınır
@@ -4046,6 +4046,12 @@ başına gruplanmış, yasal olanlar önde bir özet eklendi
 onayı (backend/arayüz işi) ve PDKS'teki *"çalışma günü değil"* satırlarının
 bilinen boş gün sayılması (entegrasyon kararı — gürültüyü asıl azaltacak şey).
 
+🆕 **1 Ekim 18:00'de ölçüldü:** PDKS'in `00:00`'ı plan değil, kart okutulunca
+sonradan değişen takvim — bilinen boş gün kaynağı **olamaz**
+(`07-GERCEK-VERI-BULGULARI.md` §7). Öneri: TShift'in kendi plan geçmişi +
+PDKS izin satırları; giriş/çıkış ham saat; yıl içi fazla mesai bordrodan.
+Karar Mustafa'da.
+
 ⚠ **Oranların çoğu varsayım:** `06-veri/anonim/` boş; yalnız belgelenmiş iki
 sayı (%46 çağrı merkezi kayıt oranı, %53 hiç kaydı olmayan kişi) ve Mustafa'nın
 %80-85'i kullanıldı. Hangisinin varsayım olduğu dosyanın başında yazılı.
@@ -4125,7 +4131,7 @@ olarak üst üste binen yerleşimler gitti. Bunlar zaten geçersizdi. 20
 dakikalık mola artık saha modelinde 30 dakika değil, doğru olan iki çeyrek
 anı kapatıyor; MOLA_KAPSAMASI cezası o şablonlarda biraz artabilir.
 
-**⚠ Bedeli ölçüldü (1 Ekim 03:40, Mustafa'nın makinesi):** düzeltmeden
+**⚠ Bedeli ölçüldü (1 Ekim gecesi koştu, sonucu 13:05'te geldi; Mustafa'nın makinesi):** düzeltmeden
 sonra tam ölçek 900 sn koşusu **plan bulamadı** — `sure_yetmedi`, 0 atama,
 ana aşamada ilk plan yok (dün 778 saniyede 654 çözüm vardı). Model
 çözümsüz değil (her şablonda geçerli yerleşim var, sayıldı); arama
@@ -4135,7 +4141,7 @@ sınırdaydı (birinci aşama üç koşuda da 120 sn'de plan bulamıyordu); bu o
 sınırın öbür tarafına itti. **Yapılan:** birinci aşama molaları sabitleyerek
 arıyor ve ipucu tam yazılıyor — T-60'ın altında. 0.2 ölçekte ölçüldü:
 birinci aşama 18 sn → **1,7 sn**, ana aşamanın ilk planı 57–101 sn →
-**21 sn**. ⚠ Tam ölçekte henüz ölçülmedi — sabahki koşu bunun sınavı.
+**21 sn**. ⚠ Tam ölçekte henüz ölçülmedi — 15:20 koşusu bunun sınavı.
 
 **✅ Sahada doğrulandı (1 Ekim öğlen, Mustafa'nın makinesi, 900 sn):**
 `iki asama: True` (birinci aşama **10,3 sn**), ana aşamada ilk plan **48,9 sn**,
@@ -4182,7 +4188,7 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 |---|---|---|
 | ~~10~~ | ~~**T-23 · "süre yetmedi" ≠ "imkânsız"**~~ | ✅ **KAPANDI 29 Eylül, K-37** — `UNKNOWN` artık `sure_yetmedi` diyor, o yolda teşhis koşmuyor |
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
-| 10b | **T-77 · geçmiş eksik raporu gürültülü** 🟡 | ✅ **Karar alındı, K-47** — yönetici bakar, özet kişi başına ve yasal önde (motor tarafı yazıldı). Açık: arayüzde "gördüm" onayı; PDKS'in "çalışma günü değil" satırlarının bilinen boş gün sayılması (entegrasyon) |
+| 10b | **T-77 · geçmiş eksik raporu gürültülü** 🟡 | ✅ **Karar alındı, K-47** — yönetici bakar, özet kişi başına ve yasal önde (motor tarafı yazıldı). Açık: arayüzde "gördüm" onayı. PDKS'in `00:00` satırı bilinen boş gün **olamaz** (1 Ekim ölçüldü, `07-GERCEK-VERI-BULGULARI.md` §7); kaynak önerisi TShift'in kendi plan geçmişi + izin satırları — karar bekliyor |
 | ~~11a~~ | ~~**T-76 · teşhis engelleyeni bulamıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — üç cevap: engelliyor · engellemiyor · belirsiz |
 | ~~11b~~ | ~~**T-73 · iki haftalık nöbetleşme**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — üst sınır 2, dört haftada en fazla iki gece haftası |
 | 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
