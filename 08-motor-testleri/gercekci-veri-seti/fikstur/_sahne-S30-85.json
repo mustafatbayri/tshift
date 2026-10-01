@@ -19,6 +19,8 @@
   "rapor -- K-49).",
   "Departman calisma saatleri: satis ve back office 7/24, musteri",
   "hizmetleri hafta ici 07-23, hafta sonu 08-19 (K-52).",
+  "Donmus gun YOK: taze hafta; donmus gun yolu coz-olc.py --donmus",
+  "ve bekcideki yeniden planlama testiyle olculur (K-54).",
   "Yetkinlik gereklilikleri: satis 2 ingilizce (08-20), back office",
   "1 ingilizce (08-18), musteri hizmetleri 1 ingilizce (08-22) ve",
   "1 almanca (10-16) -- tabanlar lider tabaniyla ayni hesapla.",
@@ -19619,9 +19621,7 @@
    "yasal": false
   }
  ],
- "donmus_gunler": [
-  0
- ],
+ "donmus_gunler": [],
  "kilitler": [
   {
    "calisan": "C0001",

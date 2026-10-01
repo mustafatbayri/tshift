@@ -260,6 +260,41 @@ def test_KUCULTULMUS_olcekte_plan_uretilir_ve_TEMIZ(kucuk_plan):
         "plan yayinlanabilir degil: %r" % kapi)
 
 
+def test_DONMUS_gun_yeniden_planlamada_korunur(kucuk_plan):
+    """K-54 (T-29): gun 0 donmus, yayinlanmis plan motorun kendi plani.
+
+    Gercek is akisi: hafta yayinlandi, pazartesi gecti, sali plan yeniden
+    kosturuluyor. Gun 0 OLAN OLDU -- aynen kalmali; kalan gunler ona uyarak
+    planlanmali; sert ihlal cikmamali; yayinlanabilir olmali. Ilk plan temiz
+    oldugu icin gecmise ait SERT ihlal de olmamali (yumusak olabilir).
+    """
+    import copy
+    g, c = kucuk_plan
+    assert c["durum"] == "cozuldu"
+    g2 = copy.deepcopy(g)
+    g2["donmus_gunler"] = [0]
+    g2["mevcut_plan"] = copy.deepcopy(c["atamalar"])
+    c2 = coz(g2, {"azami_saniye": 120, "durgunluk_saniye": 20})
+    assert c2["durum"] == "cozuldu", (c2.get("durum"), c2.get("uygulanmayan_notlar"))
+    ist = c2["cozum_istatistikleri"]
+    assert ist["baslangic_plani_kullanildi"] is True, "yayinlanmis plan ipucu olmali"
+    assert ist["donmus_gun"]["gunler"] == [0] and ist["donmus_gun"]["dusen_kisit"] > 0
+
+    def gun0(atamalar):
+        return sorted((a["calisan"], float(a["bas"]), float(a["bit"]), a.get("sablon"))
+                      for a in atamalar if a["gun"] == 0)
+    assert gun0(c2["atamalar"]) == gun0(c["atamalar"]), "donmus gun degisti"
+    assert all(a.get("donmus") is True for a in c2["atamalar"] if a["gun"] == 0)
+    assert not any(a.get("donmus") for a in c2["atamalar"] if a["gun"] != 0)
+
+    r = degerlendir(g2, c2["atamalar"])
+    sert = [i for i in r["ihlaller"] if i.get("agirlik") == "SERT" and not i.get("gecmis")]
+    assert not sert, sorted({i["kural"] for i in sert})
+    assert r["metrikler"]["gecmis_sert_ihlal"] == 0, r["gecmis_ihlaller"][:3]
+    assert not [i for i in r["ihlaller"] if i["kural"] == "DONMUS_GUN"]
+    assert (r.get("yayin_kapisi") or {}).get("yayinlanabilir") is True, r.get("yayin_kapisi")
+
+
 def test_KUCULTULMUS_olcekte_kapsama_TAM(kucuk_plan):
     """Asgari kapsama %100 olmali -- sert kural, tavizi yok.
 

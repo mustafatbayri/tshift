@@ -2460,3 +2460,78 @@ ezmez: 45 saatlik tam zamanlı yine 45'e dolar, ceza fazlalığı en az
 hücreye yayar. Doğrulayıcı aynı hücreleri yumuşak ihlal olarak sayar.
 
 → T-54 · `09-motor/cozucu/model.py` (`AGIRLIK_TABLOSU`, `_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) · `09-motor/testler/test_hedef_asimi.py`
+
+
+## K-54 · Dondurulmuş gün **olan oldu**dur: yayınlanmış plan motora gelir, geçmiş günler aynen kalır, gelecek ona uyar
+
+**Soru (T-29, 16 Eylül dış incelemesi):** *"Geçmiş yeniden planlanamaz"*
+sözünün tek bekçisi `DONMUS_GUN`, yalnız *"bu atama yeni"* işaretli
+atamalarda çalışıyordu ve o işareti hiçbir şey üretmiyordu — kural ölüydü.
+Çözücü donmuş günleri ayrıca korumuyordu. Önerim (1 Ekim öğleden sonra):
+mevcut yayınlanmış plan motora girdi olarak gelsin, motor kendi ürettiğini
+onunla karşılaştırsın.
+
+**Karar (1 Ekim 2026, Mustafa):** *"Onaylıyorum ama bir ek ile: kilitleme
+özelliğini hafta için aynı planı güncellerken kullanacaktık hatırlarsan.
+Kapanan günlerdeki plan uyumu yöneticinin bilgisi dahilinde değişebileceği
+için — yani başka bir elemanı o gün kendi inisiyatifiyle işe çağırabilir
+misal — yönetici ilgili bir planı güncellerken geçmiş günler için düzenleme
+yapabilir. Gelecek günler için istediği çalışanları kilitleyebilir. Hatta bu
+kilitleme-silme konuları için ekranda çoklu aksiyon alabileceği seçenekler
+olmalı; birden fazla kullanıcı seçerek silebilir veya kilitleyebilir. Sana
+katıldığım kısım şu: yönetici edit işlemlerini bitirdikten sonra motora
+ilgili verilerin gitmesi gerekiyor."*
+
+**Uygulanan (1 Ekim akşamı, iki yarıda):**
+
+*Girdi.* `mevcut_plan` — yayınlanmış planın satırları, çıktı biçimiyle
+aynı, yöneticinin düzenlediği hâliyle (geçmiş günler için *"gerçekte ne
+oldu"*). `donmus_gunler` zaten vardı.
+
+*Çözücü.* Donmuş günün satırları çıktıya **aynen** aktarılır (molalarıyla,
+`donmus: true` işaretiyle; çözücü üretmez, aktarır). O günlere **yeni atama
+yazılmaz**. Donmuş atamalar modelde **sabittir** ve günler arası kurallar
+onları gerçek sayar: pazartesi gece çalışmış kişi salı 11:00'den önce
+başlayamaz; beş günde 35 saat dolduranın iki günü 10 saati geçemez; adalet
+sayaçları geçmişi de sayar. Geçmişin **kendisi yargılanmaz**: bütün
+değişkenleri donmuş güne ait kısıt düşer (o gün eksik kapsanmışsa, iki
+vardiya yazılmışsa, izinli günde çalışılmışsa plan çözümsüz olmaz — 0,1
+ölçekte gün 0 için 8.945 kısıt düştü). Geçmişle geleceği birlikte tutan
+kısıt kalır; geçmiş sınırı zaten aşmışsa sınır ulaşılabilir en yakın noktaya
+**kırpılır** (40 saatlik tavan 42 saatle dolmuşsa kalan günlere pay kalmaz,
+plan yine çözülür). Yayınlanmış plan ayrıca başlangıç ipucudur (*"iyileştir,
+zar atma"*, 28 Eylül). Donmuş günde kilit ve sabit atama uygulanmaz (not
+düşülür). Hiçbir şablona oturmayan satır (yönetici 10:00–14:00 yazmış) aynen
+geçer ama modele girmez — not düşülür, doğrulayıcı yine görür.
+
+*Doğrulayıcı.* `DONMUS_GUN` donmuş günleri `mevcut_plan` ile karşılaştırır:
+eklenen, silinen, değişen satır sert ve kabul edilemez ihlal — bayrak yok.
+Yalnız donmuş günlere dayanan diğer ihlaller **`gecmis: true`** işaretlenir
+(*"olan oldu"*): `ihlaller` listesinde kalır, `gecmis_ihlaller`de ayrıca
+listelenir, **yayın kapısı ve `sert_ihlal` saymaz** — yönetici geçmişi
+değiştiremez, geleceği yayınlayamaz çıkmazına girmesin diye. Ölçü: aynı
+kural yalnız donmuş günlerin atamalarıyla da aynı ihlali üretiyor mu;
+donmuş günle serbest gün arasındaki dinlenme ihlali bu yüzden geçmiş
+sayılmaz (gelecek değişir). Donmuş gün var ama plan yoksa kural
+*"denetlenemedi"* olur, kapı kabul bekler (K-49). Onarım döngüsü geçmiş
+ihlali onarmaya kalkmaz.
+
+*Veri seti.* Gerçekçi sahne artık **taze hafta** (`donmus_gunler: []`):
+eskiden `[0]` yazıyordu ama kural ölü olduğu için sahneyi hiç etkilememişti;
+canlanınca yayınlanmış plan isterdi. Çözücü için zorluk değişmedi, önceki
+ölçümlerle karşılaştırılabilir. Donmuş gün yolu ayrıca ölçülür: bekçide
+0,1 ölçekte yeniden planlama testi (gün 0 aynı, 0 sert, yayınlanabilir,
+ipucu kullanıldı) ve `coz-olc.py --donmus` (tam ölçek, Mustafa koşturur).
+
+*Arayüz / backend (yazılmadı):* yönetici geçmiş günleri düzenler, gelecek
+günleri kilitler, **çoklu seçimle** kilitler ve siler; düzenleme bitince
+motor `mevcut_plan` + `donmus_gunler` ile çağrılır.
+
+**Bilinen sınır:** günsüz (haftalık) bir ihlalde geçmişin tek başına sınırı
+aşıp aşmadığına bakılır; aşmışsa geçmiş sayılır. Donmuş gündeki sahada
+sayım, molalar motorun aday noktalarına oturmadıysa yaklaşıktır (not düşer).
+
+Sayılar: 17 test (`test_donmus_gun.py`), 8 mutasyon hepsi öldü (toplam 179),
+bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın senaryolar 12, motor 497 test.
+
+→ T-29 · K-49 · şartname §6.6, §11.2, §11.3, §11.4 · `09-motor/cozucu/model.py` (`_donmus_plani_esle`, `_donmus_sabitle`, `_kisit`, `_donmus_suz`) · `09-motor/cozucu/coz.py` · `09-motor/dogrulayici/kurallar.py` (`donmus_gun`) · `09-motor/dogrulayici/denetle.py` (`_gecmis_ihlalleri_isaretle`) · `09-motor/testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/coz-olc.py --donmus`

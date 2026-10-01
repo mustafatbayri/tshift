@@ -59,6 +59,8 @@ def ulasilamayan_hucre(girdi, kuruldu):
     for t, gun, saat in kuruldu._hucreler():
         if not t.get("asgari"):
             continue
+        if gun in kuruldu.donmus:
+            continue          # K-54: donmus gunun kapsamasi olan oldu, plan degil
         hedef = _q(gun, saat)
         for sablon in kuruldu.sablonlar:
             if sablon.get("ekip") is not None and sablon.get("ekip") != t.get("ekip"):

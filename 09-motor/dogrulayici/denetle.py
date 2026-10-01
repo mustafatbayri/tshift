@@ -50,6 +50,9 @@ def degerlendir(girdi, atamalar):
 
     gecmis_eksik = _gecmis_eksik(girdi, atamalar)
     eksik_boyutlar = _eksik_boyutlar(girdi)
+    # K-54: yalniz donmus gunlere dayanan ihlal "olan oldu"dur -- isaretlenir,
+    # ayri listelenir, kapi ve sert sayac onu saymaz. ISARET KAPIDAN ONCE.
+    gecmis_ihlaller = _gecmis_ihlalleri_isaretle(girdi, atamalar, ihlaller)
     return {
         "ihlaller": ihlaller,
         "metrikler": _metrikler(girdi, atamalar, ihlaller),
@@ -58,9 +61,64 @@ def degerlendir(girdi, atamalar):
         "okunmayan_alanlar": _okunmayan_alanlar(girdi),
         "gecmis_eksik": gecmis_eksik,
         "gecmis_eksik_ozet": _gecmis_eksik_ozet(girdi, gecmis_eksik),
+        "gecmis_ihlaller": gecmis_ihlaller,
         # T-18 / K-49: kapi artik "bakamadim"i da gorur.
         "yayin_kapisi": yayin_kapisi(ihlaller, girdi, uygulanmayan, eksik_boyutlar),
     }
+
+
+def _gecmis_ihlalleri_isaretle(girdi, atamalar, ihlaller):
+    """K-54 (T-29): donmus gunlerin ihlali 'olan oldu'dur; raporlanir, engellemez.
+
+    MUSTAFA (1 Ekim): kapanan gunlerde plan "yoneticinin bilgisi dahilinde"
+      degisebilir -- birini o gun ise cagirmistir. Yonetici gecmis gunleri
+      duzenleyip motora gonderir; motor onlari OLDUGU GIBI alir.
+
+    O duzenleme bir kurali cignemis olabilir (iki vardiya, izinli gunde
+    calisma, 11 saatten az dinlenme). Bu GERCEKTIR ve rapora girer; ama
+    yayin kapisini kapatirsa yonetici cikmaza girer: gecmisi degistiremez,
+    gelecegi yayinlayamaz. Bu yuzden:
+
+      * Ihlalin gunu donmus degilse  -> gecmis DEGIL (gelecek degisebilir).
+      * Ihlalin gunu donmus ya da gunsuz (haftalik kural) ise -> ayni kural
+        YALNIZ donmus gunlerin atamalariyla da ayni ihlali uretiyor mu diye
+        bakilir. Uretiyorsa ihlal gecmise aittir: `gecmis: True`.
+        (Donmus gunle serbest gun arasindaki dinlenme ihlali boyle
+        isaretlenMEZ: serbest gun degisince ihlal kalkar.)
+      * DONMUS_GUN'un kendi ihlali ASLA gecmis sayilmaz -- o, planin
+        degistirildigini soyler, gecmisin kusurunu degil.
+
+    Isaretli ihlal `ihlaller` listesinde KALIR (sayilar eksilmez, metin
+    kaybolmaz); kapi (`yayin_kapisi`) ve `metrikler.sert_ihlal` onu saymaz,
+    `gecmis_ihlaller` listesi ve `metrikler.gecmis_sert_ihlal` ayrica sayar.
+    """
+    donmus = set(girdi.get("donmus_gunler", []) or [])
+    if not donmus or not ihlaller:
+        return []
+    adaylar = [i for i in ihlaller
+               if i.get("kural") != "DONMUS_GUN"
+               and (i.get("gun") is None or i.get("gun") in donmus)]
+    if not adaylar:
+        return []
+    gecmis_atamalar = [a for a in (atamalar or []) if a.get("gun") in donmus]
+    gecmiste = set()
+    for tanim in _aktif_kurallar(girdi):
+        kod = tanim.get("kod")
+        if kod == "DONMUS_GUN" or kod not in {i.get("kural") for i in adaylar}:
+            continue
+        govde = kurallar.KAYIT.get(kod)
+        if govde is None:
+            continue
+        for i in govde(girdi, gecmis_atamalar, tanim):
+            gecmiste.add((i.get("kural"), i.get("calisan"), i.get("gun")))
+    isaretli = []
+    for i in adaylar:
+        if (i.get("kural"), i.get("calisan"), i.get("gun")) in gecmiste:
+            i["gecmis"] = True
+            i["gecmis_notu"] = ("donmus gune ait -- olan oldu; kapi saymaz, "
+                                "yonetici bilgisine (K-54)")
+            isaretli.append(i)
+    return isaretli
 
 
 # ----------------------------------------------------------------------
@@ -88,7 +146,7 @@ OKUNAN_ALANLAR = {
     "": ("profil", "calisanlar", "vardiya_sablonlari", "talep", "kurallar",
          "kilitler", "sabit_atamalar", "donmus_gunler", "hafta_baslangic",
          "agirliklar", "sektor", "denetim_disi_kabul", "cok_ekipli_sayim",
-         "departmanlar", "istek_id", "sure_butcesi_sn"),
+         "departmanlar", "istek_id", "sure_butcesi_sn", "mevcut_plan"),
     "calisanlar": ("id", "ekipler", "sozlesme", "izinler", "uygunluk",
                    "devir_yuk", "yetkinlikler", "operasyonel_rol",
                    "gece_calisamaz", "durum", "gece_calisma_onayi",
@@ -111,6 +169,10 @@ OKUNAN_ALANLAR = {
     "departmanlar": ("id", "ad", "ekipler", "acik"),
     "departmanlar.acik": ("gunler", "bas", "bit"),
     "kilitler": ("calisan", "gun", "tip", "bas", "bit"),
+    # K-54: yayinlanmis plan -- cikti bicimiyle ayni satirlar (#11.3).
+    "mevcut_plan": ("calisan", "ekip", "sablon", "gun", "bas", "bit",
+                    "molalar", "donmus"),
+    "mevcut_plan.molalar": ("bas", "bit", "tip"),
     # Motor sabit atamayi SABLON kimliginden esliyor (cozucu.model
     # ._sabit_atamalar). Sartname #11.2 ornegi `sablon` yazmiyor, `bas`/`bit`
     # yaziyor -- T-38. Eslesmeyen satir `uygulanmayan_notlar`a dusuyor, yani
@@ -445,6 +507,18 @@ def _eksik_boyutlar(girdi):
                                  "kontrolu yapilamadi" % ekip,
                         "denetlenemedi": True})
 
+        # DONMUS_GUN (K-54): donmus gun var ama yayinlanmis plan verilmemisse
+        # "donmus gun degismedi" kontrolu YAPILAMAZ -- bos liste "ihlal yok"
+        # degil, "bakamadim"dir. SERT + firma kurali: kapi kabul bekletir.
+        if kod == "DONMUS_GUN":
+            if (girdi.get("donmus_gunler") or []) and girdi.get("mevcut_plan") is None:
+                eksik.append({
+                    "kural": kod, "boyut": "mevcut_plan",
+                    "sebep": "donmus gun var (%s) ama `mevcut_plan` verilmedi; "
+                             "donmus gunlerin degismedigi kontrol edilemedi"
+                             % sorted(girdi.get("donmus_gunler") or []),
+                    "denetlenemedi": True})
+
         # ROL_KAPSAMASI / YETKINLIK_KAPSAMASI: gereklilik satirinda hangi
         # nitelik arandigi yazilmamissa kural DENETLENEMEZ. Govde bos liste
         # donuyor -- yani "ihlal yok" gibi gorunuyor. Ayrimi burada yapmak
@@ -466,7 +540,9 @@ def _eksik_boyutlar(girdi):
 # ----------------------------------------------------------------------
 
 def _metrikler(girdi, atamalar, ihlaller):
-    sert = [i for i in ihlaller if i.get("agirlik") == "SERT"]
+    # K-54: donmus gune ait ihlal (olan oldu) sert sayaca girmez, ayri sayilir.
+    sert = [i for i in ihlaller if i.get("agirlik") == "SERT" and not i.get("gecmis")]
+    gecmis_sert = [i for i in ihlaller if i.get("agirlik") == "SERT" and i.get("gecmis")]
     hucre = kapsama_yuzdeleri(girdi, atamalar)
 
     # K-32: TEK bir "mesai suresi" toplami YOK. Ucu ayri ayri raporlanir,
@@ -493,7 +569,8 @@ def _metrikler(girdi, atamalar, ihlaller):
 
     return {
         "sert_ihlal": len(sert),
-        "yumusak_ihlal": len(ihlaller) - len(sert),
+        "gecmis_sert_ihlal": len(gecmis_sert),          # K-54
+        "yumusak_ihlal": len(ihlaller) - len(sert) - len(gecmis_sert),
         "asgari_kapsama_yuzde": hucre["asgari_yuzde"],
         "hedef_kapsama_yuzde": hucre["hedef_yuzde"],
         "eksik_hedef_dakika": hucre["eksik_hedef_dakika"],
@@ -589,7 +666,8 @@ def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
       meselesidir, kural denetimi degil; rapor olarak kalir.
     """
     acik_sert = [i for i in ihlaller
-                 if i.get("agirlik") == "SERT" and i.get("durum") != "kabul_edildi"]
+                 if i.get("agirlik") == "SERT" and i.get("durum") != "kabul_edildi"
+                 and not i.get("gecmis")]          # K-54: olan oldu, kapi saymaz
     engelleyen = [i for i in acik_sert if not i.get("kabul_edilebilir")]
     kabul_bekleyen = [i for i in acik_sert if i.get("kabul_edilebilir")]
 
@@ -604,6 +682,9 @@ def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
         "denetlenemeyen_kurallar": denetlenemeyen,
         "kabul_secenegi_sunulur": (bool(kabul_bekleyen) or bool(d_bekleyen))
                                   and not engelleyen and not d_engelleyen,
+        # K-54: donmus gune ait sert ihlaller -- bilgi, engel degil.
+        "gecmis_sert_ihlal": len([i for i in ihlaller
+                                  if i.get("agirlik") == "SERT" and i.get("gecmis")]),
     }
 
 

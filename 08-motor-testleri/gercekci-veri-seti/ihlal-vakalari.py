@@ -271,12 +271,18 @@ def _(g, p):
 # Plan butunlugu
 # ----------------------------------------------------------------------
 
-@vaka("DONMUS_GUN", "Donmus gune YENI atama yazilir")
+@vaka("DONMUS_GUN", "Gun 0 dondurulur, mevcut plan gun 0 satirlari; biri silinir, biri eklenir")
 def _(g, p):
-    a = dict(p[0])
-    a["gun"] = g["donmus_gunler"][0]
-    a["_yeni"] = True
-    p.append(a)
+    # K-54: donmus gun `mevcut_plan` ile karsilastirilir -- bayrak yok.
+    # Yayinlanmis plan = temel planin gun 0 satirlari; sonra plan bozulur:
+    # bir satir silinir (planda vardi, cikti), bir satir eklenir (planda yoktu).
+    g["donmus_gunler"] = [0]
+    g["mevcut_plan"] = copy.deepcopy([a for a in p if a["gun"] == 0])
+    silinen = _bul(p, lambda x: x["gun"] == 0)
+    p.remove(silinen)
+    eklenen = dict(_bul(p, lambda x: x["gun"] == 1))
+    eklenen["gun"] = 0
+    p.append(eklenen)
 
 
 @vaka("KILIT_UYUMU", "Kilitli atama plandan cikarilir")

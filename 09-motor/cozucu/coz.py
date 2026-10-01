@@ -363,6 +363,11 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     baslangic_kullanildi = False
     iki_asama = False
     ilk_basladi = time.time()
+    # K-54: yayinlanmis plan (`mevcut_plan`) ayrica verilmis bir baslangic
+    # plani yoksa ipucudur -- donmus gunleri zaten sabit, kalan gunler icin
+    # "iyilestir, zar atma" (28 Eylul karari) buradan devam eder.
+    if not baslangic_plani and girdi.get("mevcut_plan"):
+        baslangic_plani = girdi.get("mevcut_plan")
     if baslangic_plani:
         baslangic_kullanildi = _plandan_ipucu(kuruldu, baslangic_plani)
         if not baslangic_kullanildi:
@@ -409,6 +414,15 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         "isci_sayisi": isci,
         "iki_asama": iki_asama,
         "baslangic_plani_kullanildi": baslangic_kullanildi,
+        # K-54: donmus gunler -- kac satir aynen gecti, kac kisit gecmise
+        # dusuldu/kirpildi (sifirsa alan yine yazilir: "yok" ile "unutuldu"
+        # ayrilsin).
+        "donmus_gun": {
+            "gunler": sorted(kuruldu.donmus),
+            "aktarilan_satir": len(kuruldu.donmus_satirlar),
+            "dusen_kisit": kuruldu._donmus_dusen,
+            "kirpilan_kisit": kuruldu._donmus_kirpilan,
+        } if kuruldu.donmus else None,
         "baslangic_amac": (round(geri.ilk_amac) if baslangic_kullanildi
                            and geri.ilk_amac is not None else None),
     }
@@ -536,6 +550,8 @@ def _durma_sebebi(durum, cozucu, ayar, sure, butce=None):
 def _atamalari_cikar(kuruldu, cozucu):
     cikan = []
     for (e, d, tid), v in sorted(kuruldu.x.items()):
+        if d in kuruldu.donmus:
+            continue          # K-54: donmus gun satirlari plandan AYNEN gecer
         if not cozucu.Value(v):
             continue
         sablon = kuruldu.sablon[tid]
@@ -567,6 +583,14 @@ def _atamalari_cikar(kuruldu, cozucu):
         ekip = kuruldu._atama_ekibi(kisi or {}, sablon)
         cikan.append({"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,
                       "bas": sablon["bas"], "bit": sablon["bit"], "molalar": molalar})
+    if kuruldu.donmus_satirlar:
+        # Mevcut planin donmus gun satirlari: cozucu URETMEDI, AKTARDI.
+        # Molalar dahil yoneticinin biraktigi haliyle; `donmus: True` isareti
+        # okuyana "bu satir bu kosuda uretilmedi" der.
+        import copy as _copy
+        cikan.extend(_copy.deepcopy(kuruldu.donmus_satirlar))
+        cikan.sort(key=lambda a: (str(a.get("calisan")), a.get("gun", 0),
+                                  float(a.get("bas", 0))))
     return cikan
 
 
@@ -604,7 +628,11 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         # K-50: kim sayilir -- modelle ayni olcu (`hepsi`: uyelik).
         sayi = sum(1 for a in atamalar
                    if kuruldu._sayilir(kisiler.get(a["calisan"], {}),
-                                       kuruldu.sablon[a["sablon"]], t.get("ekip"))
+                                       # K-54: aktarilan satirin sablonu
+                                       # modelde olmayabilir; ekibi satirdan.
+                                       kuruldu.sablon.get(a.get("sablon"),
+                                                          {"ekip": a.get("ekip")}),
+                                       t.get("ekip"))
                    and a["gun"] * 24 + a["bas"] <= an
                    < a["gun"] * 24 + a["bit"])
         if t.get("asgari") is not None:
@@ -619,7 +647,12 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
 
     net = {}
     for a in atamalar:
-        s = kuruldu.sablon[a["sablon"]]
+        s = kuruldu.sablon.get(a.get("sablon"))
+        if s is None:        # K-54: aktarilan satir -- saati satirdan
+            s = {"bas": a["bas"], "bit": a["bit"],
+                 "mola_dk": sum((m.get("bit", 0) - m.get("bas", 0)) * 60
+                                for m in (a.get("molalar") or [])
+                                if m.get("tip") == "yemek")}
         net[a["calisan"]] = net.get(a["calisan"], 0.0) + (s["bit"] - s["bas"]) \
             - s.get("mola_dk", 0) / 60.0
     fazla = 0.0

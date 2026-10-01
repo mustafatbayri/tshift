@@ -1836,10 +1836,56 @@ def kilit_uyumu(girdi, atamalar, tanim):
 
 @kural("DONMUS_GUN")
 def donmus_gun(girdi, atamalar, tanim):
+    """Donmus gun degismez -- K-54 (T-29, 1 Ekim).
+
+    ⚠ ESKI GOVDE OLUYDU (T-29, dis inceleme 16 Eylul): yalniz `_yeni`
+      bayragi tasiyan atamayi ihlal sayiyordu ve o bayragi hicbir sey
+      uretmiyordu. Kural katalogda vardi, pratikte hic ateslenemiyordu.
+
+    SIMDI: donmus gunlerin atamalari `mevcut_plan` (yayinlanmis plan,
+    yoneticinin duzenledigi haliyle) ile KARSILASTIRILIR -- ozel bayrak yok.
+    Planda olup ciktida olmayan satir "silinmis", ciktida olup planda
+    olmayan satir "eklenmis"; degistirilmis satir ikisi birden. Uc durum da
+    yakalanir (kabul cumlesi: "donmus gun degismez"). Kabul edilemez: motor
+    gecmisi yeniden yazamaz.
+
+    Donmus gun var ama `mevcut_plan` YOKSA kural DENETLENEMEZ -- bos liste
+    "ihlal yok" demek degildir; `denetle._eksik_boyutlar` bunu
+    `denetlenemedi` diye bildirir ve kapi K-49 ile kabul bekletir.
+    """
     donmus = set(girdi.get("donmus_gunler", []) or [])
-    return [_ihlal("DONMUS_GUN", tanim, calisan=a["calisan"], gun=a["gun"],
-                   mesaj="gun %d donmus, degistirilemez" % a["gun"])
-            for a in atamalar if a["gun"] in donmus and a.get("_yeni")]
+    plan = girdi.get("mevcut_plan")
+    if not donmus or plan is None:
+        return []
+
+    def anahtar(a):
+        return (a.get("calisan"), a.get("gun"),
+                round(float(a.get("bas", 0)), 4), round(float(a.get("bit", 0)), 4))
+
+    beklenen = {}
+    for a in plan:
+        if a.get("gun") in donmus:
+            beklenen[anahtar(a)] = beklenen.get(anahtar(a), 0) + 1
+    bulunan = {}
+    for a in atamalar:
+        if a.get("gun") in donmus:
+            bulunan[anahtar(a)] = bulunan.get(anahtar(a), 0) + 1
+    cikan = []
+    for k in sorted(set(beklenen) | set(bulunan), key=lambda k: (str(k[0]), k[1], k[2])):
+        b, v = beklenen.get(k, 0), bulunan.get(k, 0)
+        if b == v:
+            continue
+        calisan, gun, bas, bit = k
+        if v > b:
+            mesaj = ("gun %d donmus: %s icin %s-%s atamasi mevcut planda YOK -- "
+                     "donmus gune yeni atama yazilamaz (olan oldu)"
+                     % (gun, calisan, _ss(bas), _ss(bit)))
+        else:
+            mesaj = ("gun %d donmus: %s icin %s-%s atamasi mevcut planda VARDI, "
+                     "plandan cikmis -- donmus gunden atama silinemez (olan oldu)"
+                     % (gun, calisan, _ss(bas), _ss(bit)))
+        cikan.append(_ihlal("DONMUS_GUN", tanim, calisan=calisan, gun=gun, mesaj=mesaj))
+    return cikan
 
 
 # ----------------------------------------------------------------------

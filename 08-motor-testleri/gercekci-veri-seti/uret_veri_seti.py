@@ -686,7 +686,20 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
         d["mola_politikasi"] = MOLA_POLITIKALARI[s["ekip"]]
         sablonlar.append(d)
 
-    # KILIT_UYUMU + DONMUS_GUN: gun 0 donmus, birkac atama kilitli
+    # KILIT_UYUMU: birkac atama kilitli (gun 2 sabitleme, gun 3 yasak).
+    #
+    # ⚠ DONMUS GUN BU SAHNEDE YOK (K-54, 1 Ekim). 1 Ekim'e kadar sahne
+    #   `donmus_gunler: [0]` yaziyordu ama kural OLUYDU (T-29): ne cozucu ne
+    #   dogrulayici gun 0'a farkli davraniyordu -- alan sahneyi hic
+    #   etkilemedi. Kural canlaninca donmus gun, yayinlanmis plan
+    #   (`mevcut_plan`) ister; plansiz donmus gun dogrulayicida
+    #   "denetlenemedi" olur ve kapi kabul bekler. Bu sahne TAZE HAFTA
+    #   planlar (yayinlanmis plan yok), o yuzden alan artik bos.
+    #   Donmus gun yolu ayrica olculur: `coz-olc.py --donmus` (tam olcek,
+    #   motorun kendi gun 0 planini dondurup yeniden planlar) ve
+    #   bekci `test_DONMUS_gun_yeniden_planlamada_korunur` (0.1 olcek).
+    #   Cozucu icin sahnenin zorlugu DEGISMEDI: onceki olcumlerle
+    #   karsilastirilabilir.
     #
     # ⚠ KILIT BICIMI (#11.2). Iki bicim var, ucuncusu YOK:
     #     sabitleme {calisan, ekip, gun, bas, bit}   -> bu atama MUTLAKA olacak
@@ -759,6 +772,8 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
             "rapor -- K-49).",
             "Departman calisma saatleri: satis ve back office 7/24, musteri",
             "hizmetleri hafta ici 07-23, hafta sonu 08-19 (K-52).",
+            "Donmus gun YOK: taze hafta; donmus gun yolu coz-olc.py --donmus",
+            "ve bekcideki yeniden planlama testiyle olculur (K-54).",
             "Yetkinlik gereklilikleri: satis 2 ingilizce (08-20), back office",
             "1 ingilizce (08-18), musteri hizmetleri 1 ingilizce (08-22) ve",
             "1 almanca (10-16) -- tabanlar lider tabaniyla ayni hesapla.",
@@ -776,7 +791,7 @@ def sahne_uret(olcek=1.0, doluluk=0.95):
         "vardiya_sablonlari": sablonlar,
         "talep": talep,
         "kurallar": kurallar_uret(),
-        "donmus_gunler": [0],
+        "donmus_gunler": [],          # K-54: taze hafta -- bkz. yukaridaki not
         "kilitler": kilitler,
         "sabit_atamalar": [],
         "devir_kapsama": [],

@@ -4,6 +4,18 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (20:40) · K-54 dondurulmuş gün canlandı: `mevcut_plan` girdisi, geçmiş aynen geçer ve gerçek sayılır, geçmişin kusuru çözümsüz etmez · T-29 kapandı**
+Mustafa'nın onayı (ekiyle: yönetici geçmiş günleri düzenler, gelecek
+günleri kilitler, çoklu seçim). Çözücü: donmuş gün satırları çıktıya aynen
+(`donmus: true`), modelde sabit; yalnız geçmişe ait kısıtlar düşer, aşılmış
+sınır kırpılır (`_kisit` süzgeci); yayınlanmış plan ipucu. Doğrulayıcı:
+`DONMUS_GUN` plana göre bayraksız; `gecmis` işaretli ihlaller kapıdan
+sayılmaz (`gecmis_ihlaller`, `metrikler.gecmis_sert_ihlal`); plansız donmuş
+gün "denetlenemedi". Veri seti taze hafta; `coz-olc.py --donmus`; bekçide
+yeniden planlama testi. Motor **497 test**, mutasyon **179** (yeni `donmus`
+8), bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın 12. Arayüz tarafı yazılmadı.
+→ `09-motor/cozucu/model.py` · `coz.py` · `teshis.py` · `dogrulayici/kurallar.py` · `denetle.py` · `orkestra.py` · `testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/` (üretici, fikstürler, vaka aracı, `coz-olc.py`, bekçi) · şartname §6.6, §11.2–11.4 · `00-DEVIR/08-URUN-KARARLARI.md` K-54 · `06-ACIK-RISKLER.md` T-29
+
 **2026-10-01 (18:45) · CI kırmızı → "süre yetmedi" testleri yarıştan kurtarıldı (T-79, O-12)**
 Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
 makine 60 kişilik sahneyi 1 saniyede çözdü, test çözememesini bekliyordu

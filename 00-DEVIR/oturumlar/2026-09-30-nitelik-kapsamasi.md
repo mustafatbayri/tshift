@@ -1165,7 +1165,7 @@ değildi — üreticiye eklendi. ⚠ Altın senaryolar 4 kırmızı: fikstürler
 `calisma`da 2 eşdeğer mutant çıktı: biri test boşluğuydu (kapatıldı:
 tek seçenekli kapalı şablon → çözümsüz testi), biri çift koruma —
 koruma tekleştirildi, mutant yeniden hedeflendi. Sayılar: motor 481,
-mutasyon 166, vaka 36/36+1, bekçi 20, altın 12.
+mutasyon 166, vaka 36 vaka · 36 kırmızı+1, bekçi 20, altın 12.
 
 ## 46 · İkinci tam ölçek koşusu (1 Ekim 17:37) — 16:45'teki kodla
 
@@ -1232,3 +1232,41 @@ açıklamasına neden yazıldı. Mutasyon grubu `sure_yetmedi` (5 bozma) eklendi
 hepsi öldü; toplam 171. Motor 481 test yeşil (konteyner, 2 dk 20 sn).
 Dosyalar makineye yazıldı, md5 iki tarafta aynı. Risk dosyasına T-79
 (kapandı), otopsilere O-12. Commit + push bloğu Mustafa'ya veriliyor.
+
+## 49 · Dondurulmuş gün canlandı — K-54 (1 Ekim 19:10–20:40)
+
+CI yeşil yanınca ("YEŞİL DEVAM") T-29'a geçildi. Tasarım: `mevcut_plan`
+girdisi; donmuş gün satırları aynen çıktıya, modelde sabit; gelecek gecmişe
+uyar; geçmişin kusuru çözümsüz etmez. Zor nokta ikincisiydi: donmuş atama
+sabitlenince izin/uygunluk/kapsama/tek-vardiya gibi kısıtlar geçmişle
+çelişip modeli çözümsüz ederdi. Çözüm: modeldeki 39 `self.m.Add` çağrısı tek
+kapıdan (`_kisit`) geçiyor; bütün değişkenleri donmuş güne ait kısıt
+düşürülüyor (`clear_linear`, CP-SAT boş kısıtı yok sayıyor — konteynerde
+denendi), geçmişle geleceği birlikte tutan kısıtta geçmiş sınırı aşmışsa
+sınır ulaşılabilir noktaya kırpılıyor. Donmuş değişkenler kısıtla değil
+domain daraltılarak sabitleniyor (kısıtlar süzgeçten geçer, domain geçmez).
+İlk sürümde süzgeç sabitlenmiş değere bakıyordu ve `_degiskenler` içindeki
+mola kısıtları (sabitlemeden önce yazılıyor) süzülmüyordu — 8.945 yerine
+1.162 kısıt düştü; güne göre sınıflandırmaya çevrildi. Süzgeç model kurmayı
+0,1 ölçekte 8,5 → 12 sn yapıyor (yalnız donmuş gün varken).
+
+Doğrulayıcı: `DONMUS_GUN` plana göre (eklenen/silinen/değişen), `_yeni`
+bayrağı gitti; plansız donmuş gün `eksik_boyutlar` → kabul bekler; yalnız
+donmuş günlere dayanan ihlaller `gecmis` işaretli (ölçü: aynı kural yalnız
+donmuş günlerin atamalarıyla da aynı ihlali üretiyor mu), kapı ve
+`sert_ihlal` saymıyor, `gecmis_ihlaller` listeliyor; onarım döngüsü de
+saymıyor. Veri seti taze hafta oldu (`donmus_gunler: []`); vaka aracı
+DONMUS_GUN vakası plana göre; `coz-olc.py --donmus` eklendi ve 0,1 ölçekte
+koştu: gün 0 aynı, 0 sert, yayınlanabilir, ipucu kullanıldı, 8.945 kısıt
+düştü. Bekçiye yeniden planlama testi (21 test, 8 dk 27 sn). Motor 497 test,
+altın 12, vaka aracı 36 vaka · 36 kırmızı, mutasyon 179 hepsi öldü (yeni grup `donmus` 8;
+16 eski çapa `self._kisit(` olarak güncellendi).
+
+⚠ Ders: mutasyon koşusu dosyaları yerinde değiştirip geri yazıyor; koşu
+sürerken makineye commit atmak mutasyonlu dosyayı kopyalayabilir. Bu kez
+md5 karşılaştırmasında yakalandı (denetle.py bir an farklıydı), koşu bitince
+yeniden doğrulandı: 14 dosya iki tarafta aynı. Bundan sonra: mutasyon
+biterken commit yok.
+
+Şartname: §6.6 kural satırı + mekanizma notu, §11.2 `mevcut_plan`, §11.3
+`donmus`, §11.4 kanallar, değişiklik 44. Kararlar K-54, risk T-29 kapandı.

@@ -66,7 +66,10 @@ def coz_ve_onar(girdi, ayar=None, azami_onarim=AZAMI_ONARIM):
             return _taslagi_denetle(girdi, cikti)
 
         rapor = degerlendir(girdi, cikti.get("atamalar") or [])
-        sert = [i for i in rapor["ihlaller"] if i.get("agirlik") == "SERT"]
+        # K-54: donmus gune ait ihlal (olan oldu) onarilmaz -- yasaklamak da
+        # anlamsiz, cozucu donmus gundeki kilidi zaten uygulamaz.
+        sert = [i for i in rapor["ihlaller"]
+                if i.get("agirlik") == "SERT" and not i.get("gecmis")]
         cikti["bagimsiz_denetim"] = _denetim_ozeti(rapor, sert)
 
         if not sert:
@@ -150,7 +153,8 @@ def _taslagi_denetle(girdi, cikti):
         plan["var"] = bool(atamalar)
 
     rapor = degerlendir(girdi, atamalar)
-    sert = [i for i in rapor["ihlaller"] if i.get("agirlik") == "SERT"]
+    sert = [i for i in rapor["ihlaller"]
+            if i.get("agirlik") == "SERT" and not i.get("gecmis")]   # K-54
     cikti["bagimsiz_denetim"] = _denetim_ozeti(rapor, sert)
     return cikti
 
@@ -167,6 +171,7 @@ def _denetim_ozeti(rapor, sert):
         "ihlaller": sert,
         "uygulanmayan_kurallar": rapor["uygulanmayan_kurallar"],
         "eksik_boyutlar": rapor["eksik_boyutlar"],
+        "gecmis_ihlaller": rapor.get("gecmis_ihlaller", []),   # K-54
         "yayin_kapisi": rapor["yayin_kapisi"],
     }
 

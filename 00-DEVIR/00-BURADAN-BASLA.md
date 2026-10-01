@@ -171,6 +171,21 @@ bekliyordu (0,1 sn bütçe aslında 1 sn; konteynerde ilk plan 1,9 sn).
 T-79 kapandı, otopsi O-12. Üçüncü tam ölçek koşusu (17:27 kodu, 46 kural)
 **0 sert, yayınlanabilir** (birinci aşama 22,9 sn, ilk plan 88,8 sn).
 Push tekrar bekleniyor.
+
+**⚠ 1 Ekim 20:40 — dondurulmuş gün canlandı (K-54), en güncel durum budur.**
+CI yeşil yandı; T-29 kapatıldı. Yayınlanmış plan (`mevcut_plan`) motora
+girdi: donmuş günün satırları çıktıya **aynen** geçer (molalarıyla), o güne
+yeni atama yazılmaz, geçmiş **gerçek** sayılır (dinlenme, haftalık saat,
+adalet), geçmişin kusuru planı çözümsüz **etmez** (yalnız geçmişe ait
+kısıtlar düşer, aşılmış sınır kırpılır). Doğrulayıcı `DONMUS_GUN`'u plana
+göre yazar (eklenen/silinen/değişen), geçmişe ait ihlalleri `gecmis`
+işaretler ve kapı saymaz; plansız donmuş gün *"denetlenemedi"* (kabul
+bekler). Gerçekçi sahne artık taze hafta (`donmus_gunler: []`; eski `[0]`
+ölü kuralla hiç etkili olmamıştı — zorluk aynı). Donmuş gün yolu: bekçide
+0,1 ölçekte yeniden planlama (gün 0 aynı, 0 sert) ve `coz-olc.py --donmus`
+(tam ölçek, Mustafa koşturacak). Motor **497 test**, mutasyon **179 hepsi
+öldü**, bekçi **21**, vaka aracı 36 vaka · 36 kırmızı, altın 12. Açık 🔴 **bir**: T-60
+(kalite). Arayüz tarafı (çoklu seçimle kilit/silme) yazılmadı.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -565,7 +580,7 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-78~~ | ✅ **KAPANDI 1 Ekim gecesi** — 20 dk mola çeyreğe sığmıyordu, molalar 5 dk üst üste biniyordu; üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir | — |
 > | **T-59 sorusu** 🆕 | *"En fazla 900 sn"* deyip 958 sn: model kurma (~55 sn) bütçenin dışında | ✅ bütçe duvar saati mi olsun (K-48 adayı; öneri: evet) |
 > | **T-38** 🆕 | Şartnamenin **on iki alanı daha** karşılıksız. En ağırı `kural_degerleri`: kişiye özel sözleşme sınırı yok sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor | ✅ hangisi önce yazılacak |
-> | **T-29** | `DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor** | ✅ işareti kim koyacak |
+> | ~~**T-29**~~ | ~~`DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor**~~ ✅ **KAPANDI 1 Ekim, K-54** — işaret yok, `mevcut_plan` ile karşılaştırma | — |
 > | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
 > | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor. ⚠ Artık **üç** kanal bu kapıda bekliyor: `uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar` | ✅ kapı ne yapmalı |
 > | ~~T-59~~ | 🟡 **DÜZELTİLDİ 30 Eylül akşamı** — birinci aşama bütçenin içinden pay alıyor, ana çözüme kalan veriliyor; tam ölçekte (900 sn) yeniden ölçülmedi | — |

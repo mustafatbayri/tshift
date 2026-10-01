@@ -1431,7 +1431,19 @@ deterministik sürüm var.
 → K-42 · T-69 · T-70 · `09-motor/testler/test_gecmis_veri.py`
 ---
 
-## 🔴 T-29 · `DONMUS_GUN` hiç ateşlenemez
+## ✅ T-29 · ~~`DONMUS_GUN` hiç ateşlenemez~~ — **KAPANDI (1 Ekim akşamı, K-54)**
+
+**Kapanış:** yayınlanmış plan (`mevcut_plan`) motora girdi oldu. Çözücü
+donmuş günün satırlarını aynen aktarıyor, yeni atama yazmıyor, geçmişi
+gerçek sayıyor (dinlenme, haftalık saat, adalet), geçmişin kusurunu çözümsüz
+etmiyor (yalnız geçmişe ait kısıtlar düşer, aşılmış sınır kırpılır).
+Doğrulayıcı `DONMUS_GUN`'u plana göre bayraksız yazıyor (eklenen, silinen,
+değişen — kabul cümlesinin üçü de), geçmişe ait diğer ihlalleri `gecmis`
+işaretleyip kapıdan saymıyor; plansız donmuş gün *"denetlenemedi"*. 17 test,
+8 mutasyon öldü; bekçide 0,1 ölçekte yeniden planlama (gün 0 aynı, 0 sert).
+Arayüz tarafı (çoklu seçimle kilit/silme, Mustafa'nın eki) yazılmadı —
+backend/arayüz işi. Tam ölçek: `coz-olc.py --donmus` Mustafa'da.
+
 
 **Bulundu:** 16 Eylül, dış inceleme (2. tur) · **Yeniden üretildi:** evet
 
@@ -4209,7 +4221,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~1c~~ | ~~**T-72 · "gece haftası" tanımı**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — çoğunluk; sıkı okuma ayar olarak kaldı |
 | ~~1a~~ | ~~**T-74 · yasal gece sınırının ölçüsü**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — Yargıtay 9. HD 2020/17967; gece postasının bütün süresi |
 | **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🟡 | Seviye 🟡'ya indi, sıra verildi (1 Ekim): `sure_butcesi_sn` ve `istek_id` yazıldı; sırada sabit atama eşlemesi, `devir_kapsama` tanımı, üç alanın şartnameden kaldırılması |
-| **3** | **T-29 · `DONMUS_GUN` ölü** 🔴 | *"Geçmiş yeniden planlanamaz"* sözünün tek bekçisi hiç ateşlenemiyor |
+| ~~3~~ | ~~**T-29 · `DONMUS_GUN` ölü**~~ | ✅ **KAPANDI 1 Ekim akşamı, K-54** — `mevcut_plan` girdisi; donmuş gün aynen geçer, gerçek sayılır; `DONMUS_GUN` plana göre; `gecmis` ihlaller kapıdan sayılmaz. 17 test, 8 mutasyon |
 | ~~4~~ | ~~**T-21 · çok ekipli çalışan**~~ | ✅ **KAPANDI 1 Ekim, K-50** — teşhis tersine döndü: sahada çift yetenekli kişi iki ekibe de sayılır; doğrulayıcı değişti, görünürlük metriği eklendi |
 | ~~5~~ | ~~**T-18 · yayın kapısı**~~ | ✅ **KAPANDI 1 Ekim, K-49** — üç kademe: yasal+sert engeller, firma+sert kabul bekler, yumuşak rapor; iki kanal kapıya bağlı |
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
@@ -4304,3 +4316,4 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | **T-66 sabit sert ihlal sayısı** | **1 Ekim 2026** | K-51 alan kaldırıldı |
 | **T-67 gece yarısı kuralı gövdesiz** | **1 Ekim 2026** | "İhlal üretmez" diye kayıtlı; vaka aracında bilerek vakasız sınıfı |
 | **T-79 CI kırmızı: süre-yetmedi testleri yarışa dayanıyordu** | **1 Ekim 2026** | Dolan bütçe artık `sure_dolmus` fikstürüyle enjekte ediliyor; 5 mutasyon öldü. Motor değişmedi |
+| **T-29 `DONMUS_GUN` ölü** | **1 Ekim 2026** | K-54: `mevcut_plan` girdisi; donmuş gün aynen geçer, gerçek sayılır, geçmişin kusuru çözümsüz etmez; kural plana göre bayraksız; `gecmis` ihlaller kapıdan sayılmaz. 17 test, 8 mutasyon, bekçi testi |

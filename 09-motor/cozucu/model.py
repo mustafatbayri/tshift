@@ -694,6 +694,21 @@ class Model(object):
         self.yemek_dk = {t["id"]: self._yemek_dk_sec(t) for t in self.sablonlar}
         self.dinlenme_tanim = {t["id"]: self._dinlenme_sec(t) for t in self.sablonlar}
         self.dinlenme = {}   # (e,d,t,i,s) -> BoolVar
+        # K-54 (T-29): donmus gunler OLAN OLDU gunleridir. Mevcut planin o
+        # gunlerdeki satirlari aynen gecer, modelde sabit sayilir; o gunlere
+        # yeni atama yazilmaz. Ayrintisi _donmus_plani_esle ve _kisit'te.
+        self.donmus = {int(d) for d in (girdi.get("donmus_gunler") or [])
+                       if d in self.gunler}
+        self.mevcut_plan = girdi.get("mevcut_plan")
+        self._var_gun = {}        # degisken indeksi -> gun (x, mola, dinlenme)
+        self._donmus_deger = {}   # sabitlenmis donmus degisken -> degeri
+        self._proto = self.m.Proto()
+        self._donmus_plan = {}    # (calisan, gun) -> [(sablon_id, molalar), ...]
+        self.donmus_satirlar = [] # ciktiya AYNEN gececek mevcut plan satirlari
+        self._donmus_dusen = 0    # tamamen gecmise ait oldugu icin dusen kisit
+        self._donmus_kirpilan = 0 # siniri gecmise gore kirpilan kisit
+        self._donmus_mola_oturmayan = 0
+        self._donmus_plani_esle()
 
     def _dinlenme_sec(self, sablon):
         """(adet, dakika) -- ucretli kisa molalar, politikadan (K-32).
@@ -775,6 +790,7 @@ class Model(object):
 
     def kur(self):
         self._degiskenler()
+        self._donmus_kilitleri_ele()
         self._gun_disi_sablonlari_kapat()
         self._gunde_tek_vardiya()
         self._uygunluk()
@@ -793,6 +809,7 @@ class Model(object):
         self._kapsama()
         self._yetkinlik()
         self._amac()
+        self._donmus_ozeti()
         return self
 
     def _sablonlari(self, c):
@@ -828,6 +845,240 @@ class Model(object):
             if c["id"] == kimlik:
                 return self._sablonlari(c)
         return self.sablonlar
+
+    # ---- K-54 (T-29): donmus gun -- "olan oldu" ---------------------------
+    #
+    # MUSTAFA (1 Ekim): "Kapanan gunlerdeki plan uyumu yoneticinin bilgisi
+    #   dahilinde degisebilir -- baska bir elemani o gun kendi inisiyatifiyle
+    #   ise cagirabilir. Yonetici plani guncellerken gecmis gunler icin
+    #   duzenleme yapabilir, gelecek gunler icin istedigi calisanlari
+    #   kilitleyebilir. Yonetici duzenlemelerini bitirdikten sonra motora
+    #   ilgili verilerin gitmesi gerekiyor."
+    #
+    # MEKANIZMA
+    #   `mevcut_plan` (yayinlanmis plan, yoneticinin duzenledigi haliyle) ve
+    #   `donmus_gunler` birlikte gelir. Donmus gunun satirlari:
+    #     * ciktiya AYNEN gecer (molalariyla; cozucu uretmez, aktarir),
+    #     * modelde SABITTIR: x = 1 (plandaki sablon), diger x = 0 -- domain
+    #       daraltilarak, kisitla degil (kisitlar suzgecten gecer, domain gecmez),
+    #     * gunler arasi kurallar onlari GERCEK sayar: dinlenme, ardisik gun,
+    #       haftalik saat, adalet -- gelecek gunler gecmise uyar.
+    #   Gecmisin KENDISI yargilanmaz: butun degiskenleri donmus gunlere ait
+    #   olan kisit DUSER (olan oldu -- o gun eksik kapsanmissa, iki vardiya
+    #   yazilmissa, izinli gunde calisilmissa model cozumsuz olmaz). Gecmisle
+    #   gelecegi birlikte tutan kisit kalir; gecmis siniri zaten asmissa sinir
+    #   ulasilabilir en iyi noktaya KIRPILIR: 45 saatlik tavan 50 saatle
+    #   dolmussa kalan gunlere pay kalmaz, plan yine cozulur.
+    #   Dogrulayici ayni gercegi "gecmis ihlal" diye ayri raporlar ve yayin
+    #   kapisi onu saymaz (denetle._gecmis_ihlalleri_isaretle).
+    #
+    # NE YAPMAZ
+    #   Plansiz donmus gun (mevcut_plan yok) SERBEST planlanir ve not dusulur;
+    #   dogrulayici DONMUS_GUN'u denetleyemez der (K-49: kabul bekler).
+    #   Hicbir sablona oturmayan satir (yonetici 10:00-14:00 yazmis, sablon
+    #   yok) ciktiya aynen gecer ama modele GIRMEZ -- saat ve dinlenme
+    #   kurallari onu gormez; dogrulayici gorur. Not dusulur.
+
+    def _yeni_bool(self, ad, gun):
+        v = self.m.NewBoolVar(ad)
+        if self.donmus:
+            self._var_gun[v.Index()] = gun
+        return v
+
+    def _domain_sabitle(self, v, deger):
+        dom = self._proto.variables[v.Index()].domain
+        dom.clear()
+        dom.extend([int(deger), int(deger)])
+        self._donmus_deger[v.Index()] = int(deger)
+
+    def _sablon_esle(self, c, satir):
+        """Mevcut plan satirini bu kisinin atanabilecegi bir sablona esler."""
+        adaylar = self._sablonlari(c)
+        tid = satir.get("sablon")
+        for t in adaylar:
+            if tid is not None and t["id"] == tid:
+                return t
+        bas, bit = satir.get("bas"), satir.get("bit")
+        if bas is None or bit is None:
+            return None
+        for t in adaylar:
+            if abs(float(t["bas"]) - float(bas)) < 1e-6 and abs(float(t["bit"]) - float(bit)) < 1e-6:
+                return t
+        return None
+
+    def _donmus_plani_esle(self):
+        if not self.donmus:
+            return
+        if self.mevcut_plan is None:
+            self.notlar.append(
+                "donmus gun var (%s) ama `mevcut_plan` verilmedi: donmus gunler "
+                "SERBEST planlandi, gecmis korunamadi; dogrulayici DONMUS_GUN'u "
+                "denetleyemez (K-54, K-49)" % sorted(self.donmus))
+            self.donmus = set()      # korunacak gecmis yok: model gunleri serbest planlar
+            return
+        kisiler = {c["id"]: c for c in self.calisanlar}
+        for a in self.mevcut_plan or []:
+            d = a.get("gun")
+            if d not in self.donmus:
+                continue
+            self.donmus_satirlar.append(dict(a, donmus=True))
+            e = a.get("calisan")
+            c = kisiler.get(e)
+            if c is None:
+                self.notlar.append(
+                    "donmus gun %s: mevcut plandaki %s calisan listesinde yok "
+                    "(ya da aktif degil); satir ciktiya aynen gecti, modele "
+                    "girmedi (K-54)" % (d, e))
+                continue
+            t = self._sablon_esle(c, a)
+            if t is None:
+                self.notlar.append(
+                    "donmus gun %s: %s'in %s-%s atamasi hicbir sablona oturmadi; "
+                    "satir ciktiya aynen gecti, saat ve dinlenme kurallarinda "
+                    "modele girmedi (K-54)" % (d, e, _ss(a.get("bas", 0)),
+                                               _ss(a.get("bit", 0))))
+                continue
+            self._donmus_plan.setdefault((e, d), []).append(
+                (t["id"], list(a.get("molalar") or [])))
+
+    def _donmus_sabitle(self, c, d, t, v, yemekler):
+        """Donmus gunun degiskenlerini mevcut plana gore sabitler."""
+        secilen = [(tid, mol) for tid, mol in self._donmus_plan.get((c["id"], d), [])
+                   if tid == t["id"]]
+        if not secilen:
+            self._domain_sabitle(v, 0)
+            for s in yemekler:
+                self._domain_sabitle(self.mola[(c["id"], d, t["id"], s)], 0)
+            for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
+                for s in adaylar:
+                    k = (c["id"], d, t["id"], i, s)
+                    if k in self.dinlenme:
+                        self._domain_sabitle(self.dinlenme[k], 0)
+            return
+        self._domain_sabitle(v, 1)
+        molalar = secilen[0][1]
+        yemek = [m for m in molalar if m.get("tip") == "yemek"]
+        dinlenmeler = sorted((m for m in molalar if m.get("tip") == "dinlenme"),
+                             key=lambda m: m.get("bas", 0))
+        oturdu = True
+        yemek_bas = yemek[0].get("bas") if yemek else None
+        yemek_var = False
+        for s in yemekler:
+            esit = (s is not None and yemek_bas is not None
+                    and abs(float(s) - float(yemek_bas)) < 1e-6)
+            self._domain_sabitle(self.mola[(c["id"], d, t["id"], s)], 1 if esit else 0)
+            yemek_var = yemek_var or esit
+        if yemek_bas is not None and not yemek_var:
+            oturdu = False
+        for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
+            hedef = dinlenmeler[i].get("bas") if i < len(dinlenmeler) else None
+            bulundu = False
+            for s in adaylar:
+                k = (c["id"], d, t["id"], i, s)
+                if k not in self.dinlenme:
+                    continue
+                esit = hedef is not None and abs(float(s) - float(hedef)) < 1e-6
+                self._domain_sabitle(self.dinlenme[k], 1 if esit else 0)
+                bulundu = bulundu or esit
+            if hedef is not None and not bulundu:
+                oturdu = False
+        if not oturdu:
+            self._donmus_mola_oturmayan += 1
+
+    def _donmus_kilitleri_ele(self):
+        if not self.donmus:
+            return
+        for k in self.girdi.get("kilitler", []) or []:
+            if k.get("gun") in self.donmus:
+                self.notlar.append(
+                    "kilit donmus gune (%s) isaret ediyor: %s -- mevcut plan "
+                    "gecerli, kilit uygulanmadi (K-54)" % (k.get("gun"), k.get("calisan")))
+        for a in self.girdi.get("sabit_atamalar", []) or []:
+            if a.get("gun") in self.donmus:
+                self.notlar.append(
+                    "sabit atama donmus gune (%s) isaret ediyor: %s -- mevcut "
+                    "plan gecerli, uygulanmadi (K-54)" % (a.get("gun"), a.get("calisan")))
+
+    def _donmus_ozeti(self):
+        if not self.donmus:
+            return
+        if self._donmus_mola_oturmayan:
+            self.notlar.append(
+                "%d donmus atamada molalar motorun aday noktalarina oturmadi; "
+                "molalar ciktiya plandan aynen gecti, modelde sahada sayildi "
+                "(K-54)" % self._donmus_mola_oturmayan)
+        if self._donmus_kirpilan:
+            self.notlar.append(
+                "donmus gunler %d kisitin sinirini zaten asmisti; sinir "
+                "ulasilabilir en yakin noktaya kirpildi (olan oldu, kalan "
+                "gunlere pay kalmadi) (K-54)" % self._donmus_kirpilan)
+
+    def _kisit(self, ct):
+        """self.m.Add + K-54 suzgeci. Butun kisitlar buradan gecer."""
+        kisit = self.m.Add(ct)
+        if self.donmus:
+            self._donmus_suz(kisit)
+        return kisit
+
+    def _donmus_suz(self, kisit):
+        proto = self._proto
+        c = proto.constraints[kisit.Index()]
+        if not c.has_linear():
+            return
+        lin = c.linear
+        vars_ = list(lin.vars)
+        coeffs = list(lin.coeffs)
+        if not vars_:
+            return
+        sabit = 0
+        serbest_lo = serbest_hi = 0
+        donmus_var = 0
+        deger = self._donmus_deger
+        var_gun = self._var_gun
+        donmus = self.donmus
+        for i, k in zip(vars_, coeffs):
+            idx = i if i >= 0 else -i - 1
+            gun = var_gun.get(idx)
+            if gun in donmus:                      # donmus gun degiskeni
+                donmus_var += 1
+                if idx in deger:
+                    d_ = deger[idx]
+                else:                              # henuz sabitlenmedi (_degiskenler ici)
+                    dom = list(proto.variables[idx].domain)
+                    d_ = dom[0]
+                sabit += k * ((1 - d_) if i < 0 else d_)
+                continue
+            if gun is not None:                    # serbest gun bool
+                lo, hi = 0, 1
+            else:                                  # yardimci tam sayi degisken
+                dom = list(proto.variables[idx].domain)
+                lo, hi = dom[0], dom[-1]
+            if i < 0:
+                lo, hi = 1 - hi, 1 - lo
+            a, b = k * lo, k * hi
+            serbest_lo += min(a, b)
+            serbest_hi += max(a, b)
+        if donmus_var == 0:
+            return
+        if donmus_var == len(vars_):
+            c.clear_linear()          # yalniz gecmis: olan oldu, kisit duser
+            self._donmus_dusen += 1
+            return
+        dom = list(lin.domain)
+        if len(dom) != 2:
+            return
+        lo, hi = dom
+        yeni_lo, yeni_hi = lo, hi
+        if sabit + serbest_hi < lo:
+            yeni_lo = sabit + serbest_hi
+            yeni_hi = max(hi, yeni_lo)
+        if sabit + serbest_lo > hi:
+            yeni_hi = sabit + serbest_lo
+            yeni_lo = min(lo, yeni_hi)
+        if (yeni_lo, yeni_hi) != (lo, hi):
+            lin.domain.clear()
+            lin.domain.extend([int(yeni_lo), int(yeni_hi)])
+            self._donmus_kirpilan += 1
 
     def _X(self, kimlik, gun, sablon_id):
         """x degiskeni; kisi o sablona atanamiyorsa SABIT SIFIR.
@@ -932,17 +1183,19 @@ class Model(object):
         for c in self.calisanlar:
             for d in self.gunler:
                 for t in self._sablonlari(c):
-                    v = self.m.NewBoolVar("x_%s_%d_%s" % (c["id"], d, t["id"]))
+                    v = self._yeni_bool("x_%s_%d_%s" % (c["id"], d, t["id"]), d)
                     self.x[(c["id"], d, t["id"])] = v
                     yemek_dk = self.yemek_dk[t["id"]]
                     yemekler = _mola_baslangiclari(t, self.mola_penceresi, yemek_dk)
                     for s in yemekler:
-                        self.mola[(c["id"], d, t["id"], s)] = self.m.NewBoolVar(
-                            "m_%s_%d_%s_%s" % (c["id"], d, t["id"], s))
+                        self.mola[(c["id"], d, t["id"], s)] = self._yeni_bool(
+                            "m_%s_%d_%s_%s" % (c["id"], d, t["id"], s), d)
                     # Vardiya secildiyse TAM BIR mola yerlesimi secilir.
-                    self.m.Add(sum(self.mola[(c["id"], d, t["id"], s)]
+                    self._kisit(sum(self.mola[(c["id"], d, t["id"], s)]
                                    for s in yemekler) == v)
                     self._dinlenme_degiskenleri(c, d, t, v, yemekler, yemek_dk)
+                    if d in self.donmus:
+                        self._donmus_sabitle(c, d, t, v, yemekler)
 
     def _dinlenme_degiskenleri(self, c, d, t, v, yemekler, yemek_dk):
         """Ucretli kisa molalarin degiskenleri ve kisitlari -- K-32.
@@ -988,9 +1241,9 @@ class Model(object):
                     self.notlar.append(not_)
                 continue
             for s in adaylar:
-                self.dinlenme[(c["id"], d, t["id"], i, s)] = self.m.NewBoolVar(
-                    "dm_%s_%d_%s_%d_%s" % (c["id"], d, t["id"], i, s))
-            self.m.Add(sum(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                self.dinlenme[(c["id"], d, t["id"], i, s)] = self._yeni_bool(
+                    "dm_%s_%d_%s_%d_%s" % (c["id"], d, t["id"], i, s), d)
+            self._kisit(sum(self.dinlenme[(c["id"], d, t["id"], i, s)]
                            for s in adaylar) == v)
             # Dinlenme yemekle CAKISAMAZ. Bu kisit yalniz "adil plan" icin
             # degil, ARITMETIK icin de sart: _sahada "molada olmak" durumunu
@@ -1001,13 +1254,13 @@ class Model(object):
                     if sy is None:
                         continue
                     if _gercek_kesisiyor(s, sure, sy, yemek_sure):
-                        self.m.Add(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                        self._kisit(self.dinlenme[(c["id"], d, t["id"], i, s)]
                                    + self.mola[(c["id"], d, t["id"], sy)] <= 1)
                 # Emniyet kemeri: bir onceki dinlenmenin gercek zamanda
                 # ustuste binen adaylariyla da cakisamaz.
                 for j, so in onceki:
                     if _gercek_kesisiyor(s, sure, so, sure):
-                        self.m.Add(self.dinlenme[(c["id"], d, t["id"], i, s)]
+                        self._kisit(self.dinlenme[(c["id"], d, t["id"], i, s)]
                                    + self.dinlenme[(c["id"], d, t["id"], j, so)] <= 1)
             onceki = [(i, s) for s in adaylar]
 
@@ -1038,7 +1291,7 @@ class Model(object):
                 for d in self.gunler:
                     if d not in izinli:
                         if (c["id"], d, t["id"]) in self.x:
-                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                            self._kisit(self.x[(c["id"], d, t["id"])] == 0)
         self._kapali_saatleri_kapat()
 
     def _departman_kapali_mi(self, t, d):
@@ -1067,7 +1320,7 @@ class Model(object):
                         % (t["id"], d, t.get("ekip"), _ss(t["bas"]), _ss(t["bit"])))
         for (e, d, tid), v in self.x.items():
             if (tid, d) in kapali:
-                self.m.Add(v == 0)
+                self._kisit(v == 0)
         tanimsiz = sorted({t.get("ekip") for t in self.sablonlar
                            if self._calisma_saatleri_aktif
                            and t.get("ekip") is not None
@@ -1085,7 +1338,7 @@ class Model(object):
         """
         for c in self.calisanlar:
             for d in self.gunler:
-                self.m.Add(self._calisiyor(c["id"], d) <= 1)
+                self._kisit(self._calisiyor(c["id"], d) <= 1)
 
     def _uygunluk(self):
         for c in self.calisanlar:
@@ -1097,7 +1350,7 @@ class Model(object):
                     for t in self.sablonlar:
                         if set(_dilimler(d, t["bas"], t["bit"])) & yasak:
                             if (c["id"], d, t["id"]) in self.x:
-                                self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                                self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
     def _gece_uygunlugu(self):
         """K-40 -- "bu kisi gece vardiyasi yapamaz" SERT kisiti.
@@ -1142,7 +1395,7 @@ class Model(object):
             for d in self.gunler:
                 for t in geceler:
                     if (c["id"], d, t["id"]) in self.x:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
     def _gece_azami(self):
         """GECE_VARDIYASI_AZAMI -- yasal 7,5 saat, sektor istisnasi (K-26).
@@ -1215,7 +1468,7 @@ class Model(object):
                     continue
                 for t, _ in asanlar:
                     if (c["id"], d, t["id"]) in self.x:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
     def _izin(self):
         for c in self.calisanlar:
@@ -1227,20 +1480,22 @@ class Model(object):
                                  for g in _dilimler(d, t["bas"], t["bit"])}
                     if dokundugu & izinli:
                         if (c["id"], d, t["id"]) in self.x:
-                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                            self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
     def _kilitler(self):
         for k in self.girdi.get("kilitler", []) or []:
             e, d = k.get("calisan"), k.get("gun")
+            if d in self.donmus:
+                continue      # K-54: donmus gunde mevcut plan gecerli (_donmus_kilitleri_ele)
             if k.get("tip") == "yasak":
                 if any(c["id"] == e for c in self.calisanlar):
-                    self.m.Add(self._calisiyor(e, d) == 0)
+                    self._kisit(self._calisiyor(e, d) == 0)
             elif "bas" in k and "bit" in k:
                 eslesen = [t for t in self.sablonlar
                            if t["bas"] == k["bas"] and t["bit"] == k["bit"]]
                 if eslesen:
                     if (e, d, eslesen[0]["id"]) in self.x:
-                        self.m.Add(self.x[(e, d, eslesen[0]["id"])] == 1)
+                        self._kisit(self.x[(e, d, eslesen[0]["id"])] == 1)
                     else:
                         # T-46: kilit, kisinin ekibinde OLMAYAN bir sablona
                         # isaret ediyor. Sessizce `0 == 1` yazip plani
@@ -1257,11 +1512,13 @@ class Model(object):
 
     def _sabit_atamalar(self):
         for a in self.girdi.get("sabit_atamalar", []) or []:
+            if a.get("gun") in self.donmus:
+                continue      # K-54: donmus gunde mevcut plan gecerli
             anahtar = (a["calisan"], a["gun"], a.get("sablon"))
             # Dogrudan sozluk aramasi: eskiden her sabit atama icin butun
             # anahtarlar listeleniyordu (350 kiside 346 bin anahtar).
             if anahtar in self.x:
-                self.m.Add(self.x[anahtar] == 1)
+                self._kisit(self.x[anahtar] == 1)
             else:
                 self.notlar.append("sabit atama modele girmedi: %r" % (anahtar,))
 
@@ -1289,7 +1546,7 @@ class Model(object):
                 for t in self.sablonlar:
                     if _net_saat(t) > gunluk:
                         if (c["id"], d, t["id"]) in self.x:
-                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                            self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
             # Dakika cinsinden tam sayi calisilir; float kisit CP-SAT'e girmez.
             dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
@@ -1311,7 +1568,7 @@ class Model(object):
             # K-38 -- HAFTALIK_AZAMI *NORMAL CALISMA* SINIRIDIR, TOPLAM TAVAN DEGIL
             #
             # ⚠ NE VARDI (29 Eylul'e kadar)
-            #     self.m.Add(dakika <= int(haftalik * 60))       # 45 saat
+            #     self._kisit(dakika <= int(haftalik * 60))       # 45 saat
             #   Bu satir toplam saati 45'te kesiyordu. 45 saat sozlesmeli bir
             #   calisan zaten 45'te duruyordu -- yani FAZLA MESAI MATEMATIKSEL
             #   OLARAK IMKANSIZDI. Asagidaki `fazla` ceza degiskeni, profile
@@ -1333,7 +1590,7 @@ class Model(object):
             #
             # ⚠ TAVAN KALKMADI, YERI DEGISTI: toplam hala sinirli, ama sinir
             #   artik "normal calisma + fazla mesai tavani".
-            self.m.Add(dakika <= int(round((haftalik + fm_pay) * 60)))
+            self._kisit(dakika <= int(round((haftalik + fm_pay) * 60)))
 
             soz = c.get("sozlesme") or {}
             tavan = soz.get("haftalik_saat")
@@ -1371,9 +1628,9 @@ class Model(object):
                 #   zamanliyi gereksiz yere 45 saate kadar yazmamak icin bir
                 #   sebebi yok -- hedef asimini cezalandiran bir kural
                 #   gelene kadar bu acik durur (bkz. 06-ACIK-RISKLER T-54).
-                self.m.Add(dakika <= int(pt_tavan * 60))
+                self._kisit(dakika <= int(pt_tavan * 60))
             elif tavan is not None:
-                self.m.Add(dakika <= int(round((tavan + fm_pay) * 60)))
+                self._kisit(dakika <= int(round((tavan + fm_pay) * 60)))
                 # Fazla mesai YUMUSAK cezayla sifira itilir (A1: esit 0).
                 #
                 # K-30 (Mustafa, 16 Eylul): "Zaten hedef hic gitmemek.
@@ -1397,7 +1654,7 @@ class Model(object):
                 #   "ceza sifir olmasin" diyor, "tam olarak 50 olsun"
                 #   demiyor (testler/test_profiller.py).
                 fazla = self.m.NewIntVar(0, int(fm_tavan * 60), "fm_%s" % c["id"])
-                self.m.Add(fazla >= dakika - int(tavan * 60))
+                self._kisit(fazla >= dakika - int(tavan * 60))
                 self.cezalar.append((50, fazla))
 
     def _dinlenme(self):
@@ -1417,7 +1674,7 @@ class Model(object):
                     for t in self.sablonlar:
                         if (d * 24 + t["bas"] - bitis < asgari
                                 and (c["id"], d, t["id"]) in self.x):
-                            self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                            self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
         for c in self.calisanlar:
             for d in self.gunler[:-1]:
@@ -1426,7 +1683,7 @@ class Model(object):
                     for t2 in self.sablonlar:
                         baslangic = (d + 1) * 24 + t2["bas"]
                         if baslangic - bitis < asgari:
-                            self.m.Add(self._X(c["id"], d, t1["id"])
+                            self._kisit(self._X(c["id"], d, t1["id"])
                                        + self._X(c["id"], d + 1, t2["id"]) <= 1)
 
     def _ardisik_gun(self):
@@ -1438,7 +1695,7 @@ class Model(object):
             azami = min(azami, _par(ht, "pencere_gun", 7) - 1)
         for c in self.calisanlar:
             for bas in range(0, HAFTA_GUN - azami):
-                self.m.Add(sum(self._calisiyor(c["id"], d)
+                self._kisit(sum(self._calisiyor(c["id"], d)
                                for d in range(bas, bas + azami + 1)) <= azami)
             # T-28: gecmise uzanan pencere. Kayitli gecmis gunleri SABIT
             # olarak sayilir; bilinmeyen gun 0'dir (K-42).
@@ -1448,7 +1705,7 @@ class Model(object):
                 if not sabit:
                     continue
                 plan = range(0, min(HAFTA_GUN, bas + azami + 1))
-                self.m.Add(sabit + sum(self._calisiyor(c["id"], d)
+                self._kisit(sabit + sum(self._calisiyor(c["id"], d)
                                        for d in plan) <= azami)
 
     def _ardisik_gece(self):
@@ -1477,7 +1734,7 @@ class Model(object):
                          for t in geceler
                          if (c["id"], d, t["id"]) in self.x]
                 if terim:
-                    self.m.Add(sum(terim) <= azami)
+                    self._kisit(sum(terim) <= azami)
             # T-28: cuma-cumartesi-pazar gecesi kayitliysa pazartesi gecesi
             # dorduncudur. Kayitli gecmis geceler SABIT sayilir (K-42).
             gecmis_geceler = {g for g, b0, b1, isaret in _gecmis_kayitlari(c)
@@ -1491,7 +1748,7 @@ class Model(object):
                          for t in geceler
                          if (c["id"], d, t["id"]) in self.x]
                 if terim:
-                    self.m.Add(sabit + sum(terim) <= azami)
+                    self._kisit(sabit + sum(terim) <= azami)
 
     # ---- hafta olcekli kurallar (30 Eylul; tanimlar K-45, K-46) ----------
     #
@@ -1579,9 +1836,9 @@ class Model(object):
                         gece_terim.append(sure * x)
                         gece_sayi.append(x)
             if gece_terim:
-                self.m.Add(2 * sum(gece_terim) <= sum(toplam_terim))
+                self._kisit(2 * sum(gece_terim) <= sum(toplam_terim))
                 if asgari_gece is not None and int(asgari_gece) > 0:
-                    self.m.Add(sum(gece_sayi) <= int(asgari_gece) - 1)
+                    self._kisit(sum(gece_sayi) <= int(asgari_gece) - 1)
 
     def _hafta_sonu_gecmiste_tam(self, c, hafta):
         """Gecmis hafta sonu KANITLI olarak iki gunu de calisilmis mi
@@ -1627,7 +1884,7 @@ class Model(object):
                         pazar.append(x)
             for x1 in cumartesi:
                 for x2 in pazar:
-                    self.m.Add(x1 + x2 <= 1)
+                    self._kisit(x1 + x2 <= 1)
 
     def _asgari_vardiya(self):
         """ASGARI_VARDIYA_SURESI -- en kisa vardiya (firma kurali, SERT).
@@ -1660,7 +1917,7 @@ class Model(object):
             for d in self.gunler:
                 for t, _ in kisalar:
                     if (c["id"], d, t["id"]) in self.x:
-                        self.m.Add(self.x[(c["id"], d, t["id"])] == 0)
+                        self._kisit(self.x[(c["id"], d, t["id"])] == 0)
 
     # ---- kapsama ------------------------------------------------------
 
@@ -1816,14 +2073,14 @@ class Model(object):
         for t, gun, saat in self._hucreler():
             atanmis = self._atanmis(t.get("ekip"), gun, saat)
             if asgari_kural and t.get("asgari"):
-                self.m.Add(sum(atanmis) >= t["asgari"])
+                self._kisit(sum(atanmis) >= t["asgari"])
             if hedef_kural and t.get("hedef"):
                 eksik = self.m.NewIntVar(0, t["hedef"], "he_%d_%d" % (gun, saat))
-                self.m.Add(eksik >= t["hedef"] - sum(atanmis))
+                self._kisit(eksik >= t["hedef"] - sum(atanmis))
                 self.cezalar.append((hedef_agirlik, eksik))
             if asim_kural and t.get("hedef") is not None:
                 asim = self.m.NewIntVar(0, kisi_sayisi, "ha_%d_%d" % (gun, saat))
-                self.m.Add(asim >= sum(atanmis) - t["hedef"])
+                self._kisit(asim >= sum(atanmis) - t["hedef"])
                 self.cezalar.append((asim_agirlik, asim))
             # MOLA_KAPSAMASI (yumusak) -- K-34: hucrenin DORT ceyregi ayri
             # ayri olculur ama CEZA DEGISKENI TEK KALIR ve hucrenin EN KOTU
@@ -1839,7 +2096,7 @@ class Model(object):
                 eksik = self.m.NewIntVar(0, t["asgari"], "me_%d_%d" % (gun, saat))
                 for ceyrek in range(CEYREK):
                     an = saat + ceyrek / float(CEYREK)
-                    self.m.Add(eksik >= t["asgari"]
+                    self._kisit(eksik >= t["asgari"]
                                - sum(self._sahada(t.get("ekip"), gun, an)))
                 self.cezalar.append((mola_agirlik, eksik))
             # SERT saha tabani (K-33). MOLA_KAPSAMASI (yumusak) plani
@@ -1857,7 +2114,7 @@ class Model(object):
             if taban_kisi:
                 for ceyrek in range(CEYREK):
                     an = saat + ceyrek / float(CEYREK)
-                    self.m.Add(sum(self._sahada(t.get("ekip"), gun, an))
+                    self._kisit(sum(self._sahada(t.get("ekip"), gun, an))
                                >= taban_kisi)
 
     def _yetkinlik(self):
@@ -1965,7 +2222,7 @@ class Model(object):
                            for t in self._sablonlari(c)
                            if (ekip is None or self._sayilir(c, t, ekip))
                            and dilim in _dilimler(d, t["bas"], t["bit"])]
-                    self.m.Add(sum(var) >= asgari)
+                    self._kisit(sum(var) >= asgari)
 
     # ---- amac ---------------------------------------------------------
 
@@ -2062,7 +2319,7 @@ class Model(object):
                 for j in range(azami):
                     y = self.m.NewIntVar(0, azami, "ag_%s_%s_%d"
                                          % (boyut, c["id"], j))
-                    self.m.Add(y >= sayim[c["id"]] - j)
+                    self._kisit(y >= sayim[c["id"]] - j)
                     self.cezalar.append((agirlik, y))
 
     def _boyut_sayaci(self, boyut):
@@ -2116,10 +2373,10 @@ class Model(object):
             dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
                          for d in self.gunler for t in self._sablonlari(c))
             if sert:
-                self.m.Add(dakika >= gereken_dk)
+                self._kisit(dakika >= gereken_dk)
             else:
                 sapma = self.m.NewIntVar(0, 100000, "sd_%s" % c["id"])
-                self.m.Add(sapma >= gereken_dk - dakika)
+                self._kisit(sapma >= gereken_dk - dakika)
                 self.cezalar.append((agirlik, sapma))
 
 

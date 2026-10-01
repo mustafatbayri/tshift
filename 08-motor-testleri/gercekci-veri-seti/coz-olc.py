@@ -11,6 +11,11 @@ NEDEN AYRI BIR BETIK
   py coz-olc.py --olcek 0.3     ~150 kisi
   py coz-olc.py                 500 kisi   -- COK uzun, bellek yiyor
   py coz-olc.py --doluluk 0.85  bolluk seti (varsayilan 0.95)
+  py coz-olc.py --donmus        cozdukten sonra gun 0'i DONDURUP yeniden
+                                planlar (K-54): motorun kendi gun 0 plani
+                                `mevcut_plan` olur; gun 0 aynen kalmali,
+                                sert ihlal 0, yayinlanabilir. Ikinci cozum
+                                `--donmus-saniye` (varsayilan 300) alir.
 
   ⚠ TAM OLCEK ICIN UYARI (28 Eylul)
     Bulut makinesinde model kurma 117 saniye olculdu ve ben bunu "beklenen
@@ -52,6 +57,9 @@ OLCEK = float(sys.argv[sys.argv.index("--olcek") + 1]) \
     if "--olcek" in sys.argv else 1.0
 DOLULUK = float(sys.argv[sys.argv.index("--doluluk") + 1]) \
     if "--doluluk" in sys.argv else 0.95
+DONMUS = "--donmus" in sys.argv
+DONMUS_SANIYE = int(sys.argv[sys.argv.index("--donmus-saniye") + 1]) \
+    if "--donmus-saniye" in sys.argv else 300
 
 
 def yaz(d):
@@ -181,8 +189,11 @@ def main():
         sayi[i["kural"]] = sayi.get(i["kural"], 0) + 1
     sonuc["dogrulama_sn"] = round(time.time() - t2, 1)
     sonuc["ihlal"] = sayi
+    # K-54: donmus gune ait ihlal "olan oldu" -- sert sayaca girmez, ayri yazilir.
     sonuc["sert_ihlal"] = sum(1 for i in r.get("ihlaller", [])
-                              if i.get("agirlik") == "SERT")
+                              if i.get("agirlik") == "SERT" and not i.get("gecmis"))
+    sonuc["gecmis_sert_ihlal"] = sum(1 for i in r.get("ihlaller", [])
+                                     if i.get("agirlik") == "SERT" and i.get("gecmis"))
     # ⚠ YAYIN KARARI `yayin_kapisi` ICINDE, en ustte DEGIL.
     #   Ilk yazimda `r.get("yayinlanabilir")` diyordum ve hep None
     #   geliyordu -- Mustafa hakli olarak "yayinlanamaz mi, neden?" diye
@@ -204,7 +215,8 @@ def main():
     # SERT ihlallerin cumleleri ekrana ve dosyaya: 30 Eylul gecesi tam
     # olcekli kosu 1 sert ihlal (PART_TIME_LIMIT) verdi ve sebebi
     # arastirilamadi -- ne kisi ne saat kaydedilmisti (T-78).
-    sertler = [i for i in r.get("ihlaller", []) if i.get("agirlik") == "SERT"]
+    sertler = [i for i in r.get("ihlaller", [])
+               if i.get("agirlik") == "SERT" and not i.get("gecmis")]
     if sertler:
         print("\n     SERT ihlaller:")
         for i in sertler[:20]:
@@ -220,10 +232,70 @@ def main():
                   f, ensure_ascii=False)
     print("     plan yazildi: %s" % os.path.basename(plan_yolu))
 
+    if DONMUS:
+        donmus_olc(g, c["atamalar"])
+
     print("\nTOPLAM: %.0f sn" % (time.time() - t0))
     print("Sonuc yazildi: %s" % ("olcum-sonucu-%d.json" % round(DOLULUK * 100)
                                  if OLCEK == 1.0 else
                                  "olcum-sonucu-%g-%d.json" % (OLCEK, round(DOLULUK * 100))))
+
+
+def donmus_olc(g, plan):
+    """4/4 -- gun 0 donmus, motorun kendi plani yayinlanmis plan (K-54).
+
+    Gercek is akisi: hafta yayinlandi, pazartesi gecti, yonetici sali gunu
+    plani yeniden kosturuyor. Gun 0 OLAN OLDU; motor onu aynen almali, kalan
+    gunleri ona uyarak planlamali. Olculen: gun 0 degisti mi, model gecmisin
+    kac kisitini dusurdu/kirpti, sert ihlal (gecmis haric), yayinlanabilir mi.
+    """
+    import copy
+    print("\n4/4  Donmus gun yeniden planlamasi (gun 0 donmus, mevcut plan = 3/3'un plani)")
+    g2 = copy.deepcopy(g)
+    g2["donmus_gunler"] = [0]
+    g2["mevcut_plan"] = copy.deepcopy(plan)
+    t = time.time()
+    k2 = Model(g2).kur()
+    kurma = time.time() - t
+    print("     model kurma %.0f sn  |  dusen kisit %d  |  kirpilan kisit %d"
+          % (kurma, k2._donmus_dusen, k2._donmus_kirpilan))
+    t = time.time()
+    c2 = coz(g2, {"azami_saniye": DONMUS_SANIYE}, kuruldu=k2)
+    sure = time.time() - t
+    ist = c2.get("cozum_istatistikleri", {})
+    print("     %.0f sn  |  durum: %s  |  %d atama  |  ipucu kullanildi: %s  |  ilk plan: %s sn"
+          % (sure, c2.get("durum"), len(c2.get("atamalar") or []),
+             ist.get("baslangic_plani_kullanildi"), ist.get("ilk_cozum_sn")))
+    sonuc = {"donmus_gunler": [0], "kurma_sn": round(kurma, 1),
+             "dusen_kisit": k2._donmus_dusen, "kirpilan_kisit": k2._donmus_kirpilan,
+             "cozum_sn": round(sure, 1), "durum": c2.get("durum"),
+             "notlar": [n for n in (c2.get("uygulanmayan_notlar") or []) if "K-54" in n]}
+    if c2.get("durum") == "cozuldu":
+        def gun0(atamalar):
+            return sorted((a["calisan"], float(a["bas"]), float(a["bit"]))
+                          for a in atamalar if a["gun"] == 0)
+        ayni = gun0(plan) == gun0(c2["atamalar"])
+        r2 = degerlendir(g2, c2["atamalar"])
+        sert = [i for i in r2.get("ihlaller", []) if i.get("agirlik") == "SERT" and not i.get("gecmis")]
+        gecmis = [i for i in r2.get("ihlaller", []) if i.get("gecmis")]
+        kapi = r2.get("yayin_kapisi") or {}
+        sonuc.update({"gun0_ayni": ayni, "sert_ihlal": len(sert),
+                      "gecmis_ihlal": len(gecmis),
+                      "donmus_gun_ihlali": sum(1 for i in sert if i["kural"] == "DONMUS_GUN"),
+                      "yayinlanabilir": kapi.get("yayinlanabilir"),
+                      "optimuma_uzaklik": (c2.get("metrikler") or {}).get("optimuma_uzaklik_yuzde")})
+        print("     gun 0 AYNI mi: %s  |  sert ihlal: %d (DONMUS_GUN %d)  |  gecmis ihlal: %d  |  YAYINLANABILIR: %s"
+              % (ayni, len(sert), sonuc["donmus_gun_ihlali"], len(gecmis), kapi.get("yayinlanabilir")))
+        if sert:
+            for i in sert[:10]:
+                print("       %s" % i.get("mesaj", i))
+    for n in sonuc["notlar"][:5]:
+        print("     not: %s" % n)
+    yol = os.path.join(BURASI, "olcum-donmus-%d.json" % round(DOLULUK * 100)) \
+        if OLCEK == 1.0 else os.path.join(BURASI, "olcum-donmus-%g-%d.json" % (OLCEK, round(DOLULUK * 100)))
+    with io.open(yol, "w", encoding="utf-8") as f:
+        f.write(json.dumps(sonuc, ensure_ascii=False, indent=1))
+    print("     donmus gun sonucu yazildi: %s" % os.path.basename(yol))
 
 
 if __name__ == "__main__":
