@@ -3000,7 +3000,9 @@ görünmedi. `int(...)` ile düzeltildi, kırmızı kanıtlı test eklendi
 
 ---
 
-## ✅ T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **KAPANDI (30 Eylül gecesi, tam ölçekte ölçüldü)** — 🟡 bir soru kaldı
+## ✅ T-59 · ~~Verilen süre bütçesi aşılıyor~~ — **KAPANDI (30 Eylül gecesi, tam ölçekte ölçüldü)** — K-48 ile tamamlandı (1 Ekim, sabah onayı bekliyor)
+
+**1 Ekim — K-48:** bütçe = **arama süresi**, model kurma **ayrı kalem** olarak gösterilir (Mustafa'nın ilk önerisi: *"ekranda modelleme 58, plan 900 sn gibi belirtsek"*; 03:40'ta benim seçimim, sabah onayı bekliyor). Aşağısı sorunun kendisi:
 
 **🟡 1 Ekim — Mustafa'ya soru (K-48 adayı).** Üç koşuda ekran *"en fazla
 900 sn"* deyip **958 sn** yazdı: birinci aşama + ana aşama = tam 900,
@@ -3123,8 +3125,54 @@ olduğu açık; sebebi açık değil.
 aşamanın **ilk planı kaçıncı saniyede** bulduğu hiçbir yerde yazmıyordu;
 "120 sn yetmiyor" ile "amaçsız modelde hiç bulamıyor" ayrılamıyordu.
 Çıktıya `ilk_cozum_sn` eklendi (`cozum_istatistikleri`; `coz-olc.py`
-*"ana asamada ilk plan: N sn"* yazıyor). Sabahki koşu bu sayıyı verecek;
-ölçüm 1 ondan sonra anlamlı.
+*"ana asamada ilk plan: N sn"* yazıyor).
+
+**1 Ekim 04:00 — birinci aşama yeniden yazıldı (plan bulma tarafı).**
+T-78 düzeltmesi tam ölçekte planı tamamen götürünce (778 sn, 0 atama)
+iki şey ölçüldü ve değiştirildi (`cozucu/coz.py::_ipucu_ver`):
+
+1. **Molalar sabitlenerek aranıyor.** Değişkenlerin üçte ikisi mola
+   yerleşimi; geçerli plan için bunların seçilmesi gerekmiyor. Birinci
+   aşamada her şablonun molaları ideale en yakın tek noktaya sabitleniyor
+   (`Model.sabit_mola_secimi`): seçilmeyen adayların alanı [0,0], kısıt
+   eklenmiyor, aşama bitince alanlar geri [0,1]. Ana aşama molaları
+   **serbest** arıyor (K-32 değişmedi).
+2. **İpucu tam yazılıyor.** Eskiden yalnız x/mola/dinlenme ipucu alıyordu;
+   ceza değişkenleri boştu. CP-SAT yarım ipucuyu onarmaya çalışıp 10
+   çelişkide vazgeçiyor (`hint_conflict_limit`): 0.2 ölçekte ipucu
+   **eldeyken** ana aşamanın ilk planı 57–101 saniyede geliyordu. Birinci
+   aşama aynı modeli çözdüğü için bütün değişkenlerin değeri var; hepsi
+   yazılıyor.
+
+| 0.2 ölçek (100 kişi, 2 çekirdek, 240 sn) | eski kod | T-78 sonrası | + sabit mola + tam ipucu |
+|---|---|---|---|
+| birinci aşama plan buldu | 18,3 sn | 18,2 sn | **1,7 sn** |
+| ana aşamada ilk plan | 100,9 sn | 57,2 sn | **21,0 sn** |
+| bulunan çözüm | 181 | 220 | 293 |
+| amaç (tek koşu, gürültülü) | 80.128 | 56.035 | 103.926 |
+
+**0.3 ölçek (151 kişi, 2 çekirdek, 300 sn) — tam ölçeğin hastalığı burada
+yeniden üretildi ve geçti:**
+
+| | eski kod | + sabit mola + tam ipucu |
+|---|---|---|
+| birinci aşama plan buldu | 35,4 sn | **2,5 sn** |
+| ana aşamada ilk plan | **YOK** (265 sn, `sure_yetmedi`, 0 atama) | **25,1 sn** |
+| bulunan çözüm | 0 | 306 |
+
+Eski kodda ipucu **eldeyken** ana aşama 265 saniyede tek plan bulamadı —
+tam ölçekteki *"birinci aşama geçti/geçmedi, ana aşama 778 sn'de 0 atama"*
+tablosunun aynısı. Yarım ipucu CP-SAT'e hiçbir şey vermiyormuş.
+
+⚠ Amaç değeri tek koşuda 56 bin ile 104 bin arasında oynuyor — **kalite
+sonucu çıkarılamaz**, bu tablo yalnız *plan bulma* için. ⚠ Sabit molalı
+başlangıç planı kalitesiz olabilir (aynı şablondaki herkes aynı dakikada
+molada); arama ondan iyileştiriyor ama ona demir atma riski var — T-60'ın
+kalite ölçümlerinde bakılacak. ⚠ Tam ölçekte **henüz ölçülmedi**.
+
+**Yan düzeltme:** `coz-olc.py` modeli sayım için bir kez kurup `coz()`a
+veriyor (`kuruldu=`); eskiden `coz()` bir kez daha kuruyordu — tam ölçekte
+55–80 sn boşa gidiyor ve "çözüm süresi" içinde görünüyordu.
 
 → T-50 · T-54 · T-59 · K-35 · K-39
 
@@ -3979,12 +4027,24 @@ olarak üst üste binen yerleşimler gitti. Bunlar zaten geçersizdi. 20
 dakikalık mola artık saha modelinde 30 dakika değil, doğru olan iki çeyrek
 anı kapatıyor; MOLA_KAPSAMASI cezası o şablonlarda biraz artabilir.
 
-**Ne gerek:** tam ölçek koşusunun **tekrarı** (sabah, `--saniye 900`):
-beklenen 0 sert ihlal ve `olcum-plan-95.json`'daki planda üst üste binen
-mola olmaması. Koşu betiği artık *"ana asamada ilk plan: N sn"* de yazıyor
-(T-60 için).
+**⚠ Bedeli ölçüldü (1 Ekim 03:40, Mustafa'nın makinesi):** düzeltmeden
+sonra tam ölçek 900 sn koşusu **plan bulamadı** — `sure_yetmedi`, 0 atama,
+ana aşamada ilk plan yok (dün 778 saniyede 654 çözüm vardı). Model
+çözümsüz değil (her şablonda geçerli yerleşim var, sayıldı); arama
+ağırlaştı: 12 bin kısıt daha, 20 dk'lık mola iki çeyrek kapatıyor
+(MOLA_KAPSAMASI ifadeleri yoğunlaştı), model kurma 55 → 78 sn. Çözücü zaten
+sınırdaydı (birinci aşama üç koşuda da 120 sn'de plan bulamıyordu); bu onu
+sınırın öbür tarafına itti. **Yapılan:** birinci aşama molaları sabitleyerek
+arıyor ve ipucu tam yazılıyor — T-60'ın altında. 0.2 ölçekte ölçüldü:
+birinci aşama 18 sn → **1,7 sn**, ana aşamanın ilk planı 57–101 sn →
+**21 sn**. ⚠ Tam ölçekte henüz ölçülmedi — sabahki koşu bunun sınavı.
 
-→ T-57 · T-27 · T-44 · K-34 · `09-motor/testler/test_net_saat_uyumu.py`
+**Ne gerek:** tam ölçek koşusunun **tekrarı** (sabah, `--saniye 900`):
+beklenen `iki asama: True`, ilk plan erken, 0 sert ihlal ve
+`olcum-plan-95.json`'daki planda üst üste binen mola olmaması. Koşu betiği
+*"ana asamada ilk plan: N sn"* yazıyor.
+
+→ T-57 · T-27 · T-44 · T-60 · K-34 · `09-motor/testler/test_net_saat_uyumu.py`
 
 ---
 
@@ -4007,8 +4067,8 @@ mola olmaması. Koşu betiği artık *"ana asamada ilk plan: N sn"* de yazıyor
 | **5** | **T-18 · yayın kapısı** 🔴 | *"Kontrol edemedim"* ile *"yayınlanabilir"* aynı cevapta — artık **üç** kanal bu kapıda bekliyor |
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
-| **6c** 🆕 | **T-59 · süre bütçesi = duvar saati mi?** 🟡 | "En fazla 900 sn" deyip 958 sn: model kurma (~55 sn) bütçenin dışında. ✅ **Mustafa'nın kararı** (K-48 adayı) — öneri: kurma da içinden düşülsün |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. Yönetici *"motor kötü plan yapıyor"* der. ⚠ Sebebi henüz ayrılmadı — önce dört ölçüm; çıktıya `ilk_cozum_sn` eklendi (1 Ekim), sabahki koşu ilk sayıyı verir |
+| ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%98,3** uzak. ⚠ 1 Ekim: T-78 düzeltmesi tam ölçekte planı götürdü; birinci aşama molaları sabitleyerek arıyor, ipucu tam (0.2'de 18 → 1,7 sn). **Tam ölçekte ölçülmedi** — sabahki koşu önce plan bulma, sonra kalite |
 | **8** | **T-54 · saatin maliyeti yok** 🔴 | Çözücü fazladan saat yazmaktan çekinmiyor: %85 dolulukta 49 kişiye 124 saat fazla mesai. ✅ **Mustafa'nın kararı** — `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

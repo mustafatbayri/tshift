@@ -4,6 +4,30 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (gece, 2) · T-78'in bedeli: tam ölçekte plan yok · birinci aşama molaları sabitleyerek arıyor, ipucu tam · K-48**
+Mustafa düzeltmeyi push edip tam ölçeği koşturdu: **plan bulunamadı**
+(`sure_yetmedi`, 0 atama; dün 654 çözüm). Model çözümsüz değil (her şablonda
+geçerli yerleşim var), arama ağırlaştı: +12 bin kısıt, 20 dk'lık mola iki
+çeyrek kapatıyor, kurma 55 → 78 sn; çözücü zaten sınırdaydı. Eski/yeni kod
+0.2 ölçekte yan yana ölçüldü: ikisi de 18 sn'de birinci aşamayı geçiyor,
+ilk plan 57–101 sn — yani sorun ölçekle büyüyen *plan bulma*. **Değişen
+(`cozucu/coz.py::_ipucu_ver`):** (1) birinci aşamada her şablonun molaları
+ideale en yakın tek noktaya sabitleniyor — seçilmeyen adayların alanı [0,0],
+kısıt eklenmiyor, sonra geri [0,1] (`Model.sabit_mola_secimi`); (2) ipucu
+**bütün** değişkenlere yazılıyor — eskiden ceza değişkenleri boştu, CP-SAT
+yarım ipucuyu 10 çelişkide bırakıyordu. 0.2 ölçekte birinci aşama 18 →
+**1,7 sn**, ana aşamanın ilk planı → **21 sn**. 0.3 ölçekte (151 kişi, 300
+sn) tam ölçeğin hastalığı yeniden üretildi: eski kod ipucu eldeyken ana
+aşamada **hiç plan bulamadı** (265 sn, 0 atama); yeni kod 2,5 sn + ilk plan
+25 sn, 306 çözüm. ⚠ Tam ölçekte ölçülmedi.
+Ana aşama molaları serbest arıyor (K-32 korunur); sabit molalı başlangıca
+demir atma riski T-60'ın kalite ölçümlerine not edildi. `coz()` artık
+önceden kurulmuş model alıyor (`kuruldu=`); `coz-olc.py` modeli bir kez
+kuruyor. **K-48:** bütçe = arama süresi, model kurma ayrı gösterilir
+(Mustafa'nın önerisi, sabah onayı). 5 test (`test_ilk_asama.py`), 6
+mutasyon. Motor **421 test**, mutasyon **128**.
+→ `09-motor/cozucu/coz.py` · `09-motor/cozucu/model.py` · `09-motor/testler/test_ilk_asama.py` · `00-DEVIR/06-ACIK-RISKLER.md` T-60, T-78 · `00-DEVIR/08-URUN-KARARLARI.md` K-48
+
 **2026-10-01 (gece) · T-78 kapandı: 20 dakikalık mola çeyreğe sığmıyordu · `ilk_cozum_sn` · K-48 sorusu**
 Mustafa tam ölçeği üç kez koşturdu: 900 sn temiz, 1.200 sn **1 sert ihlal**
 (PART_TIME_LIMIT), gece commit'inden sonra 900 sn yine temiz. Plan

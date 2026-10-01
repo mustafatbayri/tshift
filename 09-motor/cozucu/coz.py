@@ -176,6 +176,20 @@ def _ipucu_ver(kuruldu, ayar):
 
     Ipucu bulunamazsa sessizce vazgecilir: ipucu bir HIZLANDIRMADIR,
     dogrulugun parcasi degil.
+
+    ⚠ MOLALAR SABITLENEREK ARANIR (T-60, 1 Ekim)
+      Tam olcekte (500 kisi) bu asama uc kosuda da 120 saniyede plan
+      bulamadi; T-78 duzeltmesinden sonra ana asama da 778 saniyede
+      bulamadi. Degiskenlerin ucte ikisi mola yerlesimi (her vardiyada
+      ~9 yemek + 3x7-9 dinlenme adayi) ve gecerli bir plan icin bunlarin
+      SECILMESI gerekmiyor -- herhangi bir yerlesim olur. Birinci asamada
+      her sablonun molalari ideale en yakin tek noktaya SABITLENIR
+      (Model.sabit_mola_secimi): secilmeyen adaylarin alani [0,0] yapilir,
+      sum == x kisiti seciliyi kendiliginden x'e esitler. Yeni kisit
+      YAZILMAZ, model buyumez; asama bitince alanlar [0,1]'e geri alinir.
+      Ana asama molalari yine SERBEST arar -- K-32'nin "ayni sablondaki
+      herkes ayni dakikada molaya cikmasin" karari degismedi; ipucu
+      yalnizca baslangic noktasi.
     """
     if not kuruldu.cezalar:
         return False                      # amac yok; iki asamanin anlami yok
@@ -184,19 +198,66 @@ def _ipucu_ver(kuruldu, ayar):
         kuruldu.m.Minimize(sum(a * v for a, v in kuruldu.cezalar))
 
     kuruldu.m.ClearObjective()
+    sabitlenen = _molalari_sabitle(kuruldu) if ayar.get("ilk_asama_sabit_mola", True) else []
     try:
         c = cp_model.CpSolver()
         c.parameters.max_time_in_seconds = _ilk_asama_payi(ayar)
         c.parameters.num_search_workers = isci_sayisi(ayar)
         if c.Solve(kuruldu.m) not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
-        kuruldu.m.ClearHints()
-        for sozluk in (kuruldu.x, kuruldu.mola, kuruldu.dinlenme):
-            for v in sozluk.values():
-                kuruldu.m.AddHint(v, c.Value(v))
+        # ⚠ IPUCU TAM YAZILIR (T-60, 1 Ekim). Eskiden yalniz x/mola/dinlenme
+        #   ipucu aliyordu; ceza degiskenleri (eksik, fazla, adalet...) bos
+        #   kaliyordu. Yarim ipucuyu CP-SAT "onarmaya" calisir ve 10
+        #   celiskiden sonra vazgecer (hint_conflict_limit): 0.2 olcekte
+        #   ipucu ELDEYKEN ana asamanin ilk plani 57-101 saniyede geldi.
+        #   Birinci asama ayni modelin amacsiz halini cozdugu icin BUTUN
+        #   degiskenlerin degeri var; hepsi yazilir, ipucu tam ve gecerli
+        #   olur, ana asama onu ilk cozum olarak hemen alir.
+        _tam_ipucu_yaz(kuruldu, c)
         return True
     finally:
+        _molalari_serbest_birak(kuruldu, sabitlenen)
         amaci_geri_koy()
+
+
+def _tam_ipucu_yaz(kuruldu, cozucu):
+    """Birinci asamanin cozumunu BUTUN degiskenler icin ipucu yapar."""
+    proto = kuruldu.m.Proto()
+    degerler = list(cozucu.ResponseProto().solution)
+    proto.solution_hint.vars.clear()
+    proto.solution_hint.values.clear()
+    proto.solution_hint.vars.extend(list(range(len(degerler))))
+    proto.solution_hint.values.extend(degerler)
+
+
+def _molalari_sabitle(kuruldu):
+    """Secilmeyen mola adaylarinin alanini [0,0] yapar; donen liste geri
+    almak icin. Degisken alani proto uzerinde duzenlenir (cp_model_helper
+    `domain.clear()/extend()`); kisit eklenmez."""
+    proto = kuruldu.m.Proto()
+    sabitlenen = []
+    secimler = {t["id"]: kuruldu.sabit_mola_secimi(t) for t in kuruldu.sablonlar}
+    for (e, d, tid, s), v in kuruldu.mola.items():
+        sy, _ = secimler[tid]
+        if sy is not None and s is not None and s != sy:
+            sabitlenen.append(v.Index())
+    for (e, d, tid, i, s), v in kuruldu.dinlenme.items():
+        _, dinl = secimler[tid]
+        if i < len(dinl) and dinl[i] is not None and s != dinl[i]:
+            sabitlenen.append(v.Index())
+    for ix in sabitlenen:
+        dom = proto.variables[ix].domain
+        dom.clear()
+        dom.extend([0, 0])
+    return sabitlenen
+
+
+def _molalari_serbest_birak(kuruldu, sabitlenen):
+    proto = kuruldu.m.Proto()
+    for ix in sabitlenen:
+        dom = proto.variables[ix].domain
+        dom.clear()
+        dom.extend([0, 1])
 
 
 def _durgunluk_bekcisiyle_coz(cozucu, model, geri, ayar):
@@ -247,17 +308,24 @@ def _durgunluk_bekcisiyle_coz(cozucu, model, geri, ayar):
         dur.set()
 
 
-def coz(girdi, ayar=None, baslangic_plani=None):
+def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     """Master Spec #11.3 ciktisi. Plan URETIR; denetlemez.
 
     Denetleme bagimsiz dogrulayicinin isidir (#7.6) ve bu fonksiyon onu
     CAGIRMAZ -- cagirsaydi "motor kendi isini kendi onaylar" olurdu.
+
+    `kuruldu`: ayni girdiden ONCEDEN kurulmus Model (1 Ekim). Olcum betigi
+    modeli sayim icin bir kez kuruyor, sonra `coz` bir kez daha kuruyordu --
+    tam olcekte 55-80 saniye bosa. Verilirse yeniden kurulmaz; model_kurma
+    0 yazilir (kurma suresini cagiran olcmustur). Model tek kullanimliktir:
+    `coz` ipucu, amac ve alan duzenlemeleriyle onu degistirir.
     """
     ayar = dict(VARSAYILAN, **(ayar or {}))
     # T-59: model kurma AYRI bir kalemdir -- tam olcekte ~50 sn. Kullaniciya
-    # ayrica gosterilebilsin diye olculur; cozum butcesinden dusulmez.
+    # ayrica gosterilebilsin diye olculur; cozum butcesinden dusulmez (K-48).
     kurma_basladi = time.time()
-    kuruldu = Model(girdi).kur()
+    if kuruldu is None:
+        kuruldu = Model(girdi).kur()
     model_kurma = time.time() - kurma_basladi
 
     # ON KONTROL -- cozucuyu calistirmadan once (28 Eylul)

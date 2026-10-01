@@ -1039,3 +1039,40 @@ bütçenin dışında; Mustafa'ya soru (T-59, K-48 adayı). (2) Motorun
 koşu T-60'ın ilk ölçümünü verir.
 
 Mustafa yatıyor; devir dosyaları güncellendi, commit bloğu sohbette.
+
+## 40 · Düzeltmenin bedeli ve birinci aşama (1 Ekim 03:40–05:00)
+
+Mustafa düzeltmeyi push etti (CI yeşil), tam ölçek 900 sn: **plan yok** —
+`sure_yetmedi`, 0 atama, `ilk_cozum_sn: None`. Dün aynı sahnede 654 çözüm.
+Kabul: benim düzeltmemin bedeli. Model çözümsüz değil; arama ağırlaştı.
+
+**Ölçüm (0.2 ölçek = 100 kişi, 2 çekirdek, 240 sn; eski kod dört geri
+alma ile yeniden üretildi, T-78 testleri onda 8 kırmızı):**
+
+| | eski | T-78 sonrası | + sabit mola + tam ipucu |
+|---|---|---|---|
+| birinci aşama | 18,3 sn ✓ | 18,2 sn ✓ | **1,7 sn** ✓ |
+| ana aşamada ilk plan | 100,9 sn | 57,2 sn | **21,0 sn** |
+| çözüm sayısı | 181 | 220 | 293 |
+
+İlk iki sütun aynı: bu ölçekte T-78 düzeltmesi zarar vermiyor; sorun
+ölçekle büyüyen plan bulma. Asıl bulgu üçüncü satır: ipucu **eldeyken**
+ilk plan 57–101 saniyede geliyordu — ipucu yarımdı (ceza değişkenleri
+yoktu). ⚠ Mutasyon koşusu ile A/B aynı anda koştu, ilk ölçümler kirlendi;
+ikisini de durdurup A/B tek başına tekrarlandı; mutasyon tam koşusu
+yarım kaldı (sabah).
+
+**Değişen:** `_ipucu_ver` molaları sabitleyerek arıyor (alan [0,0]; proto
+`domain.clear()/extend()` ile — `del constraints[n:]` bu OR-Tools
+sürümünde desteklenmiyor, ölçüldü) ve ipucuyu `solution_hint`e tam
+yazıyor. `coz(kuruldu=)` ile ölçüm betiğinin çifte model kurması bitti.
+Motor 421 test, bekçi 20. Mutasyon grubu `ilk_asama` (6).
+
+**0.3 ölçek (151 kişi, 300 sn), 05:10:** eski kod birinci aşamayı 35
+sn'de geçti ama ana aşama **265 saniyede tek plan bulamadı** (0 atama) —
+tam ölçeğin hastalığı burada yeniden üretildi. Yeni kod: birinci aşama
+2,5 sn, ilk plan 25 sn, 306 çözüm. Yarım ipucu CP-SAT'e hiçbir şey
+vermiyormuş; asıl kaldıraç ipucunun tam yazılması + sabit molalı aramaydı.
+
+**K-48** yazıldı (sabah onayı). Devir dosyaları güncellendi; commit bloğu
+sohbette. Mustafa 03:40'tan sonra yazmadı — uyuyor varsayıldı.

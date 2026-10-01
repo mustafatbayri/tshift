@@ -98,7 +98,25 @@ zamanlı çakışma, emniyet kemeri) + sığmayan politika artık **nota** yazı
 Motor **416 test**, **122 mutasyon hepsi öldü**, bekçi 20, 33 gövde · 33 vaka, sahte
 PDKS 0 habersiz. Yeni 🟡 soru: süre bütçesi duvar saati mi (model kurma ~55 sn
 dışarıda; K-48 adayı). `ilk_cozum_sn` çıktıya eklendi (T-60 için). Açık 🔴
-**altı**. **Sabah:** commit + tam ölçek tekrarı (`--saniye 900`), beklenen 0 sert.
+**altı**.
+
+**⚠ 1 Ekim 03:40 — düzeltmenin bedeli ve cevabı (en güncel durum budur).**
+Mustafa T-78 düzeltmesini push edip (CI yeşil) tam ölçeği koşturdu: **plan
+bulunamadı** — `sure_yetmedi`, 0 atama, 778 saniyede ilk plan yok (dün 654
+çözüm vardı). Model çözümsüz değil, arama ağırlaştı; çözücü zaten sınırdaydı
+(birinci aşama üç koşuda da 120 sn'de plan bulamıyordu). **Yapılan (T-60'ın
+plan bulma tarafı):** birinci aşama molaları ideale en yakın tek noktaya
+**sabitleyerek** arıyor (alan [0,0], kısıt yok, sonra geri) ve ipucu artık
+**bütün** değişkenlere yazılıyor (yarım ipucuyu CP-SAT 10 çelişkide
+bırakıyordu). 0.2 ölçekte: birinci aşama 18 → **1,7 sn**, ana aşamanın ilk
+planı 57–101 → **21 sn**; 0.3 ölçekte (151 kişi) tam ölçeğin hastalığı yeniden
+üretildi — eski kod ipucu eldeyken ana aşamada **hiç plan bulamadı** (265 sn),
+yeni kod 2,5 sn + ilk plan 25 sn. ⚠ **Tam ölçekte ölçülmedi** — sabahki koşu
+bunun sınavı. Ana aşama molaları serbest arıyor (K-32 değişmedi). **K-48** (sabah
+onayı bekliyor): bütçe = arama, model kurma ayrı gösterilir. Ölçüm betiği
+modeli artık bir kez kuruyor (55–80 sn tasarruf). Motor **421 test**,
+**128 mutasyon**. **Sabah:** commit + `py coz-olc.py --saniye 900`; beklenen
+`iki asama: True`, ilk plan erken, 0 sert.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -270,7 +288,7 @@ A5 ertelendi (K-12).
 | | Sayı | Ne zaman ölçüldü |
 |---|---|---|
 | Yazılan kural gövdesi | **33** (katalogdaki **40**'ın alt kümesi) | 30 Eylül akşamı, ikisi de sayılarak |
-| Motor birim testi | **416**, hepsi yeşil | 1 Ekim gecesi, koşularak |
+| Motor birim testi | **421**, hepsi yeşil | 1 Ekim gecesi, koşularak |
 | Zor veri seti bekçisi | **20**, hepsi yeşil (12 + sahte PDKS üreticisi 8; 6 dk 10 sn) | 30 Eylül gecesi |
 | **Koşan** altın senaryo | **7** — A1, A3, A4, A6, A7, A8, A9 | 23 Eylül |
 | Kırmızı kanıt | **12 kasten bozma, 12'si de yakalandı** | 16 Eylül |
@@ -619,7 +637,7 @@ Aşağıdaki sıra, bir işe başlamadan önce ne kadar okuman gerektiğini söy
 | `07-motor/` | ⚠ **Motor YOK.** Geçmiş planları ölçen analiz betikleri. Bkz. `07-motor/OKU-BENI.md` | — |
 | **`08-motor-testleri/`** | ✅ **Motor var; 7 altın senaryo koşuyor ve yeşil, 4'ü (A2/A10/A11/A12) backend tarafında koşmuyor.** Şartnameden türetilmiş **kabul senaryoları** (A1–A12): motorun ne yapması gerektiğinin, motor yazılmadan önce ve motora bakmadan yazılmış hâli. **`08-motor-testleri/v5/` onaylanmış ve güncel**; v1–v4 dondurulmuş. İçinde: `KABUL-OLCUTLERI.md` (onaylı cümleler) → `08-motor-testleri/v5/fikstur/` (11 JSON + ortak sahne) → `08-motor-testleri/v5/testler/` (pytest çatısı + `08-motor-testleri/v5/testler/backend-taslak/` C# taslakları). Onay turunun özeti `ONAY-DURUMU.md`'de. Bkz. `08-motor-testleri/OKU-BENI.md` ve `08-motor-testleri/v5/testler/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan **ÖNCE** |
 | **`05-inceleme/beceriler/`** 🆕 | **İncelemenin nasıl yapılacağı** — dört dosya. Haftalık dış tarama döngüsü: kim ne yapar, paket nasıl hazırlanır, ne bulgu sayılır. `00-DEVIR/` **bağlamdır** (neyi bilmen gerek), burası **beceridir** (işin nasıl yapılacağı) | Haftalık tarama öncesi; yeni bir inceleme yapılacaksa |
-| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **416** birim testi (1 Ekim gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
+| **`09-motor/`** | ✅ **MOTOR — çalışıyor.** Üç parça: `09-motor/dogrulayici/` (denetler, **33** kural gövdesi), `09-motor/cozucu/` (CP-SAT ile üretir), `09-motor/orkestra.py` (§11.7 onarım döngüsü). **421** birim testi (1 Ekim gecesi). **`/suggest` hâlâ yok** — bilerek 501 dönüyor. ⛔ Çözücü ile doğrulayıcı birbirini import ETMEZ (§7.6); `09-motor/testler/test_bagimsizlik.py` bunu koruyor. Bkz. `09-motor/OKU-BENI.md` | Motor ya da doğrulayıcı işine başlamadan önce |
 | **`DENETIM.py`** | **Devir paketi denetimi.** §5'teki ritüelin 5. maddesini makineye yaptırır. `py DENETIM.py` | Devire "tamam" demeden önce, her seferinde |
 | `00-arsiv/` | Dondurulmuş eski sürümler | Geçmiş aranıyorsa |
 | `DEGISIM-GUNLUGU.md` | Kilometre taşları, en yeni en üstte | "Ne zaman ne değişti" |

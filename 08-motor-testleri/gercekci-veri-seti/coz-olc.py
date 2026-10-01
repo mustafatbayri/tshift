@@ -85,9 +85,10 @@ def main():
           "%(kural)d kural" % sonuc)
     yaz(sonuc)
 
-    # ⚠ Model BIR KEZ kurulur. Ilk yazimda burada bir kez olcum icin,
-    #   sonra `coz()` icinde bir kez daha kuruluyordu -- sureyi iki katina
-    #   cikariyordu ve o sure "cozum suresi" diye raporlaniyordu.
+    # ⚠ Model BIR KEZ kurulur (1 Ekim): burada sayim icin kurulan model
+    #   `coz()`a verilir; eskiden `coz()` bir kez daha kuruyordu -- tam
+    #   olcekte 55-80 saniye bosa gidiyor ve "cozum suresi" icinde
+    #   gorunuyordu (981 sn = 78 kurma + 900 arama + 3).
     print("\n1/3  Model kuruluyor...")
     sys.stdout.flush()
     t0 = time.time()
@@ -105,7 +106,7 @@ def main():
     sys.stdout.flush()
     t1 = time.time()
     try:
-        c = coz(g, {"azami_saniye": AZAMI_SANIYE})
+        c = coz(g, {"azami_saniye": AZAMI_SANIYE}, kuruldu=k)
         sonuc["cozum_sn"] = round(time.time() - t1, 1)
         sonuc["durum"] = c.get("durum")
         sonuc["atama"] = len(c.get("atamalar") or [])
@@ -133,8 +134,10 @@ def main():
              (c.get("metrikler") or {}).get("optimuma_uzaklik_yuzde")))
     # T-59 (30 Eylul aksami): sure uc kaleme ayrildi. Birinci asama +
     # ana asama verilen butceyi GECMEMELI; model kurma ayri kalem.
-    print("     model kurma %s sn · birinci asama %s sn · ana asamaya verilen %s sn"
-          % (ist.get("model_kurma_sn"), ist.get("ilk_asama_sn"),
+    # K-48: model kurma AYRI kalem (yukaridaki 1/3 adiminin suresi), arama
+    # butcesi = birinci asama + ana asama.
+    print("     model kurma %s sn (butce DISI, K-48) · birinci asama %s sn · ana asamaya verilen %s sn"
+          % (sonuc["kurma_sn"], ist.get("ilk_asama_sn"),
              ist.get("ana_asama_butce_sn")))
     # T-60 (1 Ekim): birinci asama plan bulamiyorsa ana asama ilk plani
     # kacinci saniyede buldu? Bu sayi olmadan "120 saniye yetmiyor" ile

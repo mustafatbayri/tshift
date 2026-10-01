@@ -5,38 +5,5 @@
  "sablon": 17,
  "hucre": 415,
  "kural": 42,
- "azami_saniye": 900,
- "kurma_sn": 54.4,
- "degisken": 639056,
- "kisit": 757749,
- "cozum_sn": 958.3,
- "durum": "cozuldu",
- "atama": 2484,
- "metrikler": {
-  "sert_ihlal": 0,
-  "asgari_kapsama_yuzde": 100.0,
-  "hedef_kapsama_yuzde": 74.7,
-  "eksik_hedef_dakika": 32220,
-  "toplam_saat": 20736.25,
-  "fazla_mesai_saat": 1742.5,
-  "optimuma_uzaklik_yuzde": 98.662,
-  "cozum_suresi_sn": 780.44
- },
- "durma_sebebi": "butce_doldu",
- "iki_asama": false,
- "cozum_sayisi": 648,
- "amac_degeri": 994588,
- "model_kurma_sn": 55.11,
- "ilk_asama_sn": 122.08,
- "ana_asama_butce_sn": 777.92,
- "dogrulama_sn": 1.8,
- "ihlal": {
-  "HEDEF_KAPSAMA": 105,
-  "ADALET_DENGESI": 133,
-  "MOLA_KAPSAMASI": 63
- },
- "sert_ihlal": 0,
- "yayinlanabilir": true,
- "engelleyen": 0,
- "kabul_bekleyen": 0
+ "azami_saniye": 900
 }

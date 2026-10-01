@@ -2274,3 +2274,29 @@ var ve planlanan süre `00:00` ise o gün çalışma günü değil — bu satır
 alanı gerçekten böyle kullanıp kullanmadığı doğrulanmalı.
 
 → T-77 · T-18 · K-42 · `09-motor/testler/test_rapor_ozeti_ve_teshis.py`
+
+
+## K-48 · Süre bütçesi **arama süresidir**; model kurma **ayrı kalem** olarak gösterilir — ⚠ sabah onayı bekliyor
+
+**Soru (1 Ekim gecesi):** üç tam ölçekli koşu *"en fazla 900 sn"* deyip
+958 sn sürdü — birinci aşama + ana aşama = tam 900, model kurma (~55–78 sn)
+bütçenin dışında.
+
+**Mustafa (1 Ekim 03:40):** *"Zaman en önemli kaynağımız… 'Ekranda modelleme
+58, plan 900 sn' gibi belirtsek zamandan da kazanmış olmaz mıyız? Yahut
+900'e sığdıralım, kayıp var mı yok mu testlerde anlar öyle ilerleyebiliriz."*
+
+**Seçilen (benim seçimim, Mustafa'nın ilk önerisi):** `azami_saniye` =
+**arama** bütçesi (birinci aşama + ana aşama); model kurma bütçeden
+düşülmez, ekranda **ayrı satır** olarak gösterilir (*"modelleme 58 sn ·
+arama 900 sn"*). Gerekçe: zamanı yetmeyen taraf arama; tam ölçekte birinci
+aşama 120 saniyede plan bulamıyor, 1 Ekim'de ana aşama 778 saniyede de
+bulamadı. 55 saniyeyi aramadan kesmek plan bulma şansını düşürür. İkinci
+seçenek (kurma da içeride) T-60 kapandıktan sonra yeniden açılabilir.
+
+**Uygulama:** kod zaten böyle (T-59); `coz-olc.py` ve çıktı (`model_kurma_sn`)
+iki kalemi ayrı yazıyor. Arayüz işi: iki sayı ayrı gösterilir, *"toplam
+bekleme"* ikisinin toplamıdır. ⚠ `coz-olc.py` ölçüm betiği modeli bir kez
+daha kuruyor (sayım için) — betiğin fazlası, ürünün değil.
+
+→ T-59 · T-60 · K-35

@@ -807,6 +807,41 @@ class Model(object):
                 return True
         return False
 
+    def sabit_mola_secimi(self, t):
+        """Bu sablon icin TEK bir mola yerlesimi -- birinci asama icin (T-60).
+
+        Donen: (yemek_baslangici | None, [dinlenme_i baslangici | None, ...])
+
+        Secim ideale en yakin olandir: yemek pencerenin ortasina, her
+        dinlenme kendi esit-dagitim noktasina en yakin aday; ustuste binme
+        kisitlari (gercek zamanda, _dinlenme_degiskenleri ile AYNI) burada da
+        uygulanir ki secim modelin kisitlariyla celismesin. Sigmayan mola
+        None kalir (serbest birakilir).
+        """
+        yemek_dk = self.yemek_dk[t["id"]]
+        yemekler = [s_ for s_ in _mola_baslangiclari(t, self.mola_penceresi, yemek_dk)
+                    if s_ is not None]
+        en_az, en_gec = self.mola_penceresi
+        orta = t["bas"] + (en_az + en_gec) / 2.0
+        sy = min(yemekler, key=lambda s_: (abs(s_ - orta), s_)) if yemekler else None
+        adet, dk = self.dinlenme_tanim[t["id"]]
+        sure, ysure = dk / 60.0, yemek_dk / 60.0
+        uzunluk = t["bit"] - t["bas"]
+        secim = []
+        onceki = None
+        for i, adaylar in enumerate(self._dinlenme_adaylari(t)):
+            ideal = t["bas"] + uzunluk * (i + 1) / float(adet + 1)
+            uygun = [s_ for s_ in adaylar
+                     if not (sy is not None and _gercek_kesisiyor(s_, sure, sy, ysure))
+                     and not (onceki is not None and _gercek_kesisiyor(s_, sure, onceki, sure))]
+            if not uygun:
+                secim.append(None)
+                continue
+            sec = min(uygun, key=lambda s_: (abs(s_ - ideal), s_))
+            secim.append(sec)
+            onceki = sec
+        return sy, secim
+
     def _degiskenler(self):
         for t in self.sablonlar:
             if not self._mola_politikasi_yerlesir_mi(t):
