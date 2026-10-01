@@ -1812,6 +1812,35 @@ def kilit_uyumu(girdi, atamalar, tanim):
 
     var = {anahtar(a) for a in atamalar}
     cikan = []
+
+    def sabitleme_var_mi(k):
+        """Sabitleme satiri planda var mi: `sablon` kimligiyle ya da saatle;
+        `ekip` yazilmamissa ekibe bakilmaz (T-38, 1 Ekim)."""
+        for a in atamalar:
+            if a["calisan"] != k.get("calisan") or a["gun"] != k.get("gun"):
+                continue
+            if k.get("sablon") is not None and a.get("sablon") == k.get("sablon"):
+                return True
+            if "bas" in k and "bit" in k and \
+                    abs(float(a["bas"]) - float(k["bas"])) < 1e-6 and \
+                    abs(float(a["bit"]) - float(k["bit"])) < 1e-6 and \
+                    (k.get("ekip") is None or a.get("ekip") == k.get("ekip")):
+                return True
+        return False
+
+    # #11.2'nin `sabit_atamalar` listesi de bir sabitleme kilididir (T-38):
+    # ayni soz -- yoneticinin verdigi atama planda MUTLAKA olur.
+    for a in girdi.get("sabit_atamalar", []) or []:
+        if ("bas" in a and "bit" in a) or a.get("sablon") is not None:
+            if not sabitleme_var_mi(a):
+                cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=a.get("calisan"),
+                                    gun=a.get("gun"),
+                                    mesaj="sabit atama planda yok: %s gun %s"
+                                          % (a.get("calisan"), a.get("gun"))))
+        else:
+            cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=a.get("calisan"),
+                                gun=a.get("gun"),
+                                mesaj="sabit atama bicimi taninmadi: %r" % sorted(a)))
     for k in girdi.get("kilitler", []) or []:
         if k.get("tip") == "yasak":
             calisiyor = [a for a in atamalar
@@ -1822,7 +1851,7 @@ def kilit_uyumu(girdi, atamalar, tanim):
                                     mesaj="%s gun %d'de calismamali (kilit: yasak) ama %d atama var"
                                           % (k["calisan"], k["gun"], len(calisiyor))))
         elif "bas" in k and "bit" in k:
-            if anahtar(k) not in var:
+            if not sabitleme_var_mi(k):
                 cikan.append(_ihlal("KILIT_UYUMU", tanim, calisan=k["calisan"],
                                     gun=k["gun"],
                                     mesaj="kilitli atama planda yok: %s gun %d"

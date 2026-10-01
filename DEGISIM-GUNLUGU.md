@@ -4,6 +4,16 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (23:45) · T-38: sabit atama = sabitleme kilidi, saat+ekip ile eşlenir ve doğrulanır · şartname örneği temizlendi**
+Motor sabit atamayı ve sabitleme kilidini `sablon` ya da `ekip`+`bas`+`bit`
+ile kişinin kendi şablonları içinde eşliyor (eski kilit ekibe bakmıyordu);
+doğrulayıcı `KILIT_UYUMU` sabit atamaları da denetliyor (eskiden hiç
+bakmıyordu). 9 test, 4 mutasyon (toplam **184**); motor **508 test**.
+Şartname §11.2 örneğinden `kural_degerleri` ve `tercihler` çıktı,
+`mola_tek_blok` ve sabit atama notları; değişiklik 46. T-38'de tek açık
+satır: `devir_kapsama` tanımı (Mustafa'ya soruldu).
+→ `09-motor/cozucu/model.py` (`_sablon_esle`, `_sabitle_satir`) · `09-motor/dogrulayici/kurallar.py` (`kilit_uyumu`) · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_sabit_atama.py` · `02-spec/v1.4-master-spec.md` §11.2
+
 **2026-10-01 (23:15) · K-55: PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi + izin satırları; yıl içi fazla mesai PDKS hamından TShift hesabıyla**
 Mustafa'nın üç maddelik kararı (üçüncüde bordro önerim reddedildi: kaynak
 PDKS, hesap TShift — PDKS'in hazır fazla mesai kolonu okunmaz). Motor kodu
@@ -31,7 +41,7 @@ sayılmaz (`gecmis_ihlaller`, `metrikler.gecmis_sert_ihlal`); plansız donmuş
 gün "denetlenemedi". Veri seti taze hafta; `coz-olc.py --donmus`; bekçide
 yeniden planlama testi. Motor **497 test**, mutasyon **179** (yeni `donmus`
 8), bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın 12. Arayüz tarafı yazılmadı.
-→ `09-motor/cozucu/model.py` · `coz.py` · `teshis.py` · `dogrulayici/kurallar.py` · `denetle.py` · `orkestra.py` · `testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/` (üretici, fikstürler, vaka aracı, `coz-olc.py`, bekçi) · şartname §6.6, §11.2–11.4 · `00-DEVIR/08-URUN-KARARLARI.md` K-54 · `06-ACIK-RISKLER.md` T-29
+→ `09-motor/cozucu/model.py` · `09-motor/cozucu/coz.py` · `09-motor/cozucu/teshis.py` · `09-motor/dogrulayici/kurallar.py` · `09-motor/dogrulayici/denetle.py` · `09-motor/orkestra.py` · `09-motor/testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/` (üretici, fikstürler, vaka aracı, `coz-olc.py`, bekçi) · şartname §6.6, §11.2–11.4 · `00-DEVIR/08-URUN-KARARLARI.md` K-54 · `00-DEVIR/06-ACIK-RISKLER.md` T-29
 
 **2026-10-01 (19:17) · CI kırmızı → "süre yetmedi" testleri yarıştan kurtarıldı (T-79, O-12)**
 Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:

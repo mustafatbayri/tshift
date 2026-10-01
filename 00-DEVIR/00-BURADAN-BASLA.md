@@ -160,6 +160,13 @@ gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; **karar K-55 (23:12):**
 PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi +
 izin satırları; yıl içi fazla mesai PDKS hamından TShift'in hesabıyla
 (bordro değil — Mustafa).
+
+**⚠ 1 Ekim 23:45 — T-38 sabit atama eşlemesi yazıldı, en güncel durum budur.**
+Sabit atama = sabitleme kilidi; `sablon` ya da `ekip`+`bas`+`bit` ile eşlenir,
+doğrulayıcı `KILIT_UYUMU` ile denetler (eskiden sabit atamalara hiç
+bakmıyordu). Şartname örneğinden `kural_degerleri` ve `tercihler` çıktı.
+Motor **508 test**, mutasyon **184 hepsi öldü**. T-38'de tek açık satır
+`devir_kapsama` tanımı (Mustafa'ya soruldu). Açık 🔴 yalnız T-60.
 İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
 commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
 ⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,

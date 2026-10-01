@@ -892,7 +892,16 @@ class Model(object):
         self._donmus_deger[v.Index()] = int(deger)
 
     def _sablon_esle(self, c, satir):
-        """Mevcut plan satirini bu kisinin atanabilecegi bir sablona esler."""
+        """Bir satiri (plan satiri, kilit, sabit atama) bu kisinin atanabilecegi
+        bir sablona esler: once `sablon` kimligi, yoksa `bas`+`bit` (satirda
+        `ekip` varsa yalniz o ekibin sablonlari). Eslesmezse None.
+
+        T-38 (1 Ekim): sabit atama ve sabitleme kilidi #11.2 ornegindeki gibi
+        `ekip`+`bas`+`bit` ile gelebilir; eskiden sabit atama yalniz `sablon`
+        kimliginden, kilit ise ekibe bakmadan ilk saat eslesmesinden
+        bulunuyordu (iki ekibin ayni saatli sablonu varsa yanlis ekibi
+        secip "ekibinde olmayan sablon" notu dusuyordu).
+        """
         adaylar = self._sablonlari(c)
         tid = satir.get("sablon")
         for t in adaylar:
@@ -901,7 +910,10 @@ class Model(object):
         bas, bit = satir.get("bas"), satir.get("bit")
         if bas is None or bit is None:
             return None
+        ekip = satir.get("ekip")
         for t in adaylar:
+            if ekip is not None and t.get("ekip") is not None and t.get("ekip") != ekip:
+                continue
             if abs(float(t["bas"]) - float(bas)) < 1e-6 and abs(float(t["bit"]) - float(bit)) < 1e-6:
                 return t
         return None
@@ -1491,36 +1503,44 @@ class Model(object):
                 if any(c["id"] == e for c in self.calisanlar):
                     self._kisit(self._calisiyor(e, d) == 0)
             elif "bas" in k and "bit" in k:
-                eslesen = [t for t in self.sablonlar
-                           if t["bas"] == k["bas"] and t["bit"] == k["bit"]]
-                if eslesen:
-                    if (e, d, eslesen[0]["id"]) in self.x:
-                        self._kisit(self.x[(e, d, eslesen[0]["id"])] == 1)
-                    else:
-                        # T-46: kilit, kisinin ekibinde OLMAYAN bir sablona
-                        # isaret ediyor. Sessizce `0 == 1` yazip plani
-                        # cozumsuz birakmak yanlis cevap olurdu -- sebebi
-                        # gorunmezdi. Not birakip geciyoruz.
-                        self.notlar.append(
-                            "kilit calisanin ekibinde olmayan sablona isaret "
-                            "ediyor: %s gun %s sablon %s"
-                            % (e, d, eslesen[0]["id"]))
-                else:
-                    self.notlar.append("kilit sablona eslesmedi: %s gun %s" % (e, d))
+                self._sabitle_satir(k, "kilit")
             else:
                 self.notlar.append("kilit bicimi taninmadi: %r" % sorted(k))
 
+    def _sabitle_satir(self, satir, ad):
+        """Sabitleme kilidi / sabit atama: satir bir sablona eslenir, x = 1.
+
+        T-46: kisinin ekibinde olmayan sablona isaret eden satir sessizce
+        `0 == 1` yazip plani cozumsuz birakmaz; not dusulur. Ayni sekilde
+        hicbir sablona eslesmeyen satir da not olur (T-38).
+        """
+        e, d = satir.get("calisan"), satir.get("gun")
+        c = next((c_ for c_ in self.calisanlar if c_["id"] == e), None)
+        if c is None:
+            self.notlar.append("%s calisan listesinde olmayan kisiye isaret ediyor: %s gun %s"
+                               % (ad, e, d))
+            return
+        t = self._sablon_esle(c, satir)
+        if t is None:
+            self.notlar.append("%s sablona eslesmedi: %s gun %s (%s)"
+                               % (ad, e, d,
+                                  "sablon %s" % satir.get("sablon") if satir.get("sablon")
+                                  else "%s-%s%s" % (_ss(satir.get("bas", 0)), _ss(satir.get("bit", 0)),
+                                                   " ekip %s" % satir.get("ekip") if satir.get("ekip") else "")))
+            return
+        if (e, d, t["id"]) in self.x:
+            self._kisit(self.x[(e, d, t["id"])] == 1)
+        else:
+            self.notlar.append("%s modele girmedi: %s gun %s sablon %s" % (ad, e, d, t["id"]))
+
     def _sabit_atamalar(self):
+        """`sabit_atamalar` = sabitleme kilidi (#11.2): `sablon` ya da
+        `ekip`+`bas`+`bit` ile gelir, ayni esleme ve ayni not (T-38, 1 Ekim).
+        Dogrulayici KILIT_UYUMU ile denetler."""
         for a in self.girdi.get("sabit_atamalar", []) or []:
             if a.get("gun") in self.donmus:
                 continue      # K-54: donmus gunde mevcut plan gecerli
-            anahtar = (a["calisan"], a["gun"], a.get("sablon"))
-            # Dogrudan sozluk aramasi: eskiden her sabit atama icin butun
-            # anahtarlar listeleniyordu (350 kiside 346 bin anahtar).
-            if anahtar in self.x:
-                self._kisit(self.x[anahtar] == 1)
-            else:
-                self.notlar.append("sabit atama modele girmedi: %r" % (anahtar,))
+            self._sabitle_satir(a, "sabit atama")
 
     def _sure_sinirlari(self):
         gunluk = _par(_kural(self.girdi, "GUNLUK_AZAMI"), "azami_saat", 11)

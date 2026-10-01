@@ -1310,3 +1310,21 @@ politikadaki ücretsiz yemek molası), 45'i aşan kısım fazla, yıl başından
 toplam, bilinmeyen gün varsa "en az" + rapor. Motor değişmedi; K-55 karar
 dosyasına, şartname §6.2 satırı ve §11.2 notu, değişiklik 45; K-47 ve T-77
 veri tarafı kapandı. Commit bloğu veriliyor.
+
+## 52 · Şartname borcu T-38: sabit atama eşlemesi ve temizlik (1 Ekim 23:20–23:45)
+
+Mustafa "son iki koşu yeşil, devam" dedi; sırada T-38'in kalanları vardı.
+**Sabit atama = sabitleme kilidi:** motor artık ikisini de `sablon` kimliği
+ya da `ekip`+`bas`+`bit` ile kişinin atanabileceği şablonlar içinde eşliyor
+(`_sablon_esle` ekip süzgeci aldı; `_sabitle_satir` ortak); eşleşmeyen satır
+not düşer, plan çözümsüz olmaz. Eski kilit kodu ekibe bakmadan ilk saat
+eşleşmesini alıyordu — iki ekibin aynı saatli şablonu varsa yanlış ekip,
+sonra "ekibinde olmayan şablon" notu. Doğrulayıcı `KILIT_UYUMU` artık
+`sabit_atamalar`ı da denetliyor (eskiden hiç bakmıyordu: yönetici "sali
+08-16" dese, motor atlasa, kimse görmezdi); ekip yazılmamışsa ekibe bakmaz.
+9 test (`test_sabit_atama.py`), mutasyon grubu `sabit` 4 — hepsi öldü
+(toplam 184). Motor 508 test, altın 12, vaka aracı 36 kırmızı. Şartname:
+§11.2 örneğinden `kural_degerleri` ve `tercihler` çıktı (K-39, K-13),
+`mola_tek_blok` notu, sabit atama notu, değişiklik 46. T-38'in tek açık
+satırı `devir_kapsama`; Mustafa'ya tanım önerisiyle soruldu. Dosyalar
+makinede (5 dosya, md5 aynı), DENETIM 0 hata.

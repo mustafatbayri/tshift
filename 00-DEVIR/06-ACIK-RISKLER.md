@@ -1857,11 +1857,11 @@ olan en sona.
 |---|---|---|---|
 | 1 | `sure_butcesi_sn` | Çağıranın süre bütçesi arama bütçesi olur (K-35, K-48) | ✅ **yazıldı 1 Ekim** (`servis.py`) |
 | 2 | `istek_id` | Çıktıya aynen geri yazılır (§11.3) | ✅ **yazıldı 1 Ekim** |
-| 3 | `sabit_atamalar[].bas/.bit/.ekip` | Şablon kimliği yoksa saat+ekip ile şablon eşlenir; eşleşmezse not | 🟡 sırada |
-| 4 | `devir_kapsama` | Anlamı tanımlanmalı (önceki haftadan devreden kapsama borcu?) — Mustafa'ya soru | 🟡 |
-| 5 | `tercihler` | K-13: çalışan tercih belirtmez → §11.2 örneğinden **kaldırılacak** | 📝 şartname temizliği |
-| 6 | `kural_degerleri` | K-39: kişiye özel saat sınırı yok; `S` kapsamlı kural ezilemez → **kaldırılacak** | 📝 şartname temizliği |
-| 7 | `mola_tek_blok` | K-32 ile kalktı → **kaldırılacak** | 📝 şartname temizliği |
+| 3 | `sabit_atamalar[].bas/.bit/.ekip` | Şablon kimliği yoksa saat+ekip ile şablon eşlenir; eşleşmezse not; doğrulayıcı `KILIT_UYUMU` ile denetler (sabit atama = sabitleme kilidi) | ✅ **yazıldı 1 Ekim gecesi** — 9 test, 4 mutasyon |
+| 4 | `devir_kapsama` | Anlamı tanımlanmalı — Mustafa'ya soru soruldu (1 Ekim gecesi): önerim *"önceki haftanın bu haftaya taşan vardiyalarının hücre başına kapattığı kişi sayısı; motor bunu `gecmis_vardiyalar`dan kendisi türetsin, alan yalnız geçmiş yoksa elle verilsin"* | 🟡 karar bekliyor |
+| 5 | `tercihler` | K-13: çalışan tercih belirtmez → §11.2 örneğinden kaldırıldı | ✅ **1 Ekim gecesi** |
+| 6 | `kural_degerleri` | K-39: kişiye özel saat sınırı yok; `S` kapsamlı kural ezilemez → §11.2 örneğinden kaldırıldı | ✅ **1 Ekim gecesi** |
+| 7 | `mola_tek_blok` | K-32 ile kalktı; §11.2 örneğinde zaten yoktu, not düşüldü | ✅ **1 Ekim gecesi** |
 | 8 | `izinler[].tum_gun` | K-31: yarım gün elle; alan gelirse bütün gün + bildirim (bugünkü davranış) | ✅ karar var |
 
 ---
@@ -4221,7 +4221,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~1b~~ | ~~**T-75 · ardışık hafta sonu limiti üçüncü haftayı kilitliyor**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-46** — iki gün de; üçüncü hafta çözüldü, 0 ihlal |
 | ~~1c~~ | ~~**T-72 · "gece haftası" tanımı**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — çoğunluk; sıkı okuma ayar olarak kaldı |
 | ~~1a~~ | ~~**T-74 · yasal gece sınırının ölçüsü**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — Yargıtay 9. HD 2020/17967; gece postasının bütün süresi |
-| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🟡 | Seviye 🟡'ya indi, sıra verildi (1 Ekim): `sure_butcesi_sn` ve `istek_id` yazıldı; sırada sabit atama eşlemesi, `devir_kapsama` tanımı, üç alanın şartnameden kaldırılması |
+| **2** | **T-38 · şartnamenin 12 alanı karşılıksız** 🟡 | 1 Ekim: `sure_butcesi_sn`, `istek_id`, sabit atama eşlemesi (+ doğrulama) yazıldı; üç alan şartnameden çıktı. **Tek açık satır:** `devir_kapsama` tanımı — Mustafa'nın cevabını bekliyor |
 | ~~3~~ | ~~**T-29 · `DONMUS_GUN` ölü**~~ | ✅ **KAPANDI 1 Ekim akşamı, K-54** — `mevcut_plan` girdisi; donmuş gün aynen geçer, gerçek sayılır; `DONMUS_GUN` plana göre; `gecmis` ihlaller kapıdan sayılmaz. 17 test, 8 mutasyon |
 | ~~4~~ | ~~**T-21 · çok ekipli çalışan**~~ | ✅ **KAPANDI 1 Ekim, K-50** — teşhis tersine döndü: sahada çift yetenekli kişi iki ekibe de sayılır; doğrulayıcı değişti, görünürlük metriği eklendi |
 | ~~5~~ | ~~**T-18 · yayın kapısı**~~ | ✅ **KAPANDI 1 Ekim, K-49** — üç kademe: yasal+sert engeller, firma+sert kabul bekler, yumuşak rapor; iki kanal kapıya bağlı |

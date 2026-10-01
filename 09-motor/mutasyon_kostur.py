@@ -817,6 +817,23 @@ MUTASYONLAR = [
      '            if (girdi.get("donmus_gunler") or []) and girdi.get("mevcut_plan") is None:',
      '            if False:',
      'testler/test_donmus_gun.py'),
+    # ---- T-38 (1 Ekim gecesi): sabit atama = sabitleme kilidi, saat+ekip ile
+    ('sabit', M, 'T-38: esleme ekibe bakmasin',
+     '            if ekip is not None and t.get("ekip") is not None and t.get("ekip") != ekip:\n                continue',
+     '            if False:\n                continue',
+     'testler/test_sabit_atama.py'),
+    ('sabit', M, 'T-38: saatle esleme yapilmasin (yalniz sablon kimligi)',
+     '        bas, bit = satir.get("bas"), satir.get("bit")\n        if bas is None or bit is None:\n            return None',
+     '        bas, bit = satir.get("bas"), satir.get("bit")\n        if True:\n            return None',
+     'testler/test_sabit_atama.py'),
+    ('sabit', K, 'T-38 dogrulayici: sabit atamalar denetlenmesin',
+     '    for a in girdi.get("sabit_atamalar", []) or []:\n        if ("bas" in a and "bit" in a) or a.get("sablon") is not None:',
+     '    for a in []:\n        if ("bas" in a and "bit" in a) or a.get("sablon") is not None:',
+     'testler/test_sabit_atama.py'),
+    ('sabit', K, 'T-38 dogrulayici: ekip yazilmissa da ekibe bakmasin',
+     '                    (k.get("ekip") is None or a.get("ekip") == k.get("ekip")):',
+     '                    True:',
+     'testler/test_sabit_atama.py'),
 ]
 
 

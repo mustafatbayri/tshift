@@ -190,12 +190,9 @@ OKUNAN_ALANLAR = {
     "mevcut_plan": ("calisan", "ekip", "sablon", "gun", "bas", "bit",
                     "molalar", "donmus"),
     "mevcut_plan.molalar": ("bas", "bit", "tip"),
-    # Motor sabit atamayi SABLON kimliginden esliyor (cozucu.model
-    # ._sabit_atamalar). Sartname #11.2 ornegi `sablon` yazmiyor, `bas`/`bit`
-    # yaziyor -- T-38. Eslesmeyen satir `uygulanmayan_notlar`a dusuyor, yani
-    # sessiz degil; ama gonderilen bas/bit sablonunkinden FARKLIYSA kimse
-    # gormez. Bu yuzden ikisi de bilerek listede YOK.
-    "sabit_atamalar": ("calisan", "gun", "sablon"),
+    # T-38 (1 Ekim): sabit atama artik `sablon` ya da `ekip`+`bas`+`bit` ile
+    # eslenir (cozucu.model._sabitle_satir) ve KILIT_UYUMU ile denetlenir.
+    "sabit_atamalar": ("calisan", "gun", "sablon", "ekip", "bas", "bit"),
 }
 
 # Sebebi bilinen alanlar. Bilinmeyen bir ad da bildirilir -- yazim hatasi
