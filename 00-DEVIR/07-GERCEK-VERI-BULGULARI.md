@@ -542,7 +542,14 @@ daha seyrek evlenme, doğum günü, taşınma ve saatlik izin; resmi tatil
 işareti (*15 Temmuz* 902, *Zafer Bayramı* 882). Hafta sonu çalışması var ama
 azınlık: cumartesi 1.782, pazar 1.123 kart kaydı (çoğu çağrı merkezi satış).
 
-### Öneri (karar Mustafa'da; 1 Ekim 18:00'de soruldu)
+### Öneri (1 Ekim 18:00'de soruldu) → **Karar K-55 (aynı akşam, Mustafa)**
+
+> 1 ve 2 aynen onaylandı. 3 değişti: yıl içi fazla mesai **PDKS'ten** gelir,
+> ama hazır fazla mesai kolonundan değil — ham giriş-çıkıştan TShift'in kendi
+> hesabıyla (net = aralık − politikadaki ücretsiz yemek molası; 45 saati aşan
+> kısım fazla; bilinmeyen gün varsa "en az" + rapor). Mustafa: *"PDKS
+> firmasının çıktısını bizim istediğimiz formatta alırız, gerekirse RPA."*
+> Ayrıntı `08-URUN-KARARLARI.md` K-55.
 
 1. `gecmis_bilinen_gunler`'in kaynağı PDKS'in `00:00`'ı **değil**: (a) TShift'in
    kendi yayınladığı önceki planlar — ilk haftalardan sonra geçmiş zaten

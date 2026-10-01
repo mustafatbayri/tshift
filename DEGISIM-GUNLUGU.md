@@ -4,7 +4,15 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
-**2026-10-01 (21:15) · Donmuş gün tam ölçekte kanıtlandı · günsüz ihlalde "geçmiş" ölçüsü tavan kurallarıyla sınırlandı**
+**2026-10-01 (23:15) · K-55: PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi + izin satırları; yıl içi fazla mesai PDKS hamından TShift hesabıyla**
+Mustafa'nın üç maddelik kararı (üçüncüde bordro önerim reddedildi: kaynak
+PDKS, hesap TShift — PDKS'in hazır fazla mesai kolonu okunmaz). Motor kodu
+değişmedi; içe aktarma kuralları şartname §11.2 notuna ve §6.2 yıllık tavan
+satırına yazıldı (değişiklik 45). K-47'nin açık ucu ve T-77'nin veri tarafı
+kapandı.
+→ `00-DEVIR/08-URUN-KARARLARI.md` K-55 · `02-spec/v1.4-master-spec.md` §6.2, §11.2 · `07-GERCEK-VERI-BULGULARI.md` §7
+
+**2026-10-01 (23:00) · Donmuş gün tam ölçekte kanıtlandı · günsüz ihlalde "geçmiş" ölçüsü tavan kurallarıyla sınırlandı**
 Mustafa'nın koşusu: taze hafta 0 sert; gün 0 dondurulup yeniden: 92.899
 kısıt düştü, gün 0 aynı, 0 sert, yayınlanabilir (305 sn, ipucu kullanıldı).
 Koşu bir yanlışı gösterdi: adalet dengesi (günsüz, karşılaştırma) ihlalleri
@@ -13,7 +21,7 @@ sayılabilir (`GUNSUZ_TAVAN_KURALLARI`); eksiklik/karşılaştırma kuralları
 asla. 1 test, 1 mutasyon; motor **499 test**, mutasyon **180**.
 → `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_donmus_gun.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-54
 
-**2026-10-01 (20:40) · K-54 dondurulmuş gün canlandı: `mevcut_plan` girdisi, geçmiş aynen geçer ve gerçek sayılır, geçmişin kusuru çözümsüz etmez · T-29 kapandı**
+**2026-10-01 (21:23) · K-54 dondurulmuş gün canlandı: `mevcut_plan` girdisi, geçmiş aynen geçer ve gerçek sayılır, geçmişin kusuru çözümsüz etmez · T-29 kapandı**
 Mustafa'nın onayı (ekiyle: yönetici geçmiş günleri düzenler, gelecek
 günleri kilitler, çoklu seçim). Çözücü: donmuş gün satırları çıktıya aynen
 (`donmus: true`), modelde sabit; yalnız geçmişe ait kısıtlar düşer, aşılmış
@@ -25,7 +33,7 @@ yeniden planlama testi. Motor **497 test**, mutasyon **179** (yeni `donmus`
 8), bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın 12. Arayüz tarafı yazılmadı.
 → `09-motor/cozucu/model.py` · `coz.py` · `teshis.py` · `dogrulayici/kurallar.py` · `denetle.py` · `orkestra.py` · `testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/` (üretici, fikstürler, vaka aracı, `coz-olc.py`, bekçi) · şartname §6.6, §11.2–11.4 · `00-DEVIR/08-URUN-KARARLARI.md` K-54 · `06-ACIK-RISKLER.md` T-29
 
-**2026-10-01 (18:45) · CI kırmızı → "süre yetmedi" testleri yarıştan kurtarıldı (T-79, O-12)**
+**2026-10-01 (19:17) · CI kırmızı → "süre yetmedi" testleri yarıştan kurtarıldı (T-79, O-12)**
 Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
 makine 60 kişilik sahneyi 1 saniyede çözdü, test çözememesini bekliyordu
 (0,1 sn bütçe aslında 1 sn — T-59 tabanı; konteynerde ilk plan 1,9 sn).

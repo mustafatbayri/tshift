@@ -1216,7 +1216,7 @@ kaydından alındı: 13:05–14:00, 15:45, 16:00–16:45, 16:56–17:27, 17:37;
 sürümler 16:45 ve 17:27. Diğer devir dosyalarındaki aynı etiketler de
 düzeltildi; gece (01:20–02:17) etiketleri doğruydu, kaldı.
 
-## 48 · GitHub kırmızı: "süre yetmedi" testleri yarışa dayanıyordu (1 Ekim 18:30–18:45)
+## 48 · GitHub kırmızı: "süre yetmedi" testleri yarışa dayanıyordu (1 Ekim 19:05–19:17)
 
 Push'tan sonra motor işi kırmızı: `test_sure_yetmedi.py`'de dört test
 *"'sure_yetmedi' beklenirdi: 'cozuldu'"*; 477 test yeşil. Konteynerde
@@ -1233,7 +1233,7 @@ hepsi öldü; toplam 171. Motor 481 test yeşil (konteyner, 2 dk 20 sn).
 Dosyalar makineye yazıldı, md5 iki tarafta aynı. Risk dosyasına T-79
 (kapandı), otopsilere O-12. Commit + push bloğu Mustafa'ya veriliyor.
 
-## 49 · Dondurulmuş gün canlandı — K-54 (1 Ekim 19:10–20:40)
+## 49 · Dondurulmuş gün canlandı — K-54 (1 Ekim 20:27–21:23)
 
 CI yeşil yanınca ("YEŞİL DEVAM") T-29'a geçildi. Tasarım: `mevcut_plan`
 girdisi; donmuş gün satırları aynen çıktıya, modelde sabit; gelecek gecmişe
@@ -1271,7 +1271,7 @@ biterken commit yok.
 Şartname: §6.6 kural satırı + mekanizma notu, §11.2 `mevcut_plan`, §11.3
 `donmus`, §11.4 kanallar, değişiklik 44. Kararlar K-54, risk T-29 kapandı.
 
-## 50 · Tam ölçekte donmuş gün koşusu ve düzelttiği yanlış etiket (1 Ekim 20:55–21:15)
+## 50 · Tam ölçekte donmuş gün koşusu ve düzelttiği yanlış etiket (1 Ekim 22:50–23:05)
 
 GitHub yeşil. Mustafa `coz-olc.py --saniye 900 --donmus` koştu: taze hafta
 model kurma 54 sn (bu kez makine hızlı), 902 sn, 2.352 atama, 0 sert,
@@ -1293,3 +1293,20 @@ mutasyon grubu `donmus` 9 (biri çapa güncellemesi). 0,1 ölçekte geçmiş
 29'a indi (hedef altı 9, hedef aşımı 18, mola 2 — hepsi gün 0'ın yumuşak
 bulguları). Motor 499 test, mutasyon 180 hepsi öldü. Dosyalar makinede
 (3 dosya, md5 aynı), K-54'e tam ölçek sonucu ve düzeltilmiş ölçü yazıldı.
+
+## 51 · PDKS kararı — K-55 (1 Ekim 23:12)
+
+⚠ 48–50. bölümlerin saat etiketleri yine tahmindi, 23:15'te sohbet kaydına göre düzeltildi (19:05, 20:27, 22:50). Kural: etiket yazmadan önce zaman damgasına bak.
+
+Mustafa açık ucu kapattı: (1) bilinen boş gün = TShift'in kendi plan
+geçmişi + PDKS izin satırları — onaylandı; (2) PDKS'ten yalnız ham
+giriş-çıkış, *"hangi günler çalıştı ve saat aralıkları"*, mola uyumu
+PDKS'le denetlenmez — katıldı; (3) yıl içi fazla mesai **bordrodan değil
+PDKS'ten** — *"bordrodan aktartamayız; PDKS firmasının çıktısını istediğimiz
+formatta alırız, gerekirse RPA"*. Benim bordro önerim PDKS'in hazır fazla
+mesai kolonuna güvensizliktendi (vardiyalı için yanlış hesaplıyor); çözüm:
+kaynak PDKS, hesap TShift — ham giriş-çıkıştan haftalık net (aralık −
+politikadaki ücretsiz yemek molası), 45'i aşan kısım fazla, yıl başından
+toplam, bilinmeyen gün varsa "en az" + rapor. Motor değişmedi; K-55 karar
+dosyasına, şartname §6.2 satırı ve §11.2 notu, değişiklik 45; K-47 ve T-77
+veri tarafı kapandı. Commit bloğu veriliyor.

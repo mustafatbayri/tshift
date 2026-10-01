@@ -156,13 +156,16 @@ PDKS'in `00:00`'ı plan değil, kart okutulunca sonradan değişen takvim —
 *"bilinen boş gün"* kaynağı **olamaz**; gece yarısını aşan vardiya PDKS'te de
 başladığı günde (motorla aynı, düzeltme yok); PDKS'in normal/eksik/fazla
 mesai kovaları vardiyalı çalışan için yanlış, yıl içi fazla mesai bordrodan
-gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; öneri karar bekliyor.
+gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; **karar K-55 (23:12):**
+PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi +
+izin satırları; yıl içi fazla mesai PDKS hamından TShift'in hesabıyla
+(bordro değil — Mustafa).
 İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
 commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
 ⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
 19:15, 22:40, 22:50" yanlıştı; öğleden sonra ve akşam işiydi).
 
-**⚠ 1 Ekim 18:45 — CI kırmızı yandı ve sebebi testti, en güncel durum budur.**
+**⚠ 1 Ekim 19:17 — CI kırmızı yandı ve sebebi testti, en güncel durum budur.**
 Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
 GitHub'ın makinesi 60 kişilik sahneyi 1 saniyede çözdü, test çözememesini
 bekliyordu (0,1 sn bütçe aslında 1 sn; konteynerde ilk plan 1,9 sn).
@@ -172,7 +175,7 @@ T-79 kapandı, otopsi O-12. Üçüncü tam ölçek koşusu (17:27 kodu, 46 kural
 **0 sert, yayınlanabilir** (birinci aşama 22,9 sn, ilk plan 88,8 sn).
 Push tekrar bekleniyor.
 
-**⚠ 1 Ekim 20:40 — dondurulmuş gün canlandı (K-54), en güncel durum budur.**
+**⚠ 1 Ekim 21:23 — dondurulmuş gün canlandı (K-54), en güncel durum budur.**
 CI yeşil yandı; T-29 kapatıldı. Yayınlanmış plan (`mevcut_plan`) motora
 girdi: donmuş günün satırları çıktıya **aynen** geçer (molalarıyla), o güne
 yeni atama yazılmaz, geçmiş **gerçek** sayılır (dinlenme, haftalık saat,
@@ -187,7 +190,7 @@ bekler). Gerçekçi sahne artık taze hafta (`donmus_gunler: []`; eski `[0]`
 öldü**, bekçi **21**, vaka aracı 36 vaka · 36 kırmızı, altın 12. Açık 🔴 **bir**: T-60
 (kalite). Arayüz tarafı (çoklu seçimle kilit/silme) yazılmadı.
 
-**⚠ 1 Ekim 21:15 — donmuş gün tam ölçekte kanıtlandı, en güncel durum budur.**
+**⚠ 1 Ekim 23:00 — donmuş gün tam ölçekte kanıtlandı, en güncel durum budur.**
 Mustafa `coz-olc.py --saniye 900 --donmus` koştu: taze hafta 0 sert; gün 0
 dondurulup motorun kendi planıyla yeniden çözüldü — 92.899 kısıt geçmişe
 düştü, 0 kırpıldı, 305 sn, **gün 0 aynı, 0 sert, yayınlanabilir**. Koşu bir

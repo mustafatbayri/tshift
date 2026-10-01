@@ -393,7 +393,7 @@ olarak yazıldı: topoloji değişirse ikisi de yeniden koşar.
 
 ## O-12 · Yeşil test, şans eseri yeşildi: "süre yetmedi" bir yarıştı ⚠
 
-**Tarih:** 1 Ekim 2026, 18:30
+**Tarih:** 1 Ekim 2026, 19:05
 
 **Ne oldu.** Beş kararın push'undan sonra GitHub'daki motor işi kırmızı
 yandı: `test_sure_yetmedi.py`'nin dört testi *"'sure_yetmedi' beklenirdi:

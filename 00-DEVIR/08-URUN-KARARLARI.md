@@ -2278,11 +2278,11 @@ alanı gerçekten böyle kullanıp kullanmadığı doğrulanmalı.
 okutunca **sonradan** `07:30`'a dönüyor (günden önce `00:00` olup sonra
 `07:30` olan 1.084 satırın hepsinde kart var; `00:00` kalan 6.014'ün hiçbirinde
 yok). Gelecek günler için hiçbir şey söylemiyor, geçmiş için *"kart yok"*un
-tekrarı. **Öneri (karar bekliyor):** bilinen boş günün kaynağı TShift'in
-kendi yayınladığı önceki planlar + PDKS izin satırları; giriş/çıkış yalnız
-ham saat olarak alınır (gece vardiyası başladığı günde tek satır — motorla
-aynı, düzeltme yok); yıl içi fazla mesai toplamı PDKS'in `FM` kolonundan
-değil bordrodan.
+tekrarı. **Karar → K-55 (aynı akşam):** bilinen boş günün kaynağı TShift'in
+kendi yayınladığı önceki planlar + PDKS izin satırları; PDKS'ten yalnız ham
+giriş-çıkış (gece vardiyası başladığı günde tek satır — motorla aynı,
+düzeltme yok); yıl içi fazla mesai toplamı PDKS ham verisinden TShift'in
+kendi hesabıyla (PDKS'in `FM` kolonu okunmaz; bordro değil — Mustafa).
 
 → T-77 · T-18 · K-42 · `09-motor/testler/test_rapor_ozeti_ve_teshis.py`
 
@@ -2527,7 +2527,7 @@ ipucu kullanıldı) ve `coz-olc.py --donmus` (tam ölçek, Mustafa koşturur).
 günleri kilitler, **çoklu seçimle** kilitler ve siler; düzenleme bitince
 motor `mevcut_plan` + `donmus_gunler` ile çağrılır.
 
-**Günsüz ihlalde ölçü (tam ölçek koşusunun düzelttiği nokta, 1 Ekim 21:00):**
+**Günsüz ihlalde ölçü (tam ölçek koşusunun düzelttiği nokta, 1 Ekim 23:00):**
 günsüz (haftalık) ihlallerden yalnız **tavan** türü kurallar geçmiş
 sayılabilir — haftalık azami, fazla mesai tavanı, yarı zamanlı tavanı, yıllık
 tavan: saat arttıkça kötüleşen kural, donmuş günler tek başına tavanı
@@ -2539,7 +2539,7 @@ kısmı adalet dengesiydi — yanlış etiket; aynı akşam düzeltildi, test ve
 mutasyonla çivilendi. Donmuş gündeki sahada sayım, molalar motorun aday
 noktalarına oturmadıysa yaklaşıktır (not düşer).
 
-**Tam ölçekte ölçüldü (Mustafa, 1 Ekim 20:55, `coz-olc.py --saniye 900
+**Tam ölçekte ölçüldü (Mustafa, 1 Ekim 22:50, `coz-olc.py --saniye 900
 --donmus`):** taze hafta 902 sn → 2.352 atama, 0 sert, yayınlanabilir; sonra
 gün 0 dondurulup motorun kendi planıyla yeniden: model kurma 71 sn (54'e
 karşı, süzgeç bedeli %31), **92.899 kısıt geçmişe düştü, 0 kırpıldı**,
@@ -2551,3 +2551,58 @@ Sayılar: 18 test (`test_donmus_gun.py`), 9 mutasyon hepsi öldü (toplam 180),
 bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın senaryolar 12, motor 499 test.
 
 → T-29 · K-49 · şartname §6.6, §11.2, §11.3, §11.4 · `09-motor/cozucu/model.py` (`_donmus_plani_esle`, `_donmus_sabitle`, `_kisit`, `_donmus_suz`) · `09-motor/cozucu/coz.py` · `09-motor/dogrulayici/kurallar.py` (`donmus_gun`) · `09-motor/dogrulayici/denetle.py` (`_gecmis_ihlalleri_isaretle`) · `09-motor/testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/coz-olc.py --donmus`
+
+
+## K-55 · PDKS'ten yalnız **ham giriş-çıkış** gelir; bilinen boş gün TShift'in kendi plan geçmişi + izin satırlarıdır; yıl içi fazla mesai PDKS ham verisinden **TShift'in hesabıyla** gelir
+
+**Soru (K-47'nin açık ucu, 1 Ekim):** PDKS'teki planlanan süresi `00:00`
+olan satır *"bilinen boş gün"* sayılabilir mi? Ham veri ölçüldü
+(`07-GERCEK-VERI-BULGULARI.md` §7): sayılamaz — o alan plan değil, kart
+okutulunca sonradan değişen takvim. Yan bulgular: PDKS'in normal/eksik/fazla
+mesai kolonları sabit gündüz şablonuna göre hesaplanıyor, vardiyalı
+çalışan için yanlış (17:46–00:01'e *"eksik 9:16, fazla 5:31"*); gece
+yarısını aşan vardiya PDKS'te de başladığı günde; izin kayıtları güvenilir.
+
+**Karar (1 Ekim 2026 akşamı, Mustafa), üç madde:**
+
+1. *"Onaylıyorum."* — **Bilinen boş günün kaynağı PDKS'in `00:00`'ı
+   değildir.** Kaynak: TShift'in kendi yayınladığı önceki planlar (ilk
+   haftalardan sonra geçmiş zaten elimizde, geçmiş-eksik raporunun gürültüsü
+   kendiliğinden düşer) ve PDKS'teki izin satırları (yıllık izin, ücretsiz
+   izin, evlenme, taşınma… — o gün çalışmadığı kesindir).
+2. *"PDKS'ten tam giriş-çıkış alacağız, mola uyumunu falan kontrol
+   etmeyeceğiz. Bizim PDKS'ten alacağımız tek bilgi çalışanın hangi günler
+   çalıştığı ve saat aralıkları."* — **PDKS'ten yalnız ham giriş-çıkış
+   aralıkları alınır**; süre, dinlenme ve fazla mesai hesabını ürün yapar.
+   PDKS'ten mola bilgisi gelmez ve PDKS verisiyle mola kuralları denetlenmez.
+   Çıkışı girişten küçük satır gece vardiyasıdır (başladığı güne); 16 saati
+   aşan satır ve gece 00:00–02:00 arası *"giriş"*li satır (çift kart okutma
+   artığı) **bilinmeyen gün** sayılır.
+3. *"Bordrodan bu bilgiyi aktartamayız. Bunu PDKS'ten almalıyız, ki
+   alabiliriz. Gerekirse PDKS firmasının çıktısını bizim istediğimiz formatta
+   alırız, müşteriye düzelttiririz ya da araya bir RPA koyarız. Ürünü almayı
+   kabul eden firma bu yolu öyle ya da böyle açacak; bu uygulamayla denetime
+   de girecekler."* — **Yıl içi fazla mesai toplamı PDKS'ten gelir, ama
+   PDKS'in hazır fazla mesai kolonundan değil: ham giriş-çıkıştan TShift'in
+   kendi hesabıyla.** Benim *"bordrodan"* önerim bordroya güvenden değil,
+   PDKS'in hazır kolonuna güvensizliktendi; Mustafa'nın yolu ikisini de
+   çözüyor — kaynak PDKS, hesap TShift. PDKS firmasından istenecek tek şey:
+   kişi · gün · giriş saati · çıkış saati. Başka hiçbir hesaplanmış alan
+   okunmaz.
+
+**Hesap kuralı (`yil_ici_fazla_mesai_saat`, içe aktarma tarafı):** haftanın
+net çalışması = giriş-çıkış aralıklarının toplamı − firmanın mola
+politikasındaki ücretsiz yemek molası (PDKS'ten mola gelmediği için
+politikadan düşülür); 45 saati (haftalık normal sınır) aşan kısım o haftanın
+fazla mesaisi; yıl içi toplam = takvim yılı başından planlanan haftaya kadar
+haftalık fazlaların toplamı. Bilinmeyen gün varsa toplam **"en az şu kadar"**
+gelir ve bilinmeyen gün sayısı raporlanır; motor eksik geçmişte durmaz,
+bildirir (K-42). Devreye alma: takvim yılı başından itibaren PDKS ham verisi
+bir kez içe aktarılır (açılış bakiyesi), sonra haftalık.
+
+**Motor tarafında değişiklik yok;** bunlar içe aktarma (entegrasyon) ve
+backend kurallarıdır. Şartname §11.2 notu ve §6.2 yıllık tavan satırı
+güncellendi. K-47'nin açık ucu kapandı; T-77'nin veri tarafı kapandı
+(arayüzdeki *"gördüm"* onayı açık).
+
+→ K-42 · K-47 · T-77 · `07-GERCEK-VERI-BULGULARI.md` §7 · `07-motor/pdks-ms-gece-yarisi.py` · şartname §6.2, §11.2

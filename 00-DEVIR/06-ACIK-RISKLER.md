@@ -4064,9 +4064,10 @@ bilinen boş gün sayılması (entegrasyon kararı — gürültüyü asıl azalt
 
 🆕 **1 Ekim 18:00'de ölçüldü:** PDKS'in `00:00`'ı plan değil, kart okutulunca
 sonradan değişen takvim — bilinen boş gün kaynağı **olamaz**
-(`07-GERCEK-VERI-BULGULARI.md` §7). Öneri: TShift'in kendi plan geçmişi +
-PDKS izin satırları; giriş/çıkış ham saat; yıl içi fazla mesai bordrodan.
-Karar Mustafa'da.
+(`07-GERCEK-VERI-BULGULARI.md` §7). **Karar K-55 (aynı akşam):** TShift'in
+kendi plan geçmişi + PDKS izin satırları; PDKS'ten yalnız ham giriş-çıkış;
+yıl içi fazla mesai PDKS ham verisinden TShift'in hesabıyla (bordro değil —
+Mustafa). Veri tarafı kapandı; arayüzdeki "gördüm" onayı açık.
 
 ⚠ **Oranların çoğu varsayım:** `06-veri/anonim/` boş; yalnız belgelenmiş iki
 sayı (%46 çağrı merkezi kayıt oranı, %53 hiç kaydı olmayan kişi) ve Mustafa'nın
@@ -4171,9 +4172,9 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 
 ---
 
-## ✅ T-79 · ~~CI kırmızı: "süre yetmedi" testleri makine hızına bağlıydı~~ — **KAPANDI (1 Ekim 18:40, aynı saat)**
+## ✅ T-79 · ~~CI kırmızı: "süre yetmedi" testleri makine hızına bağlıydı~~ — **KAPANDI (1 Ekim 19:17, aynı saat)**
 
-**Bulundu:** 1 Ekim 18:30, GitHub'daki motor işi — beş kararın push'undan
+**Bulundu:** 1 Ekim 19:05, GitHub'daki motor işi — beş kararın push'undan
 sonra `test_sure_yetmedi.py`'nin dört testi kırmızı yandı
 (*"'sure_yetmedi' beklenirdi: 'cozuldu'"*); aynı 481 test konteynerde ve
 Mustafa'nın makinesinde yeşildi.
@@ -4240,7 +4241,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 |---|---|---|
 | ~~10~~ | ~~**T-23 · "süre yetmedi" ≠ "imkânsız"**~~ | ✅ **KAPANDI 29 Eylül, K-37** — `UNKNOWN` artık `sure_yetmedi` diyor, o yolda teşhis koşmuyor |
 | 11 | **T-24 · K-28 durgunluk + süre bütçesi** | Karar yazılmamış; bütçe isteğin tamamını kapsamıyor (0,05 sn → 57 sn) |
-| 10b | **T-77 · geçmiş eksik raporu gürültülü** 🟡 | ✅ **Karar alındı, K-47** — yönetici bakar, özet kişi başına ve yasal önde (motor tarafı yazıldı). Açık: arayüzde "gördüm" onayı. PDKS'in `00:00` satırı bilinen boş gün **olamaz** (1 Ekim ölçüldü, `07-GERCEK-VERI-BULGULARI.md` §7); kaynak önerisi TShift'in kendi plan geçmişi + izin satırları — karar bekliyor |
+| 10b | **T-77 · geçmiş eksik raporu gürültülü** 🟡 | ✅ **Karar alındı, K-47** — yönetici bakar, özet kişi başına ve yasal önde (motor tarafı yazıldı). Açık: arayüzde "gördüm" onayı. PDKS'in `00:00` satırı bilinen boş gün **olamaz** (1 Ekim ölçüldü, `07-GERCEK-VERI-BULGULARI.md` §7); kaynak **K-55**: TShift'in kendi plan geçmişi + izin satırları; PDKS'ten yalnız ham giriş-çıkış; yıl içi fazla mesai PDKS hamından TShift hesabıyla. Veri tarafı kapandı |
 | ~~11a~~ | ~~**T-76 · teşhis engelleyeni bulamıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — üç cevap: engelliyor · engellemiyor · belirsiz |
 | ~~11b~~ | ~~**T-73 · iki haftalık nöbetleşme**~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — üst sınır 2, dört haftada en fazla iki gece haftası |
 | 12 | **T-39 · aynı hücre iki talep satırı** 🟡 | Sözleşme sessiz: yinelenen hücre iki kez sayılır, hangi `asgari` geçerli tanımsız. **Talep ekranından önce** karara bağlanmalı |
