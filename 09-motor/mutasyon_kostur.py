@@ -755,6 +755,28 @@ MUTASYONLAR = [
      '        if sayi > hedef:\n            cikan.append(_ihlal("HEDEF_ASIMI"',
      '        if sayi >= hedef:\n            cikan.append(_ihlal("HEDEF_ASIMI"',
      'testler/test_hedef_asimi.py'),
+    # ---- sure yetmedi (1 Ekim aksami): testler artik yarisla degil
+    # ---- enjeksiyonla kuruluyor -- mekanizmayi hala isirdiklarinin kaniti
+    ('sure_yetmedi', C, 'butce dolunca "cozumsuz" desin (kanitsiz cumle)',
+     '        "durum": "sure_yetmedi",',
+     '        "durum": "cozumsuz",',
+     'testler/test_sure_yetmedi.py'),
+    ('sure_yetmedi', C, 'teshis istenmeden kossun',
+     '    if ayar.get("teshis_iste"):',
+     '    if True:',
+     'testler/test_sure_yetmedi.py'),
+    ('sure_yetmedi', C, 'istenerek kosan teshis "kesin" desin',
+     '        return teshis_koy(girdi, kuruldu, istatistik, ayar, kesin=False)',
+     '        return teshis_koy(girdi, kuruldu, istatistik, ayar, kesin=True)',
+     'testler/test_sure_yetmedi.py'),
+    ('sure_yetmedi', C, 'verilen sure bildirilmesin',
+     '        "verilen_saniye": ayar["azami_saniye"],',
+     '        "verilen_saniye": None,',
+     'testler/test_sure_yetmedi.py'),
+    ('sure_yetmedi', C, '"neden oldugunu arastir" secenegi sunulmasin',
+     '        "teshis_istenebilir": True,',
+     '        "teshis_istenebilir": False,',
+     'testler/test_sure_yetmedi.py'),
 ]
 
 

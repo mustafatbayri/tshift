@@ -144,7 +144,7 @@ bilerek vakasız). Açık 🔴 **dört** (T-29, T-38, T-54, T-60).
 kalktı. **K-53:** hedefi aşan kişi-saate yumuşak ceza (`HEDEF_ASIMI`, katalog
 **41**). **T-38** 🟡'ya indi ve sıralandı; `sure_butcesi_sn` ve `istek_id`
 servise bağlandı. Kapananlar: T-54, T-63, T-66 (+ bugün daha önce T-18, T-21, T-67,
-T-78). Motor **481 test**, mutasyon **166 hepsi öldü**, 37 gövde · 36 vaka ·
+T-78). Motor **481 test**, mutasyon **166 hepsi öldü** (18:45: 171), 37 gövde · 36 vaka ·
 36 kırmızı (+1 bilerek vakasız), bekçi 20, altın senaryolar 12 geçti. Açık 🔴
 **iki**: T-29 (dondurulmuş gün — Mustafa onayladı, yazılacak), T-60 (kalite).
 ⚠ Bugünkü değişikliklerden sonra tam ölçek **yeniden** koşulmalı.
@@ -161,6 +161,16 @@ gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; öneri karar bekliyor.
 commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
 ⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
 19:15, 22:40, 22:50" yanlıştı; öğleden sonra ve akşam işiydi).
+
+**⚠ 1 Ekim 18:45 — CI kırmızı yandı ve sebebi testti, en güncel durum budur.**
+Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
+GitHub'ın makinesi 60 kişilik sahneyi 1 saniyede çözdü, test çözememesini
+bekliyordu (0,1 sn bütçe aslında 1 sn; konteynerde ilk plan 1,9 sn).
+**Motor değişmedi;** testler artık dolan bütçeyi enjekte ediyor
+(`sure_dolmus`), 5 yeni mutasyon öldü, toplam **171**; 481 test yeşil.
+T-79 kapandı, otopsi O-12. Üçüncü tam ölçek koşusu (17:27 kodu, 46 kural)
+**0 sert, yayınlanabilir** (birinci aşama 22,9 sn, ilk plan 88,8 sn).
+Push tekrar bekleniyor.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 

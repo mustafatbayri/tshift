@@ -1139,6 +1139,10 @@ T-18 hâlâ açık: kapının bilinmeyen kuralda ne yapacağı **ürün kararı*
 
 ## ✅ T-23 · ~~"Süre yetmedi" ile "imkânsız" aynı cevabı alıyor~~ — **KAPANDI (29 Eylül, K-37)**
 
+> 🆕 **1 Ekim:** bu kararın testleri bütçenin dolmasını makine hızına
+> bırakıyordu ve CI'da kırmızı yandı (T-79). Davranış değişmedi; testler
+> artık dolan bütçeyi enjekte ediyor.
+
 **Bulundu:** 16 Eylül 2026, dış inceleme · **Kod okumasıyla kesin**,
 deneyle üretilemedi (iki denemede de CP-SAT gerçekten çözümsüzlüğü kanıtladı)
 
@@ -4155,6 +4159,42 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 
 ---
 
+## ✅ T-79 · ~~CI kırmızı: "süre yetmedi" testleri makine hızına bağlıydı~~ — **KAPANDI (1 Ekim 18:40, aynı saat)**
+
+**Bulundu:** 1 Ekim 18:30, GitHub'daki motor işi — beş kararın push'undan
+sonra `test_sure_yetmedi.py`'nin dört testi kırmızı yandı
+(*"'sure_yetmedi' beklenirdi: 'cozuldu'"*); aynı 481 test konteynerde ve
+Mustafa'nın makinesinde yeşildi.
+
+**Ne.** Dört test *"60 kişilik sahne + 0,1 saniye bütçe"* ile bütçenin
+plan bulunmadan dolmasını bekliyordu. İki şey bunu bir **yarışa** çeviriyordu:
+(1) `coz` ana aramaya en az **1 saniye** verir (T-59 tabanı: sıfır süre
+CP-SAT'e *"hiç arama"* demek olurdu) — 0,1 yazan test aslında 1 saniye
+alıyordu; (2) bu sahnede ilk plan 2 çekirdekli konteynerde **1,9 saniyede**
+geliyor — GitHub'ın makinesi 1 saniyenin altında buldu ve *"çözüldü"* dedi.
+Motorda hata yok; test, dosyanın kendi uyarısının (*"süre ölçerek değil
+yapıyı sınayarak"*) tam tersini yapıyordu. 29 Eylül'den beri yeşil
+kalması şanstı.
+
+**Düzeltme (test tarafı, motor değişmedi):** `sure_dolmus` fikstürü
+CP-SAT'e aramadan `UNKNOWN` dedirtiyor — *"süre doldu, plan bulamadım,
+yokluğunu da kanıtlayamadım"*; gerçek CP-SAT bütçe dolunca tam olarak bunu
+döndürür, fark artık makine hızına bakmadan **her zaman** olması. Sahne
+aynı, model gerçekten kuruluyor, ön kontrol gerçekten koşuyor; yalnız
+aramanın sonucu enjekte ediliyor. Kanıtlanmış çözümsüzlük testleri fikstürü
+kullanmıyor — orada gerçek çözücü `INFEASIBLE` kanıtını kendi üretiyor.
+Testlerin hâlâ ısırdığı 5 mutasyonla gösterildi (*"çözümsüz desin"*,
+*"teşhis istenmeden koşsun"*, *"kesin desin"*, *"verilen süre bildirilmesin"*,
+*"seçenek sunulmasın"* — hepsi öldü; toplam **171**).
+
+**Ders (O-12):** bir testin *"zaman yetmedi"* durumu makine hızına
+bırakılmaz; dolan bütçe deterministik kurulur. Aynı ailede başka test var
+mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor — temiz.
+
+→ T-23 · T-59 · O-12 · `09-motor/testler/test_sure_yetmedi.py` · `09-motor/mutasyon_kostur.py` (`sure_yetmedi` grubu)
+
+---
+
 ## Öncelik sırası — önerilen
 
 **Sıralama ölçütü: yanlış karar riski.** Önce yanlış yayın izni, yanlış
@@ -4263,3 +4303,4 @@ beklenen). MOLA_KAPSAMASI 38 (önceki koşular 51–69).
 | **T-63 yetkinlik gerekliliği** | **1 Ekim 2026** | K-52 dört gereklilik satırı + taşıyıcı tabanı; `CALISMA_SAATLERI` departman saatleriyle yazıldı (12 test, 8 mutasyon) |
 | **T-66 sabit sert ihlal sayısı** | **1 Ekim 2026** | K-51 alan kaldırıldı |
 | **T-67 gece yarısı kuralı gövdesiz** | **1 Ekim 2026** | "İhlal üretmez" diye kayıtlı; vaka aracında bilerek vakasız sınıfı |
+| **T-79 CI kırmızı: süre-yetmedi testleri yarışa dayanıyordu** | **1 Ekim 2026** | Dolan bütçe artık `sure_dolmus` fikstürüyle enjekte ediliyor; 5 mutasyon öldü. Motor değişmedi |

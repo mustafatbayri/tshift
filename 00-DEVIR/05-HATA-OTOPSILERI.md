@@ -391,6 +391,43 @@ olarak yazıldı: topoloji değişirse ikisi de yeniden koşar.
 
 ---
 
+## O-12 · Yeşil test, şans eseri yeşildi: "süre yetmedi" bir yarıştı ⚠
+
+**Tarih:** 1 Ekim 2026, 18:30
+
+**Ne oldu.** Beş kararın push'undan sonra GitHub'daki motor işi kırmızı
+yandı: `test_sure_yetmedi.py`'nin dört testi *"'sure_yetmedi' beklenirdi:
+'cozuldu'"* dedi. Aynı dosya konteynerde ve Mustafa'nın makinesinde
+yeşildi; 29 Eylül'den beri CI'da da yeşildi.
+
+**Neden.** Testler *"60 kişilik sahne + 0,1 saniyelik bütçe"* kurup
+çözücünün yetişememesini **bekliyordu**. Ama `coz` ana aramaya en az
+1 saniye verir (T-59 tabanı) ve bu sahnede ilk plan konteynerde 1,9
+saniyede bulunuyor. GitHub'ın makinesi o gün 1 saniyenin altında buldu.
+Test, makinenin yavaş olmasına güveniyordu — dosyanın kendi başındaki
+uyarının (*"süre ölçerek değil yapıyı sınayarak"*) tam tersi. Yazan
+bendim; uyarıyı yazıp uymamışım.
+
+**Sınıfı.** O-1 ve O-9'un ailesi değil (kontrol yanlış şeye bakmıyordu);
+yeni bir sınıf: **kontrol doğru şeye bakıyor ama sonucu bir yarış
+belirliyor.** Böyle bir test kırmızı yandığında "motor bozuldu" sanılır,
+yeşil yandığında güven verir — ikisi de yanlıştır.
+
+**Düzeltme.** Dolan bütçe artık enjekte ediliyor: `sure_dolmus` fikstürü
+CP-SAT'e aramadan `UNKNOWN` dedirtiyor (gerçek çözücünün bütçe dolunca
+döndürdüğü şeyin aynısı). Sınanan şey mekanizma; makine hızı testin
+dışında. Testlerin hâlâ ısırdığı 5 mutasyonla kanıtlandı. Motor kodu
+değişmedi.
+
+### Kalıcı bekçi
+
+Mutasyon grubu `sure_yetmedi` (5 bozma); ve bir kural: **testte "zaman
+yetmedi" durumu hiçbir zaman gerçek saatle kurulmaz** — sonuç enjekte
+edilir ya da sahne kanıtlanabilir biçimde çözümsüz yapılır. Aynı aile
+tarandı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -406,6 +443,7 @@ olarak yazıldı: topoloji değişirse ikisi de yeniden koşar.
 | O-9 | Gönderilmeyen dosya iki tarafta da temiz görünüyordu | Commit öncesi içerik karşılaştırması (`cmp`), hafıza değil | ✅ |
 | O-10 | *"Doğrulayamam"* denildi, denenmemişti | "Erişimim yok" demeden önce erişimi dene | ✅ *(kural; otomatik bekçisi yok)* |
 | O-11 | Yorumda ölçülmemiş güvenlik iddiası; yapılandırma yanlıştı | Uçtan uca elle ölçüm, kapanış kaydına adım olarak yazılı | ✅ *(kural; birim testi göremez)* |
+| O-12 | "Süre yetmedi" testi makine hızına güveniyordu; CI'da kırmızı yandı | Dolan bütçe enjekte edilir (`sure_dolmus`); mutasyon grubu `sure_yetmedi` | ✅ |
 
 ---
 

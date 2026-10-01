@@ -30,6 +30,21 @@ BU DOSYA NE SINAR
   * kullanici ISTERSE teshis kosuyor ("neden oldugunu arastir")
   * istenerek kosan teshis KESIN DEGIL diye isaretleniyor
 
+⚠ 1 EKIM: "BUTCE DOLDU" ARTIK YARISLA DEGIL, ENJEKSIYONLA KURULUYOR
+  Dort test "60 kisilik sahne + 0.1 sn butce" ile butcenin dolmasini
+  bekliyordu. Iki sey bunu bir YARISA ceviriyordu:
+    1. `coz` ana aramaya en az 1 saniye verir (T-59 tabani: sifir sure
+       CP-SAT'e "hic arama" demek olurdu) -- 0.1 yazan test aslinda 1 sn
+       aliyordu.
+    2. Bu sahnede ilk plan 2 cekirdekli konteynerde 1,9 saniyede geliyor;
+       GitHub'in makinesi 1 Ekim'de 1 saniyenin altinda buldu ve dort test
+       orada kirmizi yandi ("cozuldu" bekleniyordu "sure_yetmedi").
+  Motorda hata yok; test makine hizina bagliydi -- bu dosyanin kendi
+  uyarisinin ("sure olcerek degil YAPIYI sinayarak") tam tersi. Simdi
+  `sure_dolmus` fikstur'u CP-SAT'e aramadan UNKNOWN dedirtiyor: "sure
+  doldu, plan bulamadim, yoklugunu da kanitlayamadim". Sinanan sey
+  mekanizmanin kendisi; hangi makinede kostugu fark etmez.
+
 KOSTURMA
   cd C:\\Users\\PC\\Desktop\\Tshift\\09-motor
   py -m pytest testler/test_sure_yetmedi.py -v
@@ -38,9 +53,27 @@ KOSTURMA
 import os
 import sys
 
+import pytest
+from ortools.sat.python import cp_model
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from cozucu.coz import coz                                    # noqa: E402
+
+
+@pytest.fixture
+def sure_dolmus(monkeypatch):
+    """CP-SAT'e aramadan UNKNOWN dedirtir: sure dolmus, plan yok, kanit yok.
+
+    Gercek CP-SAT butce dolunca tam olarak bunu dondurur (UNKNOWN); fark,
+    burada bunun makine hizina bakmadan HER zaman olmasi. `coz` bu duruma
+    ne yapiyor -- sinanan o. Kanitlanmis cozumsuzluk testleri bu fikstur'u
+    KULLANMAZ: orada gercek cozucu INFEASIBLE kanitini kendi uretir.
+    """
+    def aramadan_bilmiyorum(self, model, solution_callback=None):
+        return cp_model.UNKNOWN
+
+    monkeypatch.setattr(cp_model.CpSolver, "Solve", aramadan_bilmiyorum)
 
 
 def _kurallar():
@@ -98,10 +131,12 @@ def _imkansiz():
 
 
 def _yetismez():
-    """Cozulebilir ama COK KISA butce: cozucu bakmaya firsat bulamaz.
+    """Cozulebilir sahne; butcenin dolmasi `sure_dolmus` fikstur'uyle kurulur.
 
-    ⚠ Sahne bilerek buyuk, butce bilerek 0.1 saniye. Amac "zor sahne"
-      degil, MEKANIZMA: butce dolunca ne oluyor.
+    ⚠ 1 Ekim'e kadar "60 kisi + 0.1 sn" ile cozucunun yetisememesi
+      BEKLENIYORDU; bu makine hizina bagli bir yaristi (dosya basindaki
+      not). Sahne ayni kaldi -- model gercekten kuruluyor, on kontrol
+      gercekten kosuyor -- yalniz aramanin sonucu artik enjekte ediliyor.
 
     ⚠ Iki asama bilerek KAPALI: acik kalsaydi birinci asama kendi
       butcesini (varsayilan 120 sn) harcar ve test dakikalarca surerdi.
@@ -120,14 +155,14 @@ def test_KANITLANMIS_cozumsuzluk_hala_cozumsuz():
     assert c.get("teshis"), "kanitlanmis cozumsuzlukte teshis olmali"
 
 
-def test_BUTCE_dolunca_SURE_YETMEDI_der():
+def test_BUTCE_dolunca_SURE_YETMEDI_der(sure_dolmus):
     """Plan bulunamadiysa ama kanitlanmadiysa, adi baska olmali."""
     c = coz(_yetismez(), KISA)
     assert c["durum"] == "sure_yetmedi", (
         "butce dolunca 'sure_yetmedi' beklenirdi: %r" % c["durum"])
 
 
-def test_sure_yetmedigi_zaman_TESHIS_KOSMAZ():
+def test_sure_yetmedigi_zaman_TESHIS_KOSMAZ(sure_dolmus):
     """Asil kazanc bu: cevapsiz soruya 7 dakika harcanmasin.
 
     ⚠ Sure olcerek degil YAPIYI sinayarak: zamana bagli test yavas bir
@@ -142,7 +177,7 @@ def test_sure_yetmedigi_zaman_TESHIS_KOSMAZ():
         "sure yetmedigi halde en iyi plan aranmis: %r" % c.get("en_iyi_plan"))
 
 
-def test_sure_yetmedi_NE_YAPILACAGINI_soyler():
+def test_sure_yetmedi_NE_YAPILACAGINI_soyler(sure_dolmus):
     """Kullanici ekranda ne gorecegini bilmeli: sure uzatilabilir."""
     c = coz(_yetismez(), KISA)
     assert c.get("verilen_saniye"), (
@@ -151,7 +186,7 @@ def test_sure_yetmedi_NE_YAPILACAGINI_soyler():
         "'neden oldugunu arastir' secenegi bildirilmiyor: %r" % sorted(c))
 
 
-def test_ISTENIRSE_teshis_kosar_ama_KESIN_DEGIL_der():
+def test_ISTENIRSE_teshis_kosar_ama_KESIN_DEGIL_der(sure_dolmus):
     """"Neden oldugunu arastir" dugmesi: teshis kullanici isterse kosar.
 
     ⚠ Kosan teshis yine de KANIT DEGILDIR -- ciktida boyle isaretlenir.

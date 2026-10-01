@@ -4,6 +4,15 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (18:45) · CI kırmızı → "süre yetmedi" testleri yarıştan kurtarıldı (T-79, O-12)**
+Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
+makine 60 kişilik sahneyi 1 saniyede çözdü, test çözememesini bekliyordu
+(0,1 sn bütçe aslında 1 sn — T-59 tabanı; konteynerde ilk plan 1,9 sn).
+Motor değişmedi. Testler artık dolan bütçeyi `sure_dolmus` fikstürüyle
+enjekte ediyor (CP-SAT aramadan `UNKNOWN` der); 5 yeni mutasyon öldü,
+toplam **171**; motor 481 test yeşil.
+→ `09-motor/testler/test_sure_yetmedi.py` · `09-motor/mutasyon_kostur.py` · `00-DEVIR/06-ACIK-RISKLER.md` T-79 · `05-HATA-OTOPSILERI.md` O-12
+
 **2026-10-01 (18:15) · PDKS ham verisi: `MS 00:00` bilinen boş gün değil · gece yarısı başladığı günde · saat kovaları güvenilmez**
 Mustafa ham PDKS'i açtı; betik makinesinde koştu, yalnız sayı döndü.
 Bulgular `00-DEVIR/07-GERCEK-VERI-BULGULARI.md` §7 (P-2…P-5); 13 Eylül'deki

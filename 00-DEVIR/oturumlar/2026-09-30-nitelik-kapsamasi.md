@@ -1215,3 +1215,20 @@ yanlış saatler taşıyordu (03:40–05:00, 17:15, 17:30–19:15, 19:30–22:30
 kaydından alındı: 13:05–14:00, 15:45, 16:00–16:45, 16:56–17:27, 17:37;
 sürümler 16:45 ve 17:27. Diğer devir dosyalarındaki aynı etiketler de
 düzeltildi; gece (01:20–02:17) etiketleri doğruydu, kaldı.
+
+## 48 · GitHub kırmızı: "süre yetmedi" testleri yarışa dayanıyordu (1 Ekim 18:30–18:45)
+
+Push'tan sonra motor işi kırmızı: `test_sure_yetmedi.py`'de dört test
+*"'sure_yetmedi' beklenirdi: 'cozuldu'"*; 477 test yeşil. Konteynerde
+tekrar: üç koşuda da `sure_yetmedi`, arama 1,04 sn (0,1 değil — T-59
+tabanı 1 sn), 20 sn bütçeyle ilk plan 1,87 sn'de. Yani test "bu sahne
+1 saniyede çözülmez" varsayımına dayanıyordu; GitHub'ın makinesi çözdü.
+Motorda hata yok.
+
+Düzeltme test tarafında: `sure_dolmus` fikstürü CP-SAT'in `Solve`'unu
+aramadan `UNKNOWN` döndürür hâle getiriyor; dört test bunu kullanıyor,
+kanıtlanmış çözümsüzlük testleri kullanmıyor. Dosya başına ve `_yetismez`
+açıklamasına neden yazıldı. Mutasyon grubu `sure_yetmedi` (5 bozma) eklendi,
+hepsi öldü; toplam 171. Motor 481 test yeşil (konteyner, 2 dk 20 sn).
+Dosyalar makineye yazıldı, md5 iki tarafta aynı. Risk dosyasına T-79
+(kapandı), otopsilere O-12. Commit + push bloğu Mustafa'ya veriliyor.
