@@ -1311,7 +1311,7 @@ toplam, bilinmeyen gün varsa "en az" + rapor. Motor değişmedi; K-55 karar
 dosyasına, şartname §6.2 satırı ve §11.2 notu, değişiklik 45; K-47 ve T-77
 veri tarafı kapandı. Commit bloğu veriliyor.
 
-## 52 · Şartname borcu T-38: sabit atama eşlemesi ve temizlik (1 Ekim 23:20–23:45)
+## 52 · Şartname borcu T-38: sabit atama eşlemesi ve temizlik (1 Ekim 23:33 – 2 Ekim 00:10)
 
 Mustafa "son iki koşu yeşil, devam" dedi; sırada T-38'in kalanları vardı.
 **Sabit atama = sabitleme kilidi:** motor artık ikisini de `sablon` kimliği
@@ -1328,3 +1328,55 @@ sonra "ekibinde olmayan şablon" notu. Doğrulayıcı `KILIT_UYUMU` artık
 `mola_tek_blok` notu, sabit atama notu, değişiklik 46. T-38'in tek açık
 satırı `devir_kapsama`; Mustafa'ya tanım önerisiyle soruldu. Dosyalar
 makinede (5 dosya, md5 aynı), DENETIM 0 hata.
+
+## 53 · Devreden kapsama yazıldı, T-38 kapandı — K-56 (2 Ekim 00:30–00:50)
+
+Mustafa öneriyi aynen onayladı (*"sana katılıyorum, aklımda başka bir şey
+yok"*) ve bir koşu başlattı (sonucunu gönderecek). Uygulama iki yarıda:
+çözücüde `_devir_hazirla` geçmiş vardiyaların gün 0'a taşan çeyreklerini
+kişi başına tutuyor, `_devir_sayisi_dilim` hücre başına sabit sayı
+veriyor; sabit `_atanmis`, `_sahada` ve `_yetkinlik` toplamlarına ekleniyor
+(CP-SAT toplamda sabit kabul ediyor; kısıt yalnız sabitten oluşursa
+`Add(True/False)` çalışıyor, denendi); ön kontrol taşan kapsama asgariyi
+karşılıyorsa hücreyi ulaşılabilir sayıyor; motorun kendi metriği de
+sayıyor. Doğrulayıcıda `devir_atamalari` taşan vardiyaları sahte atama
+satırına çeviriyor (gün 0, `bas` negatif, `bit` taşan saat, `_devir`
+işareti) ve `_kapsama_atamalari` yalnız kapsama kurallarına veriyor; saat
+ve dinlenme kuralları görmüyor (iki kez sayım yok — test: pazar 23–07 +
+pazartesi 08 → tek dinlenme ihlali). Elle verilen `devir_kapsama` kişisiz
+satır: yalnız yazıldığı ekibe sayılır, nitelik taşımaz (zaten `calisan`
+None olduğu için nitelik süzgecinden geçemiyor — ilk yazdığım ek süzgeç
+eşdeğer mutantla yakalandı ve kaldırıldı). 8 test, mutasyon grubu `devir`
+6 (toplam 190), motor 516 test, altın 12, vaka aracı 36 kırmızı, sahte PDKS
+8. 7 dosya makinede (md5 aynı). Şartname §6.4 notu, §11.2 `devir_kapsama`
+notu, değişiklik 47; K-56 karar dosyasına; T-38 kapandı. 52. bölümün saat
+etiketi sohbet kaydına göre düzeltildi (23:33–00:10).
+
+## 54 · Oturum kapanışı (2 Ekim 01:00, Mustafa: "koşu yeşil, devir dosyasını güncelleyip oturumu kapatalım")
+
+Son iki push (T-38 sabit atama, K-55 belgeleri) GitHub'da yeşil. K-56
+(devreden kapsama) kodu ve bu kapanışın belgeleri makinede, commit bloğu
+verildi — push'tan sonra motor işi bir kez daha koşacak.
+
+**Kapanış durumu.** Motor 516 birim test, 12 altın senaryo, bekçi 21
+(0,1 ölçek, 8 dk 27 sn), 190 mutasyon hepsi öldü, vaka aracı 37 gövde ·
+36 vaka · 36 kırmızı (+1 bilerek vakasız), sahte PDKS 8. Tam ölçek (500
+kişi, %95 doluluk, 46 kural): dört koşu 0 sert ve yayınlanabilir —
+sonuncusu gün 0 dondurulmuş, gün 0 aynı. DENETIM 0 hata / 15 uyarı.
+Kararlar K-48…K-56. 1 Ekim'de kapanan kırmızılar: T-18, T-21, T-29, T-38,
+T-54, T-63, T-66, T-67, T-78, T-79. **Açık 🔴 tek: T-60** (kalite).
+
+**Sonraki pencere için sıra (karar bekleyen yok):**
+1. T-60 kalite: profil / bütçe / işçi sayısı / ağırlık ölçümleri — Mustafa'nın
+   makinesinde tam ölçekte; `coz-olc.py` hazır.
+2. Backend/arayüz işleri: içe aktarma modülü (K-55: PDKS ham giriş-çıkış,
+   izinler, yıl içi fazla mesai hesabı), dondurulmuş gün için çoklu seçimle
+   kilit/silme (K-54), geçmiş-eksik özeti için "gördüm" onayı (K-47).
+3. `SAHADA_ASGARI` tabanı sorusu (risk dosyasında).
+4. İki haftalık ölçüm aracı devreden kapsamayla yeniden ölçülmedi.
+
+**Bugünün dersleri (otopsi ve kurallar):** O-12 — "zaman yetmedi" testi
+gerçek saatle kurulmaz, enjekte edilir; mutasyon koşusu sürerken commit
+yok (dosyalar yerinde mutasyonlu olabilir); saat etiketleri sohbet
+kaydının zaman damgasından alınır, tahminle yazılmaz (üç kez düzeltildi);
+DEGISIM-GUNLUGU'nde yollar tam yazılır.

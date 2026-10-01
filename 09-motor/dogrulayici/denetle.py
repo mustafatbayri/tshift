@@ -163,7 +163,8 @@ OKUNAN_ALANLAR = {
     "": ("profil", "calisanlar", "vardiya_sablonlari", "talep", "kurallar",
          "kilitler", "sabit_atamalar", "donmus_gunler", "hafta_baslangic",
          "agirliklar", "sektor", "denetim_disi_kabul", "cok_ekipli_sayim",
-         "departmanlar", "istek_id", "sure_butcesi_sn", "mevcut_plan"),
+         "departmanlar", "istek_id", "sure_butcesi_sn", "mevcut_plan",
+         "devir_kapsama"),
     "calisanlar": ("id", "ekipler", "sozlesme", "izinler", "uygunluk",
                    "devir_yuk", "yetkinlikler", "operasyonel_rol",
                    "gece_calisamaz", "durum", "gece_calisma_onayi",
@@ -190,6 +191,8 @@ OKUNAN_ALANLAR = {
     "mevcut_plan": ("calisan", "ekip", "sablon", "gun", "bas", "bit",
                     "molalar", "donmus"),
     "mevcut_plan.molalar": ("bas", "bit", "tip"),
+    # K-56: gecmis yokken elle verilen devreden kapsama.
+    "devir_kapsama": ("ekip", "gun", "saat", "kisi"),
     # T-38 (1 Ekim): sabit atama artik `sablon` ya da `ekip`+`bas`+`bit` ile
     # eslenir (cozucu.model._sabitle_satir) ve KILIT_UYUMU ile denetlenir.
     "sabit_atamalar": ("calisan", "gun", "sablon", "ekip", "bas", "bit"),
@@ -610,6 +613,7 @@ def kapsama_yuzdeleri(girdi, atamalar):
     asgari_tut = asgari_top = hedef_tut = hedef_top = 0
     eksik_dk = 0
     uyelik, mod = kurallar.uyelik_haritasi(girdi), kurallar.cok_ekipli_sayim(girdi)
+    atamalar = kurallar._kapsama_atamalari(girdi, atamalar)     # K-56: devreden kapsama
     # K-50 gorunurlugu: baska ekibin vardiyasiyla kapatilan hucreler.
     baska_hucre = baska_kisi_saat = 0
     for t in girdi.get("talep", []) or []:

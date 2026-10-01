@@ -95,9 +95,72 @@ def ekibe_sayilir(atama, ekip, uyelik, mod):
     """Bu atama bu ekibin kapsamasina sayilir mi -- K-50."""
     if ekip is None or atama.get("ekip") == ekip:
         return True
-    if mod != "hepsi":
-        return False
+    if mod != "hepsi" or atama.get("_devir_elle"):
+        return False          # elle verilen devir sayisinin kisisi yok (K-56)
     return ekip in uyelik.get(atama.get("calisan"), ())
+
+
+# ----------------------------------------------------------------------
+# K-56 (T-38): DEVREDEN KAPSAMA -- onceki haftadan bu haftaya tasan vardiyalar
+# ----------------------------------------------------------------------
+#
+# MUSTAFA (1 Ekim gecesi): onceki haftanin pazar gecesi baslayip pazartesi
+#   sabahina tasan vardiyalari bu haftanin ilk saatlerini zaten kapatiyor;
+#   motor bunu gecmis vardiyalardan kendisi turetsin, `devir_kapsama` alani
+#   yalniz gecmis verisi olmayan ilk haftada elle verilsin.
+#
+# Burada tasan vardiyalar SAHTE ATAMA satirlarina cevrilir ve YALNIZ kapsama
+# kurallari onlari gorur (asgari/hedef/hedef asimi/mola kapsamasi/saha
+# tabani/nitelik kapsamasi ve kapsama yuzdeleri). Saat, dinlenme ve ardisik
+# gun kurallari bunlari GORMEZ -- gecmisi onlar `_kisiye_gore_gecmisli` ile
+# ayrica okur; iki kez sayilmaz.
+#
+# Satir bicimi: gun 0, `bas` negatif olabilir (pazar 23:00 -> -1), `bit`
+# tasan saat; `zaman.atanmis_mi` mutlak saatle karsilastirdigi icin dogru
+# calisir. Ekip: kisinin ILK ekibi; `hepsi` sayiminda `ekibe_sayilir` uyelik
+# haritasindan diger ekiplerine de sayar. Molasi bilinmez -> sahada sayilir.
+# Elle verilen sayi (`devir_kapsama`) kisisiz sahte satirlardir: yalniz
+# yazildigi ekibe ve saate sayilir, nitelik tasimaz.
+#
+# AYNI SAYIM COZUCUDE AYRICA YAZILI (model._devir_hazirla, #7.6).
+
+def devir_atamalari(girdi):
+    """Onceki haftadan bu haftaya tasan kapsama -- sahte atama satirlari."""
+    calisanlar = girdi.get("calisanlar") or []
+    gecmis_var = any(c.get("gecmis_vardiyalar") for c in calisanlar)
+    cikan = []
+    if gecmis_var:
+        for c in calisanlar:
+            ekipler = c.get("ekipler") or []
+            for k in c.get("gecmis_vardiyalar") or []:
+                gun, bas, bit = k.get("gun"), k.get("bas"), k.get("bit")
+                if gun is None or bas is None or bit is None or gun >= 0:
+                    continue
+                mbas, mbit = zaman.mutlak(gun, float(bas)), zaman.mutlak(gun, float(bit))
+                if mbit <= mbas:
+                    mbit += 24.0
+                if mbit <= 0:
+                    continue                      # bu haftaya tasmiyor
+                cikan.append({"calisan": c["id"], "ekip": ekipler[0] if ekipler else None,
+                              "sablon": None, "gun": 0, "bas": max(mbas, -24.0), "bit": mbit,
+                              "molalar": [], "_devir": True})
+        return cikan
+    for r in girdi.get("devir_kapsama") or []:
+        try:
+            gun, saat, kisi = int(r["gun"]), int(r["saat"]), int(r.get("kisi", 0))
+        except (KeyError, TypeError, ValueError):
+            continue
+        for i in range(max(0, kisi)):
+            cikan.append({"calisan": None, "ekip": r.get("ekip"), "sablon": None,
+                          "gun": gun, "bas": saat, "bit": saat + 1, "molalar": [],
+                          "_devir": True, "_devir_elle": True})
+    return cikan
+
+
+def _kapsama_atamalari(girdi, atamalar):
+    """Kapsama kurallarinin gordugu liste: plan + devreden (K-56)."""
+    devir = devir_atamalari(girdi)
+    return list(atamalar) + devir if devir else atamalar
 
 
 def _p(tanim, ad, varsayilan):
@@ -1379,6 +1442,7 @@ def sahada_asgari(girdi, atamalar, tanim):
         return []
     cikan = []
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
     # CEYREK bazinda (K-34): 14:15'te cokup 14:00'de duran bir saha,
     # tabani tutmus SAYILMAZ. Gerekcesi `_talep_anlari`da.
     for t, gun, saat in _talep_anlari(girdi):
@@ -1528,6 +1592,7 @@ def asgari_kapsama(girdi, atamalar, tanim):
     """
     cikan = []
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
     for t, gun, saat in _talep_hucreleri(girdi):
         asgari = t.get("asgari", 0)
         sayi = sum(1 for a in atamalar
@@ -1545,6 +1610,7 @@ def asgari_kapsama(girdi, atamalar, tanim):
 def hedef_kapsama(girdi, atamalar, tanim):
     cikan = []
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
     for t, gun, saat in _talep_hucreleri(girdi):
         hedef = t.get("hedef")
         if hedef is None:
@@ -1571,6 +1637,7 @@ def hedef_asimi(girdi, atamalar, tanim):
     """
     cikan = []
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
     for t, gun, saat in _talep_hucreleri(girdi):
         hedef = t.get("hedef")
         if hedef is None:
@@ -1596,6 +1663,7 @@ def mola_kapsamasi(girdi, atamalar, tanim):
     # o saatin EN KOTU ceyregi. Dort ayri satir yazmak ayni bosuluğu dort
     # kez sayar ve puani sessizce dort katina cikarirdi.
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
     for t, gun, saat in _talep_hucreleri(girdi):
         asgari = t.get("asgari", 0)
         en_kotu, en_kotu_an = None, saat
@@ -1749,6 +1817,9 @@ def _nitelik_kapsamasi(girdi, atamalar, tanim, kod, alan, parametre_adi):
 
     tasiyanlar = _nitelik_tasiyanlar(girdi, alan, aranan, ekip)
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
+    # K-56: devreden kisi niteligini tasiyorsa sayilir; elle verilen sayinin
+    # kisisi yok (`calisan` None), `tasiyanlar` suzgecinden zaten gecemez.
+    atamalar = _kapsama_atamalari(girdi, atamalar)
     # K-50: `hepsi`de niteligi tasiyan cok ekipli kisi, baska ekibin
     # vardiyasindayken de bu ekibin gerekliligini karsilar.
     ilgili = [a for a in atamalar

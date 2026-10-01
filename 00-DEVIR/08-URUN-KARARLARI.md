@@ -2606,3 +2606,59 @@ güncellendi. K-47'nin açık ucu kapandı; T-77'nin veri tarafı kapandı
 (arayüzdeki *"gördüm"* onayı açık).
 
 → K-42 · K-47 · T-77 · `07-GERCEK-VERI-BULGULARI.md` §7 · `07-motor/pdks-ms-gece-yarisi.py` · şartname §6.2, §11.2
+
+
+## K-56 · Devreden kapsama: önceki haftadan bu haftaya taşan vardiyalar bu haftanın ilk saatlerini kapatır; sayı geçmiş vardiyalardan türetilir, `devir_kapsama` yalnız geçmiş yokken elle verilir
+
+**Soru (T-38'in son açık satırı):** şartnanın girdisinde `devir_kapsama`
+(*"ekip, gün 0, saat 0, 2 kişi"*) alanı vardı ama anlamı hiçbir yerde yazılı
+değildi ve iki taraf da okumuyordu. 28 Eylül'de yaşanan sorun buydu:
+pazartesi 00:00–06:00 talebini yalnız pazar gecesi başlayan bir vardiya
+kapatabilir, o da planlanan haftanın içinde değil — motor "ulaşılamayan
+hücre" diyordu.
+
+**Önerim (1 Ekim 23:45):** önceki haftanın pazar gecesi başlayıp
+pazartesi sabahına taşan vardiyalarının hücre başına kapattığı kişi sayısı;
+motor bunu `gecmis_vardiyalar`dan (K-42) kendisi türetsin, alan yalnız geçmiş
+verisi olmayan ilk haftada elle verilsin; iki yarıda yazılsın.
+
+**Karar (2 Ekim 00:30, Mustafa):** *"Sana katılıyorum, aklımda başka bir
+şey yok."*
+
+**Uygulanan (2 Ekim gecesi, iki yarıda):**
+
+*Kaynak.* Girdide herhangi bir çalışanın `gecmis_vardiyalar`ı varsa
+devreden kapsama oradan türetilir: günü negatif bir kaydın gün 0'a taşan
+çeyrekleri o kişinin bu haftaki ilk saatlerini kapatır. Kişi ekiplerine
+K-50 ölçüsüyle sayılır (`hepsi`: üye olduğu her ekibe; `tek`: ilk
+ekibine). Girdide hiç geçmiş yoksa `devir_kapsama[]` {ekip, gün, saat,
+kişi} elle verilir ve sayı olduğu gibi eklenir. Geçmiş varken gelen
+`devir_kapsama` yok sayılır ve not düşülür — iki kaynak toplansa aynı kişi
+iki kez sayılırdı.
+
+*Nerede sayılır.* Çözücü: atanmış sayımı (asgari, hedef, hedef aşımı),
+sahada sayımı (mola kapsaması, saha tabanı — taşan vardiyanın molası
+bilinmez, sahada sayılır), yetkinlik/rol kapsaması (niteliği taşıyan taşan
+kişi sayılır; elle verilen sayının niteliği bilinmez, sayılmaz), ön kontrol
+(hücreye taşan kapsama yetiyorsa "ulaşılamayan" denmez) ve motorun kendi
+kapsama metriği. Doğrulayıcı: taşan vardiyalar sahte atama satırlarına
+çevrilir ve **yalnız** kapsama kuralları (asgari, hedef, hedef aşımı, mola
+kapsaması, saha tabanı, nitelik kapsaması) ile kapsama yüzdeleri onları
+görür; saat, dinlenme, ardışık gün kuralları görmez — geçmişi onlar zaten
+`gecmis_vardiyalar`dan okur, iki kez sayılmaz. Pazar 23:00–07:00 çalışmış
+kişi pazartesi 08:00'e yazılamaz (1 saat dinlenme) — iki taraf da aynı
+şeyi söyler.
+
+*Ölçüldü:* 8 test (`test_devir_kapsama.py`): geçmiş yokken 00–07 hücreleri
+ulaşılamaz; pazar 23–07 geçmişiyle iki tarafta da yüzde 100 kapsama; elle
+`devir_kapsama` geçmiş yokken sayılır, geçmiş varken yok sayılır (not);
+niteliği taşıyan taşan kişi yetkinlik kapsamasına sayılır; `tek` sayımda
+yalnız ilk ekibe. 6 mutasyon hepsi öldü (toplam 190). Motor 516 test, altın
+12, vaka aracı 36 kırmızı. İki haftalık ölçüm aracı (`iki-hafta-olc.py`)
+artık ikinci haftanın ilk saatlerini birinci haftanın gece vardiyalarıyla
+kapalı görür — gerçeğe daha yakın.
+
+**T-38 kapandı:** on iki alanın hepsi ya yazıldı ya kararla şartnameden
+çıktı.
+
+→ T-38 · K-42 · K-50 · şartname §6.4, §11.2 · `09-motor/cozucu/model.py` (`_devir_hazirla`, `_devir_sayisi_dilim`) · `09-motor/cozucu/teshis.py` · `09-motor/dogrulayici/kurallar.py` (`devir_atamalari`, `_kapsama_atamalari`) · `09-motor/testler/test_devir_kapsama.py`

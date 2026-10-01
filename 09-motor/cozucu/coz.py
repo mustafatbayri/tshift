@@ -635,6 +635,7 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
                                        t.get("ekip"))
                    and a["gun"] * 24 + a["bas"] <= an
                    < a["gun"] * 24 + a["bit"])
+        sayi += kuruldu._devir_sayisi(t.get("ekip"), gun, saat)      # K-56
         if t.get("asgari") is not None:
             asgari_top += 1
             asgari_tut += 1 if sayi >= t["asgari"] else 0

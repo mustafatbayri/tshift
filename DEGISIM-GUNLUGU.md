@@ -4,7 +4,17 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
-**2026-10-01 (23:45) · T-38: sabit atama = sabitleme kilidi, saat+ekip ile eşlenir ve doğrulanır · şartname örneği temizlendi**
+**2026-10-02 (00:50) · K-56 devreden kapsama iki yarıda yazıldı · T-38 kapandı**
+Önceki haftanın bu haftaya taşan vardiyaları (pazar 23 → pazartesi 07)
+bu haftanın ilk saatlerini kapatır: sayı `gecmis_vardiyalar`dan türetilir,
+`devir_kapsama` yalnız geçmiş yokken elle (Mustafa: "sana katılıyorum").
+Çözücü: atanmış/sahada/yetkinlik toplamlarına sabit, ön kontrol ve kendi
+metriği; doğrulayıcı: sahte atama satırları yalnız kapsama kurallarına.
+8 test, 6 mutasyon (toplam **190**), motor **516 test**. Şartnamenin on iki
+karşılıksız alanının hepsi kapandı.
+→ `09-motor/cozucu/model.py` · `09-motor/cozucu/teshis.py` · `09-motor/cozucu/coz.py` · `09-motor/dogrulayici/kurallar.py` · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_devir_kapsama.py` · `02-spec/v1.4-master-spec.md` §6.4, §11.2 · `00-DEVIR/08-URUN-KARARLARI.md` K-56 · `00-DEVIR/06-ACIK-RISKLER.md` T-38
+
+**2026-10-02 (00:10) · T-38: sabit atama = sabitleme kilidi, saat+ekip ile eşlenir ve doğrulanır · şartname örneği temizlendi**
 Motor sabit atamayı ve sabitleme kilidini `sablon` ya da `ekip`+`bas`+`bit`
 ile kişinin kendi şablonları içinde eşliyor (eski kilit ekibe bakmıyordu);
 doğrulayıcı `KILIT_UYUMU` sabit atamaları da denetliyor (eskiden hiç

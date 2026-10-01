@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-01 · *(23 Eylül)* **dört 🔴 kapandı:** T-22, T-34, T-35, T-19. Motor **77 birim test** + **7 altın senaryo** yeşil; `.NET` 45/45; CI yeşil; `DENETIM.py` **0 hata**. Yeni kanal: `okunmayan_alanlar` — gönderilen ama okunmayan girdi alanı artık bildiriliyor. ⚠ Kapatma turları **dört yeni bulgu** açtı: T-38…T-41. **25 Eylül:** `SAGLIK_KISITI` kaldırıldı (K-21 geri alındı) · **K-31** yarım günlük izin elle yönetilir · **K-32 mola modeli** — dört yeni kural, katalog **38**. *(**28 Eylül:** dinlenme molaları çözücüye bağlandı · **K-33** `SAHADA_ASGARI` — firmanın *"sahada en az N kişi"* kuralı, katalog **39**; · **K-34** zaman birimi **çeyrek saate** indi (Z-7) · **K-35** süre seçimi, kanıtlanmış optimuma yakınlık ve *İyileştir* — motor **137 test** yeşil, katalog **39**. **350 kişilik gerçekçi veri seti kuruldu** ve tam ölçekte çalıştı: 1.757 atama, **0 sert ihlal**, %100 asgari kapsama. Altı bulgu açıldı, beşi aynı gün kapandı.)* T-42 açıldı, T-43 aynı gün geri çekildi) *(**29 Eylül:** 350 kişilik set **otomatik koşuya bağlandı** — çözmeden ölçülenler tam ölçekte, çözüm gerektirenler 0.1'de · **K-36** arama işçisi sayısı makinenin çekirdeğine uyuyor: 2 çekirdekte optimuma **%23,6 yerine %7,0** uzaklık — ⚠ 6 çekirdekli makinede aynı sahne ayırt etmedi, sunucu sorusu için gerçekçi ölçek + `--tekrar` gerekiyor · motor **146 test** yeşil · **T-48 hipotez olmaktan çıktı:** 45 saniyelik bütçe çözümsüzlükte **470 saniye** sürüyor.)*
+**Son güncelleme:** 2026-10-02 01:00 (oturum Mustafa'nın kararıyla kapandı) · 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-56** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **516 birim test** + 12 altın senaryo + bekçi 21 + **190 mutasyon hepsi öldü**; CI yeşil; `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir — dördüncü koşu dondurulmuş günle. **Açık 🔴 tek: T-60** (tam ölçekte plan kalitesi). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni.**
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -161,12 +161,22 @@ PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi
 izin satırları; yıl içi fazla mesai PDKS hamından TShift'in hesabıyla
 (bordro değil — Mustafa).
 
-**⚠ 1 Ekim 23:45 — T-38 sabit atama eşlemesi yazıldı, en güncel durum budur.**
+**⚠ 2 Ekim 00:10 — T-38 sabit atama eşlemesi yazıldı, en güncel durum budur.**
 Sabit atama = sabitleme kilidi; `sablon` ya da `ekip`+`bas`+`bit` ile eşlenir,
 doğrulayıcı `KILIT_UYUMU` ile denetler (eskiden sabit atamalara hiç
 bakmıyordu). Şartname örneğinden `kural_degerleri` ve `tercihler` çıktı.
 Motor **508 test**, mutasyon **184 hepsi öldü**. T-38'de tek açık satır
 `devir_kapsama` tanımı (Mustafa'ya soruldu). Açık 🔴 yalnız T-60.
+
+**⚠ 2 Ekim 00:50 — devreden kapsama yazıldı, T-38 kapandı, en güncel durum
+budur.** Mustafa öneriyi onayladı (K-56): önceki haftanın pazar gecesinden
+taşan vardiyalar bu haftanın ilk saatlerini kapatır; sayı geçmiş
+vardiyalardan türetilir, `devir_kapsama` yalnız geçmiş yokken elle. İki
+yarıda yazıldı (çözücü sabit sayı; doğrulayıcı sahte atama satırları,
+yalnız kapsama kuralları görür). 8 test, 6 mutasyon; motor **516 test**,
+mutasyon **190 hepsi öldü**. Şartnamenin on iki karşılıksız alanının hepsi
+kapandı. Açık 🔴 yalnız T-60 (kalite). Mustafa bir koşu başlattı, sonucu
+bekleniyor.
 İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
 commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
 ⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
@@ -596,20 +606,20 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-72~~ | ✅ **KAPANDI 30 Eylül gecesi, K-45** — gece haftası = saatlerin yarısından çoğu | — |
 > | ~~T-74~~ | ✅ **KAPANDI 30 Eylül gecesi, K-44** — gece postasının bütün süresi; Yargıtay 9. HD 2020/17967 | — |
 > | ~~T-78~~ | ✅ **KAPANDI 1 Ekim gecesi** — 20 dk mola çeyreğe sığmıyordu, molalar 5 dk üst üste biniyordu; üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir | — |
-> | **T-59 sorusu** 🆕 | *"En fazla 900 sn"* deyip 958 sn: model kurma (~55 sn) bütçenin dışında | ✅ bütçe duvar saati mi olsun (K-48 adayı; öneri: evet) |
-> | **T-38** 🆕 | Şartnamenin **on iki alanı daha** karşılıksız. En ağırı `kural_degerleri`: kişiye özel sözleşme sınırı yok sayılıyor, günde 9 saatlik sözleşme 11 saate planlanabiliyor | ✅ hangisi önce yazılacak |
+> | ~~T-59 sorusu~~ | ✅ **KAPANDI 1 Ekim, K-48** — bütçe = arama süresi; model kurma ayrı kalem olarak gösterilir | — |
+> | ~~T-38~~ | ✅ **KAPANDI 2 Ekim, K-56** — on iki alanın hepsi yazıldı ya da kararla şartnameden çıktı (son satır devreden kapsama) | — |
 > | ~~**T-29**~~ | ~~`DONMUS_GUN` yalnız `_yeni` işaretli atamada ateşleniyor, o işareti **kimse üretmiyor**~~ ✅ **KAPANDI 1 Ekim, K-54** — işaret yok, `mevcut_plan` ile karşılaştırma | — |
-> | **T-21** | Çok ekipli çalışan iki ekibi aynı anda dolduruyor — modelde ekip boyutu yok | ✅ bir vardiyada tek ekibe mi sayılır |
-> | **T-18** | Gövdesi yazılmamış aktif SERT kural yayını engellemiyor. ⚠ Artık **üç** kanal bu kapıda bekliyor: `uygulanmayan_kurallar`, `eksik_boyutlar`, `okunmayan_alanlar` | ✅ kapı ne yapmalı |
+> | ~~T-21~~ | ✅ **KAPANDI 1 Ekim, K-50** — çok yetenekli çalışan üye olduğu bütün ekiplere sayılır (Mustafa'nın saha örneği) | — |
+> | ~~T-18~~ | ✅ **KAPANDI 1 Ekim, K-49** — kontrol edilemeyen kural kapıdan geçemez: yasal+sert engeller, firma+sert kabul bekler, yumuşak rapor | — |
 > | ~~T-59~~ | 🟡 **DÜZELTİLDİ 30 Eylül akşamı** — birinci aşama bütçenin içinden pay alıyor, ana çözüme kalan veriliyor; tam ölçekte (900 sn) yeniden ölçülmedi | — |
-> | **T-60** 🆕 | Tam ölçekte plan üretiliyor ama optimuma **%98,3** uzak. Yasal taraf temiz, kalite yok | ⚠ önce **dört ölçüm**, sonra karar |
-> | **T-54** 🆕 | Saatin **maliyeti yok**: çözücü fazladan saat yazmaktan çekinmiyor (%85 dolulukta 49 kişiye 124 saat fazla mesai) | ✅ `HEDEF_ASIMI` gibi yumuşak bir kural mı, ücret terimi mi |
+> | **T-60** | Tam ölçekte plan **üretiliyor** (plan bulma yarısı 1 Ekim'de kapandı: birinci aşama molaları sabitleyerek buluyor) ama optimuma **%97–99** uzak — kalite yarısı açık | ⚠ önce ölçüm (profil, bütçe, işçi sayısı, ağırlık), sonra karar |
+> | ~~T-54~~ | ✅ **KAPANDI 1 Ekim, K-53** — hedefi aşan kişi-saate yumuşak ceza (`HEDEF_ASIMI`); ücret terimi yok | — |
 > | ~~T-44~~ | ✅ **KAPANDI 28 Eylül** — K-34 ile zaman birimi çeyrek saate indi; eşik `4F → 12F/7` (taban 3 için 12 kişi yerine **6**). Çözüm süresi 40 kişide 0.78 sn | — |
 > | ~~T-23~~, ~~T-48~~ | ✅ **KAPANDI 29 Eylül, K-37** — *"süre yetmedi"* ile *"imkânsız"* ayrıldı; teşhis artık yalnız istenirse koşuyor | — |
 >
-> **Sekiz 🔴 açık.** Altısı Mustafa'nın cevabını bekliyor (T-28, T-38, T-29,
-> T-21, T-18, T-54); **T-59 mekanik** ve karar gerektirmiyor; **T-60** karar
-> değil önce **ölçüm** istiyor.
+> **Bir 🔴 açık: T-60** (2 Ekim 01:00). Karar bekleyen soru yok. Açık işler
+> (kırmızı değil): T-60 kalite ölçümleri; arayüz/backend — içe aktarma modülü
+> (K-55 kuralları), dondurulmuş gün çoklu seçim (K-54), geçmiş-eksik *"gördüm"* onayı (K-47); `SAHADA_ASGARI` tabanı sorusu.
 >
 > ⚠ **Sıra Mustafa'nın verdiği sıradır:** *"Gece işareti → iki veri seti →
 > eksik kurallar → testleri tekrarlarız."* İlk ikisi 29 Eylül'de bitti;

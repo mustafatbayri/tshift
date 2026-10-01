@@ -61,6 +61,8 @@ def ulasilamayan_hucre(girdi, kuruldu):
             continue
         if gun in kuruldu.donmus:
             continue          # K-54: donmus gunun kapsamasi olan oldu, plan degil
+        if kuruldu._devir_sayisi(t.get("ekip"), gun, saat) >= t["asgari"]:
+            continue          # K-56: onceki haftadan tasan vardiyalar zaten kapatiyor
         hedef = _q(gun, saat)
         for sablon in kuruldu.sablonlar:
             if sablon.get("ekip") is not None and sablon.get("ekip") != t.get("ekip"):

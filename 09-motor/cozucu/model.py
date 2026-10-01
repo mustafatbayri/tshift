@@ -709,6 +709,10 @@ class Model(object):
         self._donmus_kirpilan = 0 # siniri gecmise gore kirpilan kisit
         self._donmus_mola_oturmayan = 0
         self._donmus_plani_esle()
+        # K-56 (T-38): onceki haftadan bu haftaya TASAN vardiyalarin kapsamasi.
+        self._devir_kisi = {}     # calisan -> {dilim >= 0}  (gecmisten turetilen)
+        self._devir_acik = {}     # (ekip, gun, saat) -> kisi  (yalniz gecmis yokken)
+        self._devir_hazirla()
 
     def _dinlenme_sec(self, sablon):
         """(adet, dakika) -- ucretli kisa molalar, politikadan (K-32).
@@ -878,6 +882,85 @@ class Model(object):
     #   Hicbir sablona oturmayan satir (yonetici 10:00-14:00 yazmis, sablon
     #   yok) ciktiya aynen gecer ama modele GIRMEZ -- saat ve dinlenme
     #   kurallari onu gormez; dogrulayici gorur. Not dusulur.
+
+    # ---- K-56 (T-38): devreden kapsama -----------------------------------
+    #
+    # MUSTAFA (1 Ekim gecesi): "Sana katiliyorum, aklimda baska bir sey yok."
+    #   Onceki haftanin pazar gecesi baslayip pazartesi sabahina tasan
+    #   vardiyalari bu haftanin ilk saatlerini ZATEN kapatiyor. Motor bunu
+    #   bilmezse pazartesi 00:00-06:00 talebini bu haftadan karsilamaya
+    #   calisir ya da "ulasilamayan hucre" der (28 Eylul'de yasandi).
+    #
+    # KAYNAK: `calisanlar[].gecmis_vardiyalar` (K-42; gun negatif, saat
+    #   genisletilmis). Gunu negatif bir kaydin 0'a tasan ceyrekleri o
+    #   kisinin bu haftaki ilk saatlerini kapatir. Kisi ekiplerine K-50
+    #   olcusuyle sayilir (`hepsi`: uye oldugu her ekibe; `tek`: ilk ekibine).
+    #   Girdide HIC gecmis yoksa (ilk hafta) `devir_kapsama[]`
+    #   {ekip, gun, saat, kisi} elle verilir ve sayi oldugu gibi eklenir.
+    #   Gecmis varken gelen `devir_kapsama` yok sayilir ve not dusulur:
+    #   iki kaynak toplanirsa ayni kisi iki kez sayilirdi.
+    #
+    # NEREDE SAYILIR: _atanmis (ASGARI/HEDEF/HEDEF_ASIMI), _sahada
+    #   (MOLA_KAPSAMASI, SAHADA_ASGARI -- tasan vardiyanin molasi bilinmez,
+    #   sahada sayilir), _yetkinlik (niteligi tasiyan tasan kisi sayilir;
+    #   elle verilen sayinin niteligi bilinmez, sayilmaz), on kontrol
+    #   (teshis.ulasilamayan_hucre) ve motorun kendi kapsama metrigi.
+    #   Dogrulayici ayni sayimi kendi yazar (#7.6).
+
+    def _devir_hazirla(self):
+        girdi = self.girdi
+        gecmis_var = any(c.get("gecmis_vardiyalar")
+                         for c in (girdi.get("calisanlar") or []))
+        if gecmis_var:
+            for c in girdi.get("calisanlar") or []:
+                for gun, bas, bit, _ in _gecmis_kayitlari(c):
+                    tasan = {q for q in _dilimler(gun, bas, bit) if q >= 0}
+                    if tasan:
+                        self._devir_kisi.setdefault(c["id"], set()).update(tasan)
+            if girdi.get("devir_kapsama"):
+                self.notlar.append(
+                    "devir_kapsama verildi ama gecmis vardiyalar da var; devreden "
+                    "kapsama gecmisten turetildi, devir_kapsama yok sayildi (K-56)")
+            return
+        for r in girdi.get("devir_kapsama") or []:
+            try:
+                anahtar = (r.get("ekip"), int(r["gun"]), int(r["saat"]))
+                self._devir_acik[anahtar] = self._devir_acik.get(anahtar, 0) + int(r.get("kisi", 0))
+            except (KeyError, TypeError, ValueError):
+                self.notlar.append("devir_kapsama satiri taninmadi: %r" % (r,))
+
+    def _devir_sayisi_dilim(self, ekip, dilim, nitelik=None):
+        """O ceyrekte onceki haftadan devreden kisi sayisi (sabit)."""
+        if self._devir_kisi:
+            sayi = 0
+            for c in self.girdi.get("calisanlar") or []:
+                if dilim not in self._devir_kisi.get(c["id"], ()):
+                    continue
+                ekipler = c.get("ekipler") or []
+                if ekip is not None:
+                    if self.cok_ekipli_sayim == "tek":
+                        if not ekipler or ekipler[0] != ekip:
+                            continue
+                    elif ekip not in ekipler:
+                        continue
+                if nitelik is not None:
+                    alan, aranan = nitelik
+                    tasiyor = (aranan in (c.get(alan) or []) if alan == "yetkinlikler"
+                               else c.get(alan) == aranan)
+                    if not tasiyor:
+                        continue
+                sayi += 1
+            return sayi
+        if not self._devir_acik or nitelik is not None:
+            return 0
+        gun = dilim // (24 * CEYREK)
+        saat = (dilim % (24 * CEYREK)) // CEYREK
+        if ekip is None:
+            return sum(k for (e, g, s_), k in self._devir_acik.items() if (g, s_) == (gun, saat))
+        return self._devir_acik.get((ekip, gun, saat), 0)
+
+    def _devir_sayisi(self, ekip, gun, saat, nitelik=None):
+        return self._devir_sayisi_dilim(ekip, _q(gun, saat), nitelik)
 
     def _yeni_bool(self, ad, gun):
         v = self.m.NewBoolVar(ad)
@@ -2003,13 +2086,17 @@ class Model(object):
 
         K-50: kim sayilir, `_sayilir` soyler."""
         dilim = _q(gun, saat)
-        return [self._X(c["id"], d, t["id"])
-                for c in self.calisanlar
-                if ekip in (c.get("ekipler") or [])
-                for d in self.gunler
-                for t in self._sablonlari(c)
-                if self._sayilir(c, t, ekip)
-                and dilim in _dilimler(d, t["bas"], t["bit"])]
+        cikan = [self._X(c["id"], d, t["id"])
+                 for c in self.calisanlar
+                 if ekip in (c.get("ekipler") or [])
+                 for d in self.gunler
+                 for t in self._sablonlari(c)
+                 if self._sayilir(c, t, ekip)
+                 and dilim in _dilimler(d, t["bas"], t["bit"])]
+        devir = self._devir_sayisi_dilim(ekip, dilim)          # K-56
+        if devir:
+            cikan.append(devir)
+        return cikan
 
     def _sahada(self, ekip, gun, saat):
         """O hucrede SAHADA olanlar -- BUTUN molalar dusulur (MOLA_KAPSAMASI).
@@ -2069,6 +2156,9 @@ class Model(object):
                                     and dilim in _mola_dilimleri(d, t, s, dk)):
                                 ifade = ifade - self.dinlenme[anahtar]
                     cikan.append(ifade)
+        devir = self._devir_sayisi_dilim(ekip, dilim)          # K-56: molasi bilinmez, sahada
+        if devir:
+            cikan.append(devir)
         return cikan
 
     def _kapsama(self):
@@ -2242,6 +2332,9 @@ class Model(object):
                            for t in self._sablonlari(c)
                            if (ekip is None or self._sayilir(c, t, ekip))
                            and dilim in _dilimler(d, t["bas"], t["bit"])]
+                    devir = self._devir_sayisi_dilim(ekip, dilim, (alan, aranan))   # K-56
+                    if devir:
+                        var.append(devir)
                     self._kisit(sum(var) >= asgari)
 
     # ---- amac ---------------------------------------------------------
