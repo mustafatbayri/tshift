@@ -67,6 +67,19 @@ def degerlendir(girdi, atamalar):
     }
 
 
+# Gunsuz (haftalik) ihlallerden yalniz TAVAN turu kurallar gecmis sayilabilir:
+# saat arttikca kotulesen kural, donmus gunler tek basina tavani asmissa
+# gelecek bunu duzeltemez. Eksiklik ve karsilastirma kurallari (SAAT_DENGESI
+# "eksik", ADALET_DENGESI) yalniz donmus gunlerle degerlendirilince HER ZAMAN
+# daha kotu gorunur -- gelecek onlari duzeltebilir; o yuzden gunsuzken asla
+# gecmis sayilmaz. (1 Ekim tam olcek kosusunda olculdu: adalet ihlalleri
+# yanlis yere "olan oldu" isareti aliyordu.)
+GUNSUZ_TAVAN_KURALLARI = frozenset((
+    "HAFTALIK_AZAMI", "FAZLA_MESAI_TAVANI", "PART_TIME_LIMIT",
+    "YILLIK_FAZLA_MESAI_TAVANI",
+))
+
+
 def _gecmis_ihlalleri_isaretle(girdi, atamalar, ihlaller):
     """K-54 (T-29): donmus gunlerin ihlali 'olan oldu'dur; raporlanir, engellemez.
 
@@ -80,11 +93,13 @@ def _gecmis_ihlalleri_isaretle(girdi, atamalar, ihlaller):
     gelecegi yayinlayamaz. Bu yuzden:
 
       * Ihlalin gunu donmus degilse  -> gecmis DEGIL (gelecek degisebilir).
-      * Ihlalin gunu donmus ya da gunsuz (haftalik kural) ise -> ayni kural
-        YALNIZ donmus gunlerin atamalariyla da ayni ihlali uretiyor mu diye
-        bakilir. Uretiyorsa ihlal gecmise aittir: `gecmis: True`.
-        (Donmus gunle serbest gun arasindaki dinlenme ihlali boyle
-        isaretlenMEZ: serbest gun degisince ihlal kalkar.)
+      * Ihlalin gunu donmus ise, ya da gunsuz ama TAVAN turu bir kural ise
+        (GUNSUZ_TAVAN_KURALLARI) -> ayni kural YALNIZ donmus gunlerin
+        atamalariyla da ayni ihlali uretiyor mu diye bakilir. Uretiyorsa
+        ihlal gecmise aittir: `gecmis: True`. (Donmus gunle serbest gun
+        arasindaki dinlenme ihlali boyle isaretlenMEZ: serbest gun degisince
+        ihlal kalkar. Gunsuz eksiklik/karsilastirma kurallari -- saat
+        dengesi, adalet -- hic isaretlenmez: gelecek onlari duzeltebilir.)
       * DONMUS_GUN'un kendi ihlali ASLA gecmis sayilmaz -- o, planin
         degistirildigini soyler, gecmisin kusurunu degil.
 
@@ -97,7 +112,9 @@ def _gecmis_ihlalleri_isaretle(girdi, atamalar, ihlaller):
         return []
     adaylar = [i for i in ihlaller
                if i.get("kural") != "DONMUS_GUN"
-               and (i.get("gun") is None or i.get("gun") in donmus)]
+               and (i.get("gun") in donmus
+                    or (i.get("gun") is None
+                        and i.get("kural") in GUNSUZ_TAVAN_KURALLARI))]
     if not adaylar:
         return []
     gecmis_atamalar = [a for a in (atamalar or []) if a.get("gun") in donmus]

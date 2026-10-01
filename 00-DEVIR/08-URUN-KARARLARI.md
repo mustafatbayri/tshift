@@ -2527,11 +2527,27 @@ ipucu kullanıldı) ve `coz-olc.py --donmus` (tam ölçek, Mustafa koşturur).
 günleri kilitler, **çoklu seçimle** kilitler ve siler; düzenleme bitince
 motor `mevcut_plan` + `donmus_gunler` ile çağrılır.
 
-**Bilinen sınır:** günsüz (haftalık) bir ihlalde geçmişin tek başına sınırı
-aşıp aşmadığına bakılır; aşmışsa geçmiş sayılır. Donmuş gündeki sahada
-sayım, molalar motorun aday noktalarına oturmadıysa yaklaşıktır (not düşer).
+**Günsüz ihlalde ölçü (tam ölçek koşusunun düzelttiği nokta, 1 Ekim 21:00):**
+günsüz (haftalık) ihlallerden yalnız **tavan** türü kurallar geçmiş
+sayılabilir — haftalık azami, fazla mesai tavanı, yarı zamanlı tavanı, yıllık
+tavan: saat arttıkça kötüleşen kural, donmuş günler tek başına tavanı
+aşmışsa gelecek düzeltemez. Eksiklik ve karşılaştırma kuralları (saat
+dengesi "eksik", adalet dengesi) yalnız donmuş günlerle değerlendirilince
+her zaman daha kötü görünür ve gelecek onları düzeltebilir; günsüzken asla
+geçmiş sayılmaz. Mustafa'nın tam ölçek koşusunda 162 "geçmiş" ihlalin bir
+kısmı adalet dengesiydi — yanlış etiket; aynı akşam düzeltildi, test ve
+mutasyonla çivilendi. Donmuş gündeki sahada sayım, molalar motorun aday
+noktalarına oturmadıysa yaklaşıktır (not düşer).
 
-Sayılar: 17 test (`test_donmus_gun.py`), 8 mutasyon hepsi öldü (toplam 179),
-bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın senaryolar 12, motor 497 test.
+**Tam ölçekte ölçüldü (Mustafa, 1 Ekim 20:55, `coz-olc.py --saniye 900
+--donmus`):** taze hafta 902 sn → 2.352 atama, 0 sert, yayınlanabilir; sonra
+gün 0 dondurulup motorun kendi planıyla yeniden: model kurma 71 sn (54'e
+karşı, süzgeç bedeli %31), **92.899 kısıt geçmişe düştü, 0 kırpıldı**,
+305 sn'de çözüldü, ipucu kullanıldı, ilk plan 48,5 sn, **gün 0 aynı, 0 sert
+ihlal (DONMUS_GUN 0), yayınlanabilir**, optimuma uzaklık %97,1 (ilk çözüm
+%97,6). Not sıfır: motorun kendi planının molaları aday noktalarına oturdu.
+
+Sayılar: 18 test (`test_donmus_gun.py`), 9 mutasyon hepsi öldü (toplam 180),
+bekçi 21, vaka aracı 36 vaka · 36 kırmızı, altın senaryolar 12, motor 499 test.
 
 → T-29 · K-49 · şartname §6.6, §11.2, §11.3, §11.4 · `09-motor/cozucu/model.py` (`_donmus_plani_esle`, `_donmus_sabitle`, `_kisit`, `_donmus_suz`) · `09-motor/cozucu/coz.py` · `09-motor/dogrulayici/kurallar.py` (`donmus_gun`) · `09-motor/dogrulayici/denetle.py` (`_gecmis_ihlalleri_isaretle`) · `09-motor/testler/test_donmus_gun.py` · `08-motor-testleri/gercekci-veri-seti/coz-olc.py --donmus`

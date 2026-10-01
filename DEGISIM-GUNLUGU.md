@@ -4,6 +4,15 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-01 (21:15) · Donmuş gün tam ölçekte kanıtlandı · günsüz ihlalde "geçmiş" ölçüsü tavan kurallarıyla sınırlandı**
+Mustafa'nın koşusu: taze hafta 0 sert; gün 0 dondurulup yeniden: 92.899
+kısıt düştü, gün 0 aynı, 0 sert, yayınlanabilir (305 sn, ipucu kullanıldı).
+Koşu bir yanlışı gösterdi: adalet dengesi (günsüz, karşılaştırma) ihlalleri
+"olan oldu" sayılıyordu. Artık günsüz ihlalde yalnız tavan kuralları geçmiş
+sayılabilir (`GUNSUZ_TAVAN_KURALLARI`); eksiklik/karşılaştırma kuralları
+asla. 1 test, 1 mutasyon; motor **499 test**, mutasyon **180**.
+→ `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_donmus_gun.py` · `00-DEVIR/08-URUN-KARARLARI.md` K-54
+
 **2026-10-01 (20:40) · K-54 dondurulmuş gün canlandı: `mevcut_plan` girdisi, geçmiş aynen geçer ve gerçek sayılır, geçmişin kusuru çözümsüz etmez · T-29 kapandı**
 Mustafa'nın onayı (ekiyle: yönetici geçmiş günleri düzenler, gelecek
 günleri kilitler, çoklu seçim). Çözücü: donmuş gün satırları çıktıya aynen

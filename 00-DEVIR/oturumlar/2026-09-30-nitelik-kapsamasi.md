@@ -1270,3 +1270,26 @@ biterken commit yok.
 
 Şartname: §6.6 kural satırı + mekanizma notu, §11.2 `mevcut_plan`, §11.3
 `donmus`, §11.4 kanallar, değişiklik 44. Kararlar K-54, risk T-29 kapandı.
+
+## 50 · Tam ölçekte donmuş gün koşusu ve düzelttiği yanlış etiket (1 Ekim 20:55–21:15)
+
+GitHub yeşil. Mustafa `coz-olc.py --saniye 900 --donmus` koştu: taze hafta
+model kurma 54 sn (bu kez makine hızlı), 902 sn, 2.352 atama, 0 sert,
+yayınlanabilir, birinci aşama 12,2 sn, ilk plan 47,7 sn; sonra gün 0
+donmuş: model kurma 71 sn, 92.899 kısıt düştü, 0 kırpıldı, 305 sn, 2.350
+atama, ipucu kullanıldı, ilk plan 48,5 sn, **gün 0 aynı, 0 sert, yayınlanabilir**,
+not yok. Toplam 1.338 sn. Donmuş gün yolu tam ölçekte kanıtlandı.
+
+Koşunun "geçmiş ihlal: 162" satırı bir yanlışı gösterdi: 0,1 ölçekte
+bakınca geçmiş işaretlilerin 13'ü adalet dengesiydi (günsüz, karşılaştırma
+kuralı). Ölçüm "aynı kural yalnız donmuş günlerle de aynı ihlali üretiyor
+mu" idi; karşılaştırma ve eksiklik kuralları yalnız donmuş günlerle her
+zaman daha kötü görünür — gelecek düzeltebilir, "olan oldu" denemez. Saat
+dengesi (sert, kabul edilebilir) için bu kapıyı yanlış açabilirdi. Düzeltme:
+günsüz ihlalde yalnız tavan kuralları (haftalık azami, fazla mesai tavanı,
+yarı zamanlı tavanı, yıllık tavan) geçmiş sayılabilir; `GUNSUZ_TAVAN_KURALLARI`
+listesi, `test_gunsuz_EKSIKLIK_ve_KARSILASTIRMA_ihlali_gecmis_sayilmaz_TAVAN_sayilir`,
+mutasyon grubu `donmus` 9 (biri çapa güncellemesi). 0,1 ölçekte geçmiş
+29'a indi (hedef altı 9, hedef aşımı 18, mola 2 — hepsi gün 0'ın yumuşak
+bulguları). Motor 499 test, mutasyon 180 hepsi öldü. Dosyalar makinede
+(3 dosya, md5 aynı), K-54'e tam ölçek sonucu ve düzeltilmiş ölçü yazıldı.

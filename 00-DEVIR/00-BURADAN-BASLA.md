@@ -183,9 +183,17 @@ işaretler ve kapı saymaz; plansız donmuş gün *"denetlenemedi"* (kabul
 bekler). Gerçekçi sahne artık taze hafta (`donmus_gunler: []`; eski `[0]`
 ölü kuralla hiç etkili olmamıştı — zorluk aynı). Donmuş gün yolu: bekçide
 0,1 ölçekte yeniden planlama (gün 0 aynı, 0 sert) ve `coz-olc.py --donmus`
-(tam ölçek, Mustafa koşturacak). Motor **497 test**, mutasyon **179 hepsi
+(tam ölçek). Motor **497 test**, mutasyon **179 hepsi
 öldü**, bekçi **21**, vaka aracı 36 vaka · 36 kırmızı, altın 12. Açık 🔴 **bir**: T-60
 (kalite). Arayüz tarafı (çoklu seçimle kilit/silme) yazılmadı.
+
+**⚠ 1 Ekim 21:15 — donmuş gün tam ölçekte kanıtlandı, en güncel durum budur.**
+Mustafa `coz-olc.py --saniye 900 --donmus` koştu: taze hafta 0 sert; gün 0
+dondurulup motorun kendi planıyla yeniden çözüldü — 92.899 kısıt geçmişe
+düştü, 0 kırpıldı, 305 sn, **gün 0 aynı, 0 sert, yayınlanabilir**. Koşu bir
+yanlış etiketi gösterdi (adalet dengesi "olan oldu" sayılıyordu); günsüz
+ihlalde artık yalnız tavan kuralları geçmiş sayılabilir. Motor **499 test**,
+mutasyon **180 hepsi öldü**. Push bekleniyor.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 

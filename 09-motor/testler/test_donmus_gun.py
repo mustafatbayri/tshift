@@ -378,3 +378,28 @@ def test_donmus_gece_vardiyasi_ertesi_gunun_erken_vardiyasini_IMKANSIZ_kilar():
     g["mevcut_plan"] = [_satir("C1", 0, "T16", yemek_bas=_yemek_adayi(g, "T16"))]
     c = coz(g, AYAR)
     assert c["durum"] == "cozumsuz", (c.get("durum"), [a for a in c.get("atamalar", []) if a["gun"] == 1])
+
+
+def test_gunsuz_EKSIKLIK_ve_KARSILASTIRMA_ihlali_gecmis_sayilmaz_TAVAN_sayilir():
+    """Adalet (karsilastirma) ve saat dengesi (eksiklik) gelecekte duzelebilir;
+    haftalik tavan donmus gunlerde dolmussa duzelemez. 1 Ekim tam olcek
+    kosusunda adalet ihlalleri yanlis yere 'olan oldu' isareti almisti."""
+    g = _sahne(kisi=3)
+    g["kurallar"] += [{"kod": "ADALET_DENGESI", "tur": "YUMUSAK", "aktif": True,
+                       "parametreler": {"esik": 1, "boyutlar": ["gece"]}},
+                      {"kod": "SAAT_DENGESI", "tur": "SERT", "aktif": True, "yasal": False,
+                       "kabul_edilebilir": True, "parametreler": {"tolerans_saat": 0}}]
+    g["kurallar"][2]["parametreler"] = {"azami_saat": 30}        # haftalik tavan 30
+    g["donmus_gunler"] = [0, 1, 2, 3, 4]
+    # C1: bes gun 16-24 (gece) = 35 h net -> tavan 30 asildi (gecmis); C2, C3 bos.
+    plan = [_satir("C1", d, "T16", 20) for d in range(5)]
+    g["mevcut_plan"] = copy.deepcopy(plan)
+    r = degerlendir(g, plan)
+    kurallar = {i["kural"]: i for i in r["ihlaller"] if i.get("gun") is None}
+    assert "HAFTALIK_AZAMI" in kurallar and kurallar["HAFTALIK_AZAMI"].get("gecmis") is True
+    adalet = [i for i in r["ihlaller"] if i["kural"] == "ADALET_DENGESI"]
+    assert adalet, "gece dagilimi dengesiz olmali (C1 5 gece, digerleri 0)"
+    assert not any(i.get("gecmis") for i in adalet), "adalet ihlali gecmis sayilamaz -- gelecek duzeltebilir"
+    saat = [i for i in r["ihlaller"] if i["kural"] == "SAAT_DENGESI"]
+    assert saat, "C2 ve C3 sozlesme saatini doldurmadi"
+    assert not any(i.get("gecmis") for i in saat), "saat dengesi eksigi gecmis sayilamaz"
