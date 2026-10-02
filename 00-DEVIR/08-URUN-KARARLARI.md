@@ -2711,7 +2711,7 @@ optimize ediyor olacaktı.
 | | |
 |---|---|
 | **fazla mesai** | çalışma süresi − sözleşme saati, sıfırdan küçükse sıfır. Çalışma süresi = vardiya aralığı − **bütün** molalar (ücretli dinlenme dahil; İş K. md. 68: ara dinlenmeleri çalışma süresinden sayılmaz). Sözleşme saati = `sozlesme.haftalik_saat` (tam zamanlıda 45; sezonluk 40, stajyer 30 gibi daha düşük sözleşmede yine sözleşme üstü sayılır — mevzuattaki "fazla sürelerle çalışma" (sözleşme–45 arası) ile "fazla çalışma" (45 üstü) ayrımı yapılmaz, ikisi de bu sayıda) |
-| **yarı zamanlı** | fazla mesai **yazılmaz**, sözleşme saati olsa bile. 45 saate kadar çalıştırılabilir (K-39), bu *"yarı zamanlının ek mesaisi"*dir, çarpan aynı, firma için risk değil |
+| **yarı zamanlı** | fazla mesai **yazılmaz**, sözleşme saati olsa bile. 45 saate kadar çalıştırılabilir (K-39), bu *"yarı zamanlının ek mesaisi"*dir, çarpan aynı, firma için risk değil. ⚠ **K-58 (2 Ekim 23:05):** yarı zamanlıya sözleşme saati **tanımlanmaz**; baz 30, tavan 45, ikisi de kanundan |
 | **sözleşme üstü ücretli saat** (`sozlesme_ustu_ucret_saat`) 🆕 | ücret saati (yalnız ücretsiz mola düşülmüş) − sözleşme saati. K-32 kabul cümlesi 10'un büyüklüğü: ücretli molalar yüzünden sözleşmenin üstünde **ödenen** saat. **Fazla mesai değildir**, ayrı alanda raporlanır; yarı zamanlıya yazılmaz |
 
 **Ne değişti (kod):**
@@ -2750,3 +2750,48 @@ sonraki koşularda üçü aynı — 7,75 · 7,75 · 7,75 ve 11,5 · 11,5 · 11,5
 koşularda 123–127 saat, ayrı alanda.
 
 → T-60 · K-30 · K-32 · K-39 · şartname §11.3 · `09-motor/dogrulayici/denetle.py` · `09-motor/cozucu/coz.py` · `09-motor/cozucu/model.py` · `09-motor/testler/test_fazla_mesai_tanimi.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`
+
+---
+
+## K-58 · Sözleşme tipi **yalnız iki**: tam zamanlı ve yarı zamanlı; çalışana saat tanımlanmaz, değerler kanundan gelir
+
+**Karar (2 Ekim 2026, 23:05–23:22, Mustafa).**
+
+> *"Çalışana bir sözleşme saati tanımlamayacağız. Yarı zamanlı
+> işaretlediğimiz çalışanları 30 saat baz alarak, 45 saate kadar da fazla
+> mesai değil, ek mesai bağlamında çalışma yazabileceğiz şeklinde güncel
+> olarak anlaşmıştık. … Çalışana bir saat tanımı yapmıyoruz. Tam zamanlı ve
+> yarı zamanlı olarak işaretliyoruz sadece. Değerler zaten kanun
+> maddelerinden geliyor."*
+>
+> *"Tam zamanlı ve yarı zamanlı kalacak sadece."* — sezonluk ve stajyer
+> tipleri kalıyor mu sorusuna.
+
+| Tip | Haftalık değer | Kaynağı |
+|---|---|---|
+| **tam zamanlı** | 45 saat — doldurulur (K-39, SERT) | İş K. md. 63 |
+| **yarı zamanlı** | baz **30** saat (emsalin 2/3'ü); **45'e kadar** çalışma yazılabilir, 30–45 arası *ek mesai* (fazla mesai değil, çarpan aynı — K-57); 45 üstü yazılamaz | İş K. md. 13, Fazla Çalışma Yön. md. 8 |
+
+**Ne değişiyor — KARAR VERİLDİ, HENÜZ UYGULANMADI (T-80):**
+
+| Nerede | Bugünkü hâli | Olacak |
+|---|---|---|
+| Şartname §8.3 `employee_contracts.tip` | dört değer (`sezonluk`, `stajyer` dahil), `haftalik_saat` kolonu | iki değer; kişi başına saat kolonu yok |
+| Şartname §11.2 `sozlesme` | `{tip, haftalik_saat}` | `{tip}` — saat motorun kanundan aldığı sabit |
+| K-57 tanım tablosu | *"sezonluk 40, stajyer 30 gibi daha düşük sözleşmede yine sözleşme üstü sayılır"* | o cümle düşer; fazla mesai = 45 üstü |
+| Veri seti üreticisi (`uret_veri_seti.py`) | sezonluk %2 + stajyer %2 → 500 kişilik sette **29 kişi**, `haftalik_saat` 40/30 | iki tip; **set değişir, tam ölçek ölçümleri o setle yeniden koşulur** |
+| Çözücü ve doğrulayıcı | `haftalik_saat`'i kişiden okuyor (`_borc_dakika`, `saat_dengesi`, `part_time_limit`, fazla mesai tabanı) | tipten: tam zamanlı 45, yarı zamanlı 30/45 |
+| `kalite-olc.py` fazla mesai tabanı | `haftalik_saat`'i kişiden okuyor | aynı |
+
+**Açık — cevaplanmadı (yarın sorulacak):** tam zamanlıdaki `gun_sayisi`
+(5 ya da 6 günlük desen; K-39'da izin gününü saate çevirmek için: 45/6 = 7,5
+ya da 45/5 = 9 saat). Bu bir *saat* değil *gün deseni* alanı; *"çalışana saat
+tanımlamıyoruz"* kararının onu kapsayıp kapsamadığı soruldu, cevap yalnız
+tipleri kapsadı. Kaldırılırsa izin düşümü için tek bir varsayılan (6) kalır.
+
+**Yan açık iş:** yarı zamanlının 30–45 arası *ek mesai* saati ayrı bir sayı
+olarak raporlanmıyor.
+
+→ K-39 · K-57 · T-80 · şartname §5.2, §6.2, §8.3, §11.2 ·
+`08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
+`09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py`

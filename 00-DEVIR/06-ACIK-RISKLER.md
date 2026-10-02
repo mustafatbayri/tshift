@@ -3176,6 +3176,34 @@ birinci aşamanın payı 120'den **48**'e indi.
 
 ---
 
+## 🟡 T-80 · Sözleşme tipi ikiye indi (K-58) — kod, veri seti ve şartname henüz çekilmedi
+
+**Karar:** 2 Ekim 23:05–23:22, Mustafa (K-58): yalnız *tam zamanlı* ve
+*yarı zamanlı*; çalışana saat tanımlanmaz; değerler kanundan (45; 30 baz /
+45 tavan).
+
+**Bugün ne var.** Şartname §8.3 dört tip ve `haftalik_saat` kolonu; §11.2
+`sozlesme: {tip, haftalik_saat}`; veri setinde sezonluk 13 + stajyer 16 kişi
+(`haftalik_saat` 40/30); çözücü, doğrulayıcı ve `kalite-olc.py` sözleşme
+saatini kişiden okuyor; K-57'nin tanımı *"sezonluk 40, stajyer 30"* örneğini
+taşıyor.
+
+**Yapılacak (sırayla, tek pencere):** (1) `gun_sayisi` sorusu Mustafa'ya
+(K-58 *"açık"*); (2) şartname §8.3 / §11.2 / K-57 metni; (3) veri seti
+üreticisi iki tipe iner — **set değişir**; (4) iki motor yarısı saati tipten
+alır, testler (`test_sozlesme_saati.py`, `test_fazla_mesai_tanimi.py`,
+taban testleri) ve mutasyonlar; (5) tam ölçek ölçümleri **yeni setle** tekrar
+(bulgu 7–13'ün sayıları eski setindir; karşılaştırma için her iki set
+saklanır — üzerine yazılmaz, versiyonlanır).
+
+**Neden 🟡, 🔴 değil:** bugün planlar yasal; 29 kişilik iki tip yanlış
+*tanımla* değil, kaldırılacak bir tanımla planlanıyor. Ölçümleri etkiler,
+yayını etkilemez.
+
+→ K-39 · K-57 · K-58 · T-60 · şartname §8.3, §11.2
+
+---
+
 ## 🔴 T-60 · Tam ölçekte plan **üretiliyor ama optimize edilemiyor** — optimuma %98,3 uzak
 
 **Ölçüldü:** 29 Eylül, 500 kişi, 900 saniye bütçe, Mustafa'nın makinesi
@@ -4609,6 +4637,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | 29 | **A-7** eşzamanlılık | Plan editörünün önkoşulu |
 | 30 | **A-9** KVKK | Gerçek veriden önce |
 | 31 | **A-8** PgBouncer | Barındırma kararıyla birlikte |
+| 32 | **T-80** sözleşme tipi ikiye indi (K-58) | Kod, veri seti ve şartname; sonra tam ölçek ölçümleri yeni setle. T-60 ile birlikte yürür |
 
 > **Yeni özellikten önce bu liste.** Dış incelemenin sözü: *"önce yanlış yayın
 > izni ve sessiz veri atlama sorunları değerlendirilsin, ardından tamamlanma

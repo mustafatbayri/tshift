@@ -17,6 +17,7 @@ eksiğinin dökümü.
 8. [Değişen dosyalar](#8--değişen-dosyalar)
 9. [Doğrulama durumu — ne koştu, ne koşmadı](#9--doğrulama-durumu--ne-koştu-ne-koşmadı)
 10. [Gece: (a) ve (b) sonuçları, Mustafa'nın düzeltmesi ve notları](#10--gece-a-ve-b-sonuçları-mustafanın-düzeltmesi-ve-notları)
+11. [Kapanış: commit, K-58, yarına kalanlar](#11--kapanış-commit-k-58-yarına-kalanlar)
 
 ---
 
@@ -214,6 +215,7 @@ kadar *ek mesai* (fazla mesai değil); değerler kanundan gelir. Şartname §5.2
 soru (Mustafa'ya soruldu):** veri setinde ve K-57'de sezonluk (40) ve stajyer
 (30) sözleşmelerin kendi saati, tam zamanlıda `haftalik_saat` ve `gun_sayisi`
 alanları var — *"çalışana saat tanımlamıyoruz"* ile nasıl bağdaşacak.
+**Cevap 23:22:** *"tam zamanlı ve yarı zamanlı kalacak sadece"* → K-58, §11.
 **Açık iş:** yarı zamanlının 30–45 arası *ek mesai* saati ayrı bir sayı
 olarak raporlanmıyor.
 
@@ -229,4 +231,36 @@ göre değişebilir mi — yorum verildi, T-60 sonrası ölçülecek.
 iki yapılandırma) · `…/testler/test_kalite_olc.py` (+1 test; bulut
 makinesinde 10 geçti, Mustafa'nın makinesinde **henüz koşmadı**) · devir
 dosyaları.
+
+## 11 · Kapanış: commit, K-58, yarına kalanlar
+
+**23:20 — commit ve push.** Mustafa blok 3'ü koştu: kalite testleri
+`10 passed`, `DENETIM.py` 0 hata (15 bilinen uyarı; commit bekleyen 15
+dosya o anda). Ardından commit **`4bd41ab`** — 16 dosya, 34.016 satır ekleme
+(iki ölçüm dosyası 32.490 satır) — ve push; `origin/main = 4bd41ab`.
+**CI sonucu bu pencerede görülmedi.**
+
+**23:22 — K-58.** Sezonluk/stajyer sorusuna: *"tam zamanlı ve yarı zamanlı
+kalacak sadece."* Karar `08-URUN-KARARLARI.md` K-58'e, uygulama borcu
+`06-ACIK-RISKLER.md` T-80'e (🟡), şartname §8.3'e işaret (değişiklik 56)
+yazıldı. **Kod, veri seti ve şartname metni çekilmedi** — veri seti
+değişeceği için tam ölçek ölçümleri yeni setle yinelenecek. `gun_sayisi`
+alanı: soruldu, cevap yalnız tipleri kapsadı; **yarın ilk soru.**
+
+**Mustafa'nın kararları:** molalar — *"ölçümden sonra karar verelim"*; blok 4
+bugün koşulmayacak; *"bugünlük çalışmamız yeterli, yarın devam edelim."*
+
+**Kapanış durumu.** Bu bölümden sonra değişen devir dosyaları (bu günlük,
+`00-BURADAN-BASLA.md`, `06`, `08`, şartname, `DEGISIM-GUNLUGU.md`) **commit
+edilmedi**; kapanış commit bloğu sohbette verildi. Yarının girişi:
+`00-BURADAN-BASLA.md` 23:45 paragrafı — *"Yarın sıradaki tek adım"*.
+
+**Bu pencerenin kendi dersleri (O-14 dışında, otopsi açılmadı):**
+- (c) çıktısındaki *"K-57 bozuldu"* uyarısını dosyadan okurken görmedim;
+  ekran çıktısında vardı. Ölçüm betiği önemli bulguyu **yalnız ekrana**
+  yazıyordu; `fazla_mesai_uyumu` artık dosyaya da gidiyor.
+- Şartnameyi düzeltirken *"20 saatlik sözleşmeli"* örneği uydurdum; karar
+  *"çalışana saat tanımlanmaz"* idi. Örnek, karar metninden değil koddaki
+  eski test adından geldi. Kural: şartnameye yazılan her örnek bir karar
+  metnine ya da ölçüme bağlanır.
 

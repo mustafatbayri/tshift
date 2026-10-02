@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-02 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
+**Son güncelleme:** 2026-10-02 23:45 (gün kapandı — en alttaki paragraf: commit `4bd41ab` push edildi, K-58 kaydedildi, yarın blok 4) · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -295,6 +295,23 @@ plan sonuç kartının yüzde cümlesi · müşteriye sapma cümlesi · süre
 önerisinin probleme göre değişmesi — üçü de T-60 kapanınca
 (`06-ACIK-RISKLER.md` T-60, *"Mustafa'nın 2 Ekim 23:05 notları"*).
 **Commit edilmedi** (blok verildi). Açık 🔴 yalnız T-60.
+**⚠ 2 Ekim 23:45 — GÜN KAPANDI, en güncel durum budur.** Mustafa blok 3'ü
+koştu (kalite testleri **10 geçti**, `DENETIM.py` 0 hata) ve commit
+**`4bd41ab`** push edildi (16 dosya) — **CI sonucu bu pencerede görülmedi,
+yarın ilk iş bakılır.** **K-58:** sözleşme tipi yalnız *tam zamanlı* ve *yarı
+zamanlı*, çalışana saat tanımlanmaz, değerler kanundan (tam 45; yarı baz 30 /
+tavan 45) — karar kayda geçti, **kod ve veri seti henüz çekilmedi (T-80 🟡)**;
+`gun_sayisi` alanının kaderi soruldu, cevaplanmadı. **Mola kararı ölçümden
+sonra** (Mustafa). Bu paragraftan sonraki devir dosyaları **commit edilmedi**
+(blok sohbette verildi). ⚠ 214 mutasyonun tamamı değişen çözücüyle
+koşulmadı. ⚠ R7: `00-DEVIR/` 10 dosya, sadeleştirme sırada.
+
+**Yarın sıradaki tek adım:** (1) CI'a bak; (2) blok 4 — `sabit_mola_480` ve
+`a_ipuclu_240` tam ölçekte (≈50 dk); (3) sonra Mustafa'nın iki kararı: (a)
+ürüne alınsın mı / hangi süreyle, molalar ayrı adım olsun mu; (4) T-80 —
+`gun_sayisi` sorusu, sonra kod + veri seti + şartname; (5) bulgu 11'in modeli
+araç olarak. Ertelenen üçlü (sonuç kartı yüzdesi, müşteri sapma cümlesi, süre
+önerisi) T-60 kapanınca.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 

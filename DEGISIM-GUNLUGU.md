@@ -4,6 +4,14 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-02 (23:45) · K-58: sözleşme tipi yalnız tam zamanlı ve yarı zamanlı — çalışana saat tanımlanmaz · gün kapanışı**
+Mustafa: *"Tam zamanlı ve yarı zamanlı kalacak sadece"*; değerler kanundan
+(tam 45; yarı baz 30 / tavan 45, arası ek mesai). Karar kayda geçti; kod,
+veri seti ve şartname §8.3 henüz çekilmedi (**T-80** 🟡). `gun_sayisi`
+alanı açık. Commit `4bd41ab` push edildi (23:20); mola kararı ölçümden
+sonra; blok 4 yarın.
+→ `00-DEVIR/08-URUN-KARARLARI.md` (K-58) · `00-DEVIR/06-ACIK-RISKLER.md` (T-80) · `02-spec/v1.4-master-spec.md` (§8.3, değişiklik 56) · `00-DEVIR/oturumlar/2026-10-02-kalite-olcumu-tam-olcek.md` §11
+
 **2026-10-02 (23:25) · T-60: birinci aşamada iyileştirme tam ölçekte fazla mesaiyi 475–511 → 60–100 saate indirdi · yan yana arama ve ipuçsuz uzun arama elendi**
 Mustafa'nın makinesi, 600 sn, ikişer koşu: (a) hedef eksiğini de yarıya
 indirdi, ilk plan gecikmedi, 0 sert; kazancın çoğu molalar sabitken geldi.
