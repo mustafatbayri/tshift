@@ -1380,3 +1380,74 @@ gerçek saatle kurulmaz, enjekte edilir; mutasyon koşusu sürerken commit
 yok (dosyalar yerinde mutasyonlu olabilir); saat etiketleri sohbet
 kaydının zaman damgasından alınır, tahminle yazılmaz (üç kez düzeltildi);
 DEGISIM-GUNLUGU'nde yollar tam yazılır.
+
+## 55 · Oturum yeniden açıldı: T-60 kalite ölçümü, K-57 ve ağırlık deneyi (2 Ekim; ölçümler 13:00–14:32, belgeler 14:40)
+
+Mustafa: *"Hayırlı işler :) Devam ediyoruz. son koşuda yeşil"* (saat
+kaydım yok — konuşma özeti üzerinden devam edildi; aşağıdaki saatler
+dosya zaman damgaları ve sohbet kaydı). Tek açık 🔴 T-60'ın kalite yarısı.
+
+**Önce araç, sonra ölçüm (13:00–13:03 testler).** `optimuma_uzaklik_yuzde`
+tek sayıydı ve iki soruya cevap vermiyordu: amaç neyden oluşuyor, ne zaman
+iyileşti. `09-motor/cozucu/coz.py`: `_ErkenDur.egri` (her çözümde
+saniye/amaç/alt sınır), `_amac_dagilimi` (ceza değişkeni adının önekinden
+kurala: `he_` hedef eksiği, `ha_` hedef aşımı, `me_` mola, `fm_` fazla
+mesai, `ag_` adalet, `sd_` saat dengesi), `_iyilesme_ozeti` (%50/%90/%99
+eşikleri, inceltilmiş eğri), `cozucu_parametreleri` kapısı. Motor **525**
+yeşil (516 + 9), `kalite` mutasyon grubu 6/6 öldü.
+
+**Ölçüm aracı** `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` —
+yapılandırmalar `varsayilan` (ürün), `cift_butce`, `ipucu_kapali`,
+`lp_guclu`; çözücüden bağımsız iki alt sınır: **kapasite tabanı** (hücre /
+ekip-gün / gün / hafta düzeyinde, en büyüğü; gece yarısını aşan vardiya ve
+devreden kapsama sayılır — sayılmazsa taban şişer ve geçersiz olur,
+`08-motor-testleri/gercekci-veri-seti/testler/test_kalite_olc.py` bunu sınıyor) ve **fazla mesai tabanı** (kişi
+başına bit-küme DP: borcu tutturan en küçük net dakika toplamı, en çok 6
+gün). İlk yazımda hafta düzeyinin gevşekliğini yanlış bekledim (test 8
+derken 0 çıktı — doğrusu 0: taban dört düzeyin en büyüğüdür); fazla mesai
+testi `FAZLA_MESAI_TAVANI` kuralı olmadan çözümsüz çıktı (fm payı 0 → 50
+saat yasak) — kural eklendi, taban tanımı değişmedi.
+
+**0.1 ölçek, 2 çekirdek, 120 sn — dört yapılandırma (13:13–13:24) + üçer
+tekrar (13:27–13:40).** Bulgular `06-ACIK-RISKLER.md` T-60'a yazıldı; kısası:
+amacın **%88–91'i fazla mesai** (5–11 saat / 31 kişi), **oynama iki kat**
+(18.493–37.509; ipucu kapalı 10.232–34.257) → ilk tek koşunun "ipucu kapalı
+üç kat iyi" sonucu gürültüydü; süre iki katı −%28 (tek koşu, bant içi); LP
+ayarı işe yaramadı; iyileşmenin %99'u 56–118. sn'de, son iyileşme 108–119.
+sn; bağımsız tabanlar 0 (kanıtlanamıyor). Üç ayrı "fazla mesai" sayısı
+(çözücü 5–10 saat · doğrulayıcı metriği 116–125 · motor metriği 117–127) ve
+ağırlık dengesi (1 dakika fazla mesai = 5,5 kişi-saat hedef açığı) Mustafa'ya
+soruldu (13:50 civarı).
+
+**K-57 (Mustafa, 14:06):** *"Fazla mesai bizim için çok önemli bir kriter ...
+yasal tanımı kabul edeceğiz"*; yarı zamanlının 45 saate kadarki fazlası
+"ek mesai", çarpan aynı, risk değil. Ağırlık için: *"ölçüp karar vermeliyiz.
+Sana katılıyorum."* Yazıldı (14:06–14:16): doğrulayıcı metriği çalışma
+süresine çekildi, ücret farkı `sozlesme_ustu_ucret_saat` oldu; motor metriği
+`_net_saat`e (cezayla aynı ölçü); iki metrik yarı zamanlıyı atlar; fazla
+mesai ağırlığı (50/dakika) `AGIRLIK_TABLOSU`'na alındı (kiracı `agirliklar`
+ile ezebilir). `test_fazla_mesai_tanimi.py` 6 test, `fmtanim` 5 mutasyon
+öldü (toplam **201**), motor **531** yeşil. Yan sonuç kayda geçti: K-32 kabul
+cümlesi 10 ile K-39'un gövdesi çelişiyordu, kod yasal tanımda, cümle 10
+ücret alanına taşındı (K-57'de yazılı; Mustafa aksini isterse ayrı karar).
+
+**Ağırlık deneyi (14:18–14:32, 0.1 ölçek, 120 sn, ikişer koşu):** ağırlık 50 →
+5 → 1: hedef eksiği 55–69 → 53–56 → 45–51 kişi-saat, fazla mesai 7,75–11,5
+→ 8,5–9 → 10,25–11,5 saat. Hedef açığının sebebi ağırlık değil; 50 kalır.
+Mustafa 14:20 civarı *"1–2 saat yokum, ihtiyacın olmayan şeyleri yapmaya
+devam et"* dedi; belgeler, aktarım, DENETİM ve bloklar o süre içinde
+hazırlandı; commit/push ve tam ölçek koşusu Mustafa'ya kaldı.
+
+**⚠ 17:5x — Mustafa döndü, blok 1 ilk denemede kırmızı: `coz.py` makinede 0
+bayt.** Bütün motor testleri *"cannot import name 'coz' from 'cozucu.coz'"*
+ile çöktü. Bakıldı: `09-motor/cozucu/coz.py` Windows tarafında **0 bayt**,
+değişiklik zamanı 17:49:36 — benim 15:03'teki aktarımımdan 2 saat 46 dakika
+sonra, Mustafa'nın koşusundan hemen önce. 15:03'te aktarım sonrası VM
+tarafındaki md5 doğruydu (6d474cec…); on bir dosyadan yalnız bu (aktarım
+listesinin ilki) boşaldı, ötekiler sağlam. Sebep bilinmiyor; şüpheli,
+aradaki saatlerde yaşanan köprü (remote-devices) kopup yeniden bağlanması.
+Dosya yeniden yazıldı (35.193 bayt) ve bu kez **Windows tarafından geri
+okunarak** doğrulandı (`device_stage_files` ile sekiz kod dosyasının md5'i
+konteynerdeki kopyayla aynı). **Ders (kalıcı):** aktarım sonrası doğrulama VM
+görünümünden değil Windows tarafından geri okunarak yapılır; köprü koptuysa
+aktarılan dosyalar yeniden doğrulanır. Blok 1 Mustafa'ya yeniden verildi.

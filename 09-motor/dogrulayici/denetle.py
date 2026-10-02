@@ -571,18 +571,40 @@ def _metrikler(girdi, atamalar, ihlaller):
     toplam_ucret = sum(zaman.ucret_saat(a) for a in atamalar)
     toplam_brut = sum(zaman.brut_saat(a) for a in atamalar)
 
-    # Sozlesme saati bir UCRET buyuklugudur: firmanin ucretli saydigi kisa
-    # molalar yuzunden "eksik calisti" denmemeli (K-32 kabul cumlesi 10).
-    # Tipsiz veride ucret_saat == net_saat oldugu icin eski davranis aynen
-    # korunur.
+    # ⚠ "FAZLA MESAI" YASAL TANIMDIR -- K-57 (Mustafa, 2 Ekim)
+    #
+    #   2 Ekim'e kadar bu alan UCRET saatine bakiyordu (K-32 kabul cumlesi
+    #   10'un yanina yazilmisti) ve cozucunun cezaladigi sayiyla ayni sey
+    #   degildi: 0.1 olcekte ayni plan icin cozucu 5-10 saat, burasi 116-125
+    #   saat diyordu (T-60 olcumu). Uc ayri "fazla mesai" sayisi vardi.
+    #
+    #   Mustafa: "Fazla mesai bizim icin cok onemli bir kriter ... yasal
+    #   tanimi kabul edecegiz." Yasal tanim: CALISMA SURESI (ara dinlenmeleri
+    #   dusulmus, Is K. md. 68) sozlesme saatinin ustu. Cozucunun `fm_`
+    #   cezasi, FAZLA_MESAI_TAVANI ve YILLIK_FAZLA_MESAI_TAVANI kurallari
+    #   zaten boyle sayiyordu; metrik onlara cekildi.
+    #
+    #   YARI ZAMANLIYA FAZLA MESAI YAZILMAZ: 45 saate kadar carpan ayni, bu
+    #   "yari zamanlinin ek mesaisi"dir, fazla mesai degil (Mustafa, K-39 ve
+    #   K-57). Sozlesme saati olsa bile sayilmaz -- cozucu de yazmiyor.
+    #
+    #   Ucret saati farki KAYBOLMADI: `sozlesme_ustu_ucret_saat` -- yalniz
+    #   ucretsiz mola dusulmus saatin sozlesme ustu kismi (K-32 cumle 10'un
+    #   buyuklugu). Ikisi ayni anda dogrudur, adlari ayridir.
     fazla = 0.0
-    kisi_saat = {}
+    sozlesme_ustu_ucret = 0.0
+    kisi_net, kisi_ucret = {}, {}
     for a in atamalar:
-        kisi_saat[a["calisan"]] = kisi_saat.get(a["calisan"], 0.0) + zaman.ucret_saat(a)
+        kisi_net[a["calisan"]] = kisi_net.get(a["calisan"], 0.0) + zaman.net_saat(a)
+        kisi_ucret[a["calisan"]] = kisi_ucret.get(a["calisan"], 0.0) + zaman.ucret_saat(a)
     for c in girdi.get("calisanlar", []):
-        soz = (c.get("sozlesme") or {}).get("haftalik_saat")
+        sozlesme = c.get("sozlesme") or {}
+        if sozlesme.get("tip") == "yari_zamanli":
+            continue
+        soz = sozlesme.get("haftalik_saat")
         if soz is not None:
-            fazla += max(0.0, kisi_saat.get(c["id"], 0.0) - soz)
+            fazla += max(0.0, kisi_net.get(c["id"], 0.0) - soz)
+            sozlesme_ustu_ucret += max(0.0, kisi_ucret.get(c["id"], 0.0) - soz)
 
     return {
         "sert_ihlal": len(sert),
@@ -595,7 +617,8 @@ def _metrikler(girdi, atamalar, ihlaller):
         "toplam_saat": toplam_net,
         "ucret_saat": toplam_ucret,
         "brut_saat": toplam_brut,
-        "fazla_mesai_saat": fazla,
+        "fazla_mesai_saat": fazla,                        # K-57: yasal (net)
+        "sozlesme_ustu_ucret_saat": sozlesme_ustu_ucret,  # K-32 cumle 10
     }
 
 

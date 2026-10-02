@@ -18,7 +18,7 @@ import time
 
 from ortools.sat.python import cp_model
 
-from .model import (Model, _mola_baslangiclari, _mola_dilimleri,
+from .model import (Model, _mola_baslangiclari, _mola_dilimleri, _net_saat,
                     isci_sayisi)
 
 VARSAYILAN = {
@@ -32,6 +32,11 @@ VARSAYILAN = {
     # None = MAKINENIN cekirdek sayisi. Burada sabit 8 yaziyordu ve iki
     # cekirdekli makinelerde plani kotulestiriyordu (bkz. model.isci_sayisi).
     "isci_sayisi": None,
+    # T-60 (2 Ekim): CP-SAT'in kendi parametreleri, OLCUM icin kapi.
+    # {"linearization_level": 2} gibi; ad -> deger, cozucuye aynen gecer.
+    # Urun kodu bunu BOS birakir; kalite-olc.py yapilandirmalari doldurur.
+    # Sure ve isci sayisi buradan verilmez (yukaridaki alanlar esastir).
+    "cozucu_parametreleri": {},
 }
 
 
@@ -54,6 +59,11 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
         # baslamadan hemen once yazilir; yazilmadiysa kurulus ani esastir.
         self.ilk_cozum_sn = None
         self.ana_basladi = None
+        # T-60 (2 Ekim): IYILESME EGRISI -- her cozumde (saniye, amac, alt sinir).
+        # "Butce dolunca durdu" tek basina bir sey soylemiyor: plan son 10
+        # saniyede mi, ilk 30 saniyede mi iyilesti? Egri olmadan kalite
+        # olcumu yapilamaz.
+        self.egri = []
 
     def on_solution_callback(self):
         self.cozum_sayisi += 1
@@ -63,6 +73,8 @@ class _ErkenDur(cp_model.CpSolverSolutionCallback):
             self.ilk_cozum_sn = time.time() - (self.ana_basladi or self.baslangic)
         sinir = self.BestObjectiveBound()
         deger = self.ObjectiveValue()
+        self.egri.append((round(time.time() - (self.ana_basladi or self.baslangic), 2),
+                          deger, sinir))
         if deger > 0 and abs(deger - sinir) / abs(deger) <= self.ayar["hedef_bosluk"]:
             self.durma_sebebi = "hedef_bosluk"
             self.StopSearch()
@@ -354,6 +366,14 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     cozucu.parameters.max_time_in_seconds = float(ayar["azami_saniye"])
     isci = isci_sayisi(ayar)
     cozucu.parameters.num_search_workers = isci
+    # T-60: olcum yapilandirmalarinin CP-SAT parametreleri. Sure ve isci
+    # sayisi yukarida yazildi; buradan gelen ayni adli deger onlari EZMEZ.
+    for ad, deger in (ayar.get("cozucu_parametreleri") or {}).items():
+        if ad in ("max_time_in_seconds", "num_search_workers", "num_workers"):
+            kuruldu.notlar.append("cozucu parametresi yok sayildi: %s (sure ve "
+                                  "isci sayisi ayar alanlarindan verilir)" % ad)
+            continue
+        setattr(cozucu.parameters, ad, deger)
     geri = _ErkenDur(ayar)
 
     # BASLANGIC PLANI varsa onu ipucu yap; yoksa buyuk modelde iki asama.
@@ -423,6 +443,11 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
             "dusen_kisit": kuruldu._donmus_dusen,
             "kirpilan_kisit": kuruldu._donmus_kirpilan,
         } if kuruldu.donmus else None,
+        # T-60 (2 Ekim): kalite olcumunun iki araci -- amac neyden olusuyor,
+        # ne zaman iyilesti. Plan yoksa None.
+        "amac_dagilimi": (_amac_dagilimi(kuruldu, cozucu)
+                          if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE) else None),
+        "iyilesme": _iyilesme_ozeti(geri.egri),
         "baslangic_amac": (round(geri.ilk_amac) if baslangic_kullanildi
                            and geri.ilk_amac is not None else None),
     }
@@ -646,19 +671,28 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
             else:
                 eksik_dk += (t["hedef"] - sayi) * 60
 
+    # ⚠ FAZLA MESAI = YASAL TANIM (K-57, 2 Ekim): CALISMA SURESI (butun
+    #   molalar dusuk -- modelin `_net_saat`i, `fm_` cezasiyla AYNI olcu)
+    #   sozlesme saatinin ustu; yari zamanliya yazilmaz (45 saate kadar
+    #   "ek mesai", carpan ayni). 2 Ekim'e kadar burasi "brut - sablonun
+    #   mola_dk'si" sayiyordu: ucretli dinlenme molalari dusulmuyordu ve
+    #   sayi cezadan 10 kat buyuk cikiyordu (0.1 olcekte 117-127 saat
+    #   karsiliginda ceza 5-10 saat; T-60 olcumu).
     net = {}
     for a in atamalar:
         s = kuruldu.sablon.get(a.get("sablon"))
-        if s is None:        # K-54: aktarilan satir -- saati satirdan
-            s = {"bas": a["bas"], "bit": a["bit"],
-                 "mola_dk": sum((m.get("bit", 0) - m.get("bas", 0)) * 60
-                                for m in (a.get("molalar") or [])
-                                if m.get("tip") == "yemek")}
-        net[a["calisan"]] = net.get(a["calisan"], 0.0) + (s["bit"] - s["bas"]) \
-            - s.get("mola_dk", 0) / 60.0
+        if s is not None:
+            saat = _net_saat(s)
+        else:                # K-54: aktarilan satir -- molalar satirdan
+            saat = (a["bit"] - a["bas"]) - sum(
+                (m.get("bit", 0) - m.get("bas", 0)) for m in (a.get("molalar") or []))
+        net[a["calisan"]] = net.get(a["calisan"], 0.0) + saat
     fazla = 0.0
     for c in kuruldu.calisanlar:
-        soz = (c.get("sozlesme") or {}).get("haftalik_saat")
+        sozlesme = c.get("sozlesme") or {}
+        if sozlesme.get("tip") == "yari_zamanli":
+            continue
+        soz = sozlesme.get("haftalik_saat")
         if soz is not None:
             fazla += max(0.0, net.get(c["id"], 0.0) - soz)
 
@@ -678,6 +712,66 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         "optimuma_uzaklik_yuzde": _bosluk(cozucu),
         "cozum_suresi_sn": round(sure, 2),
     }
+
+
+# Ceza degiskeni adi -> kural (model.py'deki NewIntVar adlari).
+_CEZA_ONEKI = {"he": "HEDEF_KAPSAMA", "ha": "HEDEF_ASIMI", "me": "MOLA_KAPSAMASI",
+               "fm": "FAZLA_MESAI", "ag": "ADALET_DENGESI", "sd": "SAAT_DENGESI"}
+
+
+def _amac_dagilimi(kuruldu, cozucu):
+    """Amac degerinin KURAL BASINA kirilimi -- T-60 (2 Ekim).
+
+    `optimuma_uzaklik_yuzde` tek sayi: amacin neyden olustugunu soylemiyor.
+    Kalite karari icin once "ceza nereden geliyor" bilinmeli: hedef altinda
+    kalan hucreler mi (kapasite yetmiyor olabilir), adalet mi (dagitim),
+    mola kapsamasi mi (asgari == hedef hucrelerde her mola bir dip), fazla
+    mesai mi. Her kural icin: ceza (agirlik x deger toplami) ve ham deger
+    toplami (kac kisi-saat / kac birim).
+    """
+    dagilim = {}
+    for agirlik, v in kuruldu.cezalar:
+        try:
+            deger = cozucu.Value(v)
+        except Exception:
+            continue
+        onek = (v.Name().split("_", 1)[0] if hasattr(v, "Name") else "?")
+        kural = _CEZA_ONEKI.get(onek, onek)
+        d = dagilim.setdefault(kural, {"ceza": 0, "deger": 0, "degisken": 0})
+        d["ceza"] += agirlik * deger
+        d["deger"] += deger
+        d["degisken"] += 1
+    toplam = sum(d["ceza"] for d in dagilim.values()) or 1
+    for d in dagilim.values():
+        d["pay_yuzde"] = round(100.0 * d["ceza"] / toplam, 1)
+    return dict(sorted(dagilim.items(), key=lambda kv: -kv[1]["ceza"]))
+
+
+def _iyilesme_ozeti(egri, nokta=40):
+    """Iyilesme egrisinin ozeti -- T-60 (2 Ekim).
+
+    Donen: ilk/son amac, kacinci saniyede toplam iyilesmenin %50/%90/%99'una
+    ulasildigi, ve en cok `nokta` noktaya inceltilmis egri [(sn, amac,
+    alt_sinir)]. Egri bos ise None.
+    """
+    if not egri:
+        return None
+    ilk, son = egri[0][1], egri[-1][1]
+    kazanc = ilk - son
+    esikler = {}
+    for ad, oran in (("yuzde50_sn", 0.5), ("yuzde90_sn", 0.9), ("yuzde99_sn", 0.99)):
+        hedef = ilk - kazanc * oran
+        esikler[ad] = next((sn for sn, amac, _ in egri if amac <= hedef), None) if kazanc > 0 else 0.0
+    if len(egri) > nokta:
+        adim = len(egri) / float(nokta)
+        secilen = [egri[int(i * adim)] for i in range(nokta)]
+        if secilen[-1] != egri[-1]:
+            secilen.append(egri[-1])
+    else:
+        secilen = list(egri)
+    return {"ilk_amac": ilk, "son_amac": son, "cozum": len(egri),
+            "son_iyilesme_sn": egri[-1][0], "alt_sinir_son": egri[-1][2],
+            "egri": [[sn, a, b] for sn, a, b in secilen], **esikler}
 
 
 def _bosluk(cozucu):

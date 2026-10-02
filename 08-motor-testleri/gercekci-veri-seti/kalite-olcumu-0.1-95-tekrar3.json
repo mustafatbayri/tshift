@@ -1,0 +1,2444 @@
+{
+ "olcek": 0.1,
+ "doluluk": 0.95,
+ "saniye": 120,
+ "tekrar": 3,
+ "kisi": 49,
+ "hucre": 415,
+ "kural": 46,
+ "yapilandirmalar": [
+  "varsayilan",
+  "ipucu_kapali"
+ ],
+ "kosular": [
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 120
+   },
+   "kurma_sn": 8.2,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": true,
+   "cozum_sayisi": 130,
+   "amac_degeri": 18493,
+   "alt_sinir": 2280,
+   "ilk_asama_sn": 0.88,
+   "ana_asama_butce_sn": 119.12,
+   "ilk_cozum_sn": 11.71,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 15750,
+     "deger": 315,
+     "degisken": 31,
+     "pay_yuzde": 85.2
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1295,
+     "deger": 259,
+     "degisken": 855,
+     "pay_yuzde": 7.0
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 870,
+     "deger": 290,
+     "degisken": 415,
+     "pay_yuzde": 4.7
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 396,
+     "deger": 44,
+     "degisken": 415,
+     "pay_yuzde": 2.1
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 182,
+     "deger": 26,
+     "degisken": 415,
+     "pay_yuzde": 1.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 235316.0,
+    "son_amac": 18493.0,
+    "cozum": 130,
+    "son_iyilesme_sn": 117.75,
+    "alt_sinir_son": 2252.0,
+    "egri": [
+     [
+      11.71,
+      235316.0,
+      725.0
+     ],
+     [
+      13.04,
+      197859.0,
+      725.0
+     ],
+     [
+      14.87,
+      187182.0,
+      749.0
+     ],
+     [
+      15.62,
+      186766.0,
+      1676.0
+     ],
+     [
+      18.72,
+      134906.0,
+      2026.0
+     ],
+     [
+      19.7,
+      116775.0,
+      2026.0
+     ],
+     [
+      20.9,
+      107563.0,
+      2026.0
+     ],
+     [
+      21.76,
+      107524.0,
+      2026.0
+     ],
+     [
+      24.14,
+      101415.0,
+      2076.0
+     ],
+     [
+      25.1,
+      101345.0,
+      2079.0
+     ],
+     [
+      26.58,
+      99753.0,
+      2079.0
+     ],
+     [
+      27.66,
+      90676.0,
+      2079.0
+     ],
+     [
+      28.24,
+      86124.0,
+      2079.0
+     ],
+     [
+      29.06,
+      81557.0,
+      2112.0
+     ],
+     [
+      32.37,
+      72562.0,
+      2112.0
+     ],
+     [
+      32.98,
+      72514.0,
+      2112.0
+     ],
+     [
+      33.99,
+      72473.0,
+      2112.0
+     ],
+     [
+      36.46,
+      67930.0,
+      2156.0
+     ],
+     [
+      37.92,
+      58831.0,
+      2156.0
+     ],
+     [
+      38.13,
+      58775.0,
+      2156.0
+     ],
+     [
+      44.03,
+      50403.0,
+      2165.0
+     ],
+     [
+      46.08,
+      50371.0,
+      2165.0
+     ],
+     [
+      47.17,
+      45089.0,
+      2165.0
+     ],
+     [
+      50.4,
+      40562.0,
+      2165.0
+     ],
+     [
+      55.89,
+      36019.0,
+      2178.0
+     ],
+     [
+      58.5,
+      34520.0,
+      2194.0
+     ],
+     [
+      59.76,
+      34499.0,
+      2194.0
+     ],
+     [
+      60.34,
+      30842.0,
+      2194.0
+     ],
+     [
+      64.76,
+      30788.0,
+      2194.0
+     ],
+     [
+      69.2,
+      30758.0,
+      2200.0
+     ],
+     [
+      71.65,
+      30729.0,
+      2200.0
+     ],
+     [
+      76.95,
+      26391.0,
+      2200.0
+     ],
+     [
+      79.71,
+      21765.0,
+      2200.0
+     ],
+     [
+      82.14,
+      21727.0,
+      2200.0
+     ],
+     [
+      90.06,
+      18669.0,
+      2228.0
+     ],
+     [
+      90.63,
+      18609.0,
+      2228.0
+     ],
+     [
+      93.49,
+      18588.0,
+      2228.0
+     ],
+     [
+      95.22,
+      18573.0,
+      2228.0
+     ],
+     [
+      97.52,
+      18537.0,
+      2228.0
+     ],
+     [
+      101.75,
+      18509.0,
+      2228.0
+     ],
+     [
+      117.75,
+      18493.0,
+      2252.0
+     ]
+    ],
+    "yuzde50_sn": 19.69,
+    "yuzde90_sn": 51.12,
+    "yuzde99_sn": 90.06
+   },
+   "optimuma_uzaklik_yuzde": 87.671,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 89.64,
+    "eksik_hedef_dakika": 2640,
+    "toplam_saat": 1658.75,
+    "fazla_mesai_saat": 117.25,
+    "optimuma_uzaklik_yuzde": 87.671,
+    "cozum_suresi_sn": 119.17
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 43,
+    "ADALET_DENGESI": 12,
+    "MOLA_KAPSAMASI": 26,
+    "HEDEF_ASIMI": 132
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 89.64,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 115.75,
+    "toplam_saat": 1510.75
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0003",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-SABAH"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0007",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "4:S-UZUN",
+      "5:S-KISA",
+      "6:S-GECE"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0016",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0028",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 1
+  },
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 120
+   },
+   "kurma_sn": 7.7,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": true,
+   "cozum_sayisi": 134,
+   "amac_degeri": 25197,
+   "alt_sinir": 2304,
+   "ilk_asama_sn": 0.82,
+   "ana_asama_butce_sn": 119.18,
+   "ilk_cozum_sn": 11.37,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 22500,
+     "deger": 450,
+     "degisken": 31,
+     "pay_yuzde": 89.3
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1295,
+     "deger": 259,
+     "degisken": 855,
+     "pay_yuzde": 5.1
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 831,
+     "deger": 277,
+     "degisken": 415,
+     "pay_yuzde": 3.3
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 396,
+     "deger": 44,
+     "degisken": 415,
+     "pay_yuzde": 1.6
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 175,
+     "deger": 25,
+     "degisken": 415,
+     "pay_yuzde": 0.7
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 235316.0,
+    "son_amac": 25197.0,
+    "cozum": 134,
+    "son_iyilesme_sn": 116.32,
+    "alt_sinir_son": 2304.0,
+    "egri": [
+     [
+      11.37,
+      235316.0,
+      725.0
+     ],
+     [
+      12.48,
+      197859.0,
+      725.0
+     ],
+     [
+      14.31,
+      187182.0,
+      749.0
+     ],
+     [
+      16.48,
+      186745.0,
+      1950.0
+     ],
+     [
+      17.38,
+      176915.0,
+      1950.0
+     ],
+     [
+      18.85,
+      149259.0,
+      2026.0
+     ],
+     [
+      20.18,
+      131029.0,
+      2053.0
+     ],
+     [
+      21.57,
+      118891.0,
+      2053.0
+     ],
+     [
+      23.61,
+      91718.0,
+      2053.0
+     ],
+     [
+      24.13,
+      84129.0,
+      2077.0
+     ],
+     [
+      24.6,
+      79551.0,
+      2077.0
+     ],
+     [
+      24.98,
+      79458.0,
+      2086.0
+     ],
+     [
+      26.83,
+      74917.0,
+      2086.0
+     ],
+     [
+      28.32,
+      69538.0,
+      2086.0
+     ],
+     [
+      28.71,
+      61282.0,
+      2105.0
+     ],
+     [
+      31.58,
+      61235.0,
+      2105.0
+     ],
+     [
+      32.16,
+      56758.0,
+      2105.0
+     ],
+     [
+      35.3,
+      53913.0,
+      2105.0
+     ],
+     [
+      36.34,
+      49283.0,
+      2105.0
+     ],
+     [
+      37.35,
+      49252.0,
+      2105.0
+     ],
+     [
+      40.52,
+      49174.0,
+      2166.0
+     ],
+     [
+      43.76,
+      47729.0,
+      2166.0
+     ],
+     [
+      43.95,
+      43203.0,
+      2166.0
+     ],
+     [
+      45.55,
+      35093.0,
+      2166.0
+     ],
+     [
+      45.72,
+      35045.0,
+      2166.0
+     ],
+     [
+      46.82,
+      35015.0,
+      2166.0
+     ],
+     [
+      49.25,
+      34797.0,
+      2197.0
+     ],
+     [
+      50.46,
+      34749.0,
+      2197.0
+     ],
+     [
+      57.61,
+      34652.0,
+      2209.0
+     ],
+     [
+      59.43,
+      34609.0,
+      2209.0
+     ],
+     [
+      62.61,
+      30090.0,
+      2209.0
+     ],
+     [
+      63.59,
+      25551.0,
+      2209.0
+     ],
+     [
+      68.37,
+      25462.0,
+      2224.0
+     ],
+     [
+      68.67,
+      25444.0,
+      2224.0
+     ],
+     [
+      73.01,
+      25434.0,
+      2243.0
+     ],
+     [
+      80.35,
+      25340.0,
+      2252.0
+     ],
+     [
+      90.1,
+      25320.0,
+      2270.0
+     ],
+     [
+      97.05,
+      25302.0,
+      2295.0
+     ],
+     [
+      100.49,
+      25270.0,
+      2295.0
+     ],
+     [
+      108.85,
+      25211.0,
+      2295.0
+     ],
+     [
+      116.32,
+      25197.0,
+      2304.0
+     ]
+    ],
+    "yuzde50_sn": 20.92,
+    "yuzde90_sn": 43.87,
+    "yuzde99_sn": 63.59
+   },
+   "optimuma_uzaklik_yuzde": 90.856,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 89.88,
+    "eksik_hedef_dakika": 2640,
+    "toplam_saat": 1653.0,
+    "fazla_mesai_saat": 122.5,
+    "optimuma_uzaklik_yuzde": 90.856,
+    "cozum_suresi_sn": 119.24
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 42,
+    "ADALET_DENGESI": 15,
+    "MOLA_KAPSAMASI": 24,
+    "HEDEF_ASIMI": 132
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 89.88,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 119.25,
+    "toplam_saat": 1506.75
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0001",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-KISA",
+      "2:S-SABAH",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-UZUN"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0007",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-KISA",
+      "4:S-AKSAM",
+      "6:S-UZUN"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0025",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0026",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-UZUN",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0028",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-KISA",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0037",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-UZUN",
+      "3:B-UZUN",
+      "4:B-YARIM",
+      "5:B-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 2
+  },
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 120
+   },
+   "kurma_sn": 7.8,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": true,
+   "cozum_sayisi": 120,
+   "amac_degeri": 28337,
+   "alt_sinir": 2297,
+   "ilk_asama_sn": 0.67,
+   "ana_asama_butce_sn": 119.33,
+   "ilk_cozum_sn": 11.75,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 25500,
+     "deger": 510,
+     "degisken": 31,
+     "pay_yuzde": 90.0
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1340,
+     "deger": 268,
+     "degisken": 855,
+     "pay_yuzde": 4.7
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 867,
+     "deger": 289,
+     "degisken": 415,
+     "pay_yuzde": 3.1
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 441,
+     "deger": 49,
+     "degisken": 415,
+     "pay_yuzde": 1.6
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 189,
+     "deger": 27,
+     "degisken": 415,
+     "pay_yuzde": 0.7
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 235316.0,
+    "son_amac": 28337.0,
+    "cozum": 120,
+    "son_iyilesme_sn": 117.5,
+    "alt_sinir_son": 2297.0,
+    "egri": [
+     [
+      11.75,
+      235316.0,
+      725.0
+     ],
+     [
+      12.93,
+      197859.0,
+      725.0
+     ],
+     [
+      14.73,
+      187182.0,
+      749.0
+     ],
+     [
+      15.44,
+      186766.0,
+      1676.0
+     ],
+     [
+      17.58,
+      159146.0,
+      1950.0
+     ],
+     [
+      18.67,
+      145495.0,
+      2026.0
+     ],
+     [
+      19.81,
+      140938.0,
+      2053.0
+     ],
+     [
+      20.8,
+      126466.0,
+      2053.0
+     ],
+     [
+      21.41,
+      121884.0,
+      2053.0
+     ],
+     [
+      23.92,
+      112692.0,
+      2077.0
+     ],
+     [
+      24.86,
+      112616.0,
+      2077.0
+     ],
+     [
+      25.59,
+      112582.0,
+      2086.0
+     ],
+     [
+      26.06,
+      108024.0,
+      2086.0
+     ],
+     [
+      26.59,
+      71859.0,
+      2086.0
+     ],
+     [
+      28.01,
+      67356.0,
+      2086.0
+     ],
+     [
+      28.35,
+      62821.0,
+      2086.0
+     ],
+     [
+      30.93,
+      61330.0,
+      2105.0
+     ],
+     [
+      31.89,
+      56701.0,
+      2105.0
+     ],
+     [
+      32.46,
+      48592.0,
+      2105.0
+     ],
+     [
+      33.54,
+      48506.0,
+      2105.0
+     ],
+     [
+      35.5,
+      48451.0,
+      2105.0
+     ],
+     [
+      36.62,
+      48399.0,
+      2105.0
+     ],
+     [
+      40.07,
+      48250.0,
+      2166.0
+     ],
+     [
+      42.21,
+      43730.0,
+      2166.0
+     ],
+     [
+      43.44,
+      43692.0,
+      2166.0
+     ],
+     [
+      44.1,
+      42197.0,
+      2166.0
+     ],
+     [
+      47.56,
+      42156.0,
+      2197.0
+     ],
+     [
+      48.55,
+      42134.0,
+      2197.0
+     ],
+     [
+      52.57,
+      42117.0,
+      2197.0
+     ],
+     [
+      53.84,
+      37599.0,
+      2197.0
+     ],
+     [
+      56.44,
+      37581.0,
+      2209.0
+     ],
+     [
+      63.65,
+      33049.0,
+      2209.0
+     ],
+     [
+      65.01,
+      33036.0,
+      2209.0
+     ],
+     [
+      66.76,
+      32997.0,
+      2224.0
+     ],
+     [
+      78.29,
+      32979.0,
+      2224.0
+     ],
+     [
+      82.0,
+      32952.0,
+      2252.0
+     ],
+     [
+      88.18,
+      32921.0,
+      2265.0
+     ],
+     [
+      94.73,
+      32884.0,
+      2265.0
+     ],
+     [
+      98.46,
+      28368.0,
+      2279.0
+     ],
+     [
+      109.79,
+      28351.0,
+      2297.0
+     ],
+     [
+      117.5,
+      28337.0,
+      2297.0
+     ]
+    ],
+    "yuzde50_sn": 20.79,
+    "yuzde90_sn": 32.45,
+    "yuzde99_sn": 98.46
+   },
+   "optimuma_uzaklik_yuzde": 91.894,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 89.4,
+    "eksik_hedef_dakika": 2940,
+    "toplam_saat": 1660.0,
+    "fazla_mesai_saat": 125.75,
+    "optimuma_uzaklik_yuzde": 91.894,
+    "cozum_suresi_sn": 119.38
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 44,
+    "ADALET_DENGESI": 15,
+    "MOLA_KAPSAMASI": 26,
+    "HEDEF_ASIMI": 139
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 89.4,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 122.25,
+    "toplam_saat": 1508.75
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0003",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "2:S-SABAH",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-ARA"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0015",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-AKSAM",
+      "2:S-AKSAM",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0025",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-ARA",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0028",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0037",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-ARA",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0039",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-UZUN",
+      "3:B-YARIM",
+      "4:B-AKSAM",
+      "6:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0046",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0047",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "5:M-UZUN",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 3
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 120,
+    "iki_asama_esigi": 1000000000
+   },
+   "kurma_sn": 8.2,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 100,
+   "amac_degeri": 18494,
+   "alt_sinir": 2249,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 120.0,
+   "ilk_cozum_sn": 29.6,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 15750,
+     "deger": 315,
+     "degisken": 31,
+     "pay_yuzde": 85.2
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1330,
+     "deger": 266,
+     "degisken": 855,
+     "pay_yuzde": 7.2
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 762,
+     "deger": 254,
+     "degisken": 415,
+     "pay_yuzde": 4.1
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 477,
+     "deger": 53,
+     "degisken": 415,
+     "pay_yuzde": 2.6
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 175,
+     "deger": 25,
+     "degisken": 415,
+     "pay_yuzde": 0.9
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 186818.0,
+    "son_amac": 18494.0,
+    "cozum": 100,
+    "son_iyilesme_sn": 119.73,
+    "alt_sinir_son": 2242.0,
+    "egri": [
+     [
+      29.6,
+      186818.0,
+      2164.0
+     ],
+     [
+      30.31,
+      186227.0,
+      2179.0
+     ],
+     [
+      32.78,
+      109328.0,
+      2182.0
+     ],
+     [
+      32.87,
+      109056.0,
+      2182.0
+     ],
+     [
+      34.52,
+      104313.0,
+      2182.0
+     ],
+     [
+      35.36,
+      96719.0,
+      2198.0
+     ],
+     [
+      37.14,
+      96575.0,
+      2198.0
+     ],
+     [
+      37.45,
+      87549.0,
+      2198.0
+     ],
+     [
+      38.17,
+      78337.0,
+      2198.0
+     ],
+     [
+      38.76,
+      78183.0,
+      2198.0
+     ],
+     [
+      39.11,
+      78165.0,
+      2198.0
+     ],
+     [
+      39.8,
+      52457.0,
+      2198.0
+     ],
+     [
+      40.74,
+      52315.0,
+      2198.0
+     ],
+     [
+      41.84,
+      43336.0,
+      2198.0
+     ],
+     [
+      42.13,
+      43185.0,
+      2198.0
+     ],
+     [
+      42.39,
+      43158.0,
+      2208.0
+     ],
+     [
+      43.85,
+      43105.0,
+      2208.0
+     ],
+     [
+      44.43,
+      43072.0,
+      2208.0
+     ],
+     [
+      46.28,
+      43046.0,
+      2208.0
+     ],
+     [
+      46.82,
+      42985.0,
+      2208.0
+     ],
+     [
+      47.88,
+      42948.0,
+      2208.0
+     ],
+     [
+      49.62,
+      35418.0,
+      2218.0
+     ],
+     [
+      51.2,
+      32471.0,
+      2218.0
+     ],
+     [
+      51.67,
+      28011.0,
+      2218.0
+     ],
+     [
+      54.46,
+      27900.0,
+      2218.0
+     ],
+     [
+      54.81,
+      27858.0,
+      2218.0
+     ],
+     [
+      60.85,
+      27818.0,
+      2227.0
+     ],
+     [
+      63.26,
+      27805.0,
+      2230.0
+     ],
+     [
+      65.92,
+      27785.0,
+      2230.0
+     ],
+     [
+      67.61,
+      27745.0,
+      2230.0
+     ],
+     [
+      73.09,
+      27727.0,
+      2230.0
+     ],
+     [
+      74.26,
+      27716.0,
+      2230.0
+     ],
+     [
+      76.53,
+      27690.0,
+      2230.0
+     ],
+     [
+      78.54,
+      27661.0,
+      2231.0
+     ],
+     [
+      79.67,
+      27617.0,
+      2231.0
+     ],
+     [
+      84.31,
+      27582.0,
+      2231.0
+     ],
+     [
+      88.05,
+      27551.0,
+      2234.0
+     ],
+     [
+      96.45,
+      27539.0,
+      2234.0
+     ],
+     [
+      101.57,
+      23021.0,
+      2240.0
+     ],
+     [
+      103.6,
+      23012.0,
+      2240.0
+     ],
+     [
+      119.73,
+      18494.0,
+      2242.0
+     ]
+    ],
+    "yuzde50_sn": 34.56,
+    "yuzde90_sn": 51.2,
+    "yuzde99_sn": 103.67
+   },
+   "optimuma_uzaklik_yuzde": 87.839,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 87.95,
+    "eksik_hedef_dakika": 3180,
+    "toplam_saat": 1625.75,
+    "fazla_mesai_saat": 118.5,
+    "optimuma_uzaklik_yuzde": 87.839,
+    "cozum_suresi_sn": 120.06
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 50,
+    "ADALET_DENGESI": 12,
+    "MOLA_KAPSAMASI": 24,
+    "HEDEF_ASIMI": 125
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 87.95,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 117.0,
+    "toplam_saat": 1479.25
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0026",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0008",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-AKSAM",
+      "4:S-ARA",
+      "5:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0016",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "4:S-GECE",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0024",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-KISA",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 1
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 120,
+    "iki_asama_esigi": 1000000000
+   },
+   "kurma_sn": 7.7,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 141,
+   "amac_degeri": 34257,
+   "alt_sinir": 2261,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 120.0,
+   "ilk_cozum_sn": 22.1,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 31500,
+     "deger": 630,
+     "degisken": 31,
+     "pay_yuzde": 92.0
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1230,
+     "deger": 246,
+     "degisken": 855,
+     "pay_yuzde": 3.6
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 852,
+     "deger": 284,
+     "degisken": 415,
+     "pay_yuzde": 2.5
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 486,
+     "deger": 54,
+     "degisken": 415,
+     "pay_yuzde": 1.4
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 189,
+     "deger": 27,
+     "degisken": 415,
+     "pay_yuzde": 0.6
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 231440.0,
+    "son_amac": 34257.0,
+    "cozum": 141,
+    "son_iyilesme_sn": 110.62,
+    "alt_sinir_son": 2259.0,
+    "egri": [
+     [
+      22.1,
+      231440.0,
+      2028.0
+     ],
+     [
+      23.85,
+      194909.0,
+      2084.0
+     ],
+     [
+      25.62,
+      180941.0,
+      2111.0
+     ],
+     [
+      26.37,
+      172034.0,
+      2114.0
+     ],
+     [
+      28.05,
+      148109.0,
+      2114.0
+     ],
+     [
+      28.61,
+      147928.0,
+      2157.0
+     ],
+     [
+      29.45,
+      147799.0,
+      2157.0
+     ],
+     [
+      30.07,
+      137917.0,
+      2157.0
+     ],
+     [
+      31.63,
+      118829.0,
+      2157.0
+     ],
+     [
+      32.42,
+      114238.0,
+      2157.0
+     ],
+     [
+      32.92,
+      109632.0,
+      2157.0
+     ],
+     [
+      33.16,
+      95360.0,
+      2157.0
+     ],
+     [
+      34.81,
+      90851.0,
+      2157.0
+     ],
+     [
+      36.4,
+      86234.0,
+      2205.0
+     ],
+     [
+      37.67,
+      86180.0,
+      2205.0
+     ],
+     [
+      38.69,
+      72627.0,
+      2205.0
+     ],
+     [
+      40.53,
+      68017.0,
+      2205.0
+     ],
+     [
+      42.66,
+      67968.0,
+      2205.0
+     ],
+     [
+      44.69,
+      63380.0,
+      2206.0
+     ],
+     [
+      45.78,
+      59561.0,
+      2206.0
+     ],
+     [
+      47.03,
+      59513.0,
+      2206.0
+     ],
+     [
+      48.76,
+      59458.0,
+      2206.0
+     ],
+     [
+      49.72,
+      54902.0,
+      2209.0
+     ],
+     [
+      50.8,
+      54848.0,
+      2209.0
+     ],
+     [
+      51.33,
+      54784.0,
+      2211.0
+     ],
+     [
+      52.15,
+      54757.0,
+      2211.0
+     ],
+     [
+      54.05,
+      53346.0,
+      2211.0
+     ],
+     [
+      57.81,
+      48819.0,
+      2211.0
+     ],
+     [
+      59.47,
+      48792.0,
+      2211.0
+     ],
+     [
+      62.24,
+      44291.0,
+      2218.0
+     ],
+     [
+      65.26,
+      44269.0,
+      2218.0
+     ],
+     [
+      68.77,
+      39744.0,
+      2220.0
+     ],
+     [
+      70.26,
+      38250.0,
+      2220.0
+     ],
+     [
+      72.29,
+      38206.0,
+      2220.0
+     ],
+     [
+      73.46,
+      38176.0,
+      2220.0
+     ],
+     [
+      77.57,
+      38135.0,
+      2229.0
+     ],
+     [
+      78.66,
+      34431.0,
+      2229.0
+     ],
+     [
+      88.3,
+      34364.0,
+      2229.0
+     ],
+     [
+      100.57,
+      34316.0,
+      2249.0
+     ],
+     [
+      104.61,
+      34283.0,
+      2258.0
+     ],
+     [
+      110.62,
+      34257.0,
+      2259.0
+     ]
+    ],
+    "yuzde50_sn": 31.05,
+    "yuzde90_sn": 52.63,
+    "yuzde99_sn": 78.63
+   },
+   "optimuma_uzaklik_yuzde": 93.4,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 87.47,
+    "eksik_hedef_dakika": 3240,
+    "toplam_saat": 1642.25,
+    "fazla_mesai_saat": 125.5,
+    "optimuma_uzaklik_yuzde": 93.4,
+    "cozum_suresi_sn": 120.06
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 52,
+    "ADALET_DENGESI": 12,
+    "MOLA_KAPSAMASI": 26,
+    "HEDEF_ASIMI": 130
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 87.47,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 122.5,
+    "toplam_saat": 1496.0
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0003",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "2:S-SABAH",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0007",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-AKSAM",
+      "5:S-SABAH",
+      "6:S-GECE"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0001",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-KISA"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0008",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0017",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-AKSAM",
+      "3:S-GECE",
+      "5:S-KISA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0019",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-GECE",
+      "4:S-UZUN",
+      "5:S-KISA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0026",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-AKSAM",
+      "4:S-KISA",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0028",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-KISA",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 2
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 120,
+    "iki_asama_esigi": 1000000000
+   },
+   "kurma_sn": 8.7,
+   "toplam_sn": 120.1,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 106,
+   "amac_degeri": 19997,
+   "alt_sinir": 2247,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 120.0,
+   "ilk_cozum_sn": 21.04,
+   "isci_sayisi": 2,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 17250,
+     "deger": 345,
+     "degisken": 31,
+     "pay_yuzde": 86.3
+    },
+    "ADALET_DENGESI": {
+     "ceza": 1345,
+     "deger": 269,
+     "degisken": 855,
+     "pay_yuzde": 6.7
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 813,
+     "deger": 271,
+     "degisken": 415,
+     "pay_yuzde": 4.1
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 414,
+     "deger": 46,
+     "degisken": 415,
+     "pay_yuzde": 2.1
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 175,
+     "deger": 25,
+     "degisken": 415,
+     "pay_yuzde": 0.9
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 228951.0,
+    "son_amac": 19997.0,
+    "cozum": 106,
+    "son_iyilesme_sn": 119.9,
+    "alt_sinir_son": 2246.0,
+    "egri": [
+     [
+      21.04,
+      228951.0,
+      1964.0
+     ],
+     [
+      21.86,
+      228394.0,
+      1991.0
+     ],
+     [
+      23.76,
+      197087.0,
+      2012.0
+     ],
+     [
+      24.61,
+      173498.0,
+      2095.0
+     ],
+     [
+      26.2,
+      165897.0,
+      2095.0
+     ],
+     [
+      27.21,
+      165661.0,
+      2122.0
+     ],
+     [
+      27.48,
+      156482.0,
+      2122.0
+     ],
+     [
+      27.85,
+      156418.0,
+      2122.0
+     ],
+     [
+      28.88,
+      144274.0,
+      2130.0
+     ],
+     [
+      29.03,
+      144267.0,
+      2130.0
+     ],
+     [
+      32.47,
+      130644.0,
+      2165.0
+     ],
+     [
+      33.56,
+      107952.0,
+      2166.0
+     ],
+     [
+      33.99,
+      104818.0,
+      2166.0
+     ],
+     [
+      34.85,
+      77913.0,
+      2166.0
+     ],
+     [
+      35.58,
+      73338.0,
+      2166.0
+     ],
+     [
+      36.59,
+      73308.0,
+      2166.0
+     ],
+     [
+      38.32,
+      64246.0,
+      2166.0
+     ],
+     [
+      38.86,
+      58152.0,
+      2166.0
+     ],
+     [
+      39.49,
+      58138.0,
+      2166.0
+     ],
+     [
+      40.15,
+      53600.0,
+      2166.0
+     ],
+     [
+      40.79,
+      53507.0,
+      2166.0
+     ],
+     [
+      41.52,
+      53461.0,
+      2166.0
+     ],
+     [
+      43.29,
+      53402.0,
+      2166.0
+     ],
+     [
+      43.61,
+      53388.0,
+      2166.0
+     ],
+     [
+      44.25,
+      51871.0,
+      2166.0
+     ],
+     [
+      47.34,
+      51822.0,
+      2194.0
+     ],
+     [
+      47.92,
+      51785.0,
+      2194.0
+     ],
+     [
+      51.02,
+      51754.0,
+      2194.0
+     ],
+     [
+      53.45,
+      42700.0,
+      2194.0
+     ],
+     [
+      59.83,
+      42682.0,
+      2205.0
+     ],
+     [
+      64.66,
+      38168.0,
+      2205.0
+     ],
+     [
+      65.69,
+      38148.0,
+      2212.0
+     ],
+     [
+      72.97,
+      38134.0,
+      2212.0
+     ],
+     [
+      81.02,
+      33627.0,
+      2212.0
+     ],
+     [
+      83.24,
+      29119.0,
+      2212.0
+     ],
+     [
+      87.97,
+      24595.0,
+      2230.0
+     ],
+     [
+      110.56,
+      24574.0,
+      2244.0
+     ],
+     [
+      114.76,
+      24518.0,
+      2244.0
+     ],
+     [
+      116.03,
+      24504.0,
+      2244.0
+     ],
+     [
+      118.44,
+      24487.0,
+      2246.0
+     ],
+     [
+      119.9,
+      19997.0,
+      2246.0
+     ]
+    ],
+    "yuzde50_sn": 32.98,
+    "yuzde90_sn": 60.57,
+    "yuzde99_sn": 119.89
+   },
+   "optimuma_uzaklik_yuzde": 88.763,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 89.64,
+    "eksik_hedef_dakika": 2760,
+    "toplam_saat": 1655.0,
+    "fazla_mesai_saat": 122.5,
+    "optimuma_uzaklik_yuzde": 88.763,
+    "cozum_suresi_sn": 120.05
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 43,
+    "ADALET_DENGESI": 15,
+    "MOLA_KAPSAMASI": 24,
+    "HEDEF_ASIMI": 135
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 89.64,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 120.25,
+    "toplam_saat": 1503.5
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0007",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-GECE"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0001",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-GECE"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0003",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "4:S-UZUN",
+      "5:S-KISA",
+      "6:S-UZUN"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0017",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-GECE",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0047",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "3:M-SABAH",
+      "4:M-AKSAM",
+      "5:M-HSONU",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 3
+  }
+ ],
+ "kapasite_tabani": {
+  "hedef": {
+   "toplam_kisi_saat": 1554.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  },
+  "asgari": {
+   "toplam_kisi_saat": 1073.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  }
+ },
+ "fazla_mesai_tabani": {
+  "kisi": 31,
+  "saat": 0.0,
+  "dakika": 0,
+  "ceza": 0,
+  "borcunu_tutturamayan": 0,
+  "saat_dengesi_sert": true,
+  "borc_toplam_saat": 1281.0
+ },
+ "degisken": 59812,
+ "kisit": 76008,
+ "bagimsiz_alt_sinir": 0.0,
+ "makine": "bulut konteyneri, 2 cekirdek (Mustafa'nin makinesi DEGIL)",
+ "tarih": "2026-10-02"
+}

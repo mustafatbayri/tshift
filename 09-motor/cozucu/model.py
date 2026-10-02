@@ -119,6 +119,14 @@ AGIRLIK_TABLOSU = {
     # degil. CALISAN profilinde fazlalik daha pahali (gereksiz saat
     # yazilmasin), KAPSAMA profilinde neredeyse bedava.
     "HEDEF_ASIMI":           {"DENGELI": 3, "KAPSAMA": 1,  "CALISAN": 4},
+    # FAZLA_MESAI -- DAKIKA basina ceza (oteki satirlar kisi-saat ya da birim
+    # basina). 1 saat fazla mesai = 3.000 puan; hedefin altinda kalan 1
+    # kisi-saat = 9 puan. 50 sayisi 16 Eylul'den beri koddaydi (K-30:
+    # "hedef hic fazla mesaiye gitmemek"), 2 Ekim'de tabloya alindi ki
+    # `girdi["agirliklar"]["FAZLA_MESAI"]` ile OLCULEBILSIN (T-60 agirlik
+    # dengesi deneyi, Mustafa: "olcup karar vermeliyiz"). Urun davranisi
+    # degismedi: uc profilde de 50.
+    "FAZLA_MESAI":           {"DENGELI": 50, "KAPSAMA": 50, "CALISAN": 50},
 }
 
 # #6 FAZLA_MESAI_TAVANI.azami_saat_hafta de profile baglidir (#5.2 tablosu):
@@ -1755,10 +1763,12 @@ class Model(object):
                 #
                 #   50 sayisi bir KALIBRASYON, karar degil. Testler
                 #   "ceza sifir olmasin" diyor, "tam olarak 50 olsun"
-                #   demiyor (testler/test_profiller.py).
+                #   demiyor (testler/test_profiller.py). 2 Ekim: sayi
+                #   AGIRLIK_TABLOSU["FAZLA_MESAI"]'ne alindi; kiraci
+                #   `agirliklar` ile ezebilir, T-60 deneyi oradan olcer.
                 fazla = self.m.NewIntVar(0, int(fm_tavan * 60), "fm_%s" % c["id"])
                 self._kisit(fazla >= dakika - int(tavan * 60))
-                self.cezalar.append((50, fazla))
+                self.cezalar.append((self._agirlik("FAZLA_MESAI"), fazla))
 
     def _dinlenme(self):
         """VARDIYA_ARASI_DINLENME -- ardisik gunlerdeki her sablon cifti.

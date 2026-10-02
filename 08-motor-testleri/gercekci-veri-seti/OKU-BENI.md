@@ -24,6 +24,7 @@ bütün v5 atıflarını "bayat" sayardı (28 Eylül'de tam olarak bu oldu, 37 h
 | `kural-kapsamasi.py` | *"kullanmadığımız kural kalmasın"*ı **ölçer** |
 | `ihlal-vakalari.py` | her kural için birer kırmızı kanıt |
 | `sahte_pdks.py` 🆕 | **sahte PDKS** (Mustafa'nın ikinci yolu): hafta 1'in planından *"plana %80-85 uyumlu"* gerçekleşme ve **eksik kayıt** üretir, hafta 2'yi o eksik geçmişle çözer, sonra planı **gerçek** geçmişe göre denetler: K-42 raporu gerçek ihlalleri haber verdi mi. Oranların hangisinin ölçüm, hangisinin varsayım olduğu dosyanın başında. Üreticinin kendi testleri `testler/test_sahte_pdks.py` (CI'da) |
+| `kalite-olc.py` 🆕 | **plan kalitesi ölçümü** (T-60, 2 Ekim): aynı sahneyi birkaç yapılandırmayla çözer (ürünün hali · süre iki katı · ipucu kapalı · CP-SAT `linearization_level=2` · teşhis: fazla mesai ağırlığı 5 ve 1), her koşu için amacın **kural başına kırılımını** ve **iyileşme eğrisini** (kazancın %50/%90/%99'una kaçıncı saniyede ulaşıldı) yazar, çözücüden **bağımsız** iki alt sınır hesaplar (kapasite tabanı: kadro her gün azami çalışsa hedefin kaçı açıkta kalır; fazla mesai tabanı: şablon kesikliliği yüzünden kaç dakika kaçınılmaz), üç "fazla mesai" sayısını yan yana yazar (K-57) ve `--tekrar N` ile koşudan koşuya oynamayı ölçer. Sonuç `kalite-olcumu-<ölçek>-<doluluk>[-etiket].json`. Tabanların testleri `testler/test_kalite_olc.py` (hızlı, CI'da değil) |
 | `iki-hafta-olc.py` 🆕 | **geçmiş veri ölçümü** (T-28): hafta 1'in planı hafta 2'nin geçmişi olur; hafta 2 geçmişsiz ve geçmişle çözülür, ikisi de geçmişi bilen denetçiye sorulur. `--uc-hafta` üçüncü haftayı iki haftalık geçmişle çözer. Uzun (10–20 dk), CI'da değil |
 
 ```
@@ -101,6 +102,17 @@ tanımlar; sonra üç şeyi sınar:
 ```
 cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\gercekci-veri-seti
 py coz-olc.py
+```
+
+**Kalite** için (T-60, 2 Ekim) — plan bulunuyor, iyi mi? Tek koşudan sonuç
+çıkmaz (0.1 ölçekte aynı ayar dört koşuda 18.493–29.900 verdi), `--tekrar`
+şart:
+
+```
+cd C:\Users\PC\Desktop\Tshift\08-motor-testleri\gercekci-veri-seti
+py kalite-olc.py --olcek 0.1 --saniye 120                       # 4 yapılandırma, ~10 dk
+py kalite-olc.py --saniye 600 --tekrar 2 --yapilandirma varsayilan,ipucu_kapali --etiket tam   # tam ölçek, ~45 dk
+py kalite-olc.py --saniye 600 --tekrar 2 --yapilandirma varsayilan,ipucu_kapali,fm_agirlik_1 --etiket tam   # + ağırlık teşhisi, ~70 dk
 ```
 
 ---

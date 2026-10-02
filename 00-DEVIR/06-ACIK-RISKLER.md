@@ -3285,7 +3285,116 @@ kalite ölçümlerinde bakılacak. ⚠ Tam ölçekte **henüz ölçülmedi**.
 veriyor (`kuruldu=`); eskiden `coz()` bir kez daha kuruyordu — tam ölçekte
 55–80 sn boşa gidiyor ve "çözüm süresi" içinde görünüyordu.
 
-→ T-50 · T-54 · T-59 · K-35 · K-39
+**2 Ekim 13:00–14:32 — kalite tarafı ölçüldü (0.1 ölçek, bulut makinesi, 2
+çekirdek).** Önce ölçüm aracı yazıldı, sonra ölçüldü; tahmin yok.
+
+*Araçlar.* `cozum_istatistikleri`ne iki alan eklendi (`09-motor/cozucu/coz.py`):
+`amac_dagilimi` — amaç değeri kural başına ne kadar (ceza, ham değer,
+değişken sayısı, pay); `iyilesme` — her çözümde (saniye, amaç, alt sınır)
+kaydedilen eğrinin özeti: ilk/son amaç, toplam kazancın %50/%90/%99'una
+kaçıncı saniyede ulaşıldı, son iyileşme saniyesi, 40 noktaya inceltilmiş
+eğri. Ölçüm için `cozucu_parametreleri` kapısı (CP-SAT parametresi aynen
+geçer; süre ve işçi sayısı buradan geçmez, not düşer). 9 birim test
+(`09-motor/testler/test_kalite_olcumu.py`), 6 mutasyon (`kalite` grubu).
+Ölçüm betiği `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`:
+yapılandırmalar, iki çözücüden bağımsız alt sınır (kapasite tabanı ve fazla
+mesai tabanı — tanım ve geçerlilik testleri
+`08-motor-testleri/gercekci-veri-seti/testler/test_kalite_olc.py`),
+`--tekrar`. Her koşuda planın tabanın altına inmediği sınanır ("TABAN
+GEÇERSİZ" yazar).
+
+*Bulgu 1 — amaç değerinin %88–91'i fazla mesai cezasıdır.* 0.1 ölçek, 120 sn,
+ürün ayarları (dört koşu): fazla mesai %87–91 · adalet %5–6 · hedef aşımı
+%3–4 · hedef eksiği %1–2 · mola kapsaması %1. Ham değerler: fazla mesai
+**5,2–11,5 saat** (31 sözleşmeli kişi, borç toplamı 1.281 saat), hedef eksiği
+**41–69 kişi-saat** (toplam hedef 1.554; hedef kapsaması %85–90), adalet
+250–285 birim, hedef aşımı 260–290 kişi-saat, mola 23–37. **"Optimuma %88–94
+uzak" cümlesi tam olarak şunu diyor:** *31 kişinin toplam 5–12 saatlik fazla
+mesaisinin azaltılabileceği de azaltılamayacağı da kanıtlanamıyor.* Hedef
+eksiği, adalet, aşım ve mola koşudan koşuya az oynuyor; oynayan asıl fazla
+mesai dakikaları — ağırlık 50/dakika olduğu için amaç onunla oynuyor.
+
+*Bulgu 2 — koşudan koşuya oynama İKİ KAT; tek koşudan kalite sonucu
+çıkarılamaz.* Aynı sahne, aynı ayar, aynı süre:
+
+| yapılandırma | koşu 1 | koşu 2 | koşu 3 | koşu 4 | koşu 5 | koşu 6 |
+|---|---|---|---|---|---|---|
+| ürünün hali (iki aşama açık) | 29.900 | 18.493 | 25.197 | 28.337 | 26.094 | 37.509 |
+| ipucu kapalı (birinci aşama yok) | 10.232 | 18.494 | 34.257 | 19.997 | | |
+
+İlk tek koşu "ipucu kapalı üç kat iyi" göstermişti; tekrarlar bunun
+**gürültü** olduğunu gösterdi — iki yapılandırma oynama bandının içinde
+ayrılamıyor. (T-50'nin 350 kişideki "kapalı daha iyi" sonucu da tek koşuydu;
+aynı şüpheyle okunmalı.) Süre iki katı: 21.434 (tek koşu, −%28; bant içinde).
+`linearization_level=2`: 33.639, alt sınır değişmedi (2.277 ↔ 2.273) — LP'yi
+güçlendirmek ne planı ne kanıtı iyileştirdi.
+
+*Bulgu 3 — iyileşme önden yüklü ama bitmiyor.* İlk plan 11–13 sn (ipucu
+kapalıyken 20–30 sn); kazancın %50'si 19–21. sn, %90'ı 32–55. sn, %99'u
+56–118. sn; son iyileşme hemen her koşuda 108–119. saniyede. Yani 120
+saniyenin sonunda hâlâ küçük iyileşmeler geliyor; süreyi artırmanın getirisi
+gürültü bandı (bulgu 2) ölçülmeden söylenemez.
+
+*Bulgu 4 — bağımsız tabanlar bu ölçekte sıfır.* Kadro hedefi tamamen
+kapatabilir (hücre/ekip-gün/gün/hafta düzeylerinin dördü de 0), her kişi
+45 saati tam tutturan bir şablon karışımına sahip (fazla mesai tabanı 0).
+Yani 5–12 saatlik fazla mesainin kaçınılmaz olduğu **kanıtlanamıyor**; ama
+tabanlar dinlenme, ardışık gün, gece ve kapsama kısıtlarını görmediği için
+"azaltılabilir" de denemiyor. CP-SAT'in alt sınırı (≈2.270–2.310) da aynı
+yerde: kanıt tarafı her iki yoldan zayıf. Kişi düzeyinde bakıldı: fazla
+mesaisi olanların hepsi 45'in 0,5–1,25 saat üstünde, uzun şablonlu günlerle
+(S-UZUN, B-UZUN) 45'i tam tutturamayan karışımlar.
+
+*Bulgu 5 — "fazla mesai" diye üç ayrı sayı vardı; K-57 ile kapandı (14:06).* Aynı
+plan, 0.1 ölçek: çözücünün cezaladığı (çalışma süresi, bütün molalar
+düşülmüş, sözleşme üstü) **5–11 saat**; doğrulayıcının metrik kanalındaki
+`fazla_mesai_saat` (ücret saati: yalnız ücretsiz mola düşülmüş — K-32 kabul
+cümlesi 10 ile) **116–125 saat**; motorun kendi metriği (brüt eksi şablonun
+`mola_dk`'sı) **117–127 saat**. Üçü de "fazla mesai" adını taşıyordu. Tam
+ölçekteki "1.684 saat fazla mesai" de ücret saatiydi. **Mustafa: yasal tanım;
+yarı zamanlıya fazla mesai yazılmaz** (45 saate kadar "ek mesai", çarpan
+aynı). İki metrik yasal tanıma çekildi, ücret farkı `sozlesme_ustu_ucret_saat`
+adıyla ayrı alanda; 6 test, 5 mutasyon. 14:18'den sonraki koşularda üç sayı
+aynı (7,75 · 7,75 · 7,75 gibi); ayrışırsa `kalite-olc.py` *"ÜÇ SAYI AYNI
+DEĞİL (K-57 bozuldu)"* yazar. Ayrıntı: `08-URUN-KARARLARI.md` K-57.
+
+*Bulgu 6 — ağırlık dengesi: ölçüldü, değiştirmek için sebep çıkmadı.* Fazla
+mesainin 1 dakikası 50 puan, hedefin altında kalan 1 kişi-saat 9 puan: motor
+5,5 kişi-saat hedef açığını 1 dakika fazla mesaiye tercih eder (K-30).
+*"Hedef kapsaması bu yüzden mi düşük?"* sorusu Mustafa'nın onayıyla
+(*"ölçüp karar vermeliyiz"*) teşhis olarak ölçüldü — ağırlık `agirliklar`
+kapısıyla 50 → 5 ve 50 → 1 yapılarak (0.1 ölçek, 120 sn, ikişer koşu,
+14:18–14:32):
+
+| fazla mesai ağırlığı (dakika başına) | fazla mesai (saat) | hedef eksiği (kişi-saat) | hedef kapsaması |
+|---|---|---|---|
+| **50** (ürün) | 7,75 · 11,5 | 55 · 69 | %87,7 · %84,6 |
+| 5 | 9,0 · 8,5 | 53 · 56 | %88,0 · %87,7 |
+| 1 | 10,25 · 11,5 | 51 · 45 | %89,6 · %90,4 |
+
+Ağırlık 50 kat düşünce hedef açığı 10–20 kişi-saat azalıyor (kapsama 2–5
+puan), fazla mesai aynı bantta kalıyor — yani **hedef açığının sebebi fazla
+mesai ağırlığı değil**: motor fazla mesai neredeyse bedavayken bile hedefi
+kapatamıyor; açık ekip/saat/nitelik ve sert kuralların yapısından geliyor.
+Ağırlık 50'de kalır (karar yok, değişiklik yok); tam ölçekte aynı deney
+`fm_agirlik_1` yapılandırmasıyla tekrarlanabilir. Yan bulgu: ağırlık 1'de
+"optimuma uzaklık" %34'e iniyor — %92'nin fazla mesai teriminin
+kanıtlanamazlığından başka bir şey olmadığının ikinci kanıtı.
+
+**Sıradaki ölçüm — Mustafa'nın makinesinde, tam ölçek:** `kalite-olc.py
+--saniye 600 --tekrar 2 --yapilandirma varsayilan,ipucu_kapali --etiket tam`
+(~45 dk; `,fm_agirlik_1` eklenirse ~70 dk). Beklenen cevaplar: tam ölçekte
+amacın kaç yüzdesi fazla mesai ve yasal tanımla kaç saat; oynama bandı;
+ipucu kapalıyken ana aşama plan buluyor mu ve kaçıncı saniyede (0.1 ölçekte
+20–30 sn; tam ölçekte eski kodla hiç bulamıyordu — bu yüzden iki aşama var).
+Sonuç yazılmadan "ipucu kalksın/kalsın" kararı verilmez.
+
+⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
+öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
+öncesi), `kalite-olcumu-0.1-95-agirlik.json` (ağırlık deneyi, K-57 sonrası) —
+bulut makinesi, 2 çekirdek; Mustafa'nın makinesi için **tahmin değildir**.
+
+→ T-50 · T-54 · T-59 · K-30 · K-32 · K-35 · K-39 · K-57
 
 ---
 
@@ -4234,7 +4343,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). Kalan: kalite — dört ölçüm (ilk aşama payı, iki aşama açık/kapalı, SAAT_DENGESI'siz, %85 seti) |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Kalan: tam ölçekte tekrarlı ölçüm (Mustafa'nın makinesi, blok verildi) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

@@ -1258,6 +1258,13 @@ ayrımı yorumdan etkilenmez.
 9. İki bloğa bölünmüş `yemek` **sert** ihlal (K-14).
 10. Ücretli mola, sözleşme saati karşılaştırmasında **düşülmez**; çalışma
     süresi sayacında **düşülür**. İkisi aynı anda doğrudur.
+    > 🆕 **2 Ekim, K-57:** bu cümlenin büyüklüğü artık yalnız
+    > `metrikler.sozlesme_ustu_ucret_saat` alanında yaşar (sözleşme üstü
+    > **ödenen** saat). "Fazla mesai" **yasal** tanımdır (çalışma süresi,
+    > bütün molalar düşülmüş, sözleşme üstü) ve bu cümleden türetilmez.
+    > `SAAT_DENGESI` (K-39) iki yarıda da çalışma süresine bakıyordu; cümle
+    > 10 sözleşme doldurma denetiminde hiç uygulanmamıştı — çelişki yasal
+    > tanım lehine kapandı, kod değişmedi (K-57'deki yan sonuç).
 
 ### Düzeltmenin kaydı — 25 Eylül, aynı gün
 
@@ -2662,3 +2669,75 @@ kapalı görür — gerçeğe daha yakın.
 çıktı.
 
 → T-38 · K-42 · K-50 · şartname §6.4, §11.2 · `09-motor/cozucu/model.py` (`_devir_hazirla`, `_devir_sayisi_dilim`) · `09-motor/cozucu/teshis.py` · `09-motor/dogrulayici/kurallar.py` (`devir_atamalari`, `_kapsama_atamalari`) · `09-motor/testler/test_devir_kapsama.py`
+
+
+---
+
+## K-57 · "Fazla mesai" tek tanımdır: **yasal** — çalışma süresi (molalar düşülmüş) sözleşme saatinin üstü; yarı zamanlıya fazla mesai yazılmaz
+
+**Karar (2 Ekim 2026, Mustafa).** T-60 kalite ölçümü aynı plan için **üç ayrı
+"fazla mesai" sayısı** olduğunu gösterdi (0.1 ölçek, 49 kişi):
+
+| kaynak | ne sayıyordu | sonuç |
+|---|---|---|
+| çözücünün cezaladığı (`fm_` değişkenleri) | çalışma süresi (bütün molalar düşülmüş) − sözleşme saati | **5–10 saat** |
+| doğrulayıcının `metrikler.fazla_mesai_saat` | ücret saati (yalnız ücretsiz mola düşülmüş) − sözleşme saati — K-32 kabul cümlesi 10'un yanına yazılmıştı | **116–125 saat** |
+| motorun kendi `metrikler.fazla_mesai_saat` | brüt − şablonun `mola_dk`'sı (ücretli dinlenme molaları düşülmüyordu) | **117–127 saat** |
+
+Üçü de aynı adı taşıyordu. Ekranda 120 saat görünecek, motor 5 saati
+optimize ediyor olacaktı.
+
+> *"Fazla mesai ile ilgili belirsizlikler çok canımı sıktı, fazla mesai bizim
+> için çok önemli bir kriter. Firmanın zaten baş edemediği konulardan, bu
+> konuyu ne yapıp edip optimize etmeliyiz. İş ağırlığı çok ama çok yüksek.
+> Fazla mesai üç ayrı sayı tarafında yasal tanımı kabul edeceğiz. Burada
+> kafanı karıştıran yarı zamanlılar diye anlıyorum, yasal tanım diyor ki 45
+> saate kadar fazla mesai saymadan yani ödeme çarpanı değişmeden saat bazlı
+> ödemesi yapılır. Bunlar fazla mesai değil, yarı zamanlının ek mesaisi
+> diyebilirsin. Çarpanı normal mesai ile aynıdır. Bu yüzden firma için risk
+> teşkil etmez."* — Mustafa, 2 Ekim
+
+**Tanım (bundan sonra her yerde):**
+
+| | |
+|---|---|
+| **fazla mesai** | çalışma süresi − sözleşme saati, sıfırdan küçükse sıfır. Çalışma süresi = vardiya aralığı − **bütün** molalar (ücretli dinlenme dahil; İş K. md. 68: ara dinlenmeleri çalışma süresinden sayılmaz). Sözleşme saati = `sozlesme.haftalik_saat` (tam zamanlıda 45; sezonluk 40, stajyer 30 gibi daha düşük sözleşmede yine sözleşme üstü sayılır — mevzuattaki "fazla sürelerle çalışma" (sözleşme–45 arası) ile "fazla çalışma" (45 üstü) ayrımı yapılmaz, ikisi de bu sayıda) |
+| **yarı zamanlı** | fazla mesai **yazılmaz**, sözleşme saati olsa bile. 45 saate kadar çalıştırılabilir (K-39), bu *"yarı zamanlının ek mesaisi"*dir, çarpan aynı, firma için risk değil |
+| **sözleşme üstü ücretli saat** (`sozlesme_ustu_ucret_saat`) 🆕 | ücret saati (yalnız ücretsiz mola düşülmüş) − sözleşme saati. K-32 kabul cümlesi 10'un büyüklüğü: ücretli molalar yüzünden sözleşmenin üstünde **ödenen** saat. **Fazla mesai değildir**, ayrı alanda raporlanır; yarı zamanlıya yazılmaz |
+
+**Ne değişti (kod):**
+- Doğrulayıcı `metrikler.fazla_mesai_saat` artık çalışma süresine bakar;
+  ücret farkı `sozlesme_ustu_ucret_saat` alanında (`09-motor/dogrulayici/denetle.py`).
+- Motorun kendi `metrikler.fazla_mesai_saat` ve `toplam_saat` modelin
+  `_net_saat`iyle (bütün molalar) sayar — cezaladığı dakikayla **aynı ölçü**
+  (`09-motor/cozucu/coz.py`, `_metrikler`). Eskiden şablonun `mola_dk`'sını düşüyordu.
+- İki metrik de yarı zamanlıyı atlar (çözücünün cezası zaten atlıyordu).
+- Çözücünün cezası, `FAZLA_MESAI_TAVANI` ve `YILLIK_FAZLA_MESAI_TAVANI`
+  kuralları **değişmedi** — zaten yasal tanımla sayıyorlardı.
+- Fazla mesai ağırlığı (dakika başına 50) `AGIRLIK_TABLOSU["FAZLA_MESAI"]`'ne
+  alındı; kiracı `agirliklar` ile ezebilir, T-60 ağırlık deneyi oradan ölçer.
+  Üç profilde de 50 — ürün davranışı değişmedi.
+
+**Sınanan:** `09-motor/testler/test_fazla_mesai_tanimi.py` (6 test: doğrulayıcı
+1,5 / 4,0; yarı zamanlı 0/0; motor metriği = ceza/60 = doğrulayıcı metriği;
+ağırlık tablodan ve kiracıdan), `fmtanim` mutasyon grubu 5/5 öldü (toplam
+**201**). `kalite-olc.py` her koşuda üç sayıyı yan yana yazar; ayrışırsa
+*"ÜÇ SAYI AYNI DEĞİL (K-57 bozuldu)"* der.
+
+**⚠ Yan sonuç — K-32 kabul cümlesi 10 ile K-39'un gövdesi çelişiyordu, yasal
+tanım lehine kapandı.** Cümle 10: *"ücretli mola, sözleşme saati
+karşılaştırmasında düşülmez."* K-39'un gövdesi (29 Eylül, `SAAT_DENGESI`) iki
+yarıda da **çalışma süresine** (bütün molalar düşülmüş) bakıyor ve Mustafa tam
+ölçekte bunu kabul etti. Yani kod cümle 10'u sözleşme doldurma denetiminde
+hiç uygulamıyordu; cümle 10'un büyüklüğü bugünden itibaren yalnız
+`sozlesme_ustu_ucret_saat` raporunda yaşar. **Kod değişmedi**; kaydı K-32'nin
+altına düşüldü. Mustafa aksini isterse (sözleşme doldurma ücret saatine
+baksın) `SAAT_DENGESI` iki yarıda birden çekilir — ayrı karar.
+
+**Sayı tahmini değil ölçüm:** eski tanımlarla 0.1 ölçekli bir koşuda üç
+sayı 9,0 · 125,5 · 122,3 idi (`kalite-olcumu-0.1-95.json`); yeni tanımla
+sonraki koşularda üçü aynı — 7,75 · 7,75 · 7,75 ve 11,5 · 11,5 · 11,5
+(`kalite-olcumu-0.1-95-agirlik.json`); sözleşme üstü ücretli saat aynı
+koşularda 123–127 saat, ayrı alanda.
+
+→ T-60 · K-30 · K-32 · K-39 · şartname §11.3 · `09-motor/dogrulayici/denetle.py` · `09-motor/cozucu/coz.py` · `09-motor/cozucu/model.py` · `09-motor/testler/test_fazla_mesai_tanimi.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`

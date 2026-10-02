@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-02 01:00 (oturum Mustafa'nın kararıyla kapandı) · 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-56** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **516 birim test** + 12 altın senaryo + bekçi 21 + **190 mutasyon hepsi öldü**; CI yeşil; `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir — dördüncü koşu dondurulmuş günle. **Açık 🔴 tek: T-60** (tam ölçekte plan kalitesi). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni.**
+**Son güncelleme:** 2026-10-02 14:40 (oturum açık; Mustafa 1–2 saat dışarıda, commit/push ve tam ölçek koşusu onda) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü**; CI yeşil (son push K-56); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü bekleniyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni** (2 Ekim 14:40'ta sıra onarıldı: 1 Ekim 19:17, 21:23 ve 23:00 paragrafları 2 Ekim'in önüne alındı).
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -148,6 +148,10 @@ T-78). Motor **481 test**, mutasyon **166 hepsi öldü** (18:45: 171), 37 gövde
 36 kırmızı (+1 bilerek vakasız), bekçi 20, altın senaryolar 12 geçti. Açık 🔴
 **iki**: T-29 (dondurulmuş gün — Mustafa onayladı, yazılacak), T-60 (kalite).
 ⚠ Bugünkü değişikliklerden sonra tam ölçek **yeniden** koşulmalı.
+İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
+commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
+⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
+19:15, 22:40, 22:50" yanlıştı; öğleden sonra ve akşam işiydi).
 
 **⚠ 1 Ekim 18:15 — PDKS ham verisi ölçüldü, en güncel durum budur.** Mustafa
 ham PDKS'i açtı; betik makinesinde koştu, yalnız sayı döndü
@@ -160,27 +164,6 @@ gelmeli. Bulgular `07-GERCEK-VERI-BULGULARI.md` §7; **karar K-55 (23:12):**
 PDKS'ten yalnız ham giriş-çıkış; bilinen boş gün = TShift plan geçmişi +
 izin satırları; yıl içi fazla mesai PDKS hamından TShift'in hesabıyla
 (bordro değil — Mustafa).
-
-**⚠ 2 Ekim 00:10 — T-38 sabit atama eşlemesi yazıldı, en güncel durum budur.**
-Sabit atama = sabitleme kilidi; `sablon` ya da `ekip`+`bas`+`bit` ile eşlenir,
-doğrulayıcı `KILIT_UYUMU` ile denetler (eskiden sabit atamalara hiç
-bakmıyordu). Şartname örneğinden `kural_degerleri` ve `tercihler` çıktı.
-Motor **508 test**, mutasyon **184 hepsi öldü**. T-38'de tek açık satır
-`devir_kapsama` tanımı (Mustafa'ya soruldu). Açık 🔴 yalnız T-60.
-
-**⚠ 2 Ekim 00:50 — devreden kapsama yazıldı, T-38 kapandı, en güncel durum
-budur.** Mustafa öneriyi onayladı (K-56): önceki haftanın pazar gecesinden
-taşan vardiyalar bu haftanın ilk saatlerini kapatır; sayı geçmiş
-vardiyalardan türetilir, `devir_kapsama` yalnız geçmiş yokken elle. İki
-yarıda yazıldı (çözücü sabit sayı; doğrulayıcı sahte atama satırları,
-yalnız kapsama kuralları görür). 8 test, 6 mutasyon; motor **516 test**,
-mutasyon **190 hepsi öldü**. Şartnamenin on iki karşılıksız alanının hepsi
-kapandı. Açık 🔴 yalnız T-60 (kalite). Mustafa bir koşu başlattı, sonucu
-bekleniyor.
-İkinci tam ölçek koşusu (16:45 kodu) **0 sert, yayınlanabilir**; beş kararın
-commit bloğu verildi, 17:27 kodunun tam ölçek koşusu bekleniyor, push sonra.
-⚠ Bugünün saat etiketleri 18:15'te sohbet kaydına göre düzeltildi ("akşam/gece,
-19:15, 22:40, 22:50" yanlıştı; öğleden sonra ve akşam işiydi).
 
 **⚠ 1 Ekim 19:17 — CI kırmızı yandı ve sebebi testti, en güncel durum budur.**
 Push'tan sonra GitHub'da `test_sure_yetmedi.py`'nin dört testi kırmızı:
@@ -214,6 +197,36 @@ düştü, 0 kırpıldı, 305 sn, **gün 0 aynı, 0 sert, yayınlanabilir**. Koş
 yanlış etiketi gösterdi (adalet dengesi "olan oldu" sayılıyordu); günsüz
 ihlalde artık yalnız tavan kuralları geçmiş sayılabilir. Motor **499 test**,
 mutasyon **180 hepsi öldü**. Push bekleniyor.
+
+**⚠ 2 Ekim 00:10 — T-38 sabit atama eşlemesi yazıldı, en güncel durum budur.**
+Sabit atama = sabitleme kilidi; `sablon` ya da `ekip`+`bas`+`bit` ile eşlenir,
+doğrulayıcı `KILIT_UYUMU` ile denetler (eskiden sabit atamalara hiç
+bakmıyordu). Şartname örneğinden `kural_degerleri` ve `tercihler` çıktı.
+Motor **508 test**, mutasyon **184 hepsi öldü**. T-38'de tek açık satır
+`devir_kapsama` tanımı (Mustafa'ya soruldu). Açık 🔴 yalnız T-60.
+
+**⚠ 2 Ekim 00:50 — devreden kapsama yazıldı, T-38 kapandı, en güncel durum
+budur.** Mustafa öneriyi onayladı (K-56): önceki haftanın pazar gecesinden
+taşan vardiyalar bu haftanın ilk saatlerini kapatır; sayı geçmiş
+vardiyalardan türetilir, `devir_kapsama` yalnız geçmiş yokken elle. İki
+yarıda yazıldı (çözücü sabit sayı; doğrulayıcı sahte atama satırları,
+yalnız kapsama kuralları görür). 8 test, 6 mutasyon; motor **516 test**,
+mutasyon **190 hepsi öldü**. Şartnamenin on iki karşılıksız alanının hepsi
+kapandı. Açık 🔴 yalnız T-60 (kalite). Mustafa bir koşu başlattı, sonucu
+bekleniyor.
+
+**⚠ 2 Ekim 14:40 — T-60 kalite ölçüldü, K-57 "fazla mesai" tek tanıma indi, en
+güncel durum budur.** Çözücü çıktısına amaç dağılımı ve iyileşme eğrisi;
+`kalite-olc.py` (yapılandırmalar, çözücüden bağımsız tabanlar, `--tekrar`).
+0.1 ölçekte: amacın **%90'ı fazla mesai cezası**, koşudan koşuya oynama
+**iki kat** (tek koşudan sonuç çıkmaz; "ipucu kapalı üç kat iyi" gürültü
+çıktı), bağımsız tabanlar 0. Üç ayrı "fazla mesai" sayısı vardı; **K-57
+(Mustafa):** yasal tanım, yarı zamanlıya yazılmaz, ücret farkı ayrı alan —
+yazıldı. Ağırlık deneyi (Mustafa'nın onayıyla): hedef açığının sebebi
+fazla mesai ağırlığı değil, 50 kalır. Motor **531 test**, mutasyon **201
+hepsi öldü**, bekçi 21 + taban testleri 7 (28, 9 dk 37 s). **Commit/push ve tam ölçek
+`kalite-olc.py` koşusu Mustafa'ya kaldı** (blok verildi). Açık 🔴 yalnız
+T-60 (tam ölçek ölçümü bekleniyor).
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 

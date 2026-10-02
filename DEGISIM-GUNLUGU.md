@@ -4,6 +4,19 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-02 (14:40) · K-57 "fazla mesai" tek tanım (yasal) · T-60 kalite ölçüm araçları ve 0.1 ölçek ölçümleri · ağırlık deneyi**
+Üç ayrı "fazla mesai" sayısı vardı (çözücü cezası 5–11 saat, doğrulayıcı
+metriği 116–125, motor metriği 117–127 — aynı 0.1 ölçekli sahne). Mustafa:
+yasal tanım; yarı zamanlıya fazla mesai yazılmaz. İki metrik çalışma
+süresine çekildi, ücret farkı `sozlesme_ustu_ucret_saat` adıyla ayrı alan;
+fazla mesai ağırlığı tabloya alındı (kiracı ezebilir, davranış aynı). Çözücü
+çıktısına `amac_dagilimi` ve `iyilesme`; `kalite-olc.py` (yapılandırmalar,
+bağımsız tabanlar, `--tekrar`). 0.1 ölçekte: amacın %90'ı fazla mesai,
+koşudan koşuya oynama iki kat, "ipucu kapalı üç kat iyi" gürültü çıktı;
+ağırlık 50→1 deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi
+(50 kalır). 9 + 6 + 7 test, 11 mutasyon (toplam **201**), motor **531 test**.
+→ `09-motor/cozucu/coz.py` · `09-motor/cozucu/model.py` · `09-motor/dogrulayici/denetle.py` · `09-motor/testler/test_kalite_olcumu.py` · `09-motor/testler/test_fazla_mesai_tanimi.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `08-motor-testleri/gercekci-veri-seti/testler/test_kalite_olc.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-0.1-95.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-0.1-95-tekrar3.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-0.1-95-agirlik.json` · `08-motor-testleri/gercekci-veri-seti/OKU-BENI.md` · `02-spec/v1.4-master-spec.md` §11.3 · `00-DEVIR/08-URUN-KARARLARI.md` K-57 · `00-DEVIR/06-ACIK-RISKLER.md` T-60 · `00-DEVIR/oturumlar/2026-09-30-nitelik-kapsamasi.md` §55
+
 **2026-10-02 (00:50) · K-56 devreden kapsama iki yarıda yazıldı · T-38 kapandı**
 Önceki haftanın bu haftaya taşan vardiyaları (pazar 23 → pazartesi 07)
 bu haftanın ilk saatlerini kapatır: sayı `gecmis_vardiyalar`dan türetilir,
