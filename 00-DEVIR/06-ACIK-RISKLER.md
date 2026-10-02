@@ -3389,6 +3389,51 @@ ipucu kapalıyken ana aşama plan buluyor mu ve kaçıncı saniyede (0.1 ölçek
 20–30 sn; tam ölçekte eski kodla hiç bulamıyordu — bu yüzden iki aşama var).
 Sonuç yazılmadan "ipucu kalksın/kalsın" kararı verilmez.
 
+**Tam ölçek sonucu — Mustafa'nın makinesi, 6 çekirdek, 600 sn arama, ikişer
+koşu (2 Ekim 17:58–18:43; `kalite-olcumu-95-tam.json`).** 500 kişi, 415
+hücre, 46 kural; model kurma 55–59 sn.
+
+| yapılandırma | amaç | ilk plan | kazancın %50 / %90 / %99'u | son iyileşme | hedef eksiği (kişi-saat) | hedef kapsaması | fazla mesai (yasal) | sert |
+|---|---|---|---|---|---|---|---|---|
+| ürün hali (ipucu açık) · 1 | 1.579.113 | 51 sn | 222 / 447 / 537 sn | 587 sn | 1.199 | %61,5 | **510,75 saat** | 0 |
+| ürün hali (ipucu açık) · 2 | 1.471.624 | 53 sn | 217 / 528 / 581 sn | 587 sn | 1.248 | %56,9 | **475,0 saat** | 0 |
+| ipucu kapalı · 1 | **729.348** | **367 sn** | 447 / 539 / 596 sn | 600 sn | 1.180 | %57,1 | **227,75 saat** | 0 |
+| ipucu kapalı · 2 | — | **plan yok** (600 sn, süre yetmedi) | — | — | — | — | — | — |
+
+*Bulgu 7 — tam ölçekte amacın %97'si fazla mesai; üç "fazla mesai" sayısı
+artık aynı.* Ürün halinde yasal fazla mesai haftada **475–511 saat** (359
+sözleşmeli kişi; fazla mesaisi olanların hepsi 45'in 3 / 4,5 / 6 saat üstünde —
+uzun şablon karışımları: üç gece + üç uzun gibi). Sözleşme üstü ücretli saat
+1.803–1.835 (1 Ekim'deki "1.684 saat fazla mesai" bu sayıydı). Hedef eksiği
+üç koşuda da 1.180–1.248 kişi-saat (toplamın %6,3–6,7'si), hücre kapsaması
+%57–61: **yapısal**, çözücüden ve ağırlıktan bağımsız (0.1 ölçek deneyiyle
+tutarlı). Bağımsız tabanlar tam ölçekte de 0.
+
+*Bulgu 8 — ipucu demir atıyor; demir atmayan arama plan bulamayabiliyor.*
+İpucu kapalı koşu, **aynı hedef eksiğiyle fazla mesaiyi yarıya** indirdi
+(227,75 saat, amaç −%54) — yani ürünün bugünkü hali haftada ~250 saat fazla
+mesaiyi gereksiz yere planlıyor; 0.1 ölçekte gürültüye karışan fark tam
+ölçekte açık. Ama aynı yapılandırmanın ikinci koşusu 600 saniyede **hiç plan
+bulamadı**, ilkinde de ilk plan 367. saniyede geldi. Bugünkü iki aşama (önce
+amaçsız geçerli plan, sonra tam ipucu) planı 51 saniyede garanti ediyor ama
+aramayı o kötü plana bağlıyor; ipucusuz arama iyi plan buluyor ama güvenilir
+değil. **İkisi de olduğu gibi kabul edilemez.** Ürün ayarı değişmedi.
+
+*Bulgu 9 — tam ölçekte süre bitmiyor.* İpucu açıkken kazancın %99'u
+537–581. saniyede, son iyileşme 587. saniyede; ipucusuzda son iyileşme 600.
+saniyede. 0.1 ölçekteki "önden yüklü" eğri burada yok; daha uzun arama
+muhtemelen hâlâ kazandırır (ölçülmedi).
+
+**Sıradaki adım (yeni pencere; ürün kararı Mustafa'nın):** ölçülecek üç
+seçenek — (a) birinci aşama amacı **silmeden** sabit molalı küçük modelde
+kısa süre iyileştirip ipucu versin (demir iyi plana atılsın); (b) ipucu açık
+güvenlik ağı + ipucusuz arama aynı bütçede yan yana, iyi olan seçilsin
+(çekirdek paylaşımı ölçülmeli); (c) ipucusuz aramaya daha uzun süre (900 sn)
+— güvenilirlik kaç koşuda. Ayrıca hedef eksiğinin **nerede** olduğu (hangi
+ekip, hangi saatler) hücre bazında dökülmeli; %6'lık açık yapısalsa sebebi
+sert kurallardadır (dinlenme, ardışık gün, gece/hafta sonu sınırları) ve
+bunu kadro değil kural değiştirir.
+
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
 öncesi), `kalite-olcumu-0.1-95-agirlik.json` (ağırlık deneyi, K-57 sonrası) —

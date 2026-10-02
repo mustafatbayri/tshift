@@ -1451,3 +1451,51 @@ okunarak** doğrulandı (`device_stage_files` ile sekiz kod dosyasının md5'i
 konteynerdeki kopyayla aynı). **Ders (kalıcı):** aktarım sonrası doğrulama VM
 görünümünden değil Windows tarafından geri okunarak yapılır; köprü koptuysa
 aktarılan dosyalar yeniden doğrulanır. Blok 1 Mustafa'ya yeniden verildi.
+
+## 56 · Blok 1 yeşil, commit + push, tam ölçek koşusu başladı; pencere değişimi hazırlığı (2 Ekim 17:55–18:05)
+
+Mustafa blok 1'i yeniden koştu: motor **531 passed** (82,95 sn), `kalite` grubunun 6 ve
+`fmtanim` grubunun 5 mutasyonunun hepsi öldü, taban testleri 7 passed. Blok 2: commit
+`8b53fe2` (17:58:41, *"K-57: fazla mesai tek tanim (yasal); T-60 kalite olcum
+araclari, 0.1 olcek olcumleri ve agirlik deneyi"*), push edildi
+(`origin/main` = HEAD). **CI sonucu: Mustafa'dan bekleniyor** — yeşil
+görülmeden bu pencere kapanmaz. Blok 3 (tam ölçek `kalite-olc.py --saniye
+600 --tekrar 2 --yapilandirma varsayilan,ipucu_kapali --etiket tam`) 17:58'de
+başladı; bitişi ~18:45. Daha ilk adımda bir sayı geldi: tam ölçekte de
+**bağımsız tabanlar sıfır** — hedef toplamı 18.660 kişi-saat, kapasite tabanı
+0; 359 sözleşmeli kişi, borç toplamı 14.680,5 saat, fazla mesai tabanı 0.
+Yani tam ölçekte de "kadro yetmiyor / şablon tutmuyor" denemiyor; fazla
+mesainin kaçınılmazlığı bu araçla kanıtlanamıyor.
+
+**Pencere değişimi (Mustafa sordu, 18:0x):** bu pencere 30 Eylül'den beri
+açık ve bir kez sıkıştırıldı; bugün bağlantı birkaç kez koptu ve `coz.py`
+boşaldı. Karar: CI yeşil görülünce bu pencere kapanır, tam ölçek sonucu
+**yeni pencerede** yorumlanır. Yeni pencereye giriş: *"Tshift projesi,
+`00-DEVIR/00-BURADAN-BASLA.md` ve projedeki durum notunu oku; tam ölçek
+kalite ölçümünün sonucu şu:"* + özet tabloları. Yorum için gereken her şey
+`06-ACIK-RISKLER.md` T-60'ta ("Sıradaki ölçüm" paragrafı: amacın fazla mesai
+payı ve yasal saati, oynama bandı, ipucu kapalıyken ilk plan saniyesi;
+"ipucu kalsın/kalksın" kararı ancak bundan sonra).
+
+**Protokol düzeltmesi (18:2x, Mustafa'nın uyarısıyla):** pencere değişimini
+`00-BURADAN-BASLA.md` §5b *Pencere protokolü* ve
+`KALITE-ARASTIRMASI-DEGERLENDIRME.md` §8'i okumadan önermiştim; ikisini
+şimdi okudum. Uygulanacak hâli: (1) bu pencere kapatılmaz, yeni pencere
+**açılış beyanını** (hangi dosyaları okudum, sıradaki adımı nasıl anladım,
+hangi varsayımla başlıyorum) verene kadar **salt-okunur geri dönüş yolu**
+olarak açık kalır; (2) yeni pencere bu dosyaya yazmaz, kendi günlüğünü açar:
+`oturumlar/2026-10-02-kalite-olcumu-tam-olcek.md`; `00-BURADAN-BASLA.md`'yi
+yalnız aktif pencere günceller; (3) bugün "aynı hata iki kez" sinyali verildi
+(DENETIM'in N/N biçimi ve göreli yol hatası dünkü dersten sonra yine çıktı)
+— protokole göre pencere değişiminin asıl gerekçesi bu; (4) R7: `00-DEVIR/`
+on dosyada, sadeleştirme sırada (DENETIM uyarıyor). Bu pencerede yaşanan
+aktarım sorunlarının listesi sohbette verildi; kalıcı olanı O-13.
+Mustafa'nın tespiti (18:4x): bu pencere 30 Eylül'den beri kapanmadan
+sürdü ve 1 Ekim öğlen vakti "iyi geceler" dedim — evet, aynı hastalığın
+belirtisi: pencerenin "şimdi"si saatten değil sohbetin akışından
+geliyordu (dün 18:15'te saat etiketleri üç kez düzeltildi). Kural:
+**pencerenin saati sohbetten değil saatten gelir** (`date`, dosya zaman
+damgası, sohbet kaydı); zamanı yanlış sanan pencere bağlamını yitirmiş
+penceredir, protokolün "sohbet uzadı" satırı o anda uygulanır. Bir iş
+parçası = bir pencere kuralı da bu pencerede uygulanmadı (nitelik
+kapsaması, K-43…K-47, PDKS, K-54…K-57, T-38, T-60 tek pencerede).

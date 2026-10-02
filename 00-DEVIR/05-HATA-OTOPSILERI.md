@@ -428,6 +428,40 @@ tarandı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor.
 
 ---
 
+## O-13 · Aktarılan dosya makinede boşaldı; doğrulamam önbelleğe bakıyordu ⚠
+
+**Tarih:** 2 Ekim 2026, 17:49 (bulgu 17:5x, Mustafa'nın koşusuyla)
+
+**Ne oldu.** Konteynerden Mustafa'nın makinesine 11 dosya aktarıldı (15:03);
+aktarımdan hemen sonra md5 doğrulaması yaptım, on biri de doğruydu.
+17:49:36'da `09-motor/cozucu/coz.py` Windows tarafında **0 bayt** oldu —
+aktarım listesinin ilk dosyası, ötekiler sağlam. Mustafa blok 1'i koşunca
+28 test dosyası *"cannot import name 'coz'"* ile daha toplanırken çöktü.
+
+**Neden.** Kesin sebep bilinmiyor. Aradaki saatlerde makineyle bağlantı
+(köprü) iki kez kopup yeniden kuruldu; en güçlü şüphe, yeniden bağlanırken
+köprünün bekleyen bir yazımı boş tamponla kapatması. Benim doğrulamam ise
+köprünün Linux tarafındaki **görünümünü** okuyordu — o görünüm aktarımın
+önbelleğini gösterir, Windows'taki gerçek dosyayı değil. O-9 ile aynı
+sınıf: **kontrol vardı ama yanlış şeye bakıyordu** (iki taraf da aynı
+önbellekti).
+
+**Düzeltme.** Dosya yeniden yazıldı (35.193 bayt). Doğrulama bu kez
+Windows tarafından **geri okunarak** yapıldı: sekiz kod dosyası
+`device_stage_files` ile makineden çekilip konteynerdeki kopyayla md5
+karşılaştırıldı — sekizi de aynı. Blok 1 ikinci denemede yeşil (531 test,
+11 mutasyon öldü, taban testleri 7).
+
+### Kalıcı bekçi
+
+Kural (otomatik bekçisi yok, O-10 gibi): **aktarımdan sonra doğrulama
+Windows tarafından geri okuyarak yapılır, Linux görünümünden değil; köprü
+koptuysa son aktarılan dosyalar yeniden doğrulanır.** Ve Mustafa'nın
+makinesindeki test koşusu, aktarımın gerçek kapısıdır — nitekim yakalayan o
+oldu.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -444,6 +478,7 @@ tarandı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor.
 | O-10 | *"Doğrulayamam"* denildi, denenmemişti | "Erişimim yok" demeden önce erişimi dene | ✅ *(kural; otomatik bekçisi yok)* |
 | O-11 | Yorumda ölçülmemiş güvenlik iddiası; yapılandırma yanlıştı | Uçtan uca elle ölçüm, kapanış kaydına adım olarak yazılı | ✅ *(kural; birim testi göremez)* |
 | O-12 | "Süre yetmedi" testi makine hızına güveniyordu; CI'da kırmızı yandı | Dolan bütçe enjekte edilir (`sure_dolmus`); mutasyon grubu `sure_yetmedi` | ✅ |
+| O-13 | Aktarılan dosya makinede boşaldı; doğrulama önbelleğe bakıyordu | Windows tarafından geri okuyarak md5; köprü koptuysa yeniden doğrula; Mustafa'nın makinesindeki test koşusu asıl kapı | ✅ *(kural; otomatik bekçisi yok)* |
 
 ---
 
