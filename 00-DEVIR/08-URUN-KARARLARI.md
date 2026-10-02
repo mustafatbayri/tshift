@@ -1840,7 +1840,16 @@ kisıt girmemize gerek yok. Yapmamız gereken sadece çalışanın çalışabile
 kısıtlı günler veya saat aralıkları varsa bunu tutmak."*
 
 * taban: **yok**
-* tavan: emsal tam sürelinin **2/3'ü** = 45'in 2/3'ü = **30 saat**
+* ~~tavan: emsal tam sürelinin **2/3'ü** = 45'in 2/3'ü = **30 saat**~~
+  **Düzeltme (2 Ekim 23:05, Mustafa — bu satır güncellenmeden kalmıştı):**
+  *"Çalışana bir sözleşme saati tanımlamayacağız. Yarı zamanlı
+  işaretlediğimiz çalışanları 30 saat baz alarak, 45 saate kadar da fazla
+  mesai değil, ek mesai bağlamında çalışma yazabileceğiz… Tam zamanlı ve
+  yarı zamanlı olarak işaretliyoruz sadece. Değerler zaten kanun
+  maddelerinden geliyor."* Yani **baz 30 saat, tavan 45 saat**; 30–45 arası
+  *yarı zamanlının ek mesaisi* (K-57). Kod 29 Eylül'den beri tavanı 45
+  uyguluyor (`09-motor/dogrulayici/kurallar.py` `part_time_limit`); 30–45
+  arası saat ayrı raporlanmıyor (açık iş).
 * haftayı şekillendiren: `UYGUNLUK_TAKVIMI` — zaten SERT ve **iki tarafta da
   yazılı** (çözücü + doğrulayıcı), doğrulandı
 

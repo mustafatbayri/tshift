@@ -1,0 +1,2979 @@
+{
+ "olcek": 1.0,
+ "doluluk": 0.95,
+ "saniye": 900,
+ "tekrar": 5,
+ "kisi": 500,
+ "hucre": 415,
+ "kural": 46,
+ "yapilandirmalar": [
+  "ipucu_kapali"
+ ],
+ "tarih": "2026-10-02 19:37",
+ "cekirdek": 6,
+ "kosular": [
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 900,
+    "iki_asama_esigi": 1000000000
+   },
+   "girdi_ek": {},
+   "kurma_sn": 60.1,
+   "toplam_sn": 902.0,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 900.0,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 1
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 900,
+    "iki_asama_esigi": 1000000000
+   },
+   "girdi_ek": {},
+   "kurma_sn": 61.5,
+   "toplam_sn": 903.1,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 900.0,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 2
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 900,
+    "iki_asama_esigi": 1000000000
+   },
+   "girdi_ek": {},
+   "kurma_sn": 61.5,
+   "toplam_sn": 907.0,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 243,
+   "amac_degeri": 665587,
+   "alt_sinir": 21098,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 900.0,
+   "ilk_cozum_sn": 643.95,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 619500,
+     "deger": 12390,
+     "degisken": 359,
+     "pay_yuzde": 93.1
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 17499,
+     "deger": 5833,
+     "degisken": 415,
+     "pay_yuzde": 2.6
+    },
+    "ADALET_DENGESI": {
+     "ceza": 16155,
+     "deger": 3231,
+     "degisken": 9196,
+     "pay_yuzde": 2.4
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 9612,
+     "deger": 1068,
+     "degisken": 415,
+     "pay_yuzde": 1.4
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 2821,
+     "deger": 403,
+     "degisken": 415,
+     "pay_yuzde": 0.4
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 1495995.0,
+    "son_amac": 665587.0,
+    "cozum": 243,
+    "son_iyilesme_sn": 899.67,
+    "alt_sinir_son": 21098.0,
+    "egri": [
+     [
+      643.95,
+      1495995.0,
+      21006.0
+     ],
+     [
+      659.42,
+      1495514.0,
+      21006.0
+     ],
+     [
+      678.33,
+      1494299.0,
+      21037.0
+     ],
+     [
+      683.6,
+      1471176.0,
+      21037.0
+     ],
+     [
+      694.32,
+      1443838.0,
+      21044.0
+     ],
+     [
+      698.91,
+      1438967.0,
+      21044.0
+     ],
+     [
+      703.39,
+      1438650.0,
+      21044.0
+     ],
+     [
+      706.8,
+      1330303.0,
+      21044.0
+     ],
+     [
+      712.52,
+      1303137.0,
+      21052.0
+     ],
+     [
+      717.25,
+      1302784.0,
+      21052.0
+     ],
+     [
+      724.67,
+      1275445.0,
+      21052.0
+     ],
+     [
+      730.79,
+      1192358.0,
+      21052.0
+     ],
+     [
+      734.53,
+      1187781.0,
+      21052.0
+     ],
+     [
+      740.85,
+      1154471.0,
+      21059.0
+     ],
+     [
+      746.31,
+      966392.0,
+      21059.0
+     ],
+     [
+      751.35,
+      966306.0,
+      21059.0
+     ],
+     [
+      754.97,
+      960288.0,
+      21059.0
+     ],
+     [
+      758.38,
+      954963.0,
+      21059.0
+     ],
+     [
+      765.78,
+      950311.0,
+      21063.0
+     ],
+     [
+      769.29,
+      945742.0,
+      21063.0
+     ],
+     [
+      776.16,
+      930500.0,
+      21063.0
+     ],
+     [
+      782.81,
+      925733.0,
+      21063.0
+     ],
+     [
+      788.12,
+      925569.0,
+      21071.0
+     ],
+     [
+      793.95,
+      910237.0,
+      21071.0
+     ],
+     [
+      798.86,
+      905626.0,
+      21071.0
+     ],
+     [
+      803.64,
+      905508.0,
+      21071.0
+     ],
+     [
+      810.92,
+      845818.0,
+      21083.0
+     ],
+     [
+      814.37,
+      839748.0,
+      21083.0
+     ],
+     [
+      820.91,
+      792944.0,
+      21083.0
+     ],
+     [
+      829.38,
+      768767.0,
+      21083.0
+     ],
+     [
+      837.36,
+      768542.0,
+      21089.0
+     ],
+     [
+      842.03,
+      768430.0,
+      21089.0
+     ],
+     [
+      848.3,
+      730801.0,
+      21098.0
+     ],
+     [
+      854.17,
+      726271.0,
+      21098.0
+     ],
+     [
+      859.38,
+      716855.0,
+      21098.0
+     ],
+     [
+      869.42,
+      713678.0,
+      21098.0
+     ],
+     [
+      876.31,
+      713538.0,
+      21098.0
+     ],
+     [
+      880.43,
+      713461.0,
+      21098.0
+     ],
+     [
+      886.14,
+      679388.0,
+      21098.0
+     ],
+     [
+      892.02,
+      665832.0,
+      21098.0
+     ],
+     [
+      899.67,
+      665587.0,
+      21098.0
+     ]
+    ],
+    "yuzde50_sn": 746.25,
+    "yuzde90_sn": 845.98,
+    "yuzde99_sn": 892.02
+   },
+   "optimuma_uzaklik_yuzde": 96.83,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 59.52,
+    "eksik_hedef_dakika": 63660,
+    "toplam_saat": 18959.5,
+    "fazla_mesai_saat": 199.0,
+    "optimuma_uzaklik_yuzde": 96.83,
+    "cozum_suresi_sn": 903.27
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 168,
+    "ADALET_DENGESI": 145,
+    "MOLA_KAPSAMASI": 74,
+    "HEDEF_ASIMI": 212
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 59.52,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 198.99999999999943,
+    "sozlesme_ustu_ucret_saat": 1552.25,
+    "toplam_saat": 18959.5
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0171",
+     "sozlesme": 40,
+     "borc_saat": 40.0,
+     "net_saat": 45.0,
+     "fazla_saat": 5.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-SABAH",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0061",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0102",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "2:S-SABAH",
+      "3:S-SABAH",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0145",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0198",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-AKSAM",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0214",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0230",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-SABAH",
+      "2:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0238",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-ARA",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0249",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0267",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0281",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-AKSAM",
+      "3:S-SABAH",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0309",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:B-ARA",
+      "1:B-UZUN",
+      "2:B-ARA",
+      "3:B-UZUN",
+      "4:B-SABAH",
+      "5:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0319",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-UZUN",
+      "2:B-UZUN",
+      "4:B-AKSAM",
+      "5:B-AKSAM",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0324",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-UZUN",
+      "2:B-SABAH",
+      "4:B-UZUN",
+      "5:B-ARA",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0405",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-ARA",
+      "4:B-SABAH",
+      "5:B-SABAH",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0424",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 48.0,
+     "fazla_saat": 3.0,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-ARA",
+      "2:B-UZUN",
+      "3:B-UZUN",
+      "4:B-SABAH",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0482",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 47.0,
+     "fazla_saat": 2.0,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-SABAH",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0003",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-ARA"
+     ],
+     "kilit": 1,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0019",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-ARA",
+      "3:S-AKSAM",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0025",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "5:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0035",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-GECE",
+      "5:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0037",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0038",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-GECE",
+      "3:S-SABAH",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0046",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-ARA",
+      "4:S-ARA",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0047",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0064",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-AKSAM",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0070",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-GECE",
+      "3:S-SABAH",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0075",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0077",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0082",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-AKSAM",
+      "2:S-GECE",
+      "4:S-UZUN",
+      "5:S-ARA",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0100",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-ARA",
+      "2:S-AKSAM",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0107",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-ARA",
+      "5:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0124",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-GECE",
+      "1:S-GECE",
+      "2:S-GECE",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0139",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-AKSAM",
+      "2:S-GECE",
+      "4:S-UZUN",
+      "5:S-ARA",
+      "6:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0150",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-GECE",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-GECE",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0154",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-GECE",
+      "3:S-GECE",
+      "5:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0156",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "5:S-SABAH",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0160",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-SABAH",
+      "3:S-SABAH",
+      "4:S-ARA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0169",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-SABAH",
+      "4:S-SABAH",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0175",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0179",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0209",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0215",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0216",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-AKSAM",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0220",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-AKSAM",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "4:S-AKSAM",
+      "6:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0225",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-GECE",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0226",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-SABAH",
+      "6:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0229",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-SABAH",
+      "3:S-ARA",
+      "4:S-ARA",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0233",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "2:S-ARA",
+      "3:S-GECE",
+      "5:S-AKSAM",
+      "6:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0247",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-AKSAM",
+      "2:S-ARA",
+      "3:S-ARA",
+      "5:S-UZUN",
+      "6:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0253",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-AKSAM",
+      "2:S-AKSAM",
+      "3:S-AKSAM",
+      "4:S-ARA",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0261",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-SABAH",
+      "2:S-ARA",
+      "3:S-AKSAM",
+      "4:S-ARA",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0262",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-AKSAM",
+      "5:S-SABAH",
+      "6:S-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0263",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-SABAH",
+      "2:S-GECE",
+      "3:S-GECE",
+      "5:S-SABAH",
+      "6:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0287",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-SABAH",
+      "2:B-UZUN",
+      "4:B-GECE",
+      "5:B-SABAH",
+      "6:B-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0289",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-ARA",
+      "1:B-SABAH",
+      "2:B-UZUN",
+      "4:B-SABAH",
+      "5:B-AKSAM",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0310",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-ARA",
+      "2:B-UZUN",
+      "3:B-SABAH",
+      "4:B-SABAH",
+      "5:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0318",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-SABAH",
+      "2:B-SABAH",
+      "3:B-SABAH",
+      "4:B-SABAH",
+      "5:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0321",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "2:B-GECE",
+      "3:B-AKSAM",
+      "4:B-ARA",
+      "5:B-SABAH",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0322",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-ARA",
+      "1:B-SABAH",
+      "3:B-SABAH",
+      "4:B-UZUN",
+      "5:B-SABAH",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0336",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-AKSAM",
+      "3:B-GECE",
+      "4:B-UZUN",
+      "5:B-SABAH",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0338",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-SABAH",
+      "2:B-AKSAM",
+      "3:B-ARA",
+      "4:B-UZUN",
+      "5:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0354",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-ARA",
+      "1:B-ARA",
+      "2:B-UZUN",
+      "3:B-SABAH",
+      "4:B-AKSAM",
+      "5:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0362",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-SABAH",
+      "2:B-SABAH",
+      "3:B-UZUN",
+      "4:B-AKSAM",
+      "6:B-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0378",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-AKSAM",
+      "1:B-AKSAM",
+      "2:B-AKSAM",
+      "4:B-UZUN",
+      "5:B-AKSAM",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0383",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-SABAH",
+      "2:B-UZUN",
+      "3:B-SABAH",
+      "4:B-SABAH",
+      "6:B-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0386",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-SABAH",
+      "2:B-SABAH",
+      "3:B-SABAH",
+      "5:B-AKSAM",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0392",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-GECE",
+      "2:B-GECE",
+      "3:B-SABAH",
+      "4:B-UZUN",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0403",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-ARA",
+      "1:B-SABAH",
+      "2:B-UZUN",
+      "3:B-SABAH",
+      "5:B-GECE",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0408",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-SABAH",
+      "2:B-ARA",
+      "4:B-UZUN",
+      "5:B-AKSAM",
+      "6:B-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0462",
+     "sozlesme": 30,
+     "borc_saat": 30.0,
+     "net_saat": 31.5,
+     "fazla_saat": 1.5,
+     "vardiyalar": [
+      "1:M-UZUN",
+      "2:M-SABAH",
+      "3:M-AKSAM",
+      "4:M-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0013",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-ARA",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0027",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-SABAH",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0048",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0074",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-ARA",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0114",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-AKSAM",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0130",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-ARA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0136",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0157",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0159",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0162",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-SABAH",
+      "2:S-UZUN",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0167",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-KISA",
+      "2:S-SABAH",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0190",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-SABAH",
+      "2:S-SABAH",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0191",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0197",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-SABAH",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0203",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-AKSAM",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0211",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-ARA",
+      "2:S-KISA",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0237",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-AKSAM",
+      "2:S-AKSAM",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0246",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-SABAH",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-UZUN",
+      "4:S-KISA",
+      "5:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0264",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0271",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "2:S-KISA",
+      "3:S-AKSAM",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0315",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-YARIM",
+      "2:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0337",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-ARA",
+      "2:B-YARIM",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0341",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-YARIM",
+      "1:B-UZUN",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-AKSAM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0359",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "2:B-SABAH",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0364",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-YARIM",
+      "3:B-UZUN",
+      "4:B-ARA",
+      "6:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0365",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-AKSAM",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0369",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-YARIM",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "6:B-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0377",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "2:B-SABAH",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0381",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-SABAH",
+      "1:B-UZUN",
+      "2:B-YARIM",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0388",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-UZUN",
+      "2:B-UZUN",
+      "3:B-UZUN",
+      "4:B-YARIM",
+      "5:B-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0391",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-SABAH",
+      "2:B-UZUN",
+      "3:B-YARIM",
+      "4:B-UZUN",
+      "5:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0396",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "1:B-ARA",
+      "2:B-UZUN",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0398",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-UZUN",
+      "2:B-GECE",
+      "3:B-UZUN",
+      "4:B-UZUN",
+      "5:B-UZUN",
+      "6:B-YARIM"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0406",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:B-GECE",
+      "1:B-UZUN",
+      "2:B-UZUN",
+      "3:B-UZUN",
+      "4:B-YARIM",
+      "6:B-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0440",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0442",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-SABAH",
+      "3:M-UZUN",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0448",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-UZUN",
+      "2:M-UZUN",
+      "3:M-AKSAM",
+      "4:M-AKSAMK",
+      "5:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0450",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAMK",
+      "2:M-UZUN",
+      "3:M-UZUN",
+      "4:M-UZUN",
+      "5:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0460",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-UZUN",
+      "3:M-AKSAMK",
+      "4:M-UZUN",
+      "5:M-UZUN",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0465",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0466",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0481",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-AKSAMK",
+      "1:M-UZUN",
+      "2:M-UZUN",
+      "3:M-UZUN",
+      "4:M-AKSAM",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0492",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-AKSAMK",
+      "3:M-UZUN",
+      "4:M-UZUN",
+      "5:M-UZUN",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0499",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAMK",
+      "2:M-UZUN",
+      "3:M-AKSAM",
+      "5:M-UZUN",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0500",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.0,
+     "fazla_saat": 1.0,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-AKSAM",
+      "3:M-UZUN",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0431",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAM",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0432",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "1:M-SABAH",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0434",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0435",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "4:M-UZUN",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0444",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-AKSAM",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0445",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-SABAH",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0446",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0449",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "3:M-SABAH",
+      "4:M-AKSAM",
+      "5:M-HSONU",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0452",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-UZUN",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "4:M-AKSAM",
+      "5:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0454",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "1:M-SABAH",
+      "2:M-SABAH",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "5:M-UZUN",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0463",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0464",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "4:M-AKSAM",
+      "5:M-HSONU",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0467",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "4:M-UZUN",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0469",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "4:M-AKSAM",
+      "5:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0473",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-SABAH",
+      "2:M-SABAH",
+      "3:M-SABAH",
+      "4:M-UZUN",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0475",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "2:M-AKSAM",
+      "3:M-AKSAM",
+      "5:M-UZUN",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0483",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "2:M-SABAH",
+      "3:M-UZUN",
+      "4:M-SABAH",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0484",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-SABAH",
+      "2:M-SABAH",
+      "3:M-UZUN",
+      "4:M-SABAH",
+      "5:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0485",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "1:M-AKSAM",
+      "3:M-UZUN",
+      "4:M-SABAH",
+      "5:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0486",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-SABAH",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0491",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-SABAH",
+      "3:M-AKSAM",
+      "4:M-AKSAM",
+      "5:M-HSONU",
+      "6:M-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0493",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-AKSAM",
+      "2:M-UZUN",
+      "3:M-SABAH",
+      "4:M-AKSAM",
+      "5:M-HSONU",
+      "6:M-SABAH"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0495",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-SABAH",
+      "2:M-SABAH",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0497",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-UZUN",
+      "1:M-SABAH",
+      "2:M-SABAH",
+      "3:M-AKSAM",
+      "4:M-AKSAM",
+      "5:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0498",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 45.5,
+     "fazla_saat": 0.5,
+     "vardiyalar": [
+      "0:M-SABAH",
+      "1:M-UZUN",
+      "2:M-SABAH",
+      "3:M-SABAH",
+      "4:M-SABAH",
+      "6:M-HSONU"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 3
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 900,
+    "iki_asama_esigi": 1000000000
+   },
+   "girdi_ek": {},
+   "kurma_sn": 63.3,
+   "toplam_sn": 903.4,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 900.0,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 4
+  },
+  {
+   "yapilandirma": "ipucu_kapali",
+   "ayar": {
+    "azami_saniye": 900,
+    "iki_asama_esigi": 1000000000
+   },
+   "girdi_ek": {},
+   "kurma_sn": 61.7,
+   "toplam_sn": 904.2,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 0.0,
+   "ana_asama_butce_sn": 900.0,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 5
+  }
+ ],
+ "kapasite_tabani": {
+  "hedef": {
+   "toplam_kisi_saat": 18660.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  },
+  "asgari": {
+   "toplam_kisi_saat": 12723.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  }
+ },
+ "fazla_mesai_tabani": {
+  "kisi": 359,
+  "saat": 0.0,
+  "dakika": 0,
+  "ceza": 0,
+  "borcunu_tutturamayan": 0,
+  "saat_dengesi_sert": true,
+  "borc_toplam_saat": 14680.5
+ },
+ "degisken": 633591,
+ "kisit": 771332,
+ "bagimsiz_alt_sinir": 0.0
+}

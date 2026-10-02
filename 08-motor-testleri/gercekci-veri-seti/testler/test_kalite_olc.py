@@ -167,3 +167,71 @@ def test_fazla_mesai_tabani_borcunu_tutturamayan_sayilir():
     g["kurallar"] = [_kural("SAAT_DENGESI", "SERT")]
     fm = KO.fazla_mesai_tabani(g, Model(g).kur())
     assert fm["borcunu_tutturamayan"] == 0 and fm["dakika"] == 240, fm
+
+
+# ----------------------------------------------------------------------
+# Hedef dokumu -- acik ve asim NEREDE (T-60 bulgu 10, 2 Ekim aksami)
+# ----------------------------------------------------------------------
+
+def test_hedef_dokumu_eksigi_ve_asimi_AYRI_sayar_ve_hucreyi_saklar():
+    ihlaller = [
+        {"kural": "HEDEF_KAPSAMA", "ekip": "S", "gun": 0, "saat": 7, "olculen": 38, "gereken": 58},
+        {"kural": "HEDEF_ASIMI", "ekip": "S", "gun": 0, "saat": 8, "olculen": 102, "gereken": 58},
+        {"kural": "HEDEF_KAPSAMA", "ekip": "B", "gun": 1, "saat": 20, "olculen": 17, "gereken": 26},
+        {"kural": "ADALET_DENGESI", "calisan": "C1", "olculen": 3, "gereken": 2},      # sayilmaz
+        {"kural": "ASGARI_KAPSAMA", "ekip": "S", "gun": 0, "saat": 7, "olculen": 1, "gereken": 2},  # sayilmaz
+    ]
+    d = KO.hedef_dokumu(ihlaller)
+    assert d["toplam"] == {"eksik_kisi_saat": 29, "asim_kisi_saat": 44,
+                           "eksik_hucre": 2, "asim_hucre": 1}, d["toplam"]
+    assert d["ekip"]["S"] == {"eksik_kisi_saat": 20, "asim_kisi_saat": 44,
+                              "eksik_hucre": 1, "asim_hucre": 1}, d["ekip"]
+    assert d["ekip"]["B"]["eksik_kisi_saat"] == 9 and d["ekip"]["B"]["asim_kisi_saat"] == 0
+    assert d["hucreler"] == [["B", 1, 20, 17, 26], ["S", 0, 7, 38, 58], ["S", 0, 8, 102, 58]]
+    assert KO.hedef_dokumu([]) == {"ekip": {}, "hucreler": [],
+                                   "toplam": {"eksik_kisi_saat": 0, "asim_kisi_saat": 0,
+                                              "eksik_hucre": 0, "asim_hucre": 0}}
+
+
+def test_hedef_dokumu_dogrulayicinin_eksik_dakikasiyla_AYNI_toplami_verir():
+    """Cozulmus bir planda dokumun eksik toplami, dogrulayici metrigindeki
+    `eksik_hedef_dakika` ile ayni olmali (ikisi de ayni hucreleri sayar).
+    Sahne: 2 kisi, hedef 3 -- her hucrede en az 1 kisi-saat acik kalir."""
+    from dogrulayici import degerlendir
+    g = {
+        "profil": "DENGELI",
+        "calisanlar": [{"id": "C%d" % i, "ekipler": ["E"],
+                        "sozlesme": {"tip": "yari_zamanli"}, "izinler": [], "uygunluk": []}
+                       for i in (1, 2)],
+        "vardiya_sablonlari": [_sablon("GUN", 8, 17)],
+        "talep": [{"ekip": "E", "gun": d, "saat": h, "asgari": 1, "hedef": 3}
+                  for d in (0, 1) for h in range(8, 17)],
+        "kurallar": [_kural("ASGARI_KAPSAMA"), _kural("HEDEF_KAPSAMA", "YUMUSAK"),
+                     _kural("HEDEF_ASIMI", "YUMUSAK")],
+        "kilitler": [], "donmus_gunler": [],
+    }
+    c = coz(g, dict(AYAR))
+    assert c["durum"] == "cozuldu", c["durum"]
+    r = degerlendir(g, c["atamalar"])
+    d = KO.hedef_dokumu(r["ihlaller"])
+    assert d["toplam"]["eksik_kisi_saat"] >= 18, d["toplam"]          # 18 hucre x en az 1
+    assert d["toplam"]["eksik_kisi_saat"] * 60 == r["metrikler"]["eksik_hedef_dakika"], (
+        d["toplam"], r["metrikler"])
+    assert d["toplam"]["asim_kisi_saat"] == 0
+    assert len(d["hucreler"]) == d["toplam"]["eksik_hucre"] == 18
+
+
+# ----------------------------------------------------------------------
+# Uc "fazla mesai" sayisi -- hangi ayrisma (2 Ekim gecesi)
+# ----------------------------------------------------------------------
+
+def test_fazla_mesai_uyumu_gevsek_cezayi_tanim_bozulmasindan_AYIRIR():
+    # 2 Ekim, 900 sn ipucusuz kosu: cezalanan 206,5; motor ve dogrulayici 199
+    assert KO.fazla_mesai_uyumu(206.5, 199.0, 199.0) == "ceza_gevsek"
+    assert KO.fazla_mesai_uyumu(82.75, 82.75, 82.75) == "ayni"
+    # K-57 oncesi hal: motor ile dogrulayici ayri sayiyordu
+    assert KO.fazla_mesai_uyumu(9.0, 122.3, 125.5) == "tanim_ayrisiyor"
+    # cezalanan plandan KUCUK olamaz (esitsizlik tek yonlu): olursa tanim ayrismis
+    assert KO.fazla_mesai_uyumu(190.0, 199.0, 199.0) == "tanim_ayrisiyor"
+    assert KO.fazla_mesai_uyumu(199.0, 199.0, None) == "tanim_ayrisiyor"
+

@@ -104,6 +104,35 @@ YAPILANDIRMALAR = {
                      {}, {"agirliklar": {"FAZLA_MESAI": 5}}),
     "fm_agirlik_1": ("TESHIS: fazla mesai agirligi 50 -> 1 (dakika basina)",
                      {}, {"agirliklar": {"FAZLA_MESAI": 1}}),
+    # T-60 bulgu 8 (2 Ekim): "ipucu demir atiyor, ipucusuz arama guvenilir
+    # degil". Asagidakiler OLCUM secenekleridir; urunun varsayilani hicbirini
+    # acmaz (09-motor/cozucu/coz.py VARSAYILAN, testler/test_demir_secenekleri.py).
+    #   (a) birinci asama gecerli plani bulduktan sonra, molalar sabitken
+    #       amacli iyilestirir; ana asamanin ipucu iyilesmis plan olur.
+    #       Sure arama butcesinin ICINDEN gider.
+    "a_ipuclu_120":   ("(a) birinci asamada 120 sn amacli iyilestirme, amacsiz plandan baslayarak",
+                       {"ilk_asama_iyilestirme_saniye": 120}, {}),
+    "a_ipucusuz_120": ("(a) birinci asamada 120 sn amacli iyilestirme, IPUCUSUZ (bulamazsa amacsiz plan kalir)",
+                       {"ilk_asama_iyilestirme_saniye": 120,
+                        "ilk_asama_iyilestirme_ipucusuz": True}, {}),
+    "a_ipuclu_60":    ("(a) birinci asamada 60 sn amacli iyilestirme, amacsiz plandan baslayarak",
+                       {"ilk_asama_iyilestirme_saniye": 60}, {}),
+    #   2 Ekim gecesi tam olcek sonucu: (a) fazla mesaiyi 475-511 saatten
+    #   60-100 saate indirdi ve kazancin cogu SABIT MOLALI 120 saniyede geldi
+    #   (amacsiz 1,9-2,9 milyon -> 236-354 bin; ana asama ustune %6-12 ekledi).
+    #   Iki soru: daha uzun sabit molali arama daha da iyi mi; molalarin
+    #   yerini aramaktan cikarmak (Mustafa'nin sorusu) ne kazandirir?
+    "a_ipuclu_240":   ("(a) birinci asamada 240 sn amacli iyilestirme (butcenin %40'i)",
+                       {"ilk_asama_iyilestirme_saniye": 240}, {}),
+    "sabit_mola_480": ("(a) aramanin neredeyse TAMAMI sabit molali modelde: 480 sn iyilestirme, kalan ana asama",
+                       {"ilk_asama_iyilestirme_saniye": 480,
+                        "ilk_asama_iyilestirme_orani": 0.85}, {}),
+    #   (b) ana asamada ipuclu ve ipucusuz arama YAN YANA, ayni surede;
+    #       isciler bolusulur, iyi olan plan secilir. Model bellekte iki kez.
+    "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya",
+                       {"paralel_ipucusuz_isci": 3}, {}),
+    "b_paralel_2":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 2 isci, kalani ipucluya",
+                       {"paralel_ipucusuz_isci": 2}, {}),
 }
 VARSAYILAN_SECIM = "varsayilan,cift_butce,ipucu_kapali,lp_guclu"
 SECILEN = _arg("--yapilandirma", VARSAYILAN_SECIM).split(",")
@@ -313,6 +342,72 @@ def fazla_mesai_tabani(g, k):
             "saat_dengesi_sert": sert, "borc_toplam_saat": round(borc_toplam / 60.0, 1)}
 
 
+def fazla_mesai_uyumu(model_saat, motor_saat, dogrulayici_saat):
+    """Uc "fazla mesai" sayisi ayni mi; degilse HANGI ayrisma? (2 Ekim gecesi)
+
+    Uc sayi: cozucunun CEZALADIGI (ceza degiskenlerinin toplami), motorun
+    metrigi (plandan sayilir), dogrulayicinin metrigi (bagimsiz, plandan).
+
+    ⚠ NEDEN TEK "BOZULDU" UYARISI YETMEDI
+      900 sn'lik ipucusuz kosuda (2 Ekim) cezalanan 206,50, motor ve
+      dogrulayici 199,00 cikti ve betik "K-57 bozuldu" yazdi. Tanim bozuk
+      degildi: cozucu ceza degiskenini "fazla >= net - sozlesme" diye
+      ESITSIZLIKLE tanimlar (cozucu/model.py); arama bitmeden kesilen
+      planda degisken gercek degerin USTUNDE kalabilir. Plan dogru, cozucunun
+      kendi hesabi siskin -- ve amac degeri de o kadar siskin.
+
+    Donen: "ayni" | "ceza_gevsek" (motor == dogrulayici < cezalanan: plan
+    saglam, amac degeri siskin) | "tanim_ayrisiyor" (motor != dogrulayici ya
+    da cezalanan plandan KUCUK: K-57 gercekten bozulmus olabilir).
+    """
+    esit = lambda a, b: a is not None and b is not None and abs(a - b) < 0.01
+    if esit(motor_saat, dogrulayici_saat):
+        if esit(model_saat, motor_saat):
+            return "ayni"
+        if model_saat is not None and model_saat > motor_saat:
+            return "ceza_gevsek"
+    return "tanim_ayrisiyor"
+
+
+def hedef_dokumu(ihlaller):
+    """Hedef acigi ve asimi NEREDE? -- T-60 bulgu 10 (2 Ekim aksami).
+
+    Toplam "1.200 kisi-saat eksik" acigin yerini soylemiyor: hangi ekip,
+    hangi gun, hangi saat. 1 Ekim planinda 900 kisi-saat eksigin yaninda
+    3.903 kisi-saat ASIM vardi -- saat yetmiyor degil, yanlis yere yazilmis.
+    Bu ayrim hucre dokumu olmadan gorulemiyor ve 2 Ekim'in kalite dosyasi
+    dokumu saklamiyordu.
+
+    Kaynak BAGIMSIZ DOGRULAYICININ ihlal listesidir (HEDEF_KAPSAMA ve
+    HEDEF_ASIMI satirlari: ekip, gun, saat, olculen = atanan kisi, gereken =
+    hedef); cozucunun kendi sayimi degil.
+
+    Donen: {"ekip": {ekip: {"eksik_kisi_saat", "asim_kisi_saat",
+    "eksik_hucre", "asim_hucre"}}, "toplam": {...ayni dort alan},
+    "hucreler": [[ekip, gun, saat, atanan, hedef], ...]} -- yalniz hedeften
+    SAPAN hucreler, (ekip, gun, saat) sirali.
+    """
+    bos = lambda: {"eksik_kisi_saat": 0, "asim_kisi_saat": 0, "eksik_hucre": 0, "asim_hucre": 0}
+    ekip, toplam, hucreler = {}, bos(), []
+    for i in ihlaller or []:
+        if i.get("kural") not in ("HEDEF_KAPSAMA", "HEDEF_ASIMI"):
+            continue
+        atanan, hedef = i.get("olculen"), i.get("gereken")
+        if atanan is None or hedef is None or atanan == hedef:
+            continue
+        e = ekip.setdefault(i.get("ekip"), bos())
+        if atanan < hedef:
+            alan, hucre, fark = "eksik_kisi_saat", "eksik_hucre", hedef - atanan
+        else:
+            alan, hucre, fark = "asim_kisi_saat", "asim_hucre", atanan - hedef
+        for d in (e, toplam):
+            d[alan] += fark
+            d[hucre] += 1
+        hucreler.append([i.get("ekip"), i.get("gun"), i.get("saat"), atanan, hedef])
+    hucreler.sort(key=lambda h: (str(h[0]), h[1], h[2]))
+    return {"ekip": ekip, "toplam": toplam, "hucreler": hucreler}
+
+
 def fazla_mesai_kisiler(k, c):
     """Planda fazla mesaisi olan kisiler: sozlesme, borc, net saat, fazla ve
     gun gun vardiya karisimi (gun:sablon). Modelin kendi net tanimiyla
@@ -376,7 +471,7 @@ def kosu(g, ad, ayar, girdi_ek=None):
          "durum": c.get("durum")}
     for alan in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri", "alt_sinir",
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
-                 "amac_dagilimi", "iyilesme"):
+                 "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel"):
         s[alan] = ist.get(alan)
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
     s["metrikler"] = m
@@ -391,6 +486,7 @@ def kosu(g, ad, ayar, girdi_ek=None):
     s["sert_ihlal"] = sum(1 for i in r.get("ihlaller", [])
                           if i.get("agirlik") == "SERT" and not i.get("gecmis"))
     s["yayinlanabilir"] = (r.get("yayin_kapisi") or {}).get("yayinlanabilir")
+    s["hedef_dokumu"] = hedef_dokumu(r.get("ihlaller", []))
     s["dogrulayici_metrikler"] = {a: (r.get("metrikler") or {}).get(a)
                                   for a in ("hedef_kapsama_yuzde", "asgari_kapsama_yuzde",
                                             "fazla_mesai_saat", "sozlesme_ustu_ucret_saat",
@@ -405,6 +501,26 @@ def kosu(g, ad, ayar, girdi_ek=None):
     print("         sert ihlal %d  |  yayinlanabilir %s  |  hedef kapsama %%%s  |  eksik hedef %s kisi-saat  |  fazla mesai (motor metrigi) %s saat"
           % (s["sert_ihlal"], s["yayinlanabilir"], m.get("hedef_kapsama_yuzde"),
              (m.get("eksik_hedef_dakika") or 0) / 60.0, m.get("fazla_mesai_saat")))
+    hd = s["hedef_dokumu"]
+    print("         hedef dokumu (dogrulayici): eksik %d kisi-saat (%d hucre)  |  ASIM %d kisi-saat (%d hucre)"
+          % (hd["toplam"]["eksik_kisi_saat"], hd["toplam"]["eksik_hucre"],
+             hd["toplam"]["asim_kisi_saat"], hd["toplam"]["asim_hucre"]))
+    for e_ad, e in sorted(hd["ekip"].items(), key=lambda kv: str(kv[0])):
+        print("           %-12s eksik %5d kisi-saat (%3d hucre)   asim %5d kisi-saat (%3d hucre)"
+              % (e_ad, e["eksik_kisi_saat"], e["eksik_hucre"], e["asim_kisi_saat"], e["asim_hucre"]))
+    b = s.get("ilk_asama_iyilestirme")
+    if b:
+        print("         (a) birinci asama iyilestirmesi: %s sn (%s)  |  amacsiz plan %s -> iyilesmis %s  |  plan %s, cozum %s"
+              % (b["saniye"], "ipucusuz" if b["ipucusuz"] else "ipuclu", b["amacsiz_amac"],
+                 b["iyilesmis_amac"], "bulundu" if b["plan_bulundu"] else "BULUNAMADI (amacsiz ipucu kaldi)",
+                 b["cozum_sayisi"]))
+    p = s.get("paralel")
+    if p:
+        for ad in ("ipuclu", "ipucusuz"):
+            print("         (b) %-8s %d isci  |  %s  |  amac %s  |  ilk plan %s sn  |  cozum %s%s"
+                  % (ad, p[ad]["isci"], "plan var" if p[ad]["plan_bulundu"] else "PLAN YOK",
+                     p[ad]["amac_degeri"], p[ad]["ilk_cozum_sn"], p[ad]["cozum_sayisi"],
+                     "   <-- SECILEN" if p["secilen"] == ad else ""))
     for kural, d in (s["amac_dagilimi"] or {}).items():
         print("           %-16s ceza %10d  (%%%5.1f)   ham %8d   degisken %6d"
               % (kural, d["ceza"], d["pay_yuzde"], d["deger"], d["degisken"]))
@@ -474,12 +590,17 @@ def ozet(sonuc):
         if d and m.get("fazla_mesai_saat") is not None:
             model_saat = d["deger"] / 60.0
             dogrulayici_saat = (s.get("dogrulayici_metrikler") or {}).get("fazla_mesai_saat")
-            ayni = (abs(model_saat - m["fazla_mesai_saat"]) < 0.01
-                    and dogrulayici_saat is not None and abs(model_saat - dogrulayici_saat) < 0.01)
+            uyum = fazla_mesai_uyumu(model_saat, m["fazla_mesai_saat"], dogrulayici_saat)
+            s["fazla_mesai_uyumu"] = uyum
+            uyari = {"ayni": "",
+                     "ceza_gevsek": "   <-- CEZA DEGISKENI GEVSEK: plan %.2f saat, cozucu %.2f saat cezaladi (amac degeri %d puan siskin; K-57 bozulmadi)"
+                                    % (m["fazla_mesai_saat"], model_saat,
+                                       round((model_saat - m["fazla_mesai_saat"]) * 60 * (d["ceza"] / float(d["deger"]) if d["deger"] else 0))),
+                     "tanim_ayrisiyor": "   <-- UC SAYI AYNI DEGIL (K-57 bozuldu)"}[uyum]
             print("  %-14s fazla mesai (yasal, K-57): modelin cezaladigi %.2f saat (kacinilmaz taban %.1f saat) | motor metrigi %.2f saat | dogrulayici metrigi %s saat%s"
                   % (s["yapilandirma"], model_saat, fm.get("saat", 0.0), m["fazla_mesai_saat"],
                      ("%.2f" % dogrulayici_saat) if dogrulayici_saat is not None else None,
-                     "" if ayni else "   <-- UC SAYI AYNI DEGIL (K-57 bozuldu)"))
+                     uyari))
             sou = (s.get("dogrulayici_metrikler") or {}).get("sozlesme_ustu_ucret_saat")
             if sou is not None:
                 print("  %-14s sozlesme ustu ucretli saat (ayri alan, fazla mesai DEGIL): %.1f saat" % (s["yapilandirma"], sou))

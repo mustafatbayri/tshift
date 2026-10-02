@@ -37,6 +37,29 @@ VARSAYILAN = {
     # Urun kodu bunu BOS birakir; kalite-olc.py yapilandirmalari doldurur.
     # Sure ve isci sayisi buradan verilmez (yukaridaki alanlar esastir).
     "cozucu_parametreleri": {},
+    # T-60 (2 Ekim, bulgu 8): OLCUM secenekleri. Ucunun de varsayilani
+    # KAPALI -- urunun davranisi degismez; kalite-olc.py yapilandirmalari acar.
+    #
+    #   Bulgu 8: birinci asamanin AMACSIZ plani ana aramayi kotu bir plana
+    #   "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya indirdi)
+    #   ama ipucusuz arama guvenilir degil (iki kosudan biri plan bulamadi).
+    #
+    # (a) Birinci asama, gecerli plani bulduktan sonra molalar HALA SABITKEN
+    #     amaci geri koyup bu kadar saniye iyilestirir; ana asamanin ipucu
+    #     iyilesmis plan olur. Sure BUTCENIN ICINDEN gider (T-59). 0 = kapali.
+    "ilk_asama_iyilestirme_saniye": 0,
+    #     Iyilestirme butcenin en cok bu kadarini alir (ana asamaya sure
+    #     kalsin diye): 0.1 olcekte 45 sn butceyle 60 sn iyilestirme
+    #     istenince ana asamaya 1 sn kaldi ve plan DONMEDI (olculdu, 2 Ekim).
+    "ilk_asama_iyilestirme_orani": 0.4,
+    #     True: iyilestirme aramasi amacsiz plani ipucu ALMADAN baslar (kucuk
+    #     modelde demirsiz arama). Plan bulamazsa amacsiz planin ipucu KALIR --
+    #     guvenlik agi kaybolmaz.
+    "ilk_asama_iyilestirme_ipucusuz": False,
+    # (b) Ana asamada iki arama YAN YANA: biri ipuclu (guvenlik agi), biri
+    #     ipucusuz; sure ayni, isciler bolusulur; iyi olan plan secilir.
+    #     Deger = ipucusuz aramaya verilen isci sayisi. 0 = kapali.
+    "paralel_ipucusuz_isci": 0,
 }
 
 
@@ -209,6 +232,8 @@ def _ipucu_ver(kuruldu, ayar):
     def amaci_geri_koy():
         kuruldu.m.Minimize(sum(a * v for a, v in kuruldu.cezalar))
 
+    basladi = time.time()
+    kuruldu.ilk_asama_iyilestirme = None
     kuruldu.m.ClearObjective()
     sabitlenen = _molalari_sabitle(kuruldu) if ayar.get("ilk_asama_sabit_mola", True) else []
     try:
@@ -226,10 +251,83 @@ def _ipucu_ver(kuruldu, ayar):
         #   degiskenlerin degeri var; hepsi yazilir, ipucu tam ve gecerli
         #   olur, ana asama onu ilk cozum olarak hemen alir.
         _tam_ipucu_yaz(kuruldu, c)
+        _ilk_asamada_iyilestir(kuruldu, ayar, c, amaci_geri_koy, basladi)
         return True
     finally:
         _molalari_serbest_birak(kuruldu, sabitlenen)
         amaci_geri_koy()
+
+
+def _iyilestirme_coz(model, saniye, isci):
+    """Sabit molali modelde AMACLI kisa arama. Ayri fonksiyon: testler
+    "plan bulunamadi" yolunu buradan zorlar."""
+    c = cp_model.CpSolver()
+    c.parameters.max_time_in_seconds = float(saniye)
+    c.parameters.num_search_workers = isci
+    geri = _CozumSayaci()
+    return c.Solve(model, geri), c, geri
+
+
+class _CozumSayaci(cp_model.CpSolverSolutionCallback):
+    def __init__(self):
+        cp_model.CpSolverSolutionCallback.__init__(self)
+        self.cozum_sayisi = 0
+
+    def on_solution_callback(self):
+        self.cozum_sayisi += 1
+
+
+def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi):
+    """(a) secenegi -- T-60 bulgu 8 (2 Ekim). VARSAYILAN KAPALI.
+
+    Cagrildiginda: molalar SABIT, amac SILINMIS, amacsiz planin ipucu TAM
+    yazilmis. Burada amac geri konur ve ayni (kucuk) modelde
+    `ilk_asama_iyilestirme_saniye` kadar iyilestirilir; plan bulunursa ipucu
+    onunla DEGISIR. Sabit molali planin her cozumu tam modelin de cozumudur
+    (alan daraltildi, kisit eklenmedi), yani ipucu yine tam ve gecerlidir.
+
+    ⚠ GUVENLIK AGI KAYBOLMAZ: iyilestirme plan bulamazsa (ipucusuz
+      baslatildiysa olabilir) amacsiz planin ipucu GERI YAZILIR.
+    ⚠ SURE BUTCENIN ICINDEN: birinci asamanin toplami `ilk_asama_sn`e
+      yazilir, ana asamaya kalan verilir (T-59). Iyilestirme butcenin en cok
+      `ilk_asama_iyilestirme_orani` (%40) kadarini alir: ana asama ipucunu
+      plana cevirmeye yetecek sureyi bulamazsa elde plan varken "sure
+      yetmedi" doner.
+    Ne oldugu `kuruldu.ilk_asama_iyilestirme`e yazilir (ciktiya gider).
+    """
+    istenen = float(ayar.get("ilk_asama_iyilestirme_saniye") or 0)
+    if istenen <= 0:
+        return
+    kalan = float(ayar["azami_saniye"]) - (time.time() - basladi) - 1.0
+    tavan = float(ayar["azami_saniye"]) * float(ayar.get("ilk_asama_iyilestirme_orani", 0.4))
+    saniye = min(istenen, tavan, kalan)
+    amacsiz_amac = int(sum(a * amacsiz.Value(v) for a, v in kuruldu.cezalar))
+    bilgi = {"istenen_saniye": istenen, "saniye": 0.0,
+             "ipucusuz": bool(ayar.get("ilk_asama_iyilestirme_ipucusuz")),
+             "amacsiz_amac": amacsiz_amac, "iyilesmis_amac": None,
+             "plan_bulundu": False, "cozum_sayisi": 0, "optimum": False}
+    kuruldu.ilk_asama_iyilestirme = bilgi
+    if saniye <= 0:
+        return
+    proto = kuruldu.m.Proto()
+    yedek = (list(proto.solution_hint.vars), list(proto.solution_hint.values))
+    amaci_geri_koy()
+    if bilgi["ipucusuz"]:
+        kuruldu.m.ClearHints()
+    t0 = time.time()
+    durum, c2, sayac = _iyilestirme_coz(kuruldu.m, saniye, isci_sayisi(ayar))
+    bilgi["saniye"] = round(time.time() - t0, 2)
+    bilgi["cozum_sayisi"] = sayac.cozum_sayisi
+    if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        bilgi["plan_bulundu"] = True
+        bilgi["optimum"] = (durum == cp_model.OPTIMAL)
+        bilgi["iyilesmis_amac"] = int(c2.ObjectiveValue())
+        _tam_ipucu_yaz(kuruldu, c2)
+    else:
+        proto.solution_hint.vars.clear()
+        proto.solution_hint.values.clear()
+        proto.solution_hint.vars.extend(yedek[0])
+        proto.solution_hint.values.extend(yedek[1])
 
 
 def _tam_ipucu_yaz(kuruldu, cozucu):
@@ -320,6 +418,95 @@ def _durgunluk_bekcisiyle_coz(cozucu, model, geri, ayar):
         dur.set()
 
 
+def _paralel_sec(adaylar):
+    """Iki aramadan hangisinin plani donecek: plani olanlardan amaci KUCUK
+    olan; esitlikte ipuclu (guvenlik agi). Hicbirinde plan yoksa ipuclu."""
+    planli = [a for a in adaylar if a["durum"] in (cp_model.OPTIMAL, cp_model.FEASIBLE)]
+    if not planli:
+        return adaylar[0]
+    return min(planli, key=lambda a: (a["cozucu"].ObjectiveValue(), a["sira"]))
+
+
+def _paralel_coz(kuruldu, cozucu, geri, ayar, isci):
+    """(b) secenegi -- T-60 bulgu 8 (2 Ekim). VARSAYILAN KAPALI.
+
+    Ayni model iki kez, AYNI SUREDE, yan yana aranir:
+      ipuclu   : bugunku urun -- birinci asamanin plani ipucu (plan garantisi)
+      ipucusuz : ayni modelin KOPYASI, ipucu silinmis (demirsiz arama)
+    Isciler bolusulur: ipucusuza `paralel_ipucusuz_isci`, kalani ipucluya
+    (en az 1). Biri optimumu/hedef boslugu bulup durursa oteki de durdurulur.
+    Donen plan `_paralel_sec`in sectigidir.
+
+    ⚠ MODEL IKI KEZ BELLEKTE durur (kopya). Tam olcekte bellek ve cekirdek
+      paylasiminin bedeli OLCULMEDEN bu secenek urune alinmaz.
+    ⚠ Kopyanin degisken sirasi asil modelle aynidir; secilen cozucu hangisi
+      olursa olsun atamalar asil modelin degiskenleriyle okunur.
+    """
+    import threading
+
+    ipucusuz_isci = max(1, min(int(ayar["paralel_ipucusuz_isci"]), max(1, isci - 1)))
+    ipuclu_isci = max(1, isci - ipucusuz_isci)
+    cozucu.parameters.num_search_workers = ipuclu_isci
+
+    kopya = kuruldu.m.Clone()
+    kopya.ClearHints()
+    cozucu2 = cp_model.CpSolver()
+    cozucu2.parameters.copy_from(cozucu.parameters)
+    cozucu2.parameters.num_search_workers = ipucusuz_isci
+    geri2 = _ErkenDur(ayar)
+    geri2.ana_basladi = geri.ana_basladi
+
+    adaylar = [
+        {"ad": "ipuclu", "sira": 0, "cozucu": cozucu, "geri": geri, "model": kuruldu.m,
+         "isci": ipuclu_isci, "durum": None, "hata": None},
+        {"ad": "ipucusuz", "sira": 1, "cozucu": cozucu2, "geri": geri2, "model": kopya,
+         "isci": ipucusuz_isci, "durum": None, "hata": None},
+    ]
+
+    kanit = threading.Event()
+
+    def kostur(a):
+        try:
+            a["durum"] = _durgunluk_bekcisiyle_coz(a["cozucu"], a["model"], a["geri"], ayar)
+        except Exception as e:                       # pragma: no cover
+            a["durum"], a["hata"] = cp_model.UNKNOWN, repr(e)
+        # Kanitli bitis (optimum / hedef bosluk): otekinin aramasi gereksiz.
+        if a["geri"].durma_sebebi in ("optimum", "hedef_bosluk") \
+                or a["durum"] == cp_model.OPTIMAL:
+            kanit.set()
+
+    isler = [threading.Thread(target=kostur, args=(a,)) for a in adaylar]
+    for i in isler:
+        i.start()
+    # ⚠ Durdurma TEKRARLANIR: oteki arama henuz baslamamissa tek bir
+    #   StopSearch bosa gider ve o arama butcenin tamamini kosar.
+    while any(i.is_alive() for i in isler):
+        if kanit.wait(0.2):
+            for a in adaylar:
+                a["cozucu"].StopSearch()
+            time.sleep(0.05)
+    for i in isler:
+        i.join()
+
+    secilen = _paralel_sec(adaylar)
+    bilgi = {"secilen": secilen["ad"]}
+    for a in adaylar:
+        planli = a["durum"] in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+        bilgi[a["ad"]] = {
+            "isci": a["isci"],
+            "plan_bulundu": planli,
+            "amac_degeri": int(a["cozucu"].ObjectiveValue()) if planli else None,
+            "alt_sinir": int(round(a["cozucu"].BestObjectiveBound())) if planli else None,
+            "cozum_sayisi": a["geri"].cozum_sayisi,
+            "ilk_cozum_sn": (round(a["geri"].ilk_cozum_sn, 2)
+                             if a["geri"].ilk_cozum_sn is not None else None),
+            "durma_sebebi": a["geri"].durma_sebebi,
+            "iyilesme": _iyilesme_ozeti(a["geri"].egri, nokta=12),
+            "hata": a["hata"],
+        }
+    return secilen["cozucu"], secilen["geri"], secilen["durum"], bilgi
+
+
 def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     """Master Spec #11.3 ciktisi. Plan URETIR; denetlemez.
 
@@ -405,7 +592,17 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
 
     basladi = time.time()
     geri.ana_basladi = basladi
-    durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
+    paralel = None
+    if int(ayar.get("paralel_ipucusuz_isci") or 0) > 0:
+        if iki_asama:
+            cozucu, geri, durum, paralel = _paralel_coz(kuruldu, cozucu, geri, ayar, isci)
+        else:
+            kuruldu.notlar.append("paralel_ipucusuz_isci yok sayildi: ipucu yok "
+                                  "(iki asama devreye girmedi), yan yana "
+                                  "kosturulacak iki arama ayni olurdu")
+            durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
+    else:
+        durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
     sure = time.time() - basladi
 
     istatistik = {
@@ -433,6 +630,9 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         # cevabi bunsuz eksik kalir.
         "isci_sayisi": isci,
         "iki_asama": iki_asama,
+        # T-60 bulgu 8 olcum secenekleri; kapaliyken None.
+        "ilk_asama_iyilestirme": getattr(kuruldu, "ilk_asama_iyilestirme", None),
+        "paralel": paralel,
         "baslangic_plani_kullanildi": baslangic_kullanildi,
         # K-54: donmus gunler -- kac satir aynen gecti, kac kisit gecmise
         # dusuldu/kirpildi (sifirsa alan yine yazilir: "yok" ile "unutuldu"

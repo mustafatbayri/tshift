@@ -462,6 +462,33 @@ oldu.
 
 ---
 
+## O-14 · "Yalnız bakıyorum" dediğim git komutu depoda kilit bıraktı ⚠
+
+**Tarih:** 2 Ekim 2026, 18:57 (yeni pencerenin ilk dakikaları)
+
+**Ne oldu.** Açılış beyanı için depo durumuna `git status` ile baktım —
+okuma komutu saydığım için. Git, `status` sırasında indeksi tazeler ve bunun
+için `.git/index.lock` oluşturur; Mustafa'nın makinesine bağlı kabukta dosya
+**silme izni yok**, kilit silinemedi ve 0 baytlık dosya orada kaldı. Depo
+sağlamdı ama bir sonraki `git add` / `git commit` *"index.lock: File exists"*
+ile duracaktı. Mustafa elle sildi.
+
+**Neden.** *"Okuma komutu"* ile *"hiçbir şey yazmayan komut"* aynı şey
+değil; `git status`, `git diff` ve benzerleri indeksi yazabilir. Silme izni
+olmayan bir kabukta, arkasını toplayamayacağım geçici dosya üreten her komut
+iz bırakır.
+
+### Kalıcı bekçi
+
+Kural (otomatik bekçisi yok): **bu kabuktan git yalnız `GIT_OPTIONAL_LOCKS=0`
+ile çağrılır** (`export GIT_OPTIONAL_LOCKS=0`); o ayarla `status`, `diff`,
+`log` kilit açmaz — 2 Ekim'de `status` ve `diff` bu ayarla koşulup ardından
+`.git/index.lock` arandı, oluşmadı. `git add`,
+`commit`, `push` bu kabuktan **yapılmaz**; commit bloğu Mustafa'ya verilir.
+`DENETIM.py` de git çağırdığı için aynı ayarla koşulur.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -479,6 +506,7 @@ oldu.
 | O-11 | Yorumda ölçülmemiş güvenlik iddiası; yapılandırma yanlıştı | Uçtan uca elle ölçüm, kapanış kaydına adım olarak yazılı | ✅ *(kural; birim testi göremez)* |
 | O-12 | "Süre yetmedi" testi makine hızına güveniyordu; CI'da kırmızı yandı | Dolan bütçe enjekte edilir (`sure_dolmus`); mutasyon grubu `sure_yetmedi` | ✅ |
 | O-13 | Aktarılan dosya makinede boşaldı; doğrulama önbelleğe bakıyordu | Windows tarafından geri okuyarak md5; köprü koptuysa yeniden doğrula; Mustafa'nın makinesindeki test koşusu asıl kapı | ✅ *(kural; otomatik bekçisi yok)* |
+| O-14 | `git status` silme izni olmayan kabukta `.git/index.lock` bıraktı | Git yalnız `GIT_OPTIONAL_LOCKS=0` ile; `add`/`commit` bu kabuktan yapılmaz | ✅ *(kural; otomatik bekçisi yok)* |
 
 ---
 

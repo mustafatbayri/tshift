@@ -4,6 +4,33 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-02 (23:25) · T-60: birinci aşamada iyileştirme tam ölçekte fazla mesaiyi 475–511 → 60–100 saate indirdi · yan yana arama ve ipuçsuz uzun arama elendi**
+Mustafa'nın makinesi, 600 sn, ikişer koşu: (a) hedef eksiğini de yarıya
+indirdi, ilk plan gecikmedi, 0 sert; kazancın çoğu molalar sabitken geldi.
+(b) ve (c) elendi. Çözücünün ceza değişkenleri eşitsizlikle tanımlı olduğu
+için amaç değeri plandan büyük çıkabiliyor (bulgu 14); `kalite-olc.py`
+uyarısı ikiye ayrıldı, iki yeni ölçüm yapılandırması (`a_ipuclu_240`,
+`sabit_mola_480`). Yarı zamanlı tanımı düzeltildi (şartname §5.2, §6.2;
+K-39): çalışana saat tanımlanmaz, baz 30, tavan 45. **Ürün varsayılanı
+değişmedi.** Kalite testleri 10.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 13–14) · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-ab-600.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-c-900.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `02-spec/v1.4-master-spec.md` · `00-DEVIR/08-URUN-KARARLARI.md` (K-39)
+
+**2026-10-02 (21:05) · Şartname 41 kurala ve verilmiş kararlara çekildi · T-60 ölçüm seçenekleri (a) ve (b) yazıldı · açığın yeri döküldü**
+Yeni pencere şartnameyi baştan sona okudu; altı çelişki düzeltildi (v1.4
+değişiklik listesi 49–55): katalog 41, `GECE_UYGUNLUGU` satırı, `SAAT_DENGESI`
+sert ve toleranssız, yarı zamanlı tavanı 45, *"aynı girdiyle aynı plan"*
+cümlesi kaldırıldı, A11 *"çalışır, atlar ve raporlar"*, kapsamsız kullanıcı
+notu. T-60: 1 Ekim planının hücre dökümü (900 kişi-saat eksik, 3.903 fazla);
+keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (keşif,
+testi yok); çözücüye iki **ölçüm** seçeneği — birinci aşamada amaçlı
+iyileştirme ve ipuçlu + ipuçsuz yan yana arama — ürün varsayılanı değişmedi.
+İpuçsuz 900 sn tam ölçekte ölçüldü: beş koşunun dördünde plan yok (bulgu 12).
+`kalite-olc.py` her koşunun hedef dökümünü saklıyor. 14 + 2 test, 13 mutasyon
+(toplam **214**), motor **545 test** (bulut makinesinde;
+Mustafa'nın makinesinde ve CI'da henüz koşmadı). O-14: `git status` kilit
+bıraktı, kural yazıldı.
+→ `02-spec/v1.4-master-spec.md` · `09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-02-hedef-tabani/OKU-BENI.md` · `00-DEVIR/06-ACIK-RISKLER.md` (T-60) · `00-DEVIR/05-HATA-OTOPSILERI.md` (O-14) · `00-DEVIR/oturumlar/2026-10-02-kalite-olcumu-tam-olcek.md`
+
 **2026-10-02 (14:40) · K-57 "fazla mesai" tek tanım (yasal) · T-60 kalite ölçüm araçları ve 0.1 ölçek ölçümleri · ağırlık deneyi**
 Üç ayrı "fazla mesai" sayısı vardı (çözücü cezası 5–11 saat, doğrulayıcı
 metriği 116–125, motor metriği 117–127 — aynı 0.1 ölçekli sahne). Mustafa:

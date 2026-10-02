@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-02 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
+**Son güncelleme:** 2026-10-02 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -249,6 +249,52 @@ Hedef eksiği (%6,3–6,7) üç koşuda sabit: yapısal. Ayrıntı ve ölçülec
 seçenek `06-ACIK-RISKLER.md` T-60, bulgu 7–9. Commit `8b53fe2` CI yeşil.
 **Yeni pencerenin işi:** üç seçeneği ölçmek ve hedef eksiğinin yerini
 dökmek; ürün kararı Mustafa'nın. Açık 🔴 yalnız T-60.
+**⚠ 2 Ekim 21:05 — yeni pencere çalışıyor, en güncel durum budur.** Açılış
+beyanı verildi, Mustafa onayladı (19:03). **Şartname baştan sona okundu** ve
+altı çelişki düzeltildi (v1.4 değişiklik listesi 49–55): katalog **41**
+(başlık 38, sayım 35 diyordu; `GECE_UYGUNLUGU` tabloda yoktu), sözleşme
+saatini doldurma **sert ve toleranssız**, yarı zamanlı tavanı 45, *"aynı
+girdiyle aynı plan çıkar"* cümlesi kaldırıldı, eksik geçmiş senaryosu
+*"çalışır, atlar ve raporlar"*, kapsamsız kullanıcı notu *"hiçbir şey
+görmez"*. **T-60:** açığın yeri döküldü (bulgu 10: 900 kişi-saat eksik,
+3.903 fazla — saat yanlış yerde); keşif modeli aynı kadroyla **80 kişi-saat
+açık + 0 fazla mesai** buldu (bulgu 11 — ⚠ keşif, testi yok, bazı kurallar
+modelde değil); ölçüm seçenekleri **(a)** birinci aşamada iyileştirme ve
+**(b)** ipuçlu + ipuçsuz yan yana yazıldı — **ürün varsayılanı değişmedi**,
+14 test, 13 mutasyon öldü, bulut makinesinde motor **545 test** yeşil;
+`kalite-olc.py` artık açığın yerini de saklıyor (`hedef_dokumu`); 0.1
+ölçekte yol denemesinde (a) iki koşuda amaç 6.396 ve 10.008, ürün hali
+38.895 (bulut, 2 çekirdek — tam ölçek için tahmin değil);
+⚠ Mustafa'nın makinesinde ve CI'da **koşmadı, commit edilmedi**. **(c)**
+ipuçsuz 900 sn ölçüldü (19:37–20:59): beş koşunun **dördü plan bulamadı**,
+bulan tek koşu ilk planı 644. saniyede buldu (fazla mesai 199 saat, 0 sert) —
+(c) tek başına seçenek değil (bulgu 12). **Sıradaki tek adım:** blok 1
+(testler + mutasyon, Mustafa'nın makinesi) → commit → (a) ve (b) tam ölçek
+ölçümü. **Mustafa'yı bekleyen iki
+karar:** plan sonuç kartındaki *"en iyinin %X'i kadar iyi"* cümlesi (alt sınır
+tam ölçekte zayıf, sayı bugün %1 çıkar) ve müşteriye söylenecek sapma cümlesi
+(ölçülen fark %1–2 değil; sayı T-60 kapanınca). Açık 🔴 yalnız T-60.
+**⚠ 2 Ekim 23:25 — (a) ölçüldü ve işe yarıyor, en güncel durum budur.**
+Mustafa'nın makinesinde kod yeşil (motor 545 test, `demir` 13 mutasyon öldü,
+kalite testleri 9). Tam ölçek, 600 sn, ikişer koşu (`kalite-olcumu-95-ab-600.json`):
+**(a) birinci aşamada 120 sn iyileştirme** yasal fazla mesaiyi **475–511
+saatten 60–100 saate**, hedef eksiğini 1.199–1.248'den 575–656 kişi-saate
+indirdi; ilk plan yine 55–65 sn, altı koşu da 0 sert. Kazancın çoğu
+**molalar sabitken** geldi (bulgu 13). **(b)** yan yana arama elendi
+(ipuçsuz kol plan bulamadı, işçi bölmek zarar); **(c)** elendi (bulgu 12).
+Çözücünün amaç değeri planın gerçek cezasından büyük olabiliyor — koşular
+doğrulayıcının sayılarıyla karşılaştırılır (bulgu 14). **Ürün varsayılanı
+hâlâ değişmedi.** Yarı zamanlı tanımı Mustafa'nın düzeltmesiyle şartnameye ve
+K-39'a işlendi: çalışana saat tanımlanmaz, baz 30, tavan 45, arası ek mesai.
+**Sıradaki tek adım:** `sabit_mola_480` ve `a_ipuclu_240` ölçümü (blok
+verildi). **Mustafa'yı bekleyenler:** (a) ürüne alınsın mı · molalar motorun
+hesabından çıkıp ayrı, isteğe bağlı adım olsun mu (ölçümden sonra) · sezonluk
+ve stajyer sözleşmelerin saati ve `gun_sayisi` alanı *"çalışana saat
+tanımlamıyoruz"* kararıyla nasıl bağdaşacak. **Ertelenen, unutulmayacak:**
+plan sonuç kartının yüzde cümlesi · müşteriye sapma cümlesi · süre
+önerisinin probleme göre değişmesi — üçü de T-60 kapanınca
+(`06-ACIK-RISKLER.md` T-60, *"Mustafa'nın 2 Ekim 23:05 notları"*).
+**Commit edilmedi** (blok verildi). Açık 🔴 yalnız T-60.
 **Son sürüm etiketi:** `v0.8-devir`
 **Depo:** `github.com/mustafatbayri/tshift` (özel) · yerel kök: `C:\Users\PC\Desktop\Tshift`
 
@@ -647,12 +693,12 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-21~~ | ✅ **KAPANDI 1 Ekim, K-50** — çok yetenekli çalışan üye olduğu bütün ekiplere sayılır (Mustafa'nın saha örneği) | — |
 > | ~~T-18~~ | ✅ **KAPANDI 1 Ekim, K-49** — kontrol edilemeyen kural kapıdan geçemez: yasal+sert engeller, firma+sert kabul bekler, yumuşak rapor | — |
 > | ~~T-59~~ | 🟡 **DÜZELTİLDİ 30 Eylül akşamı** — birinci aşama bütçenin içinden pay alıyor, ana çözüme kalan veriliyor; tam ölçekte (900 sn) yeniden ölçülmedi | — |
-> | **T-60** | Tam ölçekte plan **üretiliyor** (plan bulma yarısı 1 Ekim'de kapandı: birinci aşama molaları sabitleyerek buluyor) ama optimuma **%97–99** uzak — kalite yarısı açık | ⚠ önce ölçüm (profil, bütçe, işçi sayısı, ağırlık), sonra karar |
+> | **T-60** | Tam ölçekte plan **üretiliyor** (plan bulma yarısı 1 Ekim'de kapandı: birinci aşama molaları sabitleyerek buluyor) ama kalite yok: ürün hali haftada 475–511 saat fazla mesai yazıyor, ipuçsuz arama yarıya indiriyor ama güvenilir değil (2 Ekim, bulgu 7–9); açık saat yetmediğinden değil yanlış yere yazılmasından (bulgu 10) | ⚠ ölçüm: (a) birinci aşamada iyileştirme, (b) yan yana arama; (c) ipuçsuz 900 sn ölçüldü, beş koşunun dördünde plan yok — sonra karar |
 > | ~~T-54~~ | ✅ **KAPANDI 1 Ekim, K-53** — hedefi aşan kişi-saate yumuşak ceza (`HEDEF_ASIMI`); ücret terimi yok | — |
 > | ~~T-44~~ | ✅ **KAPANDI 28 Eylül** — K-34 ile zaman birimi çeyrek saate indi; eşik `4F → 12F/7` (taban 3 için 12 kişi yerine **6**). Çözüm süresi 40 kişide 0.78 sn | — |
 > | ~~T-23~~, ~~T-48~~ | ✅ **KAPANDI 29 Eylül, K-37** — *"süre yetmedi"* ile *"imkânsız"* ayrıldı; teşhis artık yalnız istenirse koşuyor | — |
 >
-> **Bir 🔴 açık: T-60** (2 Ekim 01:00). Karar bekleyen soru yok. Açık işler
+> **Bir 🔴 açık: T-60** (2 Ekim 23:25). Karar bekleyenler en üstteki son paragrafta. Açık işler
 > (kırmızı değil): T-60 kalite ölçümleri; arayüz/backend — içe aktarma modülü
 > (K-55 kuralları), dondurulmuş gün çoklu seçim (K-54), geçmiş-eksik *"gördüm"* onayı (K-47); `SAHADA_ASGARI` tabanı sorusu.
 >
