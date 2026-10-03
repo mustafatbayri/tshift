@@ -21,6 +21,11 @@ NE OLDU (30 Eylul aksami)
   * model kurma suresi AYRI kalem olarak cikar (`model_kurma_sn`) --
     kullaniciya ayrica gosterilebilsin (T-59'un onerisi)
 
+K-59 (3 Ekim): birinci asama artik IKI arama -- gecerli plan (pay %20) ve
+  molalar sabitken amacli iyilestirme (pay `ilk_asama_iyilestirme_orani`,
+  %40). Ikisinin toplami `ilk_asama_sn`e yazilir; ana asamaya yine KALAN
+  verilir, soz degismez: birinci asamada GECEN + ana asamaya VERILEN <= azami.
+
 ⚠ BU TESTLER SAAT OLCMEZ -- bilerek. CI makinesi paylasimli ve 2
   cekirdekli; "5 saniyeden kisa surdu" diyen bir test yuk altinda rastgele
   kirmizi yanar (bkz. iki haftalik testin CI'dan cikarilmasi, 30 Eylul).
@@ -104,7 +109,10 @@ def test_birinci_asama_butceyi_YIYEMEZ(monkeypatch):
 
 
 def test_ipucu_aramasi_KENDI_payiyla_sinirli(monkeypatch):
-    """_ipucu_ver'e giden CP-SAT butcesi payi asmamali."""
+    """Birinci asamanin iki aramasina giden CP-SAT butceleri paylarini asmamali.
+
+    K-59'dan once iki arama vardi (ipucu + ana); 3 Ekim'den beri uc:
+    ipucu (%20), molalar sabitken iyilestirme (%40), ana asama (kalan)."""
     gorulen = []
     asil = C.cp_model.CpSolver
 
@@ -116,14 +124,17 @@ def test_ipucu_aramasi_KENDI_payiyla_sinirli(monkeypatch):
     monkeypatch.setattr(C.cp_model, "CpSolver", Kayitci)
     c = C.coz(_sahne(), {"azami_saniye": 10, "ilk_asama_saniye": 120,
                          "iki_asama_esigi": 0, "durgunluk_saniye": 0})
-    assert len(gorulen) == 2, gorulen
+    assert len(gorulen) == 3, gorulen
     assert gorulen[0] <= 2.0 + 1e-6, (
-        "birinci asama %s sn aldi; pay en cok 10 x %%20 = 2 sn" % gorulen[0])
-    # Butceler TOPLANMAZ: birinci asama payinin tamamini kullanmayabilir.
+        "gecerli plan aramasi %s sn aldi; pay en cok 10 x %%20 = 2 sn" % gorulen[0])
+    assert gorulen[1] <= 4.0 + 1e-6, (
+        "K-59 iyilestirmesi %s sn aldi; pay en cok 10 x %%40 = 4 sn" % gorulen[1])
+    # Butceler TOPLANMAZ: birinci asama paylarinin tamamini kullanmayabilir.
     # Soz su: birinci asamada GECEN + ana asamaya VERILEN <= azami.
     ist = c["cozum_istatistikleri"]
-    assert abs(gorulen[1] - ist["ana_asama_butce_sn"]) < 0.01, (gorulen, ist)
-    assert ist["ilk_asama_sn"] + gorulen[1] <= 10 + 0.01, (gorulen, ist)
+    assert abs(gorulen[2] - ist["ana_asama_butce_sn"]) < 0.01, (gorulen, ist)
+    assert ist["ilk_asama_sn"] + gorulen[2] <= 10 + 0.01, (gorulen, ist)
+    assert ist["ilk_asama_iyilestirme"]["istenen_saniye"] == 4.0, ist["ilk_asama_iyilestirme"]
 
 
 def test_model_kurma_suresi_AYRI_kalem():

@@ -87,15 +87,73 @@ def _kapali_alan(k):
 # 0. Varsayilan: iki secenek de KAPALI, urun ayni
 # ----------------------------------------------------------------------
 
-def test_varsayilanda_iki_secenek_de_KAPALI():
-    assert C.VARSAYILAN["ilk_asama_iyilestirme_saniye"] == 0
+def test_varsayilan_K59_a_ACIK_orandan_b_ve_atama_sabitleme_KAPALI():
+    """K-59 (3 Ekim, Mustafa: "olsun"): birinci asamada iyilestirme urunun
+    varsayilani; suresi butcenin %40'i (kalibrasyon). (b) ve atama sabitleme
+    olcum secenegi olarak kapali."""
+    assert C.VARSAYILAN["ilk_asama_iyilestirme_saniye"] is None
+    assert C.VARSAYILAN["ilk_asama_iyilestirme_orani"] == 0.4
     assert C.VARSAYILAN["ilk_asama_iyilestirme_ipucusuz"] is False
     assert C.VARSAYILAN["paralel_ipucusuz_isci"] == 0
+    assert C.VARSAYILAN["ana_asama_atamalar_sabit"] is False
     c = C.coz(_sahne(), dict(AYAR))
     ist = c["cozum_istatistikleri"]
     assert c["durum"] == "cozuldu" and ist["iki_asama"] is True
-    assert ist["ilk_asama_iyilestirme"] is None, ist["ilk_asama_iyilestirme"]
+    b = ist["ilk_asama_iyilestirme"]
+    assert b is not None and b["plan_bulundu"] is True, b
+    assert abs(b["istenen_saniye"] - 0.4 * AYAR["azami_saniye"]) < 1e-6, b   # 30 sn -> 12 sn
+    assert b["saniye"] <= 0.4 * AYAR["azami_saniye"] + 0.5, b
+    assert "amac_dagilimi" in b and sum(d["ceza"] for d in b["amac_dagilimi"].values()) == b["iyilesmis_amac"], b
     assert ist["paralel"] is None, ist["paralel"]
+    assert ist["atamalar_sabit"] is False
+
+
+def test_iyilestirme_SIFIR_ile_kapatilir_eski_davranis():
+    c = C.coz(_sahne(), dict(AYAR, ilk_asama_iyilestirme_saniye=0))
+    ist = c["cozum_istatistikleri"]
+    assert c["durum"] == "cozuldu" and ist["iki_asama"] is True
+    assert ist["ilk_asama_iyilestirme"] is None, ist["ilk_asama_iyilestirme"]
+
+
+# ----------------------------------------------------------------------
+# Olcum: ana asama atamalari sabitler, yalniz molalari arar
+# ----------------------------------------------------------------------
+
+def test_atamalar_sabit_ana_asama_x_i_DEGISTIREMEZ_molalari_arar(monkeypatch):
+    gorulen = {}
+    asil = C._durgunluk_bekcisiyle_coz
+
+    def bak(cozucu, model, geri, ayar):
+        proto = model.Proto()
+        gorulen["sabit_x"] = {i for i in range(len(proto.variables))
+                              if len(proto.variables[i].domain) == 2
+                              and proto.variables[i].domain[0] == proto.variables[i].domain[1]}
+        return asil(cozucu, model, geri, ayar)
+    monkeypatch.setattr(C, "_durgunluk_bekcisiyle_coz", bak)
+    g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
+    k = Model(g).kur()
+    c = C.coz(g, dict(AYAR, ana_asama_atamalar_sabit=True), kuruldu=k)
+    assert c["durum"] == "cozuldu"
+    ist = c["cozum_istatistikleri"]
+    assert ist["atamalar_sabit"] is True
+    x_indisleri = {v.Index() for v in k.x.values()}
+    assert x_indisleri <= gorulen["sabit_x"], "atama degiskenleri sabitlenmedi"
+    mola_indisleri = {v.Index() for v in k.mola.values()} | {v.Index() for v in k.dinlenme.values()}
+    assert not (mola_indisleri & gorulen["sabit_x"]), "mola degiskenleri de sabitlendi"
+    # donen plan = sabitlenen atamalar (ipucu 1 olanlar)
+    proto = k.m.Proto()
+    sabit_bir = {anahtar for anahtar, v in k.x.items() if list(proto.variables[v.Index()].domain) == [1, 1]}
+    donen = {(a["calisan"], a["gun"], a["sablon"]) for a in c["atamalar"]}
+    assert donen == sabit_bir, (donen, sabit_bir)
+    r = dogrulayici.degerlendir(g, c["atamalar"])
+    assert r["yayin_kapisi"]["yayinlanabilir"] is True, r["ihlaller"]
+
+
+def test_atamalar_sabit_ipucu_yoksa_UYGULANMAZ_not_duser():
+    c = C.coz(_sahne(), dict(AYAR, iki_asama_esigi=10 ** 9, ana_asama_atamalar_sabit=True))
+    assert c["durum"] == "cozuldu"
+    assert c["cozum_istatistikleri"]["atamalar_sabit"] is False
+    assert any("ana_asama_atamalar_sabit yok sayildi" in n for n in c["uygulanmayan_notlar"])
 
 
 # ----------------------------------------------------------------------

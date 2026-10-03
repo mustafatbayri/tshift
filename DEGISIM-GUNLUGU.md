@@ -4,6 +4,18 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-03 (16:55) · K-59: birinci aşamada amaçlı iyileştirme ürünün varsayılanı (%40) · mola ayrı adım ölçüm seçeneği**
+Mustafa: *"olsun."* Varsayılan `ilk_asama_iyilestirme_saniye: None` (orandan),
+oran 0.4; `0` eski davranış (ölçüm). Mola kararı için ölçüm seçeneği
+`ana_asama_atamalar_sabit` ve `kalite-olc.py` `mola_ayri_adim`,
+`eski_urun_hali`. 17 test, `demir` 19 mutasyon (bulut, hepsi öldü), toplam
+**221**; `test_sure_butcesi.py` bütçe testi üç aramaya göre düzeltildi (K-59'un
+kırdığı tek test). Bulutta 40 motor test dosyası **549 test geçti**, kalite
+ölçüm testleri 18 geçti; `test_gercekci_olcek.py` bulutta koşmadı (180 sn
+sınırı). Mustafa'nın tam koşusu (215) hepsi öldü, `280c4ef`. ⚠ Yeni kod
+Mustafa'nın makinesinde ve CI'da henüz koşmadı.
+→ `00-DEVIR/08-URUN-KARARLARI.md` (K-59) · `09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py` · `09-motor/testler/test_sure_butcesi.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `02-spec/v1.4-master-spec.md` (§11.3, değişiklik 57)
+
 **2026-10-03 (16:00) · T-60 blok 4: molalar sabitken uzun arama fazla mesaiyi 34–38 saate indirdi · O-15: tam mutasyon koşusu 1 yaşayan 3 atlanan buldu, düzeltildi**
 600 sn, ikişer koşu: 240 sn iyileştirme 45–53 saat / 512–533 kişi-saat eksik;
 molalar sabit 480 sn 34–38 saat / 360–366 — bedeli mola sırasında kapsama

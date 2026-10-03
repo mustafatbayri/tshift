@@ -92,8 +92,10 @@ ISCI = _arg("--isci", None, int)
 #     50 -> 5 : 1 saat fazla mesai = 300 puan = 33 kisi-saat hedef acigi
 #     50 -> 1 : 1 saat fazla mesai =  60 puan =  6,7 kisi-saat hedef acigi
 YAPILANDIRMALAR = {
-    "varsayilan":   ("urunun kostugu hal: iki asama acik",
+    "varsayilan":   ("urunun kostugu hal: iki asama + birinci asamada iyilestirme (K-59, butcenin %40'i)",
                      {}, {}),
+    "eski_urun_hali": ("K-59 oncesi urun hali: birinci asamada iyilestirme KAPALI (2 Ekim olcumleriyle kiyas icin)",
+                     {"ilk_asama_iyilestirme_saniye": 0}, {}),
     "cift_butce":   ("ayni ayarlar, arama suresi iki kati",
                      {"azami_saniye": SANIYE * 2}, {}),
     "ipucu_kapali": ("birinci asama (gecerli plan ipucu) kapali",
@@ -127,6 +129,20 @@ YAPILANDIRMALAR = {
     "sabit_mola_480": ("(a) aramanin neredeyse TAMAMI sabit molali modelde: 480 sn iyilestirme, kalan ana asama",
                        {"ilk_asama_iyilestirme_saniye": 480,
                         "ilk_asama_iyilestirme_orani": 0.85}, {}),
+    #   MOLA AYRI ADIM (3 Ekim, Mustafa'nin sorusu "molalar motorun hesabindan
+    #   ciksin mi?"): sabit_mola_480 ile AYNI birinci asama (480 sn sabit
+    #   molali iyilestirme), TEK FARK ana asamada ATAMALAR SABIT -- kalan
+    #   ~107 sn'de yalniz molalar aranir. Ayri bir mola adiminin mola
+    #   sirasinda kapsamayi ne kadar geri aldigini olcer; sabit_mola_480 ayni
+    #   surede atamalari da oynatabildiginden ikisi yan yana kosulur
+    #   (3 Ekim sabahki 480 kosularinda sabit molali planin mola kapsamasi
+    #   kaydedilmiyordu; simdi `amac_dagilimi` ile kaydediliyor). Ana asamaya
+    #   kalan 107 sn'nin plan verdigi olculdu: ilk plan 56-57 sn'de
+    #   (kalite-olcumu-95-mola-600.json, bulgu 15-16).
+    "mola_ayri_adim": ("mola ayri adim: sabit_mola_480 ile ayni ilk asama, TEK FARK ana asamada atamalar SABIT (yalniz molalar aranir)",
+                       {"ilk_asama_iyilestirme_saniye": 480,
+                        "ilk_asama_iyilestirme_orani": 0.85,
+                        "ana_asama_atamalar_sabit": True}, {}),
     #   (b) ana asamada ipuclu ve ipucusuz arama YAN YANA, ayni surede;
     #       isciler bolusulur, iyi olan plan secilir. Model bellekte iki kez.
     "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya",
@@ -471,7 +487,8 @@ def kosu(g, ad, ayar, girdi_ek=None):
          "durum": c.get("durum")}
     for alan in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri", "alt_sinir",
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
-                 "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel"):
+                 "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
+                 "atamalar_sabit"):
         s[alan] = ist.get(alan)
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
     s["metrikler"] = m
@@ -514,6 +531,12 @@ def kosu(g, ad, ayar, girdi_ek=None):
               % (b["saniye"], "ipucusuz" if b["ipucusuz"] else "ipuclu", b["amacsiz_amac"],
                  b["iyilesmis_amac"], "bulundu" if b["plan_bulundu"] else "BULUNAMADI (amacsiz ipucu kaldi)",
                  b["cozum_sayisi"]))
+        sm = (b.get("amac_dagilimi") or {}).get("MOLA_KAPSAMASI")
+        sa = (s.get("amac_dagilimi") or {}).get("MOLA_KAPSAMASI")
+        if sm and sa:
+            print("         mola sirasinda kapsama (ham): sabit molali plan %d  ->  ana asama sonu %d%s"
+                  % (sm["deger"], sa["deger"],
+                     "   (ana asamada ATAMALAR SABIT: yalniz molalar arandi)" if s.get("atamalar_sabit") else ""))
     p = s.get("paralel")
     if p:
         for ad in ("ipuclu", "ipucusuz"):

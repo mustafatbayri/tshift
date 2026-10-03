@@ -2795,3 +2795,51 @@ olarak raporlanmıyor.
 → K-39 · K-57 · T-80 · şartname §5.2, §6.2, §8.3, §11.2 ·
 `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
 `09-motor/cozucu/model.py` · `09-motor/dogrulayici/kurallar.py`
+
+---
+
+## K-59 · Birinci aşamada **amaçlı iyileştirme** ürünün varsayılanıdır; süresi bütçenin %40'ı (kalibrasyon)
+
+**Karar (3 Ekim 2026, 16:31, Mustafa).** *"1- olsun."* — *"Birinci aşamada
+iyileştirme ürünün varsayılanı olsun mu?"* sorusuna.
+
+**Ne demek.** Motor önce molaları şablonun ideal noktasına sabitleyip geçerli
+bir plan bulur (1 Ekim'den beri), **sonra molalar hâlâ sabitken amacı geri
+koyup bu planı iyileştirir**, ana aşama (molalar serbest) bu iyileşmiş
+plandan başlar. 2 Ekim'e kadar ana aşama amaçsız bir plandan başlıyor ve ona
+demir atıyordu (T-60 bulgu 8).
+
+**Dayanak (hepsi Mustafa'nın makinesi, 500 kişi, %95 doluluk, 600 sn, ikişer
+koşu; `06-ACIK-RISKLER.md` T-60 bulgu 13 ve 15):**
+
+| | fazla mesai (yasal, saat) | hedef eksiği (kişi-saat) | sert |
+|---|---|---|---|
+| ürün hali (2 Ekim) | 475 · 511 | 1.199 · 1.248 | 0 |
+| iyileştirme 120 sn (%20) | 60 · 83 | 575 · 610 | 0 |
+| iyileştirme 240 sn (%40) | 45 · 53 | 512 · 533 | 0 |
+| molalar sabit 480 sn (%80) | 34 · 38 | 360 · 366 | 0 |
+
+**Varsayılan değerler (`09-motor/cozucu/coz.py` `VARSAYILAN`):**
+`ilk_asama_iyilestirme_saniye: None` (süre orandan gelir; `0` = kapalı, ölçüm
+için eski davranış), `ilk_asama_iyilestirme_orani: 0.4`. **%40 bir
+kalibrasyondur, karar değil:** ölçülen üç noktadan ortadaki. %80 fazla mesaiyi
+daha da düşürüyor ama mola sırasında kapsama ihlalini %40'a göre üç kat
+artırıyor (624–631 ↔ 200–221; ürün halinde 426–474). Molaların motorun
+hesabından çıkıp çıkmayacağı (K-59'un ikinci sorusu, **Mustafa: "ölçümlerimizi
+tamamlayıp karar vermek isterim"**) belli olunca oran yeniden kalibre edilir.
+
+**Değişen:** varsayılan ayar; `test_demir_secenekleri.py` (17 test, biri
+*"sıfır kapatır, eski davranış"*); `demir` mutasyon grubu 19 (dördü K-59:
+varsayılan kapalı / oran %80 / `None` sıfır okunsun / sıfır kapatmasın);
+`kalite-olc.py`'de `varsayilan` artık K-59'u içeriyor, eski hâl
+`eski_urun_hali` yapılandırması; `test_sure_butcesi.py`'de bütçe bölünüşü
+testi üç aramaya göre (ipucu %20 · iyileştirme %40 · ana aşama kalan) —
+K-59'un kırdığı tek test buydu, beklenen kırılma. ⚠ Değişen ürün davranışı
+**üç profille ve tekrarlı** tam ölçekte henüz ölçülmedi; sırada.
+
+**Yan ölçüm seçeneği (ürün değil):** `ana_asama_atamalar_sabit` — ana aşama
+atamaları sabitleyip yalnız molaları arar; *"molalar ayrı adım olsun mu"*
+sorusunun ölçümü (`kalite-olc.py` `mola_ayri_adim`).
+
+→ T-60 · K-32 · K-48 · şartname §11.3 (`ilk_asama_sn`) ·
+`09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py`

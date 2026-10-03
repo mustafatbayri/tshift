@@ -37,20 +37,29 @@ VARSAYILAN = {
     # Urun kodu bunu BOS birakir; kalite-olc.py yapilandirmalari doldurur.
     # Sure ve isci sayisi buradan verilmez (yukaridaki alanlar esastir).
     "cozucu_parametreleri": {},
-    # T-60 (2 Ekim, bulgu 8): OLCUM secenekleri. Ucunun de varsayilani
-    # KAPALI -- urunun davranisi degismez; kalite-olc.py yapilandirmalari acar.
+    # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
+    #   bir plana "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya
+    #   indirdi) ama ipucusuz arama guvenilir degil (yedi kosunun ikisi plan
+    #   buldu). Cozum (a): birinci asama gecerli plani bulduktan sonra molalar
+    #   HALA SABITKEN amaci geri koyup iyilestirir; ana asamanin ipucu
+    #   iyilesmis plan olur. Sure BUTCENIN ICINDEN gider (T-59).
     #
-    #   Bulgu 8: birinci asamanin AMACSIZ plani ana aramayi kotu bir plana
-    #   "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya indirdi)
-    #   ama ipucusuz arama guvenilir degil (iki kosudan biri plan bulamadi).
+    # ⚠ K-59 (3 Ekim, Mustafa: "olsun") -- (a) URUNUN VARSAYILANI. Olculdu
+    #   (500 kisi, 600 sn, ikiser kosu): yasal fazla mesai 475-511 saat ->
+    #   120 sn'de 60-83, 240 sn'de 45-53, 480 sn'de 34-38; hedef eksigi
+    #   1.199-1.248 -> 575-610 / 512-533 / 360-366 kisi-saat; hepsi 0 sert.
     #
-    # (a) Birinci asama, gecerli plani bulduktan sonra molalar HALA SABITKEN
-    #     amaci geri koyup bu kadar saniye iyilestirir; ana asamanin ipucu
-    #     iyilesmis plan olur. Sure BUTCENIN ICINDEN gider (T-59). 0 = kapali.
-    "ilk_asama_iyilestirme_saniye": 0,
-    #     Iyilestirme butcenin en cok bu kadarini alir (ana asamaya sure
-    #     kalsin diye): 0.1 olcekte 45 sn butceyle 60 sn iyilestirme
-    #     istenince ana asamaya 1 sn kaldi ve plan DONMEDI (olculdu, 2 Ekim).
+    #   `ilk_asama_iyilestirme_saniye`: None = sure ORANDAN gelir (varsayilan);
+    #   sayi = en cok bu kadar saniye; 0 = KAPALI (eski davranis, olcum icin).
+    "ilk_asama_iyilestirme_saniye": None,
+    #   Iyilestirme butcenin en cok bu kadarini alir. %40 bir KALIBRASYON,
+    #   karar degil: olculen uc noktadan (%20, %40, %80) ortadaki; %80 fazla
+    #   mesaiyi daha da dusuruyor ama mola sirasinda kapsama ihlalini
+    #   %40'a gore uc kat artiriyor (bulgu 15). Molalarin motordan cikip
+    #   cikmayacagi (Mustafa'nin acik karari) belli olunca yeniden kalibre
+    #   edilir. Ust sinir var ki ana asamaya sure kalsin: 0.1 olcekte 45 sn
+    #   butceyle 60 sn iyilestirme istenince ana asamaya 1 sn kaldi ve plan
+    #   DONMEDI (olculdu, 2 Ekim).
     "ilk_asama_iyilestirme_orani": 0.4,
     #     True: iyilestirme aramasi amacsiz plani ipucu ALMADAN baslar (kucuk
     #     modelde demirsiz arama). Plan bulamazsa amacsiz planin ipucu KALIR --
@@ -59,7 +68,16 @@ VARSAYILAN = {
     # (b) Ana asamada iki arama YAN YANA: biri ipuclu (guvenlik agi), biri
     #     ipucusuz; sure ayni, isciler bolusulur; iyi olan plan secilir.
     #     Deger = ipucusuz aramaya verilen isci sayisi. 0 = kapali.
+    #     ⚠ Olculdu ve ELENDI (bulgu 13): ipucusuz kol plan bulamadi, isci
+    #     bolmek ipuclu kolu kotulestirdi. Olcum secenegi olarak duruyor.
     "paralel_ipucusuz_isci": 0,
+    # OLCUM (3 Ekim, Mustafa'nin sorusu: "molalar motorun hesabindan ciksin
+    #   mi?"): True ise ana asama ATAMALARI birinci asamanin planina SABITLER
+    #   ve yalniz molalari arar -- ayri bir "mola adimi"nin ne kazandirdigini
+    #   olcer (sabit molali planda ayni sablondaki herkes ayni dakikada
+    #   molada; mola sirasinda kapsama ihlali bundan). Urun varsayilani
+    #   KAPALI; ipucu yoksa (iki asama girmediyse) uygulanamaz, not duser.
+    "ana_asama_atamalar_sabit": False,
 }
 
 
@@ -278,7 +296,9 @@ class _CozumSayaci(cp_model.CpSolverSolutionCallback):
 
 
 def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi):
-    """(a) secenegi -- T-60 bulgu 8 (2 Ekim). VARSAYILAN KAPALI.
+    """(a) secenegi -- T-60 bulgu 8 (2 Ekim). K-59 (3 Ekim): URUNUN
+    VARSAYILANI, sure butcenin %40'i (`ilk_asama_iyilestirme_orani`);
+    `ilk_asama_iyilestirme_saniye: 0` kapatir (olcum: eski davranis).
 
     Cagrildiginda: molalar SABIT, amac SILINMIS, amacsiz planin ipucu TAM
     yazilmis. Burada amac geri konur ve ayni (kucuk) modelde
@@ -295,11 +315,12 @@ def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi):
       yetmedi" doner.
     Ne oldugu `kuruldu.ilk_asama_iyilestirme`e yazilir (ciktiya gider).
     """
-    istenen = float(ayar.get("ilk_asama_iyilestirme_saniye") or 0)
-    if istenen <= 0:
-        return
-    kalan = float(ayar["azami_saniye"]) - (time.time() - basladi) - 1.0
     tavan = float(ayar["azami_saniye"]) * float(ayar.get("ilk_asama_iyilestirme_orani", 0.4))
+    istenen = ayar.get("ilk_asama_iyilestirme_saniye")
+    istenen = tavan if istenen is None else float(istenen)   # K-59: None = orandan
+    if istenen <= 0:
+        return                                   # 0 = kapali (olcum: eski davranis)
+    kalan = float(ayar["azami_saniye"]) - (time.time() - basladi) - 1.0
     saniye = min(istenen, tavan, kalan)
     amacsiz_amac = int(sum(a * amacsiz.Value(v) for a, v in kuruldu.cezalar))
     bilgi = {"istenen_saniye": istenen, "saniye": 0.0,
@@ -322,12 +343,34 @@ def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi):
         bilgi["plan_bulundu"] = True
         bilgi["optimum"] = (durum == cp_model.OPTIMAL)
         bilgi["iyilesmis_amac"] = int(c2.ObjectiveValue())
+        bilgi["amac_dagilimi"] = _amac_dagilimi(kuruldu, c2)   # sabit molali planin kiriligi
         _tam_ipucu_yaz(kuruldu, c2)
     else:
         proto.solution_hint.vars.clear()
         proto.solution_hint.values.clear()
         proto.solution_hint.vars.extend(yedek[0])
         proto.solution_hint.values.extend(yedek[1])
+
+
+def _atamalari_sabitle(kuruldu):
+    """Atama degiskenlerini (x) ipucudaki degerlerine SABITLER; donen sayi
+    sabitlenen degisken sayisi (ipucu yoksa 0). Mola degiskenleri serbest
+    kalir -- ana asama yalniz molalari arar. Model tek kullanimlik (bkz.
+    `coz`), alanlar geri acilmaz."""
+    proto = kuruldu.m.Proto()
+    ipucu = dict(zip(proto.solution_hint.vars, proto.solution_hint.values))
+    if not ipucu:
+        return 0
+    sayi = 0
+    for v in kuruldu.x.values():
+        deger = ipucu.get(v.Index())
+        if deger is None:
+            continue
+        dom = proto.variables[v.Index()].domain
+        dom.clear()
+        dom.extend([int(deger), int(deger)])
+        sayi += 1
+    return sayi
 
 
 def _tam_ipucu_yaz(kuruldu, cozucu):
@@ -584,6 +627,16 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         iki_asama = (len(kuruldu.m.Proto().variables) >= ayar["iki_asama_esigi"]
                      and _ipucu_ver(kuruldu, ayar))
 
+    # OLCUM: ana asama yalniz molalari arasin -- atamalar ipucunun degerine
+    # sabitlenir (ayri "mola adimi" denemesi, 3 Ekim).
+    atamalar_sabit = False
+    if ayar.get("ana_asama_atamalar_sabit"):
+        if iki_asama:
+            atamalar_sabit = _atamalari_sabitle(kuruldu) > 0
+        else:
+            kuruldu.notlar.append("ana_asama_atamalar_sabit yok sayildi: ipucu yok "
+                                  "(iki asama devreye girmedi), sabitlenecek plan yok")
+
     # T-59: ana cozume KALAN verilir. Iki asamanin toplami azami_saniye'yi
     # gecmez. En az 1 saniye: sifir sure CP-SAT'e "hic arama" demek olurdu.
     ilk_asama = time.time() - ilk_basladi
@@ -633,6 +686,7 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         # T-60 bulgu 8 olcum secenekleri; kapaliyken None.
         "ilk_asama_iyilestirme": getattr(kuruldu, "ilk_asama_iyilestirme", None),
         "paralel": paralel,
+        "atamalar_sabit": atamalar_sabit,
         "baslangic_plani_kullanildi": baslangic_kullanildi,
         # K-54: donmus gunler -- kac satir aynen gecti, kac kisit gecmise
         # dusuldu/kirpildi (sifirsa alan yine yazilir: "yok" ile "unutuldu"

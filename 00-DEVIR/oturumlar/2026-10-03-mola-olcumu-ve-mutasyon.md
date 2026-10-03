@@ -12,6 +12,7 @@ iki karar → T-80.
 3. [Tam mutasyon koşusu: 1 yaşadı, 3 atlandı](#3--tam-mutasyon-koşusu-1-yaşadı-3-atlandı)
 4. [Değişen dosyalar ve doğrulama durumu](#4--değişen-dosyalar-ve-doğrulama-durumu)
 5. [Bekleyen kararlar](#5--bekleyen-kararlar)
+6. [16:31 — K-59 ve mola ölçüm seçeneği](#6--1631--k-59-ve-mola-ölçüm-seçeneği)
 
 ---
 
@@ -91,3 +92,51 @@ değişince commit öncesi tam koşu.
    yapılandırması yazılır: atamalar sabit, molalar serbest, 60 sn).
 3. `gun_sayisi` (K-58 açık maddesi).
 4. `DENETIM.py`'ye tam koşu damgası kontrolü (O-15) — onay.
+
+## 6 · 16:31 — K-59 ve mola ölçüm seçeneği
+
+**Mustafa'nın koşusu:** `test_gecmis_veri.py` 35 geçti, **tam mutasyon
+koşusu 215 mutasyon, hepsi öldü**, `mutasyon-tam-kosu.txt` damgası yazıldı, DENETIM 0
+hata, commit **`280c4ef`** push. O-15'in doğrulaması tamamlandı.
+
+**Kararlar:** (1) *"olsun"* → **K-59** (`08-URUN-KARARLARI.md`): iyileştirme
+varsayılan, süre bütçenin %40'ı — kalibrasyon, mola kararından sonra yeniden.
+(2) *"Ölçümlerimizi tamamlayıp karar vermek isterim."*
+
+**Yapılan (bulut):**
+- `coz.py`: `ilk_asama_iyilestirme_saniye` varsayılanı `None` (süre orandan;
+  `0` = kapalı), oran 0.4; iyileşmiş planın `amac_dagilimi` çıktıya;
+  `ana_asama_atamalar_sabit` ölçüm seçeneği (`_atamalari_sabitle`: x
+  değişkenleri ipucu değerine sabitlenir, molalar serbest); çıktıda
+  `atamalar_sabit`.
+- Testler: `test_demir_secenekleri.py` 17 (K-59 varsayılanı, sıfır kapatır,
+  atamalar sabit → x değişmez molalar serbest → dönen plan sabitlenen
+  atamalar, ipucu yoksa not); `demir` 19 mutasyon hepsi öldü; **toplam 221**.
+- `kalite-olc.py`: `varsayilan` K-59'lu, `eski_urun_hali`, `mola_ayri_adim`
+  (`sabit_mola_480` ile aynı ilk aşama — 480 sn sabit molalı iyileştirme,
+  ana aşamaya ≈107 sn — tek fark atamalar sabit); çıktıda sabit molalı
+  planın mola kapsaması ↔ ana aşama sonu. Ölçüm tasarımı: iki yapılandırma
+  yan yana, aralarında **tek fark**; 107 sn'lik ana aşamanın plan verdiği
+  sabahki 480 koşularından biliniyor (ilk plan 56–57 sn).
+- Devir: K-59, T-60 (bulgu 15'e ürün halinin mola değeri 426–474 eklendi —
+  *"üç kat"* 240 sn'ye göredir, ürün haline göre 1,3–1,5 kat; sıradaki adım),
+  şartname §11.3 ve değişiklik 57.
+
+**Doğrulama (bulut, 16:45–16:55):** `demir` 19/19 öldü. Tüm motor test
+dosyaları teker teker koşuldu (bulutun 180 sn komut sınırı yüzünden
+parçalı): **40 dosya, 549 test geçti**. Tek kırılan
+`test_sure_butcesi.py::test_ipucu_aramasi_KENDI_payiyla_sinirli` idi — iki
+CP-SAT araması bekliyordu, K-59 ile üç oldu (ipucu 2,0 sn = %20 ·
+iyileştirme 4,0 sn = %40 · ana aşama kalan 9,98 sn); test üç aramaya göre
+düzeltildi, bütçe sözü aynen duruyor (*birinci aşamada geçen + ana aşamaya
+verilen ≤ azami*). Kalite ölçüm testleri (`test_kalite_olc.py`,
+`test_sahte_pdks.py`) 18 geçti. Mutasyon: 221 çapanın hepsi dosyalarda
+tam bir kez bulunuyor (atlanan çıkmayacak); `demir` 19/19, `butce` 4/4
+(`test_sure_butcesi.py` düzeltmesinden sonra), `ilk_asama` 6/6 öldü — grup
+koşuları, toplam iddiası değil (O-15). ⚠ `test_gercekci_olcek.py` **bulutta
+koşmadı** (tam ölçek model kurma + 0,1 ölçek çözüm > 180 sn): 0,1 ölçekte
+240 sn bütçeyle K-59 artık ilk aşamada 96 sn'ye kadar iyileştirme yapar,
+ana aşamaya ≥ 96 sn kalır — plan döner, süre uzayabilir; **CI ve Mustafa'nın
+makinesi ölçer.** ⚠ Mustafa'nın makinesinde test, tam mutasyon koşusu,
+commit ve ölçüm **bekliyor**.
+
