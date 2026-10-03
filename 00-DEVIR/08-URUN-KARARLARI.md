@@ -2839,7 +2839,14 @@ K-59'un kırdığı tek test buydu, beklenen kırılma. ⚠ Değişen ürün dav
 
 **Yan ölçüm seçeneği (ürün değil):** `ana_asama_atamalar_sabit` — ana aşama
 atamaları sabitleyip yalnız molaları arar; *"molalar ayrı adım olsun mu"*
-sorusunun ölçümü (`kalite-olc.py` `mola_ayri_adim`).
+sorusunun ölçümü (`kalite-olc.py` `mola_ayri_adim`). **Ölçüldü (3 Ekim 18:21,
+T-60 bulgu 17):** atamalar sabitken mola adımı 29 sn'de mola ihlalinin
+%78–82'sini geri alıyor; aynı ilk aşamadan sonra atamaları da arayan 107 sn
+%70–75 alıyor ve atamalara dokunmuyor. Mola kararı Mustafa'da.
+
+**Doğrulama:** Mustafa'nın makinesinde 549 + 31 test, `demir` 19/19, DENETIM
+0 hata, commit **`74a7a36`** (3 Ekim 17:30), tam mutasyon koşusu **221, hepsi
+öldü** (18:54).
 
 → T-60 · K-32 · K-48 · şartname §11.3 (`ilk_asama_sn`) ·
 `09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py`

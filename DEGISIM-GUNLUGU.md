@@ -4,6 +4,16 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-03 (19:15) · K-59 depoda (`74a7a36`), 221 mutasyon hepsi öldü · mola ayrı adım ölçüldü (T-60 bulgu 17)**
+Mustafa'nın makinesi: 549 + 31 test, `demir` 19/19, DENETIM 0 hata, commit
+`74a7a36` push; tam mutasyon koşusu **221, hepsi öldü, atlanan 0** (damga
+18:54). Ölçüm `sabit_mola_480` ↔ `mola_ayri_adim` (tek fark: ana aşamada
+atamalar sabit), 600 sn, ikişer: mola adımı **29 sn'de %78–82** geri aldı
+(445–535), serbest 107 sn %70–75 (597–723) ve atamalara dokunmadı; fazla mesai
+27,5–36 saat (ilk aşamadan, %31 açıklık). ⚠ %2 boşluk toplam amacın; mola
+teriminin kendi boşluğu geniş. **Mola kararı Mustafa'da (A/B/C).**
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 17) · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-molaadim-600.json` · `09-motor/mutasyon-tam-kosu.txt` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md` §7
+
 **2026-10-03 (16:55) · K-59: birinci aşamada amaçlı iyileştirme ürünün varsayılanı (%40) · mola ayrı adım ölçüm seçeneği**
 Mustafa: *"olsun."* Varsayılan `ilk_asama_iyilestirme_saniye: None` (orandan),
 oran 0.4; `0` eski davranış (ölçüm). Mola kararı için ölçüm seçeneği

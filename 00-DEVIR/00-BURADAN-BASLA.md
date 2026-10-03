@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-03 16:55 (en alttaki paragraf: **K-59** iyileştirme ürünün varsayılanı; mola ayrı adım ölçüm seçeneği yazıldı, ölçüm Mustafa'nın makinesinde; 221 mutasyon) · önceki 16:00 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
+**Son güncelleme:** 2026-10-03 19:15 (en alttaki paragraf: **K-59** commit'lendi `74a7a36`, 221 mutasyon hepsi öldü; **mola ayrı adım ölçüldü (bulgu 17)** — karar Mustafa'da) · önceki 16:55, 16:00 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -330,8 +330,28 @@ kapsamasını ne kadar geri aldığı **ölçülmedi**; istenirse ölçüm yapı
 yazılır). Sonra: ürün varsayılanı, üç profille tekrarlı tam ölçek, koşudan
 koşuya fark; T-80 (yeni pencere, `gun_sayisi` sorusu açık); bulgu 11'in modeli
 araç olarak. Ertelenen üçlü T-60 kapanınca. ⚠ R7: `00-DEVIR/` 10 dosya.
-**⚠ 3 Ekim 16:55 — K-59 verildi, ürün varsayılanı değişti; en güncel durum
-budur.** Mustafa'nın tam mutasyon koşusu: 215 mutasyon, **hepsi öldü**; commit `280c4ef`
+**⚠ 3 Ekim 19:15 — K-59 depoda (`74a7a36`), mola ayrı adım ölçüldü, mola
+kararı Mustafa'da; en güncel durum budur.** Mustafa'nın makinesinde: 549 motor
+testi + gerçekçi set 31 test (361 sn; K-59 ile 0,1 ölçekli çözüm uzadı),
+`demir` 19/19, DENETIM 0 hata, commit **`74a7a36`** push; **tam mutasyon koşusu
+221 mutasyon, hepsi öldü, atlanan 0** (damga 18:54, O-15 — damga dosyası
+commit bekliyor). **Ölçüm (T-60 bulgu 17,** `kalite-olcumu-95-molaadim-600.json`**):**
+aynı 480 sn'lik sabit molalı ilk aşamadan sonra, atamalar **sabit** yalnız
+mola arayan adım **29 sn'de** mola ihlalinin **%78–82'sini** geri aldı (2.390–2.406
+→ 445–535) ve %2 hedef boşluğunda durdu; atamaları da arayan 107 sn **%70–75**
+aldı (→ 597–723) ve atamalara dokunmadı (fazla mesai aynen; adalet/hedef ±%1).
+⚠ %2 boşluk toplam amacın; mola teriminin kendi boşluğu daha geniş (en iyi
+ihtimalle ham ≈170–186) — ayrı mola adımı ürün olursa kendi durma ölçütü
+gerekir. Koşudan koşuya fark ilk aşamadan: fazla mesai 27,5–36 saat (%31).
+**Sıradaki tek adım: Mustafa'nın mola kararı** — (A) molalar motorda, tek
+model (bugünkü hâl); (B) motor içinde iki adım (uzun sabit molalı atama +
+kısa mola adımı); (C) molalar motordan çıkıp ayrı/isteğe bağlı öneri adımı.
+Ölçülen bedel ve kazançlar `06-ACIK-RISKLER.md` T-60 bulgu 15–17'de. Karardan
+sonra: oran kalibrasyonu → `varsayilan` üç profille tekrarlı tam ölçek →
+T-80 (yeni pencere; `gun_sayisi` sorusu açık) → bulgu 11'in modeli araç olarak.
+
+**3 Ekim 16:55 — K-59 verildi, ürün varsayılanı değişti.** Mustafa'nın tam
+mutasyon koşusu: 215 mutasyon, **hepsi öldü**; commit `280c4ef`
 push edildi. **Karar 1 — "olsun" → K-59:** birinci aşamada amaçlı iyileştirme
 ürünün varsayılanı; süre bütçenin %40'ı (kalibrasyon). **Karar 2 — molalar:**
 *"ölçümlerimizi tamamlayıp karar vermek isterim"* → ölçüm seçeneği yazıldı

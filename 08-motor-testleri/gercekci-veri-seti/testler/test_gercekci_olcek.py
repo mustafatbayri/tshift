@@ -228,9 +228,12 @@ def test_HER_KURAL_kirmizi_yanabiliyor():
 
 @pytest.fixture(scope="module")
 def kucuk_plan():
-    """Kucultulmus %95 sahnesi BIR KEZ cozulur -- ~170 saniye.
+    """Kucultulmus %95 sahnesi BIR KEZ cozulur -- butce 240 sn tavanli.
 
     Butceler CI icin secildi: GitHub'in ucretsiz makineleri 2 cekirdeklidir.
+    Sure: K-59'dan once ~170 sn idi; K-59 (3 Ekim) birinci asamada butcenin
+    %40'ina kadar (96 sn) iyilestirme yapar, dosyanin tamami Mustafa'nin
+    makinesinde (6 cekirdek) 361 sn olctu (31 test). Tavan degismedi.
     """
     g = sahne_uret(0.1, 0.95)
     return g, coz(g, {"azami_saniye": 240, "durgunluk_saniye": 25})

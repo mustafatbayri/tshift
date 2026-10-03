@@ -13,6 +13,7 @@ iki karar → T-80.
 4. [Değişen dosyalar ve doğrulama durumu](#4--değişen-dosyalar-ve-doğrulama-durumu)
 5. [Bekleyen kararlar](#5--bekleyen-kararlar)
 6. [16:31 — K-59 ve mola ölçüm seçeneği](#6--1631--k-59-ve-mola-ölçüm-seçeneği)
+7. [18:56 — Mustafa'nın koşuları ve mola ölçümü (bulgu 17)](#7--1856--mustafanın-koşuları-ve-mola-ölçümü-bulgu-17)
 
 ---
 
@@ -137,6 +138,47 @@ koşuları, toplam iddiası değil (O-15). ⚠ `test_gercekci_olcek.py` **bulutt
 koşmadı** (tam ölçek model kurma + 0,1 ölçek çözüm > 180 sn): 0,1 ölçekte
 240 sn bütçeyle K-59 artık ilk aşamada 96 sn'ye kadar iyileştirme yapar,
 ana aşamaya ≥ 96 sn kalır — plan döner, süre uzayabilir; **CI ve Mustafa'nın
-makinesi ölçer.** ⚠ Mustafa'nın makinesinde test, tam mutasyon koşusu,
-commit ve ölçüm **bekliyor**.
+makinesi ölçer.** Mustafa'nın makinesinde test, tam mutasyon koşusu,
+commit ve ölçüm → §7.
+
+## 7 · 18:56 — Mustafa'nın koşuları ve mola ölçümü (bulgu 17)
+
+**Dört blok da koştu (Mustafa, 17:10–18:54):** `09-motor` 549 test 74 sn;
+`demir` 19/19 öldü; gerçekçi set **31 test 361 sn** (0,1 ölçekli çözüm K-59
+ile uzadı — fikstür docstring'i "~170 sn" diyordu, bütçe 240 sn tavanlı;
+docstring güncellendi); DENETIM 0 hata / 15 uyarı (öncekiyle aynı); commit
+**`74a7a36`** push (11 dosya); **tam mutasyon koşusu 221 · yaşayan 0 · atlanan
+0**, damga `mutasyon-tam-kosu.txt` 18:54 (commit bekliyor). Ölçümün ekran
+çıktısı gelmedi, gerekmedi de: 2 Ekim'in dersiyle (bulgu 14 ekranda kalmıştı)
+her şey JSON'a yazılıyor; bulgu 17 `kalite-olcumu-95-molaadim-600.json`'dan
+çıkarıldı.
+
+**Ölçüm — T-60 bulgu 17 (tam metin ve tablo `06-ACIK-RISKLER.md`):**
+`sabit_mola_480` ↔ `mola_ayri_adim`, tek fark ana aşamada atamaların sabit
+olması; aynı 480 sn'lik sabit molalı ilk aşama, ana aşamaya ≈107 sn.
+- Serbest arama (107 sn): mola ihlali 2.393 → 597 ve 2.411 → 723 (−%70–75);
+  **atamalara dokunmadı** (fazla mesai aynen 27,5 / 31,75 saat; adalet −%0,2,
+  hedef aşımı −%0,8, hedef kapsaması +%1). İlk plan 51 / 69 sn, bütçe doldu.
+- Mola adımı (atamalar sabit): 2.390 → 535 ve 2.406 → 445 (−%78–82); ilk plan
+  22 / 23 sn, **29 sn'de hedef boşluğu %2,0 / %1,3 ile durdu** (≈78 sn geri
+  döndü). Fazla mesai 33,0 / 36,0 saat (ilk aşamadan).
+- ⚠ %2 boşluk toplam amacın; toplamın %70–77'si sabit fazla mesai. Mola
+  teriminin kendi boşluğu: cezası 3.745 / 3.115, toplam boşluk 2.555 / 1.813 →
+  en iyi ihtimalle ham ≈170–186'ya inebilirdi. Ayrı mola adımı ürün olursa
+  kendi durma ölçütü gerekir; ölçülmedi.
+- Koşudan koşuya fark ilk aşamadan: 27,5 · 31,75 · 33,0 · 36,0 saat (%31);
+  hedef eksiği 349–378. Not 1 aynen duruyor.
+- "İlk plan 53–57 sn" (bulgu 16) sabit bedel değil: atamalar sabitken 22–23 sn.
+
+**Karar Mustafa'da:** (A) molalar motorda, tek model (bugünkü hâl, %40);
+(B) motor içinde iki adım (uzun sabit molalı atama + atamalar sabit kısa mola
+adımı, kendi durma ölçütüyle); (C) molalar motordan çıkıp ayrı/isteğe bağlı
+öneri adımı — kalite mekanizması (B) ile aynı, fark ürün tarafında.
+Karardan sonra oran kalibrasyonu ve `varsayilan` üç profille tekrarlı ölçüm.
+
+**Bu turda depoya yazılan (commit bekliyor):** `06-ACIK-RISKLER.md` (bulgu 17,
+sıradaki adım, öncelik satırı), `08-URUN-KARARLARI.md` (K-59 doğrulama ve
+ölçüm notu), `00-BURADAN-BASLA.md` (19:15 paragrafı), `DEGISIM-GUNLUGU.md`,
+bu günlük §7, `test_gercekci_olcek.py` (yalnız docstring: süre),
+`09-motor/mutasyon-tam-kosu.txt` (damga), `kalite-olcumu-95-molaadim-600.json`.
 
