@@ -4,6 +4,30 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-04 (02:30) · Kontrollü mola ölçümü bitti (T-60 bulgu 18): mola adımı 45 sn'de kanıtlı optimum; öneri "molalar motor içinde ayrı adım", karar Mustafa'da**
+Mustafa'nın makinesi, 600 sn, üçer koşu, `kalite-olcumu-95-kontrollu-600.json`.
+Atamalar sabitken mola adımı 44–46 sn'de kanıtlı optimum (mola açığı 177–188),
+ortak arama 347 sn'de 193–202; ortak aramanın kazancının %94'ü mola, %6'sı
+atama takası (aşım −670, eksik +115 kişi-saat; fazla mesai 0). Fazla mesai
+ilk aşamada belirleniyor; 480 sn'lik dokuz koşu ort. 34,7 saat, 240 sn'lik beş
+koşu 45,1 — üçer koşuda aralıklar çakışıyor. ⚠ Bulgu 15'in eksik/aşım
+okuması düzeltildi (ortak aramanın takasıymış). Karar kuralı bu sonucu tam
+kapsamadı (aşım kuralda yoktu) — dürüst okuma T-60'ta. Öneri: B'nin
+mekanizması; süre paylaşımı kalibrasyon; (C) ürün/ekran kararı.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 18, bulgu 15 düzeltmesi, öneri) · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-kontrollu-600.json` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md` §9
+
+**2026-10-03 (19:40) · Mola kararı için kontrollü ölçüm tasarımı ve karar kuralı; `mola_adimi_tam` yapılandırması**
+Mustafa (19:09): *"Kontrollü ölçümle gidelim, bu mola kararı çok kritik
+duruyor; yeterli done veya anlaşılır bir öneri vermedin."* Bulgu 17 `e07311e`
+ile depoda. T-60'a ölçülenin okunur tablosu (mola açığı hücre başına kişi),
+A↔B kontrollü ölçüm tasarımı (üçer koşu) ve **önceden yazılmış karar kuralı**
+eklendi. `kalite-olc.py`: `mola_adimi_tam` (480 sn sabit molalı + atamalar
+sabit mola adımı, `hedef_bosluk 0`), mola açığı artık hücre başına kişi ve
+asgarinin yüzdesi olarak da yazılıyor; bayat "varsayılan hiçbirini açmaz"
+yorumu K-59'a göre düzeltildi. Bulutta 0,1 ölçekte duman testi: mola adımı
+1,6 sn'de optimum, 199 → 29.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 "Kontrollü ölçüm", "Karar kuralı") · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md` §8
+
 **2026-10-03 (19:15) · K-59 depoda (`74a7a36`), 221 mutasyon hepsi öldü · mola ayrı adım ölçüldü (T-60 bulgu 17)**
 Mustafa'nın makinesi: 549 + 31 test, `demir` 19/19, DENETIM 0 hata, commit
 `74a7a36` push; tam mutasyon koşusu **221, hepsi öldü, atlanan 0** (damga

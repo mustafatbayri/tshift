@@ -3655,7 +3655,9 @@ düşüyor (120 → 240 → 480 sn: 60–83 → 45–53 → 34–38 saat; 575–
 yani 480 sn'lik hâl ürün haline göre 1,3–1,5 kat, 120–240 sn'lik hâller ürün
 halinin **yarısı**) ve hedef aşımı daha yüksek
 (3.332–3.363 ↔ 2.692–2.724; toplam saat ≈550 kişi-saat fazla, eksik 150 kişi-saat
-az). Fazla mesaisi kalan kişilerin gösterilen hepsi 46,25 saatte — 45'i tam
+az — ⚠ **4 Ekim düzeltmesi, bulgu 18:** bu eksik/aşım farkı sabit molalı aşamanın
+uzunluğundan değil, 240 sn'lik hâlde ana aşamanın ortak aramasının yaptığı
+takastan geliyor; ilk aşama sonunda iki hâl aynı). Fazla mesaisi kalan kişilerin gösterilen hepsi 46,25 saatte — 45'i tam
 tutturmayan şablon karışımı (9 + 4,25 saatlik desen), kişi başı 1,25 saat.
 Üç "fazla mesai" sayısı dört koşuda da aynı (bulgu 14 bu koşularda görünmedi).
 
@@ -3743,19 +3745,145 @@ bütçe 240 sn tavanlı), `demir` 19/19, DENETIM 0 hata; commit **`74a7a36`**
 push; **tam mutasyon koşusu 221 mutasyon, hepsi öldü, atlanan 0** (damga
 18:54, O-15).
 
-**Sıradaki adım — Mustafa'nın mola kararı; ölçüm verisi bulgu 15–17.**
-Seçenekler ölçülenle birlikte: **(A)** molalar motorda kalsın, tek model
-(bugünkü K-59 hâli, %40): serbest arama molayı 347 sn'de 200–221'e çekiyor,
-fazla mesai 45–53 saat. **(B)** motor içinde iki adım: uzun sabit molalı
-atama aşaması + atamalar sabit kısa mola adımı: fazla mesai 27–38 saat,
-mola 445–535 (29 sn'de), kullanıcıya süre geri döner; mola adımı için durma
-ölçütü ölçülmeli (okuma 3). **(C)** molalar motorun hesabından tamamen
-çıksın, ayrı/isteğe bağlı öneri adımı: kalite açısından (B) ile aynı
-mekanizma, fark ürün/ekran tarafında (mola sırasında kapsama kuralı nerede
-değerlendirilip raporlanır). Karardan sonra: oran kalibrasyonu (B/C'de %80
-civarı, A'da %40 kalır); `varsayilan` tam ölçek üç profille (DENGELI/KAPSAMA/
-CALISAN) ve tekrarlı, koşudan koşuya fark (not 1); bulgu 11'in modeli araç
-olarak.
+**3 Ekim 19:09 — Mustafa:** *"Kontrollü ölçümle gidelim, bu mola kararı çok
+kritik duruyor. Şu an karar veremiyorum, bana yeterli done veya anlaşılır bir
+öneri de vermedin."* Haklı: bulgu 17 yalnız 107 sn'lik kuyruğu kıyasladı ve
+mola adımı erken durdu; A ile B aynı koşullarda yan yana koşmadı.
+
+**Ölçülenin okunur hâli (600 sn, %95 seti, DENGELI; mola açığı = her
+ekip-gün-saat hücresinde en kötü çeyrekte asgarinin altında kalan kişi, 415
+hücre, asgari ort. 30,7 kişi):**
+
+| mimari | fazla mesai (saat) | hedef eksiği (kişi-saat) | hedef aşımı (kişi-saat) | mola açığı: hücre başına kişi (asgarinin %'si) | koşu |
+|---|---|---|---|---|---|
+| ürün hali, K-59 öncesi (2 Ekim) | 475–511 | 1.199–1.248 | — | 1,0–1,1 (%3,3–3,7) | 2 |
+| **(A)** K-59 bugünkü hâl: 240 sn sabit molalı + ≈347 sn ortak arama | 45–53 | 512–533 | 2.692–2.724 | **0,5 (%1,6)** | 2 (sabah) |
+| (A′) 480 sn sabit molalı + ≈107 sn ortak arama | 27,5–38 | 349–378 | 3.332–3.363 | 1,4–1,7 (%4,7–5,7) | 4 |
+| **(B)** 480 sn sabit molalı + atamalar sabit mola adımı, **29 sn'de erken durdu** | **33–36** | **353–372** | 3.345–3.379 | 1,1–1,3 (%3,5–4,2) | 2 |
+| (C₀) 480 sn sabit molalı, mola adımı **yok** (molalar şablon idealinde) | 27,5–36 | 349–378 | ≈3.350 | **5,8 (%19)** | 4 (ilk aşama planları) |
+
+Üç şey ölçülü: (1) sabit molalı atama aşaması uzadıkça fazla mesai ve eksik
+düşüyor (bulgu 15); (2) ortak aramanın kazancı molaların yerleşimi — 107 sn'de
+atamalara hiç dokunmadı (bulgu 17), 347 sn'de de kazancın ≈%92'si mola
+cezasından (bulgu 16'nın sayılarıyla **çıkarım**: ilk aşama mola açığının ≈2.400
+olduğu varsayımıyla; kontrollü ölçümde ilk aşama dağılımı artık kaydediliyor,
+doğrulanacak); (3) atamalar sabitken mola adımı daha hızlı ve daha derin
+(bulgu 17). Molaları motordan **optimizasyonsuz** çıkarmak (C₀) mola açığını
+5–11 katına çıkarır — "ayrı adım" ancak kendisi de bir arama ise anlamlı, o da
+(B)'dir.
+
+**Bilinmeyen tek şey:** atamalar sabitken mola adımı, erken durmadan, mola
+açığını (A)'nın 0,5 kişi/hücresine kadar indirebiliyor mu? İnerse (B) her
+ölçütte (A)'dan iyi ve takas yok; inmezse takas şu: (B) ≈15 saat daha az
+fazla mesai ve ≈160 kişi-saat daha az eksik, karşılığında hücre başına ≈0,6–0,8
+kişi daha fazla mola açığı — o zaman karar Mustafa'nın, sayılarla.
+
+**Kontrollü ölçüm (sırada; Mustafa'nın makinesi, başka yük yokken):**
+`varsayilan` (A, K-59 hâli) ↔ `mola_adimi_tam` (B: 480 sn sabit molalı +
+atamalar sabit mola adımı, **erken durma kapalı** `hedef_bosluk 0`, kalan
+≈107 sn'yi ya da optimuma kadar kullanır), 600 sn, **üçer koşu** (≈70 dk),
+`--etiket kontrollu-600`. Üçer koşu: koşudan koşuya fark (27,5–36 saat, not 1)
+iki koşuyla ayırt edilemez. Çıktıda her koşu için ilk aşama ve son dağılım,
+mola açığı hücre başına kişi olarak, mola adımının eğrisi (`iyilesme.egri`).
+
+**Karar kuralı (ölçümden önce yazıldı, O-13 ruhuyla):** üç koşunun aralıkları
+karşılaştırılır; aralıklar çakışıyorsa "fark yok" sayılır.
+- (B) fazla mesai ve eksikte daha iyi **ve** mola açığı (A) ile fark yok →
+  **(B)**, takas yok. Sonra: mola adımına kendi durma ölçütü, oran
+  kalibrasyonu (%80 civarı), üç profil.
+- (B) fazla mesai ve eksikte daha iyi **ama** mola açığı belirgin kötü →
+  takas; her iki yönde kaç saat / kaç kişi-hücre olduğu yazılır, Mustafa
+  seçer (mola adımına daha uzun süre vermek — ör. 420 + 180 sn — ikinci bir
+  ölçümle denenebilir).
+- (A) fazla mesai ve eksikte de daha iyi ya da fark yok → **(A)** kalır,
+  ayrı adım fikri motor tarafında kapanır.
+(C) — molaların ayrı/isteğe bağlı bir **ürün adımı** olması — ölçümün konusu
+değil: motor tarafı (B) ile aynı; şartname §6.4 *"mola yerleşimi motorun
+kararıdır"* cümlesi yalnız (C)'de değişir.
+
+*Bulgu 18 — kontrollü ölçüm: mola adımı 45 saniyede kanıtlı optimuma ulaşıyor
+ve ortak aramanın 347 saniyede vardığı mola kalitesine eşit; ortak aramanın
+atamalara dokunan payı %6 (Mustafa'nın makinesi, 6 çekirdek, 600 sn, üçer
+koşu, 4 Ekim 00:49–01:56; `kalite-olcumu-95-kontrollu-600.json`).*
+
+| | `varsayilan` (A) #1 · #2 · #3 | `mola_adimi_tam` (B) #1 · #2 · #3 |
+|---|---|---|
+| fazla mesai (yasal, saat) | 45,25 · 39,25 · 43,5 | 43,5 · 41,0 · **28,0** |
+| hedef eksiği (kişi-saat) | 492 · 498 · 485 | **374 · 395 · 381** |
+| hedef aşımı (kişi-saat) | **2.658 · 2.714 · 2.682** | 3.310 · 3.294 · 3.305 |
+| mola açığı (ham; hücre başına kişi) | 202 · 193 · 196 (0,5) | 177 · 178 · 188 (0,4) |
+| adalet (ham) | 2.531 · 2.527 · 2.499 | 2.503 · 2.464 · 2.488 |
+| toplam ceza | 162.221 · 144.360 · 156.778 | 157.550 · 150.003 · 111.100 |
+| ana aşama: ilk plan · son iyileşme · bitiş | 49–57 sn · 331–343 sn · bütçe doldu (347 sn) | 23–24 sn · 44–46 sn · **kanıtlı optimum** (boşluk %0) |
+| toplam süre | 603 sn | **539–543 sn** (≈60 sn geri döndü) |
+| sert / yayınlanabilir / K-57 üç sayı | 0 / evet / aynı | 0 / evet / aynı |
+
+**Terim bazında ne oldu (ilk aşama sonu → son; JSON `amac_dagilimi`):**
+
+| | A'nın ortak araması (347 sn, atamalar + molalar) | B'nin mola adımı (≈45 sn, yalnız molalar) |
+|---|---|---|
+| mola açığı (ceza) | −15.428 … −15.519 (**kazancın %94'ü**) | −15.435 … −15.652 (%100) |
+| hedef aşımı | −1.887 … −2.052 (≈ −650 … −680 kişi-saat) | 0 |
+| hedef eksiği | **+981 … +1.116** (≈ +110 … +124 kişi-saat, kötüleşti) | 0 |
+| fazla mesai | **0** (üç koşuda da) | 0 |
+| adalet | +10 · −120 · −80 | 0 |
+| toplam | −16.333 … −16.575 | −15.435 … −15.652 |
+
+Okuma, ölçülenle sınırlı:
+1. **Mola yerleşimi için ortak aramaya gerek yok.** Atamalar sabitken mola
+   adımı 44–46 sn'de **kanıtlı optimuma** ulaştı (üç koşuda boşluk %0; ilk plan
+   23–24 sn, arama ≈21 sn) ve mola açığını 177–188'e indirdi; ortak arama
+   347 sn'de 193–202'ye vardı ve bütçe bitince hâlâ iyileşiyordu. Bulgu 17'nin
+   "%2 boşluk" çekincesi kapandı: erken durma kapatılınca adım 450–535'te
+   kalmadı, 177–188'e indi. Bugünkü 6 + sabahki 4 koşu aynı yöne bakıyor.
+2. **Ortak aramanın atamalara dokunan payı küçük ama sıfır değil:** kazancın
+   %6'sı (≈1.000 puan, toplamın %0,6'sı) — hedef aşımını 650–680 kişi-saat
+   düşürüp hedef eksiğini 110–124 kişi-saat **artırdı** (ağırlıklara göre net
+   kazanç: 3 × 670 − 9 × 115 ≈ +975). Fazla mesaiye üç koşuda da dokunmadı.
+3. ⚠ **Bulgu 15'in "uzun sabit molalı aşama → daha az eksik, daha çok aşım"
+   okuması YANLIŞTI.** Eksik ve aşım iki yapılandırmada da **ilk aşama sonunda
+   aynı** (A: eksik 367–383, aşım 3.311–3.398; B: 374–395, 3.294–3.310);
+   aradaki fark A'nın ortak aramasının yaptığı takastan geliyor (okuma 2),
+   sabit molalı aşamanın uzunluğundan değil. Bulgu 15 tablosu doğru, okuması
+   düzeltildi (aşağıda not).
+4. **Sabit molalı aşamanın uzaması fazla mesaiyi ortalamada düşürüyor ama
+   düzensiz:** 480 sn'lik dokuz koşu (sabah + bugün) 27,5–43,5 saat, ort.
+   **34,7**, sd 5,4; 240 sn'lik beş koşu 39,25–53,25, ort. **45,1**, sd 5,1.
+   Bugünkü üçer koşuda aralıklar çakışıyor (B'nin iki koşusu A'nın aralığında,
+   biri 28 saat). Fazla mesai ilk aşamada belirleniyor; koşudan koşuya fark
+   (not 1) artık en büyük kaldıraç ve mimariden bağımsız.
+5. **Karar kuralına göre:** eksik → B daha iyi (çakışma yok); mola açığı →
+   fark yok (B hafif iyi); fazla mesai → aralıklar çakışıyor, **fark yok**;
+   hedef aşımı (kuralda yoktu) → **A daha iyi** (−630 kişi-saat). Kuralın
+   birinci dalı ("fazla mesai VE eksikte iyi") tam tutmuyor, üçüncü dal da
+   tutmuyor; kural aşımı saymamıştı — eksik yazılmış. Ölçümün asıl cevabı
+   mimari sorusuna: **mola adımı ayrı ve atamalar sabitken** (B'nin
+   mekanizması) kalite kaybetmiyor, 7 kat hızlı, kanıtlı; serbest kalan
+   ≈300 sn'nin nereye gideceği ayrı bir kalibrasyon sorusu (okuma 4 ve 2:
+   sabit molalı iyileştirme ortalamada çok ama düzensiz kazandırıyor; kısa
+   bir "atama cilası" az ama düzenli kazandırıyor — ikisi birden mümkün,
+   ölçülmedi).
+
+**Not — bulgu 15 düzeltmesi (4 Ekim):** bulgu 15'teki *"hedef aşımı daha
+yüksek, eksik daha az"* farkı sabit molalı aşamanın uzunluğuna bağlanmıştı;
+bulgu 18 bunun ortak aramanın takası olduğunu gösterdi (ilk aşama sonunda
+eksik/aşım 240 ve 480 sn'de aynı). Sayılar doğru, nedensellik yanlıştı.
+
+**Öneri (4 Ekim 02:30; karar Mustafa'nın):**
+1. **Mekanizma — molalar motor içinde ayrı adım, atamalar sabitken, optimuma
+   kadar (≈45 sn tam ölçekte):** evet. Dayanak okuma 1; 10 koşu. Şartname
+   *"mola yerleşimi motorun kararıdır"* cümlesi değişmez — karar motorun,
+   adım ayrı. (C) — adımın müşteriye isteğe bağlı sunulması — motor açısından
+   bir şey kazandırmıyor (adım 45 sn), yalnız ürün/ekran kararı; ertelenebilir.
+2. **Serbest kalan süre:** önce sabit molalı iyileştirmeye (okuma 4: ortalama
+   −10 saat fazla mesai; düzensizliği not 1'in işi), kısa atama cilası
+   sonradan ölçülür (okuma 2: %0,6, düzenli). Oran kalibrasyonu ölçümle.
+3. **Sırada:** (a) motor değişikliği — üç aşama (geçerli plan → sabit molalı
+   iyileştirme → atamalar sabit mola adımı, optimumda durur; `hedef_bosluk`
+   mola adımında 0) + testler + mutasyonlar + şartname §11.3 + karar kaydı;
+   (b) kalibrasyon ölçümü: oran %80 / %90, üçer koşu; (c) `varsayilan` üç
+   profille tekrarlı; (d) koşudan koşuya fark — kaynağı ve küçültme
+   seçenekleri (not 1); bulgu 11'in modeli araç olarak.
 
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
@@ -4711,7 +4839,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 17:** atamalar sabitken mola adımı 29 sn'de ihlalin %78–82'sini geri alıyor; serbest 107 sn %70–75 ve atamalara dokunmuyor. Kalan: **Mustafa'nın mola kararı** (A/B/C), oran kalibrasyonu, üç profille tekrarlı ölçüm, koşudan koşuya farkın küçültülmesi |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **Öneri: molalar motor içinde ayrı adım (B mekanizması) — karar Mustafa'da.** Kalan: oran kalibrasyonu, üç profille tekrarlı ölçüm, koşudan koşuya fark (ilk aşamada 28–45 saat) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

@@ -14,6 +14,8 @@ iki karar → T-80.
 5. [Bekleyen kararlar](#5--bekleyen-kararlar)
 6. [16:31 — K-59 ve mola ölçüm seçeneği](#6--1631--k-59-ve-mola-ölçüm-seçeneği)
 7. [18:56 — Mustafa'nın koşuları ve mola ölçümü (bulgu 17)](#7--1856--mustafanın-koşuları-ve-mola-ölçümü-bulgu-17)
+8. [19:09 — "Kontrollü ölçümle gidelim": tasarım ve karar kuralı](#8--1909--kontrollü-ölçümle-gidelim-tasarım-ve-karar-kuralı)
+9. [4 Ekim 01:56 — kontrollü ölçüm sonucu (bulgu 18) ve öneri](#9--4-ekim-0156--kontrollü-ölçüm-sonucu-bulgu-18-ve-öneri)
 
 ---
 
@@ -181,4 +183,62 @@ sıradaki adım, öncelik satırı), `08-URUN-KARARLARI.md` (K-59 doğrulama ve
 ölçüm notu), `00-BURADAN-BASLA.md` (19:15 paragrafı), `DEGISIM-GUNLUGU.md`,
 bu günlük §7, `test_gercekci_olcek.py` (yalnız docstring: süre),
 `09-motor/mutasyon-tam-kosu.txt` (damga), `kalite-olcumu-95-molaadim-600.json`.
+
+## 8 · 19:09 — "Kontrollü ölçümle gidelim": tasarım ve karar kuralı
+
+Commit **`e07311e`** push (bulgu 17, damga 221, docstring). Mustafa: *"Kontrollü
+ölçümle gidelim, bu mola kararı çok kritik duruyor. Şu an karar veremiyorum,
+bana yeterli done veya anlaşılır bir öneri de vermedin."* Eksik olan iki şey:
+A ile B aynı koşullarda yan yana koşmadı (A'nın verisi sabahtan, ilk aşama
+dağılımı kaydedilmeden) ve B'nin mola adımı toplam amacın %2 boşluğunda erken
+durdu — mola teriminin gerçek tabanı görülmedi.
+
+**Yapılan:** T-60'a ölçülenin okunur tablosu (mola açığı = hücre başına en
+kötü çeyrekte asgarinin altında kalan kişi; 415 hücre, asgari ort. 30,7 —
+şablon idealinde 5,8 kişi/hücre %19, A'da 0,5 %1,6, B erken durmuşken 1,1–1,3),
+kontrollü ölçüm tasarımı ve **önceden yazılmış karar kuralı**. `kalite-olc.py`:
+`mola_adimi_tam` = `mola_ayri_adim` + `hedef_bosluk 0` (erken durma kapalı;
+`_ErkenDur` 0'da yalnız gerçek optimumda durur, `durgunluk_saniye` 120 >
+107 sn bütçe); çıktıda hücre başına kişi satırı. Bulutta 0,1 ölçek duman
+testi (`--saniye 90`): ilk aşama 76,5 sn, mola adımı 1,6 sn'de **optimum**,
+mola açığı 199 → 29 (hücre başına 0,5 → 0,1 kişi). Kalite ölçüm testleri 18
+geçti; DENETIM 0 hata.
+
+**Ölçüm:** `varsayilan` ↔ `mola_adimi_tam`, 600 sn, üçer koşu, etiket
+`kontrollu-600` (≈70 dk). **Karar kuralı** T-60'ta. Geçici öneri (ölçüm teyit
+edene kadar): motor içinde iki adım (B); (C) ürün/ekran kararı, motor tarafı
+(B) ile aynı.
+
+## 9 · 4 Ekim 01:56 — kontrollü ölçüm sonucu (bulgu 18) ve öneri
+
+Mustafa blok 1'i (tasarım commit'i) atlayıp doğrudan ölçümü koştu — depo
+`e07311e`'de, `kalite-olc.py`'deki `mola_adimi_tam` çalışma kopyasındaydı;
+tasarım ve sonuç tek commit'te gidecek. Ölçüm 00:49–01:56 koştu, çıktı 01:56'da
+geldi (`kalite-olcumu-95-kontrollu-600.json`, 6 koşu).
+Tam tablo ve terim bazında ayrıştırma `06-ACIK-RISKLER.md` T-60 bulgu 18.
+
+**Üç bulgu:**
+1. Atamalar sabitken mola adımı **44–46 sn'de kanıtlı optimum** (boşluk %0,
+   üç koşuda), mola açığı 177–188; ortak arama 347 sn'de 193–202 ve bütçe
+   bitince hâlâ iyileşiyordu. Bulgu 17'nin "%2 boşluk" çekincesi kapandı.
+2. Ortak aramanın kazancının **%94'ü mola**; %6'sı atama takası — hedef aşımı
+   −650…−680 kişi-saat, hedef eksiği **+110…+124** (ağırlıklara göre net
+   ≈ +975 puan); fazla mesaiye üç koşuda da dokunmadı.
+3. **Bulgu 15'in okuması düzeltildi:** eksik/aşım ilk aşama sonunda 240 ve
+   480 sn'de aynı (A: 367–383 / 3.311–3.398; B: 374–395 / 3.294–3.310); fark
+   ortak aramanın takasından. Fazla mesai ilk aşamada belirleniyor: 480 sn'lik
+   dokuz koşu ort. 34,7 (sd 5,4), 240 sn'lik beş koşu 45,1 (sd 5,1); üçer
+   koşuda aralıklar çakışıyor (B: 43,5 · 41 · 28; A: 45,25 · 39,25 · 43,5).
+
+**Karar kuralı:** eksik → B; mola → fark yok; fazla mesai → fark yok; aşım
+(kuralda yoktu) → A. Birinci dal tam tutmadı, kural aşımı saymamıştı — açıkça
+yazıldı. **Öneri:** B'nin mekanizması (mola adımı ayrı, atamalar sabit,
+optimuma kadar); süre paylaşımı kalibrasyon; (C) ürün/ekran kararı,
+ertelenebilir. Karar Mustafa'da.
+
+**Commit bekleyen (§8 + §9 birlikte):** `kalite-olc.py` (`mola_adimi_tam`,
+hücre başına kişi satırı), `06-ACIK-RISKLER.md` (kontrollü ölçüm tasarımı, karar
+kuralı, bulgu 18, bulgu 15 düzeltme notu, öneri, öncelik satırı),
+`00-BURADAN-BASLA.md`, `DEGISIM-GUNLUGU.md`, bu günlük §8–9,
+`kalite-olcumu-95-kontrollu-600.json`.
 

@@ -107,8 +107,10 @@ YAPILANDIRMALAR = {
     "fm_agirlik_1": ("TESHIS: fazla mesai agirligi 50 -> 1 (dakika basina)",
                      {}, {"agirliklar": {"FAZLA_MESAI": 1}}),
     # T-60 bulgu 8 (2 Ekim): "ipucu demir atiyor, ipucusuz arama guvenilir
-    # degil". Asagidakiler OLCUM secenekleridir; urunun varsayilani hicbirini
-    # acmaz (09-motor/cozucu/coz.py VARSAYILAN, testler/test_demir_secenekleri.py).
+    # degil". Asagidakiler OLCUM secenekleridir. (a) 3 Ekim'den beri URUNUN
+    # VARSAYILANI (K-59, butcenin %40'i); ipucusuz (a), (b) ve atamalar-sabit
+    # mola adimi olcum secenegi olarak duruyor (09-motor/cozucu/coz.py
+    # VARSAYILAN, testler/test_demir_secenekleri.py).
     #   (a) birinci asama gecerli plani bulduktan sonra, molalar sabitken
     #       amacli iyilestirir; ana asamanin ipucu iyilesmis plan olur.
     #       Sure arama butcesinin ICINDEN gider.
@@ -143,6 +145,18 @@ YAPILANDIRMALAR = {
                        {"ilk_asama_iyilestirme_saniye": 480,
                         "ilk_asama_iyilestirme_orani": 0.85,
                         "ana_asama_atamalar_sabit": True}, {}),
+    #   3 Ekim 18:21 (bulgu 17): mola_ayri_adim 29 sn'de durdu -- "hedef
+    #   boslugu %2" TOPLAM amacin boslugu, toplamin %70-77'si sabit fazla
+    #   mesai; mola teriminin kendi boslugu daha genisti (en iyi ihtimalle
+    #   ham ~170-186'ya inebilirdi, 445-535'te kaldi). KONTROLLU OLCUM
+    #   (Mustafa, 19:09: "kontrollu olcumle gidelim"): ayni adim, erken
+    #   durma KAPALI -- kalan ~107 sn'yi (ya da optimuma kadar) kullanir.
+    #   Kiyas: varsayilan (K-59: 240 sn sabit molali + ~347 sn ortak arama).
+    "mola_adimi_tam": ("mola adimi TAM: 480 sn sabit molali iyilestirme, sonra atamalar SABIT yalniz molalar; erken durma KAPALI (hedef_bosluk 0)",
+                       {"ilk_asama_iyilestirme_saniye": 480,
+                        "ilk_asama_iyilestirme_orani": 0.85,
+                        "ana_asama_atamalar_sabit": True,
+                        "hedef_bosluk": 0.0}, {}),
     #   (b) ana asamada ipuclu ve ipucusuz arama YAN YANA, ayni surede;
     #       isciler bolusulur, iyi olan plan secilir. Model bellekte iki kez.
     "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya",
@@ -537,6 +551,16 @@ def kosu(g, ad, ayar, girdi_ek=None):
             print("         mola sirasinda kapsama (ham): sabit molali plan %d  ->  ana asama sonu %d%s"
                   % (sm["deger"], sa["deger"],
                      "   (ana asamada ATAMALAR SABIT: yalniz molalar arandi)" if s.get("atamalar_sabit") else ""))
+            # Ham sayi = her talep hucresinde (ekip-gun-saat) EN KOTU ceyrekte
+            # asgarinin altinda kalan kisi, hucreler toplami. Okunur hali:
+            # hucre basina kac kisi eksik, asgarinin yuzde kaci.
+            hucreler = [t for t in (g.get("talep") or []) if t.get("asgari")]
+            if hucreler:
+                n = float(len(hucreler))
+                asg = sum(t["asgari"] for t in hucreler) / n
+                print("           = hucre basina en kotu ceyrekte ort. %.1f -> %.1f kisi eksik (asgari ort. %.1f kisi; %%%.1f -> %%%.1f)"
+                      % (sm["deger"] / n, sa["deger"] / n, asg,
+                         100.0 * sm["deger"] / n / asg, 100.0 * sa["deger"] / n / asg))
     p = s.get("paralel")
     if p:
         for ad in ("ipuclu", "ipucusuz"):
