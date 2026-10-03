@@ -2850,3 +2850,61 @@ T-60 bulgu 17):** atamalar sabitken mola adımı 29 sn'de mola ihlalinin
 
 → T-60 · K-32 · K-48 · şartname §11.3 (`ilk_asama_sn`) ·
 `09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py`
+
+---
+
+## K-60 · Mola yerleşimi motor içinde **ayrı adım**: atamalar sabitken, optimuma kadar; molalar plan çıktısında kalır
+
+**Karar (4 Ekim 2026, 02:07, Mustafa).** *"evet"* — *"Molaların yerini motor
+ayrı bir adımda belirlesin"* önerisine (öneri 02:30'da bulgu 18 ile verildi,
+02:06'da *"Karar 1 neydi hatırlatır mısın"* üzerine yeniden anlatıldı).
+
+**Ne demek.** Bugün motor atamaları ve molaları **aynı aramada** birlikte
+arıyor (ana aşama). Yeni akış üç aşama: (1) geçerli plan, molalar şablonun
+ideal yerinde sabit (1 Ekim'den beri); (2) molalar hâlâ sabitken amaçlı
+iyileştirme (K-59); (3) **atamalar kilitlenir, yalnız molaların yeri aranır,
+kanıtlı optimumda durur** (`hedef_bosluk` bu adımda 0; tam ölçekte ≈45 sn,
+ilk plan 23–24 sn + arama ≈21 sn). Serbest kalan süre atama kalitesine gider
+(paylaşımı kalibrasyon — aşağıda).
+
+**Ne değişmez.** Plan müşteriye **molalarıyla** çıkar; şartname §6.4 *"mola
+yerleşimi motorun kararıdır"* cümlesi aynen kalır — karar motorun, adım ayrı.
+`MOLA_KAPSAMASI` (yumuşak, 7) ve `SAHADA_ASGARI` (sert) aynen değerlendirilir;
+doğrulayıcıya dokunulmaz. Molaların müşteriye **isteğe bağlı ayrı ürün adımı**
+olarak sunulması (Mustafa'nın 2 Ekim fikri, T-60'ta "C") **bu kararın dışında**:
+motor açısından bir şey kazandırmıyor (adım 45 sn), saf ürün/ekran kararı,
+ertelendi.
+
+**Dayanak (hepsi Mustafa'nın makinesi, 500 kişi, %95 doluluk, 600 sn, DENGELI;
+`06-ACIK-RISKLER.md` T-60 bulgu 17–18, `kalite-olcumu-95-kontrollu-600.json`):**
+
+| | ortak arama (bugünkü hâl, 347 sn) | mola adımı, atamalar sabit (≈45 sn) |
+|---|---|---|
+| mola açığı sonucu (ham; hücre başına kişi) | 193–202 (0,5) | **177–188 (0,4)** |
+| durma | bütçe doldu, hâlâ iyileşiyor | **kanıtlı optimum**, üç koşuda boşluk %0 |
+| atamalara etkisi | kazancın %6'sı: hedef aşımı −670, hedef eksiği **+115** kişi-saat; fazla mesai **0** | yok (sabit) |
+| koşu | 3 (+ sabah 2) | 3 (+ 29 sn'de erken duran 2) |
+
+Yani ortak arama molaları **daha yavaş ve daha kötü** yerleştiriyor, atamalara
+dokunan payı küçük. Fazla mesai iki hâlde de birinci aşamada belirleniyor.
+
+**Açık kalan (ölçümle kapanır, karar değil):**
+1. **Süre paylaşımı:** serbest kalan ≈300 sn önce molalar sabitken iyileştirmeye
+   (480 sn'lik dokuz koşu ort. 34,7 saat fazla mesai; 240 sn'lik beş koşu 45,1 —
+   düzensiz, bkz. 3); kısa bir **atama cilası** (ortak aramanın %0,6'lık düzenli
+   kazancı) sonradan ölçülür. `ilk_asama_iyilestirme_orani` %80 / %90 üçer koşu.
+2. Üç profil (DENGELI/KAPSAMA/CALISAN) tekrarlı.
+3. **Koşudan koşuya fark:** aynı ayarla fazla mesai 28–43,5 saat; mimariden
+   bağımsız, birinci aşamanın doğası (T-60 not 1) — mola kararından sonra
+   sıradaki iş.
+
+**Durum:** karar verildi, **kod henüz değişmedi** (`ana_asama_atamalar_sabit`
+hâlâ ölçüm seçeneği, varsayılan kapalı). Uygulama T-60'ın sıradaki adımı:
+`coz.py` üç aşama + `hedef_bosluk` mola adımında 0 + süre paylaşımı; testler
+(`test_demir_secenekleri.py`, `test_sure_butcesi.py`), mutasyonlar (`demir`,
+`butce`), şartname §11.3 (`ilk_asama_sn`, `ana_asama_butce_sn`), değişiklik
+listesi 58. Yeni pencere (§5b).
+
+→ T-60 · K-14 · K-32 · K-59 · şartname §6.4, §11.3 · `09-motor/cozucu/coz.py`
+(`_atamalari_sabitle`) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`
+(`mola_ayri_adim`, `mola_adimi_tam`)

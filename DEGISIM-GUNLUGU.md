@@ -4,6 +4,14 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-04 (02:45) · K-60: mola yerleşimi motor içinde ayrı adım — karar verildi, kod sırada; gün kapanışı**
+Mustafa (02:07): *"evet"* → **K-60** (`08-URUN-KARARLARI.md`): atamalar
+sabitken mola adımı, kanıtlı optimuma kadar; molalar plan çıktısında kalır,
+şartname §6.4 cümlesi değişmez; molaların isteğe bağlı ürün adımı olması (C)
+ertelendi. Şartname değişiklik 58 ve §11.3 notu (kod henüz değişmedi). Sıradaki
+pencere: `coz.py` üç aşama + testler/mutasyonlar + kalibrasyon ölçümü.
+→ `00-DEVIR/08-URUN-KARARLARI.md` (K-60) · `00-DEVIR/06-ACIK-RISKLER.md` (T-60 sıradaki adım) · `02-spec/v1.4-master-spec.md` (58, §11.3) · `00-DEVIR/00-BURADAN-BASLA.md` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md` §10
+
 **2026-10-04 (02:30) · Kontrollü mola ölçümü bitti (T-60 bulgu 18): mola adımı 45 sn'de kanıtlı optimum; öneri "molalar motor içinde ayrı adım", karar Mustafa'da**
 Mustafa'nın makinesi, 600 sn, üçer koşu, `kalite-olcumu-95-kontrollu-600.json`.
 Atamalar sabitken mola adımı 44–46 sn'de kanıtlı optimum (mola açığı 177–188),

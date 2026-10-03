@@ -16,6 +16,7 @@ iki karar → T-80.
 7. [18:56 — Mustafa'nın koşuları ve mola ölçümü (bulgu 17)](#7--1856--mustafanın-koşuları-ve-mola-ölçümü-bulgu-17)
 8. [19:09 — "Kontrollü ölçümle gidelim": tasarım ve karar kuralı](#8--1909--kontrollü-ölçümle-gidelim-tasarım-ve-karar-kuralı)
 9. [4 Ekim 01:56 — kontrollü ölçüm sonucu (bulgu 18) ve öneri](#9--4-ekim-0156--kontrollü-ölçüm-sonucu-bulgu-18-ve-öneri)
+10. [4 Ekim 02:07 — K-60 ve kapanış](#10--4-ekim-0207--k-60-ve-kapanış)
 
 ---
 
@@ -241,4 +242,33 @@ hücre başına kişi satırı), `06-ACIK-RISKLER.md` (kontrollü ölçüm tasar
 kuralı, bulgu 18, bulgu 15 düzeltme notu, öneri, öncelik satırı),
 `00-BURADAN-BASLA.md`, `DEGISIM-GUNLUGU.md`, bu günlük §8–9,
 `kalite-olcumu-95-kontrollu-600.json`.
+
+## 10 · 4 Ekim 02:07 — K-60 ve kapanış
+
+Mustafa (02:06): *"Karar 1 neydi hatırlatır mısın"* → bir paragrafla
+anlatıldı (motor molaları ayrı adımda yerleştirsin; müşteri tarafında değişen
+yok; C değil). (02:07): **"evet, bugünlük bitirelim yarın devam ederiz."** →
+**K-60** yazıldı (`08-URUN-KARARLARI.md`), şartname değişiklik 58 + §11.3 notu
+(*kod henüz değişmedi*), T-60 sıradaki adım, `00-BURADAN-BASLA.md` 02:45
+paragrafı ve §3 T-60 satırı, DEGISIM. DENETIM 0 hata.
+
+**Günün özeti (3 Ekim 13:44 → 4 Ekim 02:45):** K-59 (iyileştirme varsayılan)
+koda indi ve commit'lendi (`74a7a36`); 221 mutasyon tam koşuda hepsi öldü;
+mola sorusu üç ölçümle kapandı (bulgu 17 → "kontrollü ölçümle gidelim" →
+bulgu 18) ve **K-60** verildi. Bir okuma düzeltildi (bulgu 15'in eksik/aşım
+nedenselliği). Reddedilen/ertelenen: (C) molaların isteğe bağlı ürün adımı
+(motor açısından kazanç yok, ürün kararı, ertelendi); karar kuralının ilk
+yazımı hedef aşımını saymamıştı — açıkça yazıldı, sonuca göre uyduruldu
+**değil**, dürüst okumayla verildi.
+
+**Yarınki pencere açılışta okur:** `00-BURADAN-BASLA.md` üst paragraf (02:45)
+ve §5b; `06-ACIK-RISKLER.md` T-60 bulgu 17–18 + "Sıradaki adım";
+`08-URUN-KARARLARI.md` K-59–K-60; `05-HATA-OTOPSILERI.md` O-13–O-15; bu
+günlük §6–10. İlk iş K-60'ın koda inmesi (üç aşama), sonra kalibrasyon ölçümü.
+
+Bulgu 18 ve ölçüm tasarımı Mustafa'nın commit'iyle depoda: **`2026528`**
+(6 dosya, `kalite-olc.py` ve `kalite-olcumu-95-kontrollu-600.json` dahil).
+**Commit bekleyen (K-60 kapanışı):** bu günlük §10, `06`, `08` (K-60), `00`,
+`DEGISIM-GUNLUGU.md`, `02-spec/v1.4-master-spec.md` (58, §11.3) — blok
+sohbette.
 
