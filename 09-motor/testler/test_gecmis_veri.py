@@ -434,7 +434,30 @@ def test_COZUCU_gun_degeri_NEGATIF_olmayan_kaydi_yok_sayar():
     ve tek kisilik talep cozumsuz kalirdi."""
     g = _cozucu_sahnesi([DINLENME], gecmis=[_g(0)],
                         sablonlar=[GUNDUZ], talep=[(0, 8)])
-    assert _coz(g)["durum"] == "cozuldu"
+    c = _coz(g)
+    assert c["durum"] == "cozuldu"
+    # ⚠ 3 Ekim: "cozuldu" tek basina yetmiyordu. K-56'dan (devreden kapsama)
+    #   sonra gun 0 kaydi gecmis sayilsaydi hem bu vardiyayi YASAKLAR hem
+    #   talebi "devreden kisi" olarak KAPATIRDI -- bos plan "cozuldu" cikar,
+    #   mutasyon yasar (tam mutasyon kosusu, 3 Ekim). Plan dolu olmali.
+    atanan = [(a["calisan"], a["gun"]) for a in c["atamalar"]]
+    assert atanan == [("C1", 0)], atanan
+    # ve kayit devreden kapsama olarak da sayilmamali
+    from cozucu.model import Model
+    assert Model(g).kur()._devir_kisi == {}, "gun 0 kaydi devreden kapsama sayildi"
+
+
+def test_gun_degeri_NEGATIF_olmayan_kayit_DEVREDEN_kapsama_SAYILMAZ():
+    """Dogrulayici tarafi (K-56 okuyucusu): gun 0 ile gelen kayit bu haftanin
+    saatlerini KAPATMAZ. Kapatsaydi bos plan asgari kapsamayi tutturur,
+    ihlal yazilmazdi."""
+    g = _cozucu_sahnesi([], gecmis=[_g(0)], sablonlar=[GUNDUZ], talep=[(0, 8)])
+    assert _ih(g, [], "ASGARI_KAPSAMA"), "gun 0 kaydi devreden kapsama sayildi"
+    # gun -1 kaydi 23-31 ise tasan kisim (00-07) saat 8'i KAPATMAZ, saat 6'yi kapatir
+    g2 = _cozucu_sahnesi([], gecmis=[_g(-1, 23, 31)], sablonlar=[GUNDUZ],
+                         talep=[(0, 6), (0, 8)])
+    saatler = sorted(i["saat"] for i in _ih(g2, [], "ASGARI_KAPSAMA"))
+    assert saatler == [8], saatler
 
 
 # ======================================================================

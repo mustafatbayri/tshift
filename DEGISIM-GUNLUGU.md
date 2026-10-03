@@ -4,6 +4,15 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-03 (16:00) · T-60 blok 4: molalar sabitken uzun arama fazla mesaiyi 34–38 saate indirdi · O-15: tam mutasyon koşusu 1 yaşayan 3 atlanan buldu, düzeltildi**
+600 sn, ikişer koşu: 240 sn iyileştirme 45–53 saat / 512–533 kişi-saat eksik;
+molalar sabit 480 sn 34–38 saat / 360–366 — bedeli mola sırasında kapsama
+üç kat (bulgu 15–16). Tam mutasyon koşusu: çözücünün gün-0 "geçmiş" kaydı
+mutasyonu K-56'dan sonra yaşıyordu (boş plan "çözüldü"), üç çapa K-56 ile
+bozulmuştu; test güçlendirildi, +1 test, +1 mutasyon (**215**), tam koşu
+damgası eklendi (O-15). Ürün varsayılanı değişmedi; iki karar Mustafa'da.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 15–16) · `00-DEVIR/05-HATA-OTOPSILERI.md` (O-15) · `09-motor/testler/test_gecmis_veri.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-mola-600.json` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md`
+
 **2026-10-02 (23:45) · K-58: sözleşme tipi yalnız tam zamanlı ve yarı zamanlı — çalışana saat tanımlanmaz · gün kapanışı**
 Mustafa: *"Tam zamanlı ve yarı zamanlı kalacak sadece"*; değerler kanundan
 (tam 45; yarı baz 30 / tavan 45, arası ek mesai). Karar kayda geçti; kod,

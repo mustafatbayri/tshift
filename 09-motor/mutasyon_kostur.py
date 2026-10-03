@@ -194,9 +194,16 @@ MUTASYONLAR = [
      "            if seri and g - 1 >= 0 and seri > en_uzun:",
      "            if seri and seri > en_uzun:",
      "testler/test_gecmis_veri.py"),
+    # ⚠ 3 Ekim: bu capa K-56 ile iki yerde gecer oldu (devir_atamalari ayni
+    #   satiri tasiyor) ve ATLANDI yaziyordu; baglamla tekillestirildi, K-56
+    #   okuyucusuna ayri mutasyon kondu.
     ("gecmis", K, "gun>=0 kaydi da gecmis sayilsin",
-     "        if gun is None or bas is None or bit is None or gun >= 0:",
-     "        if gun is None or bas is None or bit is None:",
+     "        if gun is None or bas is None or bit is None or gun >= 0:\n            continue\n        a = {\"calisan\": kimlik,",
+     "        if gun is None or bas is None or bit is None:\n            continue\n        a = {\"calisan\": kimlik,",
+     "testler/test_gecmis_veri.py"),
+    ("gecmis", K, "K-56 okuyucusu: gun>=0 kaydi da devreden kapsama sayilsin",
+     "                if gun is None or bas is None or bit is None or gun >= 0:\n                    continue\n                mbas, mbit",
+     "                if gun is None or bas is None or bit is None:\n                    continue\n                mbas, mbit",
      "testler/test_gecmis_veri.py"),
     ("gecmis", K, "bilinen gunler listesi yok sayilsin",
      "    return ({g for g in (c.get(\"gecmis_bilinen_gunler\") or []) if g < 0}\n            | {k[\"gun\"] for k in kayitlar})",
@@ -610,12 +617,14 @@ MUTASYONLAR = [
      '        if self.cok_ekipli_sayim == "tek":\n            return self._atama_ekibi(c, t) == ekip\n        return ekip in (c.get("ekipler") or [])',
      '        return ekip in (c.get("ekipler") or [])',
      'testler/test_cok_ekipli.py'),
+    # ⚠ 3 Ekim: iki capa K-56 ile (`_devir_elle` kosulu) bozulmustu, ATLANDI
+    #   yaziyordu; yeni metne cekildi.
     ('cok_ekipli', K, 'K-50 dogrulayici: tek modda da uyelige saysin',
-     '    if mod != "hepsi":\n        return False\n    return ekip in uyelik.get(atama.get("calisan"), ())',
-     '    return ekip in uyelik.get(atama.get("calisan"), ())',
+     '    if mod != "hepsi" or atama.get("_devir_elle"):\n        return False',
+     '    if atama.get("_devir_elle"):\n        return False',
      'testler/test_cok_ekipli.py'),
     ('cok_ekipli', K, 'K-50 dogrulayici: hepsi modda da yalniz atamanin ekibi',
-     '    if mod != "hepsi":\n        return False\n    return ekip in uyelik.get(atama.get("calisan"), ())',
+     '    if mod != "hepsi" or atama.get("_devir_elle"):\n        return False          # elle verilen devir sayisinin kisisi yok (K-56)\n    return ekip in uyelik.get(atama.get("calisan"), ())',
      '    return False',
      'testler/test_cok_ekipli.py'),
     ('cok_ekipli', K, 'K-50 dogrulayici: nitelik kapsamasi atamanin ekibine baksin (eski)',
@@ -1009,6 +1018,19 @@ def main():
 
     print("\nOZET: %d mutasyon · yasayan %d · atlanan %d"
           % (len(secilen), yasayan, atlanan))
+    # ⚠ 3 Ekim (O-15): "N mutasyon, hepsi oldu" iddiasi yalniz TAM kosudan
+    #   yazilir; grup kosusu yalniz grubun sayisini soyler. Tam kosu damgasini
+    #   dosyaya yazar ki "en son ne zaman tam kosuldu" sohbete degil depoya
+    #   baglansin. Grup kosusunda damga yazilmaz.
+    if suzgec is None:
+        import datetime
+        io.open(os.path.join(BURASI, "mutasyon-tam-kosu.txt"), "w", encoding="utf-8",
+                newline="").write(
+            "tam kosu: %s\nOZET: %d mutasyon | yasayan %d | atlanan %d\n"
+            % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+               len(secilen), yasayan, atlanan))
+    else:
+        print("(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)")
     sys.exit(1 if (yasayan or atlanan) else 0)
 
 

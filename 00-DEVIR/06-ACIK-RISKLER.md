@@ -3636,11 +3636,50 @@ hedef aşımı farkı (yukarıda) aynı aileden olabilir — bakılmadı.
    büyüklüğüyle değişiyor. Öneri tablosu ancak **son motorla**, birkaç ölçek
    × birkaç süre ölçülerek çıkarılır; T-60 kapanınca.
 
-**Sıradaki adım:** `sabit_mola_480` ve `a_ipuclu_240` tam ölçekte, 600 sn,
-ikişer koşu (not 3'ün ölçümü; ≈50 dk). Sonra iki karar Mustafa'nın: (a)
-ürünün varsayılanı olsun mu, hangi süreyle; molalar ayrı adım olsun mu.
-Ardından bulgu 11'in modeli araç olarak yazılır (şartnameden okunarak,
-testleriyle) — kalan açığın sebebini bulmak için.
+*Bulgu 15 — (a) uzadıkça iyi; aramanın tamamına yakını molalar sabitken en iyi
+(Mustafa'nın makinesi, 6 çekirdek, 600 sn, ikişer koşu, 3 Ekim 14:00–15:20;
+`kalite-olcumu-95-mola-600.json`).*
+
+| yapılandırma | koşu | ilk plan | fazla mesai (yasal) | hedef eksiği (kişi-saat) | hedef kapsaması (hücre) | hedef aşımı (kişi-saat) | mola sırasında kapsama (ham) | toplam saat | sert |
+|---|---|---|---|---|---|---|---|---|---|
+| ürün hali (2 Ekim 18:43) | 1 · 2 | 51 · 53 sn | 510,75 · 475,0 | 1.199 · 1.248 | %61,5 · %56,9 | — | — | 18.590 · — | 0 |
+| (a) 120 sn iyileştirme (2 Ekim) | 1 · 2 | 55 · 57 sn | 82,75 · 60,0 | 575 · 610 | %74,9 · %73,3 | 2.755 · 2.659 | 206 · 220 | — | 0 |
+| (a) 240 sn iyileştirme | 1 · 2 | 53 · 57 sn | 53,25 · 44,5 | 512 · 533 | %78,3 · %80,2 | 2.692 · 2.724 | 200 · 221 | 17.013 · 16.988 | 0 |
+| **molalar sabit 480 sn** + ≈107 sn serbest | 1 · 2 | 56 · 57 sn | **37,5 · 34,0** | **366 · 360** | %80,2 · %82,7 | 3.363 · 3.332 | **624 · 631** | 17.601 · 17.523 | 0 |
+
+Okuma: sabit molalı aşama uzadıkça fazla mesai ve hedef eksiği **tek yönlü**
+düşüyor (120 → 240 → 480 sn: 60–83 → 45–53 → 34–38 saat; 575–610 → 512–533 →
+360–366 kişi-saat); altı koşu da 0 sert, yayınlanabilir; ilk plan 53–57 sn'de.
+**Bedeli iki yerde:** mola sırasında kapsama ihlali **üç kat** (624–631 ↔ 200–221
+— aynı şablondaki herkes aynı dakikada molada) ve hedef aşımı daha yüksek
+(3.332–3.363 ↔ 2.692–2.724; toplam saat ≈550 kişi-saat fazla, eksik 150 kişi-saat
+az). Fazla mesaisi kalan kişilerin gösterilen hepsi 46,25 saatte — 45'i tam
+tutturmayan şablon karışımı (9 + 4,25 saatlik desen), kişi başı 1,25 saat.
+Üç "fazla mesai" sayısı dört koşuda da aynı (bulgu 14 bu koşularda görünmedi).
+
+*Bulgu 16 — molaları serbest arayan ana aşama her yapılandırmada %6–9 ekliyor,
+süresi ne olursa olsun.* İyileştirilmiş ipucu → ana aşama sonu: 293.216 →
+276.172 (−%5,8, ≈465 sn) · 236.364 → 208.107 (−%12,0) · 203.252 → 186.519
+(−%8,2, ≈347 sn) · 177.114 → 160.646 (−%9,3) · 155.389 → 142.836 (−%8,1,
+≈107 sn) · 144.670 → 132.258 (−%8,6). Kazancın gövdesi sabit molalı aşamada;
+serbest mola araması bütçeden bağımsız küçük bir pay ekliyor ve hiçbir koşuda
+durgunlukla durmadı (son iyileşme bütçenin son saniyelerinde). ⚠ Ana aşama tam
+ipucuyu ilk plana çevirmek için her koşuda **53–57 sn** harcıyor (12 koşuda
+tutarlı); sebebi ölçülmedi — ipucu doğrulaması değil model kurma/presolve
+olabilir, **tahmin**. Mustafa'nın *"molalar motorun hesabından çıksın mı"*
+sorusunun ölçülebilen kısmı bu: molaların yerini aramak kaliteyi az, mola
+sırasındaki kapsamayı çok etkiliyor; **ayrı bir mola adımının bu üç katı ne
+kadar geri aldığı ölçülmedi** (ölçüm için: atamalar sabit, molalar serbest,
+60 sn — yapılandırma yazılmadı, Mustafa'nın kararına bağlı).
+
+**Sıradaki adım:** ölçüm bitti; **iki karar Mustafa'nın** — (1) birinci
+aşamada iyileştirme ürünün varsayılanı olsun mu ve bütçenin ne kadarı sabit
+molalı aşamaya gitsin (ölçülen: ne kadar uzun o kadar iyi; serbest mola
+araması %6–9 ekliyor); (2) molalar motorun hesabından çıkıp ayrı, isteğe
+bağlı adım olsun mu (bedeli bulgu 15–16; ayrı adımın geri kazandırdığı
+ölçülmedi). Karardan sonra: ürün varsayılanı değişir, tam ölçek üç profille
+(DENGELI/KAPSAMA/CALISAN) ve tekrarlı koşulur, koşudan koşuya fark ölçülür
+(not 1); bulgu 11'in modeli araç olarak yazılır.
 
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
@@ -4596,7 +4635,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). Kalan: sabit molalı uzun arama ölçümü, (a)'nın ürüne alınması kararı, molaların ayrı adım olması kararı, koşudan koşuya farkın küçültülmesi |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). Kalan: Mustafa'nın iki kararı ((a) varsayılan mı, molalar ayrı adım mı), sonra üç profille tekrarlı ölçüm ve koşudan koşuya farkın küçültülmesi |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

@@ -489,6 +489,53 @@ ile çağrılır** (`export GIT_OPTIONAL_LOCKS=0`); o ayarla `status`, `diff`,
 
 ---
 
+## O-15 · "214 mutasyon hepsi öldü" denmişti; tam koşu iki gün yapılmamıştı, 1 yaşadı 3 atlandı ⚠
+
+**Tarih:** 3 Ekim 2026, 15:22 (Mustafa'nın tam koşusuyla)
+
+**Ne oldu.** Mustafa `py mutasyon_kostur.py`'yi **tam** koşturdu: 214 mutasyon,
+**1 yaşadı, 3 atlandı**. Devir dokümanları 1–2 Ekim boyunca *"201 mutasyon
+hepsi öldü"*, *"214 mutasyon"* yazıyordu; o sayılar **grup koşularından**
+toplanmıştı (`py mutasyon_kostur.py demir` gibi). Son tam koşu 1 Ekim 15:35'ti
+(128 mutasyon); sonraki dokuz karar (K-49…K-57) grup koşusuyla doğrulandı.
+
+| Ne | Sebep | Neden görünmedi |
+|---|---|---|
+| **Yaşadı:** çözücü, günü 0 ve üstü olan "geçmiş" kaydını da geçmiş saysın | K-56 (2 Ekim 00:50, devreden kapsama) geçmiş kayıtları **kapsamaya da** sayar oldu. Mutasyonlu kodda gün-0 kaydı hem o günkü vardiyayı yasaklıyor hem talebi "devreden kişi" olarak kapatıyor → **boş plan "çözüldü"** çıkıyor. Test yalnız `durum == "cozuldu"` diyordu, planın dolu olduğuna bakmıyordu | Mutasyon 30 Eylül'de yazıldı ve o gün öldü; K-56 davranışı değiştirdi, `gecmis` grubu K-56'dan sonra koşulmadı |
+| **Atlandı:** doğrulayıcı, gün-0 kaydı geçmiş sayılsın | K-56 doğrulayıcıya aynı satırı taşıyan ikinci bir okuyucu ekledi (`devir_atamalari`); çapa iki yerde geçti | aynı |
+| **Atlandı (2):** K-50 doğrulayıcı sayımı (tek mod / hepsi modu) | K-56 `ekibe_sayilir`'a `_devir_elle` koşulu ekledi; çapa metni değişti | `cok_ekipli` grubu K-56'dan sonra koşulmadı |
+
+**Neden.** İki şey birden: (1) *"hepsi öldü"* toplamı tam koşudan değil grup
+koşularından **toplanarak** yazıldı — toplam sayı bir ölçüm değil bir **toplama
+işlemiydi**; (2) bir özellik (K-56) komşu grupların çapalarını ve bir testin
+varsayımını değiştirdi; grup koşusu kendi grubunu görür, komşuyu görmez. Sınıf
+O-9/O-12 ile aynı: *"kontrol vardı ama yanlış şeye bakıyordu"* — grup
+koşusu bakıyordu, tam koşu bakmıyordu.
+
+**Düzeltme (3 Ekim, bulut makinesinde doğrulandı; Mustafa'nın makinesinde
+koşulacak).** Test güçlendirildi: gün-0 kaydıyla çözülen plan **dolu** olmalı
+(`[("C1", 0)]`) ve kayıt devreden kapsamaya **sayılmamalı**; doğrulayıcı için
+yeni test: gün-0 kaydı asgari kapsamayı kapatmaz, gün −1'in 23–07 kaydı
+yalnız taşan saatleri kapatır. Üç çapa yeni metne çekildi; K-56 okuyucusuna
+ayrı mutasyon kondu (**toplam 215**). `gecmis` 17/17 ve `cok_ekipli` 11/11
+öldü (bulut).
+
+### Kalıcı bekçi
+
+- **Toplam iddiası yalnız tam koşudan yazılır.** Grup koşusu yalnız grubun
+  sayısını söyler; betik grup koşusunda bunu çıktıya yazar. Tam koşu
+  `09-motor/mutasyon-tam-kosu.txt` damgasını yazar (tarih, özet) — *"en son ne
+  zaman tam koşuldu"* sohbete değil depoya bağlı.
+- **Çözücü ya da doğrulayıcı değiştiyse commit öncesi tam koşu** (Mustafa'nın
+  makinesinde ≈12 dk). Grup koşusu geliştirme sırasında, tam koşu commit
+  kapısında.
+- ⚠ Otomatik bekçisi henüz yok: `DENETIM.py`'ye *"damga, çözücü/doğrulayıcı
+  dosyalarının son değişikliğinden eskiyse uyar"* kontrolü eklenebilir —
+  `DENETIM.py` her şeyin bekçisi olduğu için **Mustafa'nın onayıyla** (T-41
+  emsali).
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -507,6 +554,7 @@ ile çağrılır** (`export GIT_OPTIONAL_LOCKS=0`); o ayarla `status`, `diff`,
 | O-12 | "Süre yetmedi" testi makine hızına güveniyordu; CI'da kırmızı yandı | Dolan bütçe enjekte edilir (`sure_dolmus`); mutasyon grubu `sure_yetmedi` | ✅ |
 | O-13 | Aktarılan dosya makinede boşaldı; doğrulama önbelleğe bakıyordu | Windows tarafından geri okuyarak md5; köprü koptuysa yeniden doğrula; Mustafa'nın makinesindeki test koşusu asıl kapı | ✅ *(kural; otomatik bekçisi yok)* |
 | O-14 | `git status` silme izni olmayan kabukta `.git/index.lock` bıraktı | Git yalnız `GIT_OPTIONAL_LOCKS=0` ile; `add`/`commit` bu kabuktan yapılmaz | ✅ *(kural; otomatik bekçisi yok)* |
+| O-15 | "Hepsi öldü" toplamı grup koşularından toplanmıştı; tam koşuda 1 yaşadı 3 atlandı | Toplam yalnız tam koşudan; tam koşu damgası `mutasyon-tam-kosu.txt`; çözücü/doğrulayıcı değişince commit öncesi tam koşu | ✅ *(kural + damga; DENETIM kontrolü onay bekliyor)* |
 
 ---
 
