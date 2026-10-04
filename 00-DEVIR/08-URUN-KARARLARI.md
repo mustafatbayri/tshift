@@ -2898,13 +2898,30 @@ dokunan payı küçük. Fazla mesai iki hâlde de birinci aşamada belirleniyor.
    bağımsız, birinci aşamanın doğası (T-60 not 1) — mola kararından sonra
    sıradaki iş.
 
-**Durum:** karar verildi, **kod henüz değişmedi** (`ana_asama_atamalar_sabit`
-hâlâ ölçüm seçeneği, varsayılan kapalı). Uygulama T-60'ın sıradaki adımı:
-`coz.py` üç aşama + `hedef_bosluk` mola adımında 0 + süre paylaşımı; testler
-(`test_demir_secenekleri.py`, `test_sure_butcesi.py`), mutasyonlar (`demir`,
-`butce`), şartname §11.3 (`ilk_asama_sn`, `ana_asama_butce_sn`), değişiklik
-listesi 58. Yeni pencere (§5b).
+**Durum (4 Ekim 14:30): koda indi.** `09-motor/cozucu/coz.py`: `VARSAYILAN`
+`mola_adimi: True` (eski ölçüm anahtarı `ana_asama_atamalar_sabit` kaldırıldı;
+`False` = eski ortak arama, ölçüm için), `mola_adimi_hedef_bosluk: 0.0`,
+`ilk_asama_iyilestirme_orani: 0.8`; ana aşama atamaları `_atamalari_sabitle`
+ile kilitler ve bekçiye (`_ErkenDur`) 0 eşiğini verir; `_ErkenDur` artık alt
+sınır değere eşitse *"optimum"* der (bulgu 18'de üç koşunun ikisi
+*"hedef_bosluk"* yazılmıştı). İki aşama devreye girmediyse (küçük model,
+başlangıç planı) atamalar ve molalar birlikte aranır, **not düşülmez** —
+küçük modellerin testleri notların boş olduğunu sınıyor. Çıktıda
+`cozum_istatistikleri.mola_adimi` ve `atamalar_sabit`. Testler: `test_demir_
+secenekleri.py` 19 (varsayılanlar, atamalar sabit/molalar serbest, eşik 0 ve
+ayardan okunması, `mola_adimi: False` eski yol, ipucu yoksa sessiz),
+`test_sure_butcesi.py` (üç arama, pay %80); `demir` mutasyon grubu 26
+(yedi K-60: varsayılan kapalı / oran %40 / oran sabit / eşik %2 / eşik
+ayardan okunmasın / eşik uygulanmasın / False da sabitlesin / eşitlikte
+optimum denmesin), **toplam 228**, bulutta grup koşuları hepsi öldü; bulutta
+40 dosya 551 test geçti; 0,1 ölçekte duman: iyileştirme 72 sn, mola adımı
+1,3 sn'de optimum, mola açığı 199 → 28, 0 sert. `kalite-olc.py`: `varsayilan`
+üç aşama; eski ortak aramalı yapılandırmalar `mola_adimi: False` taşır
+(anlamları değişmedi); kalibrasyon için `oran_90`, kıyas için `k59_hali`.
+⚠ Mustafa'nın makinesinde test, tam mutasyon koşusu, commit ve kalibrasyon
+ölçümü bekliyor. Şartname §11.3 ve değişiklik 58 güncellendi.
 
 → T-60 · K-14 · K-32 · K-59 · şartname §6.4, §11.3 · `09-motor/cozucu/coz.py`
-(`_atamalari_sabitle`) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`
-(`mola_ayri_adim`, `mola_adimi_tam`)
+(`VARSAYILAN["mola_adimi"]`, `_atamalari_sabitle`, `_ErkenDur`) ·
+`09-motor/testler/test_demir_secenekleri.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`
+(`varsayilan`, `k59_hali`, `oran_90`, `mola_ayri_adim`, `mola_adimi_tam`)

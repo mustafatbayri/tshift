@@ -92,10 +92,18 @@ ISCI = _arg("--isci", None, int)
 #     50 -> 5 : 1 saat fazla mesai = 300 puan = 33 kisi-saat hedef acigi
 #     50 -> 1 : 1 saat fazla mesai =  60 puan =  6,7 kisi-saat hedef acigi
 YAPILANDIRMALAR = {
-    "varsayilan":   ("urunun kostugu hal: iki asama + birinci asamada iyilestirme (K-59, butcenin %40'i)",
+    # ⚠ K-60 (4 Ekim): urunun varsayilani UC ASAMA -- gecerli plan, molalar
+    #   sabitken iyilestirme (%80), MOLA ADIMI (atamalar sabit, kanitli
+    #   optimum). Eski "ortak arama" yapilandirmalari anlamlarini korusun diye
+    #   `mola_adimi: False` tasir; onlar 2-3 Ekim olcumlerinin kaydidir.
+    "varsayilan":   ("urunun kostugu hal: uc asama -- gecerli plan, molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
                      {}, {}),
-    "eski_urun_hali": ("K-59 oncesi urun hali: birinci asamada iyilestirme KAPALI (2 Ekim olcumleriyle kiyas icin)",
-                     {"ilk_asama_iyilestirme_saniye": 0}, {}),
+    "k59_hali":     ("3 Ekim urun hali (K-59): %40 iyilestirme + ~347 sn ORTAK arama (atamalar + molalar birlikte)",
+                     {"ilk_asama_iyilestirme_orani": 0.4, "mola_adimi": False}, {}),
+    "oran_90":      ("K-60 kalibrasyon: iyilestirme payi %90 (mola adimina 600 sn'de ~47 sn kalir)",
+                     {"ilk_asama_iyilestirme_orani": 0.9}, {}),
+    "eski_urun_hali": ("K-59 oncesi urun hali (2 Ekim): iyilestirme KAPALI, ortak arama (kiyas icin)",
+                     {"ilk_asama_iyilestirme_saniye": 0, "mola_adimi": False}, {}),
     "cift_butce":   ("ayni ayarlar, arama suresi iki kati",
                      {"azami_saniye": SANIYE * 2}, {}),
     "ipucu_kapali": ("birinci asama (gecerli plan ipucu) kapali",
@@ -108,29 +116,31 @@ YAPILANDIRMALAR = {
                      {}, {"agirliklar": {"FAZLA_MESAI": 1}}),
     # T-60 bulgu 8 (2 Ekim): "ipucu demir atiyor, ipucusuz arama guvenilir
     # degil". Asagidakiler OLCUM secenekleridir. (a) 3 Ekim'den beri URUNUN
-    # VARSAYILANI (K-59, butcenin %40'i); ipucusuz (a), (b) ve atamalar-sabit
-    # mola adimi olcum secenegi olarak duruyor (09-motor/cozucu/coz.py
-    # VARSAYILAN, testler/test_demir_secenekleri.py).
+    # VARSAYILANI (K-59; K-60 ile %80); mola adimi 4 Ekim'den beri urunun
+    # varsayilani (K-60). Ipucusuz (a) ve (b) olcum secenegi olarak duruyor
+    # (09-motor/cozucu/coz.py VARSAYILAN, testler/test_demir_secenekleri.py).
+    # Buradaki (a)/(b) kayitlari 2-3 Ekim'in ORTAK aramali halini olcer:
+    # `mola_adimi: False`.
     #   (a) birinci asama gecerli plani bulduktan sonra, molalar sabitken
     #       amacli iyilestirir; ana asamanin ipucu iyilesmis plan olur.
     #       Sure arama butcesinin ICINDEN gider.
-    "a_ipuclu_120":   ("(a) birinci asamada 120 sn amacli iyilestirme, amacsiz plandan baslayarak",
-                       {"ilk_asama_iyilestirme_saniye": 120}, {}),
-    "a_ipucusuz_120": ("(a) birinci asamada 120 sn amacli iyilestirme, IPUCUSUZ (bulamazsa amacsiz plan kalir)",
+    "a_ipuclu_120":   ("(a) birinci asamada 120 sn amacli iyilestirme, amacsiz plandan baslayarak; ortak arama",
+                       {"ilk_asama_iyilestirme_saniye": 120, "mola_adimi": False}, {}),
+    "a_ipucusuz_120": ("(a) birinci asamada 120 sn amacli iyilestirme, IPUCUSUZ (bulamazsa amacsiz plan kalir); ortak arama",
                        {"ilk_asama_iyilestirme_saniye": 120,
-                        "ilk_asama_iyilestirme_ipucusuz": True}, {}),
-    "a_ipuclu_60":    ("(a) birinci asamada 60 sn amacli iyilestirme, amacsiz plandan baslayarak",
-                       {"ilk_asama_iyilestirme_saniye": 60}, {}),
+                        "ilk_asama_iyilestirme_ipucusuz": True, "mola_adimi": False}, {}),
+    "a_ipuclu_60":    ("(a) birinci asamada 60 sn amacli iyilestirme, amacsiz plandan baslayarak; ortak arama",
+                       {"ilk_asama_iyilestirme_saniye": 60, "mola_adimi": False}, {}),
     #   2 Ekim gecesi tam olcek sonucu: (a) fazla mesaiyi 475-511 saatten
     #   60-100 saate indirdi ve kazancin cogu SABIT MOLALI 120 saniyede geldi
     #   (amacsiz 1,9-2,9 milyon -> 236-354 bin; ana asama ustune %6-12 ekledi).
     #   Iki soru: daha uzun sabit molali arama daha da iyi mi; molalarin
     #   yerini aramaktan cikarmak (Mustafa'nin sorusu) ne kazandirir?
-    "a_ipuclu_240":   ("(a) birinci asamada 240 sn amacli iyilestirme (butcenin %40'i)",
-                       {"ilk_asama_iyilestirme_saniye": 240}, {}),
-    "sabit_mola_480": ("(a) aramanin neredeyse TAMAMI sabit molali modelde: 480 sn iyilestirme, kalan ana asama",
+    "a_ipuclu_240":   ("(a) birinci asamada 240 sn amacli iyilestirme (butcenin %40'i); ortak arama (= k59_hali)",
+                       {"ilk_asama_iyilestirme_saniye": 240, "mola_adimi": False}, {}),
+    "sabit_mola_480": ("(a) aramanin neredeyse TAMAMI sabit molali modelde: 480 sn iyilestirme, kalan ORTAK arama",
                        {"ilk_asama_iyilestirme_saniye": 480,
-                        "ilk_asama_iyilestirme_orani": 0.85}, {}),
+                        "ilk_asama_iyilestirme_orani": 0.85, "mola_adimi": False}, {}),
     #   MOLA AYRI ADIM (3 Ekim, Mustafa'nin sorusu "molalar motorun hesabindan
     #   ciksin mi?"): sabit_mola_480 ile AYNI birinci asama (480 sn sabit
     #   molali iyilestirme), TEK FARK ana asamada ATAMALAR SABIT -- kalan
@@ -141,10 +151,10 @@ YAPILANDIRMALAR = {
     #   kaydedilmiyordu; simdi `amac_dagilimi` ile kaydediliyor). Ana asamaya
     #   kalan 107 sn'nin plan verdigi olculdu: ilk plan 56-57 sn'de
     #   (kalite-olcumu-95-mola-600.json, bulgu 15-16).
-    "mola_ayri_adim": ("mola ayri adim: sabit_mola_480 ile ayni ilk asama, TEK FARK ana asamada atamalar SABIT (yalniz molalar aranir)",
+    "mola_ayri_adim": ("mola ayri adim (bulgu 17 kaydi): sabit_mola_480 ile ayni ilk asama, atamalar SABIT, genel %2 boslukta erken durur",
                        {"ilk_asama_iyilestirme_saniye": 480,
                         "ilk_asama_iyilestirme_orani": 0.85,
-                        "ana_asama_atamalar_sabit": True}, {}),
+                        "mola_adimi": True, "mola_adimi_hedef_bosluk": 0.02}, {}),
     #   3 Ekim 18:21 (bulgu 17): mola_ayri_adim 29 sn'de durdu -- "hedef
     #   boslugu %2" TOPLAM amacin boslugu, toplamin %70-77'si sabit fazla
     #   mesai; mola teriminin kendi boslugu daha genisti (en iyi ihtimalle
@@ -152,17 +162,18 @@ YAPILANDIRMALAR = {
     #   (Mustafa, 19:09: "kontrollu olcumle gidelim"): ayni adim, erken
     #   durma KAPALI -- kalan ~107 sn'yi (ya da optimuma kadar) kullanir.
     #   Kiyas: varsayilan (K-59: 240 sn sabit molali + ~347 sn ortak arama).
-    "mola_adimi_tam": ("mola adimi TAM: 480 sn sabit molali iyilestirme, sonra atamalar SABIT yalniz molalar; erken durma KAPALI (hedef_bosluk 0)",
+    #   4 Ekim: bu yapilandirma K-60 ile URUNUN VARSAYILANI oldu (600 sn'de
+    #   `varsayilan` ile ayni: %80 = 480 sn, mola adimi, hedef_bosluk 0).
+    "mola_adimi_tam": ("mola adimi TAM (bulgu 18 kaydi; 600 sn'de = varsayilan): 480 sn iyilestirme, atamalar SABIT, kanitli optimuma kadar",
                        {"ilk_asama_iyilestirme_saniye": 480,
                         "ilk_asama_iyilestirme_orani": 0.85,
-                        "ana_asama_atamalar_sabit": True,
-                        "hedef_bosluk": 0.0}, {}),
+                        "mola_adimi": True, "mola_adimi_hedef_bosluk": 0.0}, {}),
     #   (b) ana asamada ipuclu ve ipucusuz arama YAN YANA, ayni surede;
     #       isciler bolusulur, iyi olan plan secilir. Model bellekte iki kez.
-    "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya",
-                       {"paralel_ipucusuz_isci": 3}, {}),
-    "b_paralel_2":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 2 isci, kalani ipucluya",
-                       {"paralel_ipucusuz_isci": 2}, {}),
+    "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya; ortak arama",
+                       {"paralel_ipucusuz_isci": 3, "mola_adimi": False}, {}),
+    "b_paralel_2":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 2 isci, kalani ipucluya; ortak arama",
+                       {"paralel_ipucusuz_isci": 2, "mola_adimi": False}, {}),
 }
 VARSAYILAN_SECIM = "varsayilan,cift_butce,ipucu_kapali,lp_guclu"
 SECILEN = _arg("--yapilandirma", VARSAYILAN_SECIM).split(",")
@@ -502,7 +513,7 @@ def kosu(g, ad, ayar, girdi_ek=None):
     for alan in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri", "alt_sinir",
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
                  "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
-                 "atamalar_sabit"):
+                 "mola_adimi", "atamalar_sabit"):
         s[alan] = ist.get(alan)
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
     s["metrikler"] = m

@@ -22,9 +22,10 @@ NE OLDU (30 Eylul aksami)
     kullaniciya ayrica gosterilebilsin (T-59'un onerisi)
 
 K-59 (3 Ekim): birinci asama artik IKI arama -- gecerli plan (pay %20) ve
-  molalar sabitken amacli iyilestirme (pay `ilk_asama_iyilestirme_orani`,
-  %40). Ikisinin toplami `ilk_asama_sn`e yazilir; ana asamaya yine KALAN
-  verilir, soz degismez: birinci asamada GECEN + ana asamaya VERILEN <= azami.
+  molalar sabitken amacli iyilestirme (pay `ilk_asama_iyilestirme_orani`;
+  K-59'da %40, K-60 ile %80). Ikisinin toplami `ilk_asama_sn`e yazilir; ana
+  asamaya (K-60: mola adimi) yine KALAN verilir, soz degismez: birinci
+  asamada GECEN + ana asamaya VERILEN <= azami.
 
 ⚠ BU TESTLER SAAT OLCMEZ -- bilerek. CI makinesi paylasimli ve 2
   cekirdekli; "5 saniyeden kisa surdu" diyen bir test yuk altinda rastgele
@@ -112,7 +113,8 @@ def test_ipucu_aramasi_KENDI_payiyla_sinirli(monkeypatch):
     """Birinci asamanin iki aramasina giden CP-SAT butceleri paylarini asmamali.
 
     K-59'dan once iki arama vardi (ipucu + ana); 3 Ekim'den beri uc:
-    ipucu (%20), molalar sabitken iyilestirme (%40), ana asama (kalan)."""
+    ipucu (%20), molalar sabitken iyilestirme (K-60 ile %80), ana asama =
+    mola adimi (kalan)."""
     gorulen = []
     asil = C.cp_model.CpSolver
 
@@ -127,14 +129,14 @@ def test_ipucu_aramasi_KENDI_payiyla_sinirli(monkeypatch):
     assert len(gorulen) == 3, gorulen
     assert gorulen[0] <= 2.0 + 1e-6, (
         "gecerli plan aramasi %s sn aldi; pay en cok 10 x %%20 = 2 sn" % gorulen[0])
-    assert gorulen[1] <= 4.0 + 1e-6, (
-        "K-59 iyilestirmesi %s sn aldi; pay en cok 10 x %%40 = 4 sn" % gorulen[1])
+    assert gorulen[1] <= 8.0 + 1e-6, (
+        "K-59 iyilestirmesi %s sn aldi; pay en cok 10 x %%80 = 8 sn (K-60)" % gorulen[1])
     # Butceler TOPLANMAZ: birinci asama paylarinin tamamini kullanmayabilir.
     # Soz su: birinci asamada GECEN + ana asamaya VERILEN <= azami.
     ist = c["cozum_istatistikleri"]
     assert abs(gorulen[2] - ist["ana_asama_butce_sn"]) < 0.01, (gorulen, ist)
     assert ist["ilk_asama_sn"] + gorulen[2] <= 10 + 0.01, (gorulen, ist)
-    assert ist["ilk_asama_iyilestirme"]["istenen_saniye"] == 4.0, ist["ilk_asama_iyilestirme"]
+    assert ist["ilk_asama_iyilestirme"]["istenen_saniye"] == 8.0, ist["ilk_asama_iyilestirme"]
 
 
 def test_model_kurma_suresi_AYRI_kalem():

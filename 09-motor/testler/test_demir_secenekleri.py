@@ -9,12 +9,16 @@ NE BULUNDU (tam olcek, 500 kisi, 600 sn, Mustafa'nin makinesi)
   Ipucu aramayi kotu plana demirliyor; demirsiz arama guvenilir degil.
 
 BU DOSYA NEYI SINAR
-  Iki secenegin de VARSAYILANI KAPALI; urunun davranisi degismez.
   (a) `ilk_asama_iyilestirme_saniye`: birinci asama gecerli plani bulduktan
       sonra, molalar hala sabitken amaci geri koyup iyilestirir; ipucu
       iyilesmis plan olur. Plan bulamazsa amacsiz planin ipucu KALIR.
+      K-59 (3 Ekim): URUNUN VARSAYILANI; K-60 (4 Ekim): payi %80.
   (b) `paralel_ipucusuz_isci`: ana asamada ipuclu ve ipucusuz arama yan
-      yana, ayni surede; iyi olan secilir.
+      yana, ayni surede; iyi olan secilir. Olculdu ve ELENDI; kapali.
+  MOLA ADIMI (K-60, 4 Ekim, Mustafa: "evet"): ana asama atamalari birinci
+      asamanin planina sabitler, yalniz molalari arar, kanitli optimumda
+      durur (`mola_adimi_hedef_bosluk` 0). `mola_adimi: False` eski ortak
+      aramayi olcum icin geri getirir.
   Hangisinin tam olcekte ise yaradigi burada SINANMAZ -- o bir olcumdur
   (08-motor-testleri/gercekci-veri-seti/kalite-olc.py).
 
@@ -84,28 +88,33 @@ def _kapali_alan(k):
 
 
 # ----------------------------------------------------------------------
-# 0. Varsayilan: iki secenek de KAPALI, urun ayni
+# 0. Varsayilan: K-59 iyilestirme ACIK (%80), K-60 mola adimi ACIK, (b) KAPALI
 # ----------------------------------------------------------------------
 
-def test_varsayilan_K59_a_ACIK_orandan_b_ve_atama_sabitleme_KAPALI():
-    """K-59 (3 Ekim, Mustafa: "olsun"): birinci asamada iyilestirme urunun
-    varsayilani; suresi butcenin %40'i (kalibrasyon). (b) ve atama sabitleme
-    olcum secenegi olarak kapali."""
+def test_varsayilan_K59_iyilestirme_yuzde80_K60_mola_adimi_ACIK_b_KAPALI():
+    """K-59 (3 Ekim): birinci asamada iyilestirme urunun varsayilani. K-60
+    (4 Ekim, Mustafa: "evet"): payi %80 (kalibrasyon), ana asama MOLA ADIMI
+    (atamalar sabit, kanitli optimumda durur). (b) olcum secenegi, kapali."""
     assert C.VARSAYILAN["ilk_asama_iyilestirme_saniye"] is None
-    assert C.VARSAYILAN["ilk_asama_iyilestirme_orani"] == 0.4
+    assert C.VARSAYILAN["ilk_asama_iyilestirme_orani"] == 0.8
     assert C.VARSAYILAN["ilk_asama_iyilestirme_ipucusuz"] is False
     assert C.VARSAYILAN["paralel_ipucusuz_isci"] == 0
-    assert C.VARSAYILAN["ana_asama_atamalar_sabit"] is False
+    assert C.VARSAYILAN["mola_adimi"] is True
+    assert C.VARSAYILAN["mola_adimi_hedef_bosluk"] == 0.0
     c = C.coz(_sahne(), dict(AYAR))
     ist = c["cozum_istatistikleri"]
     assert c["durum"] == "cozuldu" and ist["iki_asama"] is True
     b = ist["ilk_asama_iyilestirme"]
     assert b is not None and b["plan_bulundu"] is True, b
-    assert abs(b["istenen_saniye"] - 0.4 * AYAR["azami_saniye"]) < 1e-6, b   # 30 sn -> 12 sn
-    assert b["saniye"] <= 0.4 * AYAR["azami_saniye"] + 0.5, b
+    assert abs(b["istenen_saniye"] - 0.8 * AYAR["azami_saniye"]) < 1e-6, b   # 30 sn -> 24 sn
+    assert b["saniye"] <= 0.8 * AYAR["azami_saniye"] + 0.5, b
     assert "amac_dagilimi" in b and sum(d["ceza"] for d in b["amac_dagilimi"].values()) == b["iyilesmis_amac"], b
     assert ist["paralel"] is None, ist["paralel"]
-    assert ist["atamalar_sabit"] is False
+    assert ist["mola_adimi"] is True and ist["atamalar_sabit"] is True, ist
+    # Mola adimi atamalar sabitken kanitli optimuma ulasir ve oyle der --
+    # "hedef_bosluk" degil (bulgu 18'de uc kosunun ikisi oyle yazilmisti).
+    assert ist["durma_sebebi"] == "optimum", ist["durma_sebebi"]
+    assert ist["amac_degeri"] == ist["alt_sinir"], ist
 
 
 def test_iyilestirme_SIFIR_ile_kapatilir_eski_davranis():
@@ -116,11 +125,13 @@ def test_iyilestirme_SIFIR_ile_kapatilir_eski_davranis():
 
 
 # ----------------------------------------------------------------------
-# Olcum: ana asama atamalari sabitler, yalniz molalari arar
+# K-60: ana asama = MOLA ADIMI -- atamalar sabit, yalniz molalar aranir
 # ----------------------------------------------------------------------
 
-def test_atamalar_sabit_ana_asama_x_i_DEGISTIREMEZ_molalari_arar(monkeypatch):
-    gorulen = {}
+def _ana_asamayi_izle(monkeypatch, gorulen):
+    """Ana asamaya giden modelde hangi degiskenlerin alani tek degere
+    kapatildi ve bekcinin durma esigi ne -- kaydeder, sonra asil aramayi
+    cagirir."""
     asil = C._durgunluk_bekcisiyle_coz
 
     def bak(cozucu, model, geri, ayar):
@@ -128,14 +139,21 @@ def test_atamalar_sabit_ana_asama_x_i_DEGISTIREMEZ_molalari_arar(monkeypatch):
         gorulen["sabit_x"] = {i for i in range(len(proto.variables))
                               if len(proto.variables[i].domain) == 2
                               and proto.variables[i].domain[0] == proto.variables[i].domain[1]}
+        gorulen["hedef_bosluk"] = geri.ayar["hedef_bosluk"]
         return asil(cozucu, model, geri, ayar)
     monkeypatch.setattr(C, "_durgunluk_bekcisiyle_coz", bak)
+
+
+def test_atamalar_sabit_ana_asama_x_i_DEGISTIREMEZ_molalari_arar(monkeypatch):
+    gorulen = {}
+    _ana_asamayi_izle(monkeypatch, gorulen)
     g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
     k = Model(g).kur()
-    c = C.coz(g, dict(AYAR, ana_asama_atamalar_sabit=True), kuruldu=k)
+    c = C.coz(g, dict(AYAR), kuruldu=k)                      # K-60: varsayilan ACIK
     assert c["durum"] == "cozuldu"
     ist = c["cozum_istatistikleri"]
     assert ist["atamalar_sabit"] is True
+    assert gorulen["hedef_bosluk"] == 0.0, "mola adimi kanitli optimuma kadar aramali"
     x_indisleri = {v.Index() for v in k.x.values()}
     assert x_indisleri <= gorulen["sabit_x"], "atama degiskenleri sabitlenmedi"
     mola_indisleri = {v.Index() for v in k.mola.values()} | {v.Index() for v in k.dinlenme.values()}
@@ -149,11 +167,42 @@ def test_atamalar_sabit_ana_asama_x_i_DEGISTIREMEZ_molalari_arar(monkeypatch):
     assert r["yayin_kapisi"]["yayinlanabilir"] is True, r["ihlaller"]
 
 
-def test_atamalar_sabit_ipucu_yoksa_UYGULANMAZ_not_duser():
-    c = C.coz(_sahne(), dict(AYAR, iki_asama_esigi=10 ** 9, ana_asama_atamalar_sabit=True))
+def test_mola_adimi_ipucu_yoksa_UYGULANMAZ_ve_not_DUSMEZ():
+    """Iki asama devreye girmediyse (kucuk model) sabitlenecek plan yok:
+    atamalar ve molalar birlikte aranir. Bu olagan yoldur, "uygulanmayan"
+    degil -- not dusulmez (kucuk modellerin testleri notlarin bos oldugunu
+    sinar, ornegin test_devir_kapsama)."""
+    c = C.coz(_sahne(), dict(AYAR, iki_asama_esigi=10 ** 9))
     assert c["durum"] == "cozuldu"
-    assert c["cozum_istatistikleri"]["atamalar_sabit"] is False
-    assert any("ana_asama_atamalar_sabit yok sayildi" in n for n in c["uygulanmayan_notlar"])
+    ist = c["cozum_istatistikleri"]
+    assert ist["iki_asama"] is False and ist["mola_adimi"] is True and ist["atamalar_sabit"] is False
+    assert not any("mola" in n for n in c["uygulanmayan_notlar"]), c["uygulanmayan_notlar"]
+
+
+def test_mola_adimi_KAPALI_eski_ortak_arama_atamalar_SERBEST(monkeypatch):
+    """`mola_adimi: False` -- OLCUM: eski davranis (atamalar + molalar birlikte),
+    genel hedef_bosluk (%2) gecerli."""
+    gorulen = {}
+    _ana_asamayi_izle(monkeypatch, gorulen)
+    g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
+    k = Model(g).kur()
+    c = C.coz(g, dict(AYAR, mola_adimi=False), kuruldu=k)
+    assert c["durum"] == "cozuldu"
+    ist = c["cozum_istatistikleri"]
+    assert ist["mola_adimi"] is False and ist["atamalar_sabit"] is False
+    x_indisleri = {v.Index() for v in k.x.values()}
+    assert not (x_indisleri <= gorulen["sabit_x"]), "ortak aramada atamalar sabitlenmemeli"
+    assert gorulen["hedef_bosluk"] == C.VARSAYILAN["hedef_bosluk"] == 0.02
+    assert not any("mola adimi" in n for n in c["uygulanmayan_notlar"])
+
+
+def test_mola_adimi_durma_esigi_AYARDAN_okunur(monkeypatch):
+    gorulen = {}
+    _ana_asamayi_izle(monkeypatch, gorulen)
+    c = C.coz(_sahne(kisi=4, gunler=[0], mola_kapsamasi=True),
+              dict(AYAR, mola_adimi_hedef_bosluk=0.5))
+    assert c["durum"] == "cozuldu"
+    assert gorulen["hedef_bosluk"] == 0.5
 
 
 # ----------------------------------------------------------------------
@@ -242,7 +291,9 @@ def test_a_ipuclu_iyilestirme_ipucuyu_SILMEZ(monkeypatch):
     assert gorulen["saniye"] == 5, gorulen
 
 
-def test_a_sure_BUTCENIN_ICINDEN_ve_en_cok_YUZDE_KIRKI(monkeypatch):
+def test_a_sure_BUTCENIN_ICINDEN_ve_en_cok_ORAN_KADARI(monkeypatch):
+    """Istenen saniye ne olursa olsun iyilestirme butcenin `ilk_asama_iyilestirme_orani`
+    kadarini asamaz (K-59 %40 idi, K-60 ile %80): mola adimina sure kalsin."""
     gorulen = {}
 
     def bak(model, saniye, isci):
@@ -253,10 +304,15 @@ def test_a_sure_BUTCENIN_ICINDEN_ve_en_cok_YUZDE_KIRKI(monkeypatch):
     ayar = dict(C.VARSAYILAN, **AYAR)
     ayar.update(azami_saniye=8, ilk_asama_iyilestirme_saniye=500)
     C._ipucu_ver(k, ayar)
-    # istenen 500 sn; butce 8 sn -> en cok %40'i (3,2 sn). Ana asamaya sure kalir.
-    assert 0 < gorulen["saniye"] <= 3.2 + 1e-6, gorulen
+    # istenen 500 sn; butce 8 sn -> en cok %80'i (6,4 sn). Mola adimina sure kalir.
+    assert 0 < gorulen["saniye"] <= 6.4 + 1e-6, gorulen
     b = k.ilk_asama_iyilestirme
     assert b["istenen_saniye"] == 500, b
+    # Oran ayardan okunur: %25 -> 2 sn.
+    k2 = Model(_sahne()).kur()
+    ayar2 = dict(ayar, ilk_asama_iyilestirme_orani=0.25)
+    C._ipucu_ver(k2, ayar2)
+    assert 0 < gorulen["saniye"] <= 2.0 + 1e-6, gorulen
 
 
 def test_a_uctan_uca_iki_asamanin_toplami_butceyi_GECMEZ():

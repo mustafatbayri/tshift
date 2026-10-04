@@ -4,12 +4,29 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-04 (14:30) · K-60 koda indi: motor üç aşama, mola adımı varsayılan (atamalar sabit, kanıtlı optimum), iyileştirme payı %80; 228 mutasyon**
+`coz.py`: `VARSAYILAN` `mola_adimi: True`, `mola_adimi_hedef_bosluk: 0.0`,
+`ilk_asama_iyilestirme_orani: 0.8`; ana aşama atamaları kilitler, bekçiye 0
+eşiği verir; `_ErkenDur` alt sınır değere eşitse "optimum"; küçük modelde not
+düşülmez; eski `ana_asama_atamalar_sabit` kaldırıldı. Testler
+`test_demir_secenekleri.py` 19 (+2, iki yeniden yazıldı), `test_sure_butcesi.py`
+pay %80; `demir` 26 mutasyon (+7), **toplam 228**, bulutta grup koşuları hepsi
+öldü; bulutta 40 dosya **551 test** geçti; 0,1 ölçek duman: mola adımı 1,3
+sn'de optimum, 199 → 28. `kalite-olc.py`: `varsayilan` üç aşama, eski ortak
+aramalı yapılandırmalara `mola_adimi: False`, yeni `oran_90` ve `k59_hali`.
+Şartname §11.3 (`ilk_asama_sn`, `ana_asama_butce_sn`) ve değişiklik 58 "koda
+indi". ⚠ Mustafa'nın makinesinde test, tam mutasyon koşusu, commit, kalibrasyon
+ölçümü bekliyor. 14:04: Mustafa bugün dinleniyor — **testsiz commit** (CI
+karar verir), tam mutasyon koşusu ve damga yarın.
+→ `09-motor/cozucu/coz.py` · `09-motor/testler/test_demir_secenekleri.py` · `09-motor/testler/test_sure_butcesi.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `02-spec/v1.4-master-spec.md` · `00-DEVIR/08-URUN-KARARLARI.md` (K-60 Durum) · `00-DEVIR/06-ACIK-RISKLER.md` (T-60) · `00-DEVIR/oturumlar/2026-10-04-k60-mola-adimi-koda.md`
+
 **2026-10-04 (02:45) · K-60: mola yerleşimi motor içinde ayrı adım — karar verildi, kod sırada; gün kapanışı**
 Mustafa (02:07): *"evet"* → **K-60** (`08-URUN-KARARLARI.md`): atamalar
 sabitken mola adımı, kanıtlı optimuma kadar; molalar plan çıktısında kalır,
 şartname §6.4 cümlesi değişmez; molaların isteğe bağlı ürün adımı olması (C)
-ertelendi. Şartname değişiklik 58 ve §11.3 notu (kod henüz değişmedi). Sıradaki
-pencere: `coz.py` üç aşama + testler/mutasyonlar + kalibrasyon ölçümü.
+ertelendi. Şartname değişiklik 58 ve §11.3 notu (kod henüz değişmedi). Sırada
+(aynı pencere, T-60'ın devamı): `coz.py` üç aşama + testler/mutasyonlar +
+kalibrasyon ölçümü.
 → `00-DEVIR/08-URUN-KARARLARI.md` (K-60) · `00-DEVIR/06-ACIK-RISKLER.md` (T-60 sıradaki adım) · `02-spec/v1.4-master-spec.md` (58, §11.3) · `00-DEVIR/00-BURADAN-BASLA.md` · `00-DEVIR/oturumlar/2026-10-03-mola-olcumu-ve-mutasyon.md` §10
 
 **2026-10-04 (02:30) · Kontrollü mola ölçümü bitti (T-60 bulgu 18): mola adımı 45 sn'de kanıtlı optimum; öneri "molalar motor içinde ayrı adım", karar Mustafa'da**

@@ -3889,15 +3889,22 @@ eksik/aşım 240 ve 480 sn'de aynı). Sayılar doğru, nedensellik yanlıştı.
 adım (atamalar sabit, optimuma kadar); molalar plan çıktısında kalır, şartname
 cümlesi değişmez; (C) ertelendi. *"Bugünlük bitirelim, yarın devam ederiz."*
 
-**Sıradaki adım (yeni pencere, §5b):** K-60'ın koda inmesi — `coz.py` üç
-aşama (`ana_asama_atamalar_sabit` ölçüm seçeneğinden ürün davranışına; mola
-adımında `hedef_bosluk` 0; süre paylaşımı: geçerli plan ≤%20 → iyileştirme
-oran → mola adımı kalan, kalan süre kullanıcıya geri döner) + testler
-(`test_demir_secenekleri.py`, `test_sure_butcesi.py`: dört arama) + mutasyonlar
-(`demir`, `butce`) + şartname §11.3 ve değişiklik 58 + 0,1 ölçek duman +
-Mustafa'nın makinesinde tam mutasyon koşusu. Sonra kalibrasyon ölçümü (oran
-%80 / %90, üçer koşu) → üç profil → koşudan koşuya fark (not 1) → T-80 →
-bulgu 11'in modeli araç olarak.
+**4 Ekim 14:30 — K-60 koda indi (bulut; ayrıntı K-60 "Durum").** Üç
+aşama: geçerli plan (≤%20) → molalar sabitken iyileştirme (**%80**) → mola
+adımı (atamalar sabit, `mola_adimi_hedef_bosluk` 0, kanıtlı optimumda durur).
+`_ErkenDur` eşitlikte *"optimum"* der. 19 + 7 test, `demir` 26 mutasyon
+(toplam **228**), bulutta 551 test geçti, 0,1 ölçek duman: mola adımı 1,3 sn'de
+optimum (199 → 28). ⚠ Mustafa'nın makinesinde test, tam mutasyon koşusu,
+commit bekliyor.
+
+**Sıradaki adım (bu pencerede; T-60'ın devamı, §5b):** Mustafa'nın koşuları
+(testler, tam mutasyon, commit) → **kalibrasyon ölçümü**: `varsayilan` (%80)
+↔ `oran_90` (%90; mola adımına 600 sn'de ≈47 sn kalır — tam ölçekte adım 45
+sn, sınırda; ölçümün sorusu tam da bu), 600 sn, üçer koşu (≈70 dk). Karar
+kuralı: %90 fazla mesai/eksikte belirgin iyi **ve** mola adımı üç koşuda da
+optimuma ulaşıyorsa %90; değilse %80 kalır. Sonra üç profil (DENGELI/
+KAPSAMA/CALISAN) tekrarlı → koşudan koşuya fark (not 1; ilk aşamanın doğası,
+en büyük kaldıraç) → T-80 → bulgu 11'in modeli araç olarak.
 
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
@@ -4853,7 +4860,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — kod henüz değişmedi, sıradaki pencere. Kalan: K-60 uygulaması, oran kalibrasyonu, üç profille tekrarlı ölçüm, koşudan koşuya fark (ilk aşamada 28–45 saat) |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — 14:30'da koda indi (`mola_adimi`, pay %80, 228 mutasyon), Mustafa'nın makinesinde koşu bekliyor. Kalan: oran kalibrasyonu (%80 ↔ %90), üç profille tekrarlı ölçüm, koşudan koşuya fark (ilk aşamada 28–45 saat) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

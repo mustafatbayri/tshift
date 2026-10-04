@@ -261,7 +261,9 @@ nedenselliği). Reddedilen/ertelenen: (C) molaların isteğe bağlı ürün adı
 yazımı hedef aşımını saymamıştı — açıkça yazıldı, sonuca göre uyduruldu
 **değil**, dürüst okumayla verildi.
 
-**Yarınki pencere açılışta okur:** `00-BURADAN-BASLA.md` üst paragraf (02:45)
+**Yarın bu pencere devam eder** (T-60'ın devamı; §5b: aynı işin devamı → aynı
+pencere. İlk yazımda "yeni pencere" demiştim, Mustafa 02:26'da sordu, düzeltildi).
+Açılışta bakılacaklar: `00-BURADAN-BASLA.md` üst paragraf (02:55)
 ve §5b; `06-ACIK-RISKLER.md` T-60 bulgu 17–18 + "Sıradaki adım";
 `08-URUN-KARARLARI.md` K-59–K-60; `05-HATA-OTOPSILERI.md` O-13–O-15; bu
 günlük §6–10. İlk iş K-60'ın koda inmesi (üç aşama), sonra kalibrasyon ölçümü.
