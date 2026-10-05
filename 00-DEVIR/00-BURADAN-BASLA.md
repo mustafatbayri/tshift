@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-04 14:30 (en alttaki paragraf: **K-60 koda indi** — üç aşama, mola adımı varsayılan, pay %80, 228 mutasyon; Mustafa'nın makinesinde koşu ve kalibrasyon ölçümü bekliyor) · önceki 02:55, 02:30 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
+**Son güncelleme:** 2026-10-05 21:45 (en alttaki paragraf: K-60 Mustafa'nın makinesinde yeşil — 551 test, 228 mutasyon; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı; sırada üç profil 900 sn) · önceki 4 Ekim 14:30 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -358,12 +358,22 @@ yeşil, 0,1 ölçek duman: mola adımı 1,3 sn'de optimum (199 → 28), 0 sert.
 Şartname §11.3 ve değişiklik 58 "koda indi". **14:04 — Mustafa: *"Bugün
 çalışmaktan vazgeçtim... yarın devam edeceğiz"*** → kod ve dokümanlar **testsiz
 commit'lendi** (CI karar verir; tam mutasyon koşusu 228 ve damga YARIN ilk iş).
-**Sıradaki tek adım (yarın):** testler + tam mutasyon koşusu + damga commit'i
-→ kalibrasyon ölçümü
-`varsayilan,oran_90` 600 sn üçer koşu (≈70 dk; karar kuralı T-60 "Sıradaki
-adım") → üç profil → koşudan koşuya fark (not 1) → T-80 (`gun_sayisi` sorusu
-açık) → bulgu 11'in modeli araç olarak. Oturum günlüğü:
-`oturumlar/2026-10-04-k60-mola-adimi-koda.md`.
+**5 Ekim 19:28 — Mustafa'nın koşuları: 551 test, 228 mutasyon hepsi öldü,
+gerçekçi set 31 (434 sn), DENETIM 0 hata.** Kalibrasyon ölçümü 19:30'da
+başladı (`varsayilan,oran_90`, 600 sn, üçer koşu; karar kuralı T-60 "Sıradaki
+adım"). **Ölçüm bütçesi kararı (19:34):** ürün hali ölçümleri bundan sonra
+**900 sn** (K-35'in önerilen seçeneği), 600 sn A/B kıyasları için (T-60 notu).
+**21:28 — kalibrasyon bitti (T-60 bulgu 19):** %80 ↔ %90 fark yok (fazla
+mesai 28–45,5 saat ikisinde de; eksik/aşım/mola aynı); %90'da mola adımına
+44–47 sn kaldı, optimum 40,5–42,9 sn'de — pay 1–5 sn, güvenli değil →
+**%80 kaldı**, kod değişmedi. Yan bulgu: koşudan koşuya fark iyileştirme
+aramasının kendisinden (aynı amaçsız başlangıç planından 126–161 bin'e
+varıyor). **Sıradaki tek adım:** damga + ölçüm + doküman commit'i → **üç
+profil, 900 sn, üçer koşu** (`varsayilan,profil_kapsama,profil_calisan`,
+≈2,5 saat; CALISAN çözümsüz çıkabilir — fazla mesai tavanı 0, bkz. T-60) →
+koşudan koşuya fark (not 1) → T-80 (`gun_sayisi` sorusu açık) → bulgu 11'in
+modeli araç olarak. Oturum günlüğü:
+`oturumlar/2026-10-04-k60-mola-adimi-koda.md` (§5–7).
 
 **4 Ekim 02:45 — K-60 verildi, gün kapandı.**
 Mustafa (02:07): *"evet"* → **K-60: mola yerleşimi motor içinde ayrı adım,

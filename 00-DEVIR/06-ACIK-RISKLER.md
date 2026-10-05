@@ -3906,6 +3906,62 @@ optimuma ulaşıyorsa %90; değilse %80 kalır. Sonra üç profil (DENGELI/
 KAPSAMA/CALISAN) tekrarlı → koşudan koşuya fark (not 1; ilk aşamanın doğası,
 en büyük kaldıraç) → T-80 → bulgu 11'in modeli araç olarak.
 
+**5 Ekim 19:28 — Mustafa'nın koşuları:** 551 test, **228 mutasyon hepsi öldü**
+(atlanan 0), gerçekçi set 31 (434 sn), DENETIM 0 hata → kalibrasyon ölçümü
+19:30'da başladı (`kalibrasyon-600`).
+
+**5 Ekim 21:28 — kalibrasyon ölçümü bitti (bulgu 19).**
+
+*Bulgu 19 — iyileştirme payı %80 ↔ %90: fark yok; %90'da mola adımına 600
+sn'de 44–47 sn kalıyor ve optimum 40,5–42,9 sn'de geliyor (pay 1–5 sn) —
+**%80 kaldı** (Mustafa'nın makinesi, 6 çekirdek, 600 sn, üçer koşu, 5 Ekim
+19:30–21:28; `kalite-olcumu-95-kalibrasyon-600.json`).*
+
+| | `varsayilan` (%80) #1 · #2 · #3 | `oran_90` (%90) #1 · #2 · #3 |
+|---|---|---|
+| fazla mesai (yasal, saat) | 29,0 · 40,0 · 45,5 | 44,75 · 34,0 · 28,0 |
+| hedef eksiği (kişi-saat) | 366 · 402 · 354 | 388 · 397 · 366 |
+| hedef aşımı (kişi-saat) | 3.301 · 3.300 · 3.315 | 3.325 · 3.321 · 3.429 |
+| mola açığı (ham) | 185 · 185 · 175 | 173 · 178 · 174 |
+| mola adımı: bütçe · optimum anı | 106–107 sn · 40–42 sn | **44–47 sn · 40,5–42,9 sn** |
+| toplam süre | 535–537 sn | 595–600 sn |
+| sert / yayınlanabilir / K-57 | 0 / evet / aynı | 0 / evet / aynı |
+
+Okuma: (1) karar kuralına göre %90 fazla mesai ve eksikte **belirgin iyi
+değil** (aralıklar tamamen çakışıyor), mola adımı altı koşuda da optimuma
+ulaştı ama %90'da 1–5 saniye payla — 600 sn'de güvenli değil; **%80 kalır**
+(`ilk_asama_iyilestirme_orani: 0.8`, değişiklik yok). (2) Fazlası 60 sn'lik
+iyileştirme ölçülebilir bir şey kazandırmadı: ilk aşama sonu amaç %80'de
+129–179 bin, %90'da 127–177 bin. (3) **Koşudan koşuya fark yine baskın** ve
+yeri belli oldu: birinci aşamanın amaçsız planı koşular arasında sık sık
+**aynı** (2.433.123 değeri 4 Ekim'de iki, bugün bir koşuda; 1.834.736 iki
+koşuda) ama aynı başlangıçtan iyileştirme 160.935 / 126.535 / 144.770'e
+varıyor — fark iyileştirme aramasının (çok işçili CP-SAT, süre sınırlı)
+kendisinden, başlangıç planından değil. Not 1'in ölçümü buradan başlar.
+
+**Sıradaki adım (bu pencerede):** **ürün hali, üç profil, 900 sn** (5 Ekim
+kararı: ürün hali ölçümleri 900 sn'de) — `varsayilan` (DENGELI) ·
+`profil_kapsama` · `profil_calisan`, üçer koşu (≈9 × 16 dk ≈ 2,5 saat; gece
+koşabilir). ⚠ Beklenen risk: CALISAN profilinde zorunlu fazla mesai tavanı 0
+(`FAZLA_MESAI_PROFIL`), %95 setinde fazla mesai 28–45 saat şablon karışımından
+(45'i tam tutturamayan 46,25'lik desen, bulgu 15) geliyor — CALISAN
+**çözümsüz** çıkabilir; çıkarsa bu bir ürün bulgusudur (profil × veri seti),
+ölçümün cevaplayacağı sorulardan biri. Sonra: koşudan koşuya fark (not 1;
+ölçüm tasarımı: aynı başlangıç planından tekrarlı iyileştirme) → T-80 →
+bulgu 11'in modeli araç olarak.
+
+**Ölçüm bütçesi notu (5 Ekim 19:31–19:34, Mustafa'nın sorusu: *"neden 900
+değil 600 sn?"*).** 600 sn 2 Ekim'de ölçüm ekonomisi için seçildi (*"600 sn,
+ikişer koşu, ~45 dk"*) ve kıyaslar karşılaştırılabilsin diye aynı kaldı; ürün
+seçeneklerinin (K-35: 10 / 15 / 30 dk, 15 önerilen, varsayılan 900 sn) **en
+kısasıdır** — ölçülen sayılar "10 dk" seçeneğinin sayılarıdır. Süre paylaşımı
+orantılı olduğundan (%20 / %80 / kalan) 900 sn'de mola adımına ≈170 sn kalır;
+600 sn'deki kalibrasyon dar durumdur (sığıyorsa 900/1800'de de sığar).
+**Karar (Mustafa: *"katılıyorum"*):** bundan sonra **ürün hali ölçümleri
+900 sn'de** (üç profil, tekrarlı; ≈16 dk/koşu); **600 sn A/B kıyasları için**
+kalır. "Süre önerisi probleme göre" sorusu (2 Ekim, ertelendi) T-60 kapanınca
+son motorla birkaç ölçek × birkaç süre ölçülerek cevaplanır.
+
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
 öncesi), `kalite-olcumu-0.1-95-agirlik.json` (ağırlık deneyi, K-57 sonrası) —
@@ -4860,7 +4916,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — 14:30'da koda indi (`mola_adimi`, pay %80, 228 mutasyon), Mustafa'nın makinesinde koşu bekliyor. Kalan: oran kalibrasyonu (%80 ↔ %90), üç profille tekrarlı ölçüm, koşudan koşuya fark (ilk aşamada 28–45 saat) |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — koda indi, 5 Ekim: 551 test, 228 mutasyon hepsi öldü; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı. Kalan: üç profil 900 sn tekrarlı ölçüm, koşudan koşuya fark (aynı başlangıçtan 126–161 bin; iyileştirme aramasından) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

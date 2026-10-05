@@ -4,6 +4,17 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-05 (21:45) · K-60 Mustafa'nın makinesinde yeşil; kalibrasyon ölçümü (bulgu 19): %80 kaldı; ölçüm bütçesi kararı; üç profil yapılandırmaları**
+Mustafa'nın makinesi: 551 test, **tam mutasyon koşusu 228 · yaşayan 0 ·
+atlanan 0** (damga), gerçekçi set 31 (434 sn), DENETIM 0 hata. Kalibrasyon
+(`kalite-olcumu-95-kalibrasyon-600.json`, 600 sn, üçer koşu): %80 ↔ %90 fark
+yok; %90'da mola adımına 44–47 sn kaldı, optimum 40,5–42,9 sn — **%80
+kaldı**. Koşudan koşuya fark iyileştirme aramasından (aynı başlangıçtan
+126–161 bin). Karar (Mustafa): ürün hali ölçümleri bundan sonra **900 sn**,
+600 sn A/B için. `kalite-olc.py`: `profil_kapsama`, `profil_calisan`; `oran_90`
+kayıt notu.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 19, bütçe notu) · `00-DEVIR/08-URUN-KARARLARI.md` (K-60) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `09-motor/mutasyon-tam-kosu.txt` · `00-DEVIR/oturumlar/2026-10-04-k60-mola-adimi-koda.md` §6–7
+
 **2026-10-04 (14:30) · K-60 koda indi: motor üç aşama, mola adımı varsayılan (atamalar sabit, kanıtlı optimum), iyileştirme payı %80; 228 mutasyon**
 `coz.py`: `VARSAYILAN` `mola_adimi: True`, `mola_adimi_hedef_bosluk: 0.0`,
 `ilk_asama_iyilestirme_orani: 0.8`; ana aşama atamaları kilitler, bekçiye 0

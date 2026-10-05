@@ -100,8 +100,19 @@ YAPILANDIRMALAR = {
                      {}, {}),
     "k59_hali":     ("3 Ekim urun hali (K-59): %40 iyilestirme + ~347 sn ORTAK arama (atamalar + molalar birlikte)",
                      {"ilk_asama_iyilestirme_orani": 0.4, "mola_adimi": False}, {}),
-    "oran_90":      ("K-60 kalibrasyon: iyilestirme payi %90 (mola adimina 600 sn'de ~47 sn kalir)",
+    #   5 Ekim 21:28 olculdu (bulgu 19, 600 sn, ucer kosu): %90 ile %80
+    #   arasinda fark yok (fazla mesai 28-45 saat her ikisinde, eksik/asim/
+    #   mola ayni); mola adimina 44-47 sn kaldi, optimum 40,5-42,9 sn'de --
+    #   pay 1-5 sn. %80 KALDI. Yapilandirma kayit icin duruyor.
+    "oran_90":      ("K-60 kalibrasyon kaydi (bulgu 19): iyilestirme payi %90 -- fark yok, %80 kaldi",
                      {"ilk_asama_iyilestirme_orani": 0.9}, {}),
+    # URUN HALI, UC PROFIL (5 Ekim karari: urun hali olcumleri 900 sn'de --
+    #   K-35'in onerilen secenegi; 600 sn A/B kiyaslari icin). Sahne DENGELI
+    #   profille yazili; asagidakiler yalniz `profil` alanini degistirir.
+    "profil_kapsama": ("urun hali, KAPSAMA profili (agirlik tablosu #5.4)",
+                     {}, {"profil": "KAPSAMA"}),
+    "profil_calisan": ("urun hali, CALISAN profili (agirlik tablosu #5.4; fazla mesai tavani 0)",
+                     {}, {"profil": "CALISAN"}),
     "eski_urun_hali": ("K-59 oncesi urun hali (2 Ekim): iyilestirme KAPALI, ortak arama (kiyas icin)",
                      {"ilk_asama_iyilestirme_saniye": 0, "mola_adimi": False}, {}),
     "cift_butce":   ("ayni ayarlar, arama suresi iki kati",

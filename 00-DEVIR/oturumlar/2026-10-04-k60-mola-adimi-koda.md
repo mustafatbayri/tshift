@@ -11,6 +11,8 @@ devamı → aynı pencere"). Önceki günlük: `2026-10-03-mola-olcumu-ve-mutasy
 3. [Doğrulama (bulut)](#3--doğrulama-bulut)
 4. [Kararlar, reddedilenler, açık kalanlar](#4--kararlar-reddedilenler-açık-kalanlar)
 5. [Mustafa'nın koşuları ve sıradaki adım](#5--mustafanın-koşuları-ve-sıradaki-adım)
+6. [5 Ekim — koşular yeşil, kalibrasyon ölçümü, 600/900 sn kararı](#6--5-ekim--koşular-yeşil-kalibrasyon-ölçümü-600900-sn-kararı)
+7. [5 Ekim 21:28 — kalibrasyon sonucu (bulgu 19) ve sıradaki ölçüm](#7--5-ekim-2128--kalibrasyon-sonucu-bulgu-19-ve-sıradaki-ölçüm)
 
 ## 1 · 13:32 — açılış ve durum
 
@@ -103,3 +105,49 @@ ilk iş (O-15). Yarının sırası: `py -m pytest testler -q` (iki dizin) →
 `py mutasyon_kostur.py` → damga commit'i → kalibrasyon ölçümü
 `py kalite-olc.py --saniye 600 --tekrar 3 --yapilandirma varsayilan,oran_90
 --etiket kalibrasyon-600` (≈70 dk) → karar kuralı → üç profil.
+
+## 6 · 5 Ekim — koşular yeşil, kalibrasyon ölçümü, 600/900 sn kararı
+
+**18:49 — Mustafa:** *"devam ediyoruz, nerede kaldık."* Depo `97791b5`, temiz;
+damga 221'de. Blok 1 verildi (testler + tam mutasyon + DENETIM), Blok 2
+(kalibrasyon) "yalnız Blok 1 yeşilse".
+
+**19:28 — Blok 1 sonucu (Mustafa'nın makinesi):** `09-motor` **551 geçti**
+(74 sn); **tam mutasyon koşusu 228 · yaşayan 0 · atlanan 0** (`demir` 26'sının
+hepsi dahil; damga dosyası değişti, commit bekliyor); gerçekçi set **31 geçti,
+434 sn** (dün 361, önceki gün ~170: K-60 ile 0,1 ölçekli fikstür iyileştirmeye
+bütçenin %80'ini veriyor — 192 sn; bütçe 240 sn tavanlı, CI süresi uzar,
+sorun değil); DENETIM 0 hata. → Blok 2 başladı (19:30, ≈70 dk).
+
+**19:31 — Mustafa:** *"neden 900 değil 600 sn? Müşteride 15 dk sınırımız
+olacaktı."* Dokümanlardan cevap: 600 sn 2 Ekim'de ölçüm ekonomisi için
+seçildi ve kıyaslar için sabit tutuldu; ürün seçenekleri 10/15/30 dk (K-35),
+600 = en kısası; paylaşım orantılı olduğundan 900'de mola adımına ≈170 sn
+kalır, 600'deki kalibrasyon dar durum. **Öneri:** ürün hali ölçümleri 900
+sn'de, 600 A/B için. **19:34 — Mustafa: "katılıyorum."** T-60'a not yazıldı.
+
+## 7 · 5 Ekim 21:28 — kalibrasyon sonucu (bulgu 19) ve sıradaki ölçüm
+
+Çıktı 21:28'de geldi (`kalite-olcumu-95-kalibrasyon-600.json`, 6 koşu; tam
+tablo T-60 bulgu 19). Karar kuralı uygulandı: %90 fazla mesai/eksikte belirgin
+iyi değil (aralıklar çakışıyor: 29–45,5 ↔ 28–44,75 saat; 354–402 ↔ 366–397
+kişi-saat); mola adımı altı koşuda da optimuma ulaştı ama %90'da bütçe 44–47
+sn, optimum 40,5–42,9 sn — pay 1–5 sn. **%80 kaldı, kod değişmedi.** Yan
+bulgu: aynı amaçsız başlangıç planı (2.433.123) üç koşuda 160.935 / 126.535 /
+144.770'e varıyor — koşudan koşuya fark iyileştirme aramasının kendisinden;
+not 1'in ölçüm tasarımı buradan.
+
+`kalite-olc.py`: `oran_90` kayıt notu; **`profil_kapsama`** ve
+**`profil_calisan`** (yalnız `profil` alanını değiştirir; sahne DENGELI).
+Kalite ölçüm testleri 18 geçti (bulut).
+
+**Sıradaki ölçüm — ürün hali, üç profil, 900 sn, üçer koşu** (≈2,5 saat):
+`py kalite-olc.py --saniye 900 --tekrar 3 --yapilandirma varsayilan,profil_kapsama,profil_calisan --etiket profiller-900`.
+⚠ CALISAN profilinde zorunlu fazla mesai tavanı 0; %95 setinde fazla mesai
+şablon karışımından geliyor (45'i tam tutturamayan desen) → çözümsüz
+çıkabilir; çıkarsa ürün bulgusu (profil × veri seti).
+
+**Commit bekleyen:** damga `09-motor/mutasyon-tam-kosu.txt` (228),
+`kalite-olcumu-95-kalibrasyon-600.json`, `kalite-olc.py`, `06`, `08`, `00`,
+`DEGISIM-GUNLUGU.md`, bu günlük §6–7.
+
