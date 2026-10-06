@@ -4,6 +4,20 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-06 (21:15) · *Önce fazla mesaisiz* ölçüldü (bulgu 21): altı koşuda fazla mesai 0, amaç 4–5,6 kat düştü, karar kuralı tuttu — ürün varsayılanı kararı Mustafa'da**
+Sabahın işi `85131ee` ile commit'lendi, CI yeşil. Ölçüm (Mustafa'nın makinesi,
+900 sn, üçer koşu, `kalite-olcumu-95-fmsifir-900.json`; kıyas sabahın
+`profiller-900` koşuları): fazla mesaisiz plan altı koşunun altısında 9–13
+sn'de bulundu, fazla mesai 0; amaç DENGELI 106–148 bin → 26,4–26,5 bin,
+KAPSAMA 46–58 bin → 13,8–13,9 bin; fazla mesai dışı kalemler de iyileşti
+(DENGELI %1,6–2,2, KAPSAMA %7–12); hedefi tam tutan hücre DENGELI %82–85 →
+%86, KAPSAMA %90 → %93–94; koşudan koşuya fark amaçta %40 → %0,3; süre aynı;
+0 sert. Koşudan önce yazılan karar kuralının dört maddesi iki profilde de
+tuttu. ⚠ Ölçülmeyen: fazla mesainin zorunlu olduğu veri (orada bugünkü yol
+işler); %85 seti; 600 ve 1.800 sn. Kod değişmedi; seçenek hâlâ varsayılan
+kapalı.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 21, "Sıradaki adım") · `00-DEVIR/08-URUN-KARARLARI.md` (K-30 notu) · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-fmsifir-900.json` · `00-DEVIR/oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md` §11
+
 **2026-10-06 (11:45) · Üç profil 900 sn (bulgu 20): fazla mesai aramanın artığı; O-16: çıktıdaki "optimum · %0" yanlıştı, düzeltildi; ölçüm seçeneği `fazla_mesai_once_sifir` (varsayılan kapalı)**
 Mustafa'nın makinesi, 900 sn, üçer koşu (`kalite-olcumu-95-profiller-900.json`):
 dokuz koşu 0 sert; fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0**

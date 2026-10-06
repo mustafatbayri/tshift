@@ -16,6 +16,7 @@ devamı → aynı pencere"). Önceki günlük: `2026-10-04-k60-mola-adimi-koda.m
 8. [Sıradaki adım](#8--sıradaki-adım)
 9. [Bağımsız inceleme ve düzeltmeleri](#9--bağımsız-inceleme-ve-düzeltmeleri)
 10. [19:21 — Mustafa'nın koşuları](#10--1921--mustafanın-koşuları)
+11. [21:08 — ölçüm sonucu (bulgu 21) ve karar sorusu](#11--2108--ölçüm-sonucu-bulgu-21-ve-karar-sorusu)
 
 ## 1 · 5 Ekim 21:36–21:45 — commit, demo bağlantısı
 
@@ -281,3 +282,31 @@ dosyanın md5'i sabah yazılıp doğrulananla aynı — testler tam o dosyalarda
 koştu, mutasyon koşusu her dosyayı geri yazmış. Bu dört satır (koşu sonucu)
 commit'ten önce belgelere işlendi; kod dosyalarına dokunulmadı. Sırada blok 3
 (commit + push) ve blok 4 (ölçüm).
+
+## 11 · 21:08 — ölçüm sonucu (bulgu 21) ve karar sorusu
+
+Mustafa: *"cı da yeşil"* (ek: ölçüm çıktısı). Commit `85131ee`, iki atıf
+satırı tek blokta. Ölçüm 19:37–21:00, `kalite-olcumu-95-fmsifir-900.json`
+(sayılar dosyadan okunarak doğrulandı; tablo `06-ACIK-RISKLER.md` T-60 bulgu
+21'de).
+
+| | DENGELI sabah → akşam | KAPSAMA sabah → akşam |
+|---|---|---|
+| fazla mesai (saat) | 26,25–40,5 → **0** | 10–14,25 → **0** |
+| amaç | 105.742–148.431 → 26.407–26.494 | 45.702–57.781 → 13.834–13.914 |
+| hedef eksiği (kişi-saat) | 356–367 → 344–350 | 170–197 → 98–106 |
+| hedefi tam tutan hücre | %82,4–84,8 → %85,8–86,5 | %89,6–90,6 → %92,8–94,2 |
+| koşudan koşuya fark (amaç) | %40 → %0,3 | %26 → %0,6 |
+| toplam arama | 779–781 → 773–776 sn | 781–795 → 775–779 sn |
+
+Karar kuralının dört maddesi (sabah yazıldı) iki profilde, altı koşuda tuttu.
+Fazla mesaisiz plan 8,8–12,7 sn'de bulundu. Kötüleşen kalemler de yazıldı
+(DENGELI adalet ≈+%0,6; KAPSAMA aşım ≈+%3, adalet ≈+%2).
+
+**Önerim:** ürün varsayılanı olsun. **Öneriyle birlikte söylenen sınır:**
+seçenek *"sıfır mümkünse sıfır"*ı çözüyor; fazla mesainin gerçekten zorunlu
+olduğu veride bugünkü yol işliyor ve orası tam ölçekte hiç ölçülmedi (öyle
+bir set yok). Yalnız %95 seti ve 900 sn ölçüldü.
+
+**Karar Mustafa'da.** Kod bu adımda değişmedi; belgeler ve ölçüm dosyası için
+commit bloğu verildi.

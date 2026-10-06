@@ -1059,6 +1059,15 @@ mesai 0'da kalır (satır 1), bulamazsa — kanıt ya da süre — bugünkü yol
 ve plana not düşer (satır 2; K-38'in zorunlu fazla mesai yolu kapanmaz). Ürün
 varsayılanı olup olmayacağı ölçümden sonra Mustafa'nın kararı.
 
+**Ölçüldü (6 Ekim akşamı, T-60 bulgu 21; 900 sn, üçer koşu, DENGELI ve
+KAPSAMA):** altı koşunun altısında fazla mesaisiz plan 9–13 sn'de bulundu ve
+fazla mesai **0**; plan puanı DENGELI'de 106–148 bin → 26,4–26,5 bin,
+KAPSAMA'da 46–58 bin → 13,8–13,9 bin; hedef kapsaması da yükseldi; hepsi 0
+sert. Koşudan önce yazılan karar kuralı tuttu → ürün varsayılanı olması
+öneriliyor, **karar Mustafa'da.** ⚠ Seçenek tablonun **ilk** satırını
+çözüyor. İkinci satır (fazla mesai gerçekten zorunluysa *"gereken kadar"*)
+tam ölçekte hiç ölçülmedi; orada bugünkü yol işler.
+
 → `06-ACIK-RISKLER.md` T-15 (kapandı), T-60 bulgu 20 · `09-motor/cozucu/model.py` ·
   `09-motor/cozucu/coz.py` (`fazla_mesai_once_sifir`) ·
   `09-motor/testler/test_fazla_mesai_once_sifir.py`
