@@ -165,7 +165,10 @@ def test_ana_asama_molalari_SERBEST_arar_sabit_secimde_KALMAZ():
     assert c["durum"] == "cozuldu", c["durum"]
     ist = c["cozum_istatistikleri"]
     assert ist["iki_asama"] is True
-    assert ist["amac_degeri"] == ist["alt_sinir"], ist      # kanitli optimum
+    # K-60: ana asama mola adimidir; "kanitli optimum" o adimin (atamalar
+    # sabit) optimumudur ve kendi alaninda yazilir. Kuresel sinir yok (O-16).
+    assert ist["amac_degeri"] == ist["mola_adimi_alt_sinir"], ist
+    assert ist["alt_sinir"] is None, ist
     k = Model(g)
     sy, dinl = k.sabit_mola_secimi(k.sablonlar[0])
     sabit = sorted([sy] + dinl)

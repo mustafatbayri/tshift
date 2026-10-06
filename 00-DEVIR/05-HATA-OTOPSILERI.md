@@ -536,6 +536,90 @@ ayrı mutasyon kondu (**toplam 215**). `gecmis` 17/17 ve `cok_ekipli` 11/11
 
 ---
 
+## O-16 · Motor *"optimum, uzaklık %0"* dedi; kanıtladığı yalnız mola yerleşimiydi — aynı girdide 4–5,6 kat iyi plan vardı ⚠
+
+**Tarih:** 6 Ekim 2026 (üç profil ölçümü okunurken; hata 4 Ekim'de K-60 ile girdi)
+
+**Ne oldu.** K-60 ile ana aşama *mola adımı* oldu: atamalar birinci aşamanın
+planına sabitlenir, yalnız molaların yeri aranır, çözücü o **kısıtlı**
+problemin optimumunu kanıtlayınca durur. Çıktı bunu genel alanlara yazıyordu:
+`durma_sebebi: "optimum"`, `alt_sinir == amac_degeri`,
+`metrikler.optimuma_uzaklik_yuzde: 0.0`. 5–6 Ekim'in 15 tam ölçek koşusunun
+hepsi böyle bitti. K-35'in sonuç kartı tam bu alanlardan beslenir (*"Bu plan
+teorik en iyisinin %X'i kadar iyi — tahmin değil, garantidir"*): kart yazılmış
+olsaydı her planda *"%100"* gösterecekti.
+
+Ölçüm (T-60 bulgu 20): *"optimum · %0"* denen DENGELI planları 105.742–148.431
+puan; aynı girdide **26.589**'luk plan var (CALISAN profilinin fazla mesaisiz
+planı, DENGELI ağırlıklarıyla). Tam modelin 2 Ekim'de kanıtladığı gerçek sınır
+21.098.
+
+**Neden.** (1) Çözücünün alt sınırı **çözdüğü modelin** sınırıdır; modeli
+daralttığımda (alan sabitleme) sınırın anlamı da daraldı, alanın adı aynı
+kaldı. (2) Bunu 4 Ekim'de doğru davranış sandım ve **teste yazdım**
+(*"amaç = alt sınır: kanıtlı optimum"*), şartnameye de (`durma_sebebi:
+optimum`). Yani bekçi hatayı koruyordu. (3) Bulgu 18'de *"kanıtlı optimum"*
+derken kastedilen mola yerleşimiydi ve orada doğruydu; aynı kelime ürünün
+genel alanına taşınınca başka bir iddia oldu. Sınıf O-9 · O-12 · O-15 ile
+aynı — kontrol vardı, yanlış şeye bakıyordu; burada kontrolü yanlış şeye
+**ben baktırdım**.
+
+**Nasıl fark edildi.** Testle değil; üç profil yan yana gelince. CALISAN'ın
+amacı (34 bin) DENGELI'ninkinden (106–148 bin) çok küçüktü. Profil yalnız
+ağırlıkları ve fazla mesai tavanını değiştirdiği için CALISAN planı DENGELI
+için de geçerliydi; DENGELI ağırlıklarıyla yeniden fiyatlanınca 26,6 bin
+çıktı. *"Optimum"* denen bir planın dört kat iyisi olamaz.
+
+**Düzeltme (6 Ekim).** Mola adımı koştuysa (`atamalar_sabit: true`):
+`alt_sinir` ve `optimuma_uzaklik_yuzde` **null** (küresel kanıt yok — sıfır ya
+da kısıtlı sınır yazmak yalan garanti olurdu), adımın sınırı
+`mola_adimi_alt_sinir`, sebep `mola_adimi_optimum` / `mola_adimi_hedef_bosluk`.
+Tam modeli çözen yollarda (küçük model, başlangıç planı, `mola_adimi: False`)
+alanlar eskisi gibi — kanıt varken susmak da yanlış olurdu. Testler: yanlış
+iddiayı taşıyan üç test düzeltildi; iki yeni test — biri birinci aşamaya
+**bilerek kötü** plan verir (*mola adımı "optimum" der, plan tam modelin
+kanıtlı optimumundan kötüdür, çıktı küresel sınır yazmaz*), öteki ön ekin
+yalnız kanıt iddia eden sebeplere ve yalnız mola adımında yazıldığını sınar.
+`kalite-olc.py` aynı ayrımı ekrana ve dosyaya yazar.
+
+⚠ **Aynı sınıf aynı gün ikinci kez çıktı — ve onu ben değil bağımsız inceleme
+buldu.** Düzeltmeyi yazarken yalnız *"atamalar sabit mi"* diye baktım. Aynı
+gün yazdığım ölçüm seçeneğinde (*önce fazla mesaisiz*) fazla mesai
+değişkenleri 0'a sabit kalıyor: ana aşama ortak arama olsa bile çözdüğü model
+tam model değil, ama sınırı yine küresel alana gidiyordu; ölçüm seçeneği
+(b)'nin kollarında da öyle. İşi görmemiş ayrı bir oturuma dosyalar okutuldu;
+ilk bulgusu buydu. Kural genelleştirildi: soru *"atamalar sabit mi"* değil
+*"ana aşamanın çözdüğü model **tam model mi**"* (`_sinir_kapsami`: değilse
+kısıtın adı — `mola_adimi` ya da `fazla_mesaisiz` — sınırın ve sebebin
+adına girer). Toplam 5 yeni test, 14 mutasyon (`demir`), 4 mutasyon
+(`fm_sifir`).
+
+⚠ **Düzeltmenin kapatmadığı.** Büyük modelde artık **hiç** küresel sınır yok;
+K-35'in kartı için tam modelde ayrı bir sınır adımı gerekir (T-60'ta ölçüm
+olarak yazılı). 4–6 Ekim arasında yazılmış ölçüm dosyalarındaki
+(`kalite-olcumu-95-kalibrasyon-600.json`, `kalite-olcumu-95-profiller-900.json`)
+`alt_sinir` ve `optimuma_uzaklik_yuzde` eski anlamdadır: mola adımının sınırı.
+
+### Kalıcı bekçi
+
+- **Bir sınır ya da kanıt alanı, hangi modelin sınırı olduğunu adında taşır.**
+  Model daraltılıyorsa (alan sabitleme, ipucu kilidi) sonucu genel alana
+  yazılmaz. Sorulacak soru tek tek kısıtlar değil: *"çözülen model tam model
+  mi?"* Modele yeni bir daraltma eklenince `_sinir_kapsami`ne de eklenir.
+- **Kendi düzeltmemi kendim onaylamam.** Bir hata sınıfını düzelttikten sonra
+  aynı sınıfın başka örneğini aramak için dosyalar işi görmemiş bir oturuma
+  okutulur (O-10'un kuralı; burada işe yaradı).
+- **Ucuz çapraz kontrol:** aynı girdinin daha kısıtlı bir çözümü (burada:
+  tavanı sert olan profil) aynı ağırlıklarla yeniden fiyatlanır; daha iyi
+  çıkıyorsa *"optimum"* yanlıştır. `kalite-olc.py` fazla mesai dışı amacı ayrı
+  yazar; üç profil ölçümü bu kontrolün kendisidir.
+- Testler: adında `O16` geçen beş test (`09-motor/testler/test_demir_secenekleri.py`)
+  ve `test_fazla_mesaisiz_ORTAK_arama_da_KISITLIDIR_kuresel_sinir_YAZILMAZ`
+  (`09-motor/testler/test_fazla_mesai_once_sifir.py`); mutasyon grupları `demir`,
+  `fm_sifir`.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -555,6 +639,7 @@ ayrı mutasyon kondu (**toplam 215**). `gecmis` 17/17 ve `cok_ekipli` 11/11
 | O-13 | Aktarılan dosya makinede boşaldı; doğrulama önbelleğe bakıyordu | Windows tarafından geri okuyarak md5; köprü koptuysa yeniden doğrula; Mustafa'nın makinesindeki test koşusu asıl kapı | ✅ *(kural; otomatik bekçisi yok)* |
 | O-14 | `git status` silme izni olmayan kabukta `.git/index.lock` bıraktı | Git yalnız `GIT_OPTIONAL_LOCKS=0` ile; `add`/`commit` bu kabuktan yapılmaz | ✅ *(kural; otomatik bekçisi yok)* |
 | O-15 | "Hepsi öldü" toplamı grup koşularından toplanmıştı; tam koşuda 1 yaşadı 3 atlandı | Toplam yalnız tam koşudan; tam koşu damgası `mutasyon-tam-kosu.txt`; çözücü/doğrulayıcı değişince commit öncesi tam koşu | ✅ *(kural + damga; DENETIM kontrolü onay bekliyor)* |
+| O-16 | Mola adımının optimumu planın optimumu diye yazıldı (*"optimum · %0"*); aynı girdide 4–5,6 kat iyi plan vardı; aynı sınıf aynı gün ölçüm seçeneğinde de çıktı | Çözülen model tam model değilse sınır genel alana yazılmaz (`_sinir_kapsami`; `mola_adimi_alt_sinir`, `fazla_mesaisiz_alt_sinir`); bilerek kötü planla uçtan uca test + 18 mutasyon; yeniden fiyatlama çapraz kontrolü; bağımsız inceleme | ✅ *(test + mutasyon; sonuç kartı için küresel sınır açık)* |
 
 ---
 

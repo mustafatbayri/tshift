@@ -9,6 +9,16 @@ NEDEN AYRI BIR BETIK
   "plan kotu" DEMEK DEGIL: CP-SAT'in kanitlayabildigi alt sinir cok zayif,
   oran o zayif sinira gore. Bu betik orani uc tarafindan kusatir:
 
+  ⚠ 6 Ekim DUZELTMESI (T-60 bulgu 20): yukaridaki okuma YANLIS cikti. Sinir
+    zayif degildi, PLANLAR kotuydu: tam modelin (ortak arama) bu sahnede
+    kanitladigi en iyi sinir 21.098 (2 Ekim, 900 sn; oteki kosularda
+    19.769-20.934; DENGELI). Bugun bilinen en iyi plan 26.589 (sinira en cok
+    %21 uzak); o kosularin planlari 112 bin - 1,8 milyondu.
+    Ayrica K-60'tan (4 Ekim) beri ana asama MOLA ADIMI: atamalar sabitken
+    cozucunun siniri yalniz "bu atamalarla en iyi mola yerlesimi"ni kanitlar,
+    planin tamami icin sinir DEGILDIR (O-16). O kosularda `alt_sinir` ve
+    `optimuma_uzaklik_yuzde` None'dir; adimin siniri `mola_adimi_alt_sinir`.
+
     1. AMAC NEYDEN OLUSUYOR  -- kural basina ceza kirilimi (amac_dagilimi).
        Hedef altinda kalan hucre mi, fazla mesai mi, adalet mi, mola mi?
     2. NE ZAMAN IYILESTI      -- iyilesme egrisi: toplam kazancin %50/%90/
@@ -113,6 +123,20 @@ YAPILANDIRMALAR = {
                      {}, {"profil": "KAPSAMA"}),
     "profil_calisan": ("urun hali, CALISAN profili (agirlik tablosu #5.4; fazla mesai tavani 0)",
                      {}, {"profil": "CALISAN"}),
+    # OLCUM (6 Ekim, bulgu 20): "ONCE FAZLA MESAISIZ". Uc profil olcumunde
+    #   CALISAN (fazla mesai tavani 0 -> sert) uc kosuda da 0 saat fazla
+    #   mesaiyle plan buldu; o planlar DENGELI agirliklariyla 26.589-26.703,
+    #   DENGELI'nin kendi buldugu 105.742-148.431 (fazla mesai disi kismi
+    #   26.931-26.992, %0,2 oynuyor). Birinci asama gecerli plani fazla mesai
+    #   degiskenleri 0'a sabitken arar; bulursa fazla mesai butun asamalarda
+    #   0'da kalir (K-30: "yalniz hedef kapsama iyilesecekse fazla mesai
+    #   yapilmaz"), bulamazsa alanlar geri acilir, bugunku yol isler.
+    #   Kiyas: ayni profilin `varsayilan` / `profil_kapsama` kosulari
+    #   (kalite-olcumu-95-profiller-900.json, 6 Ekim sabahi, ayni makine).
+    "fm_once_sifir": ("OLCUM (bulgu 20): once fazla mesaisiz plan, DENGELI -- bulunursa fazla mesai 0'da kalir; bulunamazsa bugunku yol",
+                     {"fazla_mesai_once_sifir": True}, {}),
+    "fm_once_sifir_kapsama": ("OLCUM (bulgu 20): once fazla mesaisiz plan, KAPSAMA profili",
+                     {"fazla_mesai_once_sifir": True}, {"profil": "KAPSAMA"}),
     "eski_urun_hali": ("K-59 oncesi urun hali (2 Ekim): iyilestirme KAPALI, ortak arama (kiyas icin)",
                      {"ilk_asama_iyilestirme_saniye": 0, "mola_adimi": False}, {}),
     "cift_butce":   ("ayni ayarlar, arama suresi iki kati",
@@ -495,6 +519,64 @@ def fazla_mesai_kisiler(k, c):
 # TEK KOSU
 # ---------------------------------------------------------------------------
 
+def fm_disi_amac(s):
+    """Amac degerinin FAZLA MESAI disindaki kismi (plan yoksa None).
+
+    Bulgu 20: tam olcekte DENGELI kosularinda amacin %74-82'si fazla mesai
+    cezasiydi ve kosudan kosuya oynayan tek kalem oydu (fazla mesai disi
+    kisim 26.931-26.992, %0,2). Iki plani "fazla mesai haric" kiyaslamak
+    icin bu sayi ayri yazilir."""
+    if s.get("amac_degeri") is None:
+        return None
+    fm = (s.get("amac_dagilimi") or {}).get("FAZLA_MESAI") or {}
+    return s["amac_degeri"] - fm.get("ceza", 0)
+
+
+def sinir_yazisi(s):
+    """Kosu satirindaki "alt sinir / uzaklik" parcasi -- O-16 (6 Ekim).
+
+    Ana asama mola adimi olarak kostuysa (`atamalar_sabit`) cozucunun siniri
+    KISITLI problemindir; "alt sinir" / "uzaklik %0" diye yazmak planin
+    optimum oldugunu soylemek olurdu (4-6 Ekim ciktilari oyle yazdi)."""
+    if s.get("atamalar_sabit"):
+        return ("kuresel alt sinir YOK (mola adimi siniri %s: yalniz bu atamalarla en iyi mola yerlesimi)"
+                % s.get("mola_adimi_alt_sinir"))
+    if s.get("fazla_mesaisiz_alt_sinir") is not None:
+        # "once fazla mesaisiz" plan buldu, ana asama ortak arama (olcum):
+        # cozulen modelde fazla mesai degiskenleri 0'da -- tam model degil.
+        return ("kuresel alt sinir YOK (fazla mesaisiz modelin siniri %s: yalniz fazla mesaisiz planlarin en iyisi)"
+                % s.get("fazla_mesaisiz_alt_sinir"))
+    return "alt sinir %s  |  uzaklik %%%s" % (s.get("alt_sinir"), s.get("optimuma_uzaklik_yuzde"))
+
+
+def fm_once_yazisi(s, ayar):
+    """ "Once fazla mesaisiz" satiri; yapilandirma secenegi istemediyse None.
+
+    ⚠ Secenek istendigi halde motor uygulamadiysa (iki asama devreye
+      girmedi: kucuk olcek, baslangic plani; ya da daraltilacak fazla mesai
+      degiskeni yok: CALISAN profili, yari zamanli kadro) kosu URUNUN
+      VARSAYILAN yolunu olcmustur -- bu SESSIZ gecmez, satira yazilir."""
+    if not ayar.get("fazla_mesai_once_sifir"):
+        return None
+    f = s.get("fazla_mesai_once_sifir")
+    if not f:
+        return ("once fazla mesaisiz: UYGULANMADI (iki asama yok ya da daraltilacak fazla mesai "
+                "degiskeni yok) -- bu kosu varsayilan yolu olctu")
+    if f["bulundu"]:
+        sonuc = "BULUNDU -- fazla mesai butun asamalarda 0"
+    elif f["kanitlandi_yok"]:
+        sonuc = ("YOK (%skanitlandi) -- alanlar geri acildi"
+                 % ("molalar sabitken " if f.get("molalar_sabit", True) else ""))
+    else:
+        sonuc = "bu surede BULUNAMADI -- alanlar geri acildi"
+    return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni"
+            % (sonuc, f["saniye"], f["degisken"]))
+
+
+def _tire(v):
+    return "-" if v is None else v
+
+
 def kosu(g, ad, ayar, girdi_ek=None):
     print("\n  [%s]  %s" % (ad, YAPILANDIRMALAR[ad][0]))
     print("         kuruluyor...")
@@ -524,12 +606,16 @@ def kosu(g, ad, ayar, girdi_ek=None):
     for alan in ("durma_sebebi", "iki_asama", "cozum_sayisi", "amac_degeri", "alt_sinir",
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
                  "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
-                 "mola_adimi", "atamalar_sabit"):
+                 "mola_adimi", "atamalar_sabit", "mola_adimi_alt_sinir",
+                 "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir"):
         s[alan] = ist.get(alan)
+    s["uygulanmayan_notlar"] = list(c.get("uygulanmayan_notlar") or [])
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
     s["metrikler"] = m
     if c.get("durum") != "cozuldu":
         print("         DURUM: %s  (%s)" % (c.get("durum"), ist.get("durma_sebebi")))
+        if fm_once_yazisi(s, tam_ayar):
+            print("         " + fm_once_yazisi(s, tam_ayar))
         return s
     r = degerlendir(g, c["atamalar"])
     sayi = {}
@@ -545,9 +631,16 @@ def kosu(g, ad, ayar, girdi_ek=None):
                                             "fazla_mesai_saat", "sozlesme_ustu_ucret_saat",
                                             "toplam_saat")}
     iy = s["iyilesme"] or {}
-    print("         %.0f sn  |  %s  |  amac %s  |  alt sinir %s  |  uzaklik %%%s  |  cozum %s"
-          % (sure, s["durma_sebebi"], s["amac_degeri"], s["alt_sinir"],
-             s["optimuma_uzaklik_yuzde"], s["cozum_sayisi"]))
+    print("         %.0f sn  |  %s  |  amac %s (fazla mesai disi %s)  |  %s  |  cozum %s"
+          % (sure, s["durma_sebebi"], s["amac_degeri"], fm_disi_amac(s), sinir_yazisi(s),
+             s["cozum_sayisi"]))
+    if fm_once_yazisi(s, tam_ayar):
+        print("         " + fm_once_yazisi(s, tam_ayar))
+    # Notlarin hepsi dosyaya yazilir; ekrana yalniz bu secenegin notu (tam
+    # olcekte "departman kapali" notlari onlarca satir).
+    for n in s["uygulanmayan_notlar"]:
+        if "fazla mesaisiz" in n:
+            print("         not: %s" % n)
     print("         ilk plan %s sn  |  kazancin %%50'si %s sn, %%90'i %s sn, %%99'u %s sn  |  son iyilesme %s sn"
           % (s["ilk_cozum_sn"], iy.get("yuzde50_sn"), iy.get("yuzde90_sn"),
              iy.get("yuzde99_sn"), iy.get("son_iyilesme_sn")))
@@ -623,21 +716,27 @@ def ozet(sonuc):
     kosular = sonuc["kosular"]
     if not kosular:
         return
+    # Ad sutunu en uzun yapilandirma adina gore genisler (en az 14): uzun
+    # adlar tabloyu kaydirmasin.
+    G = max([14] + [len(k["yapilandirma"]) for k in kosular])
+    ad = lambda k: k["yapilandirma"].ljust(G)
     print("\n%-14s %6s %10s %10s %8s %7s %7s %7s %7s %7s %5s"
-          % ("yapilandirma", "sn", "amac", "alt sinir", "uzaklik", "ilk sn",
+          % ("yapilandirma".ljust(G), "sn", "amac", "alt sinir", "uzaklik", "ilk sn",
              "%50 sn", "%90 sn", "%99 sn", "cozum", "sert"))
     taban = kosular[0].get("amac_degeri")
     for s in kosular:
         if s.get("amac_degeri") is None:
-            print("%-14s %6s  plan yok: %s (%s)" % (s["yapilandirma"], s.get("toplam_sn"),
+            print("%-14s %6s  plan yok: %s (%s)" % (ad(s), s.get("toplam_sn"),
                                                    s.get("durum"), s.get("durma_sebebi")))
             continue
         iy = s.get("iyilesme") or {}
         fark = ("%+.1f%%" % (100.0 * (s["amac_degeri"] - taban) / taban)
                 if taban and s.get("amac_degeri") is not None else "")
-        print("%-14s %6s %10s %10s %7s%% %7s %7s %7s %7s %7s %5s  %s"
-              % (s["yapilandirma"], s.get("toplam_sn"), s.get("amac_degeri"),
-                 s.get("alt_sinir"), s.get("optimuma_uzaklik_yuzde"),
+        # O-16: mola adimi kosusunda kuresel sinir yoktur -- "-" yazilir.
+        uzaklik = s.get("optimuma_uzaklik_yuzde")
+        print("%-14s %6s %10s %10s %8s %7s %7s %7s %7s %7s %5s  %s"
+              % (ad(s), s.get("toplam_sn"), s.get("amac_degeri"),
+                 _tire(s.get("alt_sinir")), "-" if uzaklik is None else "%s%%" % uzaklik,
                  s.get("ilk_cozum_sn"), iy.get("yuzde50_sn"), iy.get("yuzde90_sn"),
                  iy.get("yuzde99_sn"), s.get("cozum_sayisi"), s.get("sert_ihlal"), fark))
     # Kapasite tabani ile kiyas: planin hedef acigi tabanin kac kati?
@@ -647,7 +746,7 @@ def ozet(sonuc):
         if d and kt.get("hedef"):
             taban_ks = kt["hedef"]["taban"]
             print("  %-14s hedef acigi %d kisi-saat, kapasite tabani %s kisi-saat%s"
-                  % (s["yapilandirma"], d["deger"], taban_ks,
+                  % (ad(s), d["deger"], taban_ks,
                      ("  -> acigin en az %%%.0f'i kadro yetersizliginden"
                       % (100.0 * taban_ks / d["deger"])) if d["deger"] and taban_ks else ""))
     # Fazla mesai: plan tabanin ne kadar ustunde? Modelin cezasindan
@@ -667,12 +766,12 @@ def ozet(sonuc):
                                        round((model_saat - m["fazla_mesai_saat"]) * 60 * (d["ceza"] / float(d["deger"]) if d["deger"] else 0))),
                      "tanim_ayrisiyor": "   <-- UC SAYI AYNI DEGIL (K-57 bozuldu)"}[uyum]
             print("  %-14s fazla mesai (yasal, K-57): modelin cezaladigi %.2f saat (kacinilmaz taban %.1f saat) | motor metrigi %.2f saat | dogrulayici metrigi %s saat%s"
-                  % (s["yapilandirma"], model_saat, fm.get("saat", 0.0), m["fazla_mesai_saat"],
+                  % (ad(s), model_saat, fm.get("saat", 0.0), m["fazla_mesai_saat"],
                      ("%.2f" % dogrulayici_saat) if dogrulayici_saat is not None else None,
                      uyari))
             sou = (s.get("dogrulayici_metrikler") or {}).get("sozlesme_ustu_ucret_saat")
             if sou is not None:
-                print("  %-14s sozlesme ustu ucretli saat (ayri alan, fazla mesai DEGIL): %.1f saat" % (s["yapilandirma"], sou))
+                print("  %-14s sozlesme ustu ucretli saat (ayri alan, fazla mesai DEGIL): %.1f saat" % (ad(s), sou))
     # Bagimsiz alt sinir: HEDEF_KAPSAMA tabani x agirligi + fazla mesai tabani.
     # Oteki kurallarin tabani 0 sayilir. CP-SAT'in sinirindan buyukse,
     # "optimuma uzaklik" en az bu kadar KUCULUR.
@@ -685,25 +784,28 @@ def ozet(sonuc):
     bagimsiz = (fm.get("ceza") or 0) + (he_agirlik or 0) * ((kt.get("hedef") or {}).get("taban") or 0)
     for s in kosular:
         if s.get("amac_degeri"):
-            print("  %-14s bagimsiz alt sinir %d  ->  uzaklik en cok %%%.1f  (CP-SAT siniri %s -> %%%s)"
-                  % (s["yapilandirma"], bagimsiz,
+            print("  %-14s bagimsiz alt sinir %d  ->  uzaklik en cok %%%.1f  (CP-SAT siniri %s -> %s)"
+                  % (ad(s), bagimsiz,
                      100.0 * (s["amac_degeri"] - max(bagimsiz, s.get("alt_sinir") or 0)) / s["amac_degeri"],
-                     s.get("alt_sinir"), s.get("optimuma_uzaklik_yuzde")))
+                     _tire(s.get("alt_sinir")),
+                     "kuresel sinir yok" if s.get("alt_sinir") is None
+                     else "%%%s" % s.get("optimuma_uzaklik_yuzde")))
     sonuc["bagimsiz_alt_sinir"] = bagimsiz
     # HAM BUYUKLUKLER: amac degeri agirliga bagli, bu tablo degil. Agirlik
     # deneyinde (fm_agirlik_*) karsilastirma YALNIZ burada yapilir.
-    print("\n%-14s %10s %10s %9s %9s %9s %8s %8s" % (
-        "yapilandirma", "fm saat", "hedef eks.", "hedef %", "asim k-s", "adalet", "mola", "sert"))
+    print("\n%-14s %10s %10s %9s %9s %9s %8s %8s %10s %10s" % (
+        "yapilandirma".ljust(G), "fm saat", "hedef eks.", "hedef %", "asim k-s", "adalet", "mola", "sert",
+        "amac", "fm disi"))
     for s in kosular:
         d = s.get("amac_dagilimi") or {}
         m = s.get("metrikler") or {}
         if not d:
             continue
         ham = lambda kural: (d.get(kural) or {}).get("deger", 0)
-        print("%-14s %10.1f %10d %9s %9d %9d %8d %8s" % (
-            s["yapilandirma"], ham("FAZLA_MESAI") / 60.0, ham("HEDEF_KAPSAMA"),
+        print("%-14s %10.1f %10d %9s %9d %9d %8d %8s %10s %10s" % (
+            ad(s), ham("FAZLA_MESAI") / 60.0, ham("HEDEF_KAPSAMA"),
             m.get("hedef_kapsama_yuzde"), ham("HEDEF_ASIMI"), ham("ADALET_DENGESI"),
-            ham("MOLA_KAPSAMASI"), s.get("sert_ihlal")))
+            ham("MOLA_KAPSAMASI"), s.get("sert_ihlal"), s.get("amac_degeri"), fm_disi_amac(s)))
 
 
 def main():

@@ -4,6 +4,36 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-06 (11:45) · Üç profil 900 sn (bulgu 20): fazla mesai aramanın artığı; O-16: çıktıdaki "optimum · %0" yanlıştı, düzeltildi; ölçüm seçeneği `fazla_mesai_once_sifir` (varsayılan kapalı)**
+Mustafa'nın makinesi, 900 sn, üçer koşu (`kalite-olcumu-95-profiller-900.json`):
+dokuz koşu 0 sert; fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0**
+saat. CALISAN'ın planları DENGELI ağırlıklarıyla 26,6–26,7 bin, DENGELI'nin
+kendi bulduğu 106–148 bin (4–5,6 kat); DENGELI'de fazla mesai dışı amaç %0,2
+oynuyor — koşudan koşuya farkın tamamı fazla mesai, o da bu girdide
+gerekmiyor (K-30'a not). *"Alt sınır zayıf"* okuması düzeltildi (en iyi kanıt
+21.098, bilinen en iyi plan 26.589). **O-16:** K-60'tan beri çıktı mola
+adımının optimumunu planın optimumu gibi yazıyordu; artık mola adımı koşan
+çıktıda `alt_sinir` ve `optimuma_uzaklik_yuzde` null, adımın sınırı
+`mola_adimi_alt_sinir`, sebep `mola_adimi_optimum` (büyük modelde küresel
+sınır yok — sonuç kartı için sınır adımı açık); kural genel: çözülen model
+tam model değilse sınır küresel alana yazılmaz (`_sinir_kapsami`). Ölçüm seçeneği: önce fazla
+mesaisiz plan; bulunursa fazla mesai 0'da kalır, bulunamazsa bugünkü yol +
+not; başarısız denemenin süresi iyileştirmenin süresinden düşer (mola adımına
+kalan süre korunur); CALISAN'da işlemsiz. **Bağımsız inceleme** (işi görmemiş
+ayrı oturum) altı bulgu verdi, altısı düzeltildi — en önemlisi O-16'nın aynı
+sınıfının seçeneğin içinde de olması. Testler: `test_fazla_mesai_once_sifir.py`
+16 (yeni), `test_demir_secenekleri.py` 24 (+5), `test_ilk_asama.py`,
+`test_kalite_olc.py` 16 (+6); bulutta 572 motor testi geçti. Mutasyon: `demir`
+40 (+14), yeni grup `fm_sifir` 29 — grup koşularında öldü; toplam 271.
+**19:21, Mustafa'nın makinesi:** 572 test (80 sn), gerçekçi set 37 (428 sn),
+**tam mutasyon koşusu 271 · yaşayan 0 · atlanan 0** (damga), DENETIM hata yok.
+`kalite-olc.py`: `fm_once_sifir`,
+`fm_once_sifir_kapsama`, fazla mesai dışı amaç sütunu, sınır yazısı, seçenek
+uygulanmadıysa *"UYGULANMADI"* satırı. 5 Ekim
+21:41: demo sayfasının bağlantısı yenilendi (eski bağlantı silindi; depoda
+atıf yoktu).
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 20, "Sıradaki adım") · `00-DEVIR/05-HATA-OTOPSILERI.md` (O-16) · `00-DEVIR/08-URUN-KARARLARI.md` (K-30, K-35, K-60 notları) · `02-spec/v1.4-master-spec.md` (değişiklik 59, §9.4, §11.3) · `09-motor/cozucu/coz.py` · `09-motor/testler/test_fazla_mesai_once_sifir.py` · `09-motor/testler/test_demir_secenekleri.py` · `09-motor/testler/test_ilk_asama.py` · `09-motor/mutasyon_kostur.py` · `09-motor/mutasyon-tam-kosu.txt` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `08-motor-testleri/gercekci-veri-seti/testler/test_kalite_olc.py` · `00-DEVIR/oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
+
 **2026-10-05 (21:45) · K-60 Mustafa'nın makinesinde yeşil; kalibrasyon ölçümü (bulgu 19): %80 kaldı; ölçüm bütçesi kararı; üç profil yapılandırmaları**
 Mustafa'nın makinesi: 551 test, **tam mutasyon koşusu 228 · yaşayan 0 ·
 atlanan 0** (damga), gerçekçi set 31 (434 sn), DENETIM 0 hata. Kalibrasyon

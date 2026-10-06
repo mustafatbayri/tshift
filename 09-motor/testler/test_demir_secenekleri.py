@@ -111,10 +111,15 @@ def test_varsayilan_K59_iyilestirme_yuzde80_K60_mola_adimi_ACIK_b_KAPALI():
     assert "amac_dagilimi" in b and sum(d["ceza"] for d in b["amac_dagilimi"].values()) == b["iyilesmis_amac"], b
     assert ist["paralel"] is None, ist["paralel"]
     assert ist["mola_adimi"] is True and ist["atamalar_sabit"] is True, ist
-    # Mola adimi atamalar sabitken kanitli optimuma ulasir ve oyle der --
-    # "hedef_bosluk" degil (bulgu 18'de uc kosunun ikisi oyle yazilmisti).
-    assert ist["durma_sebebi"] == "optimum", ist["durma_sebebi"]
-    assert ist["amac_degeri"] == ist["alt_sinir"], ist
+    # Mola adimi atamalar sabitken O KISITLI PROBLEMIN kanitli optimumuna
+    # ulasir ve oyle der: "mola_adimi_optimum". Planin tamami icin kanit
+    # degildir (O-16) -- kuresel alt sinir ve "optimuma uzaklik" YAZILMAZ.
+    assert ist["durma_sebebi"] == "mola_adimi_optimum", ist["durma_sebebi"]
+    assert ist["mola_adimi_alt_sinir"] == ist["amac_degeri"], ist
+    assert ist["alt_sinir"] is None, ist["alt_sinir"]
+    assert c["metrikler"]["optimuma_uzaklik_yuzde"] is None, c["metrikler"]
+    assert C.VARSAYILAN["fazla_mesai_once_sifir"] is False
+    assert ist["fazla_mesai_once_sifir"] is None
 
 
 def test_iyilestirme_SIFIR_ile_kapatilir_eski_davranis():
@@ -194,6 +199,79 @@ def test_mola_adimi_KAPALI_eski_ortak_arama_atamalar_SERBEST(monkeypatch):
     assert not (x_indisleri <= gorulen["sabit_x"]), "ortak aramada atamalar sabitlenmemeli"
     assert gorulen["hedef_bosluk"] == C.VARSAYILAN["hedef_bosluk"] == 0.02
     assert not any("mola adimi" in n for n in c["uygulanmayan_notlar"])
+    # Ortak arama TAM modeli cozer: alt sinir kureseldir ve yazilir (O-16'nin
+    # ters yuzu -- kanit varken susmak da yanlis olurdu).
+    assert ist["alt_sinir"] is not None and ist["mola_adimi_alt_sinir"] is None, ist
+    assert ist["alt_sinir"] <= ist["amac_degeri"]
+    assert c["metrikler"]["optimuma_uzaklik_yuzde"] is not None
+    assert not str(ist["durma_sebebi"]).startswith("mola_adimi_"), ist["durma_sebebi"]
+
+
+def test_O16_mola_adimi_optimumu_PLANIN_optimumu_DEGILDIR_kuresel_sinir_YAZILMAZ(monkeypatch):
+    """O-16 (6 Ekim). 4-6 Ekim arasinda motor, mola adimi bitince "optimum,
+    optimuma uzaklik %0" diyordu. Tam olcekte olculdu (bulgu 20): oyle denen
+    planlarin ayni girdide 4-5,6 kat iyisi vardi.
+
+    Burada birinci asamanin plani BILEREK kotu secilir (en az vardiyali
+    gecerli plan: asgariyi tutar, hedefi kacirir). Mola adimi o atamalarla
+    en iyi mola yerlesimini bulur ve kanitlar -- ama plan, tam modelin
+    kanitli optimumundan KOTUDUR. Cikti bunu "optimum" diye sunmamali."""
+    g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
+    tam = C.coz(g, dict(AYAR, iki_asama_esigi=10 ** 9))
+    ti = tam["cozum_istatistikleri"]
+    assert ti["durma_sebebi"] == "optimum" and ti["amac_degeri"] == ti["alt_sinir"], ti
+    assert tam["metrikler"]["optimuma_uzaklik_yuzde"] == 0.0
+
+    def kotu_ipucu(kuruldu, ayar):
+        kuruldu.ilk_asama_iyilestirme = None
+        kuruldu.m.Minimize(sum(kuruldu.x.values()))           # en az vardiya
+        c = cp_model.CpSolver()
+        c.parameters.max_time_in_seconds = 20
+        c.parameters.num_search_workers = 2
+        assert c.Solve(kuruldu.m) == cp_model.OPTIMAL
+        C._tam_ipucu_yaz(kuruldu, c)
+        kuruldu.m.Minimize(sum(a * v for a, v in kuruldu.cezalar))
+        return True
+    monkeypatch.setattr(C, "_ipucu_ver", kotu_ipucu)
+    c = C.coz(g, dict(AYAR))
+    ist = c["cozum_istatistikleri"]
+    assert c["durum"] == "cozuldu" and ist["atamalar_sabit"] is True
+    assert ist["durma_sebebi"] == "mola_adimi_optimum", ist["durma_sebebi"]
+    assert ist["amac_degeri"] > ti["amac_degeri"], (
+        "bu test icin plan bilerek kotu olmaliydi: %s <= %s"
+        % (ist["amac_degeri"], ti["amac_degeri"]))
+    # Kotu plan icin "optimum" / "%0 uzaklik" / kuresel alt sinir YOK:
+    assert ist["alt_sinir"] is None, ist["alt_sinir"]
+    assert c["metrikler"]["optimuma_uzaklik_yuzde"] is None, c["metrikler"]
+    assert ist["mola_adimi_alt_sinir"] == ist["amac_degeri"], ist
+    assert dogrulayici.degerlendir(g, c["atamalar"])["yayin_kapisi"]["yayinlanabilir"] is True
+
+
+def test_O16_on_ek_YALNIZ_kanit_iddia_eden_sebeplere_ve_YALNIZ_mola_adiminda(monkeypatch):
+    """Mola adimi "hedef_bosluk" ile dursa da (esik > 0 verilirse) o bosluk
+    KISITLI problemindir: sebep on ek alir. Kanit iddia etmeyen sebepler
+    (durgunluk) oldugu gibi kalir. Ortak aramada hicbiri degismez -- orada
+    kanit tam modelindir."""
+    asil = C._durgunluk_bekcisiyle_coz
+    zorla = {}
+
+    def bak(cozucu, model, geri, ayar):
+        durum = asil(cozucu, model, geri, ayar)
+        geri.durma_sebebi = zorla["sebep"]
+        return durum
+    monkeypatch.setattr(C, "_durgunluk_bekcisiyle_coz", bak)
+    g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
+    for sebep, mola_adimi, beklenen in (
+            ("hedef_bosluk", True, "mola_adimi_hedef_bosluk"),
+            ("optimum", True, "mola_adimi_optimum"),
+            ("durgunluk", True, "durgunluk"),
+            ("hedef_bosluk", False, "hedef_bosluk"),
+            ("optimum", False, "optimum"),
+            ("durgunluk", False, "durgunluk")):
+        zorla["sebep"] = sebep
+        ist = C.coz(g, dict(AYAR, mola_adimi=mola_adimi))["cozum_istatistikleri"]
+        assert ist["atamalar_sabit"] is mola_adimi, ist["atamalar_sabit"]
+        assert ist["durma_sebebi"] == beklenen, (sebep, mola_adimi, ist["durma_sebebi"])
 
 
 def test_mola_adimi_durma_esigi_AYARDAN_okunur(monkeypatch):
@@ -360,6 +438,58 @@ def test_b_iki_arama_kosar_IYI_olan_secilir_plan_gecerlidir():
     assert sum(d["ceza"] for d in ist["amac_dagilimi"].values()) == ist["amac_degeri"]
 
 
+def test_O16_sinir_kapsami_TAM_model_mi_kisitli_mi():
+    """Ana asamanin cozdugu model tam model degilse sinir kuresel degildir.
+    Iki kisit: atamalar sabit (mola adimi); fazla mesai degiskenleri 0'da
+    (deneme plan BULDUYSA -- bulamadiysa alanlar geri acilmistir)."""
+    class K(object):
+        pass
+    k = K()
+    assert C._sinir_kapsami(False, k) is None                       # secenek hic kosmadi
+    k.fazla_mesai_once_sifir = None
+    assert C._sinir_kapsami(False, k) is None
+    k.fazla_mesai_once_sifir = {"bulundu": False}
+    assert C._sinir_kapsami(False, k) is None                       # alanlar geri acildi: tam model
+    assert C._sinir_kapsami(True, k) == "mola_adimi"
+    k.fazla_mesai_once_sifir = {"bulundu": True}
+    assert C._sinir_kapsami(False, k) == "fazla_mesaisiz"
+    assert C._sinir_kapsami(True, k) == "mola_adimi"                # ikisi birden: mola adimi
+    assert C._KANIT_SEBEPLERI == ("optimum", "hedef_bosluk")
+
+
+def test_O16_paralel_isaretleme_siniri_SILER_kanit_sebebine_on_ek_koyar():
+    p = {"secilen": "ipuclu",
+         "ipuclu": {"alt_sinir": 12, "durma_sebebi": "optimum"},
+         "ipucusuz": {"alt_sinir": 9, "durma_sebebi": "durgunluk"}}
+    C._paralel_kisitli_isaretle(p, "mola_adimi")
+    assert p["ipuclu"] == {"alt_sinir": None, "durma_sebebi": "mola_adimi_optimum"}, p
+    assert p["ipucusuz"] == {"alt_sinir": None, "durma_sebebi": "durgunluk"}, p
+    assert p["secilen"] == "ipuclu"
+    p = {"secilen": "ipuclu", "ipucusuz": None,
+         "ipuclu": {"alt_sinir": 5, "durma_sebebi": "hedef_bosluk"}}
+    C._paralel_kisitli_isaretle(p, "fazla_mesaisiz")
+    assert p["ipuclu"] == {"alt_sinir": None, "durma_sebebi": "fazla_mesaisiz_hedef_bosluk"}, p
+    assert p["ipucusuz"] is None
+
+
+def test_O16_b_kollarinin_siniri_de_mola_adiminda_YAZILMAZ_ortak_aramada_yazilir():
+    """(b) kollari modelin kopyasini cozer; kopya atamalar sabitlendikten
+    SONRA alinir. Mola adimi kostuysa kollarin siniri da kisitli modelindir:
+    kuresel diye yazilmaz. Ortak aramada (tam model) yazilir."""
+    g = _sahne(kisi=4, gunler=[0], mola_kapsamasi=True)
+    ist = C.coz(g, dict(AYAR, paralel_ipucusuz_isci=1))["cozum_istatistikleri"]
+    p = ist["paralel"]
+    assert ist["atamalar_sabit"] is True and p[p["secilen"]]["plan_bulundu"] is True
+    for kol in ("ipuclu", "ipucusuz"):
+        assert p[kol]["alt_sinir"] is None, (kol, p[kol])
+        assert p[kol]["durma_sebebi"] not in ("optimum", "hedef_bosluk"), (kol, p[kol])
+    ist = C.coz(g, dict(AYAR, paralel_ipucusuz_isci=1, mola_adimi=False))["cozum_istatistikleri"]
+    p = ist["paralel"]
+    assert ist["atamalar_sabit"] is False
+    assert p[p["secilen"]]["alt_sinir"] is not None, p
+    assert not str(p[p["secilen"]]["durma_sebebi"]).startswith("mola_adimi_"), p
+
+
 def test_b_KOPYAYI_cozen_cozucunun_plani_asil_modelden_dogru_okunur():
     """(b)'de secilen arama modelin KOPYASINI cozmus olabilir; atamalar ve
     amac kirilimi yine asil modelin degiskenleriyle okunur. Burada kopya tek
@@ -378,8 +508,11 @@ def test_b_KOPYAYI_cozen_cozucunun_plani_asil_modelden_dogru_okunur():
     r = dogrulayici.degerlendir(g, atamalar)
     assert r["yayin_kapisi"]["yayinlanabilir"] is True, r["ihlaller"]
     # ayni sahnenin urun yoluyla bulunan optimumu ayni olmali
+    # (urun yolu mola adimiyla biter: kuresel sinir yazilmaz, O-16; ama bu
+    # kucuk sahnede bulunan plan tam modelin kanitli optimumuyla AYNI degerde)
     urun = C.coz(g, dict(AYAR))["cozum_istatistikleri"]
-    assert urun["amac_degeri"] == urun["alt_sinir"] == int(c2.ObjectiveValue()), urun
+    assert urun["amac_degeri"] == int(c2.ObjectiveValue()), urun
+    assert urun["alt_sinir"] is None and urun["mola_adimi_alt_sinir"] == urun["amac_degeri"], urun
 
 
 def test_b_ipucusuz_arama_plansiz_kalsa_da_plan_DONER():

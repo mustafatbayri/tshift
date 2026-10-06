@@ -1041,7 +1041,27 @@ DENGELI (10) ve KAPSAMA'da (15) **çözülüyor**.
 Doğrusu: tavan **isteğe bağlı** fazla mesai için hiç kullanılmıyor (ceza
 karşılıyor), **zorunlu** fazla mesai için belirleyici.
 
-→ `06-ACIK-RISKLER.md` T-15 (kapandı) · `09-motor/cozucu/model.py`
+### ⚠ 6 Ekim — tam ölçekte *"ceza karşılıyor"* tutmuyor (T-60 bulgu 20)
+
+Yukarıdaki *"mevcut kod bu kararı zaten uyguluyor"* ölçümü **küçük bir
+sahnede** yapıldı; orada çözücü optimumu kanıtlıyor ve isteğe bağlı fazla
+mesai 0 çıkıyor. Tam ölçekte (500 kişi, %95 doluluk, 900 sn, üçer koşu)
+DENGELI **26–40,5 saat**, KAPSAMA **10–14 saat** fazla mesai yazdı; aynı
+girdide CALISAN (tavan 0, sert) üç koşuda da **0 saatle** yayınlanabilir plan
+buldu. Yani asgari kapsama fazla mesaisiz tutuyor — tablonun **ilk satırı**
+geçerli — ve plan ona uymuyor. Sebep karar ya da ağırlık değil **arama**:
+yumuşak ceza (dakika başı 50) süre içinde sıfıra itilemiyor; süreyi 600'den
+900 sn'ye çıkarmak da kapatmadı.
+
+**Karar değişmedi.** Ölçüm seçeneği yazıldı (`fazla_mesai_once_sifir`,
+varsayılan **kapalı**): motor önce fazla mesaisiz plan arar; bulursa fazla
+mesai 0'da kalır (satır 1), bulamazsa — kanıt ya da süre — bugünkü yol işler
+ve plana not düşer (satır 2; K-38'in zorunlu fazla mesai yolu kapanmaz). Ürün
+varsayılanı olup olmayacağı ölçümden sonra Mustafa'nın kararı.
+
+→ `06-ACIK-RISKLER.md` T-15 (kapandı), T-60 bulgu 20 · `09-motor/cozucu/model.py` ·
+  `09-motor/cozucu/coz.py` (`fazla_mesai_once_sifir`) ·
+  `09-motor/testler/test_fazla_mesai_once_sifir.py`
 
 ---
 
@@ -1633,7 +1653,25 @@ dil modeli değil. Token harcamaz.
 3 öncelik × 3 süre seçeneği. "İyileştir"in plan başına bir kezle
 sınırlanması bu yüzden.
 
-→ `02-spec/v1.4-master-spec.md` §9.4, §11.3 · K-28 · `09-motor/cozucu/coz.py`
+### ⚠ 6 Ekim — büyük modelde çıktıda küresel sınır yok (O-16, T-60 bulgu 20)
+
+Kartın *"kanıtlanmış yakınlık"*ı çözücünün **tam model** için kanıtladığı alt
+sınırdan gelir. K-60'tan (4 Ekim) beri büyük modelde ana aşama mola adımıdır
+(atamalar sabit): çözücünün sınırı yalnız mola yerleşimini kanıtlar. Motor
+4–6 Ekim arasında bunu `alt_sinir` ve `optimuma_uzaklik_yuzde: 0` diye
+yazıyordu — kart *"%100"* derdi, oysa aynı girdide 4–5,6 kat iyi plan
+ölçüldü. Düzeltildi: mola adımı koşan çıktıda iki alan **null**. Küçük modelde
+(iki aşama yok) ve *"İyileştir"*de (başlangıç planı) sınır eskisi gibi yazılır.
+
+Kart cümlesi 2 Ekim'den beri zaten ertelenmiş durumda (T-60 not 2: *"kalite
+sorunu kapanınca bakılacak"*). Büyük modelde geri gelmesi için tam modelde
+ayrı bir **sınır adımı** gerekir; eldeki eğrilere göre tam ölçekte ≈110 sn'de
+18,9–20,0 bin (bilinen en iyi plan 26.589 için kart *"%71–75"* derdi; 900
+sn'lik en iyi kanıtla, 21.098, *"%79"*). **Ölçülmedi**; null iken kartın ne
+göstereceği de ayrı bir ürün kararı — ikisi de açık.
+
+→ `02-spec/v1.4-master-spec.md` §9.4, §11.3 · K-28 · K-60 · `09-motor/cozucu/coz.py` ·
+  `05-HATA-OTOPSILERI.md` O-16
 
 ---
 
@@ -2893,10 +2931,13 @@ dokunan payı küçük. Fazla mesai iki hâlde de birinci aşamada belirleniyor.
    üçer koşu, fark yok; %90'da mola adımına 600 sn'de 44–47 sn kalıyor, optimum
    40,5–42,9 sn'de (pay 1–5 sn) — **%80 kaldı.** Kısa bir **atama cilası**
    (ortak aramanın %0,6'lık düzenli kazancı) hâlâ ölçülmedi; not 1'den sonra.
-2. Üç profil (DENGELI/KAPSAMA/CALISAN) tekrarlı.
+2. Üç profil (DENGELI/KAPSAMA/CALISAN) tekrarlı — **ölçüldü (6 Ekim, bulgu
+   20):** dokuz koşu, hepsi 0 sert; mola adımı dokuzunda da 42–47 sn'de bitti.
 3. **Koşudan koşuya fark:** aynı ayarla fazla mesai 28–43,5 saat; mimariden
    bağımsız, birinci aşamanın doğası (T-60 not 1) — mola kararından sonra
-   sıradaki iş.
+   sıradaki iş. **6 Ekim (bulgu 20):** farkın tamamı fazla mesai artığı
+   (fazla mesai dışı amaç %0,2 oynuyor) ve fazla mesai bu girdide gerekmiyor;
+   ölçüm seçeneği `fazla_mesai_once_sifir` (K-30'a not).
 
 **Durum (4 Ekim 14:30): koda indi.** `09-motor/cozucu/coz.py`: `VARSAYILAN`
 `mola_adimi: True` (eski ölçüm anahtarı `ana_asama_atamalar_sabit` kaldırıldı;
@@ -2924,6 +2965,16 @@ koşusu 228 · yaşayan 0 · atlanan 0** (damga 5 Ekim), gerçekçi set 31 geçt
 Commit `97791b5` (4 Ekim, testsiz) + damga commit'i. Şartname §11.3 ve
 değişiklik 58 güncellendi. Kalibrasyon ölçümü (%80 ↔ %90) 5 Ekim 19:30'da
 başladı.
+
+**⚠ 6 Ekim — *"kanıtlı optimum"* neyin optimumu (O-16).** Bu karardaki
+*"kanıtlı optimum"* her yerde **mola yerleşiminin** optimumudur: *bu
+atamalarla* daha iyi mola yerleşimi yok. Planın optimumu **değildir**. Motor
+çıktısı 4–6 Ekim arasında bunu genel alanlara yazıyordu (`durma_sebebi:
+optimum`, `alt_sinir == amac_degeri`, `optimuma_uzaklik_yuzde: 0`) ve bu
+yanlıştı: aynı girdide 4–5,6 kat iyi plan ölçüldü (bulgu 20). Düzeltildi —
+mola adımı koştuysa `durma_sebebi: mola_adimi_optimum`, adımın sınırı
+`mola_adimi_alt_sinir`, genel iki alan null. Kararın kendisi ve dayandığı
+ölçümler (bulgu 17–19) değişmedi: orada kıyaslanan mola yerleşimiydi.
 
 → T-60 · K-14 · K-32 · K-59 · şartname §6.4, §11.3 · `09-motor/cozucu/coz.py`
 (`VARSAYILAN["mola_adimi"]`, `_atamalari_sabitle`, `_ErkenDur`) ·
