@@ -4,6 +4,21 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-06 (22:45) · Mustafa amacı hatırlattı ve veri seti merdiveni önerdi; okuma + küçük ölçekli ön deneme (bulgu 22, keşif); tasarım kararı Mustafa'da**
+Mustafa (21:34, 21:36): zorunlu fazla mesaili, en azı (x) bilinen bir set;
+asıl soru *"tüm kriterlere bağlı olarak optimum planı çıkarabiliyor muyuz"*;
+beş seviyeli veri setleri. Okunan: katalog 41 kural (yumuşak dokuzun dördü
+yazılı değil); %95 setinde kıtlık yok (en iyi planda hedefin üstünde 3.141,
+altında 350 kişi-saat), geçmiş boş, yayınlanmış plan yok, herkes tek ekipte.
+Ön deneme (bulut, 49–151 kişi, tek koşu; 500 için tahmin değil): cevabı
+bilinen set kurulabiliyor (151 kişi: referans 4.089 · ürünün hali 8.864 ·
+*önce fazla mesaisiz* 4.146); x bilinen zorunlu fazla mesai seti
+kurulabiliyor (151 kişi: en az 3,5 saat kanıtlı · ürünün hali 11,25 ·
+seçenek 9,75 saat). Görüş verildi: çok set doğru; her seviyenin bilinen
+cevabı, seviyeler arasında sabit kriter seti, beşinci seviye iki set. Kod ve
+ürün varsayılanı değişmedi.
+→ `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/OKU-BENI.md` · `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 22, "Sıradaki adım") · `00-DEVIR/00-BURADAN-BASLA.md` (⚠ 6 Ekim 22:45) · `00-DEVIR/oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md` §12
+
 **2026-10-06 (21:15) · *Önce fazla mesaisiz* ölçüldü (bulgu 21): altı koşuda fazla mesai 0, amaç 4–5,6 kat düştü, karar kuralı tuttu — ürün varsayılanı kararı Mustafa'da**
 Sabahın işi `85131ee` ile commit'lendi, CI yeşil. Ölçüm (Mustafa'nın makinesi,
 900 sn, üçer koşu, `kalite-olcumu-95-fmsifir-900.json`; kıyas sabahın

@@ -17,6 +17,7 @@ devamı → aynı pencere"). Önceki günlük: `2026-10-04-k60-mola-adimi-koda.m
 9. [Bağımsız inceleme ve düzeltmeleri](#9--bağımsız-inceleme-ve-düzeltmeleri)
 10. [19:21 — Mustafa'nın koşuları](#10--1921--mustafanın-koşuları)
 11. [21:08 — ölçüm sonucu (bulgu 21) ve karar sorusu](#11--2108--ölçüm-sonucu-bulgu-21-ve-karar-sorusu)
+12. [21:34–22:45 — amaç hatırlatması ve veri seti merdiveni; okuma, ön deneme (bulgu 22)](#12--21342245--amaç-hatırlatması-ve-veri-seti-merdiveni-okuma-ön-deneme-bulgu-22)
 
 ## 1 · 5 Ekim 21:36–21:45 — commit, demo bağlantısı
 
@@ -310,3 +311,72 @@ bir set yok). Yalnız %95 seti ve 900 sn ölçüldü.
 
 **Karar Mustafa'da.** Kod bu adımda değişmedi; belgeler ve ölçüm dosyası için
 commit bloğu verildi.
+
+## 12 · 21:34–22:45 — amaç hatırlatması ve veri seti merdiveni; okuma, ön deneme (bulgu 22)
+
+Mustafa (21:34): *"Sonraki iş: zorunlu fazla mesaili bir veri seti kurup o
+yarıyı ölçmek. bunu yapmalıyız. Yani öyle bir data seti verelim ki örneğin
+minimum x kadar fazla mesai yapmak zorunda kalalım, x ten ne kadar
+uzaklaştığımıza göre kaliteyi ölçeriz. Tabi bu x değerini tutturmak
+olabildiğince zor olmalı. Ürünümüzün amacı fazla mesai yani firmaya ek ücret
+çıkarmadan eldeki kaynağı en iyi kullanmasını sağlaması bu hiç bir zaman
+değişmeyecek bir konu. Şu an yapmaya çalıştığımız plan fazla mesai kısmına
+olabildiğince az giderek diğer kriterleri de hesaba katarak optimum plan
+yapabiliyor mu? Bu arada sadece sen sorduğun için fazla mesaiye cevap verdim,
+ürünün asıl çıktısı bu değil. Ürünün çıktısı elimizdeki tüm kriterlere bağlı
+olarak optimum planı çıkarabiliyor muyuz? Amacımız fazla mesai konusunu
+çözmek değil sadece. Fazla mesai 43 kriterden sadece biri bunu unutma.
+Amaçtan dağılma sakın."*
+
+Mustafa (21:36, ben çalışırken): *"Bence bundan sonrası için, birden fazla
+data seti ile ilerlemeliyiz. Data setleri 5 kısım olabilir aklıma gelen
+sadece, sen de yorumla bu kısmı: 1- en basit data seti ve kriter seti (500
+çalışan için tabi) , 2- planın optimum oluşturulması biraz daha zor, 3 4 5
+olarak zorlaşarak ilerlemeli hatta 5 seviyesinde plan çözümsüz olabilecek
+kadar zor data seti olmalı? fikrime ne diyorsun ?"*
+
+**Okuma (yalnız okuma; depo `ae57023`, temiz).** Şartname §5.3–5.4 ve §6
+baştan okundu: katalog **41** kural (32 sert, 9 yumuşak) — Mustafa'nın *"43"*ü
+katalogla uyuşmuyor, kendisine söylendi. Motorda dört yumuşak kuralın
+(`EKIP_SUREKLILIGI`, `PLAN_KARARLILIGI`, `TERCIH_KARSILAMA`,
+`VARDIYA_ROTASYON_YONU`) yalnız ağırlık satırı var; terimi ve doğrulayıcı
+gövdesi yok. %95 fikstürü: asgari 12.723, hedef 18.660 kişi-saat, kapasite
+sayısı 19.630; geçmiş vardiyalar 500 kişide boş, donmuş gün ve yayınlanmış
+plan yok, kilit 6, herkes tek ekipte, yıl içi fazla mesai 497 kişide dolu (en
+büyük 269). Akşamın en iyi DENGELI planı (26.407): adalet 12.490 · hedef
+aşımı 9.423 (3.141 kişi-saat) · hedef eksiği 3.150 (350) · mola 1.344 ·
+fazla mesai 0. `kural-kapsamasi.py`: 22 satır SINANDI (17 ayrı kural), 20
+TEMİZ, 4 GÖVDE YOK.
+
+**Ön deneme (bulut, 2 çekirdek; betikler ve tablolar
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/`).**
+
+| Deneme | Kişi | Bilinen | Ürünün hali | *Önce fazla mesaisiz* |
+|---|---|---|---|---|
+| Gömülü plan (puan) | 49 | referans 1.429 | 1.424 | — |
+| Gömülü plan (puan) | 151 | referans 4.089 | 8.864 | 4.146 |
+| Zorunlu fazla mesai (saat) | 151 | en az 3,5 (kanıtlı) | 11,25 | 9,75 |
+
+Tek koşu, 90–125 sn bütçe; 500 kişi için tahmin değil. Gömülü planın tuzağı
+(referans varsayılan aramayla üretilirse motor aynı planı yeniden buluyor)
+ve *"asgariyi topluca artırınca zorunlu aralık dar"* gözlemi keşif
+klasöründe.
+
+**Mustafa'ya verilen görüş (22:45).** Çok set doğru. Ekler: her seviyenin
+bilinen bir cevabı olsun; kriter seti seviyeler arasında aynı kalsın (kriter
+kapatma yalnız teşhis için); beşinci seviye iki set olsun (dar kapı / kanıtlı
+imkânsız). Basamak önerisi: 1 tam oturan talep · 2 sıkı kadro · 3 geçmişli
+hafta · 4 zorunlu fazla mesai (x) · 5a dar kapı · 5b imkânsız; bugünkü %85 ve
+%95 setleri karşılaştırma olarak durur. Sıra bir varsayım, ölçülünce
+değişebilir. Dört yazılmamış yumuşak kural ayrıca söylendi: *"tüm kriterler"*
+bugün ölçülebilen 37 kuraldır.
+
+**Değişmeyen.** Kod; ürün varsayılanı (`fazla_mesai_once_sifir` kapalı —
+Mustafa *"evet"* demedi, *"bunu yapmalıyız"* zorunlu yarının ölçülmesi diye
+okundu ve kendisine söylendi). **Yanlış çıkan bir not:** `uret_veri_seti.py`
+*"%95: … fazla mesai ZORUNLU hale gelir"* diyor; bulgu 20–21 tersini ölçtü.
+Not, merdiven aracı yazılırken düzeltilecek (dosyaya bu adımda dokunulmadı).
+
+**Açık.** Mustafa'nın merdiven tasarımına cevabı; ürün varsayılanı (zorunlu
+yarı ölçülünce); önceki açık sorular (mola adımı yetişmezse plan notla dönsün
+mü; sonuç kartındaki yüzde; `gun_sayisi`).

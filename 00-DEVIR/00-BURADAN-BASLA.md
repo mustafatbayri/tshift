@@ -4,7 +4,7 @@
 > baştan sona oku, sonra aşağıdaki okuma sırasını takip et. Kod yazmaya
 > başlamadan önce `02-DEGISMEZLER.md` dosyasını mutlaka okumuş olmalısın.**
 
-**Son güncelleme:** 2026-10-06 21:20 (**⚠ 6 Ekim 21:15** paragrafı: *önce fazla mesaisiz* ölçüldü — altı koşuda fazla mesai 0, amaç 4–5,6 kat düştü, karar kuralı tuttu; **ürün varsayılanı kararı Mustafa'da**) · önceki 19:25 (19:21: Mustafa'nın makinesinde 572 test, 271 mutasyon hepsi öldü; **⚠ 6 Ekim** başlıklı paragraf, `⚠ 4 Ekim 14:30` paragrafının hemen altında: üç profil 900 sn ölçüldü — **bulgu 20:** fazla mesai aramanın artığı, CALISAN'ın fazla mesaisiz planı DENGELI ağırlıklarıyla 4–5,6 kat iyi; **O-16:** çıktıdaki *"optimum · %0"* yanlıştı, düzeltildi; ölçüm seçeneği `fazla_mesai_once_sifir`; sırada onun 900 sn ölçümü) · önceki 5 Ekim 21:45 (`⚠ 4 Ekim 14:30` paragrafının sonu: K-60 Mustafa'nın makinesinde yeşil — 551 test, 228 mutasyon; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı; sırada üç profil 900 sn) · önceki 4 Ekim 14:30 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
+**Son güncelleme:** 2026-10-06 22:50 (**⚠ 6 Ekim 22:45** paragrafı: Mustafa amacı hatırlattı — *tüm kriterlere bağlı optimum plan, fazla mesai tek kriter* — ve veri seti merdiveni önerdi; küçük ölçekli ön deneme, **bulgu 22**; **tasarım kararı Mustafa'da**) · önceki 21:20 (**⚠ 6 Ekim 21:15** paragrafı: *önce fazla mesaisiz* ölçüldü — altı koşuda fazla mesai 0, amaç 4–5,6 kat düştü, karar kuralı tuttu; **ürün varsayılanı kararı Mustafa'da**) · önceki 19:25 (19:21: Mustafa'nın makinesinde 572 test, 271 mutasyon hepsi öldü; **⚠ 6 Ekim** başlıklı paragraf, `⚠ 4 Ekim 14:30` paragrafının hemen altında: üç profil 900 sn ölçüldü — **bulgu 20:** fazla mesai aramanın artığı, CALISAN'ın fazla mesaisiz planı DENGELI ağırlıklarıyla 4–5,6 kat iyi; **O-16:** çıktıdaki *"optimum · %0"* yanlıştı, düzeltildi; ölçüm seçeneği `fazla_mesai_once_sifir`; sırada onun 900 sn ölçümü) · önceki 5 Ekim 21:45 (`⚠ 4 Ekim 14:30` paragrafının sonu: K-60 Mustafa'nın makinesinde yeşil — 551 test, 228 mutasyon; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı; sırada üç profil 900 sn) · önceki 4 Ekim 14:30 · önceki 2 Ekim 23:45 · önceki 23:25 (en alttaki iki paragraf; (a) tam ölçekte ölçüldü: fazla mesai 475–511 → 60–100 saat, (b) ve (c) elendi) · önceki 21:05 (yeni pencere — en alttaki paragraf: şartname düzeltmeleri, T-60 açığın yeri, ölçüm seçenekleri (a)/(b) yazıldı, (c) ölçüldü: ipuçsuz 900 sn beş koşunun dördünde plan yok) · önceki 18:50 (pencere devrediliyor: commit `8b53fe2` push edildi ve CI yeşil; tam ölçek kalite koşusu bitti ve yorumlandı — T-60 bulgu 7–9; sırada üç seçeneğin ölçümü, YENİ pencerede) · 2 Ekim: **K-57** "fazla mesai" tek tanım (yasal), T-60 kalite ölçüm araçları yazıldı ve 0.1 ölçekte ölçüldü (amacın %90'ı fazla mesai, oynama iki kat, ağırlık deneyi: sebep ağırlık değil). 1 Ekim'de **on 🔴 kapandı:** T-18, T-21, T-29, T-38, T-54, T-63, T-66, T-67, T-78, T-79; kararlar **K-48…K-57** (`08-URUN-KARARLARI.md`, hepsi açıklamalı). Motor **531 birim test** + 12 altın senaryo + bekçi 21 + taban 7 + **201 mutasyon hepsi öldü** (Mustafa'nın makinesinde de yeşil); `DENETIM.py` **0 hata**. Tam ölçek (500 kişi, %95): 0 sert, yayınlanabilir. **Açık 🔴 tek: T-60** (tam ölçekte tekrarlı kalite ölçümü koşuyor). Aşağıdaki *"⚠ … en güncel durum budur"* paragrafları kronolojik; **en alttaki en yeni**.
 
 **⚠ 29 Eylül akşamı — en güncel durum budur.** Mustafa 350 kişilik seti *"en zor senaryo"* diye anlattığım için uyardı; ölçülünce haklı çıktı (15 kuralın gövdesi yok, 13'ü hiç zorlanmıyor, kapasite talebin 2,3 katı). Yerine **500 kişilik iki set** kuruldu (%85 ve %95 doluluk). Dört karar: **K-37** *"imkânsız"* ile *"yetiştiremedim"* ayrı cevaplar (T-23 ve T-48 kapandı) · **K-38** haftalık 45 saat **normal** çalışma sınırı, toplam tavan değil · **K-39** sözleşme saati **doldurulur**, yarı zamanlıya saat girilmez · **K-40** gece vardiyası **işaretlenir**, tahmin edilmez. Katalog **40**, gövdesi yazılı **26**, motor **184 test** yeşil, zor set bekçileri **12** test. **Tam ölçek ilk kez çözüldü** — 2.493 atama, **0 sert ihlal**, `yayınlanabilir` True, **ama optimuma %98,3 uzak** ve 900 saniye istenen koşu 1.078 sürdü → iki yeni 🔴: **T-59** (bütçe aşımı, mekanik) ve **T-60** (kalite yok, önce dört ölçüm). Açık 🔴 sayısı **sekiz**.
 
@@ -439,6 +439,34 @@ plan notla dönsün mü; `gun_sayisi`). Açılışta oku: bu paragraf,
 `06-ACIK-RISKLER.md` T-60 bulgu 20–21, `08-URUN-KARARLARI.md` K-30 (6 Ekim
 notları), oturum günlüğü `oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
 §11.
+
+**⚠ 6 Ekim 22:45 — Mustafa amacı hatırlattı ve veri seti merdiveni önerdi;
+küçük ölçekli ön deneme yapıldı (T-60 bulgu 22, keşif); tasarım kararı
+Mustafa'da; en güncel durum budur.** Mustafa (21:34): zorunlu fazla mesaili,
+en azı (x) bilinen, tutturması zor bir set kurulsun; ama *"Ürünün çıktısı
+elimizdeki tüm kriterlere bağlı olarak optimum planı çıkarabiliyor muyuz? …
+Fazla mesai 43 kriterden sadece biri bunu unutma. Amaçtan dağılma sakın."*
+(21:36): beş seviyeli veri setleri (1 en basit … 5 çözümsüz olabilecek kadar
+zor). **Okunan:** katalog 41 kural (43 değil), yumuşak dokuzun dördü yazılı
+değil; %95 setinde kıtlık yok (en iyi planda hedefin üstünde 3.141, altında
+350 kişi-saat; asgari talep sözleşme saatlerinin %65'i), geçmiş boş,
+yayınlanmış plan yok, herkes tek ekipte — set kıtlığı, geçmişe bağlı
+kuralları ve zorunlu fazla mesaiyi sınamıyor. **Ön deneme (49–151 kişi,
+bulut, tek koşu; 500 için tahmin değil):** cevabı bilinen set kurulabiliyor
+(151 kişi: referans 4.089, ürünün hali 8.864, *önce fazla mesaisiz* 4.146);
+x bilinen zorunlu fazla mesai seti kurulabiliyor (151 kişi: en az 3,5 saat
+kanıtlı; ürünün hali 11,25, seçenek 9,75 saat). **Verilen görüş:** çok set
+doğru; her seviyenin bilinen cevabı olsun, kriter seti seviyeler arasında
+aynı kalsın, beşinci seviye iki set olsun (dar kapı / kanıtlı imkânsız);
+basamaklar 1 tam oturan talep · 2 sıkı kadro · 3 geçmişli hafta · 4 zorunlu
+fazla mesai · 5a · 5b; bugünkü iki set karşılaştırma olarak durur. **Ürün
+varsayılanı değişmedi** (Mustafa *"evet"* demedi; önce zorunlu yarı ölçülecek
+diye okundu, kendisine söylendi). Kod değişmedi; keşif betikleri ve bu
+kayıtlar için commit bloğu verildi. **Sıradaki tek adım:** Mustafa'nın
+merdiven tasarımına cevabı. Açılışta oku: bu paragraf, `06-ACIK-RISKLER.md`
+T-60 bulgu 22,
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/OKU-BENI.md`,
+oturum günlüğü `oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md` §12.
 
 **4 Ekim 02:45 — K-60 verildi, gün kapandı.**
 Mustafa (02:07): *"evet"* → **K-60: mola yerleşimi motor içinde ayrı adım,
@@ -902,7 +930,7 @@ Ve **mutasyon iki boşluk yakaladı**; ikisi de benim yazdığım, sonunda
 > | ~~T-44~~ | ✅ **KAPANDI 28 Eylül** — K-34 ile zaman birimi çeyrek saate indi; eşik `4F → 12F/7` (taban 3 için 12 kişi yerine **6**). Çözüm süresi 40 kişide 0.78 sn | — |
 > | ~~T-23~~, ~~T-48~~ | ✅ **KAPANDI 29 Eylül, K-37** — *"süre yetmedi"* ile *"imkânsız"* ayrıldı; teşhis artık yalnız istenirse koşuyor | — |
 >
-> **Bir 🔴 açık: T-60** (6 Ekim: K-59 ve K-60 kodda, kalibrasyon ve üç profil ölçüldü; kalan `fazla_mesai_once_sifir` kararı (ölçüldü, bulgu 21), sonuç kartı için küresel sınır). Durum yukarıdaki **⚠ 6 Ekim 21:15** paragrafında. Açık işler
+> **Bir 🔴 açık: T-60** (6 Ekim: K-59 ve K-60 kodda, kalibrasyon ve üç profil ölçüldü; kalan veri seti merdiveni (Mustafa'nın tasarım kararı; bulgu 22), `fazla_mesai_once_sifir` kararı (ölçüldü, bulgu 21; zorunlu yarı ölçülünce), sonuç kartı için küresel sınır). Durum yukarıdaki **⚠ 6 Ekim 22:45** paragrafında. Açık işler
 > (kırmızı değil): T-60 kalite ölçümleri; arayüz/backend — içe aktarma modülü
 > (K-55 kuralları), dondurulmuş gün çoklu seçim (K-54), geçmiş-eksik *"gördüm"* onayı (K-47); `SAHADA_ASGARI` tabanı sorusu.
 >

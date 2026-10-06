@@ -4243,7 +4243,7 @@ Okuma:
   sonra o toplam tavan olur).
 - Yalnız %95 seti ve 900 sn. %85 seti, 600 ve 1.800 sn ölçülmedi.
 
-**Sıradaki adım (bu pencerede):** Mustafa'nın kararı — *önce fazla mesaisiz*
+**Sıradaki adım (21:15'te yazıldı; 22:45'te aşağıdaki *bulgu 22* bölümünün sonundaki adım geçerli):** Mustafa'nın kararı — *önce fazla mesaisiz*
 ürün varsayılanı olsun mu. **Evet ise:** `VARSAYILAN["fazla_mesai_once_sifir"]`
 True; testler ve mutasyonlar yeni varsayılana göre; karar kaydı ve şartname
 §11.3; Mustafa'nın makinesinde testler + tam mutasyon + commit; ürün yolunun
@@ -4251,6 +4251,83 @@ True; testler ve mutasyonlar yeni varsayılana göre; karar kaydı ve şartname
 Sonra: zorunlu fazla mesaili veri seti ve *"önce en az fazla mesai"* ölçümü →
 sonuç kartı için sınır adımı ölçümü → atama cilası → %85 seti → T-80
 (`gun_sayisi` sorusu açık) → bulgu 11'in modeli araç olarak.
+
+**6 Ekim 21:34–22:45 — Mustafa'nın iki mesajı: amaç ve veri seti merdiveni;
+okuma ve küçük ölçekli ön deneme (bulgu 22, keşif).**
+
+Mustafa (21:34) zorunlu fazla mesaili, en azı (x) bilinen ve tutturması zor
+bir set istedi ve amacı hatırlattı: *"Ürünün çıktısı elimizdeki tüm kriterlere
+bağlı olarak optimum planı çıkarabiliyor muyuz? … Fazla mesai 43 kriterden
+sadece biri bunu unutma. Amaçtan dağılma sakın."* (21:36) birden fazla veri
+seti önerdi: beş seviye, 1 en basit veri ve kriter seti, 5 çözümsüz
+olabilecek kadar zor. Tam metinler oturum günlüğü §12'de.
+
+*Okunan (500 kişilik %95 seti; kaynaklar keşif klasöründe):* katalog **41**
+kural (32 sert, 9 yumuşak; 43 değil); yumuşak dokuzun dördü motorda ve
+doğrulayıcıda yazılı değil; bilinen en iyi DENGELI planında (26.407) hedefin
+altında 350, **üstünde 3.141** kişi-saat var, puanın %47'si adalet, %36'sı
+hedef aşımı; asgari talep sözleşme saatlerinin %65'i; geçen haftanın
+vardiyaları 500 kişide boş, donmuş gün ve yayınlanmış plan yok, herkes tek
+ekipte. Yani bu set kıtlığı, geçmişe bağlı kuralları ve zorunlu fazla mesaiyi
+**sınamıyor**; zorluğu yerleştirme ve adalet. `uret_veri_seti.py` içindeki
+*"%95: … fazla mesai ZORUNLU hale gelir"* notu ölçümle uyuşmuyor (bulgu
+20–21); not, merdiven aracı yazılırken düzeltilecek.
+
+*Bulgu 22 (keşif; 49 ve 151 kişi, bulut makinesi 2 çekirdek, 40–150 sn, tek
+koşu — 500 kişi için **tahmin değildir**):*
+
+1. **Cevabı bilinen set kurulabiliyor.** Fazla mesaisiz bir planın (başka
+   tohumla üretilmiş) atanmış kişi sayıları talebin `hedef` sütununa yazılınca
+   o plan yeni sahnede hedefi tam tutan, puanı bilinen bir **referans** olur
+   (üst sınır: en iyi plan ondan kötü olamaz). 49 kişi: referans 1.429, motor
+   (ürünün hali) 1.424. 151 kişi: referans 4.089, ürünün hali **8.864**
+   (farkın 4.500'ü 1,5 saat gereksiz fazla mesai), *önce fazla mesaisiz*
+   4.146 (+%1,4).
+2. **Tuzak:** referans plan ürünün varsayılan aramasıyla üretilirse motor
+   aynı planı yeniden buluyor (birinci aşama aynı yerden başlıyor); ölçü
+   motoru kayırır. Başka tohumla atamaların %33'ü ortak.
+3. **x bilinen zorunlu fazla mesai seti kurulabiliyor.** 151 kişi, asgari
+   × 1,24: en az fazla mesai **3,5 saat** (çözücü kanıtladı, 126 sn; planı
+   bağımsız doğrulayıcıda 0 sert ihlal). Aynı sahnede ürünün hali **11,25
+   saat**, *önce fazla mesaisiz* 9,75 saat (seçenek *"fazla mesaisiz plan
+   yok"* deyip bugünkü yola döndü). Bulgu 21'in *"ölçülmeyen"* yarısının ilk
+   sayısı — küçük ölçekte.
+4. **Talebi topluca artırmak zorunlu fazla mesaiyi kolay vermiyor:**
+   *gerekmiyor* ile *imkânsız* arası dar (151 kişide × 1,24 zorunlu, × 1,26
+   imkânsız; 49 kişide aralık yakalanmadı) ve x küçük. Büyük ve tutturması
+   zor bir x için hedefli kurulum gerekir.
+
+Ayrıntı, tablolar, sınırlar ve betikler:
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/OKU-BENI.md`.
+
+*Mustafa'ya verilen görüş (22:45; karar onun):* birden fazla set doğru. Üç
+ek: (1) her seviyenin **bilinen bir cevabı** olsun (referans plan; zorunlu
+fazla mesaide x) — yoksa zor seviyede *"motor kötü"* ile *"problem zor"*
+ayrılamaz; (2) kriter seti seviyeler arasında **aynı** kalsın, zorluk veriden
+gelsin (iki şey birden değişirse fark neye yazılacak bilinmez); kriter
+kapatma yalnız teşhis için; (3) beşinci seviye iki set olsun: plan var ama
+kapı dar / plan kanıtlı imkânsız (doğru cevap *"üretilemez"*, K-37).
+Önerilen basamaklar: 1 tam oturan talep · 2 sıkı kadro (asgari yüksek,
+kişisel kısıt çok, iki ekipte çalışabilen kişiler) · 3 geçmişli hafta (geçen
+hafta, donmuş gün, kilit, yıllık tavana yakın kişiler) · 4 zorunlu fazla
+mesai (x) · 5a dar kapı · 5b imkânsız. Bugünkü %85 ve %95 setleri *saha
+benzeri* karşılaştırma olarak durur. Basamakların zorluk sırası bir
+**varsayımdır**; ölçülünce yer değiştirebilir.
+
+*Ürün varsayılanı:* değişmedi (`fazla_mesai_once_sifir` kapalı). Mustafa'nın
+21:34 mesajı *"evet"* içermiyor; *"bunu yapmalıyız"* zorunlu yarının
+ölçülmesi diye okundu ve bu okuma kendisine söylendi.
+
+**Sıradaki adım (6 Ekim 22:45; yukarıdaki 21:15 adımının yerine):**
+Mustafa'nın merdiven tasarımına cevabı. Onaylarsa: önce 1 ve 4 araç olarak
+(şartnameden okunarak, testleriyle) yazılır, referans planlar Mustafa'nın
+makinesinde üretilir, 500 kişide 900 sn ölçülür. Açık teknik sorular: 500
+kişide x kanıtlanabiliyor mu (kanıtlanamazsa zorunluluk tek ekibe konup
+orada kanıtlatılır ya da x *"en az a, en çok b"* diye verilir); referans
+planı motordan bağımsız bir kurucu üretebilir mi; *"tutturması en zor x"*
+hangi kurulum (ölçülerek seçilecek). Sonra eski sıra: sonuç kartı için sınır
+adımı → atama cilası → T-80 (`gun_sayisi` sorusu açık) → bulgu 11'in modeli
+araç olarak.
 
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
@@ -5206,7 +5283,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — koda indi, 5 Ekim: 551 test, 228 mutasyon hepsi öldü; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı. **6 Ekim, bulgu 20 (üç profil, 900 sn, üçer koşu, hepsi 0 sert):** fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0** saat; CALISAN planları DENGELI ağırlıklarıyla 26,6–26,7 bin, DENGELI'nin kendi bulduğu 106–148 bin — fazla mesai verinin değil **aramanın artığı**, koşudan koşuya farkın tamamı o (fazla mesai dışı kısım %0,2 oynuyor). **O-16:** çıktı 4–6 Ekim arasında mola adımının optimumunu planın optimumu gibi yazıyordu (*"optimum · %0"*) — düzeltildi, büyük modelde küresel sınır artık null. Ölçüm seçeneği `fazla_mesai_once_sifir` yazıldı (varsayılan kapalı). **Bulgu 21 (6 Ekim akşamı, 900 sn, üçer koşu):** seçenek ölçüldü — altı koşunun altısında fazla mesai 0, amaç DENGELI 26,4–26,5 bin (sabah 106–148 bin), KAPSAMA 13,8–13,9 bin (sabah 46–58 bin), fazla mesai dışı kalemler de iyileşti, koşudan koşuya fark %40 → %0,3; karar kuralı tuttu. Kalan: Mustafa'nın kararı (ürün varsayılanı olsun mu); fazla mesainin zorunlu olduğu veri ölçülmedi; sonuç kartı için küresel sınır (sınır adımı ölçümü) |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — koda indi, 5 Ekim: 551 test, 228 mutasyon hepsi öldü; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı. **6 Ekim, bulgu 20 (üç profil, 900 sn, üçer koşu, hepsi 0 sert):** fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0** saat; CALISAN planları DENGELI ağırlıklarıyla 26,6–26,7 bin, DENGELI'nin kendi bulduğu 106–148 bin — fazla mesai verinin değil **aramanın artığı**, koşudan koşuya farkın tamamı o (fazla mesai dışı kısım %0,2 oynuyor). **O-16:** çıktı 4–6 Ekim arasında mola adımının optimumunu planın optimumu gibi yazıyordu (*"optimum · %0"*) — düzeltildi, büyük modelde küresel sınır artık null. Ölçüm seçeneği `fazla_mesai_once_sifir` yazıldı (varsayılan kapalı). **Bulgu 21 (6 Ekim akşamı, 900 sn, üçer koşu):** seçenek ölçüldü — altı koşunun altısında fazla mesai 0, amaç DENGELI 26,4–26,5 bin (sabah 106–148 bin), KAPSAMA 13,8–13,9 bin (sabah 46–58 bin), fazla mesai dışı kalemler de iyileşti, koşudan koşuya fark %40 → %0,3; karar kuralı tuttu. **Bulgu 22 (keşif, 6 Ekim gece; 49–151 kişi, bulut, tek koşu):** Mustafa amacı hatırlattı (*tüm kriterlere göre optimum plan; fazla mesai tek kriter*) ve beş seviyeli veri setleri önerdi; cevabı bilinen set ve x bilinen zorunlu fazla mesai seti küçük ölçekte kurulabildi — 151 kişide en az 3,5 saat zorunluyken ürünün hali 11,25 saat yazdı; %95 setinin kıtlığı, geçmişe bağlı kuralları ve zorunlu fazla mesaiyi sınamadığı okundu. Kalan: Mustafa'nın merdiven tasarımına cevabı; ürün varsayılanı kararı (zorunlu yarı tam ölçekte ölçülünce); sonuç kartı için küresel sınır (sınır adımı ölçümü) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |
