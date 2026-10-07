@@ -22,6 +22,7 @@ devamı → aynı pencere"). Önceki günlük: `2026-10-04-k60-mola-adimi-koda.m
 14. [6 Ekim 23:44 – 7 Ekim 00:45 — K-61 (*önce fazla mesaisiz* varsayılan; hakem ağırlıklardır) koda indi; K-62 (merdiven ve kadro)](#14--6-ekim-2344--7-ekim-0045--k-61-önce-fazla-mesaisiz-varsayılan-hakem-ağırlıklardır-koda-indi-k-62-merdiven-ve-kadro)
 15. [7 Ekim 01:00–03:30 — bağımsız inceleme: 00:45 sürümü ilkeyi çiğniyordu (O-18, bulgu 23); düzeltme](#15--7-ekim-01000330--bağımsız-inceleme-0045-sürümü-ilkeyi-çiğniyordu-o-18-bulgu-23-düzeltme)
 16. [7 Ekim 03:05–04:30 — kredi kesintisi, yeniden uygulama, yeniden doğrulama; eşdeğer mutant; bulgu 24](#16--7-ekim-03050430--kredi-kesintisi-yeniden-uygulama-yeniden-doğrulama-eşdeğer-mutant-bulgu-24)
+17. [7 Ekim 05:10–07:30 — Mustafa'nın koşuları, bulgu 23 ölçümü, dört karar (K-30 kapanışı, K-63, K-64, K-62 kadro)](#17--7-ekim-05100730--mustafanın-koşuları-bulgu-23-ölçümü-dört-karar-k-30-kapanışı-k-63-k-64-k-62-kadro)
 
 ## 1 · 5 Ekim 21:36–21:45 — commit, demo bağlantısı
 
@@ -785,3 +786,52 @@ düzeltildi. Doğrulanamayanlar (B): 2.713/2.758/11.918 (log yok), ×400,
 04:00); `test_kalite_olc.py` 18. Toplam iddiası tam koşudan sonra (O-15).
 Mustafa'ya: koşular, bulgu 23 ölçümü, iki karar (K-30 ilk satırı; bulgu 24),
 bir tasarım notu (eşitlikte fazla mesaisiz tercih edilsin mi).
+
+---
+
+## 17 · 7 Ekim 05:10–07:30 — Mustafa'nın koşuları, bulgu 23 ölçümü, dört karar (K-30 kapanışı, K-63, K-64, K-62 kadro)
+
+**Koşular (Mustafa'nın makinesi).** 587 motor testi (78 sn), 39 gerçekçi set
+testi (425 sn), DENETIM 0 hata / 17 uyarı; `git add -A`, commit `01e5e29`
+(62 dosya, +7.556 / −160), push `82f0135..01e5e29`; **tam mutasyon koşusu 290
+hepsi öldü, atlanan 0** (damga 05:42, `mutasyon-tam-kosu.txt`). Sonra bulgu
+23'ün ölçümü: `py kalite-olc.py --saniye 900 --tekrar 3 --yapilandirma
+fm_once,fm_once_kapsama --etiket fmonce-900` (~1,6 saat; bitiş ~07:15).
+
+**Bulgu 23 ölçümü — sonuç.** Tablo ve okuma `06-ACIK-RISKLER.md` T-60 bulgu
+23 ölçüm paragrafında. Özü:
+
+| Profil | Sert kesim (bulgu 21, 6 Ekim) | Ürün yolu (bulgu 23, 7 Ekim) | Fark |
+|---|---|---|---|
+| DENGELI amaç | 26.494 · 26.482 · 26.407 (ort. 26.461) | 26.634 · 26.675 · 26.705 (ort. 26.671) | **+%0,8** (koşu bazında +%0,7 … +%0,9); yayılım %0,3 → %0,3 |
+| DENGELI hedef eksiği / kapsama | 344 · 350 · 350 kişi-saat / %86,5 · 85,8 · 86,5 | 360 · 372 · 357 / %84,6 · 84,1 · 85,3 | +7 … +22 kişi-saat |
+| DENGELI iyileştirme sonu (molalar sabit) | 42.286 · 42.358 · 42.276 | 42.447 · 42.509 · 42.476 | +%0,4; son iyileşme 639–717. sn, sabit molalı sınıra uzaklık %1,9 |
+| KAPSAMA amaç | 13.914 · 13.834 · 13.848 (ort. 13.865) | 15.028 · 14.595 · 14.132 (ort. 14.585) | **+%5,2** (koşu bazında +%8,4 · +%5,3 · +%1,9); yayılım **%0,6 → %6,3** |
+| KAPSAMA hedef eksiği / kapsama | 98 · 106 · 100 / %92,8 · 92,8 · 94,2 | 159 · 132 · 112 / %92,3 · 92,3 · 93,3 | +12 … +61 kişi-saat |
+| KAPSAMA iyileştirme sonu | 33.201 · 33.508 · 33.360 | 34.270 · 33.882 · 33.590 | +%2,3; son iyileşme 684–717. sn, sınıra uzaklık %5,7 |
+| Fazla mesai | 0 / 0 / 0 · 0 / 0 / 0 | **0 / 0 / 0 · 0 / 0 / 0** | aynı |
+| Süre | 773–779 sn | 772–779 sn | aynı; fazla mesaisiz arama 8,8–9,5 sn, iyileştirme 720 sn, mola adımına ~167 sn |
+
+Karar kuralı (koşudan önce K-61'de): DENGELI **kapandı** (±%2, fazla mesai 0);
+KAPSAMA **yol yeniden** (+%5,2 ortalama, bir koşu +%8,4). Bu kez *"artık"*
+fazla mesai değil (altı koşuda 0) **yakınsama**: alanlar açılınca 359
+değişken daha serbest, iyileştirme KAPSAMA'da bütçenin sonunda hâlâ
+iyileşiyor (son iyileşme 684–717. sn) ve sabit molalı sınırına %5,7 uzak
+(sert kesim aynı sürede daha ileri gidiyordu); yayılım %0,6 → %6,3. İlke
+doğru, bedeli KAPSAMA'da aramanın yetişememesi. Ölçülecek aday: hibrit
+(iyileştirme fazla mesai alanları kapalı → serbest son tur, aynı amaç, o
+plandan). Ölçülmeden hibrit hakkında bir şey söylenmedi.
+
+**Mustafa (07:18).** *"1- ikincisi ağırlıkların sonucu. … 2- Burada belki de
+müşteriye bir aralık vermeliyiz. Planın 15-20 dk arasında tamamlanacağı gibi.
+Yani kafadan üst sınır veriyoruz bu tür durumlar için. Bence bu çalışır.
+Ayrıca 2. aşamanın planı notla dönsün önerine notumla birlikte katılıyorum.
+3- evet fazla mesaisiz tercih edilsin puan aynı ise. 4- 30 fazla bence 20.
+Bugünü kapatmamız gerekiyor. Uyuyacağım."* → K-30 sorusu kapandı; **K-63**;
+**K-64**; K-62 kadro 20 satışçı. Hepsi ⏳ (karar verildi, kod sonra).
+
+**Kapanış (07:35).** Bu kayıtlar + kapanış commit'i + **gece koşusu** (Mustafa
+*"PC'yi açık bırakabilirim"* dedi): `fm_sert_kapsama` 900 sn × 3 (taban),
+sonra `fm_once_kapsama,fm_once` 1200 sn × 3 (bütçe mi?); karar kuralları T-60
+bulgu 23 ölçüm paragrafının altında, koşudan önce yazıldı. Yarın: gece
+koşusunun okunması → hibrit ölçümü → K-63/K-64 kod → K-62 merdiven kadrosu.

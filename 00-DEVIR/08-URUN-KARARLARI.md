@@ -1089,7 +1089,9 @@ fazla mesai adımının bir haftalık düzeni açtığı yapılarda (şablon net
 sözleşmeyi tam döşemiyor, SAAT_DENGESI, iki ekibe üyelik) ağırlıklar fazla
 mesaili planı seçer — K-61'in ilkesi bunu söylüyor. **Bu karar ile K-61
 birbirini tam örtmüyor; motor K-61'e göre yazıldı, soru Mustafa'ya soruldu**
-(K-61'deki "açık ürün sorusu").
+(K-61'deki "açık ürün sorusu"). **7 Ekim 07:18 — Mustafa karar verdi:** *"1- ikincisi
+ağırlıkların sonucu."* İlk satır ağırlıkların sonucudur; sert kesim ürün yolu
+değildir; soru kapandı.
 
 → `06-ACIK-RISKLER.md` T-15 (kapandı), T-60 bulgu 20 · `09-motor/cozucu/model.py` ·
   `09-motor/cozucu/coz.py` (`fazla_mesai_once_sifir`) ·
@@ -3200,11 +3202,21 @@ adımın bütün haftayı açtığı yapılarda ağırlıklar fazla mesaili plan
 bu da 6 Ekim ilkesinin söylediğidir. İki karar birbirini tam örtmüyor; motor
 6 Ekim ilkesine göre yazıldı. Mustafa K-30'un ilk satırını mutlak isterse bu
 sert kesimdir ve 6 Ekim ilkesiyle çelişir; o zaman karar yeniden yazılır.
+**7 Ekim 07:18 — kapandı:** Mustafa *"ikincisi, ağırlıkların sonucu"* dedi;
+kod olduğu gibi.
 
-**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki kredi kesintisinde bulut
-alanı silindi, düzeltme oturum kaydındaki adımlardan yeniden uygulandı ve
-yeniden doğrulandı — T-60 bulgu 23, kesinti paragrafı), Mustafa'nın koşuları
-bekleniyor.**
+**Durum (7 Ekim 07:30): depoda — `01e5e29`; Mustafa'nın makinesinde 587 +
+39 test, DENETIM 0 hata, tam mutasyon koşusu 290 hepsi öldü (damga 05:42);
+bulgu 23 ölçüldü:** fazla mesai altı koşuda 0; DENGELI sert kesime göre
++%0,8 (karar kuralı: **kapandı**); KAPSAMA +%5,2 ortalama, koşu bazında +%8,4 ·
++%5,3 · +%1,9, yayılım %0,6 → %6,3 (kural: **yol yeniden** — artık fazla mesai
+değil yakınsama; 359 serbest değişkenle 720 sn'lik iyileştirme bitmiyor:
+son iyileşme 684–717. sn, sınıra %5,7). Ürün yolu ilkesiyle kalıyor; ölçülecek
+aday *hibrit* (iyileştirme fazla mesai kapalı + serbest son tur) — T-60 bulgu
+23 ölçüm paragrafı. ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
+kredi kesintisinde bulut alanı silindi, düzeltme oturum kaydındaki adımlardan
+yeniden uygulandı ve yeniden doğrulandı — T-60 bulgu 23, kesinti paragrafı),
+Mustafa'nın koşuları bekleniyor.**~~
 `09-motor/cozucu/coz.py`: `VARSAYILAN["fazla_mesai_once_sifir"]` True,
 `VARSAYILAN["fazla_mesai_sifirda_tut"]` False (ölçüm); `_ipucu_ver` bulunca
 alanları geri açar; `_fazla_mesai_kisayolu_gecerli` **kaldırıldı**; çıktıda
@@ -3287,7 +3299,7 @@ sınanmıyor, en iyi plan bilinmiyor (bulgu 22; O-17).
 |---|---|---|
 | Ekipler | Satış 285 · Back Office 145 · Müşteri Hizmetleri 70 (bugünkü kadro) | Mustafa: *"285 145 70 kalsın"* |
 | İki işi yapabilen kişiler | Bütün seviyelerde; satışçıların bir kısmı back office'e de üye | Mustafa (yukarıdaki alıntı); K-50 |
-| Kaç kişi | **30 satışçı (yaklaşık %10) — varsayım**; Mustafa bu soruyu cevaplamadı, kendisine söylendi | ⚠ teyit bekliyor |
+| Kaç kişi | ~~30 satışçı (yaklaşık %10) — varsayım~~ **20 satışçı** (yaklaşık %7) | Mustafa, 7 Ekim 07:18: *"4- 30 fazla bence 20"* |
 | Gece 00:00–08:00 back office talebi | Asgari **2** kişi (bugünkü sette hafta içi 13, hafta sonu 6) | Mustafa: *"en az 2 olsun mesela"* |
 | Aynı saatlerin hedefi | 3 kişi — **varsayım** (bugünkü hedef/asgari oranı ≈1,5) | ⚠ merdiven aracı yazılırken teyit |
 
@@ -3312,3 +3324,69 @@ referans planlar Mustafa'nın makinesinde, 500 kişide 900 sn ölçüm.
 
 → K-37 · K-50 · K-61 · O-17 · T-60 bulgu 22 ·
 `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+
+
+---
+
+## K-63 · Mola adımı yetişmezse **2. aşamanın planı notla döner**; ürün müşteriye **süre aralığı** verir (üst sınır)
+
+**Karar (7 Ekim 2026, 07:18, Mustafa).** T-60 bulgu 24'e (kısa bütçede mola
+adımı yetişmeyince motor elde geçerli plan varken *"süre yetmedi"* dönüyor)
+cevap:
+
+> *"Burada belki de müşteriye bir aralık vermeliyiz. Planın 15-20 dk arasında
+> tamamlanacağı gibi. Yani kafadan üst sınır veriyoruz bu tür durumlar için.
+> Bence bu çalışır. Ayrıca 2. aşamanın planı notla dönsün önerine notumla
+> birlikte katılıyorum."*
+
+**Ne demek — iki parça.**
+
+1. **Motor:** mola adımı (K-60'ın 3. aşaması) ilk çözümünü süre içinde
+   bulamazsa plan boş dönmez; iyileştirmenin planı (molalar şablonun ideal
+   yerinde — tam modelin geçerli bir çözümü) döner, `uygulanmayan_notlar`a
+   *"molalar şablonun ideal yerinde; mola adımı yetişmedi"* düşer,
+   `durma_sebebi` bunu söyler. `_ipucu_ver`in *"bütçe dolsa bile çıktı boş
+   kalmaz"* cümlesi böylece mola adımı için de doğru olur.
+2. **Ürün:** kullanıcıya tek bir süre değil **aralık** söylenir (*"15–20 dk"*
+   gibi); alt uç olağan tamamlanma, üst uç kafadan verilen tavan — motor üst
+   uçta elindeki en iyi planla döner. K-28 (*"erken dur, bekletme"*) ve K-35
+   (süreyi kullanıcı seçer) ile birlikte okunur: seçilen süre aralığın alt
+   ucudur, tavan üründe sabittir.
+
+**Dayanak.** T-60 bulgu 24 (49 kişi, 20 sn: mola adımına 2,3 sn kaldı, plan
+yok; 30 sn'de plan var). 500 kişi / 900 sn'de görülmedi (mola adımına ~167 sn
+kalıyor, adım 40–46 sn sürüyor).
+
+**Durum: ⏳ karar verildi, uygulanmadı.** Motor: `coz()` mola adımı UNKNOWN
+dönünce ipucudaki planı yazar (küçük; test: bütçesi kısılmış sahnede plan +
+not). Şartname: §9 süre metni (aralık), §11.3 `durma_sebebi` yeni değer.
+Aralığın sayıları (15–20 dk) şartnameye yazılmadan önce ölçülür: 500 kişide
+hangi bütçede plan dönmüyor (bulgu 24'ün tam ölçekli sınırı).
+
+→ K-28 · K-35 · K-60 · T-60 bulgu 24 · `09-motor/cozucu/coz.py` (`coz`, `_ipucu_ver`)
+
+---
+
+## K-64 · Puan eşitse **fazla mesaisiz plan** tercih edilir
+
+**Karar (7 Ekim 2026, 07:18, Mustafa).** Bağımsız incelemenin (A, 04:45)
+tasarım notuna cevap: *"3- evet fazla mesaisiz tercih edilsin puan aynı ise."*
+
+**Ne demek.** Ağırlıklı amaç iki planı eşit puanlıyorsa (ör. 3.252 = 3.252:
+biri 0,5 saat fazla mesaili, öteki sözleşme dengesinde 300 dk uzak) motor
+fazla mesaisiz olanı seçer. K-61 ilkesini bozmaz: *"oldukça daha optimum"*
+olan fazla mesaili plan yine seçilir; yalnız **eşitlik** fazla mesaisizden
+yana kırılır.
+
+**Dayanak.** İnceleme A'nın 640 sahnelik avında 1 eşitlik (`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-o18-duzeltme/inceleme/ajan-a/RAPOR.md`,
+bulgu 5). Nadir ama ilkeye dokunuyor.
+
+**Durum: ⏳ karar verildi, uygulanmadı.** İki yol var, ölçülmeden seçilmez:
+(a) amaç fonksiyonunda kırılım — fazla mesai dakikasının ağırlığına ε eklemek
+tam sayı ağırlıklarda bütün tabloyu ölçeklemeyi gerektirir (amaç değerleri
+değişir, kayıtlar ve testler etkilenir); (b) çözümden sonra eşitlik kontrolü —
+dönen planda fazla mesai > 0 ise, fazla mesai 0'a sabit ve amaç ≤ dönen
+puanla kısa bir arama; bulunursa o döner (süre bütçesinden pay ister).
+Önerim (b), küçük sahnede ölçülüp 500 kişide bir kez denenerek.
+
+→ K-61 · O-18 · `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-o18-duzeltme/inceleme/ajan-a/RAPOR.md`

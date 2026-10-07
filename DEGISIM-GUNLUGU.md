@@ -4,6 +4,14 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-07 (07:30) · K-61 depoda (`01e5e29`), tam mutasyon 290 hepsi öldü; bulgu 23 ölçüldü — fazla mesai 6/6 koşuda 0, DENGELI sert kesime göre +%0,8 (kapandı), KAPSAMA +%5,2 (yakınsama kaybı; hibrit ölçülecek); Mustafa: K-30 ilk satırı ağırlıkların sonucu (soru kapandı), K-63 (mola adımı yetişmezse 2. aşamanın planı notla döner + müşteriye süre aralığı), K-64 (eşitlikte fazla mesaisiz), K-62 kadro 20 satışçı**
+Mustafa'nın makinesi: 587 + 39 test, DENETIM 0 hata, commit + push, tam
+mutasyon koşusu 290 hepsi öldü, atlanan 0 (damga 05:42). Bulgu 23 (500 kişi,
+900 sn, üçer): DENGELI 26.634–26.705 ↔ sert kesim 26.407–26.494; KAPSAMA
+14.132–15.028 ↔ 13.834–13.914, yayılım %0,6 → %6,3; iyileştirme KAPSAMA'da
+bütçe sonunda hâlâ iyileşiyor, sınıra %5,7. Kod değişmedi. K-63, K-64 ⏳.
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-60 bulgu 23 ölçüm) · `00-DEVIR/08-URUN-KARARLARI.md` (K-30, K-61 durum, K-62, K-63, K-64) · `00-DEVIR/00-BURADAN-BASLA.md` (⚠ 07:30) · `00-DEVIR/oturumlar/2026-10-06-uc-profil-ve-fazla-mesai-artigi.md` §17 · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-fmonce-900.json`
+
 **2026-10-07 (05:00) · Kredi kesintisi (03:05): O-18 düzeltmesi oturum kaydından yeniden uygulandı ve yeniden doğrulandı; eşdeğer mutant düzeltildi; iki bağımsız inceleme yeniden koştu — mola adımına giden ipucu testi, ipucu koruması, "~700 sn" düzeltmesi (31 test / 290 mutasyon / 587); bulgu 24 (mola adımı yetişmezse elde plan varken "süre yetmedi")**
 03:05'te kredi bitti; 02:35–03:05 düzeltmesi yalnız bulut alanındaydı ve
 silindi. Oturum kaydındaki 20 düzenleme adımı Mustafa'nın makinesindeki 00:45
