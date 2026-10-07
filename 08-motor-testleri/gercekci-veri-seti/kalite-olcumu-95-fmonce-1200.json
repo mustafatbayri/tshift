@@ -1,0 +1,12514 @@
+{
+ "olcek": 1.0,
+ "doluluk": 0.95,
+ "saniye": 1200,
+ "tekrar": 3,
+ "kisi": 500,
+ "hucre": 415,
+ "kural": 46,
+ "yapilandirmalar": [
+  "fm_once_kapsama",
+  "fm_once"
+ ],
+ "tarih": "2026-10-07 08:14",
+ "cekirdek": 6,
+ "kosular": [
+  {
+   "yapilandirma": "fm_once_kapsama",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {
+    "profil": "KAPSAMA"
+   },
+   "kurma_sn": 50.2,
+   "toplam_sn": 1013.0,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 101,
+   "amac_degeri": 14041,
+   "alt_sinir": null,
+   "ilk_asama_sn": 972.15,
+   "ana_asama_butce_sn": 227.85,
+   "ilk_cozum_sn": 22.33,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 5464,
+     "deger": 2732,
+     "degisken": 9196,
+     "pay_yuzde": 38.9
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 4748,
+     "deger": 4748,
+     "degisken": 415,
+     "pay_yuzde": 33.8
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 2200,
+     "deger": 110,
+     "degisken": 415,
+     "pay_yuzde": 15.7
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1629,
+     "deger": 181,
+     "degisken": 415,
+     "pay_yuzde": 11.6
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 359,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 30880.0,
+    "son_amac": 14041.0,
+    "cozum": 101,
+    "son_iyilesme_sn": 39.34,
+    "alt_sinir_son": 14041.0,
+    "egri": [
+     [
+      22.33,
+      30880.0,
+      13474.0
+     ],
+     [
+      23.0,
+      26596.0,
+      13474.0
+     ],
+     [
+      23.15,
+      25786.0,
+      14041.0
+     ],
+     [
+      23.58,
+      23275.0,
+      14041.0
+     ],
+     [
+      24.28,
+      23077.0,
+      14041.0
+     ],
+     [
+      24.44,
+      22636.0,
+      14041.0
+     ],
+     [
+      24.72,
+      22546.0,
+      14041.0
+     ],
+     [
+      24.88,
+      21754.0,
+      14041.0
+     ],
+     [
+      25.17,
+      21034.0,
+      14041.0
+     ],
+     [
+      25.56,
+      20944.0,
+      14041.0
+     ],
+     [
+      25.92,
+      20233.0,
+      14041.0
+     ],
+     [
+      26.28,
+      19873.0,
+      14041.0
+     ],
+     [
+      26.46,
+      19801.0,
+      14041.0
+     ],
+     [
+      26.71,
+      19738.0,
+      14041.0
+     ],
+     [
+      27.38,
+      19603.0,
+      14041.0
+     ],
+     [
+      27.85,
+      19207.0,
+      14041.0
+     ],
+     [
+      28.51,
+      18784.0,
+      14041.0
+     ],
+     [
+      28.87,
+      18730.0,
+      14041.0
+     ],
+     [
+      29.13,
+      18370.0,
+      14041.0
+     ],
+     [
+      29.24,
+      18235.0,
+      14041.0
+     ],
+     [
+      29.67,
+      16606.0,
+      14041.0
+     ],
+     [
+      30.23,
+      16453.0,
+      14041.0
+     ],
+     [
+      30.61,
+      16345.0,
+      14041.0
+     ],
+     [
+      31.18,
+      16228.0,
+      14041.0
+     ],
+     [
+      31.26,
+      16210.0,
+      14041.0
+     ],
+     [
+      31.79,
+      16075.0,
+      14041.0
+     ],
+     [
+      32.14,
+      16039.0,
+      14041.0
+     ],
+     [
+      32.75,
+      15940.0,
+      14041.0
+     ],
+     [
+      32.96,
+      15904.0,
+      14041.0
+     ],
+     [
+      33.43,
+      15814.0,
+      14041.0
+     ],
+     [
+      33.77,
+      15796.0,
+      14041.0
+     ],
+     [
+      33.99,
+      15742.0,
+      14041.0
+     ],
+     [
+      34.22,
+      15670.0,
+      14041.0
+     ],
+     [
+      34.66,
+      14797.0,
+      14041.0
+     ],
+     [
+      34.91,
+      14770.0,
+      14041.0
+     ],
+     [
+      35.23,
+      14743.0,
+      14041.0
+     ],
+     [
+      35.45,
+      14248.0,
+      14041.0
+     ],
+     [
+      36.66,
+      14149.0,
+      14041.0
+     ],
+     [
+      37.04,
+      14104.0,
+      14041.0
+     ],
+     [
+      38.35,
+      14059.0,
+      14041.0
+     ],
+     [
+      39.34,
+      14041.0,
+      14041.0
+     ]
+    ],
+    "yuzde50_sn": 24.88,
+    "yuzde90_sn": 34.2,
+    "yuzde99_sn": 36.01
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 960.42,
+    "ipucusuz": false,
+    "amacsiz_amac": 172933,
+    "iyilesmis_amac": 33562,
+    "plan_bulundu": true,
+    "cozum_sayisi": 899,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 134548.0,
+     "son_amac": 33562.0,
+     "cozum": 899,
+     "son_iyilesme_sn": 933.04,
+     "alt_sinir_son": 32426.0,
+     "egri": [
+      [
+       7.92,
+       134548.0,
+       15767.0
+      ],
+      [
+       13.95,
+       74757.0,
+       32316.0
+      ],
+      [
+       17.56,
+       63498.0,
+       32316.0
+      ],
+      [
+       20.93,
+       57107.0,
+       32316.0
+      ],
+      [
+       24.64,
+       52003.0,
+       32316.0
+      ],
+      [
+       28.09,
+       48928.0,
+       32316.0
+      ],
+      [
+       32.55,
+       47162.0,
+       32316.0
+      ],
+      [
+       36.73,
+       45530.0,
+       32316.0
+      ],
+      [
+       41.51,
+       43236.0,
+       32316.0
+      ],
+      [
+       46.94,
+       42140.0,
+       32316.0
+      ],
+      [
+       53.07,
+       40921.0,
+       32316.0
+      ],
+      [
+       58.91,
+       39896.0,
+       32316.0
+      ],
+      [
+       65.59,
+       39071.0,
+       32316.0
+      ],
+      [
+       72.99,
+       38286.0,
+       32356.0
+      ],
+      [
+       79.3,
+       37320.0,
+       32361.0
+      ],
+      [
+       90.93,
+       36728.0,
+       32374.0
+      ],
+      [
+       98.9,
+       36267.0,
+       32379.0
+      ],
+      [
+       108.07,
+       35448.0,
+       32379.0
+      ],
+      [
+       121.07,
+       35063.0,
+       32379.0
+      ],
+      [
+       144.81,
+       34835.0,
+       32379.0
+      ],
+      [
+       172.93,
+       34569.0,
+       32379.0
+      ],
+      [
+       207.59,
+       34296.0,
+       32379.0
+      ],
+      [
+       325.94,
+       33990.0,
+       32407.0
+      ],
+      [
+       563.37,
+       33754.0,
+       32408.0
+      ],
+      [
+       933.04,
+       33562.0,
+       32426.0
+      ]
+     ],
+     "yuzde50_sn": 12.93,
+     "yuzde90_sn": 41.2,
+     "yuzde99_sn": 172.83
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 21150,
+      "deger": 2350,
+      "degisken": 415,
+      "pay_yuzde": 63.0
+     },
+     "ADALET_DENGESI": {
+      "ceza": 5464,
+      "deger": 2732,
+      "degisken": 9196,
+      "pay_yuzde": 16.3
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 4748,
+      "deger": 4748,
+      "degisken": 415,
+      "pay_yuzde": 14.1
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 2200,
+      "deger": 110,
+      "degisken": 415,
+      "pay_yuzde": 6.6
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 359,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 14041,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 359,
+    "saniye": 8.59,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 93.49,
+    "eksik_hedef_dakika": 6600,
+    "toplam_saat": 18886.5,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 39.93
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 27,
+    "ADALET_DENGESI": 92,
+    "MOLA_KAPSAMASI": 37,
+    "HEDEF_ASIMI": 170
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 41,
+      "asim_kisi_saat": 845,
+      "eksik_hucre": 12,
+      "asim_hucre": 43
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 69,
+      "asim_kisi_saat": 542,
+      "eksik_hucre": 15,
+      "asim_hucre": 44
+     },
+     "SATIS": {
+      "eksik_kisi_saat": 0,
+      "asim_kisi_saat": 3361,
+      "eksik_hucre": 0,
+      "asim_hucre": 83
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 110,
+     "asim_kisi_saat": 4748,
+     "eksik_hucre": 27,
+     "asim_hucre": 170
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      8,
+      74,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      80,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      8,
+      69,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      85,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      94,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      73,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      73,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      44,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      20,
+      23,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      21,
+      23,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      22,
+      23,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      23,
+      23,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      8,
+      77,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      77,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      39,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      8,
+      81,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      73,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      35,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      8,
+      77,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      9,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      10,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      11,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      76,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      74,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      74,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      39,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      35,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      45,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      13,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      14,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      15,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      51,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      19,
+      29,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      35,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      45,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      13,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      14,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      15,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      51,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      19,
+      29,
+      22
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      50,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      50,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      52,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      52,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      20,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      14,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      15,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      16,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      25,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      21,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      10,
+      122,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      167,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      179,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      116,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      10,
+      116,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      161,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      173,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      114,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      88,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      10,
+      114,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      159,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      171,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      114,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      88,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      10,
+      114,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      159,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      171,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      112,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      86,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      10,
+      112,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      157,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      157,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      157,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      195,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      195,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      169,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      57,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      77,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      47,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      67,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      71,
+      51
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 93.49,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 3.481659405224491e-13,
+    "sozlesme_ustu_ucret_saat": 1362.25,
+    "toplam_saat": 18886.5
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 1,
+   "fazla_mesai_uyumu": "ayni"
+  },
+  {
+   "yapilandirma": "fm_once_kapsama",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {
+    "profil": "KAPSAMA"
+   },
+   "kurma_sn": 51.1,
+   "toplam_sn": 1013.5,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 111,
+   "amac_degeri": 13773,
+   "alt_sinir": null,
+   "ilk_asama_sn": 972.49,
+   "ana_asama_butce_sn": 227.51,
+   "ilk_cozum_sn": 22.44,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 5466,
+     "deger": 2733,
+     "degisken": 9196,
+     "pay_yuzde": 39.7
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 4752,
+     "deger": 4752,
+     "degisken": 415,
+     "pay_yuzde": 34.5
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 1980,
+     "deger": 99,
+     "degisken": 415,
+     "pay_yuzde": 14.4
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1575,
+     "deger": 175,
+     "degisken": 415,
+     "pay_yuzde": 11.4
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 359,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 30800.999999999996,
+    "son_amac": 13773.0,
+    "cozum": 111,
+    "son_iyilesme_sn": 39.83,
+    "alt_sinir_son": 13773.0,
+    "egri": [
+     [
+      22.44,
+      30800.999999999996,
+      13260.0
+     ],
+     [
+      23.22,
+      26165.999999999996,
+      13260.0
+     ],
+     [
+      23.88,
+      25364.999999999996,
+      13773.0
+     ],
+     [
+      24.04,
+      22997.999999999996,
+      13773.0
+     ],
+     [
+      24.76,
+      22790.999999999996,
+      13773.0
+     ],
+     [
+      24.87,
+      22214.999999999996,
+      13773.0
+     ],
+     [
+      25.19,
+      22115.999999999996,
+      13773.0
+     ],
+     [
+      25.58,
+      21989.999999999996,
+      13773.0
+     ],
+     [
+      25.92,
+      21710.999999999996,
+      13773.0
+     ],
+     [
+      26.06,
+      21692.999999999996,
+      13773.0
+     ],
+     [
+      26.17,
+      21539.999999999996,
+      13773.0
+     ],
+     [
+      26.72,
+      20747.999999999996,
+      13773.0
+     ],
+     [
+      27.44,
+      17004.0,
+      13773.0
+     ],
+     [
+      27.61,
+      16896.0,
+      13773.0
+     ],
+     [
+      27.99,
+      16761.0,
+      13773.0
+     ],
+     [
+      28.29,
+      16599.0,
+      13773.0
+     ],
+     [
+      28.58,
+      16239.0,
+      13773.0
+     ],
+     [
+      28.83,
+      15600.0,
+      13773.0
+     ],
+     [
+      29.18,
+      15474.0,
+      13773.0
+     ],
+     [
+      29.33,
+      15438.0,
+      13773.0
+     ],
+     [
+      29.93,
+      15384.0,
+      13773.0
+     ],
+     [
+      30.52,
+      14889.0,
+      13773.0
+     ],
+     [
+      30.81,
+      14835.0,
+      13773.0
+     ],
+     [
+      31.02,
+      14799.0,
+      13773.0
+     ],
+     [
+      31.24,
+      14727.0,
+      13773.0
+     ],
+     [
+      31.52,
+      14610.0,
+      13773.0
+     ],
+     [
+      31.88,
+      14412.0,
+      13773.0
+     ],
+     [
+      32.28,
+      14376.0,
+      13773.0
+     ],
+     [
+      32.69,
+      14331.0,
+      13773.0
+     ],
+     [
+      33.1,
+      14304.0,
+      13773.0
+     ],
+     [
+      33.46,
+      14241.0,
+      13773.0
+     ],
+     [
+      33.84,
+      14187.0,
+      13773.0
+     ],
+     [
+      34.33,
+      14124.0,
+      13773.0
+     ],
+     [
+      34.83,
+      14097.0,
+      13773.0
+     ],
+     [
+      35.81,
+      14034.0,
+      13773.0
+     ],
+     [
+      36.39,
+      13980.0,
+      13773.0
+     ],
+     [
+      36.83,
+      13953.0,
+      13773.0
+     ],
+     [
+      37.97,
+      13926.0,
+      13773.0
+     ],
+     [
+      38.16,
+      13818.0,
+      13773.0
+     ],
+     [
+      39.29,
+      13791.0,
+      13773.0
+     ],
+     [
+      39.83,
+      13773.0,
+      13773.0
+     ]
+    ],
+    "yuzde50_sn": 24.83,
+    "yuzde90_sn": 29.18,
+    "yuzde99_sn": 37.52
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 960.41,
+    "ipucusuz": false,
+    "amacsiz_amac": 174257,
+    "iyilesmis_amac": 33339,
+    "plan_bulundu": true,
+    "cozum_sayisi": 903,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 135872.0,
+     "son_amac": 33339.0,
+     "cozum": 903,
+     "son_iyilesme_sn": 912.9,
+     "alt_sinir_son": 32426.0,
+     "egri": [
+      [
+       8.02,
+       135872.0,
+       15767.0
+      ],
+      [
+       14.56,
+       74825.0,
+       32317.0
+      ],
+      [
+       17.88,
+       63796.0,
+       32318.0
+      ],
+      [
+       21.54,
+       57287.0,
+       32318.0
+      ],
+      [
+       25.71,
+       50796.0,
+       32318.0
+      ],
+      [
+       29.16,
+       47880.0,
+       32318.0
+      ],
+      [
+       32.39,
+       46205.0,
+       32318.0
+      ],
+      [
+       36.45,
+       44295.0,
+       32318.0
+      ],
+      [
+       40.99,
+       43133.0,
+       32318.0
+      ],
+      [
+       46.04,
+       41274.0,
+       32318.0
+      ],
+      [
+       51.79,
+       40036.0,
+       32318.0
+      ],
+      [
+       57.07,
+       39430.0,
+       32318.0
+      ],
+      [
+       64.04,
+       38425.0,
+       32320.0
+      ],
+      [
+       71.91,
+       37289.0,
+       32321.0
+      ],
+      [
+       78.29,
+       36828.0,
+       32342.0
+      ],
+      [
+       91.25,
+       36287.0,
+       32366.0
+      ],
+      [
+       100.84,
+       35751.0,
+       32374.0
+      ],
+      [
+       118.66,
+       35294.0,
+       32390.0
+      ],
+      [
+       129.56,
+       34749.0,
+       32405.0
+      ],
+      [
+       156.47,
+       34451.0,
+       32406.0
+      ],
+      [
+       193.1,
+       34223.0,
+       32406.0
+      ],
+      [
+       226.48,
+       33964.0,
+       32406.0
+      ],
+      [
+       306.52,
+       33763.0,
+       32406.0
+      ],
+      [
+       484.02,
+       33555.0,
+       32406.0
+      ],
+      [
+       912.9,
+       33339.0,
+       32426.0
+      ]
+     ],
+     "yuzde50_sn": 14.41,
+     "yuzde90_sn": 39.4,
+     "yuzde99_sn": 160.67
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 21141,
+      "deger": 2349,
+      "degisken": 415,
+      "pay_yuzde": 63.4
+     },
+     "ADALET_DENGESI": {
+      "ceza": 5466,
+      "deger": 2733,
+      "degisken": 9196,
+      "pay_yuzde": 16.4
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 4752,
+      "deger": 4752,
+      "degisken": 415,
+      "pay_yuzde": 14.3
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 1980,
+      "deger": 99,
+      "degisken": 415,
+      "pay_yuzde": 5.9
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 359,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 13773,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 359,
+    "saniye": 8.83,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 94.22,
+    "eksik_hedef_dakika": 5940,
+    "toplam_saat": 18901.5,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 40.38
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 24,
+    "ADALET_DENGESI": 88,
+    "MOLA_KAPSAMASI": 30,
+    "HEDEF_ASIMI": 173
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 27,
+      "asim_kisi_saat": 836,
+      "eksik_hucre": 9,
+      "asim_hucre": 46
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 72,
+      "asim_kisi_saat": 544,
+      "eksik_hucre": 15,
+      "asim_hucre": 44
+     },
+     "SATIS": {
+      "eksik_kisi_saat": 0,
+      "asim_kisi_saat": 3372,
+      "eksik_hucre": 0,
+      "asim_hucre": 83
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 99,
+     "asim_kisi_saat": 4752,
+     "eksik_hucre": 24,
+     "asim_hucre": 173
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      8,
+      74,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      80,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      8,
+      73,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      81,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      75,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      75,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      43,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      8,
+      78,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      76,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      96,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      37,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      20,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      21,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      22,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      23,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      8,
+      78,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      77,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      13,
+      72,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      14,
+      72,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      15,
+      72,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      98,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      39,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      8,
+      75,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      79,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      69,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      69,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      41,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      35,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      45,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      13,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      14,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      15,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      51,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      19,
+      29,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      34,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      45,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      13,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      14,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      15,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      50,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      40,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      40,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      19,
+      29,
+      22
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      52,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      52,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      20,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      14,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      15,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      16,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      24,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      35,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      35,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      21,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      10,
+      122,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      167,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      179,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      116,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      10,
+      116,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      161,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      173,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      115,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      89,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      10,
+      115,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      160,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      160,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      160,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      198,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      198,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      172,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      115,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      115,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      114,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      88,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      10,
+      114,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      159,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      159,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      197,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      171,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      112,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      86,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      10,
+      112,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      157,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      157,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      157,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      195,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      195,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      169,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      57,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      77,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      47,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      67,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      71,
+      51
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 94.22,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 3.197442310920451e-13,
+    "sozlesme_ustu_ucret_saat": 1374.75,
+    "toplam_saat": 18901.5
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 2,
+   "fazla_mesai_uyumu": "ayni"
+  },
+  {
+   "yapilandirma": "fm_once_kapsama",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {
+    "profil": "KAPSAMA"
+   },
+   "kurma_sn": 51.4,
+   "toplam_sn": 1013.0,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 96,
+   "amac_degeri": 14418,
+   "alt_sinir": null,
+   "ilk_asama_sn": 972.78,
+   "ana_asama_butce_sn": 227.22,
+   "ilk_cozum_sn": 22.58,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 5444,
+     "deger": 2722,
+     "degisken": 9196,
+     "pay_yuzde": 37.8
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 4774,
+     "deger": 4774,
+     "degisken": 415,
+     "pay_yuzde": 33.1
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 2580,
+     "deger": 129,
+     "degisken": 415,
+     "pay_yuzde": 17.9
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1620,
+     "deger": 180,
+     "degisken": 415,
+     "pay_yuzde": 11.2
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 359,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 30960.0,
+    "son_amac": 14418.0,
+    "cozum": 96,
+    "son_iyilesme_sn": 38.93,
+    "alt_sinir_son": 14418.0,
+    "egri": [
+     [
+      22.58,
+      30960.0,
+      13860.0
+     ],
+     [
+      23.25,
+      26604.0,
+      13860.0
+     ],
+     [
+      23.89,
+      24147.0,
+      14418.0
+     ],
+     [
+      24.28,
+      23841.0,
+      14418.0
+     ],
+     [
+      24.69,
+      23445.0,
+      14418.0
+     ],
+     [
+      25.01,
+      23094.0,
+      14418.0
+     ],
+     [
+      25.07,
+      23004.0,
+      14418.0
+     ],
+     [
+      25.22,
+      22428.0,
+      14418.0
+     ],
+     [
+      25.51,
+      21348.0,
+      14418.0
+     ],
+     [
+      26.11,
+      19638.0,
+      14418.0
+     ],
+     [
+      26.41,
+      19260.0,
+      14418.0
+     ],
+     [
+      26.5,
+      19242.0,
+      14418.0
+     ],
+     [
+      27.21,
+      18999.0,
+      14418.0
+     ],
+     [
+      27.51,
+      18792.0,
+      14418.0
+     ],
+     [
+      27.67,
+      18414.0,
+      14418.0
+     ],
+     [
+      27.99,
+      18180.0,
+      14418.0
+     ],
+     [
+      28.4,
+      18144.0,
+      14418.0
+     ],
+     [
+      28.58,
+      18117.0,
+      14418.0
+     ],
+     [
+      29.06,
+      17973.0,
+      14418.0
+     ],
+     [
+      29.51,
+      17181.0,
+      14418.0
+     ],
+     [
+      29.85,
+      17055.0,
+      14418.0
+     ],
+     [
+      30.18,
+      17037.0,
+      14418.0
+     ],
+     [
+      30.29,
+      16965.0,
+      14418.0
+     ],
+     [
+      30.64,
+      16866.0,
+      14418.0
+     ],
+     [
+      30.93,
+      16497.0,
+      14418.0
+     ],
+     [
+      31.76,
+      16056.0,
+      14418.0
+     ],
+     [
+      31.98,
+      16029.0,
+      14418.0
+     ],
+     [
+      32.25,
+      15966.0,
+      14418.0
+     ],
+     [
+      32.62,
+      15750.0,
+      14418.0
+     ],
+     [
+      33.09,
+      15714.0,
+      14418.0
+     ],
+     [
+      33.67,
+      15606.0,
+      14418.0
+     ],
+     [
+      34.04,
+      15336.0,
+      14418.0
+     ],
+     [
+      34.71,
+      15318.0,
+      14418.0
+     ],
+     [
+      35.03,
+      15264.0,
+      14418.0
+     ],
+     [
+      35.11,
+      15237.0,
+      14418.0
+     ],
+     [
+      35.71,
+      14931.0,
+      14418.0
+     ],
+     [
+      36.14,
+      14904.0,
+      14418.0
+     ],
+     [
+      36.33,
+      14562.0,
+      14418.0
+     ],
+     [
+      37.36,
+      14472.0,
+      14418.0
+     ],
+     [
+      37.42,
+      14445.0,
+      14418.0
+     ],
+     [
+      38.93,
+      14418.0,
+      14418.0
+     ]
+    ],
+    "yuzde50_sn": 25.19,
+    "yuzde90_sn": 31.76,
+    "yuzde99_sn": 36.3
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 960.7,
+    "ipucusuz": false,
+    "amacsiz_amac": 160582,
+    "iyilesmis_amac": 33786,
+    "plan_bulundu": true,
+    "cozum_sayisi": 999,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 122197.0,
+     "son_amac": 33786.0,
+     "cozum": 999,
+     "son_iyilesme_sn": 945.24,
+     "alt_sinir_son": 32424.0,
+     "egri": [
+      [
+       7.91,
+       122197.0,
+       15767.0
+      ],
+      [
+       14.07,
+       68725.0,
+       32317.0
+      ],
+      [
+       17.98,
+       60456.0,
+       32318.0
+      ],
+      [
+       21.74,
+       55247.0,
+       32318.0
+      ],
+      [
+       27.1,
+       51653.0,
+       32318.0
+      ],
+      [
+       31.75,
+       48747.0,
+       32318.0
+      ],
+      [
+       36.78,
+       46386.0,
+       32318.0
+      ],
+      [
+       42.11,
+       44768.0,
+       32318.0
+      ],
+      [
+       49.21,
+       43880.0,
+       32318.0
+      ],
+      [
+       56.54,
+       42814.0,
+       32318.0
+      ],
+      [
+       64.77,
+       42096.0,
+       32318.0
+      ],
+      [
+       74.5,
+       40966.0,
+       32335.0
+      ],
+      [
+       82.32,
+       40213.0,
+       32350.0
+      ],
+      [
+       95.66,
+       39181.0,
+       32361.0
+      ],
+      [
+       115.02,
+       38484.0,
+       32377.0
+      ],
+      [
+       128.62,
+       37435.0,
+       32408.0
+      ],
+      [
+       147.71,
+       36883.0,
+       32408.0
+      ],
+      [
+       165.1,
+       36199.0,
+       32408.0
+      ],
+      [
+       192.89,
+       35777.0,
+       32408.0
+      ],
+      [
+       227.13,
+       35342.0,
+       32408.0
+      ],
+      [
+       257.03,
+       34969.0,
+       32408.0
+      ],
+      [
+       353.95,
+       34527.0,
+       32410.0
+      ],
+      [
+       496.63,
+       34244.0,
+       32412.0
+      ],
+      [
+       679.54,
+       34033.0,
+       32414.0
+      ],
+      [
+       945.24,
+       33786.0,
+       32424.0
+      ]
+     ],
+     "yuzde50_sn": 9.11,
+     "yuzde90_sn": 60.56,
+     "yuzde99_sn": 301.54
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 20988,
+      "deger": 2332,
+      "degisken": 415,
+      "pay_yuzde": 62.1
+     },
+     "ADALET_DENGESI": {
+      "ceza": 5444,
+      "deger": 2722,
+      "degisken": 9196,
+      "pay_yuzde": 16.1
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 4774,
+      "deger": 4774,
+      "degisken": 415,
+      "pay_yuzde": 14.1
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 2580,
+      "deger": 129,
+      "degisken": 415,
+      "pay_yuzde": 7.6
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 359,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 14418,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 359,
+    "saniye": 8.87,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 92.29,
+    "eksik_hedef_dakika": 7740,
+    "toplam_saat": 18894.0,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 39.59
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 32,
+    "ADALET_DENGESI": 89,
+    "MOLA_KAPSAMASI": 31,
+    "HEDEF_ASIMI": 170
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 55,
+      "asim_kisi_saat": 850,
+      "eksik_hucre": 17,
+      "asim_hucre": 43
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 74,
+      "asim_kisi_saat": 523,
+      "eksik_hucre": 15,
+      "asim_hucre": 44
+     },
+     "SATIS": {
+      "eksik_kisi_saat": 0,
+      "asim_kisi_saat": 3401,
+      "eksik_hucre": 0,
+      "asim_hucre": 83
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 129,
+     "asim_kisi_saat": 4774,
+     "eksik_hucre": 32,
+     "asim_hucre": 170
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      8,
+      74,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      80,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      77,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      8,
+      72,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      82,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      95,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      75,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      75,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      20,
+      24,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      21,
+      24,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      22,
+      24,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      23,
+      24,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      8,
+      76,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      78,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      93,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      71,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      71,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      36,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      20,
+      22,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      21,
+      22,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      22,
+      22,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      23,
+      22,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      8,
+      76,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      78,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      96,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      72,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      72,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      39,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      20,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      21,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      22,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      23,
+      25,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      8,
+      77,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      77,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      97,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      74,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      74,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      39,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      35,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      45,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      13,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      14,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      15,
+      38,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      51,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      41,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      19,
+      29,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      35,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      44,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      13,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      14,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      15,
+      37,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      50,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      40,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      40,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      19,
+      28,
+      22
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      58,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      52,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      52,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      20,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      33,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      33,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      33,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      33,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      14,
+      33,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      15,
+      33,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      16,
+      33,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      24,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      34,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      34,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      34,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      34,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      34,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      34,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      34,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      21,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      96,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      10,
+      122,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      167,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      167,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      205,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      179,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      121,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      7,
+      83,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      118,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      92,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      10,
+      118,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      163,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      163,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      163,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      201,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      201,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      175,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      118,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      118,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      7,
+      75,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      111,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      85,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      10,
+      111,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      156,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      156,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      156,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      194,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      194,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      168,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      119,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      119,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      7,
+      79,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      116,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      10,
+      116,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      161,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      161,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      199,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      173,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      120,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      120,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      7,
+      77,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      113,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      87,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      10,
+      113,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      158,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      158,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      158,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      196,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      196,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      170,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      119,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      119,
+      83
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      57,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      77,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      47,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      67,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      51,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      10,
+      71,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      96,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      96,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      122,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      102,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      71,
+      51
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 92.29,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 3.268496584496461e-13,
+    "sozlesme_ustu_ucret_saat": 1348.0,
+    "toplam_saat": 18894.0
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 3,
+   "fazla_mesai_uyumu": "ayni"
+  },
+  {
+   "yapilandirma": "fm_once",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 51.1,
+   "toplam_sn": 1019.6,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 103,
+   "amac_degeri": 26602,
+   "alt_sinir": null,
+   "ilk_asama_sn": 975.97,
+   "ana_asama_butce_sn": 224.03,
+   "ilk_cozum_sn": 21.95,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 12365,
+     "deger": 2473,
+     "degisken": 9196,
+     "pay_yuzde": 46.5
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 9615,
+     "deger": 3205,
+     "degisken": 415,
+     "pay_yuzde": 36.1
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 3285,
+     "deger": 365,
+     "degisken": 415,
+     "pay_yuzde": 12.3
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1337,
+     "deger": 191,
+     "degisken": 415,
+     "pay_yuzde": 5.0
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 359,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 40623.0,
+    "son_amac": 26602.0,
+    "cozum": 103,
+    "son_iyilesme_sn": 42.1,
+    "alt_sinir_son": 26602.0,
+    "egri": [
+     [
+      21.95,
+      40623.0,
+      21002.0
+     ],
+     [
+      22.76,
+      36584.0,
+      21002.0
+     ],
+     [
+      23.29,
+      34064.0,
+      26602.0
+     ],
+     [
+      23.66,
+      34008.0,
+      26602.0
+     ],
+     [
+      24.21,
+      33777.0,
+      26602.0
+     ],
+     [
+      24.4,
+      33721.0,
+      26602.0
+     ],
+     [
+      25.06,
+      33630.0,
+      26602.0
+     ],
+     [
+      25.47,
+      32579.999999999996,
+      26602.0
+     ],
+     [
+      25.86,
+      32544.999999999996,
+      26602.0
+     ],
+     [
+      26.32,
+      31578.999999999996,
+      26602.0
+     ],
+     [
+      26.42,
+      31116.999999999996,
+      26602.0
+     ],
+     [
+      27.19,
+      30997.999999999996,
+      26602.0
+     ],
+     [
+      27.38,
+      30962.999999999996,
+      26602.0
+     ],
+     [
+      27.91,
+      30332.999999999996,
+      26602.0
+     ],
+     [
+      28.45,
+      30185.999999999996,
+      26602.0
+     ],
+     [
+      28.52,
+      30129.999999999996,
+      26602.0
+     ],
+     [
+      28.97,
+      30066.999999999996,
+      26602.0
+     ],
+     [
+      29.15,
+      28142.0,
+      26602.0
+     ],
+     [
+      29.48,
+      28016.0,
+      26602.0
+     ],
+     [
+      29.84,
+      27981.0,
+      26602.0
+     ],
+     [
+      30.23,
+      27939.0,
+      26602.0
+     ],
+     [
+      30.7,
+      27813.0,
+      26602.0
+     ],
+     [
+      31.35,
+      27792.0,
+      26602.0
+     ],
+     [
+      31.43,
+      27743.0,
+      26602.0
+     ],
+     [
+      31.72,
+      27701.0,
+      26602.0
+     ],
+     [
+      32.4,
+      27456.0,
+      26602.0
+     ],
+     [
+      32.58,
+      27442.0,
+      26602.0
+     ],
+     [
+      33.09,
+      27386.0,
+      26602.0
+     ],
+     [
+      33.59,
+      27351.0,
+      26602.0
+     ],
+     [
+      34.31,
+      27316.0,
+      26602.0
+     ],
+     [
+      34.61,
+      27260.0,
+      26602.0
+     ],
+     [
+      34.83,
+      27246.0,
+      26602.0
+     ],
+     [
+      35.4,
+      27218.0,
+      26602.0
+     ],
+     [
+      35.84,
+      27204.0,
+      26602.0
+     ],
+     [
+      36.42,
+      26847.0,
+      26602.0
+     ],
+     [
+      37.16,
+      26749.0,
+      26602.0
+     ],
+     [
+      37.55,
+      26728.0,
+      26602.0
+     ],
+     [
+      38.79,
+      26700.0,
+      26602.0
+     ],
+     [
+      39.98,
+      26637.0,
+      26602.0
+     ],
+     [
+      41.35,
+      26616.0,
+      26602.0
+     ],
+     [
+      42.1,
+      26602.0,
+      26602.0
+     ]
+    ],
+    "yuzde50_sn": 25.42,
+    "yuzde90_sn": 29.63,
+    "yuzde99_sn": 37.2
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 960.55,
+    "ipucusuz": false,
+    "amacsiz_amac": 141378,
+    "iyilesmis_amac": 42310,
+    "plan_bulundu": true,
+    "cozum_sayisi": 666,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 111523.0,
+     "son_amac": 42310.0,
+     "cozum": 666,
+     "son_iyilesme_sn": 909.28,
+     "alt_sinir_son": 41704.0,
+     "egri": [
+      [
+       8.29,
+       111523.0,
+       17204.0
+      ],
+      [
+       13.37,
+       72436.0,
+       41430.0
+      ],
+      [
+       17.01,
+       60239.0,
+       41430.0
+      ],
+      [
+       19.95,
+       54714.0,
+       41430.0
+      ],
+      [
+       22.52,
+       53150.0,
+       41430.0
+      ],
+      [
+       25.12,
+       52163.0,
+       41430.0
+      ],
+      [
+       27.74,
+       51641.0,
+       41430.0
+      ],
+      [
+       30.88,
+       50501.0,
+       41430.0
+      ],
+      [
+       34.94,
+       49841.0,
+       41430.0
+      ],
+      [
+       39.33,
+       48642.0,
+       41432.0
+      ],
+      [
+       42.49,
+       47675.0,
+       41433.0
+      ],
+      [
+       47.57,
+       46921.0,
+       41433.0
+      ],
+      [
+       52.51,
+       46337.0,
+       41433.0
+      ],
+      [
+       58.87,
+       45915.0,
+       41433.0
+      ],
+      [
+       64.49,
+       45618.0,
+       41433.0
+      ],
+      [
+       71.41,
+       45081.0,
+       41433.0
+      ],
+      [
+       78.82,
+       44424.0,
+       41433.0
+      ],
+      [
+       90.63,
+       43952.0,
+       41433.0
+      ],
+      [
+       111.68,
+       43456.0,
+       41433.0
+      ],
+      [
+       145.59,
+       43200.0,
+       41434.0
+      ],
+      [
+       215.88,
+       42978.0,
+       41556.0
+      ],
+      [
+       290.24,
+       42815.0,
+       41607.0
+      ],
+      [
+       408.23,
+       42657.0,
+       41635.0
+      ],
+      [
+       543.4,
+       42431.0,
+       41656.0
+      ],
+      [
+       909.28,
+       42310.0,
+       41704.0
+      ]
+     ],
+     "yuzde50_sn": 11.08,
+     "yuzde90_sn": 37.65,
+     "yuzde99_sn": 215.88
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 17045,
+      "deger": 2435,
+      "degisken": 415,
+      "pay_yuzde": 40.3
+     },
+     "ADALET_DENGESI": {
+      "ceza": 12365,
+      "deger": 2473,
+      "degisken": 9196,
+      "pay_yuzde": 29.2
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 9615,
+      "deger": 3205,
+      "degisken": 415,
+      "pay_yuzde": 22.7
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 3285,
+      "deger": 365,
+      "degisken": 415,
+      "pay_yuzde": 7.8
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 359,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 26602,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 359,
+    "saniye": 12.24,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 85.78,
+    "eksik_hedef_dakika": 21900,
+    "toplam_saat": 17566.5,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 43.04
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 59,
+    "ADALET_DENGESI": 82,
+    "MOLA_KAPSAMASI": 42,
+    "HEDEF_ASIMI": 156
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "SATIS": {
+      "eksik_kisi_saat": 18,
+      "asim_kisi_saat": 2126,
+      "eksik_hucre": 2,
+      "asim_hucre": 81
+     },
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 269,
+      "asim_kisi_saat": 632,
+      "eksik_hucre": 42,
+      "asim_hucre": 31
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 78,
+      "asim_kisi_saat": 447,
+      "eksik_hucre": 15,
+      "asim_hucre": 44
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 365,
+     "asim_kisi_saat": 3205,
+     "eksik_hucre": 59,
+     "asim_hucre": 156
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      90,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      90,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      9,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      10,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      11,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      86,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      9,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      10,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      11,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      86,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      9,
+      62,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      10,
+      62,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      11,
+      62,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      88,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      32,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      42,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      19,
+      23,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      23,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      33,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      41,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      23,
+      10,
+      13
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      27,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      27,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      27,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      27,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      14,
+      27,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      15,
+      27,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      16,
+      27,
+      26
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      19,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      19,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      78,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      78,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      148,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      161,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      103,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      103,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      7,
+      66,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      93,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      67,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      147,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      150,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      21,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      1,
+      22,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      2,
+      7,
+      63,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      89,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      63,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      148,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      146,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      109,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      109,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      85,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      59,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      147,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      21,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      3,
+      22,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      85,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      59,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      147,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      147,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      21,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      22,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      46,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      56,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      30,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      10,
+      55,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      80,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      80,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      80,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      106,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      106,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      81,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      61,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      61,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      37,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      47,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      31,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      10,
+      55,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      80,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      80,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      80,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      106,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      106,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      82,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      61,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      61,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      23,
+      43,
+      16
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 85.78,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 3.907985046680551e-13,
+    "sozlesme_ustu_ucret_saat": 1275.5,
+    "toplam_saat": 17566.5
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 1,
+   "fazla_mesai_uyumu": "ayni"
+  },
+  {
+   "yapilandirma": "fm_once",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 51.6,
+   "toplam_sn": 1029.2,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 85,
+   "amac_degeri": 26823,
+   "alt_sinir": null,
+   "ilk_asama_sn": 985.13,
+   "ana_asama_butce_sn": 214.87,
+   "ilk_cozum_sn": 23.57,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 12535,
+     "deger": 2507,
+     "degisken": 9196,
+     "pay_yuzde": 46.7
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 9888,
+     "deger": 3296,
+     "degisken": 415,
+     "pay_yuzde": 36.9
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 3168,
+     "deger": 352,
+     "degisken": 415,
+     "pay_yuzde": 11.8
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1232,
+     "deger": 176,
+     "degisken": 415,
+     "pay_yuzde": 4.6
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 359,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 41600.0,
+    "son_amac": 26823.0,
+    "cozum": 85,
+    "son_iyilesme_sn": 41.19,
+    "alt_sinir_son": 26816.0,
+    "egri": [
+     [
+      23.57,
+      41600.0,
+      21951.0
+     ],
+     [
+      24.79,
+      38037.0,
+      26816.0
+     ],
+     [
+      25.9,
+      35713.0,
+      26816.0
+     ],
+     [
+      25.98,
+      35692.0,
+      26816.0
+     ],
+     [
+      26.23,
+      35643.0,
+      26816.0
+     ],
+     [
+      26.32,
+      35608.0,
+      26816.0
+     ],
+     [
+      26.38,
+      35552.0,
+      26816.0
+     ],
+     [
+      26.63,
+      35468.0,
+      26816.0
+     ],
+     [
+      27.01,
+      35447.0,
+      26816.0
+     ],
+     [
+      27.49,
+      35335.0,
+      26816.0
+     ],
+     [
+      27.77,
+      35300.0,
+      26816.0
+     ],
+     [
+      28.46,
+      33571.0,
+      26816.0
+     ],
+     [
+      28.92,
+      33501.0,
+      26816.0
+     ],
+     [
+      29.17,
+      33487.0,
+      26816.0
+     ],
+     [
+      29.63,
+      31870.0,
+      26816.0
+     ],
+     [
+      29.77,
+      31331.0,
+      26816.0
+     ],
+     [
+      30.14,
+      31261.0,
+      26816.0
+     ],
+     [
+      30.3,
+      30988.0,
+      26816.0
+     ],
+     [
+      30.74,
+      30911.0,
+      26816.0
+     ],
+     [
+      31.0,
+      30820.0,
+      26816.0
+     ],
+     [
+      31.16,
+      28538.0,
+      26816.0
+     ],
+     [
+      31.42,
+      28496.0,
+      26816.0
+     ],
+     [
+      31.75,
+      28342.0,
+      26816.0
+     ],
+     [
+      31.98,
+      28314.0,
+      26816.0
+     ],
+     [
+      32.53,
+      28202.0,
+      26816.0
+     ],
+     [
+      32.84,
+      28055.0,
+      26816.0
+     ],
+     [
+      33.62,
+      28041.0,
+      26816.0
+     ],
+     [
+      33.9,
+      27446.0,
+      26816.0
+     ],
+     [
+      34.35,
+      27432.0,
+      26816.0
+     ],
+     [
+      34.87,
+      27383.0,
+      26816.0
+     ],
+     [
+      35.26,
+      27348.0,
+      26816.0
+     ],
+     [
+      35.89,
+      27334.0,
+      26816.0
+     ],
+     [
+      36.28,
+      27257.0,
+      26816.0
+     ],
+     [
+      36.47,
+      27229.0,
+      26816.0
+     ],
+     [
+      36.94,
+      26984.0,
+      26816.0
+     ],
+     [
+      37.57,
+      26914.0,
+      26816.0
+     ],
+     [
+      37.9,
+      26900.0,
+      26816.0
+     ],
+     [
+      38.32,
+      26879.0,
+      26816.0
+     ],
+     [
+      39.4,
+      26865.0,
+      26816.0
+     ],
+     [
+      39.99,
+      26837.0,
+      26816.0
+     ],
+     [
+      41.19,
+      26823.0,
+      26816.0
+     ]
+    ],
+    "yuzde50_sn": 28.46,
+    "yuzde90_sn": 32.13,
+    "yuzde99_sn": 37.57
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 960.82,
+    "ipucusuz": false,
+    "amacsiz_amac": 135379,
+    "iyilesmis_amac": 42454,
+    "plan_bulundu": true,
+    "cozum_sayisi": 692,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 105524.0,
+     "son_amac": 42454.0,
+     "cozum": 692,
+     "son_iyilesme_sn": 942.33,
+     "alt_sinir_son": 41650.0,
+     "egri": [
+      [
+       8.86,
+       105524.0,
+       17204.0
+      ],
+      [
+       14.78,
+       62144.0,
+       41404.0
+      ],
+      [
+       17.92,
+       56633.0,
+       41404.0
+      ],
+      [
+       20.76,
+       54412.0,
+       41404.0
+      ],
+      [
+       24.31,
+       52582.0,
+       41404.0
+      ],
+      [
+       27.16,
+       51317.0,
+       41404.0
+      ],
+      [
+       31.34,
+       49779.0,
+       41430.0
+      ],
+      [
+       34.84,
+       48403.0,
+       41432.0
+      ],
+      [
+       39.53,
+       47671.0,
+       41432.0
+      ],
+      [
+       43.42,
+       47036.0,
+       41432.0
+      ],
+      [
+       50.78,
+       46302.0,
+       41434.0
+      ],
+      [
+       57.23,
+       45831.0,
+       41446.0
+      ],
+      [
+       64.45,
+       45339.0,
+       41469.0
+      ],
+      [
+       72.02,
+       44938.0,
+       41490.0
+      ],
+      [
+       80.91,
+       44596.0,
+       41512.0
+      ],
+      [
+       94.76,
+       44296.0,
+       41553.0
+      ],
+      [
+       114.16,
+       44055.0,
+       41563.0
+      ],
+      [
+       132.21,
+       43816.0,
+       41563.0
+      ],
+      [
+       159.3,
+       43611.0,
+       41563.0
+      ],
+      [
+       187.15,
+       43409.0,
+       41563.0
+      ],
+      [
+       212.8,
+       43223.0,
+       41563.0
+      ],
+      [
+       318.03,
+       43044.0,
+       41631.0
+      ],
+      [
+       402.53,
+       42809.0,
+       41647.0
+      ],
+      [
+       617.58,
+       42626.0,
+       41650.0
+      ],
+      [
+       942.33,
+       42454.0,
+       41650.0
+      ]
+     ],
+     "yuzde50_sn": 10.65,
+     "yuzde90_sn": 33.36,
+     "yuzde99_sn": 267.57
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 16863,
+      "deger": 2409,
+      "degisken": 415,
+      "pay_yuzde": 39.7
+     },
+     "ADALET_DENGESI": {
+      "ceza": 12535,
+      "deger": 2507,
+      "degisken": 9196,
+      "pay_yuzde": 29.5
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 9888,
+      "deger": 3296,
+      "degisken": 415,
+      "pay_yuzde": 23.3
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 3168,
+      "deger": 352,
+      "degisken": 415,
+      "pay_yuzde": 7.5
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 359,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 26823,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 359,
+    "saniye": 21.14,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 84.34,
+    "eksik_hedef_dakika": 21120,
+    "toplam_saat": 17651.25,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 42.71
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 65,
+    "ADALET_DENGESI": 85,
+    "MOLA_KAPSAMASI": 41,
+    "HEDEF_ASIMI": 154
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "SATIS": {
+      "eksik_kisi_saat": 10,
+      "asim_kisi_saat": 2217,
+      "eksik_hucre": 8,
+      "asim_hucre": 81
+     },
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 264,
+      "asim_kisi_saat": 632,
+      "eksik_hucre": 42,
+      "asim_hucre": 32
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 78,
+      "asim_kisi_saat": 447,
+      "eksik_hucre": 15,
+      "asim_hucre": 41
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 352,
+     "asim_kisi_saat": 3296,
+     "eksik_hucre": 65,
+     "asim_hucre": 154
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      90,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      90,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      89,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      44,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      20,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      21,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      22,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      23,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      8,
+      65,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      9,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      10,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      11,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      86,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      41,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      8,
+      65,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      9,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      10,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      11,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      85,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      41,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      9,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      10,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      11,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      86,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      33,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      41,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      23,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      33,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      41,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      23,
+      10,
+      13
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      19,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      31,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      31,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      31,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      31,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      31,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      31,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      31,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      19,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      7,
+      57,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      77,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      77,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      148,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      160,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      103,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      103,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      86,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      60,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      146,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      146,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      146,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      110,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      19,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      20,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      21,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      1,
+      22,
+      39,
+      38
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      64,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      146,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      19,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      20,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      21,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      2,
+      22,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      87,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      61,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      145,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      145,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      145,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      144,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      21,
+      41,
+      38
+     ],
+     [
+      "SATIS",
+      3,
+      22,
+      41,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      64,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      146,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      19,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      20,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      21,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      22,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      42,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      61,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      35,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      89,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      89,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      89,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      115,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      115,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      86,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      70,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      70,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      32,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      48,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      32,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      10,
+      61,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      86,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      86,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      86,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      112,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      112,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      83,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      67,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      67,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      23,
+      40,
+      16
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 84.34,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 4.192202140984591e-13,
+    "sozlesme_ustu_ucret_saat": 1286.5,
+    "toplam_saat": 17651.25
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 2,
+   "fazla_mesai_uyumu": "ayni"
+  },
+  {
+   "yapilandirma": "fm_once",
+   "ayar": {
+    "azami_saniye": 1200,
+    "fazla_mesai_once_sifir": true,
+    "fazla_mesai_sifirda_tut": false
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 51.9,
+   "toplam_sn": 1023.6,
+   "durum": "cozuldu",
+   "durma_sebebi": "mola_adimi_optimum",
+   "iki_asama": true,
+   "cozum_sayisi": 94,
+   "amac_degeri": 116976,
+   "alt_sinir": null,
+   "ilk_asama_sn": 979.44,
+   "ana_asama_butce_sn": 220.56,
+   "ilk_cozum_sn": 23.04,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "FAZLA_MESAI": {
+     "ceza": 90000,
+     "deger": 1800,
+     "degisken": 359,
+     "pay_yuzde": 76.9
+    },
+    "ADALET_DENGESI": {
+     "ceza": 12540,
+     "deger": 2508,
+     "degisken": 9196,
+     "pay_yuzde": 10.7
+    },
+    "HEDEF_ASIMI": {
+     "ceza": 9990,
+     "deger": 3330,
+     "degisken": 415,
+     "pay_yuzde": 8.5
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 3249,
+     "deger": 361,
+     "degisken": 415,
+     "pay_yuzde": 2.8
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1197,
+     "deger": 171,
+     "degisken": 415,
+     "pay_yuzde": 1.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 131970.0,
+    "son_amac": 116975.99999999999,
+    "cozum": 94,
+    "son_iyilesme_sn": 42.63,
+    "alt_sinir_son": 116975.99999999999,
+    "egri": [
+     [
+      23.04,
+      131970.0,
+      112894.99999999999
+     ],
+     [
+      24.25,
+      127636.99999999999,
+      116968.99999999999
+     ],
+     [
+      24.31,
+      127468.99999999999,
+      116968.99999999999
+     ],
+     [
+      24.9,
+      125158.99999999999,
+      116968.99999999999
+     ],
+     [
+      25.15,
+      124829.99999999999,
+      116968.99999999999
+     ],
+     [
+      25.66,
+      124808.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.13,
+      124738.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.21,
+      124682.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.45,
+      124556.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.74,
+      124353.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.91,
+      123919.99999999999,
+      116968.99999999999
+     ],
+     [
+      26.98,
+      123807.99999999999,
+      116968.99999999999
+     ],
+     [
+      27.54,
+      122834.99999999999,
+      116968.99999999999
+     ],
+     [
+      27.87,
+      120440.99999999999,
+      116968.99999999999
+     ],
+     [
+      28.43,
+      119509.99999999999,
+      116968.99999999999
+     ],
+     [
+      28.79,
+      118655.99999999999,
+      116968.99999999999
+     ],
+     [
+      28.95,
+      118641.99999999999,
+      116968.99999999999
+     ],
+     [
+      29.02,
+      118627.99999999999,
+      116968.99999999999
+     ],
+     [
+      29.54,
+      118501.99999999999,
+      116968.99999999999
+     ],
+     [
+      29.94,
+      118459.99999999999,
+      116968.99999999999
+     ],
+     [
+      30.37,
+      118221.99999999999,
+      116968.99999999999
+     ],
+     [
+      30.69,
+      117878.99999999999,
+      116968.99999999999
+     ],
+     [
+      31.13,
+      117843.99999999999,
+      116968.99999999999
+     ],
+     [
+      31.52,
+      117689.99999999999,
+      116968.99999999999
+     ],
+     [
+      31.92,
+      117472.99999999999,
+      116968.99999999999
+     ],
+     [
+      32.26,
+      117437.99999999999,
+      116968.99999999999
+     ],
+     [
+      32.53,
+      117360.99999999999,
+      116968.99999999999
+     ],
+     [
+      32.69,
+      117283.99999999999,
+      116968.99999999999
+     ],
+     [
+      33.6,
+      117262.99999999999,
+      116968.99999999999
+     ],
+     [
+      34.39,
+      117192.99999999999,
+      116968.99999999999
+     ],
+     [
+      34.99,
+      117178.99999999999,
+      116968.99999999999
+     ],
+     [
+      35.44,
+      117164.99999999999,
+      116968.99999999999
+     ],
+     [
+      35.87,
+      117129.99999999999,
+      116968.99999999999
+     ],
+     [
+      36.57,
+      117115.99999999999,
+      116968.99999999999
+     ],
+     [
+      37.61,
+      117101.99999999999,
+      116968.99999999999
+     ],
+     [
+      38.74,
+      117080.99999999999,
+      116968.99999999999
+     ],
+     [
+      39.72,
+      117066.99999999999,
+      116968.99999999999
+     ],
+     [
+      40.4,
+      117052.99999999999,
+      116968.99999999999
+     ],
+     [
+      41.62,
+      117024.99999999999,
+      116975.99999999999
+     ],
+     [
+      42.32,
+      117003.99999999999,
+      116975.99999999999
+     ],
+     [
+      42.63,
+      116975.99999999999,
+      116975.99999999999
+     ]
+    ],
+    "yuzde50_sn": 26.48,
+    "yuzde90_sn": 29.94,
+    "yuzde99_sn": 36.0
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 960.0,
+    "saniye": 844.96,
+    "ipucusuz": false,
+    "amacsiz_amac": 2688191,
+    "iyilesmis_amac": 132551,
+    "plan_bulundu": true,
+    "cozum_sayisi": 926,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 2658336.0,
+     "son_amac": 132551.0,
+     "cozum": 926,
+     "son_iyilesme_sn": 822.98,
+     "alt_sinir_son": 41662.0,
+     "egri": [
+      [
+       8.88,
+       2658336.0,
+       17204.0
+      ],
+      [
+       16.49,
+       1673472.0,
+       41424.0
+      ],
+      [
+       20.13,
+       1233750.0,
+       41424.0
+      ],
+      [
+       24.12,
+       897147.0,
+       41424.0
+      ],
+      [
+       27.83,
+       750761.0,
+       41424.0
+      ],
+      [
+       31.08,
+       661264.0,
+       41424.0
+      ],
+      [
+       35.39,
+       580705.0,
+       41424.0
+      ],
+      [
+       40.28,
+       503525.0,
+       41431.0
+      ],
+      [
+       44.64,
+       452828.0,
+       41434.0
+      ],
+      [
+       51.0,
+       402163.0,
+       41434.0
+      ],
+      [
+       56.94,
+       353459.0,
+       41434.0
+      ],
+      [
+       63.89,
+       321267.0,
+       41434.0
+      ],
+      [
+       69.79,
+       299728.0,
+       41434.0
+      ],
+      [
+       78.7,
+       266811.0,
+       41457.0
+      ],
+      [
+       87.37,
+       257988.0,
+       41496.0
+      ],
+      [
+       103.1,
+       253846.0,
+       41548.0
+      ],
+      [
+       125.87,
+       240784.0,
+       41562.0
+      ],
+      [
+       150.19,
+       229420.0,
+       41562.0
+      ],
+      [
+       179.21,
+       215584.0,
+       41562.0
+      ],
+      [
+       205.18,
+       189823.0,
+       41562.0
+      ],
+      [
+       244.93,
+       180476.0,
+       41562.0
+      ],
+      [
+       317.86,
+       165223.0,
+       41562.0
+      ],
+      [
+       416.61,
+       153128.0,
+       41610.0
+      ],
+      [
+       610.8,
+       141764.0,
+       41645.0
+      ],
+      [
+       822.98,
+       132551.0,
+       41662.0
+      ]
+     ],
+     "yuzde50_sn": 19.11,
+     "yuzde90_sn": 53.01,
+     "yuzde99_sn": 402.77
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "FAZLA_MESAI": {
+      "ceza": 90000,
+      "deger": 1800,
+      "degisken": 359,
+      "pay_yuzde": 67.9
+     },
+     "MOLA_KAPSAMASI": {
+      "ceza": 16772,
+      "deger": 2396,
+      "degisken": 415,
+      "pay_yuzde": 12.7
+     },
+     "ADALET_DENGESI": {
+      "ceza": 12540,
+      "deger": 2508,
+      "degisken": 9196,
+      "pay_yuzde": 9.5
+     },
+     "HEDEF_ASIMI": {
+      "ceza": 9990,
+      "deger": 3330,
+      "degisken": 415,
+      "pay_yuzde": 7.5
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 3249,
+      "deger": 361,
+      "degisken": 415,
+      "pay_yuzde": 2.5
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 116976,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": false,
+    "degisken": 359,
+    "saniye": 123.19,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "fazla mesaisiz plan bu surede bulunamadi; fazla mesai serbest birakildi (agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 82.89,
+    "eksik_hedef_dakika": 21660,
+    "toplam_saat": 17542.5,
+    "fazla_mesai_saat": 30.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 43.62
+   },
+   "ihlal": {
+    "HEDEF_KAPSAMA": 71,
+    "ADALET_DENGESI": 88,
+    "MOLA_KAPSAMASI": 42,
+    "HEDEF_ASIMI": 156
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {
+     "SATIS": {
+      "eksik_kisi_saat": 22,
+      "asim_kisi_saat": 2255,
+      "eksik_hucre": 11,
+      "asim_hucre": 83
+     },
+     "BACKOFFICE": {
+      "eksik_kisi_saat": 259,
+      "asim_kisi_saat": 635,
+      "eksik_hucre": 45,
+      "asim_hucre": 32
+     },
+     "MHIZMET": {
+      "eksik_kisi_saat": 80,
+      "asim_kisi_saat": 440,
+      "eksik_hucre": 15,
+      "asim_hucre": 41
+     }
+    },
+    "toplam": {
+     "eksik_kisi_saat": 361,
+     "asim_kisi_saat": 3330,
+     "eksik_hucre": 71,
+     "asim_hucre": 156
+    },
+    "hucreler": [
+     [
+      "BACKOFFICE",
+      0,
+      9,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      10,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      11,
+      63,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      12,
+      89,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      0,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      12,
+      90,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      16,
+      89,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      17,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      18,
+      70,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      19,
+      44,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      20,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      21,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      22,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      1,
+      23,
+      18,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      8,
+      65,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      9,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      10,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      11,
+      60,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      12,
+      85,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      17,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      18,
+      67,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      19,
+      41,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      2,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      9,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      10,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      11,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      12,
+      87,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      16,
+      87,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      20,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      21,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      22,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      3,
+      23,
+      16,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      8,
+      65,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      9,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      10,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      11,
+      61,
+      64
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      12,
+      86,
+      71
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      16,
+      88,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      17,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      18,
+      68,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      19,
+      42,
+      45
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      20,
+      17,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      21,
+      17,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      22,
+      17,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      4,
+      23,
+      17,
+      26
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      8,
+      33,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      12,
+      41,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      5,
+      23,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      8,
+      33,
+      29
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      12,
+      41,
+      32
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      16,
+      42,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      17,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      18,
+      32,
+      22
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      20,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      21,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      22,
+      10,
+      13
+     ],
+     [
+      "BACKOFFICE",
+      6,
+      23,
+      10,
+      13
+     ],
+     [
+      "MHIZMET",
+      0,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      0,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      19,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      20,
+      26,
+      29
+     ],
+     [
+      "MHIZMET",
+      0,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      1,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      1,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      2,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      19,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      20,
+      28,
+      29
+     ],
+     [
+      "MHIZMET",
+      2,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      3,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      19,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      20,
+      27,
+      29
+     ],
+     [
+      "MHIZMET",
+      3,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      13,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      14,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      15,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      16,
+      57,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      17,
+      51,
+      45
+     ],
+     [
+      "MHIZMET",
+      4,
+      18,
+      51,
+      29
+     ],
+     [
+      "MHIZMET",
+      4,
+      21,
+      19,
+      29
+     ],
+     [
+      "MHIZMET",
+      5,
+      10,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      11,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      12,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      13,
+      26,
+      22
+     ],
+     [
+      "MHIZMET",
+      5,
+      17,
+      19,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      10,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      11,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      12,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      13,
+      30,
+      22
+     ],
+     [
+      "MHIZMET",
+      6,
+      14,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      15,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      16,
+      30,
+      26
+     ],
+     [
+      "MHIZMET",
+      6,
+      17,
+      19,
+      26
+     ],
+     [
+      "SATIS",
+      0,
+      7,
+      52,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      8,
+      78,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      9,
+      78,
+      58
+     ],
+     [
+      "SATIS",
+      0,
+      11,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      12,
+      148,
+      103
+     ],
+     [
+      "SATIS",
+      0,
+      13,
+      148,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      16,
+      161,
+      122
+     ],
+     [
+      "SATIS",
+      0,
+      17,
+      109,
+      83
+     ],
+     [
+      "SATIS",
+      0,
+      18,
+      109,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      8,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      9,
+      64,
+      58
+     ],
+     [
+      "SATIS",
+      1,
+      11,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      12,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      1,
+      13,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      14,
+      182,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      15,
+      182,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      16,
+      143,
+      122
+     ],
+     [
+      "SATIS",
+      1,
+      17,
+      111,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      18,
+      111,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      19,
+      79,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      20,
+      79,
+      83
+     ],
+     [
+      "SATIS",
+      1,
+      21,
+      40,
+      38
+     ],
+     [
+      "SATIS",
+      1,
+      22,
+      40,
+      38
+     ],
+     [
+      "SATIS",
+      2,
+      8,
+      87,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      9,
+      61,
+      58
+     ],
+     [
+      "SATIS",
+      2,
+      11,
+      145,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      12,
+      145,
+      103
+     ],
+     [
+      "SATIS",
+      2,
+      13,
+      145,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      14,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      15,
+      186,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      16,
+      144,
+      122
+     ],
+     [
+      "SATIS",
+      2,
+      17,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      18,
+      112,
+      83
+     ],
+     [
+      "SATIS",
+      2,
+      21,
+      41,
+      38
+     ],
+     [
+      "SATIS",
+      2,
+      22,
+      41,
+      38
+     ],
+     [
+      "SATIS",
+      3,
+      8,
+      90,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      9,
+      64,
+      58
+     ],
+     [
+      "SATIS",
+      3,
+      11,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      12,
+      142,
+      103
+     ],
+     [
+      "SATIS",
+      3,
+      13,
+      142,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      14,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      15,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      16,
+      146,
+      122
+     ],
+     [
+      "SATIS",
+      3,
+      17,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      18,
+      114,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      19,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      20,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      3,
+      21,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      3,
+      22,
+      43,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      8,
+      92,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      9,
+      66,
+      58
+     ],
+     [
+      "SATIS",
+      4,
+      11,
+      140,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      12,
+      140,
+      103
+     ],
+     [
+      "SATIS",
+      4,
+      13,
+      140,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      14,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      15,
+      185,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      16,
+      148,
+      122
+     ],
+     [
+      "SATIS",
+      4,
+      17,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      18,
+      116,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      19,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      20,
+      82,
+      83
+     ],
+     [
+      "SATIS",
+      4,
+      21,
+      45,
+      38
+     ],
+     [
+      "SATIS",
+      4,
+      22,
+      45,
+      38
+     ],
+     [
+      "SATIS",
+      5,
+      7,
+      43,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      8,
+      64,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      9,
+      38,
+      29
+     ],
+     [
+      "SATIS",
+      5,
+      11,
+      88,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      12,
+      88,
+      64
+     ],
+     [
+      "SATIS",
+      5,
+      13,
+      88,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      14,
+      114,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      15,
+      114,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      16,
+      88,
+      77
+     ],
+     [
+      "SATIS",
+      5,
+      17,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      18,
+      71,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      19,
+      50,
+      51
+     ],
+     [
+      "SATIS",
+      5,
+      20,
+      50,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      7,
+      32,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      8,
+      54,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      9,
+      38,
+      29
+     ],
+     [
+      "SATIS",
+      6,
+      11,
+      87,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      12,
+      87,
+      64
+     ],
+     [
+      "SATIS",
+      6,
+      13,
+      87,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      14,
+      114,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      15,
+      114,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      16,
+      88,
+      77
+     ],
+     [
+      "SATIS",
+      6,
+      17,
+      72,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      18,
+      72,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      19,
+      50,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      20,
+      50,
+      51
+     ],
+     [
+      "SATIS",
+      6,
+      21,
+      27,
+      26
+     ],
+     [
+      "SATIS",
+      6,
+      22,
+      27,
+      26
+     ],
+     [
+      "SATIS",
+      6,
+      23,
+      18,
+      16
+     ]
+    ]
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 82.89,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 30.000000000000426,
+    "sozlesme_ustu_ucret_saat": 1316.25,
+    "toplam_saat": 17542.5
+   },
+   "fazla_mesai_kisiler": [
+    {
+     "calisan": "C0015",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-ARA",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0024",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-ARA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0027",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-KISA",
+      "4:S-SABAH",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0030",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-GECE",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0037",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0046",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-KISA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0054",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-SABAH",
+      "3:S-UZUN",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0058",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-GECE",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-KISA",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0062",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-GECE",
+      "3:S-UZUN",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0087",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "2:S-UZUN",
+      "3:S-KISA",
+      "4:S-SABAH",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0109",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-KISA",
+      "2:S-AKSAM",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0117",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-KISA",
+      "1:S-UZUN",
+      "2:S-GECE",
+      "4:S-SABAH",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0129",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 1
+    },
+    {
+     "calisan": "C0137",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-UZUN",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0154",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-KISA",
+      "2:S-GECE",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0167",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-SABAH",
+      "2:S-SABAH",
+      "3:S-KISA",
+      "4:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0180",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-ARA",
+      "2:S-KISA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0195",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-ARA",
+      "3:S-ARA",
+      "4:S-UZUN",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0198",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-UZUN",
+      "3:S-SABAH",
+      "4:S-KISA",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0205",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-AKSAM",
+      "1:S-KISA",
+      "2:S-UZUN",
+      "3:S-GECE",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0214",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-ARA",
+      "1:S-UZUN",
+      "2:S-KISA",
+      "3:S-UZUN",
+      "4:S-SABAH",
+      "5:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0223",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "2:S-ARA",
+      "3:S-UZUN",
+      "4:S-UZUN",
+      "5:S-UZUN",
+      "6:S-KISA"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0260",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-UZUN",
+      "1:S-UZUN",
+      "2:S-KISA",
+      "3:S-SABAH",
+      "4:S-UZUN",
+      "5:S-GECE"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    },
+    {
+     "calisan": "C0264",
+     "sozlesme": 45,
+     "borc_saat": 45.0,
+     "net_saat": 46.25,
+     "fazla_saat": 1.25,
+     "vardiyalar": [
+      "0:S-GECE",
+      "1:S-GECE",
+      "3:S-UZUN",
+      "4:S-KISA",
+      "5:S-UZUN",
+      "6:S-UZUN"
+     ],
+     "kilit": 0,
+     "uygunluk": 0,
+     "izin": 0
+    }
+   ],
+   "tekrar": 3,
+   "fazla_mesai_uyumu": "ayni"
+  }
+ ],
+ "kapasite_tabani": {
+  "hedef": {
+   "toplam_kisi_saat": 18660.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  },
+  "asgari": {
+   "toplam_kisi_saat": 12723.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  }
+ },
+ "fazla_mesai_tabani": {
+  "kisi": 359,
+  "saat": 0.0,
+  "dakika": 0,
+  "ceza": 0,
+  "borcunu_tutturamayan": 0,
+  "saat_dengesi_sert": true,
+  "borc_toplam_saat": 14680.5
+ },
+ "degisken": 633591,
+ "kisit": 771332,
+ "bagimsiz_alt_sinir": 0.0
+}

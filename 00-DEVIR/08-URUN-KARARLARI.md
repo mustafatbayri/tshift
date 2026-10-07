@@ -3213,7 +3213,13 @@ bulgu 23 ölçüldü:** fazla mesai altı koşuda 0; DENGELI sert kesime göre
 değil yakınsama; 359 serbest değişkenle 720 sn'lik iyileştirme bitmiyor:
 son iyileşme 684–717. sn, sınıra %5,7). Ürün yolu ilkesiyle kalıyor; ölçülecek
 aday *hibrit* (iyileştirme fazla mesai kapalı + serbest son tur) — T-60 bulgu
-23 ölçüm paragrafı. ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
+23 ölçüm paragrafı. **7 Ekim gece koşusu (okuma 17:45):** 1200 sn'de KAPSAMA
+farkı +%1,5'e indi (büyük kısmı bütçe; yayılım %4,7 kalıyor); **bulgu 25:**
+DENGELI'nin bir koşusunda fazla mesaisiz ilk arama 120 sn'de bulunamadı →
+plan 30 saat fazla mesaiyle döndü (116.976). 18 koşuda 17'si 8,6–21 sn, 1'i
+> 120 sn — ağır kuyruk. **Bu karar kuyruk kapanmadan kapanmaz:** kuyruk
+ölçümü (`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-fm-siz-arama-kuyrugu/kuyruk.py`) → yeniden başlatma politikası (ölçüm seçeneği →
+900 sn × 3 → varsayılan). Kod değişmedi. ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
 kredi kesintisinde bulut alanı silindi, düzeltme oturum kaydındaki adımlardan
 yeniden uygulandı ve yeniden doğrulandı — T-60 bulgu 23, kesinti paragrafı),
 Mustafa'nın koşuları bekleniyor.**~~
