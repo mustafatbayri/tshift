@@ -1,0 +1,22 @@
+[OLDU] M-A sifirda = False (olcum secenegi de 0'da tutmasin) [listede #27]
+      1 failed, 4 passed in 1.28s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_SERT_KESIM_olcum_secenegi_bulununca_fazla_mesai_butun_asamalarda_SIFIR'] (2 sn)
+[OLDU] M-B serbest birakma yalniz bulunamayinca (if not bulundu) [listede #43]
+      1 failed in 0.82s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_varsayilan_ACIK_urun_once_fazla_mesaisiz_arar_K61'] (2 sn)
+[OLDU] M-C ipucu yazildiktan sonra silinsin [listede #60]
+      1 failed, 3 passed in 0.92s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_bulunan_fazla_mesaisiz_plan_iyilestirmeye_TAM_IPUCU_olarak_gider_fm_SIFIR'] (2 sn)
+[OLDU] M-D sifirda = bulundu (sert kesim hep) [listede #23]
+      1 failed in 0.76s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_varsayilan_ACIK_urun_once_fazla_mesaisiz_arar_K61'] (2 sn)
+[OLDU] G-1 iyilestirme sonucu ipucuya YAZILMASIN (mola adimi fm'siz plana sabitlenir)
+      1 failed, 21 passed in 7.51s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_MUSTAFANIN_ORNEGI_fazla_mesaisiz_plan_BULUNSA_DA_agirliklar_fazla_mesaili_plani_SECER'] (8 sn)
+[OLDU] G-2 iyilestirme fm'siz modelde kossun (alanlar iyilestirme icin yeniden [0,0], sonra acilir)
+      1 failed, 3 passed in 0.89s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_bulunan_fazla_mesaisiz_plan_iyilestirmeye_TAM_IPUCU_olarak_gider_fm_SIFIR'] (2 sn)
+[*** YASADI ***] G-3 _tam_ipucu_yaz fm ipucularini hep 0 yazsin (mola adimina giden ipucu yanlis)
+      28 passed in 8.95s [] (10 sn)
+[OLDU] G-4 iyilestirme SONRASI ipucudan fm degerleri silinsin (mola adimina yarim ipucu)
+      1 failed in 0.66s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_varsayilan_ACIK_urun_once_fazla_mesaisiz_arar_K61'] (1 sn)
+[*** YASADI ***] G-5 _sinir_kapsami: sert kesim mola adimindan ONCE baksin (sira degissin)
+      28 passed in 8.66s [] (9 sn)
+[OLDU] G-6 serbest birakma yalniz BULUNUNCA (if bulundu) -- bulunamayinca yol kapanir
+      1 failed, 4 passed in 0.85s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_SERT_KESIM_olcum_secenegi_bulununca_fazla_mesai_butun_asamalarda_SIFIR'] (2 sn)
+[OLDU] G-7 iyilestirme kapsamsiz: bulununca iyilestirme ATLANSIN (fm'siz plan dogrudan mola adimina)
+      1 failed, 2 passed in 0.70s ['FAILED testler/test_fazla_mesai_once_sifir.py::test_fazla_mesaisiz_plan_VARSA_bulunur_ipucu_olur_alanlar_GERI_ACILIR'] (1 sn)

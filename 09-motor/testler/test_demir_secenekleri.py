@@ -118,7 +118,10 @@ def test_varsayilan_K59_iyilestirme_yuzde80_K60_mola_adimi_ACIK_b_KAPALI():
     assert ist["mola_adimi_alt_sinir"] == ist["amac_degeri"], ist
     assert ist["alt_sinir"] is None, ist["alt_sinir"]
     assert c["metrikler"]["optimuma_uzaklik_yuzde"] is None, c["metrikler"]
-    assert C.VARSAYILAN["fazla_mesai_once_sifir"] is False
+    # K-61 (6 Ekim): "once fazla mesaisiz" de urunun varsayilani. Bu sahnenin
+    # kadrosu yari zamanli -- fazla mesai degiskeni yok, deneme yapilmaz
+    # (ciktida None). Kendi testleri: test_fazla_mesai_once_sifir.py.
+    assert C.VARSAYILAN["fazla_mesai_once_sifir"] is True
     assert ist["fazla_mesai_once_sifir"] is None
 
 
@@ -441,17 +444,22 @@ def test_b_iki_arama_kosar_IYI_olan_secilir_plan_gecerlidir():
 def test_O16_sinir_kapsami_TAM_model_mi_kisitli_mi():
     """Ana asamanin cozdugu model tam model degilse sinir kuresel degildir.
     Iki kisit: atamalar sabit (mola adimi); fazla mesai degiskenleri 0'da
-    (deneme plan BULDUYSA -- bulamadiysa alanlar geri acilmistir)."""
+    TUTULMUSSA (yalniz olcum secenegi `fazla_mesai_sifirda_tut`; urun
+    yolunda bulunan plan ipucudur, alanlar geri acilir -- 7 Ekim, O-18)."""
     class K(object):
         pass
     k = K()
     assert C._sinir_kapsami(False, k) is None                       # secenek hic kosmadi
     k.fazla_mesai_once_sifir = None
     assert C._sinir_kapsami(False, k) is None
-    k.fazla_mesai_once_sifir = {"bulundu": False}
+    k.fazla_mesai_once_sifir = {"bulundu": False, "sifirda_tutuldu": False}
     assert C._sinir_kapsami(False, k) is None                       # alanlar geri acildi: tam model
     assert C._sinir_kapsami(True, k) == "mola_adimi"
-    k.fazla_mesai_once_sifir = {"bulundu": True}
+    # URUN YOLU: bulundu ama 0'da tutulmadi -> alanlar acik, model tamdir.
+    k.fazla_mesai_once_sifir = {"bulundu": True, "sifirda_tutuldu": False}
+    assert C._sinir_kapsami(False, k) is None
+    # SERT KESIM (olcum): 0'da tutuldu -> kisitli model.
+    k.fazla_mesai_once_sifir = {"bulundu": True, "sifirda_tutuldu": True}
     assert C._sinir_kapsami(False, k) == "fazla_mesaisiz"
     assert C._sinir_kapsami(True, k) == "mola_adimi"                # ikisi birden: mola adimi
     assert C._KANIT_SEBEPLERI == ("optimum", "hedef_bosluk")

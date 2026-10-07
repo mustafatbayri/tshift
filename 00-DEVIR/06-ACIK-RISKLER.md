@@ -4329,6 +4329,287 @@ hangi kurulum (ölçülerek seçilecek). Sonra eski sıra: sonuç kartı için s
 adımı → atama cilası → T-80 (`gun_sayisi` sorusu açık) → bulgu 11'in modeli
 araç olarak.
 
+**6 Ekim 23:02–23:15 — Mustafa'nın cevabı: merdiven yapısı ve sabit kriter
+onaylandı; iki veri seti eksiği (O-17).**
+
+Mustafa: merdiven yapısı *"evet"*, kriter seti *"önerdiğin gibi"* (sabit).
+Üç şey sordu: 21:08'in karar sorusunu anlamamıştı; 151 kişiyi merdivenin
+ölçeği sanmıştı (değil — bulut ön denemesiydi; merdiven ve sayılacak bütün
+ölçümler **500 kişi**, kendi makinesinde); *"herkes tek ekipte"* cümlesini
+*"tek ekip, 500 kişi"* diye okumuştu (sette üç ekip var: 285 satış, 145 back
+office, 70 müşteri hizmetleri; kendisi 250 / 150 / 100 hatırlıyor, kayıtta
+yok). Ve sordu: gece, iki işi yapabilen tek elemanla iki ekibin talebini
+karşılama durumu süreçte olmalıydı.
+
+*Bulunan:* o durum motorda var ve test edilmiş (13 test, bulutta yeniden
+koşuldu, geçti) ama 500 kişilik sette **yok** — iki ekibe üye kimse yok, gece
+back office talebi hafta içi asgari 13. K-50 verilirken sete eklenmemiş.
+29 Eylül'ün *"%95: eleman yetmiyor, fazla mesaiye gidiliyor"* tarifi de sette
+karşılık bulmuyor (bulgu 20–22). İkisi `05-HATA-OTOPSILERI.md` **O-17**.
+
+*Merdivene etkisi:* iki işi yapabilen kişiler önceki öneride seviye 2'de idi;
+artık **bütün** seviyelerin kadrosunda. Gece back office talebi Mustafa'nın
+tarifine göre kurulur. Her ölçümde başka ekipten kapsama raporlanır.
+
+**Sıradaki adım (6 Ekim 23:15'te yazıldı; kararların üçü 23:44'te verildi —
+aşağıdaki bölümün sonundaki adım geçerli):** Mustafa'nın dört
+kararı — (a) *önce fazla mesaisiz* ürün varsayılanı olsun mu (öneri: evet;
+yalnız iki aşamalı akışta devreye girer, küçük modele dokunmaz); (b) ekip
+sayıları 285 / 145 / 70 mi, 250 / 150 / 100 mü; (c) kaç satışçı back office
+de yapabilsin (varsayım 30); (d) gece 00:00–08:00 back office talebi en az 1
+kişi mi. Sonra: (a) evet ise önce o (varsayılan, testler, mutasyonlar, karar
+kaydı, şartname; Mustafa'nın koşuları; tek doğrulama koşusu) → merdiven
+kadrosu → seviye 1 ve 4 araç olarak → referans planlar Mustafa'nın
+makinesinde → 500 kişide 900 sn ölçüm.
+
+**6 Ekim 23:44 – 7 Ekim 00:45 — Mustafa'nın kararları: K-61 (*önce fazla
+mesaisiz* ürünün varsayılanı; hakem ağırlıklardır) ve K-62 (veri seti
+merdiveni, kadro); K-61 koda indi (bulut).** ⚠ *Bu bölümün "koddaki
+karşılığı" ve "Mustafa'ya söylenen kur" paragrafları 7 Ekim'de yanlış çıktı
+(O-18); geçerli hâl aşağıdaki **bulgu 23** bölümündedir.*
+
+Mustafa (23:44): *"Evet, ama sadece basit bir evet değil … ağırlıklar baz
+alındığında örneğin 3 saat fazla mesai içeren en optimum plan var var ve
+fazla mesaisiz plandan oldukça daha optimum bir plan ise en optimum olanı
+seçmeliyiz."* · *"1- Evet 2- 285 145 70 kalsın. 4- en az 2 olsun mesela."*
+· iki işi yapabilen kişilerin bütün seviyelerde olması: *"çok doğru bir
+davranış"* (gündüz taşmalarında da kullanılıyor). 3. soruyu (kaç satışçı back
+office de yapabilsin) cevaplamadı; 30 varsayımıyla ilerlendiği söylendi.
+Tam metinler `08-URUN-KARARLARI.md` K-61 ve K-62'de.
+
+*K-61'in koddaki karşılığı.* (1) `VARSAYILAN["fazla_mesai_once_sifir"]` True.
+(2) **Koşul** (`_fazla_mesai_kisayolu_gecerli`): kısayol, fazla mesainin
+dakika başı ağırlığı öteki ağırlıkların en büyüğünden küçük değilken
+uygulanır; değilse uygulanmaz, çıktı `uygulandi: false, sebep: "agirlik"`
+der, not düşer, kararı ağırlıklı arama verir. Gerekçe: arama fazla mesaisiz
+plan varken fazla mesaili planlara bakmaz; Mustafa'nın ilkesi (hakem
+ağırlıklar) bunun yalnız fazla mesainin kazanamayacağı ağırlıklarda
+yapılmasını gerektirir. Ürün ağırlıklarında koşul üç profilde tutar (50 ≥ 9 /
+20 / 8); 0,1 ölçekli gerçekçi sahnede doğrulandı. (3) Mustafa'nın örneği
+test: ürün ağırlıklarında fazla mesaisiz plan 72, 3 saat fazla mesaili 9.000
+→ fazla mesaisiz seçilir; hedef ağırlığı 2.000 olunca 16.000'e karşı 9.000 →
+**3 saat fazla mesaili plan seçilir**; kısayol koşulsuz uygulanmaya
+zorlanınca 16.000'lik plan döner. (4) Küçük sahnelerde kısayolun planı tam
+modelin kanıtlı optimumuyla aynı puanda (fazla mesainin gerekmediği ve
+zorunlu olduğu iki sahne).
+
+*Bulutta doğrulama (2 çekirdek; asıl kapı Mustafa'nın koşuları):* 41 dosya
+**582 test geçti** (26'sı `test_fazla_mesai_once_sifir.py`, 10 yeni);
+mutasyon harnesi 286 (`fm_sifir` 44, 15 yeni) — grup koşularında hepsi öldü,
+atlanan 0, çapaların hepsi tam bir kez eşleşiyor; **toplam iddiası tam
+koşudan sonra** (O-15). `test_kalite_olc.py` 18 geçti. Gerçekçi set
+bekçilerinin çözüm gerektirenleri bulutta 240 sn'lik bütçeyle koşulamıyor
+(komut sınırı 180 sn); 110 sn bütçeyle taklidi geçti (0,1 ölçek: fazla
+mesaisiz plan 0,5 sn'de bulundu, 0 sert, yayınlanabilir, asgari %100, tam
+zamanlılar saatini dolduruyor; donmuş günle yeniden planlama geçti).
+
+*Ölçüm aracı.* `kalite-olc.py`: `varsayilan`, `profil_*`, `cift_butce`,
+`lp_guclu` seçeneği motorun varsayılanından alır (artık açık); 6 Ekim
+öncesini ölçen kayıt yapılandırmaları açıkça kapalıdır, böylece eski
+kayıtların anlamı değişmez; 6 Ekim sabahının ürün hali `fm_once_kapali` /
+`fm_once_kapali_kapsama`; her koşu kaydı `once_fazla_mesaisiz` alanını taşır.
+⚠ 6 Ekim ve öncesinin ölçüm dosyalarında bu alan yoktur: o koşularda seçenek
+yalnız `ayar`da açıkça yazıyorsa açıktır (`kalite-olcumu-95-fmsifir-900.json`).
+
+*Mustafa'ya söylenen kur.* Bugünkü ağırlıklarda 1 saat fazla mesai = 333
+kişi-saat hedef eksiği (DENGELI), 150 (KAPSAMA); 500 kişilik en iyi planın
+haftalık hedef eksiği 350 kişi-saat. ~~Bu kurda fazla mesaili plan kazanamaz~~
+*(yanlış — bulgu 23)* — K-30'un ağırlığa yazılmış hâli. Fazla mesainin
+pazarlık edilebilir olması istenirse bu bir ağırlık kararıdır ~~; o
+ağırlıklarda kısayol kendiliğinden devreden çıkar~~ ve aramanın artığı
+yeniden ölçülmelidir.
+
+**Sıradaki adım (7 Ekim 00:45; 23:15 adımının yerine — 03:30'da aşağıdaki
+bulgu 23'ün adımıyla değişti):** Mustafa'nın koşuları — motor testleri,
+gerçekçi set, tam mutasyon koşusu (damga 286 olmalı), DENETIM, commit + push →
+**doğrulama ölçümü** (`varsayilan`, 900 sn, üç koşu: ürünün yolu bulgu 21'in
+ölçtüğüyle aynı mı — beklenen fazla mesai 0, amaç 26,4–26,5 bin). Sonra K-62:
+merdiven kadrosu (iki işi yapabilen 30 satışçı — teyit bekliyor; gece back
+office asgari 2), seviye 1 ve 4 araç olarak, referans planlar Mustafa'nın
+makinesinde, 500 kişide 900 sn ölçüm. Sonra eski sıra: sonuç kartı için sınır
+adımı → atama cilası → T-80 → bulgu 11'in modeli araç olarak.
+
+**7 Ekim 01:00–03:30 — bulgu 23: K-61'in 00:45 sürümü ilkeyi çiğniyordu;
+düzeltildi (O-18). Mustafa 00:45 sürümünü hiç koşmadı.**
+
+*Ne bulundu.* İşi görmemiş iki inceleme ajanı (kod kopyası, bulut; 00:57'de
+başlatıldı, 02:09'da döndü) aynı bulguyla döndü, ben de koştum: 00:45 sürümü fazla mesaisiz plan bulunca
+fazla mesaiyi bütün aşamalarda 0'da tutuyordu ve "ağırlık koşulu" bunu
+görmüyordu — **ürün ağırlıklarında** kanıtlı optimum fazla mesaili, dönen plan
+daha kötü:
+
+| Sahne (ürün ağırlıkları; tam model kanıtlı optimum ↔ 00:45 sürümü) | Optimum | 00:45 sürümü |
+|---|---|---|
+| Tek kişi, DENGELI, SAAT_DENGESI yumuşak; şablon netleri 7,5 sa × 5 + 7,75 sa = 45 sa 15 dk | **750** (15 dk fazla mesai) | 2.256 (0 fazla mesai; bir gün düşer, 7,25 sa sözleşme altı) |
+| Aynı kişi, KAPSAMA, SAAT_DENGESI sert (fazla mesaisiz tek dolum talebin dışındaki 9 saatlik şablon) | **750** | 880 |
+| 12 kişi, KAPSAMA; 12 × 15 dk = tam **3 saat** — Mustafa'nın örneğindeki miktar | **9.000** | 12.000 |
+| İki ekibe üye tek kişi (K-50), DENGELI / KAPSAMA | **750** | 900 / 2.000 |
+| Tek kişi ×400 (56.854 değişken, iki aşamalı yol) | **300.000** | 902.400 |
+
+Sebep: fazla mesai çeyrek saatlik adımlarla gelir (15 dk = 750 puan) ve bir
+adım bütün haftanın düzenini açabiliyor — bir gün daha çalışabilmek (9 hücre
++ 7,25 saat sözleşme altı = 2.256), talebin içindeki şablona geçebilmek, iki
+ekibi birden kapatabilmek. Benim hesabım *"bir saat fazla mesai = en çok
+bir-iki kişi-saat kazanç"* diyordu; bu yalnız tek şablonlu düz sahnelerde
+doğru. Ajan A'nın rastgele avı: çeyrek saat ızgaralı karışık şablonlar +
+yumuşak SAAT_DENGESI ile 8/400 karşı örnek; gerçekçi şablon netleriyle (7,5 /
+9 / 4,25 sa; en küçük adım 90 dk) 0/1.200. 500 kişilik sette (en küçük
+şablon taşmaları: satış ve back office 75 dk, müşteri hizmetleri 30 dk, 40
+saatlik sezonluk kadro 15 dk — ilk inceleme raporundan; hesap yöntemi kayıtlı
+değil, inceleme B 04:45'te yeniden üretemedi: fikstür şablonlarıyla 30–75 dk,
+15 dk yalnız ekipler arası karışımda) bu durumun oluştuğu **gösterilmedi**;
+oluşmayacağı kanıtlı değil. ×400 sahnesi (300.000 ↔ 902.400) yalnız ilk
+inceleme raporunda; düzeltilmiş yolda koşulmadı.
+
+İncelemenin öteki bulguları: küçük model (tek arama) ile büyük model (sert
+kesim) aynı girdide farklı karar veriyordu (yol bağımlı politika);
+*"İyileştir"* yolu (başlangıç planı) kısayolu hiç görmüyor; koşul "daraltılacak
+alan var mı" kontrolünden önce çalışıyordu (CALISAN + düşürülmüş ağırlıkta
+yanlış atlama notu); `FAZLA_MESAI_TAVANI` yokken "bulundu" sayılan deneme
+`mola_adimi: False` ile küresel kanıtı düşürüyordu; `int(ObjectiveValue())`
+kırpıyordu (65154 ↔ alt sınır 65155); birinci aşama başarısız denemede iki
+pay sürebiliyor (başlık "≤ %20" diyordu); testler yalnız 8 saatlik tek
+şablonla yazılmıştı (en küçük adım 3 saat), SAAT_DENGESI / ADALET / MOLA /
+çok ekipli üyelik yoktu; keşif OKU-BENI'de *"devreden adalet yükü hepsinde
+0"* yanlıştı (üretici 500 kişinin 124'üne `devir_yuk` yazıyor; boş olan
+geçen haftanın vardiyaları); K-61 metninde *"fazla mesai dışındaki kalemler de
+iyileşti"* abartılıydı (toplam iyileşti, adalet ve hedef aşımı az kötüleşti),
+*"%40 → %0,3"* yalnız DENGELI (KAPSAMA %26 → %0,6), *"10 yeni test"* 11'di,
+O-15'e aykırı biçimde *"286 mutasyon hepsi öldü"* grupları saymadan
+yazılmıştı.
+
+*Düzeltme (03:30, bulut; Mustafa'nın koşuları bekleniyor).* Motor: fazla
+mesaisiz plan bulununca alanlar **geri açılır**, o plan iyileştirmenin
+ipucudur, iyileştirme ve mola adımı tam modelde tam ağırlıklı amaçla koşar —
+ipucu tam ve geçerlidir, CP-SAT onu ilk çözüm olarak almaya çalışır (garanti değil; ölçülen koşularda ilk çözüm ipucudan iyiydi) ve 04:45'ten beri **ipucu korunur** — iyileştirmenin planı başlangıç planından kötüyse ipucu ezilmez, çıktıda `ipucu_korundu`, fazla mesai ancak ağırlıklara göre kazanıyorsa
+girer. Ağırlık koşulu kaldırıldı. Sert kesim ölçüm seçeneği
+(`fazla_mesai_sifirda_tut`, varsayılan kapalı); bulgu 21 o hâldir. Çıktı:
+`uygulandi` kalktı, `sifirda_tutuldu` geldi; `_sinir_kapsami` yalnız sert
+kesimde kısıtlı der; iyileştirme eğrisi çıktıya girdi
+(`ilk_asama_iyilestirme.iyilesme`); amaç değeri yuvarlanıyor. Yukarıdaki dört
+sahne test oldu: tam modelin kanıtlı optimumu = ürün yolunun puanı; sert
+kesimin daha kötü döndürdüğü de test; Mustafa'nın örneğinde fazla mesaisiz
+plan **bulunsa da** 3 saatlik plan seçiliyor. Bulutta 41 dosya **583 test**
+geçti (`test_fazla_mesai_once_sifir.py` 27; 04:00'te 28 — aşağıdaki kesinti
+paragrafı); mutasyon harnesi 285 → **286** (`fm_sifir` 43 → 44) — grup
+koşuları kesinti paragrafında; toplam iddiası tam koşudan sonra (O-15). `kalite-olc.py`: `fm_once` / `fm_once_kapsama` (ürün yolu), `fm_sert`
+/ `fm_sert_kapsama` (6 Ekim gecesinin hâli; bulgu 21'in kayıt adları buna
+sabitlendi), kayıtta `sert_kesim`; `ipucu_kapali` ve `mola_adimi_tam`
+açıklamaları düzeltildi. Şartname §6.7 yeniden yazıldı, §11.3, değişiklik 61;
+K-61 ve K-30 kayıtlarında yanlış cümleler üstü çizili; O-18.
+
+*Küçük ölçekli ön ölçüm (bulut, 2 çekirdek; ürün ölçümü DEĞİL).* 49 kişi,
+20 sn, tek koşu (02:50; logu kesintide silindi, sayılar oturum kaydındaki
+koşu çıktısından): 6 Ekim öncesi 11.918 (3 sa fazla mesai) · sert kesim 2.758
+(0) · **düzeltilmiş yol 2.713 (0)** — iyileştirme fazla mesaisiz plandan
+başlayıp fazla mesaiye dönmedi (iyileştirme boyunca fazla mesai toplamı 0'da
+kaldı). Tekrarlar (30 sn, ikişer koşu) kesinti paragrafında; 151 kişi
+koşulmadı.
+
+
+*Kredi kesintisi ve yeniden uygulama (03:05–04:30).* 03:05'te hesabın kredisi
+bitti; düzeltme (02:35–03:05) bulut çalışma alanında yazılmıştı ve henüz
+Mustafa'nın makinesine kopyalanmamıştı — bulut alanı oturumla birlikte
+sıfırlandı, dosyalar kayboldu. Her düzenleme adımı oturum kaydında tam metin
+duruyordu (20 betik: birebir metin değiştirme); 03:25'ten itibaren aynı
+adımlar Mustafa'nın makinesindeki 00:45 sürümüne (md5 `a90fe3da…`, incelemeye
+verilen hâl) yeniden uygulandı. Dayanak, adımların kendisi: her biri
+`assert count == 1` ile tek ve belirli bir metin değişimi, 20'nin 20'si ilk denemede
+geçti; o anda 14 dosyanın fark satır sayıları 03:00'teki ölçümle aynıydı
+(`coz.py` 311, test 567, mutasyon 212, şartname 188 …; 03:00 dosyalarının
+md5'i yok — silindiler, içerik eşitliği kanıtlanamaz, sayı eşitliği var).
+04:00'ten sonra 8 dosya yeniden değişti (inceleme bulguları), sayılar artık
+farklı. Yeniden doğrulama (bulut, 2 çekirdek): `09-motor` **583
+test** geçti (151 sn); gerçekçi set testleri **39** geçti (619 sn); karşı
+örnekler beş sahnede ürün yolu = kanıtlı optimum (750, 750, 9.000, 750 ve
+750), sert kesim 2.256 · 880 · 12.000 · 900 · 2.000 — 03:00'teki sayıların
+aynısı. Mutasyon grup koşuları: `demir` 40'ın 40'ı, `ilk_asama` 6/6, `kalite` 6/6
+öldü; **`fm_sifir` 43'ün 1'i yaşadı** — *"geri açma yerine ipucu silinsin"*:
+`ClearHints` ipucu **henüz yazılmadan** (`_tam_ipucu_yaz` sonra geliyor)
+çağrılıyordu, davranış değişmiyordu (eşdeğer mutant; 03:30'da *"hepsi öldü"*
+yazılmıştı — koşu bitmeden, O-15'in aynısı; üstü çizildi). Düzeltme: mutasyon
+ipucu yazıldıktan sonra siliyor, ikincisi ipucunun fazla mesai değerlerini
+siliyor (yarım ipucu); yeni test iyileştirmeye giren modelin ipucusunu
+doğrudan okuyor (bütün değişkenler, `fm_*` = 0, alanlar açık) — ikisi de
+elle uygulanıp kırmızı görüldü. `fm_sifir` yeniden koşu: **44'ün 44'ü öldü, atlanan 0** (04:14, bulut). O anda (04:30)
+`test_fazla_mesai_once_sifir.py` 28, harnes 286 (04:52: **31 / 290**, aşağıda). İlk incelemenin
+raporları (02:09) oturum kaydından kurtarıldı; kodu koşan son iki inceleme
+(03:05'te kredi uyarısıyla düşmüştü) yeniden koşturuldu (04:10–04:45):
+**A (motor):** düzeltme ilkeyi sağlıyor — 640 rastgele küçük sahnede ürün
+yolu 640'ın 640'ı kanıtlı optimuma eşit (50'si tam hedef sınıfta: fazla mesaisiz
+plan var, optimum fazla mesaili — 50'nin 50'si); bulgular: mola adımına giden ipucu
+denetlenmiyordu (iki mutant yaşıyordu: fm ipuçları hep 0 / iyileştirmeden
+sonra silinmiş) → test + iki mutasyon; eklediğim *"yarım ipucu"* mutasyonu
+protobuf'ta çöküyordu (`del vars[:]`; *"öldü"* sanılmıştı) → `.clear()`;
+ölçüm aracı 00:45 sürümünün kaydında `KeyError` → düzeltildi + test; eşitlikte
+(3.252 = 3.252) ürün yolu fazla mesaili planı seçebiliyor (640'ta 1; tasarım
+notu, Mustafa'ya); `_ipucu_ver` ve `kalite-olc.py` yorum kalıntıları.
+**B (kayıtlar):** kayıtlar büyük ölçüde güvenilir; *"~700 sn"* yanlış
+(düzeltildi), iki güncellenmemiş satır (öncelik tablosu, BURADAN T-60
+satırı — düzeltildi), *"birebir"* kanıtından güçlü (zayıflatıldı), *"CP-SAT
+onu ilk çözüm olarak alır"* kanıtından güçlü: sekiz koşuda iyileştirmenin ilk
+çözümü ipucudan **iyiydi** (9.398 < 11.792; ipucunun ceza değişkenleri gevşek)
+ve kötü dönerse koruma yoktu → **ipucu koruması eklendi** (`_ilk_asamada_iyilestir`:
+iyileştirmenin planı amaçsız plandan kötüyse ipucu ezilmez, çıktıda
+`ipucu_korundu`; test + iki mutasyon); zaman tutarsızlıkları (01:00 ↔ 02:09,
+02:40 ↔ 02:35) düzeltildi; alıntıdaki *"var var"* O-18 ve şartnamede sessizce
+düzeltilmişti → birebir yapıldı; K-30 ↔ K-61 çelişkisi *yeni değil* (aşağıda).
+Son sayılar: `test_fazla_mesai_once_sifir.py` **31**, `09-motor` **587**
+test; mutasyon **290** (`fm_sifir` 48) — bulut grup koşuları: `fm_sifir`
+48'in 48'i, `ilk_asama` 6/6 (04:52), `demir` 40'ın 40'ı, `kalite` 6/6 (04:00). Toplam
+iddiası tam koşudan sonra (O-15). Bütün kanıtlar (betikler, loglar, dört
+inceleme raporu, 20 yeniden uygulama adımı): `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-o18-duzeltme/`.
+
+*Küçük ölçek, tekrar (04:00–04:06; bulut, aynı 49 kişi).* **20 sn**, ikişer
+koşu: 6 Ekim öncesi 19.423 / 15.606 (5,5 / 4,25 sa); **sert kesim ve
+düzeltilmiş yol plan DÖNDÜRMEDİ** (`sure_yetmedi`) — bkz. bulgu 24. **30 sn**,
+ikişer koşu: 6 Ekim öncesi 15.478 / 15.469 (4,25 sa); sert kesim 2.717 /
+2.719 (0); **düzeltilmiş yol 2.722 / 2.689 (0)** — iyileştirme fazla mesaisiz
+ipucudan (11.792) başladı, fazla mesaiye hiç dönmedi, puan sert kesimin
+±%1,1'i içinde (K-61 karar kuralı küçük ölçekte tutuyor; 500 kişi için
+tahmin değildir).
+
+*Bulgu 24 (yan bulgu, 04:00): mola adımı yetişmeyince elde plan varken
+"süre yetmedi" dönüyor.* 20 sn'lik koşuda birinci aşama (fazla mesaisiz
+arama 1,3 sn + iyileştirme 16 sn) 17,7 sn aldı, mola adımına 2,3 sn kaldı ve
+adım ilk çözümünü bulamadı → `durum: sure_yetmedi`, plan yok. Oysa elde
+iyileştirmenin planı vardı (3.936 / 4.032 puan, fazla mesai 0, molalar
+şablonun ideal yerinde — tam modelin geçerli bir çözümü). 6 Ekim öncesinin
+yolu aynı bütçede plan döndürdü (birinci aşaması 0,5 sn daha kısa). Bu,
+`_ipucu_ver`in *"bütçe dolsa bile çıktı boş kalmaz"* cümlesiyle çelişiyor:
+mola adımı yetişmezse 2. aşamanın planı notla dönmeli (*"molalar şablonun
+ideal yerinde; mola adımı yetişmedi"*). 500 kişi / 900 sn'de birinci aşama ~730 sn
+(fazla mesaisiz arama 9–13 sn + iyileştirme payı 720 sn), mola adımına ~170 sn
+kalıyor ve adım 40–46 sn sürdü (bulgu 21'in tablosu; ~~"~700 sn"~~ 04:30'da
+yanlış yazılmıştı, inceleme B düzeltti), ürün yolunda görülmedi; kısa bütçede
+ve yavaş makinede gerçek. **Karar Mustafa'da** (açık listede zaten
+vardı: *"mola adımı yetişmezse plan notla dönsün mü"*); önerim: dönsün. Kod
+değişmedi.
+
+*Açık ürün sorusu (Mustafa'ya soruldu).* K-30'un ilk satırı (*"hedef için
+fazla mesai yapılmaz"*, 16 Eylül) ile K-61'in ilkesi (*"ağırlıklara göre
+oldukça daha optimum plan seçilir"*, 6 Ekim) birbirini tam örtmüyor. İnceleme
+B'nin düzeltmesi: bu çelişki **yeni değil** — K-30 kodda hiçbir zaman sert bir
+kural olmadı (*"kod değişmedi"*; ilk satır 16 Eylül'den beri ağırlıkla
+sağlanıyor; 6 Ekim öncesinin yolu da Mustafa'nın 12 kişilik örneğinde fazla
+mesaili optimumu seçiyordu). Onu ilk kez sert kurala çeviren 6 Ekim gecesinin
+sert kesimiydi ve bu O-18'in hatasıydı; düzeltme 16 Eylül'deki duruma döndü.
+Soru yine de Mustafa'nın: ilk satır **mutlak** mı (o zaman sert kesim ürün
+yolu olur ve 6 Ekim ilkesiyle çelişir) yoksa **ağırlıkların sonucu** mu (bugünkü
+kod). Ayrıca ilk satırın doğru örneği 12 kişilik sahnedir (hedef için 3 saat);
+tek kişilik S1 sahnesi hedef değil sözleşme doldurma kaynaklıdır (SAAT_DENGESI).
+
+**Sıradaki adım (7 Ekim 04:30; 03:30 adımının yerine):** Mustafa'nın
+koşuları — motor testleri (584), gerçekçi set testleri, DENETIM, commit + push
+→ **tam mutasyon koşusu** (damga 286 olmalı) → **bulgu 23'ün ölçümü**:
+`fm_once,fm_once_kapsama`, 900 sn, üçer koşu (≈1,6 saat); karar kuralı K-61'de
+yazılı (sert kesimin ±%2'si ve fazla mesai 0 → kapanır; fazla mesai > 0 →
+ağırlıkların kararı, sebebi okunur; puan %5'ten kötü → arama artığı geri
+geldi, yol yeniden). Bulgu 24 kararı (mola adımı yetişmezse 2. aşamanın
+planı notla dönsün mü — önerim evet; küçük kod + test). Sonra K-62 (merdiven
+kadrosu, seviye 1 ve 4 araç olarak, referans planlar, 500 kişide 900 sn).
+Sonra eski sıra.
+
 ⚠ 0.1 ölçek sonuçları `kalite-olcumu-0.1-95.json` (dört yapılandırma, K-57
 öncesi metrikler), `kalite-olcumu-0.1-95-tekrar3.json` (üçer tekrar, K-57
 öncesi), `kalite-olcumu-0.1-95-agirlik.json` (ağırlık deneyi, K-57 sonrası) —
@@ -5283,7 +5564,7 @@ mı bakıldı: `test_sure_butcesi.py` süreyi ölçmüyor, yapıyı sınıyor �
 | ~~6~~ | ~~**T-59 · süre bütçesi aşılıyor**~~ | ✅ **KAPANDI 30 Eylül gecesi** — tam ölçekte ölçüldü: 121,8 + 1.078,2 = 1.200,0 sn |
 | ~~6b~~ | ~~**T-78 · tam ölçekte 1 sert ihlal**~~ | ✅ **KAPANDI 1 Ekim gecesi** — sebep çeyreğe sığmayan 20 dk mola (5 dk üst üste binme); üç yerde düzeltildi, 9 test + 6 mutasyon. Sabah koşu tekrarı: 0 sert beklenir |
 | ~~6c~~ | ~~**T-59 · süre bütçesi = duvar saati mi?**~~ | ✅ **K-48 (1 Ekim, sabah onayı bekliyor):** bütçe = arama; model kurma ayrı satır olarak gösterilir. Mustafa'nın ilk önerisi; arama zaten zamanı yetmeyen taraf |
-| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — koda indi, 5 Ekim: 551 test, 228 mutasyon hepsi öldü; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı. **6 Ekim, bulgu 20 (üç profil, 900 sn, üçer koşu, hepsi 0 sert):** fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0** saat; CALISAN planları DENGELI ağırlıklarıyla 26,6–26,7 bin, DENGELI'nin kendi bulduğu 106–148 bin — fazla mesai verinin değil **aramanın artığı**, koşudan koşuya farkın tamamı o (fazla mesai dışı kısım %0,2 oynuyor). **O-16:** çıktı 4–6 Ekim arasında mola adımının optimumunu planın optimumu gibi yazıyordu (*"optimum · %0"*) — düzeltildi, büyük modelde küresel sınır artık null. Ölçüm seçeneği `fazla_mesai_once_sifir` yazıldı (varsayılan kapalı). **Bulgu 21 (6 Ekim akşamı, 900 sn, üçer koşu):** seçenek ölçüldü — altı koşunun altısında fazla mesai 0, amaç DENGELI 26,4–26,5 bin (sabah 106–148 bin), KAPSAMA 13,8–13,9 bin (sabah 46–58 bin), fazla mesai dışı kalemler de iyileşti, koşudan koşuya fark %40 → %0,3; karar kuralı tuttu. **Bulgu 22 (keşif, 6 Ekim gece; 49–151 kişi, bulut, tek koşu):** Mustafa amacı hatırlattı (*tüm kriterlere göre optimum plan; fazla mesai tek kriter*) ve beş seviyeli veri setleri önerdi; cevabı bilinen set ve x bilinen zorunlu fazla mesai seti küçük ölçekte kurulabildi — 151 kişide en az 3,5 saat zorunluyken ürünün hali 11,25 saat yazdı; %95 setinin kıtlığı, geçmişe bağlı kuralları ve zorunlu fazla mesaiyi sınamadığı okundu. Kalan: Mustafa'nın merdiven tasarımına cevabı; ürün varsayılanı kararı (zorunlu yarı tam ölçekte ölçülünce); sonuç kartı için küresel sınır (sınır adımı ölçümü) |
+| **7** | **T-60 · tam ölçekte kalite yok** 🔴 | Plan yasal çıkıyor, optimuma **%99** uzak. ✅ Plan bulma tarafı 1 Ekim'de kapandı (birinci aşama 10 sn, ilk plan 49 sn, tam ölçekte ölçüldü). 2 Ekim: kalite ölçüm araçları yazıldı, 0.1 ölçekte ölçüldü — amacın %90'ı fazla mesai cezası, koşudan koşuya oynama iki kat, tek koşudan sonuç çıkmaz; "fazla mesai" tek tanıma indi (K-57); ağırlık deneyi hedef açığının sebebinin ağırlık olmadığını gösterdi. Tam ölçek 2 Ekim 18:43'te ölçüldü: ürün hali haftada 475–511 saat fazla mesai; ipuçsuz arama yarıya indiriyor ama güvenilir değil (bulgu 7–9). Akşam: açığın yeri döküldü, keşif modeli aynı kurallarla 80 kişi-saat açık + 0 fazla mesai buldu (bulgu 10–11, keşif), ölçüm seçenekleri (a)/(b) yazıldı; (c) ölçüldü — ipuçsuz 900 sn beş koşunun dördünde plan bulamadı (bulgu 12). Gece: (a) tam ölçekte fazla mesaiyi 475–511 → 60–100 saate, hedef eksiğini yarıya indirdi; (b) elendi (bulgu 13). 3 Ekim: sabit molalı 480 sn → fazla mesai 34–38 saat, eksik 360–366, mola kapsaması üç kat (bulgu 15–16). **K-59:** iyileştirme ürünün varsayılanı (%40), `74a7a36`, 221 mutasyon hepsi öldü. **Bulgu 18 (kontrollü, üçer koşu):** atamalar sabitken mola adımı 45 sn'de kanıtlı optimum, ortak aramanın 347 sn'deki mola kalitesine eşit; ortak aramanın atamalara dokunan payı %6. **K-60 (4 Ekim 02:07): molalar motor içinde ayrı adım** — koda indi, 5 Ekim: 551 test, 228 mutasyon hepsi öldü; **bulgu 19:** pay %80 ↔ %90 fark yok, %80 kaldı. **6 Ekim, bulgu 20 (üç profil, 900 sn, üçer koşu, hepsi 0 sert):** fazla mesai DENGELI 26–40,5 · KAPSAMA 10–14 · CALISAN **0** saat; CALISAN planları DENGELI ağırlıklarıyla 26,6–26,7 bin, DENGELI'nin kendi bulduğu 106–148 bin — fazla mesai verinin değil **aramanın artığı**, koşudan koşuya farkın tamamı o (fazla mesai dışı kısım %0,2 oynuyor). **O-16:** çıktı 4–6 Ekim arasında mola adımının optimumunu planın optimumu gibi yazıyordu (*"optimum · %0"*) — düzeltildi, büyük modelde küresel sınır artık null. Ölçüm seçeneği `fazla_mesai_once_sifir` yazıldı (varsayılan kapalı). **Bulgu 21 (6 Ekim akşamı, 900 sn, üçer koşu):** seçenek ölçüldü — altı koşunun altısında fazla mesai 0, amaç DENGELI 26,4–26,5 bin (sabah 106–148 bin), KAPSAMA 13,8–13,9 bin (sabah 46–58 bin), fazla mesai dışı kalemler de iyileşti, koşudan koşuya fark %40 → %0,3; karar kuralı tuttu. **Bulgu 22 (keşif, 6 Ekim gece; 49–151 kişi, bulut, tek koşu):** Mustafa amacı hatırlattı (*tüm kriterlere göre optimum plan; fazla mesai tek kriter*) ve beş seviyeli veri setleri önerdi; cevabı bilinen set ve x bilinen zorunlu fazla mesai seti küçük ölçekte kurulabildi — 151 kişide en az 3,5 saat zorunluyken ürünün hali 11,25 saat yazdı; %95 setinin kıtlığı, geçmişe bağlı kuralları ve zorunlu fazla mesaiyi sınamadığı okundu. **6 Ekim 23:02:** Mustafa merdiven yapısını ve sabit kriter setini onayladı; **O-17** — iki işi yapabilen eleman (K-50) ve *"%95"*in tarif edilen kıtlığı 500 kişilik sette yok, merdiven kadrosunda düzeltilecek. **6 Ekim 23:44 – 7 Ekim 00:45:** **K-61** — *önce fazla mesaisiz* ürünün varsayılanı, hakem ağırlıklardır; **K-62** — merdiven ve kadro kararları. **7 Ekim 01:00–03:30, bulgu 23 / O-18:** 00:45 sürümü (bulunca fazla mesai 0'da tutuluyor + "ağırlık koşulu") bağımsız incelemede ürün ağırlıklarında ilkeyi çiğnedi (kanıtlı optimum 750 ↔ 2.256; 12 kişide 9.000 ↔ 12.000 — Mustafa'nın 3 saatlik örneği); düzeltildi: fazla mesaisiz plan yalnız başlangıç noktası, alanlar geri açılır, kararı ağırlıklar verir; sert kesim ölçüm seçeneği; dört karşı örnek sahnesi test (beşincisi, iki ekibe üye kişi KAPSAMA, yalnız doğrulama betiğinde). **7 Ekim 03:05–04:45:** kredi kesintisi — düzeltme bulut alanıyla silindi, oturum kaydındaki adımlardan yeniden uygulandı ve yeniden doğrulandı; bir eşdeğer mutant (ipucu yazılmadan siliniyordu; ~~"285 mutasyon grup koşularında öldü"~~ koşu bitmeden yazılmıştı) düzeltildi; iki bağımsız inceleme yeniden koştu — A: ürün yolu 640'ın 640'ı rastgele sahnede kanıtlı optimuma eşit, mola adımına giden ipucu denetlenmiyordu (iki mutant yaşıyordu → test + mutasyon), ipucu koruması eklendi; B: *"~700 sn"* yanlış, iki güncellenmemiş satır, zayıf *"birebir"*. Bulutta 587 test; mutasyon 290 (`fm_sifir` 48; grup koşuları fm_sifir 48'in 48'i, demir 40'ın 40'ı, ilk_asama 6/6, kalite 6/6 öldü). **Bulgu 24:** kısa bütçede mola adımı yetişmeyince elde plan varken *"süre yetmedi"* dönüyor (karar Mustafa'da). Kalan: Mustafa'nın koşuları (testler, DENETIM, commit, tam mutasyon) ve **düzeltilmiş yolun 500 kişilik ölçümü** (`fm_once,fm_once_kapsama`, 900 sn, üçer koşu); K-30 ilk satırı ↔ K-61 ilkesi sorusu ve bulgu 24 kararı Mustafa'da; merdivenin 1. ve 4. seviyesi (iki işi yapabilen satışçı sayısı teyit bekliyor); zorunlu fazla mesai tam ölçekte ölçülmedi; sonuç kartı için küresel sınır (sınır adımı ölçümü) |
 | ~~8~~ | ~~**T-54 · saatin maliyeti yok**~~ | ✅ **KAPANDI 1 Ekim, K-53** — `HEDEF_ASIMI` yumuşak kural, ağırlık profilden; ücret terimi yok |
 | ~~9~~ | ~~**T-62 · nitelik kuralı çözücüde sessiz**~~ | ✅ **KAPANDI 30 Eylül** — saat listesi yoksa açık saatlerin hepsi; ekip yoksa saha çapı; nitelik taşıyan yoksa not |
 | ~~10~~ | ~~**T-61 · atanmış mı, sahada mı**~~ | ✅ **KAPANDI 30 Eylül, K-41** — molada olan sayılır; değişen taraf doğrulayıcı oldu |

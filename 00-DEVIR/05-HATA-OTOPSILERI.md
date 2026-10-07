@@ -620,6 +620,189 @@ olarak yazılı). 4–6 Ekim arasında yazılmış ölçüm dosyalarındaki
 
 ---
 
+## O-17 · Karar verildi, veri seti izlemedi: iki işi yapabilen eleman 500 kişilik sette hiç yoktu; *"%95"* seti istenen kıtlığı taşımıyordu ⚠
+
+**Tarih:** 6 Ekim 2026 (Mustafa sorunca; eksikler 29 Eylül ve 1 Ekim'den)
+
+**Ne oldu.** İki ayrı eksik, aynı sınıf.
+
+*(1) İki işi yapabilen eleman.* 1 Ekim'de K-50 verildi (Mustafa: *"Sahada hem
+satış hem backoffice yapabilen elemanlar var… Gece 12'den sonra backoffice
+talepleri yok denecek kadar azalıyor; buraya bir eleman koymak yerine asıl işi
+satış ama backoffice yeteneği olan bir eleman konuyor ve sorun sahada çözülmüş
+oluyor."*). Motor ve doğrulayıcı kararı uyguladı; 13 test yazıldı
+(`09-motor/testler/test_cok_ekipli.py`; ilki Mustafa'nın örneği — tek kişilik
+sahne). 500 kişilik veri setine ise **iki ekibe üye tek kişi eklenmedi**;
+karar kaydına *"Veri setine etkisi: 500 kişilik sette herkes tek ekipte;
+davranış değişmedi"* yazıldı ve iş kapandı sayıldı. Sette gece back office
+talebi de tarif edilen gibi değil: hafta içi 00–08 arası asgari 13, hedef 19;
+hafta sonu asgari 6, hedef 13; back office'in kendi gece vardiyası var. Tarif
+edilen saha durumu tam ölçekte **hiç sınanmadı**.
+
+*(2) "%95" seti.* 29 Eylül'de Mustafa seti şu cümleyle istedi: *"Kadroyla
+alakalı talep için %95 istiyorum, 85 değil… Türkiye'de genelde eleman
+yetmiyor, fazla mesaiye gidiliyor."* Üretici `doluluk`u *hedef talep ÷
+sözleşme saati* diye kurdu, oranı tutturdu, bekçisini yazdı ve yorumuna *"%95:
+kadro sıkıdır; izinlerle birlikte fazla mesai ZORUNLU hale gelir"* dedi —
+**ölçmeden**. Ölçülen (6 Ekim, T-60 bulgu 20–22): fazla mesaisiz plan 9–13
+sn'de bulunuyor; asgari talep sözleşme saatlerinin %65'i; bilinen en iyi
+planda hedefin **üstünde** 3.141 kişi-saat var. Talep *atanmış kişi* sayar
+(molada olan da sayılır), sözleşme saati net çalışmadır; planda net saat
+başına ≈1,22 kişi-saat çıkıyor. Oran tutuyor, tarif edilen durum yok.
+
+**Neden.** (1) Karar *"koda işlendi, testi yazıldı"* ile kapatıldı; *"tam
+ölçekli veri seti bu kararı sınıyor mu"* sorulmadı. 28 Eylül'ün kuralı
+(*"Kullanmadığımız hiçbir kural veya kriter olmamalı. Her şey bu data setinde
+test edilebilecek şekilde tanımlı olmalı."*) set kurulurken bir kez işletildi;
+sonradan verilen kararlar sete geri bağlanmadı. `kural-kapsamasi.py` bunu
+göremez: çok ekipli sayım bir kural kodu değil, bir sayım biçimi. (2) Bir oran
+hedeflendi; oranın tarif edilen **davranışı** üretip üretmediğine bakılmadı.
+Sınıf O-11 ile aynı (yorumda yazılmış, ölçülmemiş iddia) ve 29 Eylül'ün özür
+kaydıyla aynı aile (*"seti dar kurmuşum"*).
+
+**Nasıl fark edildi.** (1) Mustafa sordu (6 Ekim 23:02). *"Herkes tek ekipte"*
+cümlemi *"tek ekip, 500 kişi"* diye okudu ve ekledi: *"…gece 3 de satış ve
+backoffice den sahada olması gereken sayıyı, örneğin satış ekibinde bulunan
+hem satış hem backoffice yetkinliği olan elemanla çözecektik… Bu case'in de
+sürecimizde olması gerekiyordu."* Kayda ve fikstüre bakınca durumun sette hiç
+olmadığı görüldü. (2) Aynı günün ölçümleri ve okuması (bulgu 20–22); 29
+Eylül'ün cümlesi bu soru üzerine günlükten yeniden okununca.
+
+**Düzeltme.** Bu adımda kod ve fikstür değişmedi; Mustafa'ya iki eksik de
+söylendi (23:10). Veri seti merdiveninin kadrosunda (sayılar Mustafa'nın
+kararını bekliyor): iki işi yapabilen kişiler **bütün** seviyelerde; gece back
+office talebi tarif edildiği gibi; her ölçümde `baska_ekipten_kapsama`
+raporlanır. Seviye 4, *"eleman yetmiyor, fazla mesai zorunlu"* durumunu en az
+fazla mesaisi bilinen biçimde kurar. Bugünkü iki set olduğu gibi kalır
+(şimdiye kadarki ölçümlerin girdisi); üreticideki yorum merdiven aracı
+yazılırken düzeltilir.
+**Kararlar (6 Ekim 23:44, K-62):** iki işi yapabilen kişiler bütün
+seviyelerde — Mustafa: *"çok doğru bir davranış"*, gündüz taşmalarında da
+kullanılıyor; gece 00:00–08:00 back office asgari 2; kişi sayısı 30 (varsayım,
+teyit bekliyor).
+
+### Kalıcı bekçi
+
+- **Bir ürün kararı kapanmadan önce üç soru:** kodda mı, testte mi, **tam
+  ölçekli veri setinde sınanıyor mu**. Üçüncüsü *"hayır"* ise karar kaydına
+  *"veri setinde yok — açık iş"* yazılır ve açık işlere girer. *"Davranış
+  değişmedi"* bir kapanış cümlesi değildir.
+- **Bir set bir saha durumunu temsil etsin diye kuruluyorsa durumun kendisi
+  ölçülür** (fazla mesai zorunlu mu, başka ekipten kapsama var mı), yalnız
+  hedeflenen oran değil.
+- Merdiven aracında her seviyenin *"bu set neyi sınıyor"* tablosu ölçümle
+  doldurulur (zorlanan kurallar, başka ekipten kapsama, zorunlu fazla mesai)
+  ve bekçisi olur. *(yazılacak)*
+
+---
+
+## O-18 · Kararın ilkesi *"hakem ağırlıklardır"* idi; yazdığım kod fazla mesaisiz planı bulunca fazla mesaili planlara hiç bakmıyordu — ve *"bu kurda oluşmaz"* dedim, karşı örnek aramadan ⚠
+
+**Tarih:** 7 Ekim 2026, 01:00–04:30 (hata 6 Ekim 22:45–7 Ekim 00:45 arasında
+yazıldı; bağımsız inceleme buldu; 03:05'te kredi kesintisiyle bulut alanı
+silindi, düzeltme 03:25–04:30'da oturum kaydındaki adımlardan yeniden
+uygulandı ve doğrulandı — T-60 bulgu 23)
+
+**Ne oldu.** 6 Ekim 23:44'te Mustafa *"önce fazla mesaisiz"* aramayı ürünün
+varsayılanı yaptı ve ilkesini söyledi: *"…ağırlıklar baz alındığında örneğin
+3 saat fazla mesai içeren en optimum plan var var ve fazla mesaisiz plandan oldukça
+daha optimum bir plan ise en optimum olanı seçmeliyiz."* Ben bunu koda şöyle
+yazdım: birinci aşama fazla mesaisiz plan bulunca fazla mesai değişkenleri
+**bütün aşamalarda 0'da kalır** (6 Ekim akşamının ölçüm seçeneği aynen), ve
+ilkeyi bir *"ağırlık koşulu"* ile *"sağladım"*: fazla mesainin dakika başı
+ağırlığı öteki ağırlıkların en büyüğünden küçük değilse kısayol uygulanır.
+Gerekçem bir hesaptı: bir saat fazla mesai 3.000 puan, hedefin bir kişi-saat
+altında kalmak 9 puan; *"bir saatlik fazla mesai en çok birkaç birim
+kazandırır, 3.000'i geçemez"*. Mustafa'ya *"bu kurda 3 saat fazla mesaili
+plan oldukça daha optimum durumu oluşmaz"* dedim, şartnameye *"hesapla
+gösterildi"* yazdım, teste *"kısayolun planı kanıtlı optimumla aynı puanda"*
+yazdım — tek bir sahneyle.
+
+İşi görmemiş iki ayrı inceleme ajanı aynı gece karşı örnekleri buldu, ben de
+koştum: **ürün ağırlıklarında** kanıtlı optimum fazla mesaili, kısayol daha
+kötüsünü döndürüyor.
+
+| Sahne (ürün ağırlıkları) | Kanıtlı optimum | Sert kesimin döndürdüğü |
+|---|---|---|
+| Tek kişi, DENGELI, SAAT_DENGESI yumuşak; şablonlar 7,5 sa × 5 + 7,75 sa | **750** (15 dk fazla mesai) | 2.256 (bir gün düşer: 7,25 sa sözleşme altı) |
+| Tek kişi, KAPSAMA, SAAT_DENGESI sert | **750** | 880 (talebin dışındaki 9 saatlik şablon) |
+| 12 kişi, KAPSAMA — Mustafa'nın örneği, tam **3 saat** | **9.000** | 12.000 |
+| İki ekibe üye tek kişi (K-50), DENGELI / KAPSAMA | **750** | 900 / 2.000 |
+
+Hesabın yanlışı: fazla mesai **adım adım** gelir (çeyrek saat = 750 puan) ve
+küçük bir adım bütün haftanın düzenini açar — bir saatin kazancı *"bir
+kişi-saat"* değil, *"bir gün daha çalışabilmek"* ya da *"sözleşme saatini
+doldurabilmek"* olabiliyor (SAAT_DENGESI dakika başına cezalı, sert hâli
+düzeni kilitliyor; iki ekibe üyelik kazancı ikiye katlıyor). Ağırlık koşulu
+bunların hiçbirini görmüyordu. 500 kişilik sette bu durumun oluştuğu
+gösterilmedi (en küçük şablon taşmaları 15–75 dk); oluşmayacağı da kanıtlı
+değil.
+
+**Neden.** (1) *"Kısayol"* diye adlandırdığım şey bir **kuraldı**: planların
+bir kümesini aramadan çıkarıyordu. Mustafa'nın ilkesi *"hiçbir planı baştan
+eleme"* demekti; ben *"elemenin zararsız olduğu koşulu bul"* diye okudum ve
+koşulu da bir hesapla değil, hesabın **bir** biçimiyle kurdum. (2) *"Oluşmaz"*
+cümlesini karşı örnek aramadan söyledim. Sınıf O-11 ve O-17 ile aynı (yorumda
+yazılmış, ölçülmemiş iddia) ve O-16 ile aynı (kısıtlı bir modelin sonucunu
+genel bir sonuç gibi sunmak). (3) Testi tezi doğrulayacak sahneyle yazdım
+(8 saatlik tek şablon: en küçük fazla mesai adımı 3 saat); 15 dakikalık
+adımın olduğu şablonlar, SAAT_DENGESI, iki ekibe üyelik testte yoktu. (4)
+Mustafa 23:44'te mid-turn *"devam et"* dedi; hız baskısıyla 00:45'te *"koda
+indi"* yazdım ve incelemeyi **sonraya** bıraktım — inceleme gelene kadar
+kayıtlar yanlış cümleleri taşıdı.
+
+**Nasıl fark edildi.** Bağımsız inceleme (iki ajan, kodu görmeden; bu
+projenin alışkanlığı). İkisi de (00:57'de başlatıldı) 02:09'da aynı bulguyla
+döndü; biri
+rastgele sahne avıyla 8/400 karşı örnek buldu (çeyrek saat ızgaralı karışık
+şablonlar + yumuşak SAAT_DENGESI), gerçekçi şablon netleriyle 0/1.200.
+Mustafa'ya 02:35'te söylendi, blok koşmaması istendi.
+
+**Düzeltme (7 Ekim).**
+
+- **Motor:** fazla mesaisiz plan bulununca o plan yalnız **başlangıç
+  noktasıdır** — fazla mesai alanları geri açılır, iyileştirme tam ağırlıklı
+  amaçla o plandan başlar (ipucu tam ve geçerlidir, CP-SAT onu ilk çözüm olarak almaya çalışır (garanti değil; ölçülen koşularda ilk çözüm ipucudan iyiydi) ve 04:45'ten beri **ipucu korunur** — iyileştirmenin planı başlangıç planından kötüyse ipucu ezilmez, çıktıda `ipucu_korundu`), kararı ağırlıklar
+  verir. Ağırlık koşulu kaldırıldı. Sert kesim **ölçüm** seçeneği olarak
+  kaldı (`fazla_mesai_sifirda_tut`, varsayılan kapalı) — 6 Ekim'in ölçümü
+  (bulgu 21) o hâldir ve yeniden üretilebilir.
+- **Testler:** dört karşı örnek sahnesi test oldu (beşincisi, iki ekibe üye
+  kişi KAPSAMA, yalnız doğrulama betiğinde; tam model kanıtlı optimumu
+  = ürün yolunun puanı; sert kesimin daha kötü döndürdüğü de test). Mustafa'nın
+  örneği: fazla mesaisiz plan **bulunsa da** 3 saatlik plan seçiliyor.
+  `09-motor/testler/test_fazla_mesai_once_sifir.py` 31; mutasyon `fm_sifir`
+  48 (toplam 290). *(04:00: grup koşusunda bir mutasyon yaşadı — ipucu
+  yazılmadan siliniyordu, eşdeğer mutant; düzeltildi, ipucuyu doğrudan okuyan
+  test eklendi.)*
+- **Kayıtlar:** şartname §6.7 / §11.3 / değişiklik 61, K-61, K-30 notu,
+  T-60, BURADAN-BASLA, oturum kaydı — yanlış cümleler üstü çizilerek
+  düzeltildi (sürümleme kuralı: tarih silinmez).
+- **Açık:** düzeltilmiş yolun 500 kişilik ölçümü (Mustafa'nın makinesi);
+  küçük ölçekte (49 kişi) iyileştirme fazla mesaiye dönmedi. Kanıtlar:
+  `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-o18-duzeltme/`.
+
+### Kalıcı bekçi
+
+- **"Oluşmaz" / "olamaz" cümlesi karşı örnek avı olmadan yazılmaz.** Bir
+  mekanizmanın bir plan kümesini aramadan çıkardığı her yerde (alan daraltma,
+  sabitleme, kısayol) ilk soru: *dışarıda kalan kümede daha iyi plan var mı?*
+  Cevap *"hayır"* ise bu bir ölçümdür (av betiği, sayı), bir hesap değil.
+  DENETIM'e eklenecek: 00-DEVIR altındaki md dosyalarında *"oluşmaz"*, *"olamaz"*,
+  *"hesapla gösterildi"* geçen satırda `ölçüldü`/`test` referansı yoksa
+  uyarı. *(yazılacak)*
+- **İlkeyi koşula çevirme.** Karar *"hakem X'tir"* diyorsa kod X'i
+  **uygular**, X'in ne zaman yanılacağını tahmin eden bir kapı yazmaz.
+  *(Otomatik bekçisi yok — inceleme alışkanlığıyla tutulur.)*
+- **Test sahnesi tezi doğrulamak için seçilmez.** Bir davranışın *"her
+  ağırlıkta doğru"* iddiası en az üç ayrı yapıdaki sahneyle sınanır (en
+  küçük adımın büyüklüğü, yumuşak/sert kural çeşitleri, çok ekipli üyelik).
+- **Bağımsız inceleme, kod "indi" denmeden önce gelir;** *"koda indi, koşuları
+  bekleniyor"* cümlesi inceleme bitmeden yazılmaz. *(Otomatik bekçisi yok.)*
+- **"Hepsi öldü" / "aşağıda" koşu bitmeden yazılmaz** (04:00'te bir kez daha
+  çiğnendi: eşdeğer mutant çıktı — O-15'in aynısı).
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -640,6 +823,8 @@ olarak yazılı). 4–6 Ekim arasında yazılmış ölçüm dosyalarındaki
 | O-14 | `git status` silme izni olmayan kabukta `.git/index.lock` bıraktı | Git yalnız `GIT_OPTIONAL_LOCKS=0` ile; `add`/`commit` bu kabuktan yapılmaz | ✅ *(kural; otomatik bekçisi yok)* |
 | O-15 | "Hepsi öldü" toplamı grup koşularından toplanmıştı; tam koşuda 1 yaşadı 3 atlandı | Toplam yalnız tam koşudan; tam koşu damgası `mutasyon-tam-kosu.txt`; çözücü/doğrulayıcı değişince commit öncesi tam koşu | ✅ *(kural + damga; DENETIM kontrolü onay bekliyor)* |
 | O-16 | Mola adımının optimumu planın optimumu diye yazıldı (*"optimum · %0"*); aynı girdide 4–5,6 kat iyi plan vardı; aynı sınıf aynı gün ölçüm seçeneğinde de çıktı | Çözülen model tam model değilse sınır genel alana yazılmaz (`_sinir_kapsami`; `mola_adimi_alt_sinir`, `fazla_mesaisiz_alt_sinir`); bilerek kötü planla uçtan uca test + 18 mutasyon; yeniden fiyatlama çapraz kontrolü; bağımsız inceleme | ✅ *(test + mutasyon; sonuç kartı için küresel sınır açık)* |
+| O-17 | Karar veri setine bağlanmadı: iki işi yapabilen eleman 500 kişilik sette hiç yok (K-50); *"%95"* seti istenen kıtlığı (fazla mesai zorunlu) taşımıyor | Karar kapanışında üçüncü soru: *tam ölçekli veri setinde sınanıyor mu*; saha durumu oranla değil ölçümle doğrulanır; merdiven seviyelerinin *"neyi sınıyor"* tablosu | 🟡 *(kural yazıldı; bekçi merdiven aracıyla gelecek)* |
+| O-18 | *"Hakem ağırlıklardır"* kararını, fazla mesaili planları aramadan çıkaran bir kısayol + tahmini bir ağırlık koşuluyla yazdım; *"bu kurda oluşmaz"* dedim — ürün ağırlıklarında karşı örnek vardı (750'ye karşı 2.256; 12 kişide 9.000'e karşı 12.000) | Bulunan fazla mesaisiz plan yalnız başlangıç noktası (alanlar geri açılır, karar ağırlıklarda); karşı örnekler test; *"oluşmaz"* cümlesi av betiği olmadan yazılmaz; inceleme *"indi"* denmeden önce | 🟡 *(kod + test; DENETIM uyarısı yazılacak; 500 kişilik ölçüm bekleniyor)* |
 
 ---
 

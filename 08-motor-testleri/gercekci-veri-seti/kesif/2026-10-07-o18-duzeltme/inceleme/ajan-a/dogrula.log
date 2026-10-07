@@ -1,0 +1,20 @@
+== S1  tek kisi, DENGELI, saat dengesi YUMUSAK
+   TAM  durum=cozuldu amac=750 alt_sinir=750 sebep=optimum iki_asama=False fm=0.25 yayin=True once=None
+   URUN durum=cozuldu amac=750 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.25 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': False}
+   SERT durum=cozuldu amac=2256 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.0 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': True}
+== F2  tek kisi, KAPSAMA, saat dengesi SERT
+   TAM  durum=cozuldu amac=750 alt_sinir=750 sebep=optimum iki_asama=False fm=0.25 yayin=True once=None
+   URUN durum=cozuldu amac=750 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.25 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': False}
+   SERT durum=cozuldu amac=880 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.0 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': True}
+== S3b 12 kisi, KAPSAMA, saat dengesi SERT (3 saat)
+   TAM  durum=cozuldu amac=9000 alt_sinir=9000 sebep=optimum iki_asama=False fm=3.0 yayin=True once=None
+   URUN durum=cozuldu amac=9000 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=3.0 yayin=True once={'bulundu': True, 'degisken': 12, 'saniye': 0.02, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': False}
+   SERT durum=cozuldu amac=12000 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.0 yayin=True once={'bulundu': True, 'degisken': 12, 'saniye': 0.02, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': True}
+== S3c iki ekibe uye tek kisi, DENGELI
+   TAM  durum=cozuldu amac=750 alt_sinir=750 sebep=optimum iki_asama=False fm=0.25 yayin=True once=None
+   URUN durum=cozuldu amac=750 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.25 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': False}
+   SERT durum=cozuldu amac=900 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.0 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.0, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': True}
+== S3d iki ekibe uye tek kisi, KAPSAMA
+   TAM  durum=cozuldu amac=750 alt_sinir=750 sebep=optimum iki_asama=False fm=0.25 yayin=True once=None
+   URUN durum=cozuldu amac=750 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.25 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.0, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': False}
+   SERT durum=cozuldu amac=2000 alt_sinir=None sebep=mola_adimi_optimum iki_asama=True fm=0.0 yayin=True once={'bulundu': True, 'degisken': 1, 'saniye': 0.01, 'kanitlandi_yok': False, 'molalar_sabit': True, 'sifirda_tutuldu': True}

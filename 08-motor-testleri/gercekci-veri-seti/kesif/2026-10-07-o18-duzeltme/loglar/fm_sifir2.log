@@ -1,0 +1,12 @@
+=== GRUP fm_sifir (duzeltilmis mutasyonlar) 01:06:45
+OZGUN KOD (baslangic):
+  testler/test_fazla_mesai_once_sifir.py     28 passed in 8.83s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_fazla_mesai_once_sifir.py     28 passed in 8.75s
+
+OZET: 44 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== BITTI 01:13:57

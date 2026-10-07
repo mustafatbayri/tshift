@@ -1,0 +1,11 @@
+10 kiyas, 13 sn: {'uretilen': 16, 'uygunsuz': 6, 'kanitsiz': 0, 'kiyas': 10, 'esit': 10, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+20 kiyas, 33 sn: {'uretilen': 32, 'uygunsuz': 12, 'kanitsiz': 0, 'kiyas': 20, 'esit': 20, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+30 kiyas, 46 sn: {'uretilen': 45, 'uygunsuz': 15, 'kanitsiz': 0, 'kiyas': 30, 'esit': 30, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+40 kiyas, 125 sn: {'uretilen': 65, 'uygunsuz': 24, 'kanitsiz': 1, 'kiyas': 40, 'esit': 40, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+50 kiyas, 207 sn: {'uretilen': 81, 'uygunsuz': 29, 'kanitsiz': 2, 'kiyas': 50, 'esit': 50, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+60 kiyas, 228 sn: {'uretilen': 93, 'uygunsuz': 31, 'kanitsiz': 2, 'kiyas': 60, 'esit': 60, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+70 kiyas, 242 sn: {'uretilen': 107, 'uygunsuz': 35, 'kanitsiz': 2, 'kiyas': 70, 'esit': 70, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+80 kiyas, 254 sn: {'uretilen': 120, 'uygunsuz': 38, 'kanitsiz': 2, 'kiyas': 80, 'esit': 80, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+90 kiyas, 317 sn: {'uretilen': 135, 'uygunsuz': 42, 'kanitsiz': 3, 'kiyas': 90, 'esit': 90, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+100 kiyas, 359 sn: {'uretilen': 147, 'uygunsuz': 44, 'kanitsiz': 3, 'kiyas': 100, 'esit': 100, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}
+BITTI 359 sn: {'uretilen': 147, 'uygunsuz': 44, 'kanitsiz': 3, 'kiyas': 100, 'esit': 100, 'urun_kotu': 0, 'urun_iyi': 0, 'a_fm_kaynakli': 0, 'b_asamali': 0, 'c_gurultu': 0}

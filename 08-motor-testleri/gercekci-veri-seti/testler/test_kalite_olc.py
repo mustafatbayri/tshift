@@ -280,6 +280,75 @@ def test_fm_once_yazisi_UYGULANMAYAN_secenegi_SESSIZ_gecmez():
     assert "YOK (kanitlandi)" in y and "molalar sabitken" not in y, y
     y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": dict(b, bulundu=False)}, ayar)
     assert "BULUNAMADI" in y and "kanit" not in y, y
+    # O-18 (7 Ekim): bulununca iki hal -- urun yolu (ipucu, alanlar acik) ve
+    # sert kesim (olcum); 6 Ekim kaydinda alan yok = sert kesimdi
+    y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": dict(b, sifirda_tutuldu=False)}, ayar)
+    assert "BULUNDU" in y and "alanlar geri acildi" in y and "agirliklar" in y and "SERT" not in y, y
+    y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": dict(b, sifirda_tutuldu=True)}, ayar)
+    assert "BULUNDU" in y and "SERT KESIM" in y and "0'da tutuldu" in y, y
+    assert "SERT KESIM" in KO.fm_once_yazisi({"fazla_mesai_once_sifir": b}, ayar)   # 6 Ekim kaydi
+    # 7 Ekim 00:45 surumunun kaydi (agirlik kosulu, `uygulandi: False`; Mustafa
+    # hic kosmadi) -- KeyError vermesin, okunsun (inceleme A, 04:45)
+    y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": {"uygulandi": False, "sebep": "agirlik",
+                                                      "fazla_mesai_agirligi": 5,
+                                                      "en_buyuk_oteki_agirlik": 9}}, ayar)
+    assert "UYGULANMADI" in y and "agirlik" in y and "00:45" in y, y
+
+
+def test_K61_etkin_ayar_secenegi_MOTORUN_varsayilanindan_alir():
+    """Yapilandirma secenegi YAZMIYORSA kosuda gecerli olan motorun
+    varsayilanidir (K-61: acik; sert kesim KAPALI -- O-18). Satir ona gore
+    yazilir; yazilan deger ezer."""
+    assert KO.COZ_VARSAYILAN["fazla_mesai_once_sifir"] is True
+    assert KO.COZ_VARSAYILAN["fazla_mesai_sifirda_tut"] is False
+    assert KO.etkin_ayar({})["fazla_mesai_sifirda_tut"] is False
+    assert KO.etkin_ayar(KO.SERT)["fazla_mesai_sifirda_tut"] is True
+    assert KO.etkin_ayar({})["fazla_mesai_once_sifir"] is True
+    assert KO.etkin_ayar(None)["fazla_mesai_once_sifir"] is True
+    assert KO.etkin_ayar({"fazla_mesai_once_sifir": False})["fazla_mesai_once_sifir"] is False
+    assert KO.etkin_ayar({"azami_saniye": 7})["azami_saniye"] == 7
+    assert "UYGULANMADI" in KO.fm_once_yazisi({"fazla_mesai_once_sifir": None}, KO.etkin_ayar({}))
+    assert KO.fm_once_yazisi({"fazla_mesai_once_sifir": None}, KO.etkin_ayar(KO.KAPALI)) is None
+
+
+def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
+    """Varsayilan degisince eski kayit yapilandirmalari SESSIZCE baska bir
+    sey olcmesin: 6 Ekim oncesini olcen her yapilandirma secenegi acikca
+    kapatir; urun halini olcenler hic yazmaz (motorun varsayilanini alir).
+    Yeni yapilandirma eklenirse bu listelerden birine YAZILMAK zorundadir."""
+    urun = {"varsayilan", "profil_kapsama", "profil_calisan", "cift_butce", "lp_guclu"}
+    # 7 Ekim urun yolu, ACIKCA yazilmis (olcum kaydinin adi): alanlar acik
+    acik = {"fm_once", "fm_once_kapsama"}
+    # SERT KESIM (6 Ekim gecesinin hali; bulgu 21'in kaydi) -- yalniz olcum
+    sert = {"fm_sert", "fm_sert_kapsama", "fm_once_sifir", "fm_once_sifir_kapsama"}
+    kayit = {"fm_once_kapali", "fm_once_kapali_kapsama", "k59_hali", "oran_90",
+             "eski_urun_hali", "fm_agirlik_5", "fm_agirlik_1", "a_ipuclu_120",
+             "a_ipucusuz_120", "a_ipuclu_60", "a_ipuclu_240", "sabit_mola_480",
+             "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
+    iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | sert | kayit | iki_asamasiz
+    for ad in urun | iki_asamasiz:
+        assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad
+        assert "fazla_mesai_sifirda_tut" not in KO.YAPILANDIRMALAR[ad][1], ad
+    for ad in acik:
+        assert KO.YAPILANDIRMALAR[ad][1] == {"fazla_mesai_once_sifir": True,
+                                             "fazla_mesai_sifirda_tut": False}, ad
+    for ad in sert:
+        assert KO.YAPILANDIRMALAR[ad][1] == KO.SERT and KO.YAPILANDIRMALAR[ad][1] is not KO.SERT, ad
+    for ad in kayit:
+        assert KO.YAPILANDIRMALAR[ad][1]["fazla_mesai_once_sifir"] is False, ad
+    assert KO.KAPALI == {"fazla_mesai_once_sifir": False}
+    assert KO.SERT == {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": True}
+    assert KO.YAPILANDIRMALAR["fm_once_kapali"][1] == KO.KAPALI
+    assert KO.YAPILANDIRMALAR["fm_once_kapali"][1] is not KO.KAPALI        # kopya: kosu degistirmesin
+    assert KO.YAPILANDIRMALAR["fm_once_kapali_kapsama"][2] == {"profil": "KAPSAMA"}
+    # kayit yapilandirmalarinin KENDI ayarlari yerinde
+    assert KO.YAPILANDIRMALAR["k59_hali"][1] == {
+        "fazla_mesai_once_sifir": False, "ilk_asama_iyilestirme_orani": 0.4, "mola_adimi": False}
+    assert KO.YAPILANDIRMALAR["mola_adimi_tam"][1] == {
+        "fazla_mesai_once_sifir": False, "ilk_asama_iyilestirme_saniye": 480,
+        "ilk_asama_iyilestirme_orani": 0.85, "mola_adimi": True, "mola_adimi_hedef_bosluk": 0.0}
+    assert KO.YAPILANDIRMALAR["fm_agirlik_5"][2] == {"agirliklar": {"FAZLA_MESAI": 5}}
 
 
 def test_ozet_plansiz_ve_istisna_kosusunda_COKMEZ(capsys):
@@ -310,7 +379,7 @@ def test_kosu_ve_ozet_mola_adimi_kosusunda_None_sinirla_COKMEZ_yeni_alanlari_SAK
     kuresel sinir yazmaz, mola adiminin sinirini ve "once fazla mesaisiz"
     sonucunu saklar; `ozet` None sinirla tablo basar (eskiden "None%")."""
     assert "fm_once_sifir" in KO.YAPILANDIRMALAR and "fm_once_sifir_kapsama" in KO.YAPILANDIRMALAR
-    assert KO.YAPILANDIRMALAR["fm_once_sifir"][1] == {"fazla_mesai_once_sifir": True}
+    assert KO.YAPILANDIRMALAR["fm_once_sifir"][1] == KO.SERT               # bulgu 21: sert kesim
     assert KO.YAPILANDIRMALAR["fm_once_sifir"][2] == {}
     assert KO.YAPILANDIRMALAR["fm_once_sifir_kapsama"][2] == {"profil": "KAPSAMA"}
     g = _fm_sahnesi()
@@ -322,18 +391,34 @@ def test_kosu_ve_ozet_mola_adimi_kosusunda_None_sinirla_COKMEZ_yeni_alanlari_SAK
     assert s["mola_adimi_alt_sinir"] == s["amac_degeri"]
     assert s["durma_sebebi"] == "mola_adimi_optimum"
     assert s["fazla_mesai_once_sifir"]["bulundu"] is True, s["fazla_mesai_once_sifir"]
+    assert s["fazla_mesai_once_sifir"]["sifirda_tutuldu"] is True          # sert kesim (olcum)
+    assert s["once_fazla_mesaisiz"] is True and s["sert_kesim"] is True
     assert s["metrikler"]["fazla_mesai_saat"] == 0
     assert s["sert_ihlal"] == 0 and s["yayinlanabilir"] is True
     assert s["uygulanmayan_notlar"] == []
     assert KO.fm_disi_amac(s) == s["amac_degeri"] > 0
-    # ayni sahne, urunun varsayilani: secenek kapali, alan None
-    v = KO.kosu(g, "varsayilan", dict(azami_saniye=20, durgunluk_saniye=3,
-                                      iki_asama_esigi=0, isci_sayisi=2))
-    assert v["fazla_mesai_once_sifir"] is None and v["atamalar_sabit"] is True
-    KO.ozet({"kosular": [s, v], "kapasite_tabani": {}, "fazla_mesai_tabani": {}})
+    # ayni sahne, urunun varsayilani (K-61/O-18): secenek YAZILMADAN da acik --
+    # motorun varsayilanindan gelir, sert kesim KAPALI, kosu kaydi bunu soyler
+    kucuk_ayar = dict(azami_saniye=20, durgunluk_saniye=3, iki_asama_esigi=0, isci_sayisi=2)
+    assert KO.YAPILANDIRMALAR["varsayilan"][1] == {}
+    v = KO.kosu(g, "varsayilan", dict(kucuk_ayar))
+    assert v["once_fazla_mesaisiz"] is True and "fazla_mesai_once_sifir" not in v["ayar"]
+    assert v["sert_kesim"] is False and "fazla_mesai_sifirda_tut" not in v["ayar"]
+    assert v["fazla_mesai_once_sifir"]["bulundu"] is True and v["atamalar_sabit"] is True
+    assert v["fazla_mesai_once_sifir"]["sifirda_tutuldu"] is False
+    assert v["metrikler"]["fazla_mesai_saat"] == 0 and v["amac_degeri"] == s["amac_degeri"]
+    ekran = capsys.readouterr().out                 # iki kosunun ekrani
+    assert ekran.count("kuresel alt sinir YOK") == 2, ekran
+    assert ekran.count("once fazla mesaisiz: BULUNDU") == 2, ekran
+    assert ekran.count("SERT KESIM") == 1 and ekran.count("alanlar geri acildi; karari agirliklar") == 1, ekran
+    # 6 Ekim oncesinin hali: kapali, alan None, durum satiri YOK
+    e = KO.kosu(g, "fm_once_kapali", dict(KO.YAPILANDIRMALAR["fm_once_kapali"][1], **kucuk_ayar))
+    assert e["once_fazla_mesaisiz"] is False and e["ayar"]["fazla_mesai_once_sifir"] is False
+    assert e["sert_kesim"] is False
+    assert e["fazla_mesai_once_sifir"] is None and e["atamalar_sabit"] is True
+    assert "once fazla mesaisiz: " not in capsys.readouterr().out
+    KO.ozet({"kosular": [s, v, e], "kapasite_tabani": {}, "fazla_mesai_tabani": {}})
     cikti = capsys.readouterr().out
-    assert "kuresel alt sinir YOK" in cikti
-    assert "once fazla mesaisiz: BULUNDU" in cikti
     # ayni sahne esigin altinda (iki asama yok): secenek uygulanmaz, ekrana yazilir
     kucuk = KO.kosu(g, "fm_once_sifir", dict(ayar, iki_asama_esigi=10 ** 9))
     assert kucuk["fazla_mesai_once_sifir"] is None and kucuk["atamalar_sabit"] is False

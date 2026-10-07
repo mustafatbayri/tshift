@@ -1,0 +1,1 @@
+cd /tmp/claude-0/-home-claude/5238fc68-a9b3-5ff2-b41f-ed509faf594a/scratchpad/duzeltme/depo/09-motor && sed -i 's/geri acilir ve kararı agirliklar verir/geri acilir ve karari agirliklar verir/' cozucu/coz.py && echo sed-ok

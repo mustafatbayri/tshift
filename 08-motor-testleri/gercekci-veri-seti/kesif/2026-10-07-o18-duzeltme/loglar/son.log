@@ -1,0 +1,30 @@
+=== MOTOR TESTLERI (son) 01:40:54
+........................................................................ [ 98%]
+...........                                                              [100%]
+587 passed in 176.41s (0:02:56)
+=== VERI SETI test_kalite_olc + test_sahte_pdks 01:43:52
+..........................                                               [100%]
+26 passed in 0.96s
+=== GRUP fm_sifir 01:43:54
+OZGUN KOD (baslangic):
+  testler/test_fazla_mesai_once_sifir.py     31 passed in 8.98s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_fazla_mesai_once_sifir.py     31 passed in 8.76s
+
+OZET: 48 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== GRUP ilk_asama 01:51:50
+OZGUN KOD (baslangic):
+  testler/test_ilk_asama.py                  5 passed in 0.59s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_ilk_asama.py                  5 passed in 0.63s
+
+OZET: 6 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== BITTI 01:52:02

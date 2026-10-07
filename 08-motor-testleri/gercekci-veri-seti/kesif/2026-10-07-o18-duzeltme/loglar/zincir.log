@@ -1,0 +1,59 @@
+=== MOTOR TESTLERI 00:31:23
+........................................................................ [ 74%]
+........................................................................ [ 86%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+583 passed in 151.45s (0:02:31)
+=== VERI SETI TESTLERI 00:33:57
+.......................................                                  [100%]
+39 passed in 619.35s (0:10:19)
+=== V5 ALTIN 00:44:18
+FAILED test_altin_senaryolar.py::test_evaluate_senaryosu[A04] - motor_istemci...
+FAILED test_altin_senaryolar.py::test_evaluate_senaryosu[A08] - motor_istemci...
+7 failed, 4 passed, 5 skipped in 0.24s
+=== GRUP fm_sifir 00:44:19
+OZGUN KOD (baslangic):
+  testler/test_fazla_mesai_once_sifir.py     27 passed in 8.53s
+
+MUTASYONLAR:
+  [fm_sifir  ] O-18: geri acma yerine ipucu silinsin (fazla mesaisiz plan kaybolsun) *** YASADI *** 27 passed in 8.81s
+
+OZGUN KOD (bitis):
+  testler/test_fazla_mesai_once_sifir.py     27 passed in 8.59s
+
+OZET: 43 mutasyon · yasayan 1 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== GRUP demir 00:51:17
+OZGUN KOD (baslangic):
+  testler/test_demir_secenekleri.py          24 passed in 8.21s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_demir_secenekleri.py          24 passed in 7.49s
+
+OZET: 40 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== GRUP ilk_asama 00:57:00
+OZGUN KOD (baslangic):
+  testler/test_ilk_asama.py                  5 passed in 0.59s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_ilk_asama.py                  5 passed in 0.57s
+
+OZET: 6 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== GRUP kalite 00:57:11
+OZGUN KOD (baslangic):
+  testler/test_kalite_olcumu.py              9 passed in 0.56s
+
+MUTASYONLAR:
+
+OZGUN KOD (bitis):
+  testler/test_kalite_olcumu.py              9 passed in 0.57s
+
+OZET: 6 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
+=== BITTI 00:57:21

@@ -1,0 +1,1501 @@
+[
+ {
+  "i": 161,
+  "tohum": 33,
+  "dosya": "av-kilit-33.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true
+  },
+  "tam": {
+   "amac": 10188,
+   "fm": 3.0
+  },
+  "urun": {
+   "amac": 10188,
+   "fm": 3.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 9,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3234,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 3234,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 24,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 5415,
+   "fm": 1.25
+  },
+  "urun": {
+   "amac": 5415,
+   "fm": 1.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 36,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1710,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 1710,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 38,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6780,
+   "fm": 1.5
+  },
+  "urun": {
+   "amac": 6780,
+   "fm": 1.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 46,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 8130,
+   "fm": 2.5
+  },
+  "urun": {
+   "amac": 8130,
+   "fm": 2.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 47,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6792,
+   "fm": 2.0
+  },
+  "urun": {
+   "amac": 6792,
+   "fm": 2.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 54,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2292,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 2292,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.05,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 69,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2580,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 2580,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 73,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 1,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1644,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 1644,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 1,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 78,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3396,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 3396,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 82,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3540,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 3540,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 89,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 4878,
+   "fm": 1.5
+  },
+  "urun": {
+   "amac": 4878,
+   "fm": 1.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 90,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2004,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 2004,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 91,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 1,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 921,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 921,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 1,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 106,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2364,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 2364,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 109,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1500,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 1500,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 125,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3420,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 3420,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 127,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 9864,
+   "fm": 3.0
+  },
+  "urun": {
+   "amac": 9864,
+   "fm": 3.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 130,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6648,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 6648,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 134,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 7350,
+   "fm": 1.25
+  },
+  "urun": {
+   "amac": 7350,
+   "fm": 1.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 143,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2628,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 2628,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 148,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6980,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 6980,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 154,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 4116,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 4116,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 163,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2550,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 2550,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 168,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 1,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1617,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 1617,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 1,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 170,
+  "tohum": 55,
+  "dosya": "av-kilit2-55.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 4743,
+   "fm": 1.5
+  },
+  "urun": {
+   "amac": 4743,
+   "fm": 1.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 7,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 4520,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 4520,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 8,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3282,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 3282,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 11,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3400,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 3400,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 34,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1550,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 1550,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 55,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3288,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 3288,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.03,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 58,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 7770,
+   "fm": 2.5
+  },
+  "urun": {
+   "amac": 7770,
+   "fm": 2.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 61,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3450,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 3450,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 63,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 1968,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 1968,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 64,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 4720,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 4720,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 69,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2740,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 2740,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 72,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 2,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2019,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 2019,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 2,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 74,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6050,
+   "fm": 1.25
+  },
+  "urun": {
+   "amac": 6050,
+   "fm": 1.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 80,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 6,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 8100,
+   "fm": 2.5
+  },
+  "urun": {
+   "amac": 8100,
+   "fm": 2.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 6,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 82,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 6216,
+   "fm": 2.0
+  },
+  "urun": {
+   "amac": 6216,
+   "fm": 2.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 88,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3849,
+   "fm": 0.5
+  },
+  "urun": {
+   "amac": 3849,
+   "fm": 0.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 103,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3288,
+   "fm": 1.0
+  },
+  "urun": {
+   "amac": 3288,
+   "fm": 1.0,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 116,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2571,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 2571,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 117,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 5,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 8130,
+   "fm": 2.5
+  },
+  "urun": {
+   "amac": 8130,
+   "fm": 2.5,
+   "once": {
+    "bulundu": true,
+    "degisken": 5,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 128,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3090,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 3090,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 136,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 1,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "KAPSAMA",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 870,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 870,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 1,
+    "saniye": 0.0,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 138,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 3708,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 3708,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 145,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 3,
+   "iki_ekip": false,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2412,
+   "fm": 0.75
+  },
+  "urun": {
+   "amac": 2412,
+   "fm": 0.75,
+   "once": {
+    "bulundu": true,
+    "degisken": 3,
+    "saniye": 0.01,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ },
+ {
+  "i": 148,
+  "tohum": 66,
+  "dosya": "av-kilit2-66.jsonl",
+  "meta": {
+   "n": 4,
+   "iki_ekip": true,
+   "sd": "YUMUSAK",
+   "profil": "DENGELI",
+   "meyilli": true,
+   "kilit": true,
+   "kilit2": true
+  },
+  "tam": {
+   "amac": 2451,
+   "fm": 0.25
+  },
+  "urun": {
+   "amac": 2451,
+   "fm": 0.25,
+   "once": {
+    "bulundu": true,
+    "degisken": 4,
+    "saniye": 0.02,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   }
+  }
+ }
+]

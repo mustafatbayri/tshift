@@ -56,7 +56,7 @@ Kaynak: `02-spec/v1.4-master-spec.md` §5.4 ve §6, `fikstur/_sahne-S30-95.json`
 | Bilinen en iyi DENGELI planı (26.407 puan) | hedefin **altında 350**, **üstünde 3.141** kişi-saat; fazla mesai 0 |
 | O planın puanı nereden geliyor | adalet %47 · hedef aşımı %36 · hedef eksiği %12 · mola kapsaması %5 |
 | Kanıtlı alt sınır (tam model) | 21.098 → plan sınıra en çok %20 uzak; ne kadarı motorun eksiği **bilinmiyor** |
-| Geçen haftanın vardiyaları | 500 kişinin hepsinde **boş**; devreden adalet yükü hepsinde 0 |
+| Geçen haftanın vardiyaları | 500 kişinin hepsinde **boş** (`gecmis_vardiyalar`). ~~Devreden adalet yükü hepsinde 0~~ — *düzeltme 7 Ekim (inceleme): üretici 500 kişinin 124'üne sıfırdan farklı `devir_yuk` yazıyor (adalet bilerek dengesiz); 6 Ekim'de tek bir kişinin satırına bakıp genellemiştim* |
 | Donmuş gün · yayınlanmış plan · sabit atama | yok · yok · yok (kilit 6) |
 | Ekip üyeliği | 500 kişinin hepsi **tek** ekipte (model çok ekipli kişiyi destekliyor) |
 | `kural-kapsamasi.py` | 22 satır SINANDI (17 ayrı kural) · 20 TEMİZ · 4 GÖVDE YOK |
@@ -72,9 +72,9 @@ net saat, talep hücrelerinde 21.451 kişi-saat ediyor (18.660 − 350 + 3.141)
 
 ⚠ `kural-kapsamasi.py` *"kaba bir plan bu kuralı çiğniyor mu"*yu ölçer;
 *"kural en iyi planı kısıtlıyor mu"*yu ölçmez. TEMİZ satırlarının bir kısmı
-veride karşılığı olmadığı için temiz (geçmiş boş → ardışık gün, ardışık gece,
-ardışık hafta sonu, gece postası devri geçmişten zorlanamıyor; yayınlanmış
-plan yok → donmuş gün zorlanamıyor).
+veride karşılığı olmadığı için temiz (geçen haftanın vardiyaları boş →
+ardışık gün, ardışık gece, ardışık hafta sonu, gece postası devri geçmişten
+zorlanamıyor; yayınlanmış plan yok → donmuş gün zorlanamıyor).
 
 ## 3. Deneme 1 — gömülü plan: cevabı bilinen set
 

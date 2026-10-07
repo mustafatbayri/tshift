@@ -35,6 +35,28 @@ NEDEN AYRI BIR BETIK
   Ustune YAPILANDIRMALAR karsilastirilir -- ayni sahne, ayni makine, yalniz
   bir sey degisir:
     varsayilan   : urunun kostugu hal (iki asama acik)
+                   ⚠ 6 Ekim, K-61: urunun hali artik ONCE FAZLA MESAISIZ
+                     arar. `varsayilan`, `profil_*`, `cift_butce`, `lp_guclu`
+                     bu tarihten sonra onu ICERIR; 6 Ekim oncesinin hali
+                     `fm_once_kapali`. Eski kayit yapilandirmalari
+                     (k59_hali, a_*, sabit_mola_480, mola_*, b_*, oran_90,
+                     eski_urun_hali, fm_agirlik_*) kapali sabitlenmistir:
+                     olctukleri sey degismesin. Her kosunun kaydinda
+                     `once_fazla_mesaisiz` alani kosuda secenegin ACIK olup
+                     olmadigini soyler (ayar; uygulanip uygulanmadigi
+                     `fazla_mesai_once_sifir` alanindadir). Alan 6 Ekim
+                     22:45'ten sonraki kayitlarda var; daha eski kayitlarda
+                     secenek `ayar` sozlugunden okunur (bulgu 21'in
+                     kaydinda acikca `true`, ondan oncekilerde yok = kapali).
+                   ⚠ 7 Ekim, O-18: 6 Ekim gecesi olculen hal SERT KESIMDI
+                     (fazla mesaisiz plan bulununca fazla mesai butun
+                     asamalarda 0'da tutuluyordu). Bu Mustafa'nin ilkesini
+                     cigniyordu (hakem agirliklardir); urun yolu duzeltildi:
+                     bulunan plan yalniz baslangic noktasi, alanlar geri
+                     acilir. Sert kesim olcum yapilandirmasi olarak duruyor
+                     (`fm_sert`, `fm_sert_kapsama`; bulgu 21'in kaydi bu
+                     haldir). Duzeltilmis yolun tam olcekli olcumu: `fm_once`
+                     / `fm_once_kapsama` (= `varsayilan` / `profil_kapsama`).
     cift_butce   : ayni, sure IKI KATI            -> sure mi yetmiyor?
     ipucu_kapali : birinci asama (ipucu) kapali   -> ipucu yardim mi ediyor,
                                                      koturuyor mu?
@@ -60,6 +82,7 @@ SONUC NEREYE YAZILIR
 """
 
 import copy
+import importlib
 import io
 import json
 import os
@@ -75,6 +98,11 @@ for y in (MOTOR, BURASI):
 from cozucu.model import Model                                # noqa: E402
 from cozucu.coz import coz                                    # noqa: E402
 from dogrulayici import degerlendir                           # noqa: E402
+
+# Motorun VARSAYILAN ayarlari: bir yapilandirma bir secenegi YAZMIYORSA
+# kosuda gecerli olan deger budur (K-61: "once fazla mesaisiz" varsayilan
+# acik). `cozucu.coz` adi fonksiyona cozuldugu icin modul boyle alinir.
+COZ_VARSAYILAN = importlib.import_module("cozucu.coz").VARSAYILAN
 
 
 def _arg(ad, varsayilan, tur=str):
@@ -101,21 +129,43 @@ ISCI = _arg("--isci", None, int)
 #   (olcek degisti); ham buyukluklere bakilir (ozet tablosu).
 #     50 -> 5 : 1 saat fazla mesai = 300 puan = 33 kisi-saat hedef acigi
 #     50 -> 1 : 1 saat fazla mesai =  60 puan =  6,7 kisi-saat hedef acigi
+KAPALI = {"fazla_mesai_once_sifir": False}     # 6 Ekim oncesinin yolu (kayit yapilandirmalari)
+SERT = {"fazla_mesai_once_sifir": True,        # 6 Ekim gecesinin sert kesimi (bulgu 21; OLCUM)
+        "fazla_mesai_sifirda_tut": True}
 YAPILANDIRMALAR = {
     # ⚠ K-60 (4 Ekim): urunun varsayilani UC ASAMA -- gecerli plan, molalar
     #   sabitken iyilestirme (%80), MOLA ADIMI (atamalar sabit, kanitli
     #   optimum). Eski "ortak arama" yapilandirmalari anlamlarini korusun diye
     #   `mola_adimi: False` tasir; onlar 2-3 Ekim olcumlerinin kaydidir.
-    "varsayilan":   ("urunun kostugu hal: uc asama -- gecerli plan, molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
+    # ⚠ K-61 (6 Ekim, Mustafa: "Evet"): "ONCE FAZLA MESAISIZ" urunun
+    #   varsayilani. Urun halini olcen yapilandirmalar (`varsayilan`,
+    #   `profil_*`, `cift_butce`, `lp_guclu`) onu motorun varsayilanindan
+    #   ALIR. 6 Ekim oncesinin kayit yapilandirmalari `KAPALI` tasir.
+    # ⚠ O-18 (7 Ekim): urun yolu = once fazla mesaisiz ARA, bulunca o plandan
+    #   agirlikli aramaya devam et (alanlar acik). Sert kesim (`SERT`) yalniz
+    #   olcum; bulgu 21 o haldir.
+    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz, bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
                      {}, {}),
+    "fm_once":      ("URUN YOLU (7 Ekim): once fazla mesaisiz plan, bulunursa ipucu -- alanlar GERI ACILIR, karari agirliklar verir; DENGELI (= varsayilan; adi olcumun kaydi icin)",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {}),
+    "fm_once_kapsama": ("URUN YOLU (7 Ekim), KAPSAMA profili (= profil_kapsama)",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {"profil": "KAPSAMA"}),
+    "fm_sert":      ("SERT KESIM (6 Ekim gecesinin hali, bulgu 21; OLCUM): fazla mesaisiz plan bulunursa fazla mesai butun asamalarda 0'da TUTULUR; DENGELI",
+                     dict(SERT), {}),
+    "fm_sert_kapsama": ("SERT KESIM (bulgu 21; OLCUM), KAPSAMA profili",
+                     dict(SERT), {"profil": "KAPSAMA"}),
+    "fm_once_kapali": ("6 Ekim ONCESININ urun hali: once fazla mesaisiz KAPALI, DENGELI (kiyas; bulgu 20'nin kosulari)",
+                     dict(KAPALI), {}),
+    "fm_once_kapali_kapsama": ("6 Ekim ONCESININ urun hali: once fazla mesaisiz KAPALI, KAPSAMA profili",
+                     dict(KAPALI), {"profil": "KAPSAMA"}),
     "k59_hali":     ("3 Ekim urun hali (K-59): %40 iyilestirme + ~347 sn ORTAK arama (atamalar + molalar birlikte)",
-                     {"ilk_asama_iyilestirme_orani": 0.4, "mola_adimi": False}, {}),
+                     dict(KAPALI, ilk_asama_iyilestirme_orani=0.4, mola_adimi=False), {}),
     #   5 Ekim 21:28 olculdu (bulgu 19, 600 sn, ucer kosu): %90 ile %80
     #   arasinda fark yok (fazla mesai 28-45 saat her ikisinde, eksik/asim/
     #   mola ayni); mola adimina 44-47 sn kaldi, optimum 40,5-42,9 sn'de --
     #   pay 1-5 sn. %80 KALDI. Yapilandirma kayit icin duruyor.
     "oran_90":      ("K-60 kalibrasyon kaydi (bulgu 19): iyilestirme payi %90 -- fark yok, %80 kaldi",
-                     {"ilk_asama_iyilestirme_orani": 0.9}, {}),
+                     dict(KAPALI, ilk_asama_iyilestirme_orani=0.9), {}),
     # URUN HALI, UC PROFIL (5 Ekim karari: urun hali olcumleri 900 sn'de --
     #   K-35'in onerilen secenegi; 600 sn A/B kiyaslari icin). Sahne DENGELI
     #   profille yazili; asagidakiler yalniz `profil` alanini degistirir.
@@ -128,27 +178,35 @@ YAPILANDIRMALAR = {
     #   mesaiyle plan buldu; o planlar DENGELI agirliklariyla 26.589-26.703,
     #   DENGELI'nin kendi buldugu 105.742-148.431 (fazla mesai disi kismi
     #   26.931-26.992, %0,2 oynuyor). Birinci asama gecerli plani fazla mesai
-    #   degiskenleri 0'a sabitken arar; bulursa fazla mesai butun asamalarda
-    #   0'da kalir (K-30: "yalniz hedef kapsama iyilesecekse fazla mesai
-    #   yapilmaz"), bulamazsa alanlar geri acilir, bugunku yol isler.
+    #   degiskenleri 0'a sabitken arar. 6 Ekim gecesinin hali: bulursa fazla
+    #   mesai butun asamalarda 0'da kalir (SERT KESIM -- simdi yalniz olcum,
+    #   `fm_sert*`). Urun yolu (7 Ekim, O-18): bulunan plan ipucudur, alanlar
+    #   geri acilir, karari agirliklar verir (`fm_once*`). Bulamazsa her iki
+    #   halde alanlar geri acilir, onceki yol isler.
     #   Kiyas: ayni profilin `varsayilan` / `profil_kapsama` kosulari
     #   (kalite-olcumu-95-profiller-900.json, 6 Ekim sabahi, ayni makine).
-    "fm_once_sifir": ("OLCUM (bulgu 20): once fazla mesaisiz plan, DENGELI -- bulunursa fazla mesai 0'da kalir; bulunamazsa bugunku yol",
-                     {"fazla_mesai_once_sifir": True}, {}),
-    "fm_once_sifir_kapsama": ("OLCUM (bulgu 20): once fazla mesaisiz plan, KAPSAMA profili",
-                     {"fazla_mesai_once_sifir": True}, {"profil": "KAPSAMA"}),
+    #   Bulgu 21'in kaydi (kalite-olcumu-95-fmsifir-900.json) bu adlarla
+    #   yazildi. O kosuda secenek 6 Ekim gecesinin SERT KESIMIYDI (O-18):
+    #   ayni olcumu bugun `fm_sert` / `fm_sert_kapsama` verir; bu ikisi
+    #   kaydin adlari olarak sert kesime SABITLENDI (olctukleri degismesin).
+    "fm_once_sifir": ("bulgu 21 kaydi (6 Ekim, sert kesim = fm_sert): once fazla mesaisiz plan, DENGELI -- bulunursa fazla mesai 0'da TUTULUR; bulunamazsa onceki yol",
+                     dict(SERT), {}),
+    "fm_once_sifir_kapsama": ("bulgu 21 kaydi (6 Ekim, sert kesim = fm_sert_kapsama): KAPSAMA profili",
+                     dict(SERT), {"profil": "KAPSAMA"}),
     "eski_urun_hali": ("K-59 oncesi urun hali (2 Ekim): iyilestirme KAPALI, ortak arama (kiyas icin)",
-                     {"ilk_asama_iyilestirme_saniye": 0, "mola_adimi": False}, {}),
+                     dict(KAPALI, ilk_asama_iyilestirme_saniye=0, mola_adimi=False), {}),
     "cift_butce":   ("ayni ayarlar, arama suresi iki kati",
                      {"azami_saniye": SANIYE * 2}, {}),
-    "ipucu_kapali": ("birinci asama (gecerli plan ipucu) kapali",
+    "ipucu_kapali": ("birinci asama (gecerli plan ipucu) kapali -- K-61'den beri 'once fazla mesaisiz' da birinci asamada oldugundan o da kapali: varsayilandan IKI sey farkli",
                      {"iki_asama_esigi": 10 ** 9}, {}),
     "lp_guclu":     ("CP-SAT linearization_level=2 (daha guclu LP, daha iyi alt sinir)",
                      {"cozucu_parametreleri": {"linearization_level": 2}}, {}),
+    #   K-61: bu agirliklarda kisayolun kosulu zaten tutmaz (5 < 9); 2
+    #   Ekim'in kaydiyla birebir ayni kalsin diye acikca kapali.
     "fm_agirlik_5": ("TESHIS: fazla mesai agirligi 50 -> 5 (dakika basina)",
-                     {}, {"agirliklar": {"FAZLA_MESAI": 5}}),
+                     dict(KAPALI), {"agirliklar": {"FAZLA_MESAI": 5}}),
     "fm_agirlik_1": ("TESHIS: fazla mesai agirligi 50 -> 1 (dakika basina)",
-                     {}, {"agirliklar": {"FAZLA_MESAI": 1}}),
+                     dict(KAPALI), {"agirliklar": {"FAZLA_MESAI": 1}}),
     # T-60 bulgu 8 (2 Ekim): "ipucu demir atiyor, ipucusuz arama guvenilir
     # degil". Asagidakiler OLCUM secenekleridir. (a) 3 Ekim'den beri URUNUN
     # VARSAYILANI (K-59; K-60 ile %80); mola adimi 4 Ekim'den beri urunun
@@ -160,22 +218,22 @@ YAPILANDIRMALAR = {
     #       amacli iyilestirir; ana asamanin ipucu iyilesmis plan olur.
     #       Sure arama butcesinin ICINDEN gider.
     "a_ipuclu_120":   ("(a) birinci asamada 120 sn amacli iyilestirme, amacsiz plandan baslayarak; ortak arama",
-                       {"ilk_asama_iyilestirme_saniye": 120, "mola_adimi": False}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=120, mola_adimi=False), {}),
     "a_ipucusuz_120": ("(a) birinci asamada 120 sn amacli iyilestirme, IPUCUSUZ (bulamazsa amacsiz plan kalir); ortak arama",
-                       {"ilk_asama_iyilestirme_saniye": 120,
-                        "ilk_asama_iyilestirme_ipucusuz": True, "mola_adimi": False}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=120,
+                            ilk_asama_iyilestirme_ipucusuz=True, mola_adimi=False), {}),
     "a_ipuclu_60":    ("(a) birinci asamada 60 sn amacli iyilestirme, amacsiz plandan baslayarak; ortak arama",
-                       {"ilk_asama_iyilestirme_saniye": 60, "mola_adimi": False}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=60, mola_adimi=False), {}),
     #   2 Ekim gecesi tam olcek sonucu: (a) fazla mesaiyi 475-511 saatten
     #   60-100 saate indirdi ve kazancin cogu SABIT MOLALI 120 saniyede geldi
     #   (amacsiz 1,9-2,9 milyon -> 236-354 bin; ana asama ustune %6-12 ekledi).
     #   Iki soru: daha uzun sabit molali arama daha da iyi mi; molalarin
     #   yerini aramaktan cikarmak (Mustafa'nin sorusu) ne kazandirir?
     "a_ipuclu_240":   ("(a) birinci asamada 240 sn amacli iyilestirme (butcenin %40'i); ortak arama (= k59_hali)",
-                       {"ilk_asama_iyilestirme_saniye": 240, "mola_adimi": False}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=240, mola_adimi=False), {}),
     "sabit_mola_480": ("(a) aramanin neredeyse TAMAMI sabit molali modelde: 480 sn iyilestirme, kalan ORTAK arama",
-                       {"ilk_asama_iyilestirme_saniye": 480,
-                        "ilk_asama_iyilestirme_orani": 0.85, "mola_adimi": False}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=480,
+                            ilk_asama_iyilestirme_orani=0.85, mola_adimi=False), {}),
     #   MOLA AYRI ADIM (3 Ekim, Mustafa'nin sorusu "molalar motorun hesabindan
     #   ciksin mi?"): sabit_mola_480 ile AYNI birinci asama (480 sn sabit
     #   molali iyilestirme), TEK FARK ana asamada ATAMALAR SABIT -- kalan
@@ -187,9 +245,9 @@ YAPILANDIRMALAR = {
     #   kalan 107 sn'nin plan verdigi olculdu: ilk plan 56-57 sn'de
     #   (kalite-olcumu-95-mola-600.json, bulgu 15-16).
     "mola_ayri_adim": ("mola ayri adim (bulgu 17 kaydi): sabit_mola_480 ile ayni ilk asama, atamalar SABIT, genel %2 boslukta erken durur",
-                       {"ilk_asama_iyilestirme_saniye": 480,
-                        "ilk_asama_iyilestirme_orani": 0.85,
-                        "mola_adimi": True, "mola_adimi_hedef_bosluk": 0.02}, {}),
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=480,
+                            ilk_asama_iyilestirme_orani=0.85,
+                            mola_adimi=True, mola_adimi_hedef_bosluk=0.02), {}),
     #   3 Ekim 18:21 (bulgu 17): mola_ayri_adim 29 sn'de durdu -- "hedef
     #   boslugu %2" TOPLAM amacin boslugu, toplamin %70-77'si sabit fazla
     #   mesai; mola teriminin kendi boslugu daha genisti (en iyi ihtimalle
@@ -199,16 +257,16 @@ YAPILANDIRMALAR = {
     #   Kiyas: varsayilan (K-59: 240 sn sabit molali + ~347 sn ortak arama).
     #   4 Ekim: bu yapilandirma K-60 ile URUNUN VARSAYILANI oldu (600 sn'de
     #   `varsayilan` ile ayni: %80 = 480 sn, mola adimi, hedef_bosluk 0).
-    "mola_adimi_tam": ("mola adimi TAM (bulgu 18 kaydi; 600 sn'de = varsayilan): 480 sn iyilestirme, atamalar SABIT, kanitli optimuma kadar",
-                       {"ilk_asama_iyilestirme_saniye": 480,
-                        "ilk_asama_iyilestirme_orani": 0.85,
-                        "mola_adimi": True, "mola_adimi_hedef_bosluk": 0.0}, {}),
+    "mola_adimi_tam": ("mola adimi TAM (bulgu 18 kaydi; 600 sn'de 6 Ekim oncesinin varsayilani -- once fazla mesaisiz KAPALI): 480 sn iyilestirme, atamalar SABIT, kanitli optimuma kadar",
+                       dict(KAPALI, ilk_asama_iyilestirme_saniye=480,
+                            ilk_asama_iyilestirme_orani=0.85,
+                            mola_adimi=True, mola_adimi_hedef_bosluk=0.0), {}),
     #   (b) ana asamada ipuclu ve ipucusuz arama YAN YANA, ayni surede;
     #       isciler bolusulur, iyi olan plan secilir. Model bellekte iki kez.
     "b_paralel_3":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 3 isci, kalani ipucluya; ortak arama",
-                       {"paralel_ipucusuz_isci": 3, "mola_adimi": False}, {}),
+                       dict(KAPALI, paralel_ipucusuz_isci=3, mola_adimi=False), {}),
     "b_paralel_2":    ("(b) ipuclu + ipucusuz yan yana; ipucusuza 2 isci, kalani ipucluya; ortak arama",
-                       {"paralel_ipucusuz_isci": 2, "mola_adimi": False}, {}),
+                       dict(KAPALI, paralel_ipucusuz_isci=2, mola_adimi=False), {}),
 }
 VARSAYILAN_SECIM = "varsayilan,cift_butce,ipucu_kapali,lp_guclu"
 SECILEN = _arg("--yapilandirma", VARSAYILAN_SECIM).split(",")
@@ -550,20 +608,35 @@ def sinir_yazisi(s):
 
 
 def fm_once_yazisi(s, ayar):
-    """ "Once fazla mesaisiz" satiri; yapilandirma secenegi istemediyse None.
+    """ "Once fazla mesaisiz" satiri; kosuda secenek KAPALIYSA None.
 
-    ⚠ Secenek istendigi halde motor uygulamadiysa (iki asama devreye
-      girmedi: kucuk olcek, baslangic plani; ya da daraltilacak fazla mesai
-      degiskeni yok: CALISAN profili, yari zamanli kadro) kosu URUNUN
-      VARSAYILAN yolunu olcmustur -- bu SESSIZ gecmez, satira yazilir."""
+    `ayar` kosuda GECERLI olan ayardir (motorun varsayilani + yapilandirma;
+    bkz. `etkin_ayar`): K-61'den beri secenek yazilmasa da aciktir.
+
+    ⚠ Secenek acik oldugu halde motor denemediyse kosu fazla mesaisiz aramayi
+      YAPMAMISTIR -- bu SESSIZ gecmez, satira yazilir: deneme hic yapilmadi
+      (iki asama devreye girmedi: kucuk olcek, baslangic plani; ya da
+      daraltilacak fazla mesai degiskeni yok: CALISAN profili, yari zamanli
+      kadro) -> cikti None.
+    O-18 (7 Ekim): bulununca iki hal var -- urun yolu (ipucu, alanlar geri
+      acildi, karari agirliklar verdi) ve sert kesim (`sifirda_tutuldu`,
+      olcum). Eski kayitlarda (6 Ekim) alan yok: o kosular sert kesimdi."""
     if not ayar.get("fazla_mesai_once_sifir"):
         return None
     f = s.get("fazla_mesai_once_sifir")
     if not f:
         return ("once fazla mesaisiz: UYGULANMADI (iki asama yok ya da daraltilacak fazla mesai "
-                "degiskeni yok) -- bu kosu varsayilan yolu olctu")
-    if f["bulundu"]:
-        sonuc = "BULUNDU -- fazla mesai butun asamalarda 0"
+                "degiskeni yok) -- bu kosuda fazla mesaisiz arama yapilmadi")
+    if f.get("uygulandi") is False:
+        # 7 Ekim 00:45 surumunun kaydi (agirlik kosulu; Mustafa hic kosmadi,
+        # kayit yok) -- yine de okunabilsin (inceleme A, 04:45).
+        return ("once fazla mesaisiz: UYGULANMADI (00:45 surumunun agirlik kosulu: %s) "
+                "-- bu kosuda fazla mesaisiz arama yapilmadi" % f.get("sebep"))
+    if f.get("bulundu"):
+        if f.get("sifirda_tutuldu", True):
+            sonuc = "BULUNDU -- SERT KESIM: fazla mesai butun asamalarda 0'da tutuldu (olcum)"
+        else:
+            sonuc = "BULUNDU -- ipucu oldu, alanlar geri acildi; karari agirliklar verdi"
     elif f["kanitlandi_yok"]:
         sonuc = ("YOK (%skanitlandi) -- alanlar geri acildi"
                  % ("molalar sabitken " if f.get("molalar_sabit", True) else ""))
@@ -571,6 +644,13 @@ def fm_once_yazisi(s, ayar):
         sonuc = "bu surede BULUNAMADI -- alanlar geri acildi"
     return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni"
             % (sonuc, f["saniye"], f["degisken"]))
+
+
+def etkin_ayar(ayar):
+    """Kosuda GECERLI olan ayar: motorun varsayilani + yapilandirmanin
+    yazdiklari. Bir yapilandirmanin YAZMADIGI secenek varsayilandan gelir;
+    kayit bunu soylemezse "o kosuda acik miydi" sonradan bilinemez."""
+    return dict(COZ_VARSAYILAN, **(ayar or {}))
 
 
 def _tire(v):
@@ -599,7 +679,13 @@ def kosu(g, ad, ayar, girdi_ek=None):
     sure = time.time() - t1
     ist = c.get("cozum_istatistikleri") or {}
     m = c.get("metrikler") or {}
+    etkin = etkin_ayar(tam_ayar)
     s = {"yapilandirma": ad, "ayar": {a: v for a, v in tam_ayar.items()},
+         # K-61: secenek varsayilandan da gelebilir; kosuda ACIK MIYDI?
+         # (AYAR. Uygulanip uygulanmadigi `fazla_mesai_once_sifir`te.)
+         "once_fazla_mesaisiz": bool(etkin.get("fazla_mesai_once_sifir")),
+         # O-18: sert kesim mi (olcum) -- urun yolunda False.
+         "sert_kesim": bool(etkin.get("fazla_mesai_sifirda_tut")),
          "girdi_ek": girdi_ek or {},
          "kurma_sn": round(kurma, 1), "toplam_sn": round(sure, 1),
          "durum": c.get("durum")}
@@ -614,8 +700,8 @@ def kosu(g, ad, ayar, girdi_ek=None):
     s["metrikler"] = m
     if c.get("durum") != "cozuldu":
         print("         DURUM: %s  (%s)" % (c.get("durum"), ist.get("durma_sebebi")))
-        if fm_once_yazisi(s, tam_ayar):
-            print("         " + fm_once_yazisi(s, tam_ayar))
+        if fm_once_yazisi(s, etkin):
+            print("         " + fm_once_yazisi(s, etkin))
         return s
     r = degerlendir(g, c["atamalar"])
     sayi = {}
@@ -634,8 +720,8 @@ def kosu(g, ad, ayar, girdi_ek=None):
     print("         %.0f sn  |  %s  |  amac %s (fazla mesai disi %s)  |  %s  |  cozum %s"
           % (sure, s["durma_sebebi"], s["amac_degeri"], fm_disi_amac(s), sinir_yazisi(s),
              s["cozum_sayisi"]))
-    if fm_once_yazisi(s, tam_ayar):
-        print("         " + fm_once_yazisi(s, tam_ayar))
+    if fm_once_yazisi(s, etkin):
+        print("         " + fm_once_yazisi(s, etkin))
     # Notlarin hepsi dosyaya yazilir; ekrana yalniz bu secenegin notu (tam
     # olcekte "departman kapali" notlari onlarca satir).
     for n in s["uygulanmayan_notlar"]:
