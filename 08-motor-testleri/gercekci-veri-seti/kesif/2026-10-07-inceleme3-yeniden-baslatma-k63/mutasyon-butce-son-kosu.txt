@@ -1,0 +1,14 @@
+OZGUN KOD (baslangic):
+  testler/test_sure_butcesi.py               7 passed in 4.06s
+
+MUTASYONLAR:
+  [butce     ] birinci asama eski butcesini alsin             OLDU           1 failed, 6 passed in 4.00s
+  [butce     ] ana cozum butcenin tamamini alsin              OLDU           2 failed, 5 passed in 4.02s
+  [butce     ] ana cozume sifir kalabilsin                    OLDU           1 failed, 6 passed in 3.97s
+  [butce     ] durma sebebi eski kiyasla                      OLDU           1 failed, 6 passed in 3.99s
+
+OZGUN KOD (bitis):
+  testler/test_sure_butcesi.py               7 passed in 4.01s
+
+OZET: 4 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)

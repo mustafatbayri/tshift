@@ -1,0 +1,26 @@
+OZGUN KOD (baslangic):
+  testler/test_mola_adimi_yetismedi.py       10 passed in 0.90s
+
+MUTASYONLAR:
+  [k63       ] K-63 kapali: ana asama plansizsa eskisi gibi "sure yetmedi" OLDU           4 failed, 6 passed in 0.95s
+  [k63       ] K-37 cignensin: INFEASIBLE (kanit) de ipucu planina cevrilsin OLDU           1 failed, 9 passed in 0.85s
+  [k63       ] iki asama yokken de denensin (yarim/yok ipucu) OLDU           2 failed, 8 passed in 1.05s
+  [k63       ] cozucu degistirilmesin (plansiz cozucuden plan okunsun) OLDU           3 failed, 7 passed in 1.28s
+  [k63       ] not dusulmesin (sessiz geri donus)             OLDU           2 failed, 8 passed in 0.95s
+  [k63       ] durma sebebi sabitlenmis modelin "optimum"u kalsin (yanlis kanit) OLDU           3 failed, 7 passed in 0.94s
+  [k63       ] ortak aramada da "mola_adimi_yetismedi" densin OLDU           1 failed, 9 passed in 0.97s
+  [k63       ] sabitlenmis modelin siniri yazilsin (O-16 cignenir) OLDU           2 failed, 8 passed in 0.91s
+  [k63       ] ortak aramada yakinlik yuzdesi yazilsin (sabit modelin %0'i) OLDU           1 failed, 9 passed in 0.91s
+  [k63       ] cevirme adimi ARASIN (sabitleme kapali; gecersiz ipucuda plan uydurulur) OLDU           2 failed, 8 passed in 0.93s
+  [k63       ] cevirme adimi butun iscilerle kossun           OLDU           1 failed, 9 passed in 0.95s
+  [k63       ] cevirme adimina butcenin tamami verilsin       OLDU           1 failed, 9 passed in 0.93s
+  [k63       ] cevirme adiminin tabani kalksin (0 sn = hic arama) OLDU           1 failed, 9 passed in 0.99s
+  [k63       ] yarim ipucu da cevrilsin (eksik degiskenler aranir) OLDU           1 failed, 9 passed in 0.92s
+  [k63       ] ipucu plani ciktiya yazilmasin                 OLDU           3 failed, 7 passed in 0.91s
+  [k63       ] ipucu plani basarisizken "bulundu" densin      OLDU           1 failed, 9 passed in 1.04s
+
+OZGUN KOD (bitis):
+  testler/test_mola_adimi_yetismedi.py       10 passed in 0.98s
+
+OZET: 16 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)

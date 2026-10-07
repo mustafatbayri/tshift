@@ -295,6 +295,32 @@ def test_fm_once_yazisi_UYGULANMAYAN_secenegi_SESSIZ_gecmez():
     assert "UYGULANMADI" in y and "agirlik" in y and "00:45" in y, y
 
 
+def test_fm_once_yazisi_bulgu_25_denemeleri_yazar_eski_kayitta_alan_yok():
+    """Yeniden baslatma (bulgu 25): `denemeler` varsa her denemenin tohumu,
+    durumu ve suresi satira girer; 7 Ekim sabahindan eski kayitlarda alan
+    yoktur, satir eskisi gibi biter."""
+    ayar = {"fazla_mesai_once_sifir": True}
+    b = {"bulundu": True, "degisken": 359, "saniye": 47.3, "kanitlandi_yok": False,
+         "molalar_sabit": True, "sifirda_tutuldu": False, "deneme_siniri": 3,
+         "denemeler": [{"tohum": 1, "saniye": 40.0, "durum": "UNKNOWN"},
+                       {"tohum": 2, "saniye": 7.3, "durum": "OPTIMAL"}]}
+    y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": b}, ayar)
+    assert "deneme 2/3" in y and "tohum 1 UNKNOWN 40.0s" in y and "tohum 2 OPTIMAL 7.3s" in y, y
+    eski = {k: v for k, v in b.items() if k not in ("denemeler", "deneme_siniri")}
+    y = KO.fm_once_yazisi({"fazla_mesai_once_sifir": eski}, ayar)
+    assert "deneme" not in y and y.endswith("359 fazla mesai degiskeni"), y
+
+
+def test_ipucu_plani_yazisi_K63_alinan_ve_alinamayan_eski_kayitta_None():
+    assert KO.ipucu_plani_yazisi({}) is None
+    assert KO.ipucu_plani_yazisi({"ipucu_plani": None}) is None
+    y = KO.ipucu_plani_yazisi({"ipucu_plani": {"bulundu": True, "saniye": 0.4, "durum": "OPTIMAL"},
+                               "durma_sebebi": "mola_adimi_yetismedi"})
+    assert "IKINCI ASAMANIN PLANI alindi" in y and "0.4 sn" in y and "mola_adimi_yetismedi" in y, y
+    y = KO.ipucu_plani_yazisi({"ipucu_plani": {"bulundu": False, "saniye": 0.1, "durum": "INFEASIBLE"}})
+    assert "ALINAMADI" in y and "INFEASIBLE" in y, y
+
+
 def test_K61_etkin_ayar_secenegi_MOTORUN_varsayilanindan_alir():
     """Yapilandirma secenegi YAZMIYORSA kosuda gecerli olan motorun
     varsayilanidir (K-61: acik; sert kesim KAPALI -- O-18). Satir ona gore
@@ -319,6 +345,8 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
     urun = {"varsayilan", "profil_kapsama", "profil_calisan", "cift_butce", "lp_guclu"}
     # 7 Ekim urun yolu, ACIKCA yazilmis (olcum kaydinin adi): alanlar acik
     acik = {"fm_once", "fm_once_kapsama"}
+    # bulgu 25: urun yolu + yeniden baslatma (3 x 40 sn, farkli tohum)
+    yeniden = {"fm_once_deneme3", "fm_once_deneme3_kapsama"}
     # SERT KESIM (6 Ekim gecesinin hali; bulgu 21'in kaydi) -- yalniz olcum
     sert = {"fm_sert", "fm_sert_kapsama", "fm_once_sifir", "fm_once_sifir_kapsama"}
     kayit = {"fm_once_kapali", "fm_once_kapali_kapsama", "k59_hali", "oran_90",
@@ -326,13 +354,20 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
              "a_ipucusuz_120", "a_ipuclu_60", "a_ipuclu_240", "sabit_mola_480",
              "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
-    assert set(KO.YAPILANDIRMALAR) == urun | acik | sert | kayit | iki_asamasiz
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz
     for ad in urun | iki_asamasiz:
         assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad
         assert "fazla_mesai_sifirda_tut" not in KO.YAPILANDIRMALAR[ad][1], ad
+        assert "fazla_mesaisiz_deneme" not in KO.YAPILANDIRMALAR[ad][1], ad   # motorun varsayilani (1)
     for ad in acik:
         assert KO.YAPILANDIRMALAR[ad][1] == {"fazla_mesai_once_sifir": True,
                                              "fazla_mesai_sifirda_tut": False}, ad
+    for ad in yeniden:
+        assert KO.YAPILANDIRMALAR[ad][1] == {"fazla_mesai_once_sifir": True,
+                                             "fazla_mesai_sifirda_tut": False,
+                                             "fazla_mesaisiz_deneme": 3}, ad
+    assert KO.YAPILANDIRMALAR["fm_once_deneme3_kapsama"][2] == {"profil": "KAPSAMA"}
+    assert KO.COZ_VARSAYILAN["fazla_mesaisiz_deneme"] == 1       # varsayilan 3 olunca bu test ve `urun` kumesi gozden gecer
     for ad in sert:
         assert KO.YAPILANDIRMALAR[ad][1] == KO.SERT and KO.YAPILANDIRMALAR[ad][1] is not KO.SERT, ad
     for ad in kayit:

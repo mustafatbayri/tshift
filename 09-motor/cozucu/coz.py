@@ -19,6 +19,9 @@ AKIS -- K-60 (Mustafa, 4 Ekim): UC ASAMA
                       iyi plan disarida kalmaz (7 Ekim duzeltmesi, O-18).
                       Bulunamazsa alanlar yine acilir, fazla mesai serbestken
                       bir kez daha aranir (en kotu halde iki pay: 2 x %20).
+                      Bulgu 25 (7 Ekim): fazla mesaisiz aramanin payi
+                      `fazla_mesaisiz_deneme` denemeye bolunebilir (farkli
+                      tohum; varsayilan 1 = tek deneme) -- olcum secenegi.
   2. iyilestirme    : molalar hala sabit, amac geri konur, atamalar iyilesir (%80, kalibrasyon);
                       ipucu 1'in plani -- fazla mesaisiz bulunduysa fazla
                       mesai yalniz agirliklara gore KAZANIYORSA eklenir
@@ -26,6 +29,10 @@ AKIS -- K-60 (Mustafa, 4 Ekim): UC ASAMA
                       aranir, o KISITLI problemin kanitli optimumunda durur
                       (hedef_bosluk 0); kalan sure kullaniciya geri doner
                       (tam olcekte ~45 sn)
+                      K-63 (7 Ekim): mola adimi surede plan uretemezse 2'nin
+                      plani doner (molalar sablonun ideal yerinde), notla ve
+                      `durma_sebebi: mola_adimi_yetismedi` ile -- elde plan
+                      varken "sure yetmedi" denmez (bulgu 24).
   ⚠ O-16 (6 Ekim): mola adiminin optimumu PLANIN optimumu DEGILDIR. Atamalar
     sabitken cozucunun alt siniri yalniz "bu atamalarla en iyi mola
     yerlesimi"ni kanitlar. Bu yuzden mola adimi kostugunda `alt_sinir` ve
@@ -174,12 +181,42 @@ VARSAYILAN = {
     #   `fm_sert` / `fm_once_kapali` yapilandirmalari.
     #   False = 6 Ekim oncesinin davranisi (olcum ve kiyas icin).
     "fazla_mesai_once_sifir": True,
+    # OLCUM (T-60 bulgu 25, 7 Ekim): fazla mesaisiz aramanin YENIDEN
+    #   BASLATILMASI. Birinci asamanin payi (en cok 120 sn) bu kadar denemeye
+    #   bolunur (3 -> 3 x 40 sn), her deneme farkli CP-SAT tohumuyla
+    #   (1 = kutuphanenin varsayilani = bugunku arama, sonra 2, 3...), ilk
+    #   bulunan plan alinir; kanitli "yok" (INFEASIBLE) gelirse kalan denemeler
+    #   yapilmaz. NEDEN: 7 Ekim gece kosusunda (500 kisi, 1200 sn) bu arama 18
+    #   kosunun 1'inde 120 sn'de plan bulamadi ve motor fazla mesai serbest yola
+    #   dustu -- plan 30 saat fazla mesaiyle dondu (116.976; otekiler 26,6-26,8
+    #   bin). Kuyruk olcumu (kuyruk.py, 35 deneme, 6 isci): medyan 7,5 sn, %90
+    #   13 sn, en uzun 62 sn, P(T > 40 sn) = 2/35 -- 3 x 40 sn ile hepsinin
+    #   basarisiz olma tahmini ~%0,02 (denemeler bagimsiz sayilarak; offline).
+    #   1 = BUGUNKU DAVRANIS (tek deneme, payin tamami). 3 motorda 900 sn x 3
+    #   ile olculmeden varsayilan YAPILMAZ (karar kurali bulgu 25'te).
+    "fazla_mesaisiz_deneme": 1,
     # OLCUM: True = 6 Ekim gecesinin SERT KESIMI -- fazla mesaisiz plan
     #   bulununca fazla mesai degiskenleri sonraki asamalarda da [0,0]'da
     #   kalir; cozulen model tam model degildir (kuresel sinir yazilmaz,
     #   `_sinir_kapsami` "fazla_mesaisiz"). Urun yolunda KAPALI (O-18).
     #   Yalniz `fazla_mesai_once_sifir` acikken anlamlidir.
     "fazla_mesai_sifirda_tut": False,
+    # K-63 (7 Ekim, Mustafa: "2. asamanin plani notla donsun onerine ...
+    #   katiliyorum"): ana asama (mola adimi) surede plan uretemezse ama elde
+    #   ikinci asamanin TAM ipucusu varsa o plan doner (molalar sablonun ideal
+    #   yerinde), notla ve `durma_sebebi: mola_adimi_yetismedi` ile. Ipucu plana
+    #   cevrilir: KARAR degiskenleri (x, mola, dinlenme) ipucu degerine
+    #   sabitlenir, ceza degiskenlerini amac en kucuge indirir -- amac_degeri
+    #   planin SIKI amacidir (bkz. `_ipucu_planini_al`; bagimsiz inceleme 3).
+    #   Bu adimin tavani -- butcenin DISINDA kalan tek kalem; olculdu: 0.2
+    #   olcekte 0,6-0,8 sn (bulut, 1 isci), tam olcekte OLCULMEDI
+    #   (disdegerleme ~4 sn); tavan guvenlik icin. Ipucu gecersiz cikarsa
+    #   (olmamali: ayni modelin alani daraltilmis halinin cozumu) eski cevap
+    #   ("sure yetmedi") aynen doner. NEDEN: bulgu 24 (7 Ekim) -- 20 sn'lik
+    #   butcede mola adimina 1-2 sn kaliyor, ikinci asamanin gecerli plani
+    #   eldeyken kullaniciya "sure yetmedi" donuyordu (0.2 olcekte dogal
+    #   kosuda kendiliginden olustu: mola adimina 1,68 sn kaldi).
+    "ipucu_plani_saniye": 30,
 }
 
 
@@ -348,6 +385,12 @@ def _ipucu_ver(kuruldu, ayar):
       Ana asama molalari yine SERBEST arar -- K-32'nin "ayni sablondaki
       herkes ayni dakikada molaya cikmasin" karari degismedi; ipucu
       yalnizca baslangic noktasi.
+
+    ⚠ ONCE FAZLA MESAISIZ (K-61) ve YENIDEN BASLATMA (bulgu 25, 7 Ekim)
+      Secenek acikken bu arama fm_* alanlari [0,0]'a sabitken yapilir ve
+      `_fazla_mesaisiz_ara` ile payi `fazla_mesaisiz_deneme` denemeye
+      bolunebilir (varsayilan 1). Bulunursa plan yalniz IPUCUDUR (alanlar
+      geri acilir); bulunamazsa alanlar acilir, `_gecerli_plan_yeniden_ara`.
     """
     if not kuruldu.cezalar:
         return False                      # amac yok; iki asamanin anlami yok
@@ -364,20 +407,33 @@ def _ipucu_ver(kuruldu, ayar):
     fm_eski = (_fazla_mesaiyi_sifirla(kuruldu)
                if ayar.get("fazla_mesai_once_sifir") else [])
     try:
-        c = cp_model.CpSolver()
-        c.parameters.max_time_in_seconds = _ilk_asama_payi(ayar)
-        c.parameters.num_search_workers = isci_sayisi(ayar)
-        durum = c.Solve(kuruldu.m)
+        pay = _ilk_asama_payi(ayar)
+        denemeler = None
+        if fm_eski:
+            # Fazla mesaisiz arama: payi `fazla_mesaisiz_deneme` denemeye boler
+            # (bulgu 25; varsayilan 1 = tek deneme, payin tamami).
+            durum, c, denemeler = _fazla_mesaisiz_ara(kuruldu, ayar, pay)
+        else:
+            c = cp_model.CpSolver()
+            c.parameters.max_time_in_seconds = pay
+            c.parameters.num_search_workers = isci_sayisi(ayar)
+            durum = c.Solve(kuruldu.m)
         dusulecek = 0.0
         if fm_eski:
             bulundu = durum in (cp_model.OPTIMAL, cp_model.FEASIBLE)
-            deneme = time.time() - basladi
+            deneme_sn = time.time() - basladi     # butun denemelerin toplami
             # OLCUM ("sert kesim"): plan bulunduysa fazla mesai 0'da KALSIN mi?
             # Urunun yolunda HAYIR -- bkz. VARSAYILAN["fazla_mesai_sifirda_tut"].
             sifirda = bulundu and bool(ayar.get("fazla_mesai_sifirda_tut"))
             kuruldu.fazla_mesai_once_sifir = {
                 "bulundu": bulundu, "degisken": len(fm_eski),
-                "saniye": round(deneme, 2),
+                # Toplam: butun denemelerin suresi (bulunan dahil).
+                "saniye": round(deneme_sn, 2),
+                # Bulgu 25: her denemenin tohumu, suresi, durumu; `deneme_siniri`
+                # istenen en cok deneme (politika). Tek denemede de yazilir ki
+                # kuyruk urun kosularinda gorunur kalsin.
+                "deneme_siniri": _deneme_siniri(ayar),
+                "denemeler": denemeler,
                 # INFEASIBLE = fazla mesaisiz plan YOK (kanit); UNKNOWN = sure
                 # yetmedi, var mi yok mu bilinmiyor.
                 # ⚠ Kanit ARANAN MODELINDIR: molalar sablonun ideal yerinde
@@ -405,14 +461,16 @@ def _ipucu_ver(kuruldu, ayar):
                     "(agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)"
                     % ("yok (%skanitlandi)" % ("molalar sabitken " if mola_sabit else "")
                        if durum == cp_model.INFEASIBLE
-                       else "bu surede bulunamadi"))
+                       else "bu surede bulunamadi" + (
+                           # bulgu 25: kac denemede (yeniden baslatma acikken)
+                           " (%d denemede)" % len(denemeler) if len(denemeler) > 1 else "")))
                 # ⚠ BASARISIZ DENEMENIN SURESI IYILESTIRMENIN PAYINDAN DUSER.
                 #   Dusulmezse en kotu halde (deneme payini doldurdu, yeniden
                 #   arama da) birinci asama butcenin tamamini yer, mola
                 #   adimina 1 sn kalir ve elde plan varken "sure yetmedi"
                 #   doner (900 sn'de: 120 + 120 + 659). Dusulunce mola adimina
                 #   kalan sure deneme yapilmamis gibi kalir (120 + 720).
-                dusulecek = deneme
+                dusulecek = deneme_sn
                 durum, c = _gecerli_plan_yeniden_ara(kuruldu, ayar, basladi)
         if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
@@ -430,6 +488,60 @@ def _ipucu_ver(kuruldu, ayar):
     finally:
         _molalari_serbest_birak(kuruldu, sabitlenen)
         amaci_geri_koy()
+
+
+def _deneme_siniri(ayar):
+    """`fazla_mesaisiz_deneme`: en cok kac deneme (en az 1; bos/0/eksi = 1)."""
+    try:
+        return max(1, int(ayar.get("fazla_mesaisiz_deneme") or 1))
+    except (TypeError, ValueError):
+        return 1
+
+
+def _fazla_mesaisiz_ara(kuruldu, ayar, pay):
+    """Fazla mesaisiz (fm_* alanlari [0,0]) GECERLI plan aramasi -- T-60 bulgu
+    25 (7 Ekim). Donen: (durum, cozucu, denemeler).
+
+    Pay `fazla_mesaisiz_deneme` esit parcaya bolunur; her deneme AYNI modeli
+    farkli CP-SAT tohumuyla (1, 2, 3...; 1 kutuphanenin varsayilani, yani
+    bugunku arama) arar. Ilk bulunan plan doner. INFEASIBLE kanittir ("fazla
+    mesaisiz plan yok" -- molalar sabitken): kalan denemeler yapilmaz, tohum
+    bunu degistirmez. UNKNOWN ("bu parcada bulunamadi") sonraki denemeye
+    gecer. Varsayilan 1: tek deneme, payin tamami -- davranis 7 Ekim sabahiyla
+    ayni.
+
+    ⚠ NEDEN TOHUM: 500 kisilik modelde bu aramanin suresi agir kuyruklu
+      (medyan 7,5 sn, 53 gozlemde 1 x > 120 sn; kuyruk.py). Ayni tohumla bile
+      sure 7 kat oynuyor (paralel iscilerin zamanlamasi); farkli tohum
+      aramanin baslangicini da degistirir -- yeniden baslatma, tek uzun
+      aramaya gore kuyrugu keser (offline tahmin 3 x 40 sn: %0,02; motorda
+      900 sn x 3 ile dogrulanacak, bulgu 25).
+    ⚠ Toplam sure payi asmaz (parcalar esit; 1 sn tabani yalniz birden cok
+      denemede ve pay deneme sayisindan kucukse devreye girer -- tek denemede
+      pay aynen verilir, bugunku aramayla birebir). Bu arama birinci
+      asamanin kendisidir: basarili denemenin suresi iyilestirmeden
+      dusulmez; basarisiz denemelerin toplami duser (`_ipucu_ver`,
+      `dusulecek`).
+    Arac: kesif/2026-10-07-fm-siz-arama-kuyrugu/kuyruk.py `--politika N` ayni
+    fonksiyonu motor disinda tekrar tekrar kosturur (politika olcumu).
+    """
+    adet = _deneme_siniri(ayar)
+    parca = float(pay) if adet == 1 else max(1.0, float(pay) / adet)
+    isci = isci_sayisi(ayar)
+    denemeler = []
+    durum, c = cp_model.UNKNOWN, None
+    for i in range(adet):
+        c = cp_model.CpSolver()
+        c.parameters.max_time_in_seconds = parca
+        c.parameters.num_search_workers = isci
+        c.parameters.random_seed = i + 1          # 1 = CP-SAT varsayilani (bugunku arama)
+        t0 = time.time()
+        durum = c.Solve(kuruldu.m)
+        denemeler.append({"tohum": i + 1, "saniye": round(time.time() - t0, 2),
+                          "durum": c.StatusName(durum)})
+        if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE):
+            break                                 # plan var, ya da yoklugu kanitli
+    return durum, c, denemeler
 
 
 def _fazla_mesaiyi_sifirla(kuruldu):
@@ -603,6 +715,79 @@ def _atamalari_sabitle(kuruldu):
         dom.extend([int(deger), int(deger)])
         sayi += 1
     return sayi
+
+
+def _ipucu_planini_al(kuruldu, ayar):
+    """K-63 (7 Ekim): modeldeki TAM ipucunun PLANINI cozume cevirir. Donen
+    sozluk: {"bulundu", "saniye", "durum", "durum_kodu", "sabitlenen", "cozucu"}.
+
+    NASIL: KARAR degiskenleri (x, mola, dinlenme) ipucu degerine SABITLENIR
+    (alan daraltma, `_atamalari_sabitle` gibi; model `coz` icinde tek
+    kullanimlik), ceza degiskenleri SERBEST kalir ve amac onlari en kucuge
+    indirir. Boylece plan ipucunun planidir (atamalar ve molalar birebir) ve
+    `amac_degeri` o planin SIKI amacidir. Tek isci: karar degiskenleri
+    sabitken arama yok, yayilim var.
+
+    ⚠ NEDEN BUTUN DEGISKENLER SABITLENMEZ (bagimsiz inceleme 3, 7 Ekim
+      aksami): ipucunun ceza degerleri GEVSEK olabilir -- ikinci asamanin
+      planinda az (0.2 olcekte +%1,2), birinci asamanin AMACSIZ planinda cok
+      (0.1-0.2 olcekte +%85-89, tamami mola kapsamasi). Butun degiskenler
+      ipucuya sabitlenseydi (`fix_variables_to_their_hinted_value`) donen
+      `amac_degeri` o gevsek toplam olurdu; K-35 karti planlari bu sayiyla
+      kiyasliyor. Olculdu (0.2 olcek, bulut, 1 isci): karar degiskenleri sabit
+      0,63 sn, amac = alt sinir, karar degiskenlerinde 0 fark; butun
+      degiskenler sabit 0,8 sn.
+    ⚠ IPUCU TAM OLMALI: `_tam_ipucu_yaz` butun degiskenleri yazar; yarim
+      ipucu (baslangic plani, `_plandan_ipucu`: yalniz x/mola/dinlenme) bu
+      yoldan gecmez -- bu "ikinci asamanin plani" olmazdi (K-54 yolu icin
+      ayri karar gerekir).
+    ⚠ Ipucu gecersiz cikarsa (INFEASIBLE/UNKNOWN) `bulundu: False` doner;
+      cagiran eski cevabi ("sure yetmedi") aynen verir. Gecersiz olmamali:
+      ipucu ayni modelin alani DARALTILMIS halinin cozumudur ve alanlar
+      yalniz genisletildi ya da ipucu degerine sabitlendi.
+    Sure: 0.1 olcekte 0,33 sn, 0.2 olcekte 0,7-0,8 sn (bulut, 2 cekirdek);
+    tam olcekte olculmedi (dogrusal disdegerleme ~4 sn); tavan
+    `ipucu_plani_saniye`.
+    """
+    proto = kuruldu.m.Proto()
+    bilgi = {"bulundu": False, "saniye": 0.0, "durum": None, "durum_kodu": None,
+             "sabitlenen": 0, "cozucu": None}
+    if len(proto.solution_hint.vars) < len(proto.variables):
+        bilgi["durum"] = "ipucu_eksik"
+        return bilgi
+    ipucu = dict(zip(proto.solution_hint.vars, proto.solution_hint.values))
+    for sozluk in (kuruldu.x, kuruldu.mola, kuruldu.dinlenme):
+        for v in sozluk.values():
+            deger = ipucu.get(v.Index())
+            if deger is None:
+                continue
+            dom = proto.variables[v.Index()].domain
+            dom.clear()
+            dom.extend([int(deger), int(deger)])
+            bilgi["sabitlenen"] += 1
+    c = cp_model.CpSolver()
+    c.parameters.max_time_in_seconds = max(1.0, float(ayar.get("ipucu_plani_saniye", 30)))
+    c.parameters.num_search_workers = 1
+    t0 = time.time()
+    durum = c.Solve(kuruldu.m)
+    bilgi.update({"saniye": round(time.time() - t0, 2), "durum": c.StatusName(durum),
+                  "durum_kodu": durum,
+                  "bulundu": durum in (cp_model.OPTIMAL, cp_model.FEASIBLE),
+                  "cozucu": c})
+    return bilgi
+
+
+def _ipucu_kaynagi(kuruldu):
+    """Modeldeki tam ipucu hangi asamanin plani: "ikinci_asama" (iyilestirme
+    plan buldu ve ipucu onunla yenilendi), "birinci_asama_korundu"
+    (iyilestirmenin plani ipucudan kotuydu, amacsiz plan kaldi) ya da
+    "birinci_asama" (iyilestirme kapali / plan bulamadi: amacsiz plan)."""
+    iy = getattr(kuruldu, "ilk_asama_iyilestirme", None) or {}
+    if iy.get("plan_bulundu") and not iy.get("ipucu_korundu"):
+        return "ikinci_asama"
+    if iy.get("ipucu_korundu"):
+        return "birinci_asama_korundu"
+    return "birinci_asama"
 
 
 def _tam_ipucu_yaz(kuruldu, cozucu):
@@ -895,6 +1080,31 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         durum = _durgunluk_bekcisiyle_coz(cozucu, kuruldu.m, geri, ayar)
     sure = time.time() - basladi
 
+    # K-63 (7 Ekim): ANA ASAMA YETISMEDIYSE IKINCI ASAMANIN PLANI DONER.
+    # Ana asama plansiz dondu (UNKNOWN: sure yetmedi) ama iki asama ikinci
+    # asamanin TAM ipucusunu yazdiysa, o plan gecerlidir ve eldedir: ipucu
+    # plana cevrilir, notla doner. Molalar o planda sablonun ideal yerindedir
+    # (mola adimi aranmadi). "Sure yetmedi" demek elde plan varken yanlisti
+    # (bulgu 24). INFEASIBLE kanittir, buraya girmez (K-37: imkansiz ayri).
+    ipucu_plani = None
+    if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE) and iki_asama:
+        ipucu_plani = _ipucu_planini_al(kuruldu, ayar)
+        if ipucu_plani["bulundu"]:
+            cozucu, durum = ipucu_plani["cozucu"], ipucu_plani["durum_kodu"]
+            # Ipucu hangi asamanin plani? Iyilestirme plan bulduysa ve ipucu
+            # korunmadiysa ikincinin; yoksa birincinin AMACSIZ plani (bagimsiz
+            # inceleme 3: not yanlis asamayi soylemesin).
+            ipucu_plani["kaynak"] = _ipucu_kaynagi(kuruldu)
+            kuruldu.notlar.append(
+                "%s surede plan uretemedi; %s dondu "
+                "(molalar %s, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)"
+                % ("mola adimi" if atamalar_sabit else "ana asama",
+                   {"ikinci_asama": "ikinci asamanin plani",
+                    "birinci_asama_korundu": "birinci asamanin plani (iyilestirmenin plani ondan kotuydu, ipucu korundu)",
+                    "birinci_asama": "birinci asamanin AMACSIZ plani (iyilestirme plan bulamadi)"}[ipucu_plani["kaynak"]],
+                   "sablonun ideal yerinde" if ayar.get("ilk_asama_sabit_mola", True)
+                   else "birinci asamanin buldugu yerde"))
+
     # O-16 (6 Ekim): ana asamanin cozdugu model TAM MODEL degilse cozucunun
     # alt siniri ve "optimum"u o KISITLI problemindir -- planin tamami icin
     # kanit DEGIL. Iki kisitli hal var (bkz. `_sinir_kapsami`):
@@ -916,6 +1126,13 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         sebep = kapsam + "_" + sebep
     if paralel and kapsam:
         _paralel_kisitli_isaretle(paralel, kapsam)
+    ipucu_plani_dondu = bool(ipucu_plani and ipucu_plani["bulundu"])
+    if ipucu_plani_dondu:
+        # K-63: donen plan ikinci asamanindir; ana asama hic plan bulmadi.
+        # Sabitlenmis ipucunun "optimum"u ve siniri kanit DEGILDIR (tek
+        # noktali model): kuresel de kisitli da sinir yazilmaz.
+        sebep = "mola_adimi_yetismedi" if atamalar_sabit else "ana_asama_yetismedi"
+        sinir = None
 
     istatistik = {
         "degisken_sayisi": len(kuruldu.x) + len(kuruldu.mola),
@@ -956,6 +1173,11 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         # `bulundu` / `kanitlandi_yok` / `saniye` denemenin sonucu;
         # `sifirda_tutuldu` yalniz olcum secenegiyle True (sert kesim).
         "fazla_mesai_once_sifir": getattr(kuruldu, "fazla_mesai_once_sifir", None),
+        # K-63: ana asama plansizken ikinci asamanin plani alindi mi; None =
+        # gerek olmadi. {"bulundu", "saniye", "durum"} -- `saniye` butcenin
+        # disindaki tek kalem.
+        "ipucu_plani": ({a: ipucu_plani.get(a) for a in ("bulundu", "saniye", "durum", "kaynak")}
+                        if ipucu_plani else None),
         "baslangic_plani_kullanildi": baslangic_kullanildi,
         # K-54: donmus gunler -- kac satir aynen gecti, kac kisit gecmise
         # dusuldu/kirpildi (sifirsa alan yine yazilir: "yok" ile "unutuldu"
@@ -978,8 +1200,8 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         atamalar = _atamalari_cikar(kuruldu, cozucu)
         metrikler = _metrikler(kuruldu, atamalar, cozucu, sure)
-        if kapsam:
-            metrikler["optimuma_uzaklik_yuzde"] = None      # O-16: kuresel kanit yok
+        if kapsam or ipucu_plani_dondu:
+            metrikler["optimuma_uzaklik_yuzde"] = None      # O-16 / K-63: kuresel kanit yok
         return {
             "durum": "cozuldu",
             "motor_surumu": SURUM,

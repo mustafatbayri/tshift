@@ -1,0 +1,42 @@
+M1 durum_kodu hep OPTIMAL (esdeger beklenir)                           YASIYOR   10 passed in 0.99s
+
+M2 durum adi hep OPTIMAL                                               OLDU    1 failed, 7 passed in 0.91s
+      E   AssertionError: {'bulundu': False, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+M3a tohum hep 1 yazilsin                                               OLDU    1 failed, 32 passed in 8.16s
+      E   AssertionError: [{'tohum': 1, 'saniye': 0.0, 'durum': 'UNKNOWN'}, {'tohum': 1, 'saniye': 0.0, 'durum': 'UNKNOWN'}, {'tohum': 1, 'saniye': 0.0, 'durum': 'OPTIMAL'}]
+M3b tohum kaymis (i+2)                                                 OLDU    1 failed, 31 passed in 8.31s
+      E   AssertionError: {'tohum': 2, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+M3c tohum = len(denemeler)+1 (esdeger)                                 YASIYOR   38 passed in 9.42s
+
+M4 parca = pay/(adet+1)                                                OLDU    1 failed, 7 passed in 0.83s
+      E   AssertionError: [3.0, 6.0, 23.99782371520996, 29.988161325454712]
+M5 not: mola adimi / ana asama ters                                    OLDU    1 failed in 0.54s
+      E   AssertionError: ['ana asama surede plan uretemedi; ikinci asamanin plani dondu (molalar sablonun ideal yerinde, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)']
+M6 K-63 baslangic planinda da denensin                                 OLDU    1 failed, 4 passed in 0.72s
+      E   AssertionError: assert {'bulundu': False, 'saniye': 0.0, 'durum': 'ipucu_eksik'} is None
+M18 ipucu_plani ciktisi yalniz bulununca                               OLDU    1 failed, 7 passed in 1.01s
+      E   TypeError: 'NoneType' object is not subscriptable
+M19 tavan: 0 -> 30 (or ile)                                            OLDU    1 failed, 8 passed in 1.01s
+      E   AssertionError: (True, 1, 30.0)
+M20 K-63 yalniz atamalar sabitken                                      OLDU    1 failed, 1 passed in 0.62s
+      E   AssertionError: assert 'sure_yetmedi' == 'cozuldu'
+M21 not tek denemede de '(1 denemede)' desin (>1 -> >=1)               YASIYOR   38 passed in 9.40s
+
+M22 deneme_siniri = len(denemeler)                                     OLDU    1 failed, 34 passed in 9.33s
+      E   AssertionError: {'bulundu': False, 'degisken': 6, 'saniye': 0.0, 'deneme_siniri': 1, ...}
+M11 dusulecek = denemelerin toplami (olcumden degil)                   YASIYOR   38 passed in 9.29s
+
+M29 fm_once.saniye = yalniz son denemenin suresi                       OLDU    1 failed, 33 passed in 9.26s
+      E   AssertionError: {'bulundu': False, 'degisken': 6, 'saniye': 0.4, 'deneme_siniri': 3, ...}
+M30 K-63: cozum_suresi ipucu planinin suresini de kapsasin (sure += saniye) YASIYOR   10 passed in 0.94s
+
+M31 K-63 sebep: atamalar_sabit yerine mola_adimi ayarina bakilsin      YASIYOR   10 passed in 1.05s
+
+M32 ipucu eksik kontrolu <= (tam ipucu da eksik sayilsin)              OLDU    1 failed in 0.58s
+      E   AssertionError: sure_yetmedi
+M33 fm-siz aramada ilk deneme payin tamamini alsin, kalanlar 1 sn      OLDU    1 failed, 32 passed in 8.04s
+      E   AssertionError: [(20.0, 1), (6.666666666666667, 2), (6.666666666666667, 3)]
+M34 denemeler listesi bos kalsin (None yerine [])                      YASIYOR   48 passed in 10.01s
+
+
+OZGUN KOD (son): 48 passed in 9.87s

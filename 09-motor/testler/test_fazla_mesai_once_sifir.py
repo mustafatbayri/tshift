@@ -43,6 +43,13 @@ BU DOSYA NEYI SINAR
     * `fazla_mesai_sifirda_tut: True` (OLCUM) 6 Ekim'in sert kesimidir:
       bulununca fazla mesai 0'da kalir, cozulen model tam model DEGILDIR,
       kuresel sinir yazilmaz (bolum 3b); urun yolunda KAPALI.
+    * `fazla_mesaisiz_deneme` (OLCUM, T-60 bulgu 25, 7 Ekim; varsayilan 1):
+      fazla mesaisiz aramanin payi N denemeye bolunur, her deneme farkli
+      CP-SAT tohumuyla (1 = kutuphanenin varsayilani = bugunku arama), ilk
+      bulunan alinir, INFEASIBLE kanittir (kalan denemeler yapilmaz);
+      ciktida `denemeler` (bolum 7). NEDEN: 500 kisilik gece kosusunda bu
+      arama 18 kosunun 1'inde 120 sn'de bulamadi ve plan 30 saat fazla
+      mesaiyle dondu; kuyruk olcumu (35 deneme) medyan 7,5 sn, en uzun 62 sn.
   Tam olcekte ne kazandirdigi burada SINANMAZ -- o bir olcumdur
   (08-motor-testleri/gercekci-veri-seti/kalite-olc.py; kayit: T-60 bulgu
   21 sert kesim; duzeltilmis yolun 500 kisilik olcumu bekleniyor).
@@ -328,6 +335,9 @@ def test_fazla_mesaisiz_deneme_SUREYE_takilirsa_kanit_DENMEZ_butce_asilmaz(monke
     assert gorulen["fm"] == once
     notlar = [n for n in c["uygulanmayan_notlar"] if "fazla mesaisiz" in n]
     assert len(notlar) == 1 and "bu surede bulunamadi" in notlar[0], notlar
+    assert "denemede" not in notlar[0], notlar          # tek denemede deneme sayisi yazilmaz (bulgu 25)
+    b = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert b["deneme_siniri"] == 1 and len(b["denemeler"]) == 1 and b["denemeler"][0]["durum"] == "UNKNOWN", b
     pay = C._ilk_asama_payi(dict(C.VARSAYILAN, **AYAR))                   # 30 x %20 = 6 sn
     assert abs(cagri[0] - pay) < 1e-6, cagri
     assert 1.0 <= cagri[1] <= pay + 1e-6, cagri
@@ -901,3 +911,189 @@ def test_amac_degeri_YUVARLANIR_kirpilmaz():
             return 65154.999999
     assert C._amac_degeri(Sahte(), cp_model.OPTIMAL) == 65155
     assert C._amac_degeri(Sahte(), cp_model.UNKNOWN) is None
+
+
+# ----------------------------------------------------------------------
+# 7. YENIDEN BASLATMA -- T-60 bulgu 25 (7 Ekim): `fazla_mesaisiz_deneme`
+#    Varsayilan 1 = tek deneme (bugunku arama). Olcumde 3: pay uce bolunur,
+#    her deneme farkli tohum, ilk bulunan alinir; INFEASIBLE kanittir.
+# ----------------------------------------------------------------------
+
+def _kaydeden_cozucu(monkeypatch, ilk_unknown=0, bekle=0.0):
+    """CpSolver'in her Solve cagrisinda (sure, tohum) kaydeder; ilk
+    `ilk_unknown` cagri aramadan UNKNOWN doner (`bekle` sn bekleyerek)."""
+    cagri = []
+    asil = C.cp_model.CpSolver
+
+    class Kaydet(asil):
+        def Solve(self, model, *a, **kw):
+            cagri.append((self.parameters.max_time_in_seconds, self.parameters.random_seed))
+            if len(cagri) <= ilk_unknown:
+                if bekle:
+                    time.sleep(bekle)
+                return cp_model.UNKNOWN
+            return asil.Solve(self, model, *a, **kw)
+
+    monkeypatch.setattr(C.cp_model, "CpSolver", Kaydet)
+    return cagri
+
+
+def test_VARSAYILAN_tek_deneme_payin_tamami_TOHUM_1_kutuphanenin_varsayilani(monkeypatch):
+    """Varsayilan 1: davranis 7 Ekim sabahiyla ayni -- tek arama, sure = pay,
+    tohum 1 (CP-SAT'in varsayilani; motor bugune kadar hic yazmadi, yani 1
+    ile aradi). Ciktida `denemeler` tek denemede de yazilir (kuyruk urun
+    kosularinda gorunur kalsin)."""
+    assert C.VARSAYILAN["fazla_mesaisiz_deneme"] == 1
+    assert cp_model.CpSolver().parameters.random_seed == 1          # kutuphanenin varsayilani
+    cagri = _kaydeden_cozucu(monkeypatch)
+    k = Model(_sahne(gun=5)).kur()
+    assert C._ipucu_ver(k, dict(C.VARSAYILAN, **UZUN)) is True
+    pay = C._ilk_asama_payi(dict(C.VARSAYILAN, **UZUN))                 # 100 x %20 = 20 sn
+    assert cagri[0] == (pay, 1), cagri
+    b = k.fazla_mesai_once_sifir
+    assert b["bulundu"] is True and b["deneme_siniri"] == 1, b
+    assert len(b["denemeler"]) == 1, b["denemeler"]
+    d = b["denemeler"][0]
+    assert d["tohum"] == 1 and d["durum"] in ("OPTIMAL", "FEASIBLE") and d["saniye"] >= 0, d
+
+
+def test_UC_deneme_pay_UCE_bolunur_tohumlar_FARKLI_ilk_bulunan_alinir(monkeypatch):
+    """Ilk iki deneme aramadan UNKNOWN doner, ucuncusu gercek arama: uc cagri,
+    her biri pay/3 sn, tohumlar 1-2-3; plan BULUNDU sayilir, not dusulmez,
+    ipucu fazla mesaisiz plandir ve iyilestirmenin payi AYNEN kalir (bulan
+    arama birinci asamanin kendisidir; basarisiz parcalar da onun icinde)."""
+    cagri = _kaydeden_cozucu(monkeypatch, ilk_unknown=2)
+    gorulen = {}
+
+    def kaydet(model, saniye, isci):
+        proto = model.Proto()
+        gorulen["saniye"] = saniye
+        gorulen["ipucu"] = dict(zip(proto.solution_hint.vars, proto.solution_hint.values))
+        gorulen["degisken"] = len(proto.variables)
+        return cp_model.UNKNOWN, None, C._CozumSayaci()
+    monkeypatch.setattr(C, "_iyilestirme_coz", kaydet)
+    k = Model(_sahne(gun=5)).kur()
+    fm_indeks = [v.Index() for v in _fm(k)]
+    ayar = dict(C.VARSAYILAN, **dict(UZUN, fazla_mesaisiz_deneme=3))
+    assert C._ipucu_ver(k, ayar) is True
+    pay = C._ilk_asama_payi(ayar)                                          # 20 sn
+    assert [s for s, _ in cagri[:3]] == [pay / 3] * 3, cagri
+    assert [t for _, t in cagri[:3]] == [1, 2, 3], cagri
+    assert len(cagri) == 3, cagri                        # yeniden arama YOK (bulundu)
+    b = k.fazla_mesai_once_sifir
+    assert b["bulundu"] is True and b["kanitlandi_yok"] is False and b["deneme_siniri"] == 3, b
+    assert [d["tohum"] for d in b["denemeler"]] == [1, 2, 3], b["denemeler"]
+    assert [d["durum"] for d in b["denemeler"]][:2] == ["UNKNOWN", "UNKNOWN"], b["denemeler"]
+    assert b["denemeler"][2]["durum"] in ("OPTIMAL", "FEASIBLE"), b["denemeler"]
+    assert not any("fazla mesaisiz" in n for n in k.notlar), k.notlar
+    assert abs(gorulen["saniye"] - 80.0) < 1e-6, gorulen                  # pay %80 AYNEN
+    assert len(gorulen["ipucu"]) == gorulen["degisken"] > 0
+    assert all(gorulen["ipucu"][i] == 0 for i in fm_indeks)                # ipucu fazla mesaisiz
+
+
+def test_UC_deneme_HEPSI_bulamazsa_eski_yol_not_KAC_DENEMEDE_der_sure_DUSER(monkeypatch):
+    """Uc parca da UNKNOWN: alanlar geri acilir, fazla mesai serbestken
+    yeniden aranir (4. cagri), not "bu surede bulunamadi (3 denemede)" der,
+    uc parcanin toplam suresi iyilestirmenin payindan duser (O-12: beklenen
+    deger motorun OLCTUGU sureden hesaplanir)."""
+    cagri = _kaydeden_cozucu(monkeypatch, ilk_unknown=3, bekle=0.4)
+    gorulen = {}
+
+    def kaydet(model, saniye, isci):
+        gorulen["saniye"] = saniye
+        return cp_model.UNKNOWN, None, C._CozumSayaci()
+    monkeypatch.setattr(C, "_iyilestirme_coz", kaydet)
+    k = Model(_sahne(gun=5)).kur()
+    ayar = dict(C.VARSAYILAN, **dict(UZUN, fazla_mesaisiz_deneme=3))
+    assert C._ipucu_ver(k, ayar) is True                 # yeniden arama buldu
+    assert len(cagri) == 4, cagri
+    b = k.fazla_mesai_once_sifir
+    assert b["bulundu"] is False and b["kanitlandi_yok"] is False, b
+    assert [d["durum"] for d in b["denemeler"]] == ["UNKNOWN"] * 3, b["denemeler"]
+    assert 1.0 < b["saniye"] < 30.0, b                    # ~1,2 sn (3 x 0,4)
+    assert abs(sum(d["saniye"] for d in b["denemeler"]) - b["saniye"]) <= 0.05, b
+    notlar = [n for n in k.notlar if "fazla mesaisiz" in n]
+    assert len(notlar) == 1 and "bu surede bulunamadi (3 denemede)" in notlar[0], notlar
+    assert abs(gorulen["saniye"] - (80.0 - b["saniye"])) <= 0.02, (gorulen, b)
+
+
+def test_INFEASIBLE_KANITTIR_kalan_denemeler_YAPILMAZ_not_deneme_saymaz():
+    """Fazla mesai zorunluyken (gun=6) ilk deneme INFEASIBLE doner: tohum bunu
+    degistirmez, kalan iki deneme yapilmaz; not "yok (kanitlandi)" der,
+    "(3 denemede)" demez."""
+    g = _sahne(gun=6)
+    c = C.coz(g, dict(AYAR, fazla_mesaisiz_deneme=3))
+    assert c["durum"] == "cozuldu"
+    b = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert b["bulundu"] is False and b["kanitlandi_yok"] is True and b["deneme_siniri"] == 3, b
+    assert len(b["denemeler"]) == 1 and b["denemeler"][0]["durum"] == "INFEASIBLE", b["denemeler"]
+    notlar = [n for n in c["uygulanmayan_notlar"] if "fazla mesaisiz" in n]
+    assert len(notlar) == 1 and "yok (molalar sabitken kanitlandi)" in notlar[0], notlar
+    assert "denemede" not in notlar[0], notlar
+
+
+def test_parcalar_ESIT_toplam_PAYI_asmaz_taban_1_sn(monkeypatch):
+    """`_fazla_mesaisiz_ara` dogrudan: pay 6 sn, 3 deneme -> 2'ser sn; pay 2
+    sn, 4 deneme -> taban 1 sn (sifir/kesirli sure CP-SAT'e 'hic arama'
+    demek olurdu; pay denemeden kucukse toplam payi asabilir, belgelidir)."""
+    cagri = _kaydeden_cozucu(monkeypatch, ilk_unknown=10 ** 6)        # hep UNKNOWN
+    k = Model(_sahne(gun=5)).kur()
+    k.m.ClearObjective()
+    durum, c, denemeler = C._fazla_mesaisiz_ara(k, dict(C.VARSAYILAN, fazla_mesaisiz_deneme=3), 6.0)
+    assert durum == cp_model.UNKNOWN and len(denemeler) == 3
+    assert [s for s, _ in cagri[-3:]] == [2.0, 2.0, 2.0], cagri
+    assert [t for _, t in cagri[-3:]] == [1, 2, 3], cagri
+    _, _, denemeler = C._fazla_mesaisiz_ara(k, dict(C.VARSAYILAN, fazla_mesaisiz_deneme=4), 2.0)
+    assert len(denemeler) == 4 and [s for s, _ in cagri[-4:]] == [1.0] * 4, cagri
+    _, _, denemeler = C._fazla_mesaisiz_ara(k, dict(C.VARSAYILAN), 6.0)        # varsayilan 1
+    assert len(denemeler) == 1 and cagri[-1] == (6.0, 1), cagri
+    # tek denemede 1 sn tabani YOK: pay aynen (bugunku aramayla birebir; inceleme 3 B4)
+    C._fazla_mesaisiz_ara(k, dict(C.VARSAYILAN), 0.8)
+    assert cagri[-1] == (0.8, 1), cagri
+    C._fazla_mesaisiz_ara(k, dict(C.VARSAYILAN, fazla_mesaisiz_deneme=2), 0.8)
+    assert [s for s, _ in cagri[-2:]] == [1.0, 1.0], cagri
+
+
+def test_deneme_sayisi_GECERSIZSE_1_sayilir():
+    """Bos, 0, eksi, sayi olmayan -> 1 (tek deneme); "3" -> 3."""
+    for deger, beklenen in ((None, 1), (0, 1), (-2, 1), ("3", 3), ("x", 1), (2.9, 2), (3, 3)):
+        assert C._deneme_siniri({"fazla_mesaisiz_deneme": deger}) == beklenen, (deger, beklenen)
+    assert C._deneme_siniri({}) == 1
+
+
+def test_URUN_yolunda_ciktida_denemeler_tek_kayit_tohum_1():
+    """Urunun hali (secenek yazilmaz): tek deneme, tohum 1, plan bulundu;
+    `deneme_siniri` 1. Kuyruk olcumunun karsiligi ciktida okunur."""
+    c = C.coz(_sahne(gun=5), dict(AYAR_URUN))
+    b = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert b["bulundu"] is True and b["deneme_siniri"] == 1, b
+    assert len(b["denemeler"]) == 1 and b["denemeler"][0]["tohum"] == 1, b["denemeler"]
+    assert b["denemeler"][0]["durum"] in ("OPTIMAL", "FEASIBLE")
+
+
+def test_UCTAN_UCA_uc_deneme_butceyi_ASMAZ(monkeypatch):
+    """`coz()` ile: azami 10 sn, 3 deneme; uc parca da suresini doldurup
+    UNKNOWN doner (gercek uyku), sonra yeniden arama ve asamalar gercek.
+    `ilk_asama_sn + ana_asama_butce_sn <= azami` (T-59) ve plan doner.
+    Inceleme 3 (B4) olctu: azami 10/5/30'da toplam = azami."""
+    cagri = []
+    asil = C.cp_model.CpSolver
+
+    class ParcayiDoldur(asil):
+        def Solve(self, model, *a, **kw):
+            cagri.append(self.parameters.max_time_in_seconds)
+            if len(cagri) <= 3:
+                time.sleep(self.parameters.max_time_in_seconds)
+                return cp_model.UNKNOWN
+            return asil.Solve(self, model, *a, **kw)
+    monkeypatch.setattr(C.cp_model, "CpSolver", ParcayiDoldur)
+    g = _sahne(gun=5)
+    c = C.coz(g, dict(AYAR, azami_saniye=10, fazla_mesaisiz_deneme=3))
+    assert c["durum"] == "cozuldu", c.get("durum")
+    ist = c["cozum_istatistikleri"]
+    b = ist["fazla_mesai_once_sifir"]
+    assert b["bulundu"] is False and [d["durum"] for d in b["denemeler"]] == ["UNKNOWN"] * 3, b
+    assert cagri[:3] == [1.0, 1.0, 1.0], cagri                  # pay 2 sn / 3 -> taban 1 sn
+    assert 2.9 < b["saniye"] < 3.6, b
+    assert ist["ilk_asama_sn"] + ist["ana_asama_butce_sn"] <= 10.0 + 0.05, ist
+    assert c["metrikler"]["fazla_mesai_saat"] == 0

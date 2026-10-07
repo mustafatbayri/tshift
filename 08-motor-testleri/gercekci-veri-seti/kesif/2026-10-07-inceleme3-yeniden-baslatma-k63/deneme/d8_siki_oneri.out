@@ -1,0 +1,3 @@
+fix-all: OPTIMAL 0.86s amac=8757 | oneri(1 isci): OPTIMAL 0.11s amac=8754 bound=8754 | karar degiskeni farki=0
+fix-all: OPTIMAL 0.83s amac=8757 | oneri(1 isci): OPTIMAL 0.12s amac=8754 bound=8754 | karar degiskeni farki=0
+fix-all: OPTIMAL 0.77s amac=8757 | oneri(1 isci): OPTIMAL 0.11s amac=8754 bound=8754 | karar degiskeni farki=0

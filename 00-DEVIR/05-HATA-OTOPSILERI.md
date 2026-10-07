@@ -803,6 +803,55 @@ Mustafa'ya 02:35'te söylendi, blok koşmaması istendi.
 
 ---
 
+## O-19 · *"Tohum 0 = CP-SAT'in varsayılanı, motorun kullandığı değer"* yazdım; kütüphanenin varsayılanı 1'di — bir ölçüm yanlış etiketle kayda geçti ⚠
+
+**Tarih:** 7 Ekim 2026, 18:40 (hata 17:30–18:00 arasında yazıldı: `kuyruk.py`,
+OKU-BENI, T-60 bulgu 25 tablosu, oturum kaydı; yeniden başlatmayı koda
+yazarken `CpSolver().parameters.random_seed`i okuyunca görüldü)
+
+**Ne oldu.** Kuyruk ölçüm aracı aynı modeli 30 farklı tohumla çözüyor ve
+*"motorun kullandığı tohumu"* beş kez tekrarlıyordu. Motor tohum yazmaz; ben
+*"CP-SAT'in varsayılanı 0'dır"* diye **hatırladım** ve aracı, OKU-BENI'yi,
+bulgu 25'in tablosunu (*"Tohum 0 (ürünün ayarı), 5 tekrar"*) ve oturum
+kaydını buna göre yazdım. ortools 9.15'te varsayılan **1**: motor 1 ile
+arıyordu; beş tekrar başka bir tohumundu.
+
+**Nasıl görünüyordu.** Hiçbir şey kırmızı yanmadı; araç çalıştı, sayılar
+geldi, tablo doldu. Yanlış olan tek şey bir etiketti — ve o etiket
+*"motorun kendi aramasını 5 kez gördük"* iddiasını taşıyordu.
+
+**Sonucu değiştirdi mi.** Hayır: tohum 0'ın beş tekrarı 7,8–55,9 sn
+(aynı tohumda 7× fark) ve vardığı sonuç — *rastgelelik tohumdan değil,
+paralel işçilerin zamanlamasından* — herhangi bir tohum için aynı okunur;
+motorun tohumu (1) 30'un içinde bir kez ölçüldü. Yeniden başlatma politikası
+(3 × 40 sn, farklı tohum) bu etiketten bağımsız. Ama kayıt yanlıştı ve
+düzeltilmeseydi bir sonraki okuyan *"ürünün ayarı 5 kez denendi"* diye
+okuyacaktı.
+
+**Ne yakaladı.** Kodun kendisi: yeniden başlatmada ilk denemenin *"bugünkü
+arama"* olması gerekiyordu; bunu yazarken varsayılanı kütüphaneden okudum.
+Bir hafta sonra yazsaydım yakalanmayabilirdi.
+
+**Düzeltme.** `kuyruk.py` (tohum argümanı `--tekrar-tohum`, varsayılan 1;
+`--sifir-tekrar` adı 18:00 komut satırı geçerli kalsın diye duruyor), OKU-BENI
+(düzeltme kutusu), bulgu 25 tablosu ve oturum kaydı (üstü çizili + doğrusu).
+Yeniden başlatmanın ilk denemesi tohum 1 (kütüphanenin varsayılanı) — bunu
+bir test (*"VARSAYILAN tek deneme … TOHUM 1"*) ve bir mutasyon (*"ilk tohum 0
+olsun"*) çiviliyor: kütüphane varsayılanı değişirse test kırmızı yanar.
+
+### Kalıcı bekçi
+
+- **Kütüphane varsayılanı hafızadan yazılmaz; koddan okunur ve test çiviler.**
+  Bir ölçümün etiketi *"X'in varsayılanı"* / *"ürünün ayarı"* diyorsa o değer
+  aynı betikte `print` edilir (kuyruk.py artık kurulumda *"CP-SAT varsayılan
+  tohumu N (motorun tohumu)"* basıyor) — etiket, okunan değerden üretilir,
+  yazılmaz.
+- Mustafa'nın kuralının bir alt maddesi: *"tahmin yürütme"* yalnız sahaya ve
+  verilere değil, **kullandığımız araçların davranışına** da uygulanır.
+  *(Otomatik bekçisi yok; test + mutasyon yalnız bu tohumu korur.)*
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -824,7 +873,8 @@ Mustafa'ya 02:35'te söylendi, blok koşmaması istendi.
 | O-15 | "Hepsi öldü" toplamı grup koşularından toplanmıştı; tam koşuda 1 yaşadı 3 atlandı | Toplam yalnız tam koşudan; tam koşu damgası `mutasyon-tam-kosu.txt`; çözücü/doğrulayıcı değişince commit öncesi tam koşu | ✅ *(kural + damga; DENETIM kontrolü onay bekliyor)* |
 | O-16 | Mola adımının optimumu planın optimumu diye yazıldı (*"optimum · %0"*); aynı girdide 4–5,6 kat iyi plan vardı; aynı sınıf aynı gün ölçüm seçeneğinde de çıktı | Çözülen model tam model değilse sınır genel alana yazılmaz (`_sinir_kapsami`; `mola_adimi_alt_sinir`, `fazla_mesaisiz_alt_sinir`); bilerek kötü planla uçtan uca test + 18 mutasyon; yeniden fiyatlama çapraz kontrolü; bağımsız inceleme | ✅ *(test + mutasyon; sonuç kartı için küresel sınır açık)* |
 | O-17 | Karar veri setine bağlanmadı: iki işi yapabilen eleman 500 kişilik sette hiç yok (K-50); *"%95"* seti istenen kıtlığı (fazla mesai zorunlu) taşımıyor | Karar kapanışında üçüncü soru: *tam ölçekli veri setinde sınanıyor mu*; saha durumu oranla değil ölçümle doğrulanır; merdiven seviyelerinin *"neyi sınıyor"* tablosu | 🟡 *(kural yazıldı; bekçi merdiven aracıyla gelecek)* |
-| O-18 | *"Hakem ağırlıklardır"* kararını, fazla mesaili planları aramadan çıkaran bir kısayol + tahmini bir ağırlık koşuluyla yazdım; *"bu kurda oluşmaz"* dedim — ürün ağırlıklarında karşı örnek vardı (750'ye karşı 2.256; 12 kişide 9.000'e karşı 12.000) | Bulunan fazla mesaisiz plan yalnız başlangıç noktası (alanlar geri açılır, karar ağırlıklarda); karşı örnekler test; *"oluşmaz"* cümlesi av betiği olmadan yazılmaz; inceleme *"indi"* denmeden önce | 🟡 *(kod + test; DENETIM uyarısı yazılacak; 500 kişilik ölçüm bekleniyor)* |
+| O-18 | *"Hakem ağırlıklardır"* kararını, fazla mesaili planları aramadan çıkaran bir kısayol + tahmini bir ağırlık koşuluyla yazdım; *"bu kurda oluşmaz"* dedim — ürün ağırlıklarında karşı örnek vardı (750'ye karşı 2.256; 12 kişide 9.000'e karşı 12.000) | Bulunan fazla mesaisiz plan yalnız başlangıç noktası (alanlar geri açılır, karar ağırlıklarda); karşı örnekler test; *"oluşmaz"* cümlesi av betiği olmadan yazılmaz; inceleme *"indi"* denmeden önce | 🟡 *(kod + test; DENETIM uyarısı yazılacak; 500 kişilik ölçüm 7 Ekim'de yapıldı — bulgu 23)* |
+| O-19 | Kuyruk ölçümünde *"tohum 0 = CP-SAT varsayılanı = motorun tohumu"* yazdım; varsayılan 1'di — etiket yanlış, sonuç değişmedi | Kütüphane varsayılanı koddan okunur, betik basar, test + mutasyon çiviler (tohum 1); *"tahmin yürütme"* araçların davranışı için de geçerli | ✅ *(düzeltildi; test + mutasyon)* |
 
 ---
 

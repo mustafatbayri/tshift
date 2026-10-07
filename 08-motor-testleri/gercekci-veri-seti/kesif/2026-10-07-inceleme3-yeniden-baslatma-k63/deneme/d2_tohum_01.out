@@ -1,0 +1,26 @@
+degisken=59812 kisit=76008 x=1841 mola=15638 dinlenme=40201 ceza=2131
+mola sabitlenen 49021 fm sifirlanan 31
+
+(a) 1 isci
+  seed=None              OPTIMAL   0.76s dal=12625 catisma=31 det=0.0888 bool=1365
+  seed=1                 OPTIMAL   0.58s dal=12625 catisma=31 det=0.0888 bool=1365
+  seed=2                 OPTIMAL   0.63s dal=12810 catisma=81 det=0.1204 bool=1365
+  seed=3                 OPTIMAL   0.65s dal=8370 catisma=32 det=0.0911 bool=1365
+  seed=None tekrar       OPTIMAL   0.68s dal=12625 catisma=31 det=0.0888 bool=1365
+  yazilmamis == seed1 cozum: True | dal/catisma/det esit: True
+  yazilmamis tekrar ayni: True
+  seed2 != seed1 cozum: True | seed3 != seed1: True
+  seed2 vs seed1 x farki: 294 / 1841
+
+(b) 2 isci
+  seed=None #1           OPTIMAL   0.85s dal=14143 catisma=96 det=0.5055 bool=1365
+  seed=None #2           OPTIMAL   0.82s dal=14143 catisma=96 det=0.496 bool=1365
+  seed=None #3           OPTIMAL   0.78s dal=14143 catisma=96 det=0.3858 bool=1365
+  seed=1 #1              OPTIMAL   0.75s dal=14143 catisma=96 det=0.5235 bool=1365
+  seed=1 #2              OPTIMAL   0.77s dal=14143 catisma=96 det=0.5143 bool=1365
+  seed=1 #3              OPTIMAL   0.72s dal=14143 catisma=96 det=0.496 bool=1365
+  seed=2 #1              OPTIMAL   0.81s dal=14839 catisma=85 det=0.4783 bool=1365
+  seed=2 #2              OPTIMAL   0.84s dal=14839 catisma=85 det=0.4667 bool=1365
+  seed=2 #3              OPTIMAL   0.76s dal=14839 catisma=85 det=0.4905 bool=1365
+
+(c) model proto Solve sonrasi ayni mi: True

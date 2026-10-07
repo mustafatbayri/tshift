@@ -1,8 +1,8 @@
 # 7 Ekim 2026 (gündüz) — gece koşusunun okunması; bulgu 25: fazla mesaisiz ilk aramanın kuyruğu
 
 **Pencere:** 7 Ekim 17:28 – · **Önceki:** `2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
-§15–17 (O-18 düzeltmesi, kredi kesintisi, bulgu 23–24, K-63/K-64). **Bu
-pencerede kod değişmedi.**
+§15–17 (O-18 düzeltmesi, kredi kesintisi, bulgu 23–24, K-63/K-64). ~~**Bu
+pencerede kod değişmedi.**~~ *(18:31'den sonra değişti — §6.)*
 
 ## İçindekiler
 
@@ -11,6 +11,9 @@ pencerede kod değişmedi.**
 3. [Kuyruk ölçümü aracı ve karar kuralı](#3--kuyruk-ölçümü-aracı-ve-karar-kuralı)
 4. [Sıradaki](#4--sıradaki)
 5. [Kuyruk ölçümünün sonucu (18:00)](#5--kuyruk-ölçümünün-sonucu-1800)
+6. [Sıra onaylandı; yeniden başlatma + K-63 koda indi (18:31–20:30)](#6--sıra-onaylandı-yeniden-başlatma--k-63-koda-indi-18312030)
+7. [Bağımsız inceleme 3 ve düzeltmeler; O-19](#7--bağımsız-inceleme-3-ve-düzeltmeler-o-19)
+8. [Mustafa'ya blok ve sıradaki](#8--mustafaya-blok-ve-sıradaki)
 
 ## 1 · Gece koşusunun sonucu
 
@@ -69,7 +72,9 @@ Mustafa `kuyruk.py --deneme 30 --tavan 120 --sifir-tekrar 5` koşturdu (kurma
 [0,0]; 6 işçi). **35 denemenin hepsi buldu**; medyan 7,5 sn, %90 13,0 sn, en
 uzun 61,9 sn; P(T > 10/20/40/60/120) = 9/35 · 2/35 · 2/35 · 1/35 · 0/35. Tohum
 0'ın beş tekrarı 13,0 · 55,9 · 12,2 · 7,9 · 7,8 sn — rastgelelik tohumdan
-değil, paralel işçilerin zamanlamasından (aynı tohumda 7× fark).
+değil, paralel işçilerin zamanlamasından (aynı tohumda 7× fark). *(O-19,
+18:40: tohum 0'a "motorun tohumu" denmişti; motorun tohumu CP-SAT'in
+varsayılanı **1**'dir — sonuç değişmez, etiket düzeltildi; §7.)*
 
 Karar kuralı (OKU-BENI, koşudan önce): P(T > 120) ≈ 0 ve %90 < 40 sn → ilk
 dal. Toplamda (6 Ekim'den beri 18 ürün/sert koşusu + 35 deneme = 53 gözlem)
@@ -84,3 +89,120 @@ süresi/durumu eklenir.
 bugünkü davranış; ölçümde 3) + testler + mutasyonlar → `fm_once` 900 sn × 3 →
 varsayılan 3 → K-61 kapanır. Sırası Mustafa'nın sıralama cevabına göre
 (18:03'te sorulan: kalibrasyonları dondurma; dört kural + veri seti).
+
+## 6 · Sıra onaylandı; yeniden başlatma + K-63 koda indi (18:31–20:30)
+
+**18:03–18:31.** Mustafa: *"eksik kalan kriterleri ne zaman ekleyeceğiz,
+sanki onları eklemeden yaptığımız testler zaman kaybı gibi…"* — cevap: dört
+yumuşak kural (EKIP_SUREKLILIGI, PLAN_KARARLILIGI, TERCIH_KARSILAMA,
+VARDIYA_ROTASYON_YONU) ve veri seti v2 (K-62) olmadan kalibrasyon ölçümleri
+(hibrit, %80→%90, K-64) tekrar gerekir; o yüzden kalibrasyonlar **dondu**,
+bulgu 25 ise ölçümden bağımsız bir ürün sorunu (30 saat fazla mesaili plan).
+Önerilen sıra onaylandı (*"önerdiğin sıraya katılıyorum"*, 18:31 *"başla"*):
+(1) yeniden başlatma + K-63; (2) kalibrasyonlar dondu; (3) dört yumuşak kural
+(motor + doğrulayıcı + test + mutasyon; tanım soruları tek tek); (4) veri seti
+v2; (5) merdiven ölçümleri; K-64 (3)'ten sonra.
+
+**Kod (bulut, 18:35–19:45).** `09-motor/cozucu/coz.py`:
+- `VARSAYILAN["fazla_mesaisiz_deneme"] = 1`; `_deneme_siniri`,
+  `_fazla_mesaisiz_ara(kuruldu, ayar, pay)` — pay N parçaya, tohum `i + 1`
+  (1 = CP-SAT varsayılanı; **buradayken O-19 görüldü**, §7), ilk bulunan
+  alınır, INFEASIBLE kanıt sayılır; `_ipucu_ver` fazla mesaisiz aramayı bu
+  fonksiyona verir, `fazla_mesai_once_sifir`'a `deneme_siniri` + `denemeler`
+  yazar, not *"(N denemede)"* der; `saniye` bütün denemelerin toplamı
+  (`deneme_sn`), başarısızsa iyileştirmeden düşer.
+- K-63: `coz()` ana aşama UNKNOWN + `iki_asama` → `_ipucu_planini_al`
+  (ilk sürüm: `fix_variables_to_their_hinted_value`, 1 işçi, tavan
+  `ipucu_plani_saniye` 30) → plan + not + `durma_sebebi:
+  mola_adimi_yetismedi` / `ana_asama_yetismedi`, `sinir None`, çıktıda
+  `ipucu_plani`; `optimuma_uzaklik_yuzde` None.
+- Testler: bölüm 7 (7 test: varsayılan tek deneme/tohum 1, üç deneme
+  pay/3 + tohumlar, hepsi UNKNOWN → not + süre düşer, INFEASIBLE kalanları
+  durdurur, parçalar/taban, geçersiz sayı → 1, ürün çıktısı);
+  `test_mola_adimi_yetismedi.py` (10: yol, ortak arama, paralel, eşik altı,
+  başlangıç planı, yarım ipucu, INFEASIBLE K-37, geçersiz ipucu, parametreler,
+  olağan yol). Mutasyon: `fm_sifir` +11, yeni grup `k63` 16. Bulutta
+  `k63` 16'nın 16'sı, `fm_sifir` 59'un 58'i öldü + 1 **ATLANDI** (çapa eskimişti —
+  düzeltildi, tek başına koşuldu: öldü); tam takım 604; `butce` 4/4, `demir`
+  40'ın 40'ı, `ilk_asama` 6'nın 6'sı, `kalite` 6'nın 6'sı, `sure_yetmedi` 5'in 5'i (üç eskimiş çapa
+  düzeltildi).
+- Ölçüm araçları: kalite-olc `fm_once_deneme3` / `_kapsama` (+ `ipucu_plani`
+  satırı, test listesi); `kuyruk.py --politika N` (motorun kendi
+  `_fazla_mesaisiz_ara`sı N kez), `--tekrar-tohum`; 0.1 ölçekte duman.
+- Şartname §6.7 (bulgu 25 + yeni alt bölüm K-63), §11.3 (`durma_sebebi`,
+  `denemeler`, `ipucu_plani`), değişiklik 63.
+
+**18:52 — Mustafa:** yarın akşam mimar arkadaşı Yılmaz'la görüşecek; proje
+özeti + gelinen nokta + eksikler + destek alınacak yerler + yorumunu
+istediğimiz konular için bir çıktı istedi. **19:48:** spora gitti (1,5 saat);
+onay gerektirmeyen işler sürsün, makinede koşacak bir şey varsa atılsın.
+
+## 7 · Bağımsız inceleme 3 ve düzeltmeler; O-19
+
+**O-19 (18:40).** `_fazla_mesaisiz_ara`'yı yazarken varsayılanı okudum:
+`CpSolver().parameters.random_seed` → **1**. Kuyruk aracında, OKU-BENI'de,
+bulgu 25 tablosunda ve bu kaydın §5'inde *"tohum 0 = motorun kullandığı değer
+(CP-SAT varsayılanı)"* yazmıştım — hafızadan. Ölçümün sonucu değişmedi (aynı
+tohumda 7× fark; motorun tohumu 30'un içinde bir kez), etiketi yanlıştı.
+Düzeltildi (araç, OKU-BENI, bulgu 25 üstü çizili, §5'e not), test + mutasyon
+tohumu çiviliyor. `05-HATA-OTOPSILERI.md` O-19.
+
+**İnceleme 3 (19:05–19:45; ayrı ajan, kodu görmemiş; rapor + deney
+betikleri `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-inceleme3-yeniden-baslatma-k63/`).**
+Karar: *koda inmeye hazır, bloklayıcı yok.* Ölçtükleri: tohum yazılmamış ≡
+tohum 1 (aynı çözüm vektörü, dal/çatışma), ardışık Solve model durumunu
+değiştirmiyor, bütçe uçtan uca tutuyor (azami 10/5/30 × deneme 1/3), ipucu
+her yolda tam ve geçerli, sabitleme ipucuyla birebir (123.935 değişkende 0
+fark), çevirme 0.1'de 0,33 sn / 0.2'de 0,7–0,8 sn, 0.2 ölçekte 20 sn doğal
+koşuda bulgu 24 kendiliğinden oluştu ve K-63 plan döndürdü (doğrulayıcı
+yayınlanabilir). Bulduğu ve **aynı akşam işlenen** düzeltmeler:
+- **B6 (düzeltilmeli):** `fix_variables_to_their_hinted_value` ipucunun
+  **gevşek ceza değerlerini** aynen alıyordu — ikinci aşamanın planında
+  +%1,2, birinci aşamanın amaçsız planında **+%85–89** (0.1–0.2 ölçek,
+  tamamı `me_`). K-35 kartı planları `amac_degeri` ile kıyaslıyor. Düzeltme:
+  `_ipucu_planini_al` yalnız **karar değişkenlerini** (x, mola, dinlenme)
+  ipucuya sabitler, cezaları amaç sıkar (inceleme prototipi 0,63 sn, amaç =
+  alt sınır, karar değişkenlerinde 0 fark). Test: *"ceza değerleri gevşekse
+  amaç yine sıkı"* (fm ipucusu 0 → 600: eski 30.360, yeni 360).
+- **B7:** iyileştirme plan bulamadıysa / ipucu korunduysa dönen plan birinci
+  aşamanın amaçsız planıdır; not *"ikinci aşamanın planı"* diyordu →
+  `_ipucu_kaynagi`, `ipucu_plani.kaynak`, not üç hâli ayırır; `ilk_asama_sabit_mola`
+  kapalıysa *"şablonun ideal yerinde"* de denmez; iki test.
+- **B4:** 1 sn tabanı tek denemede de uygulanıyordu (azami < 5 sn'de 0,8 →
+  1,0): `parca = pay if adet == 1 else max(1, pay/adet)`; test + mutasyon.
+- **B10:** test edilmeyen iddialar → üç test: not sınırı (*"(1 denemede)"*
+  sızmasın), çevirme süresi `cozum_suresi_sn`'ye girmez, uçtan uca 3 deneme
+  bütçe (gerçek uyku). Mutasyonlar: `fm_sifir` 61, `k63` 22 (toplam 325).
+- **B1 (süreç):** inceleme paketine kopyaladığım `coz.py` **mutant anlık
+  görüntüydü** — grup koşusu sürerken ağaçtan kopya almıştım (koşturucu
+  dosyayı yerinde değiştirip geri yazıyor); inceleyici bunu fark edip
+  dondurulmuş kopya aldı ve diff ile doğruladı. **Ders:** mutasyon koşusu
+  sürerken aynı ağaçtan kopya alınmaz, test koşturulmaz; son doğrulama
+  (takım + gruplar) koşu bittikten sonra, temiz ağaçta. Bu akşam öyle
+  yapıldı (§8).
+- **B11:** `deneme` (süre) → `deneme_sn`; `VARSAYILAN` yorumundaki *"tipik
+  olarak 1 sn'nin altında"* ölçüme bağlandı (0.2'de 0,6–0,8 sn; tam ölçek
+  ölçülmedi, dışdeğerleme ~4 sn).
+- **B9:** K-63 çıktısında `durum: cozuldu` + `cozum_sayisi: 0` +
+  `cozum_suresi_sn` = plansız ana aşamanın süresi — spec §11.3'e yazıldı.
+- **B12 (bitişik, kapsam dışı):** T-60 **bulgu 26** (`ipucu_korundu` kıyası
+  gevşek `amacsiz_amac` ile — aynı sıkılaştırma çaresi; ürün yoluna ~0,5–4
+  sn ekler, **karar Mustafa'da**), **bulgu 27** (donmuş gün × iki aşama:
+  `_molalari_serbest_birak` donmuş günün mola alanlarını `[0,1]`e açıyor,
+  48 alan; görünür etki ölçülmedi; **sırada**).
+
+## 8 · Mustafa'ya blok ve sıradaki
+
+Düzeltmelerden sonra temiz ağaçta (hiçbir koşu sürmezken): tam takım **609**
+(587 + bölüm 7'nin 8'i + K-63'ün 14'ü); mutasyon grupları `k63` 22'nin 22'si,
+`fm_sifir` 61, `butce` 4, `demir` 40 (sonuçlar aşağıda, koşu bittikçe);
+`08-motor-testleri/gercekci-veri-seti/testler` 41. Dosyalar Mustafa'nın
+makinesine taze adlarla yazıldı, md5 geri okundu (O-13), DENETIM 0 HATA.
+Blok (Mustafa döndüğünde): testler → DENETIM → commit → tam mutasyon (damga)
+→ `fm_once_deneme3` 900 sn × 3 → `kuyruk.py --politika 3 --deneme 20`.
+**Karar kuralı koşudan önce** (T-60 bulgu 25 *"Koda indi"* paragrafı):
+üç koşuda fazla mesai 0 ve amaç `fm_once` düzeyinde (26,6–26,8 bin), hiçbiri
+*"bulunamadı"* yoluna düşmemiş; politika kipinde 20'de 0 bulunamayan →
+**varsayılan 3, K-61 kapanır**; bir koşu bile düşerse 4 × 30 ölçülür.
+Sonra sıranın 3. maddesi: dört yumuşak kural — şartnameden okunarak, tanım
+soruları tek tek. Yılmaz brifingi ayrı dosya (`00-DEVIR/brifing/`).

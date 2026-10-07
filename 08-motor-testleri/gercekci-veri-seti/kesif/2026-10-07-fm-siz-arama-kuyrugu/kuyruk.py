@@ -10,26 +10,39 @@ NEDEN
   kalin, ve 120 sn'yi kac deneme halinde harcamak (yeniden baslatma) kuyrugu
   keser mi?
 
-NE YAPAR
-  500 kisilik fiksturu bir kez kurar, birinci asamayi MOTORUN KENDI
-  yardimcilariyla aynen hazirlar (amac silinir, molalar sablonun ideal
-  yerine sabitlenir, fm_* alanlari [0,0]) ve ayni modeli N farkli
-  `random_seed` ile cozer; her denemede sure ve durum yazilir. Varsayilan
-  isci sayisi motorunkiyle aynidir (makinenin cekirdegi). Seed 0 motorun
-  kullandigi degerdir (CP-SAT varsayilani); paralel iscilerle zamanlama
-  yine de rastgeledir, o yuzden seed 0 birkac kez tekrarlanir.
+NE YAPAR (iki kip)
+  TOHUM KIPI (varsayilan): 500 kisilik fiksturu bir kez kurar, birinci
+  asamayi MOTORUN KENDI yardimcilariyla aynen hazirlar (amac silinir, molalar
+  sablonun ideal yerine sabitlenir, fm_* alanlari [0,0]) ve ayni modeli N
+  farkli `random_seed` ile cozer; her denemede sure ve durum yazilir.
+  Varsayilan isci sayisi motorunkiyle aynidir (makinenin cekirdegi).
+  ⚠ DUZELTME (7 Ekim 18:40): 18:00 kosusunda "seed 0 motorun kullandigi
+    deger (CP-SAT varsayilani)" yaziliydi -- YANLIS. CP-SAT'in varsayilan
+    tohumu 1'dir (ortools 9.15, `CpSolver().parameters.random_seed` -> 1) ve
+    motor tohum yazmadigi icin 1 ile ariyordu. 18:00 kosusundaki "5 x tohum 0"
+    motorun tohumunun degil, tohum 0'in tekrariydi; vardigi sonuc (ayni
+    tohumda bile 7x fark -> rastgelelik paralel iscilerin zamanlamasindan)
+    gecerliligini korur. Tekrarlanan tohum artik `--tekrar-tohum` (varsayilan
+    1 = motorun tohumu); `--sifir-tekrar` adi 18:00 kaydinin komut satiri
+    gecerli kalsin diye duruyor (anlami: tekrar SAYISI).
+  POLITIKA KIPI (`--politika N`): motorun KENDI `_fazla_mesaisiz_ara`
+  fonksiyonunu (yeniden baslatma: pay N'e bolunur, tohum 1..N, ilk bulunan
+  alinir) `--deneme` kez kosturur; her kosuda bulundu mu, toplam sure, kac
+  denemede. Bu, politikanin motor disinda ama motorun koduyla olcumudur;
+  asil olcum kalite-olc.py `fm_once_deneme3` (900 sn x 3).
 
 KULLANIM (Mustafa'nin makinesi; bulutta kosturulmaz -- 500 kisi)
   cd 08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-fm-siz-arama-kuyrugu
-  py kuyruk.py --deneme 30 --tavan 120 --sifir-tekrar 5 --cikti kuyruk-30.jsonl
-  (~1 dk kurma + deneme basina 9-120 sn; 30 deneme tipik 10-25 dk)
+  py kuyruk.py --deneme 30 --tavan 120 --sifir-tekrar 5 --cikti kuyruk-30.jsonl      (18:00 kosusu)
+  py kuyruk.py --politika 3 --deneme 20 --tavan 120 --cikti politika-3x40.jsonl       (3 x 40 sn, 20 kez)
+  (~1 dk kurma + deneme basina 9-120 sn)
   Duman testi (kucuk sahne, sayilari anlamsiz): py kuyruk.py --olcek 0.1 --deneme 3 --tavan 30 --sifir-tekrar 1 --cikti duman.jsonl
 
 CIKTI
-  jsonl: {"seed", "durum", "saniye", "cozum_bulundu"}; sonda ozet: kantiller,
-  P(T > 20/40/60/120 sn) ve yeniden-baslatma politikalarinin OFFLINE tahmini
-  (ornegin 3 x 40 sn: deneme bagimsiz sayilarak P(hepsi > 40)). Tahmin,
-  karar icin yeter; politika secilince motorda gercekten olculur.
+  tohum kipi jsonl: {"seed", "durum", "saniye", "cozum_bulundu"}; sonda ozet:
+  kantiller, P(T > 20/40/60/120 sn) ve yeniden-baslatma politikalarinin
+  OFFLINE tahmini (ornegin 3 x 40 sn: deneme bagimsiz sayilarak P(hepsi > 40)).
+  politika kipi jsonl: {"kip": "politika", "bulundu", "saniye", "denemeler"}.
 """
 import io, json, os, sys, time
 sys.dont_write_bytecode = True
@@ -50,7 +63,9 @@ def _arg(ad, varsayilan, tur=str):
 
 DENEME = _arg("--deneme", 30, int)
 TAVAN = _arg("--tavan", 120.0, float)
-SIFIR_TEKRAR = _arg("--sifir-tekrar", 5, int)
+SIFIR_TEKRAR = _arg("--sifir-tekrar", 5, int)       # tekrar SAYISI (ad 18:00 kaydindan)
+TEKRAR_TOHUM = _arg("--tekrar-tohum", 1, int)       # tekrarlanan tohum; 1 = motorun tohumu (CP-SAT varsayilani)
+POLITIKA = _arg("--politika", 0, int)               # 0 = tohum kipi; N = motorun yeniden baslatmasi, N deneme
 ISCI = _arg("--isci", 0, int) or isci_sayisi(dict(C.VARSAYILAN))
 CIKTI = _arg("--cikti", "kuyruk.jsonl")
 OLCEK = _arg("--olcek", 1.0, float)          # 1.0 = 500 kisilik fikstur; kucuk deger = uretilmis sahne (duman testi)
@@ -65,8 +80,9 @@ else:
     print("DUMAN TESTI: olcek %s (%d kisi) -- 500 kisilik olcum degildir" % (OLCEK, len(g["calisanlar"])), flush=True)
 t0 = time.time()
 k = Model(g).kur()
-print("kurma %.0f sn | %d degisken | isci %d | tavan %.0f sn | deneme %d (+ seed 0 x %d)"
-      % (time.time() - t0, len(k.m.Proto().variables), ISCI, TAVAN, DENEME, SIFIR_TEKRAR), flush=True)
+varsayilan_tohum = cp_model.CpSolver().parameters.random_seed
+print("kurma %.0f sn | %d degisken | isci %d | tavan %.0f sn | CP-SAT varsayilan tohumu %d (motorun tohumu)"
+      % (time.time() - t0, len(k.m.Proto().variables), ISCI, TAVAN, varsayilan_tohum), flush=True)
 
 # Birinci asamanin hazirligi -- `_ipucu_ver` ile ayni sira, ayni yardimcilar
 k.m.ClearObjective()
@@ -74,7 +90,37 @@ sabitlenen = C._molalari_sabitle(k)
 fm_eski = C._fazla_mesaiyi_sifirla(k)
 print("molalar sabit: %d aday kapatildi | fazla mesai degiskeni [0,0]: %d" % (len(sabitlenen), len(fm_eski)), flush=True)
 
-seedler = [0] * SIFIR_TEKRAR + list(range(1, DENEME + 1))
+if POLITIKA > 0:
+    # ---- POLITIKA KIPI: motorun kendi yeniden baslatmasi, DENEME kez
+    ayar = dict(C.VARSAYILAN, fazla_mesaisiz_deneme=POLITIKA, isci_sayisi=ISCI)
+    print("POLITIKA: %d x %.0f sn (pay %.0f sn), %d kosu" % (POLITIKA, TAVAN / POLITIKA, TAVAN, DENEME), flush=True)
+    bulunan, toplamlar, ikinci_ve_sonrasi = 0, [], 0
+    with open(CIKTI, "a") as f:
+        for i in range(1, DENEME + 1):
+            t1 = time.time()
+            durum, c, denemeler = C._fazla_mesaisiz_ara(k, ayar, TAVAN)
+            sure = time.time() - t1
+            bulundu = durum in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+            kayit = {"kip": "politika", "sira": i, "politika": POLITIKA, "tavan": TAVAN, "isci": ISCI,
+                     "bulundu": bulundu, "saniye": round(sure, 2), "denemeler": denemeler}
+            f.write(json.dumps(kayit) + "\n"); f.flush()
+            bulunan += bulundu
+            toplamlar.append(sure)
+            ikinci_ve_sonrasi += len(denemeler) > 1
+            print("%3d  %-10s %7.2f sn  denemeler: %s%s" % (
+                i, "BULUNDU" if bulundu else "YOK", sure,
+                " / ".join("t%d %s %.1fs" % (d["tohum"], d["durum"], d["saniye"]) for d in denemeler),
+                "" if bulundu else "   <-- BULUNAMADI"), flush=True)
+    n = len(toplamlar)
+    sirali = sorted(toplamlar)
+    print("\nOZET (politika %d x %.0f sn): %d kosu | bulunamayan %d | 2+ deneme gereken %d | medyan %.1f sn | en uzun %.1f sn"
+          % (POLITIKA, TAVAN / POLITIKA, n, n - bulunan, ikinci_ve_sonrasi,
+             sirali[len(sirali) // 2], sirali[-1]))
+    print("Kayit:", CIKTI)
+    sys.exit(0)
+
+# ---- TOHUM KIPI
+seedler = [TEKRAR_TOHUM] * SIFIR_TEKRAR + list(range(1, DENEME + 1))
 sureler = []
 with open(CIKTI, "a") as f:
     for i, seed in enumerate(seedler, 1):

@@ -3219,7 +3219,22 @@ DENGELI'nin bir koşusunda fazla mesaisiz ilk arama 120 sn'de bulunamadı →
 plan 30 saat fazla mesaiyle döndü (116.976). 18 koşuda 17'si 8,6–21 sn, 1'i
 > 120 sn — ağır kuyruk. **Bu karar kuyruk kapanmadan kapanmaz:** kuyruk
 ölçümü (`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-fm-siz-arama-kuyrugu/kuyruk.py`) → yeniden başlatma politikası (ölçüm seçeneği →
-900 sn × 3 → varsayılan). Kod değişmedi. ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
+900 sn × 3 → varsayılan). Kod değişmedi. **7 Ekim 18:00–20:30:** kuyruk
+ölçüldü (35 deneme, hepsi buldu; medyan 7,5 sn, %90 13 sn, en uzun 62 sn;
+53 gözlemde 1 × > 120 sn — ince ama gerçek kuyruk; O-19: *"tohum 0 = motorun
+tohumu"* etiketi yanlıştı, motorun tohumu CP-SAT varsayılanı 1'dir, sonuç
+değişmedi) → Mustafa 18:31 *"başla"* → **yeniden başlatma koda indi:**
+`VARSAYILAN["fazla_mesaisiz_deneme"] = 1` (bugünkü arama, birebir; ölçümde
+3 = 3 × 40 sn, tohum 1 → 2 → 3, ilk bulunan alınır, INFEASIBLE kalan
+denemeleri durdurur), `_fazla_mesaisiz_ara`, çıktıda `deneme_siniri` +
+`denemeler`; testler bölüm 7 (8), mutasyon `fm_sifir` 61; kalite-olc
+`fm_once_deneme3` / `_kapsama`; `kuyruk.py --politika N`. Bağımsız inceleme 3:
+bloklayıcı yok (tohum eşdeğerliği ve bütçe aritmetiği ölçüldü). **Karar
+kuralı (koşudan önce):** `fm_once_deneme3` 900 sn × 3'te fazla mesai 0, amaç
+`fm_once` düzeyinde, hiçbir koşu *"bulunamadı"* yoluna düşmemiş; politika
+kipinde 20 koşunun hiçbiri bulunamamış değilse → **varsayılan 3, bu karar
+kapanır**; aksi hâlde 4 × 30 ölçülür. Bitişik bulgu 26 (`ipucu_korundu`
+kıyası gevşek amaçla) **karar bekliyor** (T-60). ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
 kredi kesintisinde bulut alanı silindi, düzeltme oturum kaydındaki adımlardan
 yeniden uygulandı ve yeniden doğrulandı — T-60 bulgu 23, kesinti paragrafı),
 Mustafa'nın koşuları bekleniyor.**~~
@@ -3248,8 +3263,8 @@ dosya 583 test geçti (04:00'ten sonra 584; 04:52: 587). `kalite-olc.py`: `fm_on
 bulgu 21'in kayıt adları sert kesime sabitlendi; kayıtta `sert_kesim` alanı.
 Şartname §6.7 (yeniden yazıldı), §11.3, değişiklik 61.
 
-→ K-30 · K-38 · K-62 · O-18 · T-60 bulgu 20–23 · şartname §6.7, §11.3 ·
-`09-motor/cozucu/coz.py` (`_ipucu_ver`, `_fazla_mesaiyi_sifirla`, `_sinir_kapsami`) ·
+→ K-30 · K-38 · K-62 · K-63 · O-18 · O-19 · T-60 bulgu 20–27 · şartname §6.7, §11.3 ·
+`09-motor/cozucu/coz.py` (`_ipucu_ver`, `_fazla_mesaisiz_ara`, `_fazla_mesaiyi_sifirla`, `_sinir_kapsami`) ·
 `09-motor/testler/test_fazla_mesai_once_sifir.py` · `09-motor/mutasyon_kostur.py`
 (`fm_sifir`) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py`
 
@@ -3363,13 +3378,37 @@ cevap:
 yok; 30 sn'de plan var). 500 kişi / 900 sn'de görülmedi (mola adımına ~167 sn
 kalıyor, adım 40–46 sn sürüyor).
 
-**Durum: ⏳ karar verildi, uygulanmadı.** Motor: `coz()` mola adımı UNKNOWN
-dönünce ipucudaki planı yazar (küçük; test: bütçesi kısılmış sahnede plan +
-not). Şartname: §9 süre metni (aralık), §11.3 `durma_sebebi` yeni değer.
-Aralığın sayıları (15–20 dk) şartnameye yazılmadan önce ölçülür: 500 kişide
-hangi bütçede plan dönmüyor (bulgu 24'ün tam ölçekli sınırı).
+~~**Durum: ⏳ karar verildi, uygulanmadı.**~~ **Durum (7 Ekim 20:30): motor
+parçası koda indi (bulut; Mustafa'nın koşusu bekleniyor).** `coz()` ana aşama
+(mola adımı ya da ortak arama) plansız (UNKNOWN) dönerse ve iki aşama
+ikinci aşamanın **tam** ipucusunu yazdıysa `_ipucu_planini_al` ipucuyu plana
+çevirir — **karar değişkenleri** (x, mola, dinlenme) ipucu değerine
+sabitlenir, ceza değişkenlerini amaç en küçüğe indirir, `amac_degeri` planın
+**sıkı** amacıdır (ilk sürüm bütün değişkenleri sabitliyordu; bağımsız
+inceleme 3 ipucunun ceza değerlerinin gevşek olabildiğini ölçtü: ikinci
+aşamanın planında +%1,2, birinci aşamanın amaçsız planında +%85–89 —
+düzeltildi). Plan `durma_sebebi: mola_adimi_yetismedi` (ortak aramada
+`ana_asama_yetismedi`), `alt_sinir` / `mola_adimi_alt_sinir` /
+`optimuma_uzaklik_yuzde` null (kanıt yok), notla döner: *"mola adımı sürede
+plan üretemedi; ikinci aşamanın planı döndü (molalar şablonun ideal yerinde,
+mola yerleşimi aranmadı; optimuma yakınlık kanıtı yok)"* — iyileştirme plan
+bulamadıysa / ipucu korunduysa not *"birinci aşamanın (amaçsız) planı"* der
+(`ipucu_plani.kaynak`). INFEASIBLE'da K-37 teşhis yolu değişmez; iki aşama
+yoksa (eşik altı; başlangıç planı — yarım ipucu, K-54 için ayrı karar) eski
+cevap `sure_yetmedi`; ipucu geçersiz çıkarsa plan uydurulmaz. Çevirme
+süresi **bütçenin dışındaki tek kalem** (`ipucu_plani.saniye`; tavan
+`ipucu_plani_saniye` 30): 0.2 ölçekte 0,6–0,8 sn, tam ölçekte **ölçülmedi**
+(dışdeğerleme ~4 sn). 0.2 ölçekte 20 sn doğal koşuda bulgu 24 kendiliğinden
+oluştu ve K-63 plan döndürdü (doğrulayıcı yayınlanabilir). Testler:
+`09-motor/testler/test_mola_adimi_yetismedi.py` (14); mutasyon grubu `k63`
+(22). Şartname §6.7 (yeni alt bölüm), §11.3 (`durma_sebebi`, `ipucu_plani`),
+değişiklik 63. **Ürün parçası (süre aralığı) ⏳:** sayılar (15–20 dk) tam
+ölçekte ölçülmeden şartnameye yazılmaz — `fm_once_deneme3` 900 × 3
+koşusunun kaydında `ipucu_plani` ve mola adımına kalan süre okunacak.
 
-→ K-28 · K-35 · K-60 · T-60 bulgu 24 · `09-motor/cozucu/coz.py` (`coz`, `_ipucu_ver`)
+→ K-28 · K-35 · K-37 · K-54 · K-60 · O-16 · T-60 bulgu 24 · şartname §6.7, §11.3 ·
+`09-motor/cozucu/coz.py` (`coz`, `_ipucu_planini_al`, `_ipucu_kaynagi`) ·
+`09-motor/testler/test_mola_adimi_yetismedi.py` · `09-motor/mutasyon_kostur.py` (`k63`)
 
 ---
 

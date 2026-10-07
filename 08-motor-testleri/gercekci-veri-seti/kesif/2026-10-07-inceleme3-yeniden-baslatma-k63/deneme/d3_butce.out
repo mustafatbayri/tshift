@@ -1,0 +1,12 @@
+(i) dogal
+azami=10 deneme=3 zorla=0 | durum=cozuldu      ilk_asama=0.02 ana_butce=9.98 toplam=10.00 OK | duvar=0.03 | fm: bulundu=True sn=0.01 denemeler=[(1, 0.01, 'OPTIMAL')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 8.0, 9.984]
+azami=10 deneme=1 zorla=0 | durum=cozuldu      ilk_asama=0.01 ana_butce=9.99 toplam=10.00 OK | duvar=0.03 | fm: bulundu=True sn=0.0 denemeler=[(1, 0.0, 'OPTIMAL')] | iyilestirme_sn=0.0 | cagri sureleri=[2.0, 8.0, 9.988]
+
+(ii) fm-siz denemeler sureyi doldurup UNKNOWN
+azami=10 deneme=3 zorla=3 | durum=cozuldu      ilk_asama=3.01 ana_butce=6.99 toplam=10.00 OK | duvar=3.03 | fm: bulundu=False sn=3.0 denemeler=[(1, 1.0, 'UNKNOWN'), (2, 1.0, 'UNKNOWN'), (3, 1.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 1.0, 1.0, 2.0, 4.998, 6.988]
+azami=10 deneme=1 zorla=1 | durum=cozuldu      ilk_asama=2.01 ana_butce=7.99 toplam=10.00 OK | duvar=2.03 | fm: bulundu=False sn=2.0 denemeler=[(1, 2.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[2.0, 2.0, 5.999, 7.987]
+azami= 5 deneme=3 zorla=3 | durum=cozuldu      ilk_asama=3.01 ana_butce=1.99 toplam=5.00 OK | duvar=3.03 | fm: bulundu=False sn=3.0 denemeler=[(1, 1.0, 'UNKNOWN'), (2, 1.0, 'UNKNOWN'), (3, 1.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 1.0, 1.0, 1.0, 0.994, 1.988]
+azami= 5 deneme=1 zorla=1 | durum=cozuldu      ilk_asama=1.01 ana_butce=3.99 toplam=5.00 OK | duvar=1.03 | fm: bulundu=False sn=1.0 denemeler=[(1, 1.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 1.0, 2.995, 3.989]
+azami= 4 deneme=3 zorla=3 | durum=cozuldu      ilk_asama=3.01 ana_butce=1.00 toplam=4.01 OK | duvar=3.02 | fm: bulundu=False sn=3.0 denemeler=[(1, 1.0, 'UNKNOWN'), (2, 1.0, 'UNKNOWN'), (3, 1.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 1.0, 1.0, 1.0, 1.0]
+azami= 4 deneme=1 zorla=1 | durum=cozuldu      ilk_asama=1.01 ana_butce=2.99 toplam=4.00 OK | duvar=1.03 | fm: bulundu=False sn=1.0 denemeler=[(1, 1.0, 'UNKNOWN')] | iyilestirme_sn=0.0 | cagri sureleri=[1.0, 1.0, 1.994, 2.988]
+azami=30 deneme=3 zorla=3 | durum=cozuldu      ilk_asama=6.01 ana_butce=23.99 toplam=30.00 OK | duvar=6.03 | fm: bulundu=False sn=6.0 denemeler=[(1, 2.0, 'UNKNOWN'), (2, 2.0, 'UNKNOWN'), (3, 2.0, 'UNKNOWN')] | iyilestirme_sn=0.01 | cagri sureleri=[2.0, 2.0, 2.0, 6.0, 17.998, 23.985]

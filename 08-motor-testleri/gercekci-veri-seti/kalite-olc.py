@@ -57,6 +57,13 @@ NEDEN AYRI BIR BETIK
                      (`fm_sert`, `fm_sert_kapsama`; bulgu 21'in kaydi bu
                      haldir). Duzeltilmis yolun tam olcekli olcumu: `fm_once`
                      / `fm_once_kapsama` (= `varsayilan` / `profil_kapsama`).
+                   ⚠ 7 Ekim, bulgu 25: fazla mesaisiz ilk arama 18 kosunun
+                     1'inde 120 sn'de bulunamadi (plan 30 saat fazla mesaiyle).
+                     `fm_once_deneme3` / `_kapsama`: ayni yol, arama 3 x 40 sn
+                     farkli tohumla (`fazla_mesaisiz_deneme: 3`); kayitta
+                     `fazla_mesai_once_sifir.denemeler`. K-63 ile ana asama
+                     plansiz donerse ikinci asamanin plani alinir; kayitta
+                     `ipucu_plani` ve `durma_sebebi: mola_adimi_yetismedi`.
     cift_butce   : ayni, sure IKI KATI            -> sure mi yetmiyor?
     ipucu_kapali : birinci asama (ipucu) kapali   -> ipucu yardim mi ediyor,
                                                      koturuyor mu?
@@ -150,6 +157,19 @@ YAPILANDIRMALAR = {
                      {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {}),
     "fm_once_kapsama": ("URUN YOLU (7 Ekim), KAPSAMA profili (= profil_kapsama)",
                      {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {"profil": "KAPSAMA"}),
+    # T-60 bulgu 25 (7 Ekim): fazla mesaisiz ilk arama 18 kosunun 1'inde 120
+    #   sn'de bulunamadi -> plan 30 saat fazla mesaiyle (116.976). Kuyruk
+    #   olcumu (kuyruk.py, 35 deneme): medyan 7,5 sn, en uzun 62 sn. Yeniden
+    #   baslatma: 120 sn'lik pay 3 x 40 sn'ye bolunur, her deneme farkli tohum
+    #   (`fazla_mesaisiz_deneme: 3`). Karar kurali: 900 sn x 3'te fazla mesai
+    #   ve amac `fm_once` ile ayni duzeyde kalir, hicbir kosu "bulunamadi"
+    #   yoluna dusmezse varsayilan 3 olur ve K-61 kapanir.
+    "fm_once_deneme3": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25): fazla mesaisiz arama 3 x 40 sn, farkli tohum; DENGELI",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
+                      "fazla_mesaisiz_deneme": 3}, {}),
+    "fm_once_deneme3_kapsama": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25), KAPSAMA profili",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
+                      "fazla_mesaisiz_deneme": 3}, {"profil": "KAPSAMA"}),
     "fm_sert":      ("SERT KESIM (6 Ekim gecesinin hali, bulgu 21; OLCUM): fazla mesaisiz plan bulunursa fazla mesai butun asamalarda 0'da TUTULUR; DENGELI",
                      dict(SERT), {}),
     "fm_sert_kapsama": ("SERT KESIM (bulgu 21; OLCUM), KAPSAMA profili",
@@ -642,8 +662,28 @@ def fm_once_yazisi(s, ayar):
                  % ("molalar sabitken " if f.get("molalar_sabit", True) else ""))
     else:
         sonuc = "bu surede BULUNAMADI -- alanlar geri acildi"
-    return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni"
-            % (sonuc, f["saniye"], f["degisken"]))
+    # Bulgu 25: denemeler (yeniden baslatma). Eski kayitlarda alan yok.
+    denemeler = f.get("denemeler")
+    deneme = ""
+    if denemeler:
+        deneme = "  |  deneme %d/%s: %s" % (
+            len(denemeler), f.get("deneme_siniri", "?"),
+            ", ".join("tohum %s %s %ss" % (d.get("tohum"), d.get("durum"), d.get("saniye"))
+                      for d in denemeler))
+    return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni%s"
+            % (sonuc, f["saniye"], f["degisken"], deneme))
+
+
+def ipucu_plani_yazisi(s):
+    """K-63 satiri: ana asama plansiz donup ikinci asamanin plani alindiysa.
+    None = gerek olmadi (eski kayitlarda alan yok)."""
+    ip = s.get("ipucu_plani")
+    if not ip:
+        return None
+    if ip.get("bulundu"):
+        return ("K-63: ana asama plansiz dondu, IKINCI ASAMANIN PLANI alindi (%s sn; molalar "
+                "sablonun ideal yerinde; sebep %s)" % (ip.get("saniye"), s.get("durma_sebebi")))
+    return "K-63: ana asama plansiz dondu, ipucu plani ALINAMADI (%s)" % ip.get("durum")
 
 
 def etkin_ayar(ayar):
@@ -693,7 +733,7 @@ def kosu(g, ad, ayar, girdi_ek=None):
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
                  "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
                  "mola_adimi", "atamalar_sabit", "mola_adimi_alt_sinir",
-                 "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir"):
+                 "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir", "ipucu_plani"):
         s[alan] = ist.get(alan)
     s["uygulanmayan_notlar"] = list(c.get("uygulanmayan_notlar") or [])
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
@@ -702,6 +742,8 @@ def kosu(g, ad, ayar, girdi_ek=None):
         print("         DURUM: %s  (%s)" % (c.get("durum"), ist.get("durma_sebebi")))
         if fm_once_yazisi(s, etkin):
             print("         " + fm_once_yazisi(s, etkin))
+        if ipucu_plani_yazisi(s):
+            print("         " + ipucu_plani_yazisi(s))
         return s
     r = degerlendir(g, c["atamalar"])
     sayi = {}
@@ -722,10 +764,12 @@ def kosu(g, ad, ayar, girdi_ek=None):
              s["cozum_sayisi"]))
     if fm_once_yazisi(s, etkin):
         print("         " + fm_once_yazisi(s, etkin))
+    if ipucu_plani_yazisi(s):
+        print("         " + ipucu_plani_yazisi(s))
     # Notlarin hepsi dosyaya yazilir; ekrana yalniz bu secenegin notu (tam
     # olcekte "departman kapali" notlari onlarca satir).
     for n in s["uygulanmayan_notlar"]:
-        if "fazla mesaisiz" in n:
+        if "fazla mesaisiz" in n or "ikinci asamanin plani" in n:
             print("         not: %s" % n)
     print("         ilk plan %s sn  |  kazancin %%50'si %s sn, %%90'i %s sn, %%99'u %s sn  |  son iyilesme %s sn"
           % (s["ilk_cozum_sn"], iy.get("yuzde50_sn"), iy.get("yuzde90_sn"),

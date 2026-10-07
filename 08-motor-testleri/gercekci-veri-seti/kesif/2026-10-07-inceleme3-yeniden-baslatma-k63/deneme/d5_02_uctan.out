@@ -1,0 +1,9 @@
+olcek 0.20 kisi 100 kurma 14.1s degisken=123935 kisit=153780 x=3850 mola=32739 dinlenme=84252 ceza=3093
+  durum=cozuldu sebep=mola_adimi_yetismedi duvar=19.1s ilk_asama=18.12 ana_butce=1.88 cozum_suresi=0.0 ipucu_plani={'bulundu': True, 'saniye': 0.81, 'durum': 'OPTIMAL'}
+  fm_once={'bulundu': True, 'saniye': 1.62, 'denemeler': [{'tohum': 1, 'saniye': 1.32, 'durum': 'OPTIMAL'}]}
+  iyilestirme={'saniye': 16.02, 'plan_bulundu': True, 'amacsiz_amac': 26392, 'iyilesmis_amac': 9172, 'cozum_sayisi': 54, 'ipucu_korundu': False}
+  amac=9172 alt_sinir=None mola_adimi_alt_sinir=None cozum_sayisi=0 ilk_cozum_sn=None iyilesme=None
+  notlar: ['sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)', 'sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)', 'sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)', 'sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)', 'C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)', 'C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)', 'mola adimi surede plan uretemedi; ikinci asamanin plani dondu (molalar sablonun ideal yerinde, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)']
+  metrikler: {'fazla_mesai_saat': 0.0, 'asgari_kapsama_yuzde': 100.0, 'hedef_kapsama_yuzde': 78.55, 'optimuma_uzaklik_yuzde': None}
+  dogrulayici yayinlanabilir=True (0.7s) sert_ihlal=0
+  SIKILIK donen      amac(ipucu)=9172 siki=9062 (OPTIMAL, 0.6s) fark=110 gevsek={'ha': 18, 'he': 72, 'ag': 20}

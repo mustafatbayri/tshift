@@ -1,0 +1,63 @@
+
+== _ornek_sahne(2000) urun 
+  _ipucu_ver: True 0.0s | iyilestirme: {'plan_bulundu': True, 'amacsiz_amac': 16000, 'iyilesmis_amac': 9000, 'optimum': True, 'ipucu_korundu': False}
+  ipucu tam mi: True (474/474)
+  atamalar sabitlendi: 42
+  _ipucu_planini_al: {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+  (a) cozum == ipucu? farkli degisken sayisi: 0 | amac(cozucu)=9000 amac(ipucu)=9000 bound=9000
+  (b/c) ayni x/mola icin SIKI amac: OPTIMAL 9000 | ipucu amaci 9000 | fark 0
+  gevsek ceza (kural: fazla puan): YOK
+
+== _sahne(5) urun 
+  _ipucu_ver: True 0.0s | iyilestirme: {'plan_bulundu': True, 'amacsiz_amac': 360, 'iyilesmis_amac': 360, 'optimum': True, 'ipucu_korundu': False}
+  ipucu tam mi: True (466/466)
+  atamalar sabitlendi: 42
+  _ipucu_planini_al: {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+  (a) cozum == ipucu? farkli degisken sayisi: 0 | amac(cozucu)=360 amac(ipucu)=360 bound=360
+  (b/c) ayni x/mola icin SIKI amac: OPTIMAL 360 | ipucu amaci 360 | fark 0
+  gevsek ceza (kural: fazla puan): YOK
+
+== _ornek_sahne(2000) iyilestirme KAPALI 
+  _ipucu_ver: True 0.0s | iyilestirme: {'plan_bulundu': None, 'amacsiz_amac': None, 'iyilesmis_amac': None, 'optimum': None, 'ipucu_korundu': None}
+  ipucu tam mi: True (474/474)
+  atamalar sabitlendi: 42
+  _ipucu_planini_al: {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+  (a) cozum == ipucu? farkli degisken sayisi: 0 | amac(cozucu)=16000 amac(ipucu)=16000 bound=16000
+  (b/c) ayni x/mola icin SIKI amac: OPTIMAL 16000 | ipucu amaci 16000 | fark 0
+  gevsek ceza (kural: fazla puan): YOK
+
+== _sahne(5) iyilestirme KAPALI 
+  _ipucu_ver: True 0.0s | iyilestirme: {'plan_bulundu': None, 'amacsiz_amac': None, 'iyilesmis_amac': None, 'optimum': None, 'ipucu_korundu': None}
+  ipucu tam mi: True (466/466)
+  atamalar sabitlendi: 42
+  _ipucu_planini_al: {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+  (a) cozum == ipucu? farkli degisken sayisi: 0 | amac(cozucu)=360 amac(ipucu)=360 bound=360
+  (b/c) ayni x/mola icin SIKI amac: OPTIMAL 360 | ipucu amaci 360 | fark 0
+  gevsek ceza (kural: fazla puan): YOK
+
+== _sahne(6) iyilestirme KAPALI 
+  _ipucu_ver: True 0.0s | iyilestirme: {'plan_bulundu': None, 'amacsiz_amac': None, 'iyilesmis_amac': None, 'optimum': None, 'ipucu_korundu': None}
+  ipucu tam mi: True (474/474)
+  atamalar sabitlendi: 42
+  _ipucu_planini_al: {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'}
+  (a) cozum == ipucu? farkli degisken sayisi: 0 | amac(cozucu)=54432 amac(ipucu)=54432 bound=54432
+  (b/c) ayni x/mola icin SIKI amac: OPTIMAL 54432 | ipucu amaci 54432 | fark 0
+  gevsek ceza (kural: fazla puan): YOK
+
+== (d) gevsek ipucu: fm ipucusu sisirilir
+  fm[0] ipucu 0 alan ust 600
+  sisirilmis ipucu -> {'bulundu': True, 'saniye': 0.0, 'durum': 'OPTIMAL'} | amac(cozucu)=30360 (dogru plan amaci 360)
+
+== (c') uctan uca: iyilestirme UNKNOWN + ana asama UNKNOWN -> K-63 ne dondurur?
+  _sahne(5) durum=cozuldu sebep=mola_adimi_yetismedi amac_degeri=360 fm_saat=0.0 dagilim={'HEDEF_KAPSAMA': 40, 'FAZLA_MESAI': 0}
+     ayni atamalarin SIKI amaci: 360 | rapor edilen 360 | iyilestirme: {'plan_bulundu': False, 'amacsiz_amac': 360}
+     notlar: ['mola adimi surede plan uretemedi; ikinci asamanin plani dondu (molalar sablonun ideal yerinde, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)']
+     dogrulayici yayinlanabilir: True
+  _sahne(6) durum=cozuldu sebep=mola_adimi_yetismedi amac_degeri=54432 fm_saat=18.0 dagilim={'FAZLA_MESAI': 1080, 'HEDEF_KAPSAMA': 48}
+     ayni atamalarin SIKI amaci: 54432 | rapor edilen 54432 | iyilestirme: {'plan_bulundu': False, 'amacsiz_amac': 54432}
+     notlar: ['fazla mesaisiz plan yok (molalar sabitken kanitlandi); fazla mesai serbest birakildi (agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)', 'mola adimi surede plan uretemedi; ikinci asamanin plani dondu (molalar sablonun ideal yerinde, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)']
+     dogrulayici yayinlanabilir: True
+  _ornek(2000) durum=cozuldu sebep=mola_adimi_yetismedi amac_degeri=16000 fm_saat=0.0 dagilim={'HEDEF_KAPSAMA': 8, 'FAZLA_MESAI': 0}
+     ayni atamalarin SIKI amaci: 16000 | rapor edilen 16000 | iyilestirme: {'plan_bulundu': False, 'amacsiz_amac': 16000}
+     notlar: ['mola adimi surede plan uretemedi; ikinci asamanin plani dondu (molalar sablonun ideal yerinde, mola yerlesimi aranmadi; optimuma yakinlik kaniti yok)']
+     dogrulayici yayinlanabilir: True

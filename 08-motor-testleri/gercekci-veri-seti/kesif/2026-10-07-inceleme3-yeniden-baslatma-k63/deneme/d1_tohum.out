@@ -1,0 +1,32 @@
+ortools 9.15.6755
+varsayilan random_seed: 1
+
+== _sahne(5) degisken 466
+  isci=1 seed=None OPTIMAL 0.012s dal=0 catisma=0 bool=0 det=1e-06
+  isci=1 seed=1    OPTIMAL 0.002s dal=0 catisma=0 bool=0 det=1e-06
+  isci=1 seed=2    OPTIMAL 0.002s dal=0 catisma=0 bool=0 det=1e-06
+  isci=1 seed=3    OPTIMAL 0.002s dal=0 catisma=0 bool=0 det=1e-06
+  -> isci=1: cozum(yazilmamis)==cozum(seed 1)? True ; dal/catisma esit? True ; seed2 farkli cozum? False ; seed3 farkli? False
+  isci=2 seed=None OPTIMAL 0.006s dal=0 catisma=0 bool=0 det=1e-06
+  isci=2 seed=1    OPTIMAL 0.003s dal=0 catisma=0 bool=0 det=1e-06
+  isci=2 seed=2    OPTIMAL 0.003s dal=0 catisma=0 bool=0 det=1e-06
+  isci=2 seed=3    OPTIMAL 0.004s dal=0 catisma=0 bool=0 det=1e-06
+  -> isci=2: cozum(yazilmamis)==cozum(seed 1)? True ; dal/catisma esit? True ; seed2 farkli cozum? False ; seed3 farkli? False
+  model proto Solve sonrasi ayni mi: True
+  1 isci seed=1 iki kosu ayni cozum: True dal: 0 0
+  1 isci seed yazilmamis iki kosu ayni cozum: True dal: 0 0
+
+== _ornek(2000) degisken 474
+  isci=1 seed=None OPTIMAL 0.004s dal=0 catisma=0 bool=0 det=0.000121
+  isci=1 seed=1    OPTIMAL 0.003s dal=0 catisma=0 bool=0 det=0.000121
+  isci=1 seed=2    OPTIMAL 0.003s dal=0 catisma=0 bool=0 det=0.000121
+  isci=1 seed=3    OPTIMAL 0.003s dal=0 catisma=0 bool=0 det=0.000121
+  -> isci=1: cozum(yazilmamis)==cozum(seed 1)? True ; dal/catisma esit? True ; seed2 farkli cozum? False ; seed3 farkli? False
+  isci=2 seed=None OPTIMAL 0.005s dal=0 catisma=0 bool=0 det=0.000121
+  isci=2 seed=1    OPTIMAL 0.005s dal=0 catisma=0 bool=0 det=0.000121
+  isci=2 seed=2    OPTIMAL 0.005s dal=0 catisma=0 bool=0 det=0.000121
+  isci=2 seed=3    OPTIMAL 0.005s dal=0 catisma=0 bool=0 det=0.000121
+  -> isci=2: cozum(yazilmamis)==cozum(seed 1)? True ; dal/catisma esit? True ; seed2 farkli cozum? False ; seed3 farkli? False
+  model proto Solve sonrasi ayni mi: True
+  1 isci seed=1 iki kosu ayni cozum: True dal: 0 0
+  1 isci seed yazilmamis iki kosu ayni cozum: True dal: 0 0

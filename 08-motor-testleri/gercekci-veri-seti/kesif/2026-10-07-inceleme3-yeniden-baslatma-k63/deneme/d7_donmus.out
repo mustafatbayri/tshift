@@ -1,0 +1,6 @@
+ideal yemek slotu: 12.0 | adaylar: [11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75]
+donmus gun 0 mola alanlari (once): [(0, 0), (1, 1)] | [1,1] sayisi: 6
+durum: cozuldu | baslangic_plani_kullanildi: False | iki_asama: True
+fm_once: {'bulundu': True, 'kanitlandi_yok': False, 'denemeler': [{'tohum': 1, 'saniye': 0.0, 'durum': 'OPTIMAL'}]}
+notlar: ['baslangic plani bu girdiye oturmadi; sifirdan aranacak']
+donmus gun 0 mola alanlari DEGISEN sayisi: 48 | ornek: [(1, [0, 0], [0, 1]), (2, [0, 0], [0, 1]), (3, [0, 0], [0, 1])]

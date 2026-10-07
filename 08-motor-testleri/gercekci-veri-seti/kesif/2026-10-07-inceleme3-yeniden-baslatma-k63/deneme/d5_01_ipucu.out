@@ -1,0 +1,10 @@
+olcek 0.10 kisi 49 kurma 7.3s degisken=59812 kisit=76008 x=1841 mola=15638 dinlenme=40201 ceza=2131
+  _ipucu_ver=True 25.2s | fm_once={'bulundu': True, 'saniye': 0.86, 'denemeler': [{'tohum': 1, 'saniye': 0.73, 'durum': 'OPTIMAL'}]} | iyilestirme={'saniye': 24.02, 'plan_bulundu': True, 'amacsiz_amac': 11792, 'iyilesmis_amac': 3938, 'optimum': False, 'ipucu_korundu': False, 'cozum_sayisi': 50}
+  _tam_ipucu_yaz cagri sayisi: 2
+  SIKILIK amacsiz    amac(ipucu)=11792 siki=6227 (OPTIMAL, 0.3s) fark=5565 gevsek={'me': 5565}
+  SIKILIK c2         amac(ipucu)=3938 siki=3935 (OPTIMAL, 0.3s) fark=3 gevsek={'ha': 3}
+  ipucu tam: True
+  _ipucu_planini_al #1: {'bulundu': True, 'saniye': 0.33, 'durum': 'OPTIMAL'} | cozum==ipucu farkli=0 | amac=3938
+  _ipucu_planini_al #2: {'bulundu': True, 'saniye': 0.33, 'durum': 'OPTIMAL'} | cozum==ipucu farkli=0 | amac=3938
+  _ipucu_planini_al #3: {'bulundu': True, 'saniye': 0.35, 'durum': 'OPTIMAL'} | cozum==ipucu farkli=0 | amac=3938
+  kiyas: 2 isci sabitleme acik: OPTIMAL 0.31s

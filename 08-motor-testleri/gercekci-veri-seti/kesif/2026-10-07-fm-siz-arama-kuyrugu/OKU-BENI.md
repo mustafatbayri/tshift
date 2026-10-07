@@ -40,3 +40,26 @@ ilk dalı: kuyruk ince ama gerçek (53 gözlemde 1 × > 120 sn); yeniden
 başlatma (3 × 40 sn, farklı tohum; offline tahmin %0,02 başarısızlık) motorda
 ölçüm seçeneği olarak yazılacak, 900 sn × 3 ile doğrulanacak, sonra
 varsayılan. Okuması T-60 bulgu 25'te.
+
+> ⚠ **Düzeltme (7 Ekim 18:40, O-19).** Yukarıda ve 18:00 kaydında *"tohum 0 =
+> motorun kullandığı değer (CP-SAT varsayılanı)"* deniyordu — **yanlış**.
+> CP-SAT'in varsayılan tohumu **1**'dir (ortools 9.15'te ölçüldü:
+> `CpSolver().parameters.random_seed` → 1); motor tohum yazmadığı için 1 ile
+> arıyordu. 18:00 koşusundaki 5 tekrar tohum 0'ındı — motorun tohumunun değil.
+> Vardığı sonuç değişmez: aynı tohumda bile 7× fark, rastgelelik paralel
+> işçilerin zamanlamasından; motorun tohumu (1) 30'un içinde bir kez ölçüldü.
+> Araçta tekrarlanan tohum artık `--tekrar-tohum` (varsayılan 1);
+> `--sifir-tekrar` adı 18:00 komut satırı geçerli kalsın diye duruyor (anlamı
+> tekrar sayısı). Varsayım kütüphaneden okunmadan yazılmıştı; ders O-19'da.
+
+**Politika kipi (18:50'den sonra).** Motora yeniden başlatma yazıldıktan sonra
+araç motorun kendi `_fazla_mesaisiz_ara` fonksiyonunu tekrar tekrar koşturur:
+
+```
+py kuyruk.py --politika 3 --deneme 20 --tavan 120 --cikti politika-3x40.jsonl
+```
+
+Her koşuda: bulundu mu, toplam süre, hangi denemede (tohum 1 → 2 → 3). Asıl
+doğrulama kalite-olc.py `fm_once_deneme3` (900 sn × 3); bu kip aramanın
+kendisini 20 kez görmek için (karar kuralı: hiçbir koşu 3 × 40'ta bulunamadı
+yoluna düşmemeli; 2+ deneme gereken koşu sayısı kuyruğun ölçüsüdür).

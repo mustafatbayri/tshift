@@ -1,0 +1,69 @@
+OZGUN KOD (baslangic):
+  testler/test_fazla_mesai_once_sifir.py     38 passed in 9.37s
+
+MUTASYONLAR:
+  [fm_sifir  ] K-61: varsayilan KAPALI olsun (karar geri alinsin) OLDU           6 failed, 32 passed in 9.08s
+  [fm_sifir  ] O-18: sert kesim urunun varsayilani olsun (6 Ekim gecesinin hali) OLDU           7 failed, 31 passed in 8.98s
+  [fm_sifir  ] secenek yok sayilsin                           OLDU           24 failed, 14 passed in 8.68s
+  [fm_sifir  ] secenek kapaliyken de uygulansin               OLDU           2 failed, 36 passed in 9.77s
+  [fm_sifir  ] O-18: bulununca hep 0'da tutulsun (sert kesim; ilke cignenir) OLDU           7 failed, 31 passed in 8.94s
+  [fm_sifir  ] O-18: olcum secenegi acikken de 0'da tutulmasin OLDU           4 failed, 34 passed in 9.51s
+  [fm_sifir  ] O-18: bulunamayinca da "0'da tutuldu" densin   OLDU           1 failed, 37 passed in 9.72s
+  [fm_sifir  ] O-18: ciktida "sifirda_tutuldu" hep False yazsin OLDU           4 failed, 34 passed in 9.32s
+  [fm_sifir  ] O-18: ciktida "sifirda_tutuldu" bulundu'yu yazsin OLDU           4 failed, 34 passed in 9.42s
+  [fm_sifir  ] O-18: alanlar yalniz bulunamayinca geri acilsin (6 Ekim gecesi) OLDU           6 failed, 32 passed in 8.99s
+  [fm_sifir  ] O-18: alanlar hic geri acilmasin               OLDU           13 failed, 25 passed in 9.69s
+  [fm_sifir  ] O-18: sert kesimde de alanlar geri acilsin     OLDU           3 failed, 35 passed in 9.50s
+  [fm_sifir  ] O-18: ipucu yazildiktan sonra silinsin (fazla mesaisiz plan kaybolsun) OLDU           3 failed, 35 passed in 9.77s
+  [fm_sifir  ] O-18: ipucu fm degerleri silinsin (yarim ipucu; fazla mesaisiz baslangic kaybolsun) OLDU           3 failed, 35 passed in 9.49s
+  [fm_sifir  ] O-18: ipucunun fm degerleri hep 0 yazilsin (mola adimina yanlis ipucu) OLDU           1 failed, 37 passed in 9.51s
+  [fm_sifir  ] O-18: iyilestirmeden sonra ipucunun fm degerleri silinsin (mola adimina yarim ipucu) OLDU           1 failed, 37 passed in 9.53s
+  [fm_sifir  ] O-18: iyilestirme ipucudan KOTU plan dondurse de ipucu ezilsin (koruma yok) OLDU           1 failed, 37 passed in 9.66s
+  [fm_sifir  ] O-18: koruma ters calissin (iyi plani at, kotuyu yaz) OLDU           6 failed, 32 passed in 8.99s
+  [fm_sifir  ] bulunamayinca not dusulmesin (sessiz geri donus) OLDU           8 failed, 30 passed in 9.71s
+  [fm_sifir  ] bulununca da not dusulsun                      OLDU           3 failed, 35 passed in 9.63s
+  [fm_sifir  ] not "en aza indirilir" diye kanit iddia etsin  OLDU           1 failed, 37 passed in 9.55s
+  [fm_sifir  ] bulunamayinca yeniden aranmasin                OLDU           6 failed, 32 passed in 9.63s
+  [fm_sifir  ] plan yokken de "bulundu" densin                OLDU           10 failed, 28 passed in 10.03s
+  [fm_sifir  ] sure yetmemesi de kanit sayilsin               OLDU           2 failed, 36 passed in 10.07s
+  [fm_sifir  ] not hep "kanitlandi" desin                     ATLANDI (capa 0 kez)
+  [fm_sifir  ] not hep "molalar sabitken" desin               OLDU           1 failed, 37 passed in 9.86s
+  [fm_sifir  ] sonuc ciktiya yazilmasin                       OLDU           18 failed, 20 passed in 9.10s
+  [fm_sifir  ] sifirlama butun ceza degiskenlerine dokunsun   OLDU           18 failed, 20 passed in 9.11s
+  [fm_sifir  ] sifirlama alani daraltmasin                    OLDU           9 failed, 29 passed in 9.64s
+  [fm_sifir  ] zaten 0 olan alan da sabitlenmis sayilsin (CALISAN) OLDU           1 failed, 37 passed in 9.59s
+  [fm_sifir  ] geri alma eski alani degil [0,1] yazsin        OLDU           14 failed, 24 passed in 9.80s
+  [fm_sifir  ] yeniden arama butcenin tamamini alsin          OLDU           2 failed, 36 passed in 9.71s
+  [fm_sifir  ] yeniden arama kalan butceye bakmasin           OLDU           1 failed, 37 passed in 9.65s
+  [fm_sifir  ] yeniden arama paya bakmasin (kalanin tamami)   OLDU           2 failed, 36 passed in 9.67s
+  [fm_sifir  ] yeniden arama tabani kalksin (sifir/eksi sure) OLDU           1 failed, 37 passed in 9.58s
+  [fm_sifir  ] yeniden arama 1 sn pay birakmasin              OLDU           1 failed, 37 passed in 9.60s
+  [fm_sifir  ] basarisiz denemenin suresi iyilestirmeden dusulmesin OLDU           3 failed, 35 passed in 9.54s
+  [fm_sifir  ] deneme suresi yalniz paydan dussun (acik istekten degil) OLDU           1 failed, 37 passed in 9.58s
+  [fm_sifir  ] basarili denemenin suresi de iyilestirmeden dusulsun OLDU           2 failed, 36 passed in 9.37s
+  [fm_sifir  ] kanitin kapsami ciktida hep "sabit" yazsin     OLDU           1 failed, 37 passed in 9.62s
+  [fm_sifir  ] O-16: sert kesim tam model sayilsin            OLDU           1 failed, 37 passed in 9.44s
+  [fm_sifir  ] O-16/O-18: urun yolu (bulundu, alanlar acik) kisitli sayilsin OLDU           1 failed, 37 passed in 9.40s
+  [fm_sifir  ] O-16: deneme yapildiysa hep kisitli sayilsin   OLDU           2 failed, 36 passed in 9.60s
+  [fm_sifir  ] iyilestirme egrisi yazilmasin                  OLDU           1 failed, 37 passed in 9.53s
+  [fm_sifir  ] iyilestirme egrisine nokta eklenmesin          OLDU           1 failed, 37 passed in 9.67s
+  [fm_sifir  ] amac degeri yuvarlanmasin, kirpilsin           OLDU           1 failed, 37 passed in 9.57s
+  [fm_sifir  ] O-16: fazla mesaisiz siniri yazilmasin         OLDU           1 failed, 37 passed in 9.36s
+  [fm_sifir  ] O-16: fazla mesaisiz siniri her kosuda yazilsin OLDU           2 failed, 36 passed in 9.49s
+  [fm_sifir  ] bulgu 25: deneme sayisi yok sayilsin (hep tek deneme) OLDU           3 failed, 35 passed in 9.26s
+  [fm_sifir  ] bulgu 25: tohum degismesin (her deneme ayni arama) OLDU           2 failed, 36 passed in 9.54s
+  [fm_sifir  ] bulgu 25: ilk tohum 0 olsun (bugunku arama degisir; kutuphane varsayilani 1) OLDU           3 failed, 35 passed in 9.40s
+  [fm_sifir  ] bulgu 25: pay bolunmesin (her deneme payin tamami; butce asilir) OLDU           2 failed, 36 passed in 9.47s
+  [fm_sifir  ] bulgu 25: parca tabani kalksin (kesirli/sifir sure) OLDU           1 failed, 37 passed in 9.62s
+  [fm_sifir  ] bulgu 25: yeniden baslatma yapilmasin (ilk denemeden sonra dur) OLDU           3 failed, 35 passed in 9.30s
+  [fm_sifir  ] bulgu 25: INFEASIBLE kanit sayilmasin (kalan denemeler bosa kossun) OLDU           1 failed, 37 passed in 9.63s
+  [fm_sifir  ] bulgu 25: denemeler ciktiya yazilmasin         OLDU           5 failed, 33 passed in 9.90s
+  [fm_sifir  ] bulgu 25: deneme siniri ciktida hep 1 yazsin   OLDU           2 failed, 36 passed in 9.96s
+  [fm_sifir  ] bulgu 25: not kac denemede oldugunu soylemesin OLDU           1 failed, 37 passed in 9.78s
+  [fm_sifir  ] bulgu 25: deneme sayisinin tabani kalksin (0/eksi deger) OLDU           1 failed, 37 passed in 9.55s
+
+OZGUN KOD (bitis):
+  testler/test_fazla_mesai_once_sifir.py     38 passed in 9.58s
+
+OZET: 59 mutasyon · yasayan 0 · atlanan 1
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)

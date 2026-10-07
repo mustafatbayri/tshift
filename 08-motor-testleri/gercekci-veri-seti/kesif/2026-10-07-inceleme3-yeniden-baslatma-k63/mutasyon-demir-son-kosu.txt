@@ -1,0 +1,50 @@
+OZGUN KOD (baslangic):
+  testler/test_demir_secenekleri.py          24 passed in 5.67s
+
+MUTASYONLAR:
+  [demir     ] K-59 geri: (a) varsayilan KAPALI olsun         OLDU           2 failed, 22 passed in 5.02s
+  [demir     ] K-60: oran %80 degil %40 olsun (K-59 hali)     OLDU           1 failed, 23 passed in 5.36s
+  [demir     ] K-60: oran ayardan okunmasin (sabit %80)       OLDU           1 failed, 23 passed in 5.38s
+  [demir     ] K-60 geri: mola adimi varsayilan KAPALI olsun  OLDU           7 failed, 17 passed in 6.37s
+  [demir     ] K-60: mola adimi genel %2 bosluguyla dursun (0 degil) OLDU           2 failed, 22 passed in 5.41s
+  [demir     ] K-60: mola adimi esigi ayardan okunmasin       OLDU           1 failed, 23 passed in 5.15s
+  [demir     ] K-60: mola adimi esigi hic uygulanmasin (genel %2 kalsin) OLDU           2 failed, 22 passed in 5.37s
+  [demir     ] K-60: mola_adimi False da sabitlesin (olcum kapisi kapansin) OLDU           3 failed, 21 passed in 4.66s
+  [demir     ] ErkenDur: esitlikte "optimum" degil "hedef_bosluk" densin (eski) OLDU           2 failed, 22 passed in 5.08s
+  [demir     ] K-59: None orandan degil sifirdan okunsun      OLDU           2 failed, 22 passed in 5.80s
+  [demir     ] K-59: sifir kapatmasin (orana dussun)          OLDU           1 failed, 23 passed in 5.47s
+  [demir     ] mola adimi: atamalar sabitlenmesin             OLDU           2 failed, 22 passed in 7.27s
+  [demir     ] mola adimi: molalar da sabitlensin             OLDU           2 failed, 22 passed in 4.81s
+  [demir     ] mola adimi: ipucu yokken de uygulandi densin   OLDU           3 failed, 21 passed in 4.90s
+  [demir     ] (b) varsayilan ACIK olsun                      OLDU           2 failed, 22 passed in 5.73s
+  [demir     ] (a) iyilestirme AMACSIZ kossun                 OLDU           6 failed, 18 passed in 5.20s
+  [demir     ] (a) ipucusuz bayragi yok sayilsin              OLDU           1 failed, 23 passed in 5.13s
+  [demir     ] (a) plan bulunamayinca amacsiz ipucu GERI yazilmasin OLDU           1 failed, 23 passed in 5.37s
+  [demir     ] (a) iyilesmis plan ipucuya yazilmasin          OLDU           3 failed, 21 passed in 5.60s
+  [demir     ] (a) sure butceden dusulmesin                   OLDU           1 failed, 23 passed in 5.30s
+  [demir     ] (a) iyilestirme butcenin tamamini alabilsin    OLDU           1 failed, 23 passed in 5.32s
+  [demir     ] (b) secim tersine: amaci BUYUK olan            OLDU           1 failed, 23 passed in 5.39s
+  [demir     ] (b) plansiz arama da secilebilsin              OLDU           4 failed, 20 passed in 4.71s
+  [demir     ] (b) kopyanin ipucu silinmesin                  OLDU           1 failed, 23 passed in 5.19s
+  [demir     ] (b) isciler bolusulmesin                       OLDU           1 failed, 23 passed in 5.81s
+  [demir     ] (b) ipucu yokken de paralel kossun             OLDU           1 failed, 23 passed in 5.56s
+  [demir     ] O-16 geri: kisitli kosuda kuresel alt sinir yazilsin OLDU           3 failed, 21 passed in 5.18s
+  [demir     ] O-16: ortak aramada da kuresel sinir silinsin  OLDU           3 failed, 21 passed in 4.74s
+  [demir     ] O-16 geri: kisitli kosuda uzaklik %0 yazilsin  OLDU           2 failed, 22 passed in 5.02s
+  [demir     ] O-16: uzaklik ortak aramada da silinsin        OLDU           2 failed, 22 passed in 5.26s
+  [demir     ] O-16 geri: kisitli kosu duz "optimum" desin    OLDU           3 failed, 21 passed in 4.32s
+  [demir     ] O-16: on ek ortak aramada da yazilsin          OLDU           3 failed, 21 passed in 4.45s
+  [demir     ] O-16: "hedef_bosluk" on eksiz kalsin           OLDU           3 failed, 21 passed in 4.67s
+  [demir     ] O-16: kanit iddia etmeyen sebep de on ek alsin OLDU           1 failed, 23 passed in 4.58s
+  [demir     ] O-16: mola adiminin kendi siniri yazilmasin    OLDU           3 failed, 21 passed in 4.82s
+  [demir     ] O-16: mola adimi siniri ortak aramada da yazilsin OLDU           1 failed, 23 passed in 5.43s
+  [demir     ] O-16: mola adimi tam model sayilsin            OLDU           6 failed, 18 passed in 4.31s
+  [demir     ] O-16: (b) kollari kisitli kosuda isaretlenmesin OLDU           1 failed, 23 passed in 4.92s
+  [demir     ] O-16: (b) kollarinin siniri silinmesin         OLDU           2 failed, 22 passed in 4.96s
+  [demir     ] O-16: (b) kollarinin sebebi on eksiz kalsin    OLDU           2 failed, 22 passed in 4.81s
+
+OZGUN KOD (bitis):
+  testler/test_demir_secenekleri.py          24 passed in 5.14s
+
+OZET: 40 mutasyon · yasayan 0 · atlanan 0
+(grup kosusu: toplam iddiasi icin `py mutasyon_kostur.py` tam kosulur)
