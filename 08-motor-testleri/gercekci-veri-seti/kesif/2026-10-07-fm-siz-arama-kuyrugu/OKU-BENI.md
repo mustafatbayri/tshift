@@ -32,5 +32,11 @@ tahminde başarısızlığı en düşük olan) motorda ölçüm seçeneği olara
 *"bulunamadı"* yolunun planı (30 saat fazla mesai) bir ürün sorunu olarak
 kalır: K-61 ancak bu kuyruk kapanınca *"kapandı"* denir.
 
-**Bu klasörde sonuç yok** — koşu Mustafa'nın makinesinde; çıktı
-`kuyruk-30.jsonl` buraya düşer, okuması T-60 bulgu 25'e yazılır.
+**Sonuç (7 Ekim 18:00, Mustafa'nın makinesi; `kuyruk-30.jsonl`).** 35 denemenin
+hepsi 120 sn'de buldu; medyan 7,5 sn, %90 13,0 sn, en uzun 61,9 sn; P(T > 40)
+= 2/35, P(T > 60) = 1/35, P(T > 120) = 0/35. Tohum 0'ın beş tekrarı 7,8–55,9
+sn: rastgelelik tohumdan değil paralel işçilerin zamanlamasından. Kuralın
+ilk dalı: kuyruk ince ama gerçek (53 gözlemde 1 × > 120 sn); yeniden
+başlatma (3 × 40 sn, farklı tohum; offline tahmin %0,02 başarısızlık) motorda
+ölçüm seçeneği olarak yazılacak, 900 sn × 3 ile doğrulanacak, sonra
+varsayılan. Okuması T-60 bulgu 25'te.

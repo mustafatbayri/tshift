@@ -10,6 +10,7 @@ pencerede kod değişmedi.**
 2. [Bulgu 25 — fazla mesaisiz ilk aramanın kuyruğu](#2--bulgu-25--fazla-mesaisiz-ilk-aramanın-kuyruğu)
 3. [Kuyruk ölçümü aracı ve karar kuralı](#3--kuyruk-ölçümü-aracı-ve-karar-kuralı)
 4. [Sıradaki](#4--sıradaki)
+5. [Kuyruk ölçümünün sonucu (18:00)](#5--kuyruk-ölçümünün-sonucu-1800)
 
 ## 1 · Gece koşusunun sonucu
 
@@ -60,3 +61,26 @@ yine yazılır (ucuz sigorta), öncelik hibrite döner.
 (1) `kuyruk.py` koşusu (Mustafa, ~15–25 dk) → politika; (2) K-63 (süre
 aralığı; mola adımı yetişmezse plan) ve K-64 kod; (3) hibrit KAPSAMA; (4)
 K-62 merdiven kadrosu (20 satışçı BO, gece BO ≥ 2).
+
+## 5 · Kuyruk ölçümünün sonucu (18:00)
+
+Mustafa `kuyruk.py --deneme 30 --tavan 120 --sifir-tekrar 5` koşturdu (kurma
+53 sn; 633.591 değişken; 529.480 mola adayı kapalı; 359 fazla mesai değişkeni
+[0,0]; 6 işçi). **35 denemenin hepsi buldu**; medyan 7,5 sn, %90 13,0 sn, en
+uzun 61,9 sn; P(T > 10/20/40/60/120) = 9/35 · 2/35 · 2/35 · 1/35 · 0/35. Tohum
+0'ın beş tekrarı 13,0 · 55,9 · 12,2 · 7,9 · 7,8 sn — rastgelelik tohumdan
+değil, paralel işçilerin zamanlamasından (aynı tohumda 7× fark).
+
+Karar kuralı (OKU-BENI, koşudan önce): P(T > 120) ≈ 0 ve %90 < 40 sn → ilk
+dal. Toplamda (6 Ekim'den beri 18 ürün/sert koşusu + 35 deneme = 53 gözlem)
+1 × > 120 sn, 2 × 56–62 sn, 1 × 21 sn. Kuyruk ince ama gerçek; tek denemeyle
+120 sn'de kalma ~%2 ve bedeli 30 saat fazla mesaili plan. Çare ucuz: **120
+sn'lik payı 3 × 40 sn'lik denemeye bölmek**, her deneme farklı tohumla
+(offline tahmin: başarısızlık 0,057³ ≈ %0,02; bağımsızlık varsayımı, motorda
+doğrulanacak). Tipik koşu (7,5 sn) etkilenmez. Çıktıya denemelerin
+süresi/durumu eklenir.
+
+**Plan:** motorda ölçüm seçeneği `fazla_mesaisiz_deneme` (varsayılan 1 =
+bugünkü davranış; ölçümde 3) + testler + mutasyonlar → `fm_once` 900 sn × 3 →
+varsayılan 3 → K-61 kapanır. Sırası Mustafa'nın sıralama cevabına göre
+(18:03'te sorulan: kalibrasyonları dondurma; dört kural + veri seti).

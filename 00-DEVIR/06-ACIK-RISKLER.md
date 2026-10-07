@@ -4707,8 +4707,40 @@ başlatma yine yazılır (ucuz sigorta) ama ölçüm önceliği hibrite döner;
 kuyruk gerçekse yeniden başlatma motorda ölçüm seçeneği olur, 900 sn × 3 ile
 doğrulanır, sonra varsayılan. Kod değişmedi.
 
-*Önerilen sıra (17:45).* (1) kuyruk ölçümü (~15–25 dk, Mustafa'nın
-makinesi) → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı
+*Kuyruk ölçümü — sonuç (7 Ekim 18:00; `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-fm-siz-arama-kuyrugu/kuyruk-30.jsonl`).* 500
+kişilik model, birinci aşama motorla birebir (molalar sabit: 529.480 aday
+kapalı; fazla mesai [0,0]: 359 değişken), 6 işçi, 120 sn tavan; 30 tohum +
+5 × tohum 0 (motorun kullandığı):
+
+| | Değer |
+|---|---|
+| Bulunamayan | **0 / 35** (120 sn'de hepsi OPTIMAL = geçerli plan) |
+| Medyan · %90 · en uzun | **7,5 sn · 13,0 sn · 61,9 sn** |
+| P(T > 10 / 20 / 40 / 60 / 120 sn) | 9/35 · 2/35 · 2/35 · 1/35 · **0/35** |
+| Tohum 0 (ürünün ayarı), 5 tekrar | 13,0 · **55,9** · 12,2 · 7,9 · 7,8 sn — aynı tohumda bile 7× fark: rastgelelik paralel işçilerin zamanlamasından, tohumdan değil |
+| Yeniden başlatma, offline tahmin (bağımsızlık varsayımı) | 2 × 60 sn → 0,08 % · **3 × 40 sn → 0,02 %** · 4 × 30 sn → 0,00 % başarısızlık |
+
+**Okuma (karar kuralı OKU-BENI'de koşudan önce yazılı).** P(T > 120) = 0/35 ve
+%90 kantil 13 sn < 40 → kuralın ilk dalı: gece koşusundaki 120+ sn olayı
+kalın bir kuyruğun değil, ince ama gerçek bir kuyruğun ucu. Birlikte sayınca
+(6 Ekim'den beri 18 ürün/sert koşusu + 35 deneme = **53 gözlem**): 1 × > 120
+sn, 2 × 56–62 sn, 1 × 21 sn; gerisi 6,4–13 sn. Yani tek denemeyle 120 sn'de
+kalma olasılığı ~%2 düzeyinde ve o durumda plan 30 saat fazla mesaiyle
+dönüyor — ürün için kabul edilmez, çaresi ucuz: **yeniden başlatma.** Aynı
+120 sn'lik pay 3 × 40 sn'lik denemeye bölünür, her deneme farklı tohumla;
+tipik koşu (7,5 sn) hiç etkilenmez, kuyruk denemeler arasında bağımsızsa
+başarısızlık ~%0,02'ye iner (varsayım; motorda 900 sn × 3 ile doğrulanır).
+Çıktıya `fazla_mesai_once_sifir.denemeler` (her denemenin süresi/durumu)
+eklenir — kuyruk ürün koşularında da görünür kalsın.
+
+*Sıradaki (bulgu 25 için).* Motorda ölçüm seçeneği `fazla_mesaisiz_deneme`
+(varsayılan 1 = bugünkü davranış; ölçümde 3) + testler + mutasyonlar →
+Mustafa'nın makinesinde `fm_once` 900 sn × 3 (ve kuyruk aracı yeniden,
+3 × 40 politikasıyla) → varsayılan 3 → **K-61 kapanır.** Sırası Mustafa'nın
+18:03'teki sıralama cevabına göre (kriterler + veri seti önceliği).
+
+*Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
+makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı
 yetişmezse plan) ve K-64 kod; (3) hibrit ölçümü KAPSAMA; (4) K-62 merdiven
 kadrosu.
 
