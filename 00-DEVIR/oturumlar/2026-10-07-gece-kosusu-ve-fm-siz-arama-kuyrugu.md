@@ -1,6 +1,6 @@
 # 7 Ekim 2026 (gündüz) — gece koşusunun okunması; bulgu 25: fazla mesaisiz ilk aramanın kuyruğu; yeniden başlatma + K-63 koda; K-61 kapanışı (8 Ekim sabahı)
 
-**Pencere:** 7 Ekim 17:28 – 8 Ekim 05:45 · **Önceki:** `2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
+**Pencere:** 7 Ekim 17:28 – 8 Ekim 06:30+ (sürüyor) · **Önceki:** `2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
 §15–17 (O-18 düzeltmesi, kredi kesintisi, bulgu 23–24, K-63/K-64). ~~**Bu
 pencerede kod değişmedi.**~~ *(18:31'den sonra değişti — §6; 8 Ekim sabahı
 varsayılan 3 — §9.)*
@@ -282,3 +282,40 @@ varsayılan 3 + dokümanlar bitince tek blok. **Sıradaki blok:** testler (610 +
 politika jsonl, damga) → push → tam mutasyon (327). Sonra sıranın 3. maddesi:
 dört yumuşak kural (şartnameden okunarak; tanım soruları tek tek); bulgu 26
 karar Mustafa'da; bulgu 27 sırada; hibrit/%90 dondu (K-64 sonrası).
+
+**05:05 — sıra 3 başladı: ilk tanım sorusu soruldu.** Okunan: şartname §5.4,
+§6.3/6.5/6.8 satırları, §8.2–8.3, §11.2; K-13, K-22, K-49, K-50, K-54;
+`09-motor/cozucu/model.py` (dört kuralın yalnız ağırlık satırı var),
+`09-motor/dogrulayici/kurallar.py` (gövde yok), %95 fikstürü (herkes tek ekipte, `mevcut_plan` yok, 130 yarı
+zamanlı / 85 uygunluk kaydı, şablon başlangıçları 07:00 · 08:00 · 10:00 ·
+11:00 · 13:45 · 15:15 · 23:00; sabah/akşam/gece etiketi yok, yalnız yasal
+`gece_mi`). Mustafa'ya **soru 1 — `VARDIYA_ROTASYON_YONU`**, üç karar:
+(1) "geri" = art arda iki çalışma gününde sonraki başlangıç öncekinden erken
+(önerim) / sınıf gerilemesi; (2) boş gün karşılaştırmayı sıfırlar (önerim) /
+sıfırlamaz; (3) ceza birimi geri geçiş başına 1 × ağırlık (önerim) / erken
+kaydırılan saat. Sıradaki sorular: `TERCIH_KARSILAMA` (esnekliğin "kullanım
+oranı" ne), `PLAN_KARARLILIGI` ("değişim" sayımı), `EKIP_SUREKLILIGI` (hangi
+süreklilik). Cevaplar gelmeden kod yazılmaz.
+
+**05:05 — Mustafa'nın cevabı; 05:10–06:30 literatür.** *"1 için cevabı
+literatürden alabilirsin … geri tanımına katılıyorum … 2 boş gün sıfırlar …
+3'ü anlayamadım, istişare ederek ilerleyelim; ben yatıyorum, makine açık,
+bloğu koşmaya bıraktım."* Blok: `c4ddca1` commit + push (origin'le eşit);
+**tam mutasyon 327'nin hepsi öldü, atlanan 0** (damga 05:39, okundu 05:52);
+pytest özetleri Mustafa'nın ekranında. Literatür okuması
+`02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md`: IARC 124
+(2020) §1.1 madde 8 — *geri* = öğleden sonra→sabah **ve sabah→gece**; hızlı
+dönüş < 11 sa (madde 9); FIOH vardiya sınıfları (Härmä 2018 SJWEH); kanıt
+Czeisler 1982, Bambra 2008 (26 çalışma), Di Muzio 2021 (JAMA Netw Open), HSE,
+NIOSH. Üç karara yansıması: (1) kabul edilen tanıma ek — başlangıç farkı
+**dairesel** ((−12, 12]) okunsun ki 08:00→23:00 geri sayılsın; (2) kabul,
+Pazar→Pazartesi çifti geçmişle; (3) açıklandı — öneri **ağırlık × geri
+kaydırılan saat**, alternatif geçiş başına 1 birim. Keşif
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-08-rotasyon-yonu/` (`geri_say.py`): 0.1 ölçekte 132
+art arda çiftin 18'i geri (ort. 3,85 sa), 0.2'de 301'in 48'i (ort. 4,7 sa);
+geri geçişlerin ~dörtte biri sabah→gece atlaması. Okunamayanlar belgede
+(sjweh.fi izin istedi, PMC doğrulama, Europe PMC 429; Czeisler ikincil
+kaynaktan). 05:40'ta Mustafa'ya özet + iki soru (1-ek dairesel; 3: saat/adet)
+gönderildi; kod yazılmadı. Sıradaki: `TERCIH_KARSILAMA` sorusu hazır
+bekliyor (0.2 ölçek keşfi: 33 yarı zamanlı ort. 20,1 sa / 3,1 gün, uygun
+günlerin %67–75'i kullanılıyor, 2'si 0 saat).
