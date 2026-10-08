@@ -1287,6 +1287,14 @@ MUTASYONLAR = [
     # ---- YENIDEN BASLATMA -- T-60 bulgu 25 (7 Ekim): `fazla_mesaisiz_deneme`
     # ---- (varsayilan 1). Pay N'e bolunur, her deneme farkli tohum, ilk bulunan
     # ---- alinir, INFEASIBLE kanittir. Yakalayan testler: bolum 7.
+    ('fm_sifir', C, 'K-61 kapanisi geri: varsayilan tek deneme olsun',
+     '    "fazla_mesaisiz_deneme": 3,',
+     '    "fazla_mesaisiz_deneme": 1,',
+     'testler/test_fazla_mesai_once_sifir.py'),
+    ('fm_sifir', C, 'K-61 kapanisi: varsayilan 2 deneme olsun (politika degissin)',
+     '    "fazla_mesaisiz_deneme": 3,',
+     '    "fazla_mesaisiz_deneme": 2,',
+     'testler/test_fazla_mesai_once_sifir.py'),
     ('fm_sifir', C, 'bulgu 25: deneme sayisi yok sayilsin (hep tek deneme)',
      '    adet = _deneme_siniri(ayar)\n',
      '    adet = 1\n',

@@ -1,4 +1,4 @@
-# 7 Ekim 2026 — fazla mesaisiz ilk aramanın kuyruğu (keşif; motor değişmedi)
+# 7 Ekim 2026 — fazla mesaisiz ilk aramanın kuyruğu (keşif; ölçüm sırasında motor değişmedi — yeniden başlatma 7 Ekim 18:35'te koda indi, 8 Ekim'de varsayılan oldu)
 
 **Soru.** Ürün yolu (K-61) birinci aşamada geçerli planı fazla mesai
 değişkenleri 0'a sabitken arar; payı en çok 120 sn. 7 Ekim gece koşusunda
@@ -63,3 +63,19 @@ Her koşuda: bulundu mu, toplam süre, hangi denemede (tohum 1 → 2 → 3). As�
 doğrulama kalite-olc.py `fm_once_deneme3` (900 sn × 3); bu kip aramanın
 kendisini 20 kez görmek için (karar kuralı: hiçbir koşu 3 × 40'ta bulunamadı
 yoluna düşmemeli; 2+ deneme gereken koşu sayısı kuyruğun ölçüsüdür).
+
+**Politika kipinin sonucu (7–8 Ekim gecesi, Mustafa'nın makinesi;
+`politika-3x40.jsonl`).** 20 koşunun **20'si de ilk denemede** (tohum 1,
+OPTIMAL) buldu; süreler 6,48–8,37 sn (medyan 6,6 sn, en uzun 8,4 sn), 2+
+deneme gereken 0, bulunamayan 0. Aynı gece `fm_once_deneme3` 900 sn × 3'te de
+üç koşu ilk denemede (6,73 / 7,12 / 7,34 sn) buldu → karar kuralı tuttu,
+**`fazla_mesaisiz_deneme` varsayılanı 3 oldu, K-61 kapandı** (8 Ekim sabahı;
+T-60 bulgu 25, K-61). Dürüst okuma: politika kipinin her koşusu ürün yolu
+gibi tohum 1 ile başlar; yani bu 20 koşu ürünün **ilk denemesinin 20
+tekrarıdır** ve yayılımı 1,3× (6,5–8,4 sn) çıktı — 18:00 ölçümünde aynı
+tohumun (0) beş tekrarı 7× yayılmıştı (7,8–55,9 sn). Yeniden başlatma
+(tohum 2, 3) 23 koşunun hiçbirinde **devreye girmedi**: zararsızlığı ölçüldü
+(puan, süre, fazla mesai tek denemeli yolla aynı), koruma değeri 18:00
+ölçümüne (53 gözlemde 1 × > 120 sn, 2 × 56–62 sn) ve çevrimdışı tahmine
+dayanıyor. Ürün koşularının `fazla_mesai_once_sifir.denemeler` alanı okunmaya
+devam eder; ilk denemede bulunamayan ilk koşu T-60'a yazılır.

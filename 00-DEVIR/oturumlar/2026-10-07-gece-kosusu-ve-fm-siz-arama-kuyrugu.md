@@ -1,8 +1,9 @@
-# 7 Ekim 2026 (gündüz) — gece koşusunun okunması; bulgu 25: fazla mesaisiz ilk aramanın kuyruğu
+# 7 Ekim 2026 (gündüz) — gece koşusunun okunması; bulgu 25: fazla mesaisiz ilk aramanın kuyruğu; yeniden başlatma + K-63 koda; K-61 kapanışı (8 Ekim sabahı)
 
-**Pencere:** 7 Ekim 17:28 – · **Önceki:** `2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
+**Pencere:** 7 Ekim 17:28 – 8 Ekim 05:45 · **Önceki:** `2026-10-06-uc-profil-ve-fazla-mesai-artigi.md`
 §15–17 (O-18 düzeltmesi, kredi kesintisi, bulgu 23–24, K-63/K-64). ~~**Bu
-pencerede kod değişmedi.**~~ *(18:31'den sonra değişti — §6.)*
+pencerede kod değişmedi.**~~ *(18:31'den sonra değişti — §6; 8 Ekim sabahı
+varsayılan 3 — §9.)*
 
 ## İçindekiler
 
@@ -14,6 +15,7 @@ pencerede kod değişmedi.**~~ *(18:31'den sonra değişti — §6.)*
 6. [Sıra onaylandı; yeniden başlatma + K-63 koda indi (18:31–20:30)](#6--sıra-onaylandı-yeniden-başlatma--k-63-koda-indi-18312030)
 7. [Bağımsız inceleme 3 ve düzeltmeler; O-19](#7--bağımsız-inceleme-3-ve-düzeltmeler-o-19)
 8. [Mustafa'ya blok ve sıradaki](#8--mustafaya-blok-ve-sıradaki)
+9. [Gece koşusunun sonucu: karar kuralı tuttu — varsayılan 3, K-61 kapandı; brifing v3 (8 Ekim 00:10–05:45)](#9--gece-koşusunun-sonucu-karar-kuralı-tuttu--varsayılan-3-k-61-kapandı-brifing-v3-8-ekim-00100545)
 
 ## 1 · Gece koşusunun sonucu
 
@@ -206,3 +208,77 @@ Blok (Mustafa döndüğünde): testler → DENETIM → commit → tam mutasyon (
 **varsayılan 3, K-61 kapanır**; bir koşu bile düşerse 4 × 30 ölçülür.
 Sonra sıranın 3. maddesi: dört yumuşak kural — şartnameden okunarak, tanım
 soruları tek tek. Yılmaz brifingi ayrı dosya (`00-DEVIR/brifing/`).
+## 9 · Gece koşusunun sonucu: karar kuralı tuttu — varsayılan 3, K-61 kapandı; brifing v3 (8 Ekim 00:10–05:45)
+
+**Mustafa'nın koşusu (7 Ekim akşamı → gece; çıktı 00:10 dolayında okundu).**
+Blok sırayla geçti: 609 + 41 test, DENETIM 0 HATA, commit `34a386b` push;
+**tam mutasyon 325'in hepsi öldü, atlanan 0** (damga 22:15,
+`09-motor/mutasyon-tam-kosu.txt`); `fm_once_deneme3` 900 sn × 3
+(`08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-fmonce-deneme3-900.json`);
+politika kipi (`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-fm-siz-arama-kuyrugu/politika-3x40.jsonl`).
+Sayılar T-60 bulgu 25'teki *"Ölçüldü"* tablosunda; özeti: amaç **26.498 /
+26.700 / 26.736** (tek denemeli yolun 7 Ekim ölçümü 26.634–26.705 — aynı
+düzey), fazla mesai üçünde **0**, 0 sert, hepsi yayınlanabilir, hedef kapsama
+%85,3–86,0, fazla mesaisiz arama üçünde de **ilk denemede** (6,73–7,34 sn),
+mola adımı optimum (772–775 sn); politika kipi **20 koşunun 20'si ilk
+denemede**, 6,48–8,37 sn, medyan 6,6 sn, 2+ deneme gereken 0. Koşudan önce
+yazılı kuralın (§8) her şartı sağlandı → **varsayılan 3, K-61 kapandı**
+(00:10; 08-URUN-KARARLARI K-61 başlığı, T-60 bulgu 25, şartname değişiklik 64).
+
+**Dürüst okuma.** Yeniden başlatma bu 23 koşunun **hiçbirinde devreye
+girmedi**. Politika kipinin her koşusu ürün yolu gibi tohum 1'le başlar; yani
+o 20 koşu ürünün *ilk denemesinin* 20 tekrarıdır ve yayılımı 1,3× çıktı
+(6,5–8,4 sn) — 18:00 ölçümünde aynı tohumun (0) beş tekrarı 7× yayılmıştı
+(7,8–55,9 sn). Seçeneğin **zararsız** olduğu ölçüldü (puan, süre, fazla mesai
+tek denemeli yolla aynı); **koruma değeri gözlemlenmedi**, 18:00 kuyruk
+ölçümüne (53 gözlemde 1 × > 120 sn, 2 × 56–62 sn) ve çevrimdışı tahmine
+dayanıyor. Ürün koşularının `fazla_mesai_once_sifir.denemeler` alanı okunmaya
+devam eder; ilk denemede bulunamayan ilk koşu T-60'a yazılır — politika o
+zaman gerçekten sınanmış olur.
+
+**Kod (bulut, 04:10–05:30).**
+- `09-motor/cozucu/coz.py`: `VARSAYILAN["fazla_mesaisiz_deneme"] = 3`
+  (yorumu ölçümle; 1 = tek deneme, payın tamamı — 7 Ekim sabahının yolu,
+  ölçüm/kıyas). Başka kod değişmedi.
+- `09-motor/testler/test_fazla_mesai_once_sifir.py` bölüm 7 yeniden yazıldı:
+  *varsayılan 3 — pay üçe bölünür, tohum 1'le başlar*; *tek deneme seçeneği —
+  payın tamamı, tohum 1*; parçalar (varsayılan → 3 × 2,0; seçenek 1 → (6,0, 1)
+  ve (0,8, 1); 2 → [1,0, 1,0]); ürün yolu çıktısında `deneme_siniri` 3, ilk
+  denemede bulunur; `UZUN` ve *"süreye takılırsa"* testi tek denemeli (notta
+  *"denemede"* geçmez). Dosya 40 test.
+- `09-motor/mutasyon_kostur.py`: `fm_sifir` +2 — *"varsayılan tek deneme
+  olsun"*, *"varsayılan 2 deneme olsun"* (ikisi de öldü: 3 test düşüyor) →
+  `fm_sifir` 63, toplam **327**.
+- `kalite-olc.py`: `fm_once` / `fm_once_kapsama` **tek denemeye sabit**
+  (`fazla_mesaisiz_deneme: 1` — bulgu 23'ün kaydı, 7 Ekim sabahının yolu);
+  `fm_once_deneme3` / `_kapsama` açıkça 3 (= bugünkü varsayılan);
+  `varsayilan` / `profil_*` motoru izler. `test_kalite_olc.py` 20 (yapılandırma
+  kümesi, `COZ_VARSAYILAN` 3, `etkin_ayar` 3 / 1).
+- Bulutta, koşu bittikten sonra temiz ağaçta okundu: tam takım **610**;
+  `fm_sifir` 63'ün 63'ü, `k63` 22'nin 22'si, `butce` 4'ün 4'ü öldü, atlanan 0;
+  ölçüm aracı testleri 41. Toplam iddiası Mustafa'nın tam koşusundan sonra
+  (beklenen 327, yaşayan 0).
+- Dokümanlar: K-61 başlığı ✅ KAPANDI + ölçüm paragrafı (08); bulgu 25
+  *"Ölçüldü — karar kuralı tuttu"* tablosu, T-60 satırı (06); şartname §6.7
+  (varsayılan 3), §11.3 (`deneme_siniri` varsayılan 3), değişiklik 64; kuyruk
+  OKU-BENI politika sonucu; BURADAN ⚠ 8 Ekim 05:00; DEGISIM 05:00.
+
+**Brifing (22:26 → 00:12).** Mustafa 22:26: brifingde O-19, K-63 gibi
+kısayolların açıklaması olsun, *"bir bu doküman bir spec gidip gelmek
+istemiyorum"*. v2 bir kısaltma sözlüğü (fihrist) ekledi — **yanlış anlama**;
+00:12: *"K-61 ne ise onu dokümana eklemen"* — istenen, her kararın
+*kendisinin* belgede olmasıydı. v3 yazıldı
+(`00-DEVIR/brifing/2026-10-08-yilmaz-gorusmesi-v3.md`, 855 satır): her karar,
+bulgu ve otopsi içeriğiyle yerinde — M-01…M-15; K-28, K-48, K-35, K-16, K-49,
+K-37, K-59, K-60, O-16, K-54; K-30, K-57, K-61, O-18, bulgu 23, K-64; bulgu
+25, O-19, ölçüm sonucu, K-63; T-60 + K-62 merdiveni; bekçiler. Taslakta
+*"iyileştirmede kazancın %99'u ilk 36 sn'de"* yazmıştım — o eğri mola
+adımınındı, düzeltildi. v1 ve v2 yan yana duruyor (sürümleme). Ders: geri
+bildirim iki türlü okunabiliyorsa tek örnekle sormak bir sürüm kazandırır.
+
+**04:07 — Mustafa:** *"şimdi ne yapacağım"* → koşturulacak bir şey yok;
+varsayılan 3 + dokümanlar bitince tek blok. **Sıradaki blok:** testler (610 +
+41) → DENETIM → commit (K-61 kapanışı; untracked: brifing v2/v3, ölçüm json,
+politika jsonl, damga) → push → tam mutasyon (327). Sonra sıranın 3. maddesi:
+dört yumuşak kural (şartnameden okunarak; tanım soruları tek tek); bulgu 26
+karar Mustafa'da; bulgu 27 sırada; hibrit/%90 dondu (K-64 sonrası).

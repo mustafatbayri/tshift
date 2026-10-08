@@ -19,9 +19,9 @@ AKIS -- K-60 (Mustafa, 4 Ekim): UC ASAMA
                       iyi plan disarida kalmaz (7 Ekim duzeltmesi, O-18).
                       Bulunamazsa alanlar yine acilir, fazla mesai serbestken
                       bir kez daha aranir (en kotu halde iki pay: 2 x %20).
-                      Bulgu 25 (7 Ekim): fazla mesaisiz aramanin payi
-                      `fazla_mesaisiz_deneme` denemeye bolunebilir (farkli
-                      tohum; varsayilan 1 = tek deneme) -- olcum secenegi.
+                      Bulgu 25 / K-61 kapanisi (8 Ekim): fazla mesaisiz
+                      aramanin payi 3 denemeye bolunur (3 x 40 sn, farkli
+                      tohum; `fazla_mesaisiz_deneme`, 1 = tek deneme, olcum).
   2. iyilestirme    : molalar hala sabit, amac geri konur, atamalar iyilesir (%80, kalibrasyon);
                       ipucu 1'in plani -- fazla mesaisiz bulunduysa fazla
                       mesai yalniz agirliklara gore KAZANIYORSA eklenir
@@ -181,20 +181,26 @@ VARSAYILAN = {
     #   `fm_sert` / `fm_once_kapali` yapilandirmalari.
     #   False = 6 Ekim oncesinin davranisi (olcum ve kiyas icin).
     "fazla_mesai_once_sifir": True,
-    # OLCUM (T-60 bulgu 25, 7 Ekim): fazla mesaisiz aramanin YENIDEN
-    #   BASLATILMASI. Birinci asamanin payi (en cok 120 sn) bu kadar denemeye
-    #   bolunur (3 -> 3 x 40 sn), her deneme farkli CP-SAT tohumuyla
-    #   (1 = kutuphanenin varsayilani = bugunku arama, sonra 2, 3...), ilk
-    #   bulunan plan alinir; kanitli "yok" (INFEASIBLE) gelirse kalan denemeler
-    #   yapilmaz. NEDEN: 7 Ekim gece kosusunda (500 kisi, 1200 sn) bu arama 18
-    #   kosunun 1'inde 120 sn'de plan bulamadi ve motor fazla mesai serbest yola
-    #   dustu -- plan 30 saat fazla mesaiyle dondu (116.976; otekiler 26,6-26,8
-    #   bin). Kuyruk olcumu (kuyruk.py, 35 deneme, 6 isci): medyan 7,5 sn, %90
-    #   13 sn, en uzun 62 sn, P(T > 40 sn) = 2/35 -- 3 x 40 sn ile hepsinin
-    #   basarisiz olma tahmini ~%0,02 (denemeler bagimsiz sayilarak; offline).
-    #   1 = BUGUNKU DAVRANIS (tek deneme, payin tamami). 3 motorda 900 sn x 3
-    #   ile olculmeden varsayilan YAPILMAZ (karar kurali bulgu 25'te).
-    "fazla_mesaisiz_deneme": 1,
+    # K-61 KAPANISI (T-60 bulgu 25; 8 Ekim 00:10): fazla mesaisiz aramanin
+    #   YENIDEN BASLATILMASI -- URUNUN VARSAYILANI 3. Birinci asamanin payi (en
+    #   cok 120 sn) uc denemeye bolunur (3 x 40 sn), her deneme farkli CP-SAT
+    #   tohumuyla (1 = kutuphanenin varsayilani = 7 Ekim sabahina kadarki
+    #   arama, sonra 2, 3), ilk bulunan plan alinir; kanitli "yok" (INFEASIBLE)
+    #   gelirse kalan denemeler yapilmaz. NEDEN: 7 Ekim gece kosusunda (500
+    #   kisi, 1200 sn) bu arama 18 kosunun 1'inde 120 sn'de plan bulamadi ve
+    #   motor fazla mesai serbest yola dustu -- plan 30 saat fazla mesaiyle
+    #   dondu (116.976; otekiler 26,6-26,8 bin). Kuyruk olcumu (kuyruk.py, 35
+    #   deneme, 6 isci): medyan 7,5 sn, %90 13 sn, en uzun 62 sn, P(T > 40 sn)
+    #   = 2/35 -- 3 x 40 sn ile hepsinin basarisiz olma tahmini ~%0,02
+    #   (denemeler bagimsiz sayilarak; offline). OLCULDU (7-8 Ekim gecesi,
+    #   Mustafa'nin makinesi, karar kurali kosudan once yazili): 900 sn x 3'te
+    #   amac 26.498-26.736 (tek denemeli yolla ayni duzey), fazla mesai 0,
+    #   hicbiri "bulunamadi" yoluna dusmedi; politika kipinde 20 kosunun 20'si
+    #   ilk denemede (6,5-8,4 sn). Yeniden baslatma bu 23 kosuda hic devreye
+    #   girmedi: zararsiz oldugu olculdu, koruma degeri kuyruk olcumune
+    #   dayaniyor. 1 = tek deneme, payin tamami (7 Ekim sabahinin davranisi;
+    #   olcum/kiyas icin: kalite-olc.py `fm_once*`).
+    "fazla_mesaisiz_deneme": 3,
     # OLCUM: True = 6 Ekim gecesinin SERT KESIMI -- fazla mesaisiz plan
     #   bulununca fazla mesai degiskenleri sonraki asamalarda da [0,0]'da
     #   kalir; cozulen model tam model degildir (kuresel sinir yazilmaz,
@@ -507,8 +513,8 @@ def _fazla_mesaisiz_ara(kuruldu, ayar, pay):
     bugunku arama) arar. Ilk bulunan plan doner. INFEASIBLE kanittir ("fazla
     mesaisiz plan yok" -- molalar sabitken): kalan denemeler yapilmaz, tohum
     bunu degistirmez. UNKNOWN ("bu parcada bulunamadi") sonraki denemeye
-    gecer. Varsayilan 1: tek deneme, payin tamami -- davranis 7 Ekim sabahiyla
-    ayni.
+    gecer. Varsayilan 3 (K-61 kapanisi, 8 Ekim); 1 = tek deneme, payin
+    tamami -- 7 Ekim sabahinin davranisi (olcum/kiyas).
 
     ⚠ NEDEN TOHUM: 500 kisilik modelde bu aramanin suresi agir kuyruklu
       (medyan 7,5 sn, 53 gozlemde 1 x > 120 sn; kuyruk.py). Ayni tohumla bile

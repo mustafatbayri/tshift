@@ -343,9 +343,10 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
     kapatir; urun halini olcenler hic yazmaz (motorun varsayilanini alir).
     Yeni yapilandirma eklenirse bu listelerden birine YAZILMAK zorundadir."""
     urun = {"varsayilan", "profil_kapsama", "profil_calisan", "cift_butce", "lp_guclu"}
-    # 7 Ekim urun yolu, ACIKCA yazilmis (olcum kaydinin adi): alanlar acik
+    # 7 Ekim sabahinin urun yolu (bulgu 23 kaydi): alanlar acik, TEK deneme --
+    # 8 Ekim'de varsayilan 3 olunca anlami degismesin diye 1 ACIKCA yazili
     acik = {"fm_once", "fm_once_kapsama"}
-    # bulgu 25: urun yolu + yeniden baslatma (3 x 40 sn, farkli tohum)
+    # bulgu 25 / K-61 kapanisi: urun yolu + yeniden baslatma (3 x 40 sn) = bugunku varsayilan
     yeniden = {"fm_once_deneme3", "fm_once_deneme3_kapsama"}
     # SERT KESIM (6 Ekim gecesinin hali; bulgu 21'in kaydi) -- yalniz olcum
     sert = {"fm_sert", "fm_sert_kapsama", "fm_once_sifir", "fm_once_sifir_kapsama"}
@@ -361,13 +362,16 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
         assert "fazla_mesaisiz_deneme" not in KO.YAPILANDIRMALAR[ad][1], ad   # motorun varsayilani (1)
     for ad in acik:
         assert KO.YAPILANDIRMALAR[ad][1] == {"fazla_mesai_once_sifir": True,
-                                             "fazla_mesai_sifirda_tut": False}, ad
+                                             "fazla_mesai_sifirda_tut": False,
+                                             "fazla_mesaisiz_deneme": 1}, ad
     for ad in yeniden:
         assert KO.YAPILANDIRMALAR[ad][1] == {"fazla_mesai_once_sifir": True,
                                              "fazla_mesai_sifirda_tut": False,
                                              "fazla_mesaisiz_deneme": 3}, ad
     assert KO.YAPILANDIRMALAR["fm_once_deneme3_kapsama"][2] == {"profil": "KAPSAMA"}
-    assert KO.COZ_VARSAYILAN["fazla_mesaisiz_deneme"] == 1       # varsayilan 3 olunca bu test ve `urun` kumesi gozden gecer
+    assert KO.COZ_VARSAYILAN["fazla_mesaisiz_deneme"] == 3       # K-61 kapanisi (8 Ekim); `urun` kumesi varsayilani alir
+    assert KO.etkin_ayar({})["fazla_mesaisiz_deneme"] == 3
+    assert KO.etkin_ayar(KO.YAPILANDIRMALAR["fm_once"][1])["fazla_mesaisiz_deneme"] == 1
     for ad in sert:
         assert KO.YAPILANDIRMALAR[ad][1] == KO.SERT and KO.YAPILANDIRMALAR[ad][1] is not KO.SERT, ad
     for ad in kayit:

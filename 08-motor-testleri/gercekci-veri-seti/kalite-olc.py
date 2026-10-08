@@ -151,23 +151,33 @@ YAPILANDIRMALAR = {
     # ⚠ O-18 (7 Ekim): urun yolu = once fazla mesaisiz ARA, bulunca o plandan
     #   agirlikli aramaya devam et (alanlar acik). Sert kesim (`SERT`) yalniz
     #   olcum; bulgu 21 o haldir.
-    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz, bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
+    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
                      {}, {}),
-    "fm_once":      ("URUN YOLU (7 Ekim): once fazla mesaisiz plan, bulunursa ipucu -- alanlar GERI ACILIR, karari agirliklar verir; DENGELI (= varsayilan; adi olcumun kaydi icin)",
-                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {}),
-    "fm_once_kapsama": ("URUN YOLU (7 Ekim), KAPSAMA profili (= profil_kapsama)",
-                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False}, {"profil": "KAPSAMA"}),
+    # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
+    #   bulgu 23'un kaydidir (7 Ekim sabahi, TEK deneme) -- anlami degismesin
+    #   diye `fazla_mesaisiz_deneme: 1` ACIKCA yazili. Bugunku urun yolu
+    #   `varsayilan` / `profil_kapsama` (= `fm_once_deneme3*`).
+    "fm_once":      ("7 Ekim sabahinin urun yolu (bulgu 23 kaydi): once fazla mesaisiz plan TEK denemeyle, bulunursa ipucu -- alanlar GERI ACILIR, karari agirliklar verir; DENGELI",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
+                      "fazla_mesaisiz_deneme": 1}, {}),
+    "fm_once_kapsama": ("7 Ekim sabahinin urun yolu (bulgu 23 kaydi), KAPSAMA profili; TEK deneme",
+                     {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
+                      "fazla_mesaisiz_deneme": 1}, {"profil": "KAPSAMA"}),
     # T-60 bulgu 25 (7 Ekim): fazla mesaisiz ilk arama 18 kosunun 1'inde 120
     #   sn'de bulunamadi -> plan 30 saat fazla mesaiyle (116.976). Kuyruk
     #   olcumu (kuyruk.py, 35 deneme): medyan 7,5 sn, en uzun 62 sn. Yeniden
     #   baslatma: 120 sn'lik pay 3 x 40 sn'ye bolunur, her deneme farkli tohum
-    #   (`fazla_mesaisiz_deneme: 3`). Karar kurali: 900 sn x 3'te fazla mesai
-    #   ve amac `fm_once` ile ayni duzeyde kalir, hicbir kosu "bulunamadi"
-    #   yoluna dusmezse varsayilan 3 olur ve K-61 kapanir.
-    "fm_once_deneme3": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25): fazla mesaisiz arama 3 x 40 sn, farkli tohum; DENGELI",
+    #   (`fazla_mesaisiz_deneme: 3`). Karar kurali (kosudan once): 900 sn x
+    #   3'te fazla mesai 0 ve amac `fm_once` duzeyinde, hicbir kosu
+    #   "bulunamadi" yoluna dusmemis, politika kipinde 20'de 0 bulunamayan ->
+    #   varsayilan 3, K-61 kapanir. OLCULDU (8 Ekim 00:10): 26.498 / 26.700 /
+    #   26.736, fazla mesai 0, hepsi ilk denemede; politika 20/20 -> kural
+    #   tuttu, varsayilan 3. Bu adlar 8 Ekim kaydinin adlari olarak duruyor
+    #   (= bugunku `varsayilan`).
+    "fm_once_deneme3": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25; 8 Ekim'den beri = varsayilan): fazla mesaisiz arama 3 x 40 sn, farkli tohum; DENGELI",
                      {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
                       "fazla_mesaisiz_deneme": 3}, {}),
-    "fm_once_deneme3_kapsama": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25), KAPSAMA profili",
+    "fm_once_deneme3_kapsama": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25; = profil_kapsama), KAPSAMA profili",
                      {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
                       "fazla_mesaisiz_deneme": 3}, {"profil": "KAPSAMA"}),
     "fm_sert":      ("SERT KESIM (6 Ekim gecesinin hali, bulgu 21; OLCUM): fazla mesaisiz plan bulunursa fazla mesai butun asamalarda 0'da TUTULUR; DENGELI",

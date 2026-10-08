@@ -3036,7 +3036,7 @@ mola adımı koştuysa `durma_sebebi: mola_adimi_optimum`, adımın sınırı
 
 ---
 
-## K-61 · Motor **önce fazla mesaisiz plan arar** (ürünün varsayılanı); **hakem ağırlıklardır** — bulunan plan yalnız başlangıç noktasıdır *(uygulanışı 7 Ekim'de düzeltildi, O-18)*
+## K-61 · Motor **önce fazla mesaisiz plan arar** (ürünün varsayılanı); **hakem ağırlıklardır** — bulunan plan yalnız başlangıç noktasıdır *(uygulanışı 7 Ekim'de düzeltildi, O-18)* — ✅ **KAPANDI (8 Ekim 00:10): yeniden başlatma 3 × 40 sn ölçüldü, varsayılan oldu**
 
 **Karar (6 Ekim 2026, 23:44, Mustafa).** 21:08'de sorulan *"önce fazla
 mesaisiz, ürünün standart davranışı olsun mu?"* sorusuna:
@@ -3233,8 +3233,23 @@ bloklayıcı yok (tohum eşdeğerliği ve bütçe aritmetiği ölçüldü). **Ka
 kuralı (koşudan önce):** `fm_once_deneme3` 900 sn × 3'te fazla mesai 0, amaç
 `fm_once` düzeyinde, hiçbir koşu *"bulunamadı"* yoluna düşmemiş; politika
 kipinde 20 koşunun hiçbiri bulunamamış değilse → **varsayılan 3, bu karar
-kapanır**; aksi hâlde 4 × 30 ölçülür. Bitişik bulgu 26 (`ipucu_korundu`
-kıyası gevşek amaçla) **karar bekliyor** (T-60). ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
+kapanır**; aksi hâlde 4 × 30 ölçülür. **ÖLÇÜLDÜ (7–8 Ekim gecesi, Mustafa'nın
+makinesi; `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-fmonce-deneme3-900.json`,
+`kesif/2026-10-07-fm-siz-arama-kuyrugu/politika-3x40.jsonl`):** `fm_once_deneme3`
+900 sn × 3 → amaç **26.498 · 26.700 · 26.736** (tek denemeli yol 26.634–26.705:
+aynı düzey), fazla mesai üçünde **0**, 0 sert, hepsi yayınlanabilir, hedef
+kapsama %85,3–86,0; fazla mesaisiz arama üçünde de ilk denemede (6,7–7,3 sn),
+mola adımı optimum. Politika kipi 20 koşu: **20'si ilk denemede**, medyan 6,6
+sn, en uzun 8,4 sn. Kuralın her şartı sağlandı → **varsayılan 3; K-61
+kapandı** (`VARSAYILAN["fazla_mesaisiz_deneme"] = 3`, 8 Ekim sabahı koda;
+`fm_once*` yapılandırmaları bulgu 23'ün kaydı olarak tek denemeye
+sabitlendi). ⚠ Dürüst not: bu 23 koşunun hiçbirinde yeniden başlatma
+**devreye girmedi** (hepsi ilk denemede bulundu); seçeneğin zararsız olduğu
+ölçüldü, koruma değeri 18:00 kuyruk ölçümüne (53 gözlemde 1 × > 120 sn, 2 ×
+56–62 sn) ve çevrimdışı tahmine dayanıyor — ürün koşularında `denemeler`
+alanı okunmaya devam eder; ilk denemede bulunamayan ilk koşu T-60'a
+yazılır. Bitişik bulgu 26 (`ipucu_korundu` kıyası gevşek amaçla) **karar
+bekliyor** (T-60). ~~**Durum (7 Ekim 04:30): koda indi (bulut; 03:05'teki
 kredi kesintisinde bulut alanı silindi, düzeltme oturum kaydındaki adımlardan
 yeniden uygulandı ve yeniden doğrulandı — T-60 bulgu 23, kesinti paragrafı),
 Mustafa'nın koşuları bekleniyor.**~~
