@@ -37,6 +37,11 @@ daha az belirgin).
 
 **Geri alma bedeli:** 🔴 **Çok yüksek.** Tüm veri taşınır.
 
+> ⚠ **11 Ekim 2026 — yön değişti (M-16).** Mustafa ve Yılmaz, tek veritabanı
+> + `tenant_id` yerine **her müşteri için ayrı konteyner** mimarisine geçme
+> kararı aldı. Bu karar henüz uygulanmadı, tanımı açık; kod ve testler bugün
+> M-01'e göre çalışıyor. Ayrıntı ve açık sorular M-16'da.
+
 → `04-kod/db/rls/`, `04-kod/backend/src/TShift.Infrastructure/Persistence/`
 
 ---
@@ -309,11 +314,76 @@ elle yazmayacak.
 
 ---
 
+## M-16 · Kiracılık modeli değişiyor: her müşteri için ayrı konteyner (M-01'in yerine) — ⏳ tanımı açık, uygulanmadı
+
+**Karar (11 Ekim 2026; Mustafa + Yılmaz görüşmesi, 8 Ekim akşamı).** Mustafa
+(11 Ekim 18:25): *"Yılmaz ile görüşmemiz sonucunda, tek database multitenant
+id yerine, her müşteri için konteyner mimarisine geçme kararı aldık."*
+Yılmaz'ın öteki konulardaki yorumları ayrıca gelecek; **şimdilik motor
+yazılmaya ve test edilmeye devam ediliyor**, bu karar koda inmedi.
+
+**Ne değişiyor:** M-01'in seçtiği *tek PostgreSQL + her tabloda `tenant_id`
++ iki katmanlı yalıtım (EF filtresi + RLS)* modeli yerine her müşteri kendi
+yalıtılmış ortamında (konteyner) çalışır. M-01 bu seçeneği 9 Eylül'de
+*"kiracı başına ayrı veritabanı: yönetim ve migration maliyeti; 100 müşteride
+100 migration"* gerekçesiyle elemişti; o gerekçenin cevabı (dağıtım
+otomasyonu) bu kararla birlikte tasarlanmalı.
+
+**Bugün neden ucuz:** M-01'in geri alma bedeli *"tüm veri taşınır"* idi —
+henüz müşteri verisi yok; bedel bugün **kod + test + belge** değişiminden
+ibaret. Ocak pilotundan sonra aynı karar çok daha pahalı olurdu; bu yüzden
+şimdi verilmesi doğru zamanlama.
+
+**Neye dokunuyor (sayım, 11 Ekim):**
+
+| Yer | Bugünkü hâli | Kararla ne olur |
+|---|---|---|
+| Şartname §7.3 *Çok kiracılık*, §8.1 `tenants` | tek DB, `tenant_id`, RLS, `app.tenant_id` GUC | yeniden yazılır (tanım netleşince, yeni şartname sürümü) |
+| `02-DEGISMEZLER.md` K-1…K-9 (9 değişmez, 47'nin içinde) | kiracı yalıtımı RLS ile kanıtlanıyor | yalıtımın kanıtı **konteyner/ağ/kimlik** düzeyine taşınır; değişmezler aynı kalır (*"başka kiracının verisi hiçbir yoldan görünmez"*), kanıt yöntemi değişir |
+| Kimlik testleri (45 test; M0, M1, M2, 1–4, H5 ve D6 kodlu olanlar RLS'e dayanır) | yeşil | RLS'e bağlı olanlar anlamını yitirir ya da yeniden yazılır |
+| `04-kod/db/rls/`, `DbConnectionInterceptor`, EF global filtresi | yazılı, çalışıyor | kalkar ya da *"tek kiracılı DB'de ikinci kemer"* olarak kalır (karar) |
+| M-02 iki DB rolü, M-13 `login_attempts` RLS dışı, M-14 slug ile giriş | M-01'e göre tasarlandı | M-02 muhtemelen kalır; M-13/M-14 kiracı yönlendirmesine göre yeniden bakılır |
+| M-09 motor ayrı servis | kiracıdan bağımsız, `/solve` girdisi kiracıyı bilmez | **değişmez** — motor bugün de kiracıyı bilmiyor; konteyner başına mı ortak havuz mu (aşağıda soru) |
+| Barındırma (ertelenmişti, "satış sonrası") | karar yok | artık ertelenemez: konteyner orkestrasyonu mimarinin parçası |
+
+**Tanımlanmadan koda inmeyecek sorular** (Yılmaz'ın yorumlarıyla birlikte
+cevaplanacak; her biri bir karar satırı olacak):
+
+1. **Konteynerin sınırı:** müşteri başına *uygulama + veritabanı* mı, yalnız
+   veritabanı mı? Aynı makinede kaç müşteri?
+2. **Kimlik ve yönlendirme:** kullanıcı hangi konteynere nasıl gider
+   (alt alan adı `firma.tshift.com` → konteyner; merkezi bir giriş var mı)?
+   M-14'ün slug'ı burada mı kullanılır?
+3. **Sürüm dağıtımı:** 100 müşteri = 100 migration — hangi otomasyon
+   (tek imaj, sürüm başına toplu güncelleme, geri alma)? M-01'in eleme
+   gerekçesi buydu; cevapsız bırakılmaz.
+4. **Motor:** konteyner başına kendi motoru mu (CPU boşta kalır), ortak bir
+   motor havuzu + kuyruk mu (kiracı verisi kuyruğa girer — yalıtımın en
+   hassas yeri)? K-35'in süre bütçesi ve 6 işçi hesabı buna bağlı.
+5. **RLS'in kaderi:** tek kiracılı veritabanında kalır mı (ikinci kemer,
+   bedava) kalkar mı (sadelik)?
+6. **Maliyet ve ölçek:** müşteri başına sabit maliyet (en küçük müşteri
+   için bile bir konteyner), izleme/yedek/log her müşteri için ayrı.
+7. **Veri ve yedek:** müşteri başına yedek, geri yükleme, müşteri ayrılınca
+   silme — tek DB'de satır silmekti, şimdi ortam silmek.
+
+**Durum:** ⏳ karar verildi, tanımı açık, **uygulanmadı**. Kod, testler ve
+şartname M-01'e göre; DENETIM/değişmezler bugün M-01'i kanıtlamaya devam
+ediyor (bilerek — tanım gelmeden sökülmez). Yılmaz'ın yorumları gelince:
+sorular cevaplanır → şartname yeni sürüm (§7.3, §8.1, §7.1 bileşenler) →
+değişmezlerin kanıt yöntemi → kod.
+
+→ M-01 · M-02 · M-09 · M-13 · M-14 · `02-DEGISMEZLER.md` §1 · şartname §7.3, §8.1 ·
+`00-DEVIR/brifing/2026-10-08-yilmaz-gorusmesi-v3.md` §11–12
+
+---
+
 ## Karar geri alma maliyeti — özet
 
 | Karar | Durum | Sonradan değiştirmenin bedeli |
 |---|---|---|
-| M-01 Kiracılık modeli | ✅ Çalışıyor | 🔴 Tüm veri taşınır |
+| M-01 Kiracılık modeli | ⚠ 11 Ekim: **M-16 ile yön değişti** (kod hâlâ M-01) | 🔴 Tüm veri taşınır — bugün müşteri verisi yok, bedel kod+test+belge |
+| **M-16 Her müşteri için ayrı konteyner** | ⏳ Karar verildi, tanımı açık | 🟡 Uygulanmadan önce değiştirmek ucuz; uygulandıktan sonra 🔴 |
 | M-02 İki DB rolü | ✅ Çalışıyor | 🟢 Düşük |
 | M-03 Kendi kimlik katmanımız | ✅ Çalışıyor | 🟡 Orta |
 | M-04 İzin jetonda / kapsam DB'de | ✅ Çalışıyor | 🟢 Düşük |
