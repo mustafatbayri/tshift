@@ -1,0 +1,7 @@
+plan                                                             D adet   D saat |  eski ad  eski sa | motor ad motor sa |   amac satir~ | D kazanci
+ti/planlar/kalite-olcumu-0.2-95-d-once-bulut/varsayilan-1.json        4    25.50 |        2     7.00 |        2      7.0 |      7     25 | +2 (18.50 sa)
+ti/planlar/kalite-olcumu-0.2-95-d-once-bulut/varsayilan-2.json        8    42.75 |        5    15.00 |        5     15.0 |     15     42 | +3 (27.75 sa)
+kalite-olcumu-0.2-95-d-sonra-bulut/rotasyon_0-1.json                 66   330.50 |       63   302.75 |       66    330.5 |   None    332 | +3 (27.75 sa)
+kalite-olcumu-0.2-95-d-sonra-bulut/rotasyon_0-2.json                 56   278.00 |       53   250.25 |       56    278.0 |   None    280 | +3 (27.75 sa)
+kalite-olcumu-0.2-95-d-sonra-bulut/varsayilan-1.json                  3     9.00 |        3     9.00 |        3      9.0 |      9      9 | +0 (0.00 sa)
+kalite-olcumu-0.2-95-d-sonra-bulut/varsayilan-2.json                  2     7.00 |        2     7.00 |        2      7.0 |      7      7 | +0 (0.00 sa)

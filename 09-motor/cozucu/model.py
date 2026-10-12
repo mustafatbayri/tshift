@@ -688,6 +688,18 @@ def rotasyon_geri_saat(bas_onceki, bas_sonraki, yon="ileri"):
     return -fark if fark < 0 else 0.0
 
 
+def gece_yarisini_asar(bas, bit):
+    """K-65 gun tanimi D (Mustafa, 12 Ekim 2026): vardiya BASLADIGI gune ve
+    gece yarisini asiyorsa BITTIGI gune de aittir. Bitis genisletilmis saat
+    (31 = ertesi gun 07:00) ya da ham yazim (bit <= bas -> Z-1) olabilir.
+    TAM 24:00'da biten ASMAZ. Baslangic 0 <= bas < 24 varsayilir (sartname
+    #6.3 madde 8). AYNI TANIM DOGRULAYICIDA AYRICA YAZILI (#7.6)."""
+    b, e = float(bas), float(bit)
+    if e <= b:
+        e += 24.0
+    return e > 24.0
+
+
 def rotasyon_yonu(kural, notlar=None):
     """Kuralin `yon` parametresi: 'ileri' (varsayilan) ya da 'geri'; baska bir deger
     'ileri' sayilir ve not dusulur."""
@@ -2500,9 +2512,14 @@ class Model(object):
         Sartname #6.3: "Vardiya saati ileri kaysin (sabah->aksam->gece), geriye
         degil. Uyku sagligi literaturunde standart." Tanim (K-65; literatur
         okumasi 02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md):
-          1. KIYASLANAN CIFT: ayni kisinin ART ARDA IKI CALISMA GUNU (d ve d+1'de
-             vardiyasi var). Araya bos gun girince kiyas SIFIRLANIR (Mustafa:
-             "bos gun sifirlar"; kanit art arda vardiyalar uzerine).
+          1. KIYASLANAN CIFT -- gun tanimi D (Mustafa, 12 Ekim 2026: "D"):
+             vardiya basladigi gune ve gece yarisini asiyorsa BITTIGI gune de
+             aittir (tam 24:00 asmaz). Ardisik iki vardiya, ikincisi birincinin
+             son gununde ya da ertesinde basliyorsa kiyaslanir; arada HIC
+             DOKUNULMAMIS takvim gunu varsa SIFIRLANIR ("bos gun sifirlar").
+             Sali 23:00-07:30 -> Carsamba (geceye ait) -> Persembe 13:45: cift.
+             Model: d -> d+1 ciftleri asagida; gece yarisini ASAN sablonun
+             d -> d+2 cifti ayrica (`ro_<kisi>_<d+1>` yeniden, `- calisiyor(d+1)`).
           2. YON: baslangic farki 24 saatlik cemberde, (-12, 12]; eksi = geri
              (`rotasyon_geri_saat`). Sabah->gece atlamasi boylece geri sayilir
              (IARC 2020 madde 8) -- Mustafa 11 Ekim: "dairesel, evet".
@@ -2513,8 +2530,10 @@ class Model(object):
              yukari): 2,75 -> 3; 0,25 -> 0. Dogrulayici ve metrik KESIN saati
              raporlar; yuvarlama yalniz amac teriminde (sartname #6.3).
           4. Pazar->Pazartesi: onceki haftanin son gunu `gecmis_vardiyalar`
-             (gun -1) varsa sayilir, yoksa SESSIZCE atlanir (yumusak kural;
-             K-42 raporu sert sinir kurallari icin -- gurultu degil, O-7).
+             (gun -1) varsa sayilir; D ile gun -1 kaydi yoksa gun -2'nin gece
+             yarisini asan kaydi, ve gun -1'in gece yarisini asan kaydi
+             pazartesi bosken sali ile; kayit yoksa SESSIZCE atlanir (yumusak
+             kural; K-42 raporu sert sinir kurallari icin -- gurultu degil, O-7).
           5. K-54: ikisi de donmus gun olan cift sayilmaz (olan oldu); donmus
              gun -> serbest gun cifti sayilir (gelecek gecmise uyar). Bilinen
              sinir (inceleme 4, B2): donmus gunde ayni kisiye IKI satir varsa
@@ -2552,8 +2571,9 @@ class Model(object):
                     hy = int(h + 0.5)
                     if hy > 0:
                         geri[(s_["id"], t_["id"])] = hy
-            if not geri:
-                continue
+            # 12 Ekim: burada `if not geri: continue` vardi -- sablonlari arasinda geri cift
+            # olmayan kisinin (tek sablon) GECMIS -> pazartesi terimi de atlaniyordu; dogrulayici
+            # ve metrik o cifti sayiyordu (#7.6 ayriligi). Bos `geri` asagidaki donguleri zaten susturur.
             for d in self.gunler[:-1]:
                 if d in self.donmus and d + 1 in self.donmus:
                     continue                     # K-54: olan oldu
@@ -2568,9 +2588,35 @@ class Model(object):
                 if g is not None:
                     self.rotasyon[(c["id"], d)] = g
                     self.cezalar.append((agirlik, g))
+            # D (12 Ekim): gece yarisini ASAN vardiya d -> (d+1 bos) -> d+2 cifti. Gece d+1'e
+            # dokundugu icin d+1 "bos gun" degildir; kiyas d+2'ye uzanir. d+1'de calisiyorsa
+            # cift (d, d+1) ve (d+1, d+2)'dir -- bu kisit `- calisiyor(d+1)` ile susar. Degisken
+            # `ro_<kisi>_<d+1>` YENIDEN kullanilir: (d+1, d+2) cifti ancak d+1'de calisilirken,
+            # bu cift ancak calisilmazken etkin -- ikisi ayni anda baglamaz.
+            asanlar = [s_ for s_ in sablonlar if gece_yarisini_asar(s_["bas"], s_["bit"])]
+            for d in self.gunler:
+                if not asanlar or d + 2 not in self.gunler:
+                    continue
+                if d in self.donmus and d + 2 in self.donmus:
+                    continue                     # K-54: olan oldu
+                for s_ in asanlar:
+                    for t_ in sablonlar:
+                        hy = geri.get((s_["id"], t_["id"]))
+                        if not hy:
+                            continue
+                        xs, xt = self._X(c["id"], d, s_["id"]), self._X(c["id"], d + 2, t_["id"])
+                        if isinstance(xs, int) or isinstance(xt, int):
+                            continue
+                        g = self._ro_degiskeni(c["id"], d + 1, agirlik)
+                        self._kisit(g >= hy * (xs + xt - 1 - self._calisiyor(c["id"], d + 1)))
             # Pazar -> Pazartesi: gecmisin son gunu (gun -1) biliniyorsa
+            kayitlar = _gecmis_kayitlari(c)
             if 0 in self.gunler and 0 not in self.donmus:
-                onceki = [bas for gun, bas, _, _ in _gecmis_kayitlari(c) if gun == -1]
+                onceki = [bas for gun, bas, _, _ in kayitlar if gun == -1]
+                # D: gun -1'de kayit yoksa gun -2'nin gece yarisini asan kaydi gun -1'e
+                # dokunur -> pazartesiyle kiyaslanir (gun -1 kaydi varsa cift onunladir)
+                if not onceki:
+                    onceki = [bas for gun, bas, bit, _ in kayitlar if gun == -2 and bit > 24.0]
                 if onceki:
                     bas_onceki = min(onceki)     # ayni gunde birden cok kayit: ilk baslangic
                     g = None
@@ -2585,6 +2631,29 @@ class Model(object):
                     if g is not None:
                         self.rotasyon[(c["id"], -1)] = g
                         self.cezalar.append((agirlik, g))
+            # D: gun -1'in gece yarisini asan kaydi pazartesiye dokunur; pazartesi bossa
+            # sali onunla kiyaslanir (`ro_<kisi>_0` yeniden kullanilir, `- calisiyor(0)`)
+            if 1 in self.gunler and 1 not in self.donmus:
+                asan = [(bas, bit) for gun, bas, bit, _ in kayitlar if gun == -1]
+                if asan and max(bit for _, bit in asan) > 24.0:
+                    bas_onceki = min(bas for bas, _ in asan)
+                    for t_ in sablonlar:
+                        hy = int(rotasyon_geri_saat(bas_onceki, t_["bas"], yon) + 0.5)
+                        xt = self._X(c["id"], 1, t_["id"])
+                        if hy <= 0 or isinstance(xt, int):
+                            continue
+                        g = self._ro_degiskeni(c["id"], 0, agirlik)
+                        self._kisit(g >= hy * (xt - self._calisiyor(c["id"], 0)))
+
+    def _ro_degiskeni(self, kisi, gun, agirlik):
+        """`ro_<kisi>_<gun>` (gun = ciftin ILK gunu; D ciftinde bos gorunen ara gun) --
+        varsa yeniden kullanilir, yoksa kurulur ve amaca eklenir."""
+        g = self.rotasyon.get((kisi, gun))
+        if g is None:
+            g = self.m.NewIntVar(0, 12, "ro_%s_%d" % (kisi, gun))
+            self.rotasyon[(kisi, gun)] = g
+            self.cezalar.append((agirlik, g))
+        return g
 
     def _saat_dengesi(self):
         """K-39 -- tam zamanli calisan SOZLESME SAATINI DOLDURUR.

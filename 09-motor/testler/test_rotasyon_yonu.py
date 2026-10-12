@@ -11,7 +11,9 @@ Ekim; literatur okumasi 02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur
      baslangici oncekinden ERKEN. Fark 24 saatlik CEMBERDE okunur ((-12, 12]):
      08:00 -> ertesi gun 23:00 = +15 degil -9, yani GERI (sabah->gece atlamasi;
      IARC 2020 madde 8). Mustafa: "dairesel, evet".
-  2. BOS GUN SIFIRLAR: araya bos gun girince kiyas yok.
+  2. BOS GUN SIFIRLAR: araya bos gun girince kiyas yok. Gun tanimi D (12 Ekim):
+     gece yarisini asan vardiya bittigi gune de aittir -- o gun "bos" degildir
+     (bolum 5).
   3. CEZA = agirlik x GERI KAYDIRILAN SAAT (Mustafa: "onerin"). Motor tam sayi
      ister: saat EN YAKIN TAM SAATE yuvarlanir (2,75 -> 3); dogrulayici ve
      metrik KESIN saati yazar.
@@ -121,7 +123,7 @@ def test_dogrulayici_sabah_gece_atlamasi_GERI_dairesel():
     g = _sahne([])
     ih = _ihlaller(degerlendir(g, [_atama(0, SABAH), _atama(1, GECE)]))
     assert [(i["gun"], i["olculen"]) for i in ih] == [(1, 8)]        # 07:00 -> 23:00: +16 = -8
-    # gece -> (ertesi gun bos: gece sabahi kaplar) -> sabah: cift yok
+    # gece -> (gun 1: gece sabahina dokunur, D) -> gun 2 sabah: cift VAR ama 23:00 -> 07:00 ILERI (+8)
     assert _ihlaller(degerlendir(g, [_atama(0, GECE), _atama(2, SABAH)])) == []
 
 
@@ -404,3 +406,198 @@ def test_kural_aktif_false_terim_metrik_satir_YOK():
     assert c["metrikler"]["rotasyon_geri_gecis"] is None
     assert "VARDIYA_ROTASYON_YONU" not in c["cozum_istatistikleri"]["amac_dagilimi"]
     assert _ihlaller(degerlendir(g, c["atamalar"])) == []
+
+
+# ----------------------------------------------------------------------
+# 5. Gun tanimi D (Mustafa, 12 Ekim 2026; K-65 madde 1 degisti, inceleme 4 B8):
+#    vardiya BASLADIGI gune ve gece yarisini asiyorsa BITTIGI gune de aittir;
+#    ardisik iki vardiya, ikincisi birincinin son gununde ya da ertesinde
+#    basliyorsa kiyaslanir; arada dokunulmamis takvim gunu varsa sifirlanir.
+#    Yon ve ceza aynen (baslangictan). Kabul olcutleri 1-8 (12 Ekim 17:06 onayi).
+# ----------------------------------------------------------------------
+
+GEC_BITEN = {"id": "GEC_BITEN", "ekip": "E", "bas": 16, "bit": 24, "mola_dk": 60}      # TAM 24:00: asmaz
+ORTA_D = {"id": "ORTA_D", "ekip": "E", "bas": 9.75, "bit": 18, "mola_dk": 60}          # 23 -> 9.75: ileri 10,75
+AKSAM_D = {"id": "AKSAM_D", "ekip": "E", "bas": 14, "bit": 22, "mola_dk": 60}          # 23 -> 14: geri 9; ORTA_D'den kisa
+
+
+def test_D_olcut1_gece_bos_gorunen_gun_aksam_KIYASLANIR_dogrulayici_ve_metrik():
+    """Sali 23:00-07:00 gecesi, Carsamba bos, Persembe 13:45: Carsamba geceye dokundu -> cift; 9,25 saat geri."""
+    from cozucu.coz import _rotasyon_metrigi
+    g = _sahne([])
+    plan = [_atama(0, GECE), _atama(2, AKSAM)]
+    ih = _ihlaller(degerlendir(g, plan))
+    assert [(i["gun"], i["olculen"]) for i in ih] == [(2, 9.25)]
+    assert "gun 0 23 -> gun 2 13:45, 9.25 saat geri" in ih[0]["mesaj"]
+    assert _rotasyon_metrigi(Model(copy.deepcopy(g)).kur(), plan) == (1, 9.25)
+
+
+def test_D_olcut2_ve_3_gece_yarisini_ASMAYAN_ve_TAM_24te_biten_bos_gunle_SIFIRLANIR():
+    from cozucu.coz import _rotasyon_metrigi
+    from cozucu.model import gece_yarisini_asar
+    from dogrulayici.kurallar import _rotasyon_son_gun
+    g = _sahne([], sablonlar=(SABAH, AKSAM, GECE, GEC_BITEN))
+    k = Model(copy.deepcopy(g)).kur()
+    for plan in ([_atama(0, AKSAM), _atama(2, SABAH)],          # 13:45-22:00, bos, 07:00
+                 [_atama(0, GEC_BITEN), _atama(2, SABAH)]):     # 16:00-24:00, bos, 07:00 (9 saat geri olurdu)
+        assert _ihlaller(degerlendir(g, plan)) == []
+        assert _rotasyon_metrigi(k, plan) == (0, 0.0)
+    # tanim iki tarafta ayni (ayri yazili): 24 asmaz, 24,25 asar, ham yazim 23 -> 7 asar
+    for (b, e), asar in {(16, 24): False, (16, 24.25): True, (23, 7): True, (23, 31): True,
+                         (0, 8): False, (13.75, 22): False}.items():
+        assert gece_yarisini_asar(b, e) is asar and _rotasyon_son_gun(5, b, e) == 5 + int(asar), (b, e)
+
+
+def test_D_olcut4_geceden_sonra_IKI_bos_gun_SIFIRLAR():
+    g = _sahne([])
+    assert _ihlaller(degerlendir(g, [_atama(0, GECE), _atama(3, AKSAM)])) == []
+
+
+def test_D_olcut5_ara_gunde_calisiyorsa_ciftler_ardisik_gunlerdir():
+    """Gece d, d+1'de calisiyor: ciftler (d, d+1) ve (d+1, d+2); d -> d+2 ayrica sayilmaz."""
+    g = _sahne([])
+    plan = [_atama(0, GECE), _atama(1, GECE), _atama(2, AKSAM)]   # 23 -> 23 (0), 23 -> 13:45 (9,25)
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(degerlendir(g, plan))] == [(2, 9.25)]
+
+
+def test_D_olcut1_motor_zorunlu_ciftte_bedel_ara_gunun_degiskeninde():
+    # gun 0 saat 23 yalniz GECE; gun 2 saat 20 yalniz AKSAM; gun 1 talepsiz
+    g = _sahne([(0, 23), (2, 20)], sablonlar=(SABAH, AKSAM, GECE))
+    k = Model(copy.deepcopy(g)).kur()
+    assert ("P1", 1) in k.rotasyon                                   # ro_P1_1 yeniden kullanilir
+    c = coz(g, AYAR)
+    assert c["durum"] == "cozuldu"
+    assert {a["gun"]: a["sablon"] for a in c["atamalar"]} == {0: "GECE", 2: "AKSAM"}
+    assert _rot(c)["deger"] == 9 and _rot(c)["ceza"] == 9 * AGIRLIK_TABLOSU["VARDIYA_ROTASYON_YONU"]["DENGELI"]
+    assert c["metrikler"]["rotasyon_geri_gecis"] == 1 and c["metrikler"]["rotasyon_geri_saat"] == 9.25
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(degerlendir(g, c["atamalar"]))] == [(2, 9.25)]
+
+
+def test_D_olcut7_motor_secim_varken_geceden_sonra_GERI_olmayani_secer():
+    """Gun 2 saat 17: ORTA_D (09:45, gece 23:00'ten ILERI) ya da AKSAM_D (14:00, 9 saat GERI).
+    AKSAM_D bir ceyrek kisa (hedef asimi ucuz) -- D olmasaydi motor onu secerdi."""
+    g = _sahne([(0, 23), (2, 17)], sablonlar=(GECE, ORTA_D, AKSAM_D))
+    c = coz(g, AYAR)
+    assert {a["gun"]: a["sablon"] for a in c["atamalar"]} == {0: "GECE", 2: "ORTA_D"}
+    assert c["metrikler"]["rotasyon_geri_gecis"] == 0 and _rot(c)["ceza"] == 0
+    g0 = _sahne([(0, 23), (2, 17)], sablonlar=(GECE, ORTA_D, AKSAM_D), agirliklar={"VARDIYA_ROTASYON_YONU": 0})
+    c0 = coz(g0, AYAR)                                                # kanit: kural susunca kisa olan secilir
+    assert {a["gun"]: a["sablon"] for a in c0["atamalar"]} == {0: "GECE", 2: "AKSAM_D"}
+    assert c0["metrikler"]["rotasyon_geri_gecis"] == 1 and c0["metrikler"]["rotasyon_geri_saat"] == 9
+
+
+def test_D_ara_gunde_calisilirsa_D_kisiti_SUSAR():
+    """Gece d, d+1'de calisiyor, d+2: D kisiti `- calisiyor(d+1)` ile susar; bedel yalniz ardisik ciftlerden.
+    Sablonlar gunlere baglandi (`gunler`) ki plan tek olsun: gun 0 N (21:00-05:00), gun 1 X (16:00-24:00;
+    05:00'ten 11 saat), gun 2 AKSAM (13:45). Ciftler: N -> X 5 geri, X -> AKSAM 2,25 geri. D cifti
+    N -> AKSAM (7,25) EKLENMEZ -- eklenseydi amac terimi 14 olurdu."""
+    n = {"id": "N", "ekip": "E", "bas": 21, "bit": 29, "mola_dk": 60, "gunler": [0]}
+    x = {"id": "X", "ekip": "E", "bas": 16, "bit": 24, "mola_dk": 60, "gunler": [1]}
+    ak = dict(AKSAM, gunler=[2])
+    g = _sahne([(0, 23), (1, 20), (2, 21)], sablonlar=(n, x, ak))
+    c = coz(g, AYAR)
+    assert c["durum"] == "cozuldu", c.get("teshis")
+    assert {a["gun"]: a["sablon"] for a in c["atamalar"]} == {0: "N", 1: "X", 2: "AKSAM"}
+    assert _rot(c)["deger"] == 5 + 2
+    assert c["metrikler"]["rotasyon_geri_gecis"] == 2 and c["metrikler"]["rotasyon_geri_saat"] == 7.25
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(degerlendir(g, c["atamalar"]))] == [(1, 5), (2, 2.25)]
+
+
+def test_D_olcut6a_gecmis_gun_eksi_iki_gecesi_pazar_kaydi_yokken_pazartesiyle_KIYASLANIR():
+    g = _sahne([(0, 20)], sablonlar=(SABAH, AKSAM))
+    g["calisanlar"][0]["gecmis_vardiyalar"] = [{"gun": -2, "bas": 23, "bit": 31}]     # Cmt 23:00 - Paz 07:00
+    r = degerlendir(g, [_atama(0, AKSAM)])
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(r)] == [(0, 9.25)]
+    assert not [e for e in r["gecmis_eksik"] if e["kural"] == "VARDIYA_ROTASYON_YONU"]
+    c = coz(g, AYAR)
+    assert _rot(c)["deger"] == 9 and c["metrikler"]["rotasyon_geri_saat"] == 9.25
+    # Pazar kaydi VARSA cift onunla (gun -1 SABAH 07:00 -> 13:45 ileri): satir yok
+    g2 = copy.deepcopy(g)
+    g2["calisanlar"][0]["gecmis_vardiyalar"].append({"gun": -1, "bas": 7, "bit": 15})
+    assert _ihlaller(degerlendir(g2, [_atama(0, AKSAM)])) == []
+    c2 = coz(g2, AYAR)
+    assert c2["metrikler"]["rotasyon_geri_gecis"] == 0 and (_rot(c2) is None or _rot(c2)["deger"] == 0)
+    # gun -2 kaydi gece yarisini ASMIYORSA: sifirlanir (eski test_..._gun_-2 ile ayni)
+    g3 = copy.deepcopy(g)
+    g3["calisanlar"][0]["gecmis_vardiyalar"] = [{"gun": -2, "bas": 15, "bit": 23}]
+    assert _ihlaller(degerlendir(g3, [_atama(0, AKSAM)])) == []
+    c3 = coz(g3, AYAR)
+    assert c3["metrikler"]["rotasyon_geri_gecis"] == 0 and (_rot(c3) is None or _rot(c3)["deger"] == 0)
+
+
+def test_D_olcut6b_gecmis_gun_eksi_bir_gecesi_pazartesi_bosken_saliyla_KIYASLANIR():
+    g = _sahne([(1, 20)], sablonlar=(SABAH, AKSAM))
+    g["calisanlar"][0]["gecmis_vardiyalar"] = [{"gun": -1, "bas": 23, "bit": 7}]      # ham yazim (Z-1)
+    r = degerlendir(g, [_atama(1, AKSAM)])
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(r)] == [(1, 9.25)]
+    k = Model(copy.deepcopy(g)).kur()
+    assert ("P1", 0) in k.rotasyon
+    c = coz(g, AYAR)
+    assert {a["gun"]: a["sablon"] for a in c["atamalar"]} == {1: "AKSAM"}
+    assert _rot(c)["deger"] == 9 and c["metrikler"]["rotasyon_geri_saat"] == 9.25
+
+
+def test_D_olcut6b_pazartesi_CALISIYORSA_gun_eksi_bir_gecesi_saliyla_kiyaslanmaz():
+    """Gun -1 23:00-07:00, gun 0 Y 18:00-24:00 (11 saat dinlenme), gun 1 AKSAM 13:45. Ciftler:
+    (-1, 0) 23 -> 18 = 5 geri; (0, 1) 18 -> 13:45 = 4,25 geri (4). Gun -1 -> sali D cifti (9,25)
+    eklenmez -- eklenseydi amac 5 + 9 = 14 olurdu."""
+    y = {"id": "Y", "ekip": "E", "bas": 18, "bit": 24, "mola_dk": 60, "gunler": [0]}
+    ak = dict(AKSAM, gunler=[1])
+    g = _sahne([(0, 20), (1, 21)], sablonlar=(y, ak))
+    g["calisanlar"][0]["gecmis_vardiyalar"] = [{"gun": -1, "bas": 23, "bit": 31}]
+    c = coz(g, AYAR)
+    assert c["durum"] == "cozuldu", c.get("teshis")
+    assert {a["gun"]: a["sablon"] for a in c["atamalar"]} == {0: "Y", 1: "AKSAM"}
+    assert _rot(c)["deger"] == 5 + 4
+    assert c["metrikler"]["rotasyon_geri_gecis"] == 2 and c["metrikler"]["rotasyon_geri_saat"] == 9.25
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(degerlendir(g, c["atamalar"]))] == [(0, 5), (1, 4.25)]
+
+
+def test_D_tek_sablonlu_kisinin_gecmis_pazartesi_terimi_motorda_da_var():
+    """12 Ekim bulgusu: `if not geri: continue` tek sablonlu kisinin gecmis -> pazartesi terimini
+    atliyordu; dogrulayici ve metrik sayiyordu (#7.6 ayriligi)."""
+    g = _sahne([(0, 8)], sablonlar=(SABAH,))
+    g["calisanlar"][0]["gecmis_vardiyalar"] = [{"gun": -1, "bas": 13.75, "bit": 20}]
+    c = coz(g, AYAR)
+    assert _rot(c) is not None and _rot(c)["deger"] == 7
+    assert c["metrikler"]["rotasyon_geri_saat"] == 6.75
+    assert [(i["gun"], i["olculen"]) for i in _ihlaller(degerlendir(g, c["atamalar"]))] == [(0, 6.75)]
+
+
+def test_D_K54_donmus_gece_serbest_aksam_terime_girer_hepsi_donmusse_GECMIS():
+    plan = [_atama(0, GECE), _atama(2, AKSAM)]
+    g = _sahne([(0, 23), (2, 20)], sablonlar=(SABAH, AKSAM, GECE), donmus_gunler=[0, 1],
+               mevcut_plan=copy.deepcopy(plan[:1]))
+    k = Model(copy.deepcopy(g)).kur()
+    assert ("P1", 1) in k.rotasyon                                   # donmus -> serbest: girer
+    ih = _ihlaller(degerlendir(g, plan))
+    assert [(i["gun"], i["olculen"], bool(i.get("gecmis"))) for i in ih] == [(2, 9.25, False)]
+    g2 = _sahne([(0, 23), (2, 20)], sablonlar=(SABAH, AKSAM, GECE), donmus_gunler=[0, 1, 2],
+                mevcut_plan=copy.deepcopy(plan))
+    k2 = Model(copy.deepcopy(g2)).kur()
+    assert ("P1", 1) not in k2.rotasyon                              # olan oldu
+    ih2 = _ihlaller(degerlendir(g2, plan))
+    assert [(i["gun"], i.get("gecmis")) for i in ih2] == [(2, True)]
+
+
+def test_D_olcut7_rastgele_planlarda_metrik_ve_dogrulayici_AYNI_cifti_sayar():
+    """Uc sayim ayni ciftleri sayar: 400 rastgele plan (gece, 24:00'da biten, bos gunler, gecmis
+    -1/-2). Motor tarafi yukaridaki zorunlu/secim testlerinde."""
+    import random
+    from cozucu.coz import _rotasyon_metrigi
+    rnd = random.Random(20261012)
+    sablonlar = (SABAH, ORTA, AKSAM, GECE, GEC_BITEN)
+    for _ in range(400):
+        g = _sahne([], sablonlar=sablonlar)
+        gecmis = []
+        for gun in (-2, -1):
+            if rnd.random() < 0.5:
+                t = rnd.choice(sablonlar)
+                gecmis.append({"gun": gun, "bas": t["bas"], "bit": t["bit"]})
+        g["calisanlar"][0]["gecmis_vardiyalar"] = gecmis
+        plan = [_atama(d, rnd.choice(sablonlar)) for d in range(7) if rnd.random() < 0.6]
+        if not plan:
+            continue
+        ih = _ihlaller(degerlendir(g, plan))
+        gecis, saat = _rotasyon_metrigi(Model(copy.deepcopy(g)).kur(), plan)
+        assert (gecis, saat) == (len(ih), round(sum(i["olculen"] for i in ih), 2)), (gecmis, plan)

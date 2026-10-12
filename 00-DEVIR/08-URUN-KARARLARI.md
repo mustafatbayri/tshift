@@ -3470,7 +3470,7 @@ puanla kısa bir arama; bulunursa o döner (süre bütçesinden pay ister).
 
 ---
 
-## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat** — ✅ **KAPANDI (12 Ekim 14:48): "sonra" ölçüldü, geri geçiş −%95, ağırlık 3 kalır; gün tanımı D (B8) koda inecek**
+## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat** — ✅ **KAPANDI (12 Ekim 14:48): "sonra" ölçüldü, geri geçiş −%95, ağırlık 3 kalır; gün tanımı D (B8) koda indi (12 Ekim 18:00, bulut; Mustafa'nın tam mutasyonu bekleniyor)**
 
 **Karar (8 ve 11 Ekim 2026, Mustafa).** Sıranın 3. maddesi (dört yumuşak
 kural) için ilk tanım sorusu 8 Ekim 05:05'te soruldu; üç karar:
@@ -3649,6 +3649,66 @@ okuması: öneri, eski sette ayrı "sonra-2" koşusu **yapılmasın** — D bulu
 0,2 ölçekte sayımla doğrulanır, tam ölçek sayıları K-62 seviye 1 taban
 ölçümünde (K-67 ile aynı koşu) okunur — **Mustafa 15:57: "katılıyorum"**
 (eski sette ayrı koşu yok).
+
+**D koda indi (12 Ekim 16:50–18:00, bulut; kabul ölçütleri 1–8 Mustafa 17:06
+onayı — 4: *"bir günde sıfırlanıyorsa iki günde de"* (koruma testi olarak
+kaldı), 6 düz anlatıldı, 7: *"sen yorumla ve karar ver"* → üç sayım aynı
+çifti sayar, testle zorlanır; 8: *"ölçmeden ilerlemiyoruz"*).**
+- **Model** (`09-motor/cozucu/model.py` `_rotasyon`, `gece_yarisini_asar`,
+  `_ro_degiskeni`): gece yarısını aşan şablon *s* (gün *d*) × gün *d+2*'nin
+  geri şablonu *t*: `ro_<kişi>_<d+1> ≥ saat × (x_s + x_t − 1 − çalışıyor(d+1))`;
+  değişken yeniden kullanılır (iki kısıt aynı anda bağlamaz). Geçmiş: gün −1
+  kaydı yoksa gün −2'nin aşan gecesi → Pazartesi (`ro_<kişi>_-1`); gün −1'in
+  aşan gecesi → (Pazartesi boş) → Salı (`ro_<kişi>_0`, `− çalışıyor(0)`).
+  K-54: d ve d+2 ikisi de donmuşsa yazılmaz.
+- **Doğrulayıcı** (`kurallar.py` `vardiya_rotasyon_yonu`, `_rotasyon_son_gun`)
+  ve **metrik** (`coz.py` `_rotasyon_metrigi`): kişinin plan + geçmiş
+  vardiyaları gün sırasıyla; ardışık çift, `d1 ≤ son_gün(d0) + 1` ise
+  kıyaslanır; yalnız ikinci vardiya plan haftasındaysa satır/sayı.
+- **Yan bulgu (düzeltildi):** `if not geri: continue` — şablonları arasında
+  geri çift olmayan kişide (tek şablon) motor geçmiş→Pazartesi terimini de
+  atlıyordu; doğrulayıcı/metrik sayıyordu (§7.6 ayrılığı, ürün sahnesinde
+  6 şablonlu kişilerde etkisizdi). Test:
+  `test_D_tek_sablonlu_kisinin_gecmis_pazartesi_terimi_motorda_da_var`.
+- **Testler** `09-motor/testler/test_rotasyon_yonu.py` 26 → **39** (bölüm 5:
+  ölçüt 1–7, ara gün çalışılırsa D susar, Pazartesi çalışıyorsa gün −1
+  gecesi Salı'yla kıyaslanmaz, K-54, 400 rastgele planda metrik ≡
+  doğrulayıcı); eski 26'nın hiçbiri değişmedi (yalnız bir yorum satırı).
+  **Mutasyon** `rotasyon` 35 → **47** (12 yeni D mutantı; D yüzünden hedef
+  metni değişen 15 eski mutant aynı anlamla yeniden bağlandı — biri, "gün −1
+  iki kayıtta son başlangıç", birleşik okumada aynı-gün mutantına katıldığı
+  için D mutantına çevrildi); bulutta grup koşusu **47 mutantın hepsi öldü**; toplam 374.
+- **Bulutta paketler:** 09-motor **649** yeşil (636 + 13), v5 altın 12 + 4
+  atlanan, fikstür denetleyici temiz, zor veri seti **50** yeşil.
+- **Ölçüm (ölçüt 8; bulut, 2 çekirdek — süreler senin makinenle
+  kıyaslanamaz; 0,2 ölçek, 100 kişi, %95, 300 sn × 2;
+  `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-rotasyon-D/sonuc-0.2-bulut.txt`):**
+
+  | | eski kod, ağırlık 3 | **D kodu, ağırlık 3** | D kodu, ağırlık 0 |
+  |---|---|---|---|
+  | geri çift — D sayımı (doğrulayıcı) | 4 / 8 | **3 / 2** | 66 / 56 |
+  | geri çift — eski tanım | 2 / 5 | 3 / 2 | 63 / 53 |
+  | D'nin gördüğü fazla çift (B8) | +2 / +3 (18,5 / 27,75 sa) | **0 / 0** | +3 / +3 |
+  | motor metriği = doğrulayıcı | (eski tanımla 2/5 = 2/5) | **3 = 3, 2 = 2** (9,0 / 7,0 sa) | 66 = 66, 56 = 56 |
+  | amaç terimi = satırların yuvarlı toplamı | — | **9 = 9, 7 = 7** | (`null`) |
+  | hedef kapsama % | 89,64 / 90,84 | 89,16 / 88,43 | 91,33 / 91,81 |
+  | aşım k-s · adalet · mola | 619/633 · 532/524 · 52/49 | 626/620 · 523/530 · 49/50 | 630/625 · 513/518 · 47/44 |
+  | amaç (rotasyon terimi hariç) | 5.475 / 5.366 | 5.403 / 5.481 | 5.270 / 5.241 |
+  | fazla mesai · sert · yayınlanabilir | 0 · 0 · evet | 0 · 0 · evet | 0 · 0 · evet |
+  | kısıt (kurma) | 161.256 (14 sn) | **161.521 (13 sn)** | 161.521 |
+
+  Okuma: D'nin gördüğü gece → (dokunulmuş gün) → akşam delikleri eski kodun
+  planlarında vardı (2–3 çift, ~9 sa), D koduyla **kapandı (0)**; ağırlık 0
+  iken yine açılıyor (+3) — kapanışı yapan modeldeki terim. Bedel bu
+  örneklemde gürültünün içinde (rotasyon dışı amaç ort. 5.420 → 5.442,
+  +%0,4; iki koşu arası fark %1,6; hedef kapsama −1,4 puan ama eksik
+  kişi-saat 61 → 66 ve tekrarlar arası ±6) — **iki koşuluk 0,2 ölçek bunu
+  ayırt etmez; tam ölçek sayıları K-62 seviye 1 taban ölçümünde** (K-67
+  ile aynı koşu, Mustafa 15:57). 500 kişi kurulum: kısıt 809.888 →
+  **811.258 (+1.370, +%0,17)**, değişken aynı (636.495), kurma 72,6 → 74,4
+  sn (tek ölçüm; `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-rotasyon-D/kisit_say.py`).
+- **Bekleyen:** Mustafa'nın makinesinde testler + DENETIM + commit + tam
+  mutasyon (374).
 
 → §6.3 · §11.3 · K-61 · K-54 · K-42 · O-7 · T-60 ·
 `02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md` ·

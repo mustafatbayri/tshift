@@ -2047,7 +2047,9 @@ def _boyut_sayaci(boyut, girdi=None):
 # degil. Uyku sagligi literaturunde standart." Tanim literatur okumasindan
 # (02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md; IARC 2020,
 # Bambra 2008, Di Muzio 2021) ve Mustafa'nin uc kararindan:
-#   1. ART ARDA IKI CALISMA GUNU kiyaslanir; bos gun kiyasi sifirlar.
+#   1. ART ARDA IKI CALISMA GUNU kiyaslanir; bos gun kiyasi sifirlar. Gun tanimi D
+#      (Mustafa, 12 Ekim): vardiya gece yarisini asiyorsa bittigi gune de aittir --
+#      23:00-07:30 gecesinden sonraki gun "bos" degildir (tam 24:00 asmaz).
 #   2. Baslangic farki 24 SAATLIK CEMBERDE okunur, (-12, 12]; eksi = GERI.
 #      Sabah->gece atlamasi (08:00 -> ertesi gun 23:00 = -9) geri sayilir.
 #   3. Olcu GERI KAYDIRILAN SAAT (kesin; motor amac teriminde tam saate
@@ -2073,33 +2075,45 @@ def _rotasyon_geri_saat(bas_onceki, bas_sonraki, yon="ileri"):
     return -fark if fark < 0 else 0.0
 
 
+def _rotasyon_son_gun(gun, bas, bit):
+    """K-65 gun tanimi D (Mustafa, 12 Ekim 2026): vardiya baslangic gunune ve gece
+    yarisini asiyorsa bitis gunune aittir; TAM 24:00 asmaz. Donen: dokunulan SON gun.
+    (Cozucude `gece_yarisini_asar` ayrica yazili -- #7.6.)"""
+    b, e = float(bas), float(bit)
+    if e <= b:
+        e += 24.0                      # Z-1
+    return int(gun) + (1 if e > 24.0 else 0)
+
+
 @kural("VARDIYA_ROTASYON_YONU")
 def vardiya_rotasyon_yonu(girdi, atamalar, tanim):
-    """YUMUSAK (K-65). Art arda iki calisma gununde sonraki vardiya oncekinden
-    GERI (erken; dairesel) basliyorsa bir satir: `olculen` geri saat (kesin),
-    `gereken` 0, `gun` ciftin IKINCI gunu (K-54 isareti: iki gun de donmussa
-    gecmis sayilir, donmus->serbest cifti sayilmaz)."""
+    """YUMUSAK (K-65; gun tanimi D, 12 Ekim). Ayni kisinin ardisik iki vardiyasi,
+    ikincisi birincinin dokundugu SON gunde ya da ertesinde basliyorsa kiyaslanir;
+    arada hic dokunulmamis takvim gunu varsa sifirlanir. Sonraki BASLANGIC oncekinden
+    GERI (erken; dairesel) ise bir satir: `olculen` geri saat (kesin), `gereken` 0,
+    `gun` ikinci vardiyanin gunu (K-54 isareti). Gecmis kayitlar (negatif gun) onceki
+    vardiya olabilir; satir yalniz ikinci vardiya plan haftasindaysa yazilir."""
     yon = _p(tanim, "yon", "ileri")
     if yon not in ("ileri", "geri"):
         yon = "ileri"
     cikan = []
     for kimlik, liste in sorted(_kisiye_gore(atamalar).items()):
-        bas = {}
-        for a in liste:
+        bas, son = {}, {}
+        for a in list(liste) + _gecmis_kayitlari(girdi, kimlik):
             d = int(a["gun"])
-            bas[d] = min(bas[d], float(a["bas"])) if d in bas else float(a["bas"])
-        onceki = [float(k["bas"]) for k in _gecmis_kayitlari(girdi, kimlik) if int(k["gun"]) == -1]
-        if onceki:
-            bas[-1] = min(onceki)
-        for d in sorted(bas):
-            if d + 1 not in bas:
-                continue
-            h = _rotasyon_geri_saat(bas[d], bas[d + 1], yon)
+            b = float(a["bas"])
+            bas[d] = min(bas[d], b) if d in bas else b
+            son[d] = max(son.get(d, d), _rotasyon_son_gun(d, a["bas"], a["bit"]))
+        gunler = sorted(bas)
+        for d0, d1 in zip(gunler, gunler[1:]):
+            if d1 < 0 or d1 > son[d0] + 1:
+                continue                   # gecmis ici cift ya da arada dokunulmamis gun
+            h = _rotasyon_geri_saat(bas[d0], bas[d1], yon)
             if h > 0:
-                cikan.append(_ihlal("VARDIYA_ROTASYON_YONU", tanim, calisan=kimlik, gun=d + 1,
+                cikan.append(_ihlal("VARDIYA_ROTASYON_YONU", tanim, calisan=kimlik, gun=d1,
                                     olculen=round(h, 2), gereken=0,
                                     mesaj="%s: gun %d %s -> gun %d %s, %.2f saat %s"
-                                          % (kimlik, d, _ss(bas[d]), d + 1, _ss(bas[d + 1]), h,
+                                          % (kimlik, d0, _ss(bas[d0]), d1, _ss(bas[d1]), h,
                                              "geri" if yon == "ileri" else "ileri (yon=geri)")))
     return cikan
 

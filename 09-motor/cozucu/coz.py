@@ -55,7 +55,7 @@ from ortools.sat.python import cp_model
 
 from .model import (Model, _mola_baslangiclari, _mola_dilimleri, _net_saat,
                     isci_sayisi, _kural, _gecmis_kayitlari, rotasyon_geri_saat,
-                    rotasyon_yonu)
+                    rotasyon_yonu, gece_yarisini_asar)
 
 VARSAYILAN = {
     "azami_saniye": 900,          # 15 dk mutlak butce
@@ -1412,32 +1412,39 @@ def _atamalari_cikar(kuruldu, cozucu):
 def _rotasyon_metrigi(kuruldu, atamalar):
     """VARDIYA_ROTASYON_YONU (K-65): plandaki geri gecis sayisi ve toplam geri saat (KESIN,
     yuvarlanmamis). Planin TAMAMI sayilir (donmus satirlar dahil -- metrik plani anlatir;
-    amac terimi K-54 ile iki donmus gunun ciftini yazmaz). Pazar->Pazartesi cifti icin
-    `gecmis_vardiyalar` gun -1 kaydi varsa sayilir. Kural aktif degilse (None, None).
-    Ayni tanim dogrulayicida ayrica yazili (#7.6)."""
+    amac terimi K-54 ile iki donmus gunun ciftini yazmaz). Gun tanimi D (12 Ekim): vardiya
+    gece yarisini asiyorsa bittigi gune de aittir; ardisik iki vardiya, ikincisi birincinin
+    son gununde ya da ertesinde basliyorsa kiyaslanir. Gecmis kayitlar (gun -1, -2 ...)
+    onceki vardiya olabilir; cift yalniz ikinci vardiya plan haftasindaysa sayilir. Kural
+    aktif degilse (None, None). Ayni tanim dogrulayicida ayrica yazili (#7.6)."""
     k = _kural(kuruldu.girdi, "VARDIYA_ROTASYON_YONU")
     if not k:
         return None, None
     yon = rotasyon_yonu(k)
-    bas = {}
+    bas, son = {}, {}
+
+    def _ekle(kisi, d, b, e):
+        bg, sg = bas.setdefault(kisi, {}), son.setdefault(kisi, {})
+        bg[d] = min(bg[d], b) if d in bg else b
+        sg[d] = max(sg.get(d, d), d + (1 if gece_yarisini_asar(b, e) else 0))
+
     for a in atamalar:
-        g = bas.setdefault(a["calisan"], {})
-        d = int(a["gun"])
-        g[d] = min(g[d], float(a["bas"])) if d in g else float(a["bas"])
+        _ekle(a["calisan"], int(a["gun"]), float(a["bas"]), float(a["bit"]))
     for c in kuruldu.girdi.get("calisanlar", []) or []:     # pasif de: aktarilan donmus satir (inceleme 4, B3)
         if c["id"] not in bas:
             continue                                         # planda satiri olmayanin gecmisi cift yapmaz
-        onceki = [b for gun, b, _, _ in _gecmis_kayitlari(c) if gun == -1]
-        if onceki:
-            bas[c["id"]][-1] = min(onceki)
+        for gun, b, e, _ in _gecmis_kayitlari(c):
+            _ekle(c["id"], gun, b, e)
     gecis, saat = 0, 0.0
-    for gunler in bas.values():
-        for d in sorted(gunler):
-            if d + 1 in gunler:
-                h = rotasyon_geri_saat(gunler[d], gunler[d + 1], yon)
-                if h > 0:
-                    gecis += 1
-                    saat += h
+    for kisi, gunler in bas.items():
+        sirali = sorted(gunler)
+        for d0, d1 in zip(sirali, sirali[1:]):
+            if d1 < 0 or d1 > son[kisi][d0] + 1:
+                continue
+            h = rotasyon_geri_saat(gunler[d0], gunler[d1], yon)
+            if h > 0:
+                gecis += 1
+                saat += h
     return gecis, round(saat, 2)
 
 
