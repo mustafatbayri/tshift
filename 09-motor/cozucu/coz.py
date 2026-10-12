@@ -201,7 +201,7 @@ VARSAYILAN = {
     #   girmedi: zararsiz oldugu olculdu, koruma degeri kuyruk olcumune
     #   dayaniyor. 1 = tek deneme, payin tamami (7 Ekim sabahinin davranisi;
     #   olcum/kiyas icin: kalite-olc.py `fm_once*`).
-    "fazla_mesaisiz_deneme": 1,
+    "fazla_mesaisiz_deneme": 3,
     # OLCUM: True = 6 Ekim gecesinin SERT KESIMI -- fazla mesaisiz plan
     #   bulununca fazla mesai degiskenleri sonraki asamalarda da [0,0]'da
     #   kalir; cozulen model tam model degildir (kuresel sinir yazilmaz,
