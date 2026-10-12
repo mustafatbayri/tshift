@@ -1,7 +1,7 @@
 # 11 Ekim 2026 — Yılmaz görüşmesinin sonucu: konteyner mimarisi kararı (M-16); sıra 3'ün durumu
 
-**Pencere:** 11 Ekim 18:25 – 12 Ekim 05:00 (aynı pencere; 03:50'de
-bağlam bir kez sıkıştırıldı, §7) · **Önceki:** `2026-10-07-gece-kosusu-ve-fm-siz-arama-kuyrugu.md`
+**Pencere:** 11 Ekim 18:25 – 12 Ekim 16:00 — **KAPANDI** (aynı pencere; 03:50'de
+bağlam bir kez sıkıştırıldı, §7; kapanış §8) · **Önceki:** `2026-10-07-gece-kosusu-ve-fm-siz-arama-kuyrugu.md`
 §9 (K-61 kapanışı, sıra 3'ün ilk sorusu, literatür okuması). Kod 18:30'dan
 sonra değişti (§4–5); gece yalnız vaka, harness ve dokümanlar (§7).
 
@@ -14,6 +14,7 @@ sonra değişti (§4–5); gece yalnız vaka, harness ve dokümanlar (§7).
 5. [K-65 koda indi; bağımsız inceleme 4 (19:30–22:00)](#5--k-65-koda-indi-bağımsız-inceleme-4-19302200)
 6. ["Önce" ölçümü (bulgu 28) ve Mustafa'ya blok](#6--önce-ölçümü-bulgu-28-ve-mustafaya-blok)
 7. [Gece 12 Ekim 03:50–05:00: iki CI kırmızısı, rotasyon gün tanımı D, hedef aşımı yeniden açıldı](#7--gece-12-ekim-03500500-iki-ci-kırmızısı-rotasyon-gün-tanımı-d-hedef-aşımı-yeniden-açıldı)
+8. [12 Ekim 13:55–16:00: üç karar, aşım profili, pencere kapanışı](#8--12-ekim-13551600-üç-karar-aşım-profili-pencere-kapanışı)
 
 ## 1 · Mustafa'nın haberi ve M-16
 
@@ -306,3 +307,69 @@ git push
 
 CI beklentisi: 09-motor 636 yeşil (coz.py 3'e döndü), 08 paketi 50 yeşil
 (vaka `8dfc935`'te). Kırmızı yanarsa çıktıyı at.
+
+## 8 · 12 Ekim 13:55–16:00: üç karar, aşım profili, pencere kapanışı
+
+**13:55–14:48 — Bloklar alındı.** Blok A `b5b30ec` (coz.py 3'e döndü), Blok
+B `3c565e0`; GitHub'da iki iş de yeşil (Mustafa 14:48). Gece koşusunun
+konsol çıktısı dosyalardan okunanla birebir (362 · yaşayan 0; 15 / 8 / 14).
+
+**13:56 — Mustafa karar paketini istedi** (*"Şu kararlarla ilgili içerikleri
+düzenle ve tekrar at karar vereyim"*); üç karar tek mesajda, tablolarıyla.
+
+**14:48 — Üç karar.** *"Karar 1 — A ağırlık 3 kalır. Merdiven testlerinde
+tekrar kontrol edeceğiz zaten. Karar 2 — D. Karar 3 — Seçenek A, burada
+şöyle bir hata var, ya vardiya planlarında ya talepte eksik var. Hiçbir
+işletme talebin üstünde eleman çalıştırmaz, çalıştırmak istemez. … test
+datamızda bir uyumsuzluk var … hedeflenen sahadaki eleman sayılarında bir
+değişiklik yapmamız lazım. … Fazladan bir eleman çalıştırmak bildiğin fazla
+mesaiden bile fazla maliyet yaratabilir. … 11 kişi falan fazla çalıştırdığını
+gördüm. Ne bu bolluk mübarek :)"*
+
+**14:50 — Aşım profili (3'ü doğruladı; 11 değil, 64).** `asim_profili.py`
+(aynı doğrulayıcı sayımı), sonra planı varsayilan-1: 415 hücrenin 261'i
+tam hedefte, aşım 154 hücrede; **SATIS 14:00–16:00 hedef 122, atanan 186
+(+64) her hafta içi günü**, SATIS 11:00–13:00 +36, BACKOFFICE 16:00 +36,
+MHIZMET 18:00 +21; önce planında aynı (SATIS 14:00 ort. +54,9). Sebep:
+gündüz şablonlarının beşi de 13:45–16:15'i kapsıyor (S-SABAH, S-ARA,
+S-AKSAM, S-UZUN, S-KISA) — o gün çalışan herkes aynı anda sahada, talep
+eğrisi 7/24'e yayılmış; "%95 doluluk" toplamda tutuyor, şekilde tutmuyor.
+K-62 seviye 1 ("tam oturan talep: hedef, geçerli ve fazla mesaisiz bir
+planın kendisi") tam bu yüzden vardı → öne çekildi.
+
+**15:10 — Uygulama planı Mustafa'ya:** K-67 (SERT; motor `tur`ü girdiden
+okur, kiracı `tur_gecersiz_kilma` ile yumuşatabilir; çözümsüzlükte teşhis;
+S30 setleri YUMUŞAK kalır), K-62 seviye 1 öne (hedef = referans kapsaması),
+D bugün koda; üç soru: kabul edilebilir? D için eski sette ayrı koşu yok?
+asgari = hedef / 1,5 mi, hedefe yakın mı?
+
+**15:55–15:57 — Cevaplar.** *"1 — evet. 2 — tam anlamadım. 3 — asgariyi
+hedefe yakın tutalım."* → asgari = hedef − 1 (en az 1). 2 düz anlatıldı
+(eski sette 1 sa 45'lik koşu rafta kalır; D bulutta 0,2 ölçekte doğrulanır,
+tam ölçek seviye 1 tabanında) → *"tamamdır sana katılıyorum 2 kararında
+da. bekliyorum"*. Pencere sorusu: *"önce motoru bitirip mi geçmeliyiz?"* →
+cevap: kararları işleyip geçelim (bağlam bir kez sıkıştırıldı; motor işi
+2–3 gün). Mustafa katıldı.
+
+**Yazılanlar:** K-65 (KAPANDI; D kararı; okuma yolu), K-53 notu, **K-67**
+(yeni), K-62 (seviye 1 öne, asgari satırı), bulgu 29 kararı, T-60 satırı,
+BURADAN ⚠ 12 Ekim 16:00, DEGISIM 16:00, kesif klasörüne `asim_profili.py` +
+sonuç, kalan üç kuralın soru taslağı
+`02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` (bulut
+taslağından depoya; sorulmadı). Kod değişmedi.
+
+**Yeni pencerenin ilk işi:** BURADAN ⚠ 12 Ekim 16:00 → D kodu (K-65'teki
+cümle ve bedel) → K-62 seviye 1 aracı + K-67 (aynı değişiklik seti) →
+Mustafa'nın makinesinde taban ölçümü. Her commit bloğu `.mutasyon-suruyor`
+korkuluğuyla (O-21).
+
+**Kapanış commit bloğu (Mustafa):**
+
+```powershell
+cd C:\Users\PC\Desktop\Tshift
+if (Test-Path 09-motor\.mutasyon-suruyor) { "MUTASYON SURUYOR - commit alma"; exit }
+git add 00-DEVIR DEGISIM-GUNLUGU.md 02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md 08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi
+git status --short
+git commit -m "Uc karar (12 Ekim): K-65 KAPANDI (agirlik 3 kalir); rotasyon gun tanimi D onaylandi (koda yeni pencerede); K-67 HEDEF_ASIMI SERT + kabul edilebilir -- asim veri setinin uyumsuzlugu (SATIS 14-16 hedef 122 / atanan 186, asim profili araci), K-62 seviye 1 one cekildi (talep referans plandan, asgari = hedef - 1); kalan uc kuralin soru taslagi depoya; pencere kapanisi; kod degismedi" -m "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`nClaude-Session: https://claude.ai/code/session_01XpZisZSTfgoQCAu3K4VzWE"
+git push
+```

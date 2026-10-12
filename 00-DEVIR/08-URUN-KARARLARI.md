@@ -2573,8 +2573,10 @@ sert ihlal olması gerekiyor."* Yumuşak biçimi 1 Ekim'de ben önermiştim; ser
 seçeneği o gün konmamıştı. Ölçüm ve seçenekler (A sert mutlak — 0,1 ölçekte
 **çözümsüz**, `ASGARI_KAPSAMA` + örtüşen şablon geometrisi; B sert yalnız
 saat ücretli için; C yumuşak, iki ağırlık; D sert + kabul) **T-60 bulgu 29**'da;
-karar Mustafa'da. Bu başlık karar gelince kapanır ya da K-67 olarak yeniden
-yazılır.
+~~karar Mustafa'da.~~ **Karar 12 Ekim 14:48: Seçenek A, sert — K-67** (aşım
+veri setinin uyumsuzluğu; talep referans plandan türer). Bu başlığın
+yumuşak tanımı yalnız S30 setlerinde (tarihsel kayıt) ve kiracı geçersiz
+kılmasında yaşar.
 
 → T-54 · T-60 bulgu 29 · `09-motor/cozucu/model.py` (`AGIRLIK_TABLOSU`, `_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) · `09-motor/testler/test_hedef_asimi.py`
 
@@ -3348,6 +3350,7 @@ sınanmıyor, en iyi plan bilinmiyor (bulgu 22; O-17).
 | Kaç kişi | ~~30 satışçı (yaklaşık %10) — varsayım~~ **20 satışçı** (yaklaşık %7) | Mustafa, 7 Ekim 07:18: *"4- 30 fazla bence 20"* |
 | Gece 00:00–08:00 back office talebi | Asgari **2** kişi (bugünkü sette hafta içi 13, hafta sonu 6) | Mustafa: *"en az 2 olsun mesela"* |
 | Aynı saatlerin hedefi | 3 kişi — **varsayım** (bugünkü hedef/asgari oranı ≈1,5) | ⚠ merdiven aracı yazılırken teyit |
+| **Seviye 1'de asgari** 🆕 | **hedef − 1 (en az 1)** — hedef/1,5 varsayımı kalktı | Mustafa, 12 Ekim 15:55: *"asgariyi hedefe yakın tutalım"* (K-67) |
 
 Bugünkü iki set (`08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-S30-85.json`
 ve `08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-S30-95.json`) olduğu gibi kalır: şimdiye kadarki bütün ölçümlerin girdisidir; merdiven yeni
@@ -3363,6 +3366,10 @@ kurulum (iki üç değişken ölçülerek seçilecek); dört yazılmamış yumu�
 
 **Sıra.** Önce seviye 1 ve 4: araç (şartnameden okunarak, testleriyle),
 referans planlar Mustafa'nın makinesinde, 500 kişide 900 sn ölçüm.
+**12 Ekim (K-67):** seviye 1 **öne çekildi** — `HEDEF_ASIMI` sert olunca
+bugünkü S30 setleri çözümsüz (aşım şablon geometrisinden: SATIS 14:00–16:00
+hedef 122, atanan 186); yeni taban seviye 1 seti, K-67 ile aynı değişiklik
+setinde. S30 setleri olduğu gibi kalır (YUMUŞAK).
 
 **Durum (7 Ekim 00:45): karar verildi, araç yazılmadı.** Yöntemin ön denemesi
 (49 ve 151 kişi, bulut):
@@ -3463,7 +3470,7 @@ puanla kısa bir arama; bulunursa o döner (süre bütçesinden pay ister).
 
 ---
 
-## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat**
+## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat** — ✅ **KAPANDI (12 Ekim 14:48): "sonra" ölçüldü, geri geçiş −%95, ağırlık 3 kalır; gün tanımı D (B8) koda inecek**
 
 **Karar (8 ve 11 Ekim 2026, Mustafa).** Sıranın 3. maddesi (dört yumuşak
 kural) için ilk tanım sorusu 8 Ekim 05:05'te soruldu; üç karar:
@@ -3579,6 +3586,10 @@ ya da (b) açık kalır, ağırlık K-62'ye. Önerim (a): bedel tek koşuluk
 oynamanın içinde (ağırlık 0 koşuları önceye göre +1,3 puan kapsama verdi;
 ağırlık 3 koşuları −0,3), adalet sapması bir koşudan (12.975) geliyor.
 
+**✅ Karar (12 Ekim 2026 14:48, Mustafa): "A — ağırlık 3 kalır. Merdiven
+testlerinde tekrar kontrol edeceğiz zaten."** K-65 kapandı; ağırlık K-62
+merdiveninde (seviye 1 tabanı, K-67 ile birlikte) yeniden okunur.
+
 **Üç yan bulgu.** (i) Ağırlık 0 koşuları önce ile aynı sayıyı veriyor
 (281 / 292 / 280 ↔ 279 / 301 / 278): kural ağırlıksızken tarafsız, sayım
 tekrarlanabilir. (ii) Art arda çift sayısı 1.619–1.653 → 1.600–1.609
@@ -3626,8 +3637,18 @@ Bedel: modelde yalnız gece yarısını aşan şablonlar için ek kısıt
 (`ro_<kişi>_<d+1>` yeniden kullanılır, `g ≥ hy·(x[d,s] + x[d+2,t] − 1 −
 calisiyor(d+1))`), doğrulayıcı + metrik son günü okur, ~8 test, ~8 mutasyon,
 şartname §6.3 madde 1/8, literatür §4.2(b); ardından tam ölçekte "sonra-2"
-(1 sa 45). **Onay bekliyor; kod yazılmadı.** Ayrıntı: oturum kaydı
+(1 sa 45). ~~**Onay bekliyor; kod yazılmadı.**~~ Ayrıntı: oturum kaydı
 `00-DEVIR/oturumlar/2026-10-11-konteyner-karari-ve-sira-3-durumu.md` §7.
+
+**✅ Karar (12 Ekim 2026 14:48, Mustafa): "D".** Madde 1 yukarıdaki D
+cümlesiyle değişir; koda yeni pencerede iner (model: gece yarısını aşan
+şablonlar için d→d+2 çifti `ro_<kişi>_<d+1>` değişkeniyle, `calisiyor(d+1)`
+düşülerek; doğrulayıcı ve metrik son günü okur; gün −1 **ve** −2; ~8 test,
+~8 mutasyon; şartname §6.3 madde 1 ve 8; literatür §4.2(b)). Tam ölçek
+okuması: öneri, eski sette ayrı "sonra-2" koşusu **yapılmasın** — D bulutta
+0,2 ölçekte sayımla doğrulanır, tam ölçek sayıları K-62 seviye 1 taban
+ölçümünde (K-67 ile aynı koşu) okunur — **Mustafa 15:57: "katılıyorum"**
+(eski sette ayrı koşu yok).
 
 → §6.3 · §11.3 · K-61 · K-54 · K-42 · O-7 · T-60 ·
 `02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md` ·
@@ -3676,3 +3697,99 @@ nerede?"* — yoktu). 2–11 Ekim arasındaki ölçümlerin planları yok.
 Mustafa'nın makinesi) — 500 kişilik üç plan, `08-motor-testleri/gercekci-veri-seti/planlar/kalite-olcumu-95-rotasyon-once-900/`.
 
 → Şartname §16.2 notu, değişiklik 66 · §11.3 · §11.4 · §8.6 · K-65 (ilk kullanım)
+
+
+---
+
+## K-67 · `HEDEF_ASIMI` **SERT** (kabul edilebilir ✅): hiçbir işletme talebin üstünde eleman çalıştırmaz; aşım veri setinin uyumsuzluğudur — talep referans plandan türer (K-62 seviye 1 öne çekildi)
+
+**Soru (12 Ekim 04:08, Mustafa):** *"hedef aşımını yumuşak kriter olarak
+değerlendirmişiz. … Biz maliyet açısından fazla mesai yaptırmamaya çalışıyoruz
+sen hedef aşımını yumuşak yaptığında ortaya ne çıkıyor? Yine fazladan para
+yakıyoruz. Yani benim hedeflediğim sayının üstünde eleman çalıştıran bir
+işletme para yakmaz mı? Bu kriterin de sert ihlal olması gerekiyor."*
+K-53'te (1 Ekim) kuralı yumuşak olarak ben önermiştim; sert seçeneği o gün
+hiç konmamıştı.
+
+**Ölçüm (T-60 bulgu 29, 12 Ekim gecesi).** Önce/sonra planlarında aşım
+3.154–3.382 kişi-saat (143–155 hücre), aynı planlarda 341–425 kişi-saat
+eksik; aşım hücrelerindeki kişi-saatin en az yarısı tam zamanlının zaten
+ödenmiş 45 saati (K-39). Sert mutlak sondası 0,1 ölçekte **çözümsüz** —
+`SAAT_DENGESI`, `ROL`, `YETKINLIK` kaldırılınca da; yalnız `ASGARI_KAPSAMA`
+da kaldırılınca çözülüyor. Dört seçenek sunuldu (A sert mutlak, B sert
+yalnız saat ücretli, C iki ağırlık, D sert + kabul). **Hücre profili
+(14:48'den sonra, sonra planı varsayilan-1,
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/asim_profili.py`):**
+
+| ekip · saat | hedef | atanan | aşım |
+|---|---|---|---|
+| SATIS 14:00–16:00, her hafta içi günü | 122 | 186 | **+64** |
+| SATIS 11:00–13:00 | 103 | 139 | +36 |
+| BACKOFFICE 16:00 | 45 | 81 | +36 |
+| MHIZMET 18:00 | 29 | 50 | +21 |
+
+415 hücrenin 261'i tam hedefte; aşım 154 hücrede ve kalabalık olanlar hep
+aynı saatler. Sebep şablon geometrisi: gündüz şablonlarının **beşi de**
+13:45–16:15 arasını kapsıyor (S-SABAH 7–16:15, S-ARA 11–20:15, S-AKSAM
+13:45–23, S-UZUN 8–18:45, S-KISA 10–16) — o gün çalışan herkes aynı anda
+sahada; talep eğrisi ise 7/24'e yayılmış. Toplamda "%95 doluluk" tutuyor
+(19.630 saate 18.660 saat), **şekil tutmuyor**. "Önce" planında da aynı
+(SATIS 14:00 ort. +54,9).
+
+**Karar (12 Ekim 2026 14:48, Mustafa): Seçenek A.** *"burada şöyle bir hata
+var, ya vardiya planlarında ya talepte eksik var. Hiçbir işletme talebin
+üstünde eleman çalıştırmaz, çalıştırmak istemez. Hadi çalıştırdı diyelim.
+Bizim test ekibimiz gibi büyük bir organizasyonda anca 1–2 kişi falan fazla
+çalıştırdığı olur o da bazı günler olabilir mesela. Yani test datamızda bir
+uyumsuzluk var (çalışan sözleşmeleri de olabilir, vardiya şablonları da
+olabilir, çalıştırılması gereken kişi de olabilir ki bence hedeflenen
+sahadaki eleman sayılarında bir değişiklik yapmamız lazım.) Sana çok önce de
+demiştim, fazla eleman çalıştırmaz aksine hep eksik eleman olur veya ucu
+ucuna yetişir elemanlar. Fazladan bir eleman çalıştırmak bildiğin fazla
+mesaiden bile fazla maliyet yaratabilir."* 15:55: kabul edilebilir **✅**;
+seviye 1'de **asgari hedefe yakın** (*"asgariyi hedefe yakın tutalım"* →
+asgari = hedef − 1, en az 1).
+
+**Ne değişir (koda yeni pencerede iner; sıra D'den sonra).**
+
+1. *Katalog / şartname §6.4:* `HEDEF_ASIMI` türü **SERT**, yasal ❌, kabul
+   ✅ (yönetici bilerek fazla kişi koyarsa K-49 ile kabul ederek yayınlar).
+   Değişiklik satırı 67; katalog sayısı değişmez (41).
+2. *Motor:* `_kapsama` türü girdiden okur — SERT ise `atanan ≤ hedef`
+   kısıtı (SAAT_DENGESI'nin yaptığı gibi), YUMUŞAK ise bugünkü ceza
+   (kiracı `tur_gecersiz_kilma` ile yumuşatabilir — §8'deki alan zaten var).
+   Çözümsüzlükte **teşhis**: hangi hücrelerde hedef aşılmadan asgari / 45
+   saat tabanı karşılanamıyor (§1.3 madde 4; `test_rapor_ozeti_ve_teshis.py`
+   ailesi). Amaç kırılımında `HEDEF_ASIMI` SERT'ken görünmez.
+3. *Doğrulayıcı:* türü zaten girdiden okuyor; vaka var
+   (`ihlal-vakalari.py`, temelde zaten sınanıyor). Kapı: sert ihlal, kabul
+   edilebilir.
+4. *Veri setleri:* bugünkü S30 setleri (%85/%95) **olduğu gibi kalır** ve
+   kendi kural listelerinde YUMUŞAK yazdıkları için çözülmeye devam eder
+   (şimdiye kadarki bütün ölçümlerin girdisi; K-62'nin "üzerine yazılmaz"
+   kararı; üretici bu iki set için türü YUMUŞAK tutar ve bunun K-67 öncesi
+   tarihsel kayıt olduğunu yazar). **Yeni taban: K-62 seviye 1** — talep,
+   geçerli ve fazla mesaisiz bir **referans planın kapsamasından** türer
+   (hedef = referans kapsaması; asgari = hedef − 1, en az 1); sıfır aşımlı
+   plan kurgu gereği vardır. Kadro K-62'deki gibi (285/145/70; 20 çift
+   yetkinlikli satışçı; BO gece asgari 2). Bütün yeni ölçümlerin tabanı bu
+   set; bulgu 23/25/28 sayıları "eski set" olarak kalır.
+5. *Testler:* `test_hedef_asimi.py` (6; sert yol + yumuşak geçersiz kılma
+   yolu + teşhis), mutasyonlar (4 → sert/yumuşak seçimi, kısıt yazılmasın,
+   teşhis), bekçiler seviye 1 setine bağlanır (CI "zor veri seti" adımı iki
+   seti de koşar: S30 YUMUŞAK, seviye 1 SERT).
+
+**Ölçü (koşudan önce yazılacak):** seviye 1'de `varsayilan` 900 sn × 3 →
+aşım 0 (kısıt), 0 sert, fazla mesai 0, eksik referansa göre; rotasyon (D
+dâhil) sayımı; referans planla kalem kalem kıyas (K-62 ilke 3).
+
+**Dürüst sınır.** Sert kural, talebini saatlik eğri olarak giren bir
+müşteriyi (şablonlarına oturmayan talep) **çözümsüze** götürür; ürün bunu
+teşhisle açıklar, susmaz. Bu, "yumuşak ceza ile yaklaşık plan" yerine
+"önce veriyi düzelt" tercihidir — Mustafa'nın sahadan söylediği kural
+(*"hep eksik eleman olur ya da ucu ucuna yetişir"*) bunu gerektiriyor.
+
+→ K-53 · K-62 · K-39 · K-49 · T-60 bulgu 29 · şartname §6.4, §1.3, §8 ·
+`09-motor/cozucu/model.py` (`_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) ·
+`09-motor/testler/test_hedef_asimi.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/`
