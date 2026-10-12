@@ -54,7 +54,8 @@ import time
 from ortools.sat.python import cp_model
 
 from .model import (Model, _mola_baslangiclari, _mola_dilimleri, _net_saat,
-                    isci_sayisi)
+                    isci_sayisi, _kural, _gecmis_kayitlari, rotasyon_geri_saat,
+                    rotasyon_yonu)
 
 VARSAYILAN = {
     "azami_saniye": 900,          # 15 dk mutlak butce
@@ -1408,6 +1409,38 @@ def _atamalari_cikar(kuruldu, cozucu):
     return cikan
 
 
+def _rotasyon_metrigi(kuruldu, atamalar):
+    """VARDIYA_ROTASYON_YONU (K-65): plandaki geri gecis sayisi ve toplam geri saat (KESIN,
+    yuvarlanmamis). Planin TAMAMI sayilir (donmus satirlar dahil -- metrik plani anlatir;
+    amac terimi K-54 ile iki donmus gunun ciftini yazmaz). Pazar->Pazartesi cifti icin
+    `gecmis_vardiyalar` gun -1 kaydi varsa sayilir. Kural aktif degilse (None, None).
+    Ayni tanim dogrulayicida ayrica yazili (#7.6)."""
+    k = _kural(kuruldu.girdi, "VARDIYA_ROTASYON_YONU")
+    if not k:
+        return None, None
+    yon = rotasyon_yonu(k)
+    bas = {}
+    for a in atamalar:
+        g = bas.setdefault(a["calisan"], {})
+        d = int(a["gun"])
+        g[d] = min(g[d], float(a["bas"])) if d in g else float(a["bas"])
+    for c in kuruldu.girdi.get("calisanlar", []) or []:     # pasif de: aktarilan donmus satir (inceleme 4, B3)
+        if c["id"] not in bas:
+            continue                                         # planda satiri olmayanin gecmisi cift yapmaz
+        onceki = [b for gun, b, _, _ in _gecmis_kayitlari(c) if gun == -1]
+        if onceki:
+            bas[c["id"]][-1] = min(onceki)
+    gecis, saat = 0, 0.0
+    for gunler in bas.values():
+        for d in sorted(gunler):
+            if d + 1 in gunler:
+                h = rotasyon_geri_saat(gunler[d], gunler[d + 1], yon)
+                if h > 0:
+                    gecis += 1
+                    saat += h
+    return gecis, round(saat, 2)
+
+
 def _metrikler(kuruldu, atamalar, cozucu, sure):
     """Motorun KENDI olcumu.
 
@@ -1486,6 +1519,7 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
             fazla += max(0.0, net.get(c["id"], 0.0) - soz)
 
     yuzde = lambda tut, top: 100.0 if top == 0 else round(100.0 * tut / top, 2)
+    rot_gecis, rot_saat = _rotasyon_metrigi(kuruldu, atamalar)
     return {
         # ⚠ `sert_ihlal` BURADAN KALDIRILDI -- K-51 (Mustafa, 1 Ekim):
         #   "Kaldiralim; ihlaller degisken degil sonucta, birinin saptamasi
@@ -1500,12 +1534,17 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         "fazla_mesai_saat": round(fazla, 2),
         "optimuma_uzaklik_yuzde": _bosluk(cozucu),
         "cozum_suresi_sn": round(sure, 2),
+        # K-65 (11 Ekim): geri rotasyon -- art arda calisma gunlerinde sonraki
+        #   baslangic oncekinden erken (dairesel). Kural aktif degilse None.
+        "rotasyon_geri_gecis": rot_gecis,
+        "rotasyon_geri_saat": rot_saat,
     }
 
 
 # Ceza degiskeni adi -> kural (model.py'deki NewIntVar adlari).
 _CEZA_ONEKI = {"he": "HEDEF_KAPSAMA", "ha": "HEDEF_ASIMI", "me": "MOLA_KAPSAMASI",
-               "fm": "FAZLA_MESAI", "ag": "ADALET_DENGESI", "sd": "SAAT_DENGESI"}
+               "fm": "FAZLA_MESAI", "ag": "ADALET_DENGESI", "sd": "SAAT_DENGESI",
+               "ro": "VARDIYA_ROTASYON_YONU"}          # K-65 (11 Ekim)
 
 
 def _amac_dagilimi(kuruldu, cozucu):
@@ -1519,6 +1558,7 @@ def _amac_dagilimi(kuruldu, cozucu):
     toplami (kac kisi-saat / kac birim).
     """
     dagilim = {}
+    sifir = set()                      # agirligi 0 olan kural: degisken serbest, `deger` cop
     for agirlik, v in kuruldu.cezalar:
         try:
             deger = cozucu.Value(v)
@@ -1530,9 +1570,13 @@ def _amac_dagilimi(kuruldu, cozucu):
         d["ceza"] += agirlik * deger
         d["deger"] += deger
         d["degisken"] += 1
+        if agirlik == 0:
+            sifir.add(kural)
     toplam = sum(d["ceza"] for d in dagilim.values()) or 1
-    for d in dagilim.values():
+    for kural, d in dagilim.items():
         d["pay_yuzde"] = round(100.0 * d["ceza"] / toplam, 1)
+        if kural in sifir:
+            d["deger"] = None              # agirlik 0: cozucu degiskeni sikmaz (inceleme 4, B9) -- plana metrikten bakilir
     return dict(sorted(dagilim.items(), key=lambda kv: -kv[1]["ceza"]))
 
 

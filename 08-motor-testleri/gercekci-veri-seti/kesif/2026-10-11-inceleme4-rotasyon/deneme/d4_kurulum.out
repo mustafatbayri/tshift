@@ -1,0 +1,18 @@
+
+=== olcek 0.1: 49 kisi, 17 sablon, 3 ekip ===
+  kural ACIK    kurma sn: ['6.43', '6.35', '7.11'] | {'degisken': 60082, 'kisit': 79578, 'x': 1841, 'mola': 15638, 'dinlenme': 40201, 'ceza': 2401, 'ro_degisken': 270, 'ro_kisit': 3570}
+  kural KAPALI  kurma sn: ['7.24', '6.12', '6.74'] | {'degisken': 59812, 'kisit': 76008, 'x': 1841, 'mola': 15638, 'dinlenme': 40201, 'ceza': 2131, 'ro_degisken': 0, 'ro_kisit': 0}
+  kisi basina (sablon sayisi, geri sablon cifti): dagilim [((5, 9), 7), ((6, 14), 38)]
+  beklenen ro kisit = sum(kisi: geri cift x 6 gun cifti) = 3570 (gecmis gun -1 kaydi olan kisi yok -> pazartesi terimi yok)
+
+=== olcek 0.2: 100 kisi, 17 sablon, 3 ekip ===
+  kural ACIK    kurma sn: ['12.82', '13.52', '13.12'] | {'degisken': 124499, 'kisit': 161256, 'x': 3850, 'mola': 32739, 'dinlenme': 84252, 'ceza': 3657, 'ro_degisken': 564, 'ro_kisit': 7476}
+  kural KAPALI  kurma sn: ['13.81', '13.38', '12.40'] | {'degisken': 123935, 'kisit': 153780, 'x': 3850, 'mola': 32739, 'dinlenme': 84252, 'ceza': 3093, 'ro_degisken': 0, 'ro_kisit': 0}
+  kisi basina (sablon sayisi, geri sablon cifti): dagilim [((5, 9), 14), ((6, 14), 80)]
+  beklenen ro kisit = sum(kisi: geri cift x 6 gun cifti) = 7476 (gecmis gun -1 kaydi olan kisi yok -> pazartesi terimi yok)
+
+=== 0.1 olcek cozum (urun yolu varsayilanlari, 40 sn): cozuldu, 42 sn, durma mola_adimi_optimum, mola_adimi True ===
+  amac kirilimi: {'ceza': 0, 'deger': 0, 'degisken': 270, 'pay_yuzde': 0.0}
+  metrik: gecis 0 saat 0.0 | dogrulayici: 0 satir, 0.00 saat | inceleme sayimi: [0, 0]
+  deger == yuvarlanmis toplam: True | satirlar: []
+  gece (bitis > 24) -> ertesi gun bos -> iki gun sonra calisma: 7 kez; bunlardan dairesel 'geri' olani: 0 ([])

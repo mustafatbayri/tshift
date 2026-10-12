@@ -1,0 +1,31 @@
+... 25 sahne, 1 sn
+... 50 sahne, 1 sn
+... 75 sahne, 2 sn
+... 100 sahne, 3 sn
+... 125 sahne, 3 sn
+sahne 147: cozuldu ['i_deger!=yuvarlanmis_toplam']
+... 150 sahne, 4 sn
+... 175 sahne, 5 sn
+... 200 sahne, 5 sn
+... 225 sahne, 6 sn
+... 250 sahne, 7 sn
+sahne 255: cozuldu ['i_deger!=yuvarlanmis_toplam']
+... 275 sahne, 7 sn
+... 300 sahne, 8 sn
+... 325 sahne, 8 sn
+... 350 sahne, 9 sn
+... 375 sahne, 10 sn
+... 400 sahne, 10 sn
+
+TOPLAM 400 sahne, cozuldu 391, cozumsuz 9, hata 0, sure 10 sn
+durma sebepleri: {'optimum': 391}
+kural dagilimi: {'acik': 270, 'yok': 66, 'aktif_false': 55}
+acik: agirlik 0: 51, yon=geri: 57, gecmisli: 195, donmuslu: 75 (cift satir 13, oturmayan 2), asgari acik: 196
+acik sahnelerde dogrulayici geri satiri olan: 71, toplam satir 111, gecmis isaretli 31
+sablon ozellikleri (tum sahneler): bas 0: 149, bas>=24: 163, gece yarisini asan: 327
+agirlik>0 sahne: 219; deger>0 olan: 23; deger toplami 210; satir toplami (gecmis haric) 46
+agirlik 0 sahnelerde satir: 38, deger (serbest) toplami: 9760
+FARKLI sahne: 2
+fark turleri: {'i_deger!=yuvarlanmis_toplam': 2}
+  sahne 147: ['i_deger!=yuvarlanmis_toplam'] | kural acik agirlik 6 yon ileri donmus [0] cift_satir False oturmayan True gecmis 0 | metrik [1, 6.75] dogrulayici [1, 6.75] benim [1, 6.75] deger 0 beklenen 7 durma optimum
+  sahne 255: ['i_deger!=yuvarlanmis_toplam'] | kural acik agirlik 6 yon ileri donmus [4] cift_satir False oturmayan True gecmis 3 | metrik [1, 9.0] dogrulayici [1, 9.0] benim [1, 9.0] deger 0 beklenen 9 durma optimum

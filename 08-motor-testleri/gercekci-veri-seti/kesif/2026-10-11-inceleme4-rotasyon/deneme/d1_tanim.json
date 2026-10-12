@@ -1,0 +1,400 @@
+{
+ "A1_dairesel_uc_yazim": {
+  "cift_sayisi": 34,
+  "farkli": [],
+  "ornekler": {
+   "(8, 20)": 0.0,
+   "(20, 8)": 0.0,
+   "(24.5, 7)": 0.0,
+   "(0, 7)": 0.0,
+   "(23, 7)": 0.0,
+   "(13.75, 11)": 2.75,
+   "(10, 22.25)": 11.75,
+   "(8, 23)": 9.0,
+   "(9, 0)": 9.0,
+   "(10, 13.75)": 0.0
+  },
+  "ornekler_yon_geri": {
+   "(8, 20)": 12.0,
+   "(20, 8)": 12.0,
+   "(7, 10)": 3.0
+  }
+ },
+ "A2_yuvarlama_uctan_uca": {
+  "satirlar": "[\n {\n  \"b0\": 10.25,\n  \"b1\": 10,\n  \"yon\": \"ileri\",\n  \"kesin\": 0.25,\n  \"beklenen_yuvarlanmis\": 0,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 0,\n  \"metrik_saat\": 0.25,\n  \"uyum\": true\n },\n {\n  \"b0\": 10.5,\n  \"b1\": 10,\n  \"yon\": \"ileri\",\n  \"kesin\": 0.5,\n  \"beklenen_yuvarlanmis\": 1,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 1,\n  \"metrik_saat\": 0.5,\n  \"uyum\": true\n },\n {\n  \"b0\": 10.75,\n  \"b1\": 10,\n  \"yon\": \"ileri\",\n  \"kesin\": 0.75,\n  \"beklenen_yuvarlanmis\": 1,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 1,\n  \"metrik_saat\": 0.75,\n  \"uyum\": true\n },\n {\n  \"b0\": 13.5,\n  \"b1\": 11,\n  \"yon\": \"ileri\",\n  \"kesin\": 2.5,\n  \"beklenen_yuvarlanmis\": 3,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 3,\n  \"metrik_saat\": 2.5,\n  \"uyum\": true\n },\n {\n  \"b0\": 13.75,\n  \"b1\": 11,\n  \"yon\": \"ileri\",\n  \"kesin\": 2.75,\n  \"beklenen_yuvarlanmis\": 3,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 3,\n  \"metrik_saat\": 2.75,\n  \"uyum\": true\n },\n {\n  \"b0\": 23,\n  \"b1\": 13.75,\n  \"yon\": \"ileri\",\n  \"kesin\": 9.25,\n  \"beklenen_yuvarlanmis\": 9,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 9,\n  \"metrik_saat\": 9.25,\n  \"uyum\": true\n },\n {\n  \"b0\": 10,\n  \"b1\": 22.25,\n  \"yon\": \"ileri\",\n  \"kesin\": 11.75,\n  \"beklenen_yuvarlanmis\": 12,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 12,\n  \"metrik_saat\": 11.75,\n  \"uyum\": true\n },\n {\n  \"b0\": 8,\n  \"b1\": 20,\n  \"yon\": \"geri\",\n  \"kesin\": 12.0,\n  \"beklenen_yuvarlanmis\": 12,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 12,\n  \"metrik_saat\": 12.0,\n  \"uyum\": true\n },\n {\n  \"b0\": 20,\n  \"b1\": 8,\n  \"yon\": \"geri\",\n  \"kesin\": 12.0,\n  \"beklenen_yuvarlanmis\": 12,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 12,\n  \"metrik_saat\": 12.0,\n  \"uyum\": true\n },\n {\n  \"b0\": 11.5,\n  \"b1\": 23.5,\n  \"yon\": \"ileri\",\n  \"kesin\": 0.0,\n  \"beklenen_yuvarlanmis\": 0,\n  \"durum\": \"cozuldu\",\n  \"cift_kuruldu\": true,\n  \"deger\": 0,\n  \"metrik_saat\": 0.0,\n  \"uyum\": true\n }\n]"
+ },
+ "A3_donmus_gunde_iki_satir_ilk_baslangic": {
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    "AKSAM",
+    13.75
+   ],
+   [
+    "P1",
+    0,
+    "SABAH",
+    7
+   ],
+   [
+    "P1",
+    1,
+    "ORTA",
+    10
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 12,
+   "deger": 4,
+   "degisken": 6,
+   "pay_yuzde": 100.0
+  },
+  "metrik": [
+   0,
+   0.0
+  ],
+  "dogrulayici": [],
+  "benim": [],
+  "notlar": []
+ },
+ "A4_donmus_gun0_plansiz_gecmisli": {
+  "model_rotasyon_anahtarlari": [
+   [
+    "P1",
+    -1
+   ],
+   [
+    "P1",
+    0
+   ],
+   [
+    "P1",
+    1
+   ],
+   [
+    "P1",
+    2
+   ],
+   [
+    "P1",
+    3
+   ],
+   [
+    "P1",
+    4
+   ],
+   [
+    "P1",
+    5
+   ]
+  ],
+  "model_donmus": [],
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 21,
+   "deger": 7,
+   "degisken": 7,
+   "pay_yuzde": 100.0
+  },
+  "metrik": [
+   1,
+   6.75
+  ],
+  "dogrulayici": [
+   [
+    0,
+    6.75,
+    true
+   ]
+  ],
+  "gecmis_ihlaller": [
+   [
+    "VARDIYA_ROTASYON_YONU",
+    0
+   ]
+  ]
+ },
+ "A5_pasif_calisan_donmus_satir_gecmis": {
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    1,
+    "SABAH",
+    7
+   ],
+   [
+    "P2",
+    0,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 0,
+   "deger": 0,
+   "degisken": 6,
+   "pay_yuzde": 0.0
+  },
+  "metrik": [
+   0,
+   0.0
+  ],
+  "dogrulayici": [
+   [
+    "P2",
+    0,
+    6.75,
+    true
+   ]
+  ],
+  "benim": [
+   [
+    "P2",
+    0,
+    6.75,
+    true
+   ]
+  ],
+  "notlar": [
+   "donmus gun 0: mevcut plandaki P2 calisan listesinde yok (ya da aktif degil); satir ciktiya aynen gecti, modele girmedi (K-54)"
+  ]
+ },
+ "A6_donmus_satir_sablona_oturmuyor": {
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    null,
+    10
+   ],
+   [
+    "P1",
+    1,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 0,
+   "deger": 0,
+   "degisken": 6,
+   "pay_yuzde": 0.0
+  },
+  "metrik": [
+   1,
+   3.0
+  ],
+  "dogrulayici": [
+   [
+    1,
+    3.0,
+    null
+   ]
+  ],
+  "notlar": [
+   "donmus gun 0: P1'in 10:00-14:00 atamasi hicbir sablona oturmadi; satir ciktiya aynen gecti, saat ve dinlenme kurallarinda modele girmedi (K-54)"
+  ]
+ },
+ "A7_serbest_donmus_cifti": {
+  "model_rotasyon_anahtarlari": [
+   [
+    "P1",
+    0
+   ],
+   [
+    "P1",
+    1
+   ],
+   [
+    "P1",
+    2
+   ],
+   [
+    "P1",
+    3
+   ],
+   [
+    "P1",
+    4
+   ],
+   [
+    "P1",
+    5
+   ]
+  ],
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    1,
+    "AKSAM",
+    13.75
+   ],
+   [
+    "P1",
+    2,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 21,
+   "deger": 7,
+   "degisken": 6,
+   "pay_yuzde": 100.0
+  },
+  "metrik": [
+   1,
+   6.75
+  ],
+  "dogrulayici": [
+   [
+    2,
+    6.75,
+    null
+   ]
+  ]
+ },
+ "A8_gun_eksi1_iki_kayit": {
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 0,
+   "deger": 0,
+   "degisken": 7,
+   "pay_yuzde": 0.0
+  },
+  "metrik": [
+   0,
+   0.0
+  ],
+  "dogrulayici": [],
+  "aciklama": "min(5, 13.75)=5 -> 05:00 -> 07:00 ileri: satir yok beklenir; 13.75 alinsaydi 6,75 geri"
+ },
+ "A9_yon_degerleri": {
+  "sonuc": "{\"'GERI'\": {\"deger\": 4, \"not\": [\"VARDIYA_ROTASYON_YONU: yon 'GERI' taninmadi, 'ileri' uygulandi\"], \"dogrulayici\": [[1, 3.75]]}, \"'Geri'\": {\"deger\": 4, \"not\": [\"VARDIYA_ROTASYON_YONU: yon 'Geri' taninmadi, 'ileri' uygulandi\"], \"dogrulayici\": [[1, 3.75]]}, \"None\": {\"deger\": 4, \"not\": [\"VARDIYA_ROTASYON_YONU: yon 'None' taninmadi, 'ileri' uygulandi\"], \"dogrulayici\": [[1, 3.75]]}, \"1\": {\"deger\": 4, \"not\": [\"VARDIYA_ROTASYON_YONU: yon '1' taninmadi, 'ileri' uygulandi\"], \"dogrulayici\": [[1, 3.75]]}, \"'geri '\": {\"deger\": 4, \"not\": [\"VARDIYA_ROTASYON_YONU: yon 'geri ' taninmadi, 'ileri' uygulandi\"], \"dogrulayici\": [[1, 3.75]]}}"
+ },
+ "A10_gun0_donmus_planli_gecmisli": {
+  "model_rotasyon_anahtarlari": [
+   [
+    "P1",
+    0
+   ],
+   [
+    "P1",
+    1
+   ],
+   [
+    "P1",
+    2
+   ],
+   [
+    "P1",
+    3
+   ],
+   [
+    "P1",
+    4
+   ],
+   [
+    "P1",
+    5
+   ]
+  ],
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    "SABAH",
+    7
+   ],
+   [
+    "P1",
+    1,
+    "SABAH",
+    7
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 0,
+   "deger": 0,
+   "degisken": 6,
+   "pay_yuzde": 0.0
+  },
+  "metrik": [
+   1,
+   6.75
+  ],
+  "dogrulayici": [
+   [
+    0,
+    6.75,
+    true
+   ]
+  ]
+ },
+ "A11_aktif_false": {
+  "model_rotasyon": 0,
+  "ro_ceza": 0,
+  "metrik": [
+   null,
+   null
+  ],
+  "kirilim_anahtari": false,
+  "dogrulayici": [],
+  "uygulanmayan": []
+ },
+ "A12_alan_12": {
+  "durum": "cozuldu",
+  "plan": [
+   [
+    "P1",
+    0,
+    "S0",
+    8
+   ],
+   [
+    "P1",
+    1,
+    "S1",
+    20
+   ]
+  ],
+  "amac_kirilimi": {
+   "ceza": 36,
+   "deger": 12,
+   "degisken": 6,
+   "pay_yuzde": 100.0
+  },
+  "metrik": [
+   1,
+   12.0
+  ],
+  "dogrulayici": [
+   [
+    1,
+    12.0
+   ]
+  ]
+ }
+}

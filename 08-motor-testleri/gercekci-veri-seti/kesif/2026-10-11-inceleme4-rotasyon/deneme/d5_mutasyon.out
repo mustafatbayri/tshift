@@ -1,0 +1,36 @@
+temiz kopya: rc=0 18 passed in 0.39s
+M1 motor: yuvarlama round() -- tam ,5'te asagi (2,5 -> 2; Python bankaci yuvarlamasi)      | YASIYOR  | beklenti: ölmeli (0,5 yukari)    | 18 passed in 0.59s
+M1b motor: pazartesi teriminde de round()                                                  | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.63s
+M2 motor: yuvarlama hep yukari (0,25 -> 1; 9,25 -> 10)                                     | YASIYOR  | beklenti: ölmeli (0,25 -> 0)     | 18 passed in 0.48s
+M3 motor: gun 0 donmusken de pazartesi terimi yazilsin (K-54 ihlali)                       | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.68s
+M4 motor: gun -1'de birden cok kayit -> SON baslangic (max)                                | YASIYOR  | beklenti: ölmeli (ilk baslangic) | 18 passed in 0.52s
+M5 dogrulayici: gun -1'de birden cok kayit -> max                                          | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.62s
+M6 dogrulayici: ayni gunde birden cok atama -> SON baslangic (max)                         | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.54s
+M7 metrik (coz.py): ayni gunde birden cok atama -> max                                     | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.43s
+M8 metrik (coz.py): gun -1'de birden cok kayit -> max                                      | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.54s
+M9 motor: g alani 0..11 (12 saatlik geri sigmaz)                                           | YASIYOR  | beklenti: ölmeli (11,75 -> 12)   | 18 passed in 0.50s
+M10 motor: donmus->serbest cifti de atlansin (K-54 yanlis)                                 | OLDU     | beklenti: ölmeli                 | 1 failed, 16 passed in 0.49s
+M11 metrik (coz.py): donmus satirlar sayilmasin                                            | OLDU     | beklenti: ölmeli                 | 1 failed, 16 passed in 0.53s
+M13 motor: sinir fark <= -12 yerine < -12 (tam -12 geri sayilir)                           | OLDU     | beklenti: ölmeli                 | 1 failed in 0.37s
+M14 motor: sinir fark > 12 yerine >= 12 (tam +12 geri sayilir)                             | OLDU     | beklenti: ölmeli                 | 1 failed in 0.37s
+M18 dogrulayici: 0,5 saatten kucuk geri satir yazilmasin                                   | YASIYOR  | beklenti: ölmeli (0,25 satiri)   | 18 passed in 0.56s
+M19 motor: 1 saatlik geri cift kisit yazmasin (hy > 1)                                     | YASIYOR  | beklenti: ölmeli                 | 18 passed in 0.56s
+M20 metrik (coz.py): yalniz AKTIF kisinin satirlari sayilsin (aktarilan pasif kisi satiri dussun) | YASIYOR  | beklenti: ölmeli?                | 18 passed in 0.47s
+M21 motor: yon notu dusulmesin (sessiz ileri)                                              | OLDU     | beklenti: ölmeli                 | 1 failed, 15 passed in 0.55s
+M22 dogrulayici: olculen kesin yerine 1 ondalik                                            | OLDU     | beklenti: ölmeli                 | 1 failed, 1 passed in 0.39s
+geri alinmis kopya: rc=0 18 passed in 0.53s
+
+YASAYAN: 13 / 19
+  - M1 motor: yuvarlama round() -- tam ,5'te asagi (2,5 -> 2; Python bankaci yuvarlamasi)
+  - M1b motor: pazartesi teriminde de round()
+  - M2 motor: yuvarlama hep yukari (0,25 -> 1; 9,25 -> 10)
+  - M3 motor: gun 0 donmusken de pazartesi terimi yazilsin (K-54 ihlali)
+  - M4 motor: gun -1'de birden cok kayit -> SON baslangic (max)
+  - M5 dogrulayici: gun -1'de birden cok kayit -> max
+  - M6 dogrulayici: ayni gunde birden cok atama -> SON baslangic (max)
+  - M7 metrik (coz.py): ayni gunde birden cok atama -> max
+  - M8 metrik (coz.py): gun -1'de birden cok kayit -> max
+  - M9 motor: g alani 0..11 (12 saatlik geri sigmaz)
+  - M18 dogrulayici: 0,5 saatten kucuk geri satir yazilmasin
+  - M19 motor: 1 saatlik geri cift kisit yazmasin (hy > 1)
+  - M20 metrik (coz.py): yalniz AKTIF kisinin satirlari sayilsin (aktarilan pasif kisi satiri dussun)

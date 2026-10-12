@@ -86,6 +86,10 @@ KOSTURMA (PowerShell)
 SONUC NEREYE YAZILIR
   `kalite-olcumu-<olcek>-<doluluk>[-etiket].json` -- ayni klasore, her
   adimda. `--etiket` verilmezse ayni olcekteki onceki sonucun USTUNE yazar.
+  K-66 (11 Ekim): her cozulen kosunun CIZELGESI de yazilir --
+  `planlar/<olcum-dosyasi-adi>/<yapilandirma>-<tekrar>.json` (urun bicimi:
+  motorun #11.3 ciktisi + dogrulayicinin #11.4 raporu) ve `.html` (okunur).
+  `--plansiz` kapatir. Ayrinti: cizelge.py.
 """
 
 import copy
@@ -105,6 +109,7 @@ for y in (MOTOR, BURASI):
 from cozucu.model import Model                                # noqa: E402
 from cozucu.coz import coz                                    # noqa: E402
 from dogrulayici import degerlendir                           # noqa: E402
+import cizelge                                                # noqa: E402  (K-66: her kosu cizelge yazar)
 
 # Motorun VARSAYILAN ayarlari: bir yapilandirma bir secenegi YAZMIYORSA
 # kosuda gecerli olan deger budur (K-61: "once fazla mesaisiz" varsayilan
@@ -180,6 +185,11 @@ YAPILANDIRMALAR = {
     "fm_once_deneme3_kapsama": ("URUN YOLU + YENIDEN BASLATMA (bulgu 25; = profil_kapsama), KAPSAMA profili",
                      {"fazla_mesai_once_sifir": True, "fazla_mesai_sifirda_tut": False,
                       "fazla_mesaisiz_deneme": 3}, {"profil": "KAPSAMA"}),
+    # K-65 (11 Ekim): VARDIYA_ROTASYON_YONU amac terimi. "Once/sonra" kiyasi icin
+    #   kuralin agirligi 0 (terim susar; metrik ve dogrulayici yine sayar).
+    #   Gercek "once" 11 Ekim'den onceki kodun kosusudur (rotasyon-once-900).
+    "rotasyon_0":   ("URUN YOLU, VARDIYA_ROTASYON_YONU agirligi 0 (K-65 kiyasi; kural susar, metrik sayar); DENGELI",
+                     {}, {"agirliklar": {"VARDIYA_ROTASYON_YONU": 0}}),
     "fm_sert":      ("SERT KESIM (6 Ekim gecesinin hali, bulgu 21; OLCUM): fazla mesaisiz plan bulunursa fazla mesai butun asamalarda 0'da TUTULUR; DENGELI",
                      dict(SERT), {}),
     "fm_sert_kapsama": ("SERT KESIM (bulgu 21; OLCUM), KAPSAMA profili",
@@ -305,6 +315,12 @@ FAZLA_MESAI_TABANI = None
 
 
 ETIKET = _arg("--etiket", "")       # dosya adina ek: --etiket tekrar3 -> ...-tekrar3.json
+# K-66 (Mustafa, 11 Ekim): "tum kosumlarda cizelge hazir olsun". Her cozulen
+#   kosunun plani urun biciminde (#11.3 cikti + #11.4 dogrulama) ve okunur
+#   HTML olarak planlar/<olcum-dosyasi-adi>/<yapilandirma>-<tekrar>.json|.html
+#   dosyalarina yazilir. --plansiz ile kapatilir (yalniz hizli duman icin).
+PLANSIZ = "--plansiz" in sys.argv
+PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
 def dosya_adi():
@@ -313,6 +329,12 @@ def dosya_adi():
     if ETIKET:
         ad += "-" + ETIKET
     return os.path.join(BURASI, ad + ".json")
+
+
+def plan_klasoru():
+    if PLAN_KLASORU:
+        return PLAN_KLASORU
+    return os.path.join(BURASI, "planlar", os.path.splitext(os.path.basename(dosya_adi()))[0])
 
 
 def yaz(d):
@@ -707,7 +729,7 @@ def _tire(v):
     return "-" if v is None else v
 
 
-def kosu(g, ad, ayar, girdi_ek=None):
+def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
     print("\n  [%s]  %s" % (ad, YAPILANDIRMALAR[ad][0]))
     print("         kuruluyor...")
     sys.stdout.flush()
@@ -756,6 +778,19 @@ def kosu(g, ad, ayar, girdi_ek=None):
             print("         " + ipucu_plani_yazisi(s))
         return s
     r = degerlendir(g, c["atamalar"])
+    if not PLANSIZ:                                   # K-66: cizelge her kosuda
+        kayit = {"arac": "kalite-olc.py", "yapilandirma": ad, "tekrar": tekrar, "saniye": tam_ayar["azami_saniye"],
+                 "etiket": ETIKET, "olcek": OLCEK, "doluluk": DOLULUK, "ayar": {a: v for a, v in tam_ayar.items()},
+                 "girdi_ek": girdi_ek or {}, "tarih": time.strftime("%Y-%m-%d %H:%M"), "cekirdek": os.cpu_count(),
+                 "olcum_dosyasi": os.path.basename(dosya_adi())}
+        try:
+            jy, hy = cizelge.plan_kaydet(plan_klasoru(), "%s-%d" % (ad, tekrar), g, c, r, kayit)
+            s["plan_dosyasi"] = os.path.relpath(jy, BURASI)
+            print("         cizelge: %s (+ .html)" % s["plan_dosyasi"])
+        except Exception as e:                        # cizelge yazilamadi diye olcum durmaz; sessiz de degil
+            s["plan_dosyasi"] = None
+            s["plan_hatasi"] = "%s: %s" % (type(e).__name__, str(e)[:200])
+            print("         CIZELGE YAZILAMADI: %s" % s["plan_hatasi"])
     sayi = {}
     for i in r.get("ihlaller", []):
         sayi[i["kural"]] = sayi.get(i["kural"], 0) + 1
@@ -787,6 +822,10 @@ def kosu(g, ad, ayar, girdi_ek=None):
     print("         sert ihlal %d  |  yayinlanabilir %s  |  hedef kapsama %%%s  |  eksik hedef %s kisi-saat  |  fazla mesai (motor metrigi) %s saat"
           % (s["sert_ihlal"], s["yayinlanabilir"], m.get("hedef_kapsama_yuzde"),
              (m.get("eksik_hedef_dakika") or 0) / 60.0, m.get("fazla_mesai_saat")))
+    if m.get("rotasyon_geri_gecis") is not None:                      # K-65
+        print("         rotasyon: %s geri gecis, %s saat (dogrulayici satiri %s)"
+              % (m.get("rotasyon_geri_gecis"), m.get("rotasyon_geri_saat"),
+                 s["ihlal"].get("VARDIYA_ROTASYON_YONU", 0)))
     hd = s["hedef_dokumu"]
     print("         hedef dokumu (dogrulayici): eksik %d kisi-saat (%d hucre)  |  ASIM %d kisi-saat (%d hucre)"
           % (hd["toplam"]["eksik_kisi_saat"], hd["toplam"]["eksik_hucre"],
@@ -824,8 +863,8 @@ def kosu(g, ad, ayar, girdi_ek=None):
                      p[ad]["amac_degeri"], p[ad]["ilk_cozum_sn"], p[ad]["cozum_sayisi"],
                      "   <-- SECILEN" if p["secilen"] == ad else ""))
     for kural, d in (s["amac_dagilimi"] or {}).items():
-        print("           %-16s ceza %10d  (%%%5.1f)   ham %8d   degisken %6d"
-              % (kural, d["ceza"], d["pay_yuzde"], d["deger"], d["degisken"]))
+        print("           %-16s ceza %10d  (%%%5.1f)   ham %8s   degisken %6d"
+              % (kural, d["ceza"], d["pay_yuzde"], "-" if d["deger"] is None else d["deger"], d["degisken"]))
     # FAZLA MESAI KIMDE, HANGI VARDIYA KARISIMIYLA? Taban sifirsa bile plan
     # fazla mesai yaziyorsa sebebi kisi duzeyinde gorulmeli (kilit mi,
     # uygunluk mu, dinlenme mi, yoksa cozucu mu bulamadi).
@@ -991,7 +1030,7 @@ def main():
             print("\n%d/%d  %s%s" % (n, len(SECILEN), ad,
                                      ("  (tekrar %d/%d)" % (tekrar + 1, TEKRAR)) if TEKRAR > 1 else ""))
             try:
-                s = kosu(g, ad, dict(YAPILANDIRMALAR[ad][1]), YAPILANDIRMALAR[ad][2])
+                s = kosu(g, ad, dict(YAPILANDIRMALAR[ad][1]), YAPILANDIRMALAR[ad][2], tekrar=tekrar + 1)
             except Exception as e:                       # olcum devam etsin, hata yazilsin
                 s = {"yapilandirma": ad, "durum": "ISTISNA", "hata": str(e)[:400]}
                 print("         ISTISNA: %s" % s["hata"])

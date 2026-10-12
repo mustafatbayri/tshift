@@ -22,3 +22,14 @@ En sık geri geçişler (0.2): 13:45→11:00 (12), 11:15→08:00 (7), 15:15→11
 saat dinlenme), 10:00→23:00 (3), 07:00→23:00 (2). Geri geçişlerin ~dörtte
 biri sabah→gece atlaması; düz (dairesel olmayan) okumada bunlar "ileri"
 görünürdü. 500 kişide ölçüm kural yazıldıktan sonra (önce/sonra, 900 sn × 3).
+
+**11 Ekim — K-65 koda indi; `plandan_say.py`.** Mustafa'nın kararları
+(dairesel okuma: evet; ceza birimi: saat) ile kural motor + doğrulayıcıya
+yazıldı (kayıt K-65, şartname §6.3 tanım alt bölümü). `plandan_say.py`
+kaydedilmiş planlardan (K-66 plan kaydı, `planlar/...json`) bugünkü
+doğrulayıcıyla geri geçişleri sayar — "önce" koşusu (`rotasyon-once-900`, 11
+Ekim öncesi kod) ile "sonra"yı aynı ölçüyle kıyaslamak için. Duman (0.1
+ölçek, 40 sn, 2'şer koşu): kural açıkken **1 / 1** geri geçiş (9 / 1 saat),
+ağırlık 0 iken **25 / 23** (119 / 103 saat); amaç 2.788 / 2.806 (rotasyon cezası
+27 / 3 dahil) ↔ 2.714 / 2.724 — rotasyon dışı kalemler +%1,7 / +%2,9; küçük
+ölçek, yalnız yön gösterir. 500 kişi: K-65 kaydı.

@@ -7,8 +7,7 @@ tanım kararı gerekiyordu (8 Ekim 05:05 sorusu). Mustafa: 1 ve 2'de önerim
 kabul, *"sınırları literatürden bulabiliriz"*; 3 (*ceza birimi*) *"istişare
 ederek"*. Bu belge literatürün ne dediğini, üç karara nasıl yansıdığını ve
 şartnameye/koda inecek tanım taslağını toplar.
-**Tarih:** 8 Ekim 2026, 05:10–06:30 · **Durum:** ⏳ **3. madde Mustafa'da**
-(1 ve 2 kabul edildi; literatür 1'e bir ek getiriyor — §4.1)
+**Tarih:** 8 Ekim 2026, 05:10–06:30 · **Durum:** ✅ **karar verildi (11 Ekim, Mustafa: "1 — evet, 2 — önerin"): dairesel okuma + saat × ağırlık — K-65, koda indi** *(bu belge okumanın kaydıdır; tanımın güncel hâli şartname §6.3)*
 **İstek:** Mustafa (05:05) — *"1- için cevabı literatürden alabilirsin … 2- boş gün
 sıfırlar. Bunun için de literatüre bakmanda fayda var. 3- bunu anlayamadım
 tam. Bu kısmı istişare ederek ilerleyelim."*

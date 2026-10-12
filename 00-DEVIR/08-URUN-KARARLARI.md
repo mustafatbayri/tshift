@@ -3450,3 +3450,142 @@ puanla kısa bir arama; bulunursa o döner (süre bütçesinden pay ister).
 Önerim (b), küçük sahnede ölçülüp 500 kişide bir kez denenerek.
 
 → K-61 · O-18 · `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-07-o18-duzeltme/inceleme/ajan-a/RAPOR.md`
+
+---
+
+## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat**
+
+**Karar (8 ve 11 Ekim 2026, Mustafa).** Sıranın 3. maddesi (dört yumuşak
+kural) için ilk tanım sorusu 8 Ekim 05:05'te soruldu; üç karar:
+
+1. *"Geri" nedir?* Önerilen tanım kabul (8 Ekim: *"Geri tanımına
+   katılıyorum"*): aynı kişinin **art arda iki çalışma gününde** sonraki
+   vardiyanın başlangıcı öncekinden erkense geri. Literatürün eki (IARC
+   Monographs 124, 2020, §1.1 madde 8: *sabah→gece* de saat yönünün
+   tersi) → başlangıç farkı **24 saatlik çemberde** okunur ((−12, 12];
+   08:00→ertesi gün 23:00 = 9 saat geri). 11 Ekim: *"1 — evet."*
+2. *Boş gün:* **sıfırlar** (8 Ekim: *"boş gün sıfırlar"*). Pazar→Pazartesi
+   çifti geçmiş gün −1 varsa sayılır, yoksa sessizce atlanır (yumuşak
+   kural; K-42 raporu sert sınır kuralları için — gürültü değil, O-7).
+3. *Ceza birimi:* 8 Ekim'de anlaşılmadı, 11 Ekim'de *"2 — önerin"*:
+   **ağırlık × geri kaydırılan saat** (alternatif geçiş başına 1 birim
+   elendi — 1 saatlik oynama ile 7 saatlik akşam→sabah aynı bedelde
+   olurdu, sınıf sınırı gerekirdi). Motor amaç teriminde saati en yakın tam
+   saate yuvarlar (CP-SAT tam sayı); doğrulayıcı ve metrik kesin saat.
+
+**Literatür ve keşif.** `02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md`
+(Czeisler 1982, Bambra 2008, Di Muzio 2021, IARC 2020, HSE, NIOSH, FIOH
+tanımları; okunamayanlar listeli). Küçük ölçekte 11 Ekim öncesi motor art
+arda günlerin %14–16'sını geri kuruyordu, ortalama 3,9–4,7 saat, dörtte biri
+sabah→gece atlaması (`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-08-rotasyon-yonu/`).
+
+**Koda indi (11 Ekim, bulut).** `09-motor/cozucu/model.py` `_rotasyon`
+(`rotasyon_geri_saat`, `rotasyon_yonu`; kişi × gün çifti başına `ro_` tam
+sayısı, yalnız geri şablon çiftleri için kısıt, çarpım değişkeni yok; K-54:
+iki donmuş günün çifti yazılmaz), `09-motor/cozucu/coz.py` (`_CEZA_ONEKI["ro"]`,
+`metrikler.rotasyon_geri_gecis / _saat` plandan), `09-motor/dogrulayici/kurallar.py`
+`VARDIYA_ROTASYON_YONU` (aynı tanım ayrı yazılı, §16.1; satırın günü çiftin
+ikinci günü — K-54 işareti için). Testler `09-motor/testler/test_rotasyon_yonu.py`
+(26: tanım iki tarafta aynı, doğrulayıcı satırları, sabah→gece, boş gün,
+Pazar→Pazartesi, `yon`, K-54 işareti, motorun zorunlu geri geçiş bedeli
+= yuvarlanmış saat × ağırlık, seçim varken geri olmayanı seçer, ağırlık
+profilden/kiracıdan, kural yokken terim ve metrik yok, kısıt sayısı; +
+inceleme 4'ün sekizi), mutasyon grubu `rotasyon` 35 (toplam 362). Şartname §6.3 tanım alt bölümü,
+§11.3, değişiklik 65. Ölçüm aracı: `kalite-olc.py` `rotasyon_0` (ağırlık 0
+kıyası) ve rotasyon satırı; çizelgeler K-66 ile.
+
+**Bağımsız inceleme 4 (11 Ekim, ayrı ajan; rapor
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-11-inceleme4-rotasyon/RAPOR.md`).**
+Karar: *koda inmeye hazır, bloklayıcı yok.* 1.100 rastgele + 40 hedefli
+sahnede metrik ≡ doğrulayıcı ≡ bağımsız üçüncü sayım (0 fark); amaç terimi
+≡ yuvarlanmış satır toplamı (4 fark, hepsi şablona oturmayan donmuş satır —
+B1, bilinen sınır). İşlenenler: **B3** metrik pasif çalışanın aktarılan
+satırının geçmişini de okur (düzeltildi); **B5** 13 ek mutant testlerden
+kaçıyordu → 8 test (tam ,5 yukarı — `round()` bankacı yuvarlaması aşağı
+verirdi; kesir < ,5 aşağı; 0,25'lik satır; 1 saatlik çift; 12 saatlik alan;
+aynı günde iki kayıt → ilk başlangıç; gün 0 donmuş + geçmiş; pasif kişi;
+`aktif: false`) ve 14 mutant eklendi → testler **26**, `rotasyon` grubu
+**35** (toplam 362), hepsi öldü; **B6** şartnamedeki "~54 bin kısıt"
+ölçülmemişti → ölçüm (14 geri çift, +%4,7–4,9 kısıt) yazıldı; **B9**
+ağırlık 0 iken amaç kırılımının `deger`i `null` (çöp sayı basılmasın).
+Not düzeyinde: B2 (donmuş günde iki satır — en büyük geri), B7 (±12
+asimetrisi), B8 (çalışma günü = başlangıç günü; `bas ≥ 24`) şartname
+§6.3 madde 8'e "bilinen sınır" olarak yazıldı; karar gerektirenler aşağıda.
+
+**Ölçüm (T-60).** "Önce" = Mustafa'nın 11 Ekim 18:40'ta başlattığı
+`rotasyon-once-900` koşusu (11 Ekim öncesi kod, 900 sn × 3, K-66 ile
+çizelgeli; `kalite-olcumu-95-rotasyon-once-900.json`): amaç **27.040 /
+26.646 / 27.119**, fazla mesai 0, hedef kapsama %84,3 / 85,1 / 84,3, 0 sert.
+Kaydedilen üç plan bugünkü doğrulayıcıyla sayıldı (`plandan_say.py`):
+**279 / 301 / 278 geri geçiş** (art arda çiftlerin %17,2 / 18,4 / 17,1'i),
+**1.364 / 1.489 / 1.346 saat**, ortalama 4,9 saat; büyüklükler 2,75–4
+saat ağırlıklı, 47–61 adet 9 saatlik (09:00→00:00 gecesi), 30–35
+sabah→gece atlaması, 12–17 adet 11 saatlik. Ağırlık 3 ile bu ~4.000–4.500
+puan = amacın ~%15'i: kural **ince ayar değil**, gerçek bir ödünleşme
+(küçük ölçekte %1 görünmesi yanıltıcıydı). "Sonra": yeni kod `varsayilan`
+(ağırlık 3) ve `rotasyon_0` (ağırlık 0, metrik sayar), 900 sn × 3'er,
+çizelgeli. **Karar kuralı (koşudan önce):** geri geçiş sayısı ve saati
+*belirgin* düşmeli (hedef: yarıdan az); kapsama, adalet, fazla mesai
+(0 kalmalı) ve öteki amaç kalemleri bulgu 23/25 düzeyinde kalmalı (±%3);
+süre bütçesi aynı, kurma süresi ±%10. Aksi hâlde ağırlık K-62
+kalibrasyonuna bırakılır, kural açık kalır. Sonuç bu başlığa ve T-60'a.
+
+**Dürüst sınır.** Küçük ölçekte bedel amacın ~%1'i görünüyordu; 500 kişide
+"önce" planlarının geri saati amacın ~%15'ine denk — ödünleşme gerçek,
+ölçülmeden "zararsız" denmez. K-61 ilkesi değişmez (fazla mesai 0 kalmalı
+— karar kuralında). Ağırlık 0 iken amaç kırılımındaki `deger` `null`
+(değişken serbest), plana metrikten bakılır.
+
+**Karar bekleyen (Mustafa):** inceleme 4 B8 — *"çalışma günü = vardiyanın
+başladığı gün"*: 23:00–07:00 gecesinden sonra bir gün boş görünür ve
+ertesi akşam 13:45 ile kıyaslanmaz (literatür gece→akşam geçişini geri
+sayar). Bugünkü tanım senin "boş gün sıfırlar" kararının sonucu; istersen
+"gece vardiyasının bittiği gün de çalışma günü sayılsın" diye genişletilir.
+
+→ §6.3 · §11.3 · K-61 · K-54 · K-42 · O-7 · T-60 ·
+`02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md` ·
+`09-motor/testler/test_rotasyon_yonu.py`
+
+---
+
+## K-66 · Her ölçüm koşusu **çizelgeyi ürün biçiminde** kaydeder; UI buna karşı geliştirilir
+
+**Karar (11 Ekim 2026, 18:31–18:35, Mustafa).** *"Bundan sonra testlerimizin
+çıktıları çizelge de üretmeli. Bu minvalde devam edeceğiz. Yılmaz da
+çizelgelere bakacak."* Ardından: *"Sadece Yılmaz'ın bakması için değil,
+sonrasında UI tarafında bunu aktarabilmek için de çizelge lazım. … uzun
+vadede yani üründe kullanılacak çizelge çıktısı üret. … Tüm koşumlarda bu
+çizelge de hazır olsun artık."*
+
+**Ne vardı.** `kalite-olc.py` 2 Ekim'den beri her koşunun yalnız özetini
+yazıyordu (metrikler, ihlal sayıları); motorun `atamalar` listesi — çizelgenin
+kendisi — dosyaya girmiyordu (11 Ekim 00:47 sorusu: *"çizelge bu datada
+nerede?"* — yoktu). 2–11 Ekim arasındaki ölçümlerin planları yok.
+
+**Ne oldu.** `08-motor-testleri/gercekci-veri-seti/cizelge.py` (yeni) ve
+`kalite-olc.py` kancası: çözülen her koşu için
+`planlar/<ölçüm-adı>/<yapılandırma>-<tekrar>.json` ve `.html`.
+- **JSON = ürün biçimi.** `{"kayit", "girdi_ozeti", "cikti", "dogrulama"}`:
+  `cikti` motorun `/solve` cevabının **kendisi** (şartname §11.3 — `atamalar`,
+  `metrikler`, `cozum_istatistikleri`, `uygulanmayan_notlar`,
+  `bagimsiz_denetim` orkestra ile aynı özet; `istek_id` hariç), `dogrulama`
+  bağımsız doğrulayıcının **tam** raporu (§11.4). Hiçbir alan yeniden
+  adlandırılmaz, eklenmez: arayüz ve arka uç bu dosyaya karşı
+  geliştirilebilir; `plan_runs.girdi_ozeti` (§8.6) için `girdi_ozeti`.
+- **HTML = göz için** (UI'nin yerine değil): kişi × gün tablosu (vardiya
+  saati, ekip, molalar; brüt/net), ekip × gün × saat kapsama ızgarası
+  (yaklaşık: mola düşülmez, yalnız atamanın ekibi), doğrulayıcı özeti,
+  künye. `python cizelge.py <plan.json>` yeniden üretir.
+- `--plansiz` kapatır (yalnız hızlı duman); testler depoya plan bırakmaz
+  (`PLAN_KLASORU` geçici klasör). Testler
+  `08-motor-testleri/gercekci-veri-seti/testler/test_cizelge.py` (9: saat
+  yazımı, kişi × gün, kapsama taşması, HTML, **`cikti` aynen + `bagimsiz_denetim`
+  = `orkestra._denetim_ozeti`**, CLI, `kosu` kancası / `--plansiz`).
+- Öteki ölçüm araçları (`coz-olc.py`, `cekirdek-olc.py`, `iki-hafta-olc.py`,
+  keşif betikleri) aynı `plan_kaydet`'i **bir sonraki kullanımlarında**
+  alır; kalite ölçümü bugün tek üretim yoludur.
+
+**İlk gerçek çizelgeler:** `rotasyon-once-900` koşusu (11 Ekim akşamı,
+Mustafa'nın makinesi) — 500 kişilik üç plan, `08-motor-testleri/gercekci-veri-seti/planlar/kalite-olcumu-95-rotasyon-once-900/`.
+
+→ Şartname §16.2 notu, değişiklik 66 · §11.3 · §11.4 · §8.6 · K-65 (ilk kullanım)

@@ -1,0 +1,8 @@
+sahne 61: cozuldu ['i_deger!=yuvarlanmis_toplam']
+
+TOPLAM 300 sahne (921 uretildi), cozuldu 293, sure 6 sn
+durma sebepleri: {'optimum': 293}
+agirlik>0: 223 sahne; deger>0: 128; deger toplami 1287; satir (gecmis haric) 216; gecmis isaretli 23; yon=geri 38; donmuslu 65; gecmisli 153
+agirlik 0: 70 sahne; satir 75
+FARKLI sahne: 1
+  sahne 61: ['i_deger!=yuvarlanmis_toplam'] | agirlik 6 yon ileri donmus [0, 1] cift_satir False oturmayan True | metrik [1, 9.25] dogrulayici [1, 9.25] benim [1, 9.25] deger 0 beklenen 9

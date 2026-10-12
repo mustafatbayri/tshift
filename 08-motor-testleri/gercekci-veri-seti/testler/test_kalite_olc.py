@@ -40,6 +40,7 @@ def _yukle(ad):
 
 
 KO = _yukle("kalite-olc.py")
+KO.PLANSIZ = True        # K-66: kosu() cizelge yazar; testler depoya plan dosyasi birakmasin (cizelge testleri ayri)
 AYAR = {"azami_saniye": 20, "durgunluk_saniye": 3, "iki_asama_esigi": 10 ** 9}
 
 
@@ -355,7 +356,9 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
              "a_ipucusuz_120", "a_ipuclu_60", "a_ipuclu_240", "sabit_mola_480",
              "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
-    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz
+    rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon
+    assert KO.YAPILANDIRMALAR["rotasyon_0"][1] == {} and KO.YAPILANDIRMALAR["rotasyon_0"][2] == {"agirliklar": {"VARDIYA_ROTASYON_YONU": 0}}
     for ad in urun | iki_asamasiz:
         assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad
         assert "fazla_mesai_sifirda_tut" not in KO.YAPILANDIRMALAR[ad][1], ad

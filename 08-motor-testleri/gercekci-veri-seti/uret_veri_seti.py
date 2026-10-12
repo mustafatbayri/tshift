@@ -645,8 +645,10 @@ def kurallar_uret():
     # kabul edilebilir.
     ek("CALISMA_SAATLERI", "SERT", kabul=True)
 
-    # --- govdesi YAZILMAMIS olanlar (uygulanmayan_kurallar atessin) ---
-    # Dort yumusak kural: K-49 ile yalniz raporlanir, kapiyi etkilemez.
+    # --- yumusak kurallar; uc tanesinin govdesi YAZILMAMIS (uygulanmayan_kurallar
+    #     atessin; K-49 ile yalniz raporlanir, kapiyi etkilemez).
+    #     VARDIYA_ROTASYON_YONU 11 Ekim'de yazildi (K-65): parametresiz, `yon`
+    #     varsayilani "ileri"; agirlik #5.4 tablosundan (DENGELI 3).
     for kod, tur, yasal in (
             ("EKIP_SUREKLILIGI", "YUMUSAK", False),
             ("PLAN_KARARLILIGI", "YUMUSAK", False),

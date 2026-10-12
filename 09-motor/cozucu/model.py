@@ -664,6 +664,41 @@ def _calisabilir(c):
     return c.get("durum", "aktif") == "aktif"
 
 
+def rotasyon_geri_saat(bas_onceki, bas_sonraki, yon="ileri"):
+    """VARDIYA_ROTASYON_YONU (K-65, 11 Ekim): art arda iki calisma gununde
+    sonraki vardiyanin baslangici oncekinden ne kadar GERI (erken)?
+
+    Fark 24 saatlik CEMBERDE okunur: (-12, 12] saate indirgenir -- 08:00'den
+    ertesi gun 23:00'e gecmek +15 degil -9'dur (sabah->gece atlamasi GERI;
+    IARC Monographs 124 (2020) madde 8: "morning to night" counter-clockwise).
+    Eksi fark geri; donen deger geri saat (>= 0), ileri ve ayni saat 0.
+    `yon = "geri"` (kiraci tersini isterse) isareti cevirir: ileri kaymalar
+    cezalanir. Baslangiclar genisletilmis saat olabilir (23, 24.5); once
+    24'e indirgenir.
+
+    AYNI TANIM DOGRULAYICIDA AYRICA YAZILI (dogrulayici/kurallar.py; #7.6).
+    """
+    fark = (float(bas_sonraki) % 24.0) - (float(bas_onceki) % 24.0)
+    if fark > 12.0:
+        fark -= 24.0
+    elif fark <= -12.0:
+        fark += 24.0
+    if yon == "geri":
+        fark = -fark
+    return -fark if fark < 0 else 0.0
+
+
+def rotasyon_yonu(kural, notlar=None):
+    """Kuralin `yon` parametresi: 'ileri' (varsayilan) ya da 'geri'; baska bir deger
+    'ileri' sayilir ve not dusulur."""
+    yon = _par(kural, "yon", "ileri")
+    if yon not in ("ileri", "geri"):
+        if notlar is not None:
+            notlar.append("VARDIYA_ROTASYON_YONU: yon '%s' taninmadi, 'ileri' uygulandi" % yon)
+        return "ileri"
+    return yon
+
+
 class Model(object):
     """CP-SAT modeli ve onu girdiye baglayan her sey."""
 
@@ -686,6 +721,7 @@ class Model(object):
         self.x = {}          # (e,d,t) -> BoolVar
         self.mola = {}       # (e,d,t,s) -> BoolVar
         self.cezalar = []    # (agirlik, IntVar) ciftleri
+        self.rotasyon = {}   # VARDIYA_ROTASYON_YONU (K-65): (kisi, gun) -> geri saat degiskeni
         self.notlar = []     # uygulanmayan/atlanan seyler -- sessiz gecmemek icin
         self.profil = self._profil_sec(girdi.get("profil"))
         self.mola_penceresi = self._mola_penceresi_sec()
@@ -874,7 +910,8 @@ class Model(object):
     #     * modelde SABITTIR: x = 1 (plandaki sablon), diger x = 0 -- domain
     #       daraltilarak, kisitla degil (kisitlar suzgecten gecer, domain gecmez),
     #     * gunler arasi kurallar onlari GERCEK sayar: dinlenme, ardisik gun,
-    #       haftalik saat, adalet -- gelecek gunler gecmise uyar.
+    #       haftalik saat, adalet, rotasyon yonu (K-65: donmus->serbest cifti)
+    #       -- gelecek gunler gecmise uyar.
     #   Gecmisin KENDISI yargilanmaz: butun degiskenleri donmus gunlere ait
     #   olan kisit DUSER (olan oldu -- o gun eksik kapsanmissa, iki vardiya
     #   yazilmissa, izinli gunde calisilmissa model cozumsuz olmaz). Gecmisle
@@ -888,8 +925,9 @@ class Model(object):
     #   Plansiz donmus gun (mevcut_plan yok) SERBEST planlanir ve not dusulur;
     #   dogrulayici DONMUS_GUN'u denetleyemez der (K-49: kabul bekler).
     #   Hicbir sablona oturmayan satir (yonetici 10:00-14:00 yazmis, sablon
-    #   yok) ciktiya aynen gecer ama modele GIRMEZ -- saat ve dinlenme
-    #   kurallari onu gormez; dogrulayici gorur. Not dusulur.
+    #   yok) ciktiya aynen gecer ama modele GIRMEZ -- saat, dinlenme ve
+    #   rotasyon (K-65) kurallari onu gormez; dogrulayici ve plan metrigi gorur
+    #   (inceleme 4, B1). Not dusulur.
 
     # ---- K-56 (T-38): devreden kapsama -----------------------------------
     #
@@ -2352,6 +2390,7 @@ class Model(object):
     def _amac(self):
         self._adalet()
         self._saat_dengesi()
+        self._rotasyon()
         if self.cezalar:
             self.m.Minimize(sum(a * v for a, v in self.cezalar))
 
@@ -2454,6 +2493,98 @@ class Model(object):
         if boyut == "cumartesi":
             return lambda t, d: _hafta_sonu_gunu(d, t["bas"], t["bit"]) == 5
         return None
+
+    def _rotasyon(self):
+        """VARDIYA_ROTASYON_YONU -- K-65 (Mustafa, 11 Ekim 2026). YUMUSAK.
+
+        Sartname #6.3: "Vardiya saati ileri kaysin (sabah->aksam->gece), geriye
+        degil. Uyku sagligi literaturunde standart." Tanim (K-65; literatur
+        okumasi 02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md):
+          1. KIYASLANAN CIFT: ayni kisinin ART ARDA IKI CALISMA GUNU (d ve d+1'de
+             vardiyasi var). Araya bos gun girince kiyas SIFIRLANIR (Mustafa:
+             "bos gun sifirlar"; kanit art arda vardiyalar uzerine).
+          2. YON: baslangic farki 24 saatlik cemberde, (-12, 12]; eksi = geri
+             (`rotasyon_geri_saat`). Sabah->gece atlamasi boylece geri sayilir
+             (IARC 2020 madde 8) -- Mustafa 11 Ekim: "dairesel, evet".
+          3. CEZA: her geri cift icin agirlik x GERI KAYDIRILAN SAAT (Mustafa:
+             "onerin" = saat; alternatif gecis basina 1 birim elendi: 1 saatlik
+             olagan oynama ile 7 saatlik aksam->sabah ayni bedelde olurdu).
+             CP-SAT tam sayi ister: saat EN YAKIN TAM SAATE yuvarlanir (0,5
+             yukari): 2,75 -> 3; 0,25 -> 0. Dogrulayici ve metrik KESIN saati
+             raporlar; yuvarlama yalniz amac teriminde (sartname #6.3).
+          4. Pazar->Pazartesi: onceki haftanin son gunu `gecmis_vardiyalar`
+             (gun -1) varsa sayilir, yoksa SESSIZCE atlanir (yumusak kural;
+             K-42 raporu sert sinir kurallari icin -- gurultu degil, O-7).
+          5. K-54: ikisi de donmus gun olan cift sayilmaz (olan oldu); donmus
+             gun -> serbest gun cifti sayilir (gelecek gecmise uyar). Bilinen
+             sinir (inceleme 4, B2): donmus gunde ayni kisiye IKI satir varsa
+             (gecmiste cakisma) terim her sabit sablonla kurulur, yani en
+             BUYUK geriyi alir; dogrulayici ve metrik ilk baslangici alir.
+             Fark yalniz K-54'un zaten kusurlu saydigi gecmiste; duzeltilmedi.
+
+        KURULUM: kisi x gun cifti basina bir tam sayi `ro_<kisi>_<gun>` (geri
+        saat, 0..12) ve her GERI sablon cifti (s, t) icin
+            g >= geri_saat(s, t) * (x[kisi, d, s] + x[kisi, d+1, t] - 1).
+        Yalniz kisinin atanabildigi sablonlar (T-46) ve geri olan ciftler:
+        veri setinde 6 sablonlu kisi 14, 5 sablonlu 9 geri cift (inceleme 4,
+        d4): 0.1 olcekte +3.570 kisit (+%4,7), 0.2'de +7.476 (+%4,9), degisken
+        +%0,45; 500 kisiye dis degerleme ~37-40 bin; yeni carpim degiskeni yok. Ileri ve ayni-saat
+        ciftleri kisit yazmaz (g'yi sifira cekmek amacin isi).
+
+        ⚠ AGIRLIK 0 iken (kiraci `agirliklar` ile susturursa) g serbest kalir
+          ve `amac_dagilimi.deger` ANLAMSIZDIR; plani anlatan sayi
+          `metrikler.rotasyon_geri_gecis / _saat`tir (plandan sayilir).
+        """
+        k = _kural(self.girdi, "VARDIYA_ROTASYON_YONU")
+        if not k:
+            return
+        yon = rotasyon_yonu(k, self.notlar)
+        agirlik = self._agirlik("VARDIYA_ROTASYON_YONU", k)
+        self.rotasyon = {}                       # (kisi, gun) -> g (gun = ciftin ILK gunu; -1 = gecmis)
+        for c in self.calisanlar:
+            sablonlar = self._sablonlari(c)
+            if not sablonlar:
+                continue
+            geri = {}                            # (s, t) -> yuvarlanmis geri saat (> 0)
+            for s_ in sablonlar:
+                for t_ in sablonlar:
+                    h = rotasyon_geri_saat(s_["bas"], t_["bas"], yon)
+                    hy = int(h + 0.5)
+                    if hy > 0:
+                        geri[(s_["id"], t_["id"])] = hy
+            if not geri:
+                continue
+            for d in self.gunler[:-1]:
+                if d in self.donmus and d + 1 in self.donmus:
+                    continue                     # K-54: olan oldu
+                g = None
+                for (sid, tid), hy in geri.items():
+                    xs, xt = self._X(c["id"], d, sid), self._X(c["id"], d + 1, tid)
+                    if isinstance(xs, int) or isinstance(xt, int):
+                        continue                 # kisi o sablona atanamiyor: terim sifir
+                    if g is None:
+                        g = self.m.NewIntVar(0, 12, "ro_%s_%d" % (c["id"], d))
+                    self._kisit(g >= hy * (xs + xt - 1))
+                if g is not None:
+                    self.rotasyon[(c["id"], d)] = g
+                    self.cezalar.append((agirlik, g))
+            # Pazar -> Pazartesi: gecmisin son gunu (gun -1) biliniyorsa
+            if 0 in self.gunler and 0 not in self.donmus:
+                onceki = [bas for gun, bas, _, _ in _gecmis_kayitlari(c) if gun == -1]
+                if onceki:
+                    bas_onceki = min(onceki)     # ayni gunde birden cok kayit: ilk baslangic
+                    g = None
+                    for t_ in sablonlar:
+                        hy = int(rotasyon_geri_saat(bas_onceki, t_["bas"], yon) + 0.5)
+                        xt = self._X(c["id"], 0, t_["id"])
+                        if hy <= 0 or isinstance(xt, int):
+                            continue
+                        if g is None:
+                            g = self.m.NewIntVar(0, 12, "ro_%s_-1" % c["id"])
+                        self._kisit(g >= hy * xt)
+                    if g is not None:
+                        self.rotasyon[(c["id"], -1)] = g
+                        self.cezalar.append((agirlik, g))
 
     def _saat_dengesi(self):
         """K-39 -- tam zamanli calisan SOZLESME SAATINI DOLDURUR.
