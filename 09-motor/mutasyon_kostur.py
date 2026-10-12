@@ -29,6 +29,15 @@ KOSTURMA
   cd C:\\Users\\PC\\Desktop\\Tshift\\09-motor
   py mutasyon_kostur.py            -> hepsi
   py mutasyon_kostur.py gecmis     -> adinda "gecmis" gecen gruplar
+
+ISARET DOSYASI -- O-21 (12 Ekim)
+  Kosu surerken `09-motor/.mutasyon-suruyor` dosyasi durur; kosu bitince
+  (hata, Ctrl-C dahil) silinir. 12 Ekim 04:10'da tam kosu surerken alinan
+  bir commit `coz.py`'yi mutant haliyle depoya soktu (`8dfc935`, CI 3
+  kirmizi). Kosu surerken calisma agacina GUVENILMEZ: test kosturmak, dosya
+  kopyalamak, `git add` -- hicbiri. Commit bloklari bu dosyaya bakar.
+  Dosya varken ikinci bir kosu baslatilmaz (yarim kalmis kosudan kaldiysa
+  elle silinir).
 """
 
 import hashlib
@@ -40,6 +49,7 @@ import sys
 
 BURASI = os.path.dirname(os.path.abspath(__file__))
 KOK = os.path.dirname(BURASI)
+ISARET = os.path.join(BURASI, ".mutasyon-suruyor")      # O-21: kosu surerken durur
 
 
 def _md5(yol):
@@ -1583,6 +1593,27 @@ MUTASYONLAR = [
 
 
 def main():
+    """Isaret dosyasini koyar, kosuyu yapar, NE OLURSA OLSUN kaldirir (O-21)."""
+    if os.path.exists(ISARET):
+        print("⚠ %s var: baska bir mutasyon kosusu suruyor ya da yarim kalmis. "
+              "Kosu yoksa dosyayi silip yeniden baslat." % ISARET)
+        sys.exit(3)
+    import datetime
+    io.open(ISARET, "w", encoding="utf-8", newline="").write(
+        "mutasyon kosusu suruyor: %s (pid %d, suzgec %s)\n"
+        "Bu dosya varken calisma agacina guvenme: test kosturma, dosya kopyalama, git add YOK (O-21).\n"
+        % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), os.getpid(),
+           sys.argv[1] if len(sys.argv) > 1 else "(tam kosu)"))
+    try:
+        _kosu()
+    finally:
+        try:
+            os.remove(ISARET)
+        except OSError:
+            pass
+
+
+def _kosu():
     suzgec = sys.argv[1] if len(sys.argv) > 1 else None
     secilen = [m for m in MUTASYONLAR if suzgec is None or suzgec in m[0]]
     testler = sorted({m[5] for m in secilen})

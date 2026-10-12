@@ -57,3 +57,6 @@ desktop.ini
 # Claude'un gonderdigi dosyalar buraya iniyor; depo icerigi degil.
 Claude outputs/
 
+
+# ---- motor mutasyon harness (O-21): kosu surerken duran isaret dosyasi ----
+09-motor/.mutasyon-suruyor

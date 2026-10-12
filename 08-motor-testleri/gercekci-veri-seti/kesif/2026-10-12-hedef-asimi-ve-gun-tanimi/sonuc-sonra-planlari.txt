@@ -1,0 +1,36 @@
+
+==== varsayilan-1.json  (2450 atama)
+  net saat / tip: {'tam_zamanli': 14759, 'yari_zamanli': 2221, 'sezonluk': 330, 'stajyer': 307}
+  HEDEF_ASIMI: 3207 kisi-saat, 154 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1667 kisi-saat (52%); hucrede yalniz tam zamanli olan asim 538 kisi-saat (17%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10672, 'yari_zamanli': 1513, 'stajyer': 238, 'sezonluk': 190}
+  rotasyon geri cift (saat>0): bugunku tanim 15 | C (K-46 cogunluk) 22 | D (dokunulan gun) 22 | D'nin kazanci 7 | C'nin kaybi 0, kazanci 7 | ayni gun ciftleri 0
+
+==== varsayilan-2.json  (2466 atama)
+  net saat / tip: {'tam_zamanli': 14784, 'yari_zamanli': 2286, 'sezonluk': 330, 'stajyer': 293}
+  HEDEF_ASIMI: 3165 kisi-saat, 148 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1755 kisi-saat (55%); hucrede yalniz tam zamanli olan asim 454 kisi-saat (14%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10297, 'yari_zamanli': 1628, 'sezonluk': 219, 'stajyer': 224}
+  rotasyon geri cift (saat>0): bugunku tanim 8 | C (K-46 cogunluk) 16 | D (dokunulan gun) 16 | D'nin kazanci 8 | C'nin kaybi 0, kazanci 8 | ayni gun ciftleri 0
+
+==== varsayilan-3.json  (2450 atama)
+  net saat / tip: {'tam_zamanli': 14790, 'yari_zamanli': 2175, 'sezonluk': 332, 'stajyer': 290}
+  HEDEF_ASIMI: 3154 kisi-saat, 151 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1710 kisi-saat (54%); hucrede yalniz tam zamanli olan asim 525 kisi-saat (17%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10452, 'yari_zamanli': 1565, 'sezonluk': 207, 'stajyer': 225}
+  rotasyon geri cift (saat>0): bugunku tanim 14 | C (K-46 cogunluk) 25 | D (dokunulan gun) 25 | D'nin kazanci 11 | C'nin kaybi 0, kazanci 11 | ayni gun ciftleri 0
+
+==== rotasyon_0-1.json  (2456 atama)
+  net saat / tip: {'tam_zamanli': 14767, 'yari_zamanli': 2176, 'sezonluk': 345, 'stajyer': 283}
+  HEDEF_ASIMI: 3241 kisi-saat, 152 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1612 kisi-saat (50%); hucrede yalniz tam zamanli olan asim 587 kisi-saat (18%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10646, 'yari_zamanli': 1423, 'stajyer': 199, 'sezonluk': 199}
+  rotasyon geri cift (saat>0): bugunku tanim 281 | C (K-46 cogunluk) 258 | D (dokunulan gun) 293 | D'nin kazanci 12 | C'nin kaybi 35, kazanci 12 | ayni gun ciftleri 0
+
+==== rotasyon_0-2.json  (2470 atama)
+  net saat / tip: {'tam_zamanli': 14777, 'yari_zamanli': 2194, 'sezonluk': 343, 'stajyer': 280}
+  HEDEF_ASIMI: 3164 kisi-saat, 143 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1638 kisi-saat (52%); hucrede yalniz tam zamanli olan asim 508 kisi-saat (16%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10196, 'yari_zamanli': 1496, 'sezonluk': 184, 'stajyer': 206}
+  rotasyon geri cift (saat>0): bugunku tanim 292 | C (K-46 cogunluk) 272 | D (dokunulan gun) 306 | D'nin kazanci 14 | C'nin kaybi 34, kazanci 14 | ayni gun ciftleri 0
+
+==== rotasyon_0-3.json  (2461 atama)
+  net saat / tip: {'tam_zamanli': 14750, 'yari_zamanli': 2186, 'sezonluk': 354, 'stajyer': 278}
+  HEDEF_ASIMI: 3174 kisi-saat, 147 hucre | saatlik (yz/sezonluk/stajyer) ile ACIKLANABILIR ust sinir 1628 kisi-saat (51%); hucrede yalniz tam zamanli olan asim 530 kisi-saat (17%)
+  asim hucrelerindeki kisi-saat / tip: {'tam_zamanli': 10388, 'yari_zamanli': 1525, 'stajyer': 185, 'sezonluk': 198}
+  rotasyon geri cift (saat>0): bugunku tanim 280 | C (K-46 cogunluk) 275 | D (dokunulan gun) 297 | D'nin kazanci 17 | C'nin kaybi 22, kazanci 17 | ayni gun ciftleri 0

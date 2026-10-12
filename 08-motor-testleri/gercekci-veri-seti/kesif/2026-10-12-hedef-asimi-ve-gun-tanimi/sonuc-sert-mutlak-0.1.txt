@@ -1,0 +1,4 @@
+olcek 0.10: 49 calisan, 415 talep hucresi
+  bugunku (yumusak, amacsiz) (ha_ sifirlanan 0): OPTIMAL, 10.9 sn (kurma dahil 18.9)
+  SERT ha=0 (ha_ sifirlanan 415): INFEASIBLE, 1.8 sn (kurma dahil 9.9)
+  -> SERT mutlak kural bu olcekte COZUMSUZ

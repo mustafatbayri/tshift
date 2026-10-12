@@ -1,8 +1,9 @@
 # 11 Ekim 2026 — Yılmaz görüşmesinin sonucu: konteyner mimarisi kararı (M-16); sıra 3'ün durumu
 
-**Pencere:** 11 Ekim 18:25 – 22:30 · **Önceki:** `2026-10-07-gece-kosusu-ve-fm-siz-arama-kuyrugu.md`
+**Pencere:** 11 Ekim 18:25 – 12 Ekim 05:00 (aynı pencere; 03:50'de
+bağlam bir kez sıkıştırıldı, §7) · **Önceki:** `2026-10-07-gece-kosusu-ve-fm-siz-arama-kuyrugu.md`
 §9 (K-61 kapanışı, sıra 3'ün ilk sorusu, literatür okuması). Kod 18:30'dan
-sonra değişti (§4–5).
+sonra değişti (§4–5); gece yalnız vaka, harness ve dokümanlar (§7).
 
 ## İçindekiler
 
@@ -12,6 +13,7 @@ sonra değişti (§4–5).
 4. [İki karar ve K-66: çizelge her koşuda (18:30–19:30)](#4--iki-karar-ve-k-66-çizelge-her-koşuda-18301930)
 5. [K-65 koda indi; bağımsız inceleme 4 (19:30–22:00)](#5--k-65-koda-indi-bağımsız-inceleme-4-19302200)
 6. ["Önce" ölçümü (bulgu 28) ve Mustafa'ya blok](#6--önce-ölçümü-bulgu-28-ve-mustafaya-blok)
+7. [Gece 12 Ekim 03:50–05:00: iki CI kırmızısı, rotasyon gün tanımı D, hedef aşımı yeniden açıldı](#7--gece-12-ekim-03500500-iki-ci-kırmızısı-rotasyon-gün-tanımı-d-hedef-aşımı-yeniden-açıldı)
 
 ## 1 · Mustafa'nın haberi ve M-16
 
@@ -137,3 +139,170 @@ ertesi 00:00 gecesi), 11 (12–17), sabah→gece atlaması 30–35. Ağırlık 3
 tam mutasyon (362) → `py kalite-olc.py --saniye 900 --tekrar 3 --yapilandirma
 varsayilan,rotasyon_0 --etiket rotasyon-sonra-900` (~1 sa 45 dk, çizelgeli)
 → `py plandan_say.py` iki klasöre. Sonra `TERCIH_KARSILAMA` sorusu.
+
+## 7 · Gece 12 Ekim 03:50–05:00: iki CI kırmızısı, rotasyon gün tanımı D, hedef aşımı yeniden açıldı
+
+Bu pencerenin bağlamı 03:50 civarında bir kez sıkıştırıldı (öncesi özet +
+devir dosyalarından okunuyor). Kod değişmedi (vaka ve harness dışında);
+motor dosyalarına dokunulmadı.
+
+**03:50 — Mustafa bloğu koştu, `0ad3713` push; CI'ın 08 işi kırmızı
+(O-20).** `test_HER_KURAL_kirmizi_yanabiliyor`: *VARDIYA_ROTASYON_YONU
+VAKASI YOK*. 11 Ekim'de doğrulayıcı gövdesi yazılmış, `ihlal-vakalari.py`'ye
+vaka eklenmemişti; ben 08 paketini koşturmadan *"50 geçer"* demiştim. Vaka
+eklendi (AKŞAM 13:45–22:00 → ertesi gün ORTA 10:00–18:00; 3,75 sa geri; 11
+saat dinlenme tutar), bulutta ilgili test geçti, dosya makineye yazıldı
+(md5 `6f79566e…`), sabah için tek satırlık commit verildi.
+
+**04:03 — K-46 sorusu (B8).** Mustafa: *"Vardiyanın %50'sinden fazlası
+hangi dilimdeyse o günün vardiyası sayılır diye karar vermemiş miydik?"*
+Cevabım C önerisiydi (K-46 çoğunluk gününü rotasyona uygulamak); 04:13'te
+Mustafa'nın "bitiş saati" yorumuyla sayılınca **C'nin bugünkünden kötü
+olduğu** görüldü (aşağıda).
+
+**04:08 — Hedef aşımı yeniden açıldı.** Mustafa: *"hedef aşımını yumuşak
+kriter olarak değerlendirmişiz … sen hedef aşımını yumuşak yaptığında …
+Yine fazladan para yakıyoruz. … hedeflediğim sayının üstünde eleman
+çalıştıran bir işletme para yakmaz mı? Bu kriterin de sert ihlal olması
+gerekiyor. Çok yanlış gittin mübarek."* → T-60 **bulgu 29** (ölçüm aşağıda),
+karar Mustafa'da. K-53'te kuralı yumuşak olarak ben önermiştim; sert
+seçeneği o gün hiç konmamıştı.
+
+**04:10–04:25 — `8dfc935` mutant taşıdı (O-21).** Sabah için verilen
+commit 04:10'da alındı; tam mutasyon koşusu 04:16'ya kadar sürüyordu ve
+`coz.py` o anda k63 grubunun mutantıydı: `"fazla_mesaisiz_deneme": 1`.
+CI'ın 09 işi 3 kırmızı / 633 yeşil, üçü de bu satır (K-61 testleri).
+`git show`/`git diff` ile okundu: HEAD mutantı taşıyor; çalışma ağacı koşu
+bitince geri yazılmış, `0ad3713` ile birebir aynı (md5 `f27d01bc…`),
+`model.py`/`kurallar.py` temiz; damga `tam kosu: 2026-10-12 04:16 · 362 ·
+yaşayan 0`; "sonra" ölçümü 04:17'de **temiz kodla** başladı
+(`kalite-olcumu-95-rotasyon-sonra-900.json` 01:17 UTC). Düzeltme commit
+bloğu verildi (`coz.py` + damga; mesaj hatayı söylüyor). Kalıcı önlem
+harness'ta: `09-motor/.mutasyon-suruyor` işaret dosyası (`main` koyar,
+`finally` kaldırır; varsa ikinci koşu başlamaz, çıkış 3) — bulutta
+denendi; **her commit bloğu artık bu dosyaya bakar.** Makineye 05:00'te
+yazıldı (ölçüm `mutasyon_kostur.py`'yi kullanmıyor; sabah commit'iyle
+depoya girer).
+
+**04:13–04:50 — Rotasyon gün tanımı: Mustafa'nın "bitiş saati" yorumu →
+D.** Mustafa: *"biz rotasyonu çalışanın mesaisinin bittiği saatten itibaren
+belirlemiyor muyuz? … adamın salı çalıştığını ve saat kaçta bittiğini
+biliyoruz. Sadece C demek için elvermedi."* Önce planlarından sayım
+(`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/olc.py`; bugünkü doğrulayıcının
+`_rotasyon_geri_saat`'i; üç plan):
+
+| gün tanımı | geri çift (plan 1 / 2 / 3) | bugünküne göre |
+|---|---|---|
+| bugünkü — başlangıç günü (K-65 madde 1) | 279 / 301 / 278 | — |
+| C — K-46 çoğunluk günü | 269 / 283 / 260 | +10 / +13 / +10 kazanır (B8), **−27 / −31 / −28 kaybeder:** S-SABAH → ertesi gün S-GECE (sabah→gece atlaması; IARC "geri") kaybolur, çünkü gece ertesi güne yazılınca araya boş gün girmiş görünür |
+| D — vardiya dokunduğu her güne aittir; boş gün = hiç dokunulmayan takvim günü | 296 / 314 / 288 | +17 / +13 / +10, kayıp yok; kazanılanların hepsi B8: S-GECE 23:00–07:30 → (boş görünen gün) → S-AKSAM 13:45, 9,25 sa geri |
+
+Aynı gün iki vardiya çifti planlarda 0 (`_gunde_tek_vardiya`). Literatür:
+HSE gündüz↔gece geçişinde **iki tam gece uyku** istiyor — Salı 07:30'da
+bitirip Çarşamba 13:45'te başlayanın bir gecesi var; sıfırlayan boş gün
+değil. **Yön yine başlangıç saatinden** (literatürün sabah→akşam→gece
+tanımı başlangıca göre; madde 2 değişmez); bitiş saati yalnız "o güne
+dokundu mu / boş gün girdi mi"yi belirler. D'nin cümlesi (madde 1'in
+yerine): *(a) vardiya başladığı güne ve gece yarısını aşıyorsa bittiği güne
+aittir (tam 24:00'da biten aşmaz); (b) aynı kişinin art arda iki vardiyası,
+ikincisi birincinin son gününde ya da ertesinde başlıyorsa kıyaslanır;
+arada dokunulmamış bir takvim günü varsa sıfırlanır; (c) yön ve ceza
+aynen.* Pazar→Pazartesi: gün −1 **ve** gün −2'nin taşan geceleri buna göre.
+Model bedeli: yalnız gece yarısını aşan şablonlar için ek kısıt —
+`ro_<kişi>_<d+1>` değişkeni yeniden kullanılır,
+`g ≥ hy · (x[d,s] + x[d+2,t] − 1 − calisiyor(d+1))` (`_calisiyor` 0/1);
+doğrulayıcı + metrik son günü okur; ~8 test, ~8 mutasyon; şartname §6.3
+madde 1 ve 8, K-65, literatür §4.2(b); sonra tam ölçekte "sonra-2" (1 sa
+45). **Karar Mustafa'da; onay gelmeden kod yok.**
+
+**04:30–04:55 — Hedef aşımı ölçümü (bulgu 29).** Aynı betik; önce
+planları, 500 kişi, %95; doğrulayıcının `hedef_asimi` sayımı sözleşme
+tipine göre ayrıldı:
+
+- Aşım **3.359 / 3.222 / 3.382 kişi-saat** (155 / 149 / 153 hücre); aynı
+  planlarda eksik 368 / 364 / 375 kişi-saat — ikisi birlikte: bloklu
+  şablonlar saatlik talep eğrisine oturmuyor.
+- Aşım hücrelerindeki kişi-saat: tam zamanlı 10.968 / 10.572 / 10.922;
+  yarı zamanlı 1.445 / 1.449 / 1.374; sezonluk 186 / 189 / 203; stajyer
+  204 / 194 / 199. Saat ücretlilerle (yz + sezonluk + stajyer)
+  açıklanabilir aşımın **üst sınırı 1.589 / 1.606 / 1.574 kişi-saat
+  (%47–50)**; yalnız tam zamanlı bulunan hücrelerin aşımı 619 / 552 / 571
+  (%17–18). Tam zamanlı gereken (izin düşülmüş) ≈ 14.988 saat; planda
+  14.754–14.770 net; hedef toplamı 18.660.
+- **Sert mutlak sonda** (bulut, 0,1 ölçek, 49 kişi, amaçsız olabilirlik;
+  `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/sert_deneme.py`, `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/sert_deneme2.py`): bugünkü model OPTIMAL 11 sn;
+  **`ha_* = 0` (415 hücre) → INFEASIBLE 1,8 sn.** `SAAT_DENGESI` kaldırılınca
+  da INFEASIBLE (10 sn); `ROL_KAPSAMASI` + `YETKINLIK_KAPSAMASI` de
+  kaldırılınca INFEASIBLE (9,5 sn); **`ASGARI_KAPSAMA` da kaldırılınca
+  OPTIMAL** (18 sn). Yani sıfır aşım, 45 saat tabanı olmasa bile, bilerek
+  örtüşen bloklu şablonlarla asgariyi tutturmanın geometrisine çarpıyor
+  (örnek: 07:00'ı yalnız S-SABAH açar, 16:15–18:45'i S-UZUN, 13:45'ten
+  sonrasını S-AKSAM; 13:45–16:15'te üçü üst üste).
+- Mustafa'ya sunulan seçenekler: **A** sert mutlak (çözümsüz — önerilmedi);
+  **B** sert, saat ücretli için (*hedefin üstündeki hücrede saat ücretli
+  çalışan bulunamaz*; tabanları yok, her zaman çözülür; bedeli: 5,5
+  saatlik yarı zamanlı şablonu 3 eksik + 1 hedefe değen saat için
+  yazılamaz; 0,2 ölçekte ölçülecek); **C** yumuşak kalır, ağırlık ikiye
+  ayrılır (tam zamanlı aşımı ucuz, saat ücretli aşımı ≥ 9); **D** sert +
+  kabul edilebilir (haftada ~150 hücre; önerilmedi). Görüşüm B ya da C.
+  Soru: **saat başı ödenen kim?** (yarı zamanlı evet — K-58; sezonluk 40
+  sa ve stajyer 30 sa sabit mi?) — B/C'nin kümesini belirler.
+
+**Pencere sorusu (Mustafa 04:13).** Bağlam bir kez sıkıştırıldı; öneri:
+"sonra" sonucu burada okunup K-65'e işlensin, D ve hedef aşımı
+kararlarıyla yeni pencere açılsın.
+
+**Açık (05:00):** (1) düzeltme commit'i (Mustafa, blok verildi); (2) ~~"sonra"
+ölçümü ≈ 06:00 → `plandan_say.py` iki klasöre → K-65 karar kuralı → kayıt~~
+*(05:50'de yapıldı, aşağıda; kapanış yorumu Mustafa'da)*;
+(3) D onayı (Mustafa); (4) hedef aşımı kararı + saat ücretli kümesi
+(Mustafa); (5) harness işaret dosyası makinede, commit bekliyor; (6) sabah
+commit bloğu: "sonra" çıktıları + planlar + `mutasyon_kostur.py` +
+dokümanlar — bloğun başında `.mutasyon-suruyor` korkuluğu.
+
+**05:50–06:05 — "Sonra" ölçümü okundu (zamanlanmış hatırlatmayla; Mustafa
+uyuyor, karar isteyen hiçbir şeye dokunulmadı).** Koşu 05:41'de bitti; altı
+plan + `kalite-olcumu-95-rotasyon-sonra-900.json` buluta çekildi;
+`plandan_say.py` dokuz planda, `olc.py` altı yeni planda koşturuldu.
+Sonuç K-65'te tablo hâlinde; özet: ağırlık 3 ile geri geçiş **279–301 →
+15 / 8 / 14** (−%95), geri saat 1.346–1.489 → 82 / 52 / 64, sabah→gece
+atlaması 0; ağırlık 0 koşuları önce ile aynı (281 / 292 / 280); fazla mesai
+0, kurma 53–58 sn; bedel: hedef kapsama ort. −0,3 puan (koşudan koşuya
+oynama ±1,3 puan), hedef eksiği +%11 kişi-saat, adalet +%3,2 (bir koşu
+12.975 — kuralın "±%3"ünün tam sınırında), mola kapsaması +%8, hedef aşımı
+−%5, rotasyon dışı amaç +%1,5. Doğrulayıcı sayımı altı planda motor
+metriğiyle birebir. **Kapanış yorumu Mustafa'da** (öneri: kapandı, ağırlık 3
+DENGELI varsayılanı kalır, K-62'de yeniden bakılır). Yan bulgular: art arda
+çift −%1–3 (araya boş gün koyma meyli); **kalan geri geçişlerin yarısı B8**
+(D ile 22 / 16 / 25; S-GECE → boş görünen gün → S-AKSAM 7 / 8 / 11) — D
+kararının ağırlığı arttı. Dokümanlar: K-65, bulgu 28, T-60 satırı, BURADAN
+05:50 eki, DEGISIM 06:00, kesif OKU-BENI + `sonuc-sonra-planlari.txt`.
+
+**Sabah için iki blok (sırayla; ikisi de `.mutasyon-suruyor` korkuluğuyla).**
+
+*Blok A — düzeltme commit'i (HEAD hâlâ `8dfc935` ise):*
+
+```powershell
+cd C:\Users\PC\Desktop\Tshift
+if (Test-Path 09-motor\.mutasyon-suruyor) { "MUTASYON SURUYOR - commit alma"; exit }
+git diff HEAD -- 09-motor/cozucu/coz.py
+# yalniz "-  fazla_mesaisiz_deneme: 1" / "+ ... 3" gorunmeli; baska satir varsa DUR
+git add 09-motor/cozucu/coz.py 09-motor/mutasyon-tam-kosu.txt
+git commit -m "coz.py: 8dfc935 mutasyon kosusu surerken alindi, fazla_mesaisiz_deneme mutanti (1) commit'e girdi; K-61 varsayilani 3 geri; tam mutasyon 362 damgasi (04:16, yasayan 0); 8dfc935 mesajindaki rotasyon-sonra-900 olcumu o anda yoktu" -m "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`nClaude-Session: https://claude.ai/code/session_01XpZisZSTfgoQCAu3K4VzWE"
+git push
+```
+
+*Blok B — gecenin işi (A'dan sonra):*
+
+```powershell
+cd C:\Users\PC\Desktop\Tshift
+if (Test-Path 09-motor\.mutasyon-suruyor) { "MUTASYON SURUYOR - commit alma"; exit }
+git add .gitignore 09-motor/mutasyon_kostur.py 08-motor-testleri/gercekci-veri-seti/kalite-olcumu-95-rotasyon-sonra-900.json 08-motor-testleri/gercekci-veri-seti/planlar/kalite-olcumu-95-rotasyon-sonra-900 08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi 00-DEVIR DEGISIM-GUNLUGU.md
+git status --short
+# 09-motor/cozucu/coz.py burada " M" olarak GORUNMEMELI (gorunuyorsa Blok A atlanmis)
+git commit -m "K-65 sonra olcumu (rotasyon-sonra-900, 900 sn x 3 x 2): agirlik 3 ile geri gecis 279-301 -> 15/8/14, geri saat 1346-1489 -> 52-82, fazla mesai 0, rotasyon disi amac +%1,5, adalet +%3,2 sinirda (kapanis yorumu Mustafa'da); agirlik 0 = once; alti cizelge; bulgu 29 hedef asimi olcumu (sert mutlak 0.1 olcekte cozumsuz, secenekler karar bekliyor); rotasyon gun tanimi D onerisi (B8 kalan geri gecislerin yarisi; karar bekliyor); O-20/O-21 otopsileri; harness .mutasyon-suruyor isaret dosyasi; motor kodu degismedi" -m "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`nClaude-Session: https://claude.ai/code/session_01XpZisZSTfgoQCAu3K4VzWE"
+git push
+```
+
+CI beklentisi: 09-motor 636 yeşil (coz.py 3'e döndü), 08 paketi 50 yeşil
+(vaka `8dfc935`'te). Kırmızı yanarsa çıktıyı at.

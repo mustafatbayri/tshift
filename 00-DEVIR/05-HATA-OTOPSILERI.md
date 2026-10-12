@@ -852,6 +852,91 @@ olsun"*) çiviliyor: kütüphane varsayılanı değişirse test kırmızı yanar
 
 ---
 
+## O-20 · Doğrulayıcı gövdesi yazıldı, ihlal vakası yazılmadı; *"50 geçer"* dedim, 08 paketini koşturmadan — CI yakaladı ⚠
+
+**Tarih:** 12 Ekim 2026, 03:50 (hata 11 Ekim 19:30–22:00 arasında, K-65
+koda inerken; CI'ın 08 işi `0ad3713`'te kırmızı yandı)
+
+**Ne oldu.** `VARDIYA_ROTASYON_YONU`'nun doğrulayıcı gövdesini yazdım (K-65),
+26 test ve 35 mutasyonla çivilendi — ama
+`08-motor-testleri/gercekci-veri-seti/ihlal-vakalari.py`'ye vaka eklenmedi.
+`test_HER_KURAL_kirmizi_yanabiliyor` tam bunu sayar (*"gövdesi yazılı ama
+vakası olmayan kural"* — 30 Eylül'de bu boşluk için düzeltilmişti) ve kırmızı
+yandı: *VAKASI YOK — hiç sınanmadı.* Mustafa'ya verdiğim blokta 08 paketi
+vardı; ben bulutta yalnız 09-motor paketini (636) koşturup *"50 geçer"*
+diye yazdım.
+
+**Nasıl görünüyordu.** 09-motor paketi yeşil, mutasyonlar ölü, inceleme 4
+bloklayıcı yok. Vaka aracı 08 paketinin içinde; o paket 6–7 dakika sürüyor,
+koşturulmadı.
+
+**Sonucu değiştirdi mi.** Kuralın kendisi doğruydu (vaka eklenince ilk
+koşuda kırmızı yandı: AKŞAM 13:45 → ertesi gün ORTA 10:00, 3,75 saat geri,
+11 saat dinlenme tutar). Ama *"kullanmadığımız hiçbir kural olmasın"*
+cümlesinin ölçümü bir gece eksik kaldı.
+
+**Ne yakaladı.** CI (`0ad3713`) — testin 30 Eylül'de genişletilmiş hâli
+(K-40'ın aynı hatası: *"yeni kural ekledi, vakası yoktu"*).
+
+**Düzeltme.** Vaka `ihlal-vakalari.py`'de (`8dfc935`). **Kural:** doğrulayıcı
+gövdesi yazan değişiklik, `ihlal-vakalari.py` satırı ve 08 paketinin
+koşusu olmadan *"indi"* denmez; *"N geçer"* cümlesi koşulmamış paket için
+yazılmaz (O-15'in test paketine uyarlanmış hâli).
+
+### Kalıcı bekçi
+
+- Test zaten vardı ve yakaladı; eksik olan **koşulmasıydı**. Bulutta 08
+  paketi her doğrulayıcı gövdesinden sonra koşulur (6–7 dk; test
+  sahnesi 0,95 diskten).
+
+---
+
+## O-21 · Tam mutasyon koşusu sürerken alınan commit mutantı taşıdı (`8dfc935`: `fazla_mesaisiz_deneme` 3 → 1) ⚠
+
+**Tarih:** 12 Ekim 2026, 04:10 (commit) — 04:14 (CI'ın 09 işi 3 kırmızı,
+Mustafa attı) — 04:25 (sebep `git show`/`git diff` ile okundu)
+
+**Ne oldu.** O-20'nin vaka düzeltmesi için *"sabah"* diye tek satırlık bir
+commit bloğu verdim. Mustafa bloğu 04:10'da aldı; bloğun kendisi (testler →
+DENETIM → commit → **tam mutasyon** → "sonra" ölçümü) o sırada **tam
+mutasyon** adımındaydı (bitiş 04:16, damga: 362 mutasyon, yaşayan 0).
+Harness her mutasyonu dosyaya yazıp testi koşturup geri yazar; `git add` o
+pencereye denk geldi ve `coz.py` k63 grubunun mutantıyla (`"fazla_mesaisiz_deneme": 1`)
+commit'e girdi. CI'da 3 test kırmızı (633 yeşil) — üçü de bu satırı sınıyor
+(K-61'in kapanışını çivileyen testler görevini yaptı). Commit mesajı ayrıca
+*"rotasyon-sonra-900 ölçümü ve damgası"* diyordu; ikisi de o anda yoktu.
+
+**Nasıl görünüyordu.** Mutasyon bitince harness dosyayı geri yazdı: çalışma
+ağacı `0ad3713` ile birebir aynı (md5 `f27d01bc…`), `git status` yalnız
+*"coz.py değişti"* diyor — çünkü HEAD mutantı taşıyor, ağaç doğru. "Sonra"
+ölçümü 04:17'de **temiz** kodla başladı; ölçüm geçerli.
+
+**Sonucu değiştirdi mi.** Depoda (GitHub) K-61'in varsayılanı 6 dakika
+boyunca 1'di; düzeltme commit'i (`coz.py` + damga) verildi. Ölçüm ve
+çalışma ağacı etkilenmedi.
+
+**Ne yakaladı.** CI — K-61 testleri. Aynı B1 dersi (11 Ekim: mutasyon
+sürerken test koşturmak / dosya kopyalamak) üçüncü kez, bu kez `git add`
+yüzüyle: **harness koşarken çalışma ağacına güvenilmez — okumak, test
+etmek, kopyalamak ve commit almak dahil.**
+
+**Düzeltme.** (1) Düzeltme commit'i (Mustafa). (2) Harness koşarken
+`09-motor/.mutasyon-suruyor` işaret dosyası bırakır, bitince (hata ve
+kesinti dahil, `finally`) siler; dosya varken ikinci bir harness
+başlatılamaz. (3) Mustafa'ya verilen **her** commit bloğu önce bu dosyaya
+bakar, varsa *"mutasyon sürüyor, commit alınmadı"* der ve durur. (4) Blok
+adımları `;` ile değil, önceki adım kırmızıysa duracak biçimde yazılır.
+
+### Kalıcı bekçi
+
+- `09-motor/.mutasyon-suruyor` + commit bloğundaki korkuluk *(kod bu
+  gece yazıldı ve makineye aktarıldı — ölçüm `mutasyon_kostur.py`'yi
+  kullanmıyor; sabah commit'iyle depoya girer)*. Git kancası (`pre-commit`) daha
+  sağlam olurdu; O-14 gereği git yapılandırmasına köprüden dokunulmaz —
+  Mustafa isterse bir githooks diziniyle (core.hooksPath) bağlanır.
+
+---
+
 ## Özet: hata → bekçi tablosu
 
 | # | Hata | Kalıcı bekçi | Durum |
@@ -875,6 +960,8 @@ olsun"*) çiviliyor: kütüphane varsayılanı değişirse test kırmızı yanar
 | O-17 | Karar veri setine bağlanmadı: iki işi yapabilen eleman 500 kişilik sette hiç yok (K-50); *"%95"* seti istenen kıtlığı (fazla mesai zorunlu) taşımıyor | Karar kapanışında üçüncü soru: *tam ölçekli veri setinde sınanıyor mu*; saha durumu oranla değil ölçümle doğrulanır; merdiven seviyelerinin *"neyi sınıyor"* tablosu | 🟡 *(kural yazıldı; bekçi merdiven aracıyla gelecek)* |
 | O-18 | *"Hakem ağırlıklardır"* kararını, fazla mesaili planları aramadan çıkaran bir kısayol + tahmini bir ağırlık koşuluyla yazdım; *"bu kurda oluşmaz"* dedim — ürün ağırlıklarında karşı örnek vardı (750'ye karşı 2.256; 12 kişide 9.000'e karşı 12.000) | Bulunan fazla mesaisiz plan yalnız başlangıç noktası (alanlar geri açılır, karar ağırlıklarda); karşı örnekler test; *"oluşmaz"* cümlesi av betiği olmadan yazılmaz; inceleme *"indi"* denmeden önce | 🟡 *(kod + test; DENETIM uyarısı yazılacak; 500 kişilik ölçüm 7 Ekim'de yapıldı — bulgu 23)* |
 | O-19 | Kuyruk ölçümünde *"tohum 0 = CP-SAT varsayılanı = motorun tohumu"* yazdım; varsayılan 1'di — etiket yanlış, sonuç değişmedi | Kütüphane varsayılanı koddan okunur, betik basar, test + mutasyon çiviler (tohum 1); *"tahmin yürütme"* araçların davranışı için de geçerli | ✅ *(düzeltildi; test + mutasyon)* |
+| O-20 | Doğrulayıcı gövdesi yazıldı, ihlal vakası yazılmadı; 08 paketi koşturulmadan *"50 geçer"* dendi | Test zaten vardı (`test_HER_KURAL_kirmizi_yanabiliyor`) ve CI'da yakaladı; kural: gövde + vaka + 08 paketi koşusu olmadan *"indi"* denmez | ✅ *(vaka `8dfc935`; kural)* |
+| O-21 | Tam mutasyon sürerken alınan commit `coz.py`'nin mutantını taşıdı (`8dfc935`, K-61 varsayılanı 3 → 1); CI 3 kırmızı | Harness `09-motor/.mutasyon-suruyor` işaret dosyası; commit blokları dosya varsa durur; blok adımları kırmızıda durur | 🟡 *(düzeltme commit'i verildi; işaret dosyası makinede, commit bekliyor)* |
 
 ---
 

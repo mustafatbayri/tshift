@@ -2566,7 +2566,17 @@ pahalı; eksik kişi müşteri kaybıdır, fazla kişi paradır. Sert tabanları
 ezmez: 45 saatlik tam zamanlı yine 45'e dolar, ceza fazlalığı en az
 hücreye yayar. Doğrulayıcı aynı hücreleri yumuşak ihlal olarak sayar.
 
-→ T-54 · `09-motor/cozucu/model.py` (`AGIRLIK_TABLOSU`, `_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) · `09-motor/testler/test_hedef_asimi.py`
+**⚠ Yeniden açıldı (12 Ekim 2026 04:08, Mustafa):** *"hedef aşımını yumuşak
+kriter olarak değerlendirmişiz … Yine fazladan para yakıyoruz. … hedeflediğim
+sayının üstünde eleman çalıştıran bir işletme para yakmaz mı? Bu kriterin de
+sert ihlal olması gerekiyor."* Yumuşak biçimi 1 Ekim'de ben önermiştim; sert
+seçeneği o gün konmamıştı. Ölçüm ve seçenekler (A sert mutlak — 0,1 ölçekte
+**çözümsüz**, `ASGARI_KAPSAMA` + örtüşen şablon geometrisi; B sert yalnız
+saat ücretli için; C yumuşak, iki ağırlık; D sert + kabul) **T-60 bulgu 29**'da;
+karar Mustafa'da. Bu başlık karar gelince kapanır ya da K-67 olarak yeniden
+yazılır.
+
+→ T-54 · T-60 bulgu 29 · `09-motor/cozucu/model.py` (`AGIRLIK_TABLOSU`, `_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) · `09-motor/testler/test_hedef_asimi.py`
 
 
 ## K-54 · Dondurulmuş gün **olan oldu**dur: yayınlanmış plan motora gelir, geçmiş günler aynen kalır, gelecek ona uyar
@@ -3530,6 +3540,56 @@ puan = amacın ~%15'i: kural **ince ayar değil**, gerçek bir ödünleşme
 süre bütçesi aynı, kurma süresi ±%10. Aksi hâlde ağırlık K-62
 kalibrasyonuna bırakılır, kural açık kalır. Sonuç bu başlığa ve T-60'a.
 
+**"Sonra" ölçüldü (12 Ekim 04:17–05:41, Mustafa'nın makinesi, 6 çekirdek,
+`rotasyon-sonra-900`: `varsayilan` ağırlık 3 ve `rotasyon_0` ağırlık 0,
+900 sn × 3'er, çizelgeli; okuma 05:50, bulut).** Altısı da çözüldü, 0 sert,
+yayınlanabilir, **fazla mesai 0**, fazla mesaisiz ilk arama hepsinde ilk
+denemede. Doğrulayıcının sayımı (`plandan_say.py`) altı planda da motorun
+metriğiyle **birebir** aynı.
+
+| | önce (11 Ekim öncesi kod) | **sonra, ağırlık 3** | sonra, ağırlık 0 |
+|---|---|---|---|
+| geri geçiş (art arda çift) | 279 / 301 / 278 (1.619–1.637'nin %17–18'i) | **15 / 8 / 14** (1.600–1.609'un %0,5–0,9'u) | 281 / 292 / 280 (%17–18) |
+| geri saat | 1.364 / 1.489 / 1.346 | **82 / 52 / 64** | 1.376 / 1.437 / 1.309 |
+| sabah→gece atlaması | 30 / 35 / 30 | **0 / 0 / 0** | 37 / 35 / 26 |
+| hedef kapsama % | 84,34 / 85,06 / 84,34 (ort. 84,58) | 82,17 / 84,58 / 86,02 (ort. 84,26) | 86,75 / 86,02 / 84,82 (ort. 85,86) |
+| hedef eksiği kişi-saat (`HEDEF_KAPSAMA` ham) | 368 / 364 / 375 | 425 / 398 / 403 | 357 / 341 / 361 |
+| hedef aşımı kişi-saat | 3.359 / 3.222 / 3.382 | 3.207 / 3.165 / 3.154 | 3.241 / 3.164 / 3.174 |
+| adalet (ceza / ham) | 12.440 / 12.395 / 12.380 (2.488 / 2.479 / 2.476) | 12.605 / 12.975 / 12.820 (2.521 / 2.595 / 2.564) | 12.445 / 12.560 / 12.460 |
+| mola kapsaması ham | 173 / 187 / 174 | 197 / 188 / 189 | 185 / 184 / 190 |
+| amaç (rotasyon terimi hariç) | 27.040 / 26.646 / 27.119 | 27.430 / 27.368 / 27.232 | 26.676 / 26.409 / 26.561 |
+| rotasyon terimi (ağırlık × yuvarlanmış saat) | — | 246 / 156 / 192 | 0 (`deger: null`) |
+| kurma sn · ilk plan sn | 52–61 · 22–24 | 53–58 · 22–24 | 53–56 · 22 |
+
+**Karar kuralına göre okuma.** (1) Geri geçiş *belirgin* düşmeli, hedef
+yarıdan az → **%95 düştü** (279–301 → 8–15; saat 1.346–1.489 → 52–82);
+sabah→gece atlaması sıfır. ✅ (2) Fazla mesai 0 kaldı ✅; süre bütçesi aynı,
+kurma 53–58 sn (önce 52–61) ✅. (3) Kapsama/adalet/öteki kalemler ±%3: hedef
+kapsama yüzdesi ortalama −0,3 puan (✅; koşudan koşuya oynama ±1,3 puan —
+aynı gece ağırlık 0 koşuları 84,8–86,8), ama kişi-saat olarak hedef eksiği
++%11 (369 → 409; haftalık hedefin %0,2'si), adalet cezası **+%3,2** (sınırda),
+mola kapsaması +%8, hedef aşımı −%5; rotasyon dışı amaç toplamı **+%1,5**
+(26.935 → 27.343). Yani kuralın bedeli ölçüldü: öteki kriterlerde ~%1,5,
+karşılığı geri geçişlerin %95'i (önce planları yeni amaçla ~31 bin ederdi;
+sonra planları 27,4–27,7 bin). **Kuralın işe yaradığı ve bedelinin küçük
+olduğu kesin; adalet +%3,2 ile kuralın "±%3" cümlesinin tam sınırında.**
+Kapanış yorumu Mustafa'nın: (a) kapandı — ağırlık 3 DENGELI varsayılanı
+kalır (zaten "kalibrasyonlar dondu", K-62 merdiveninde yeniden bakılır),
+ya da (b) açık kalır, ağırlık K-62'ye. Önerim (a): bedel tek koşuluk
+oynamanın içinde (ağırlık 0 koşuları önceye göre +1,3 puan kapsama verdi;
+ağırlık 3 koşuları −0,3), adalet sapması bir koşudan (12.975) geliyor.
+
+**Üç yan bulgu.** (i) Ağırlık 0 koşuları önce ile aynı sayıyı veriyor
+(281 / 292 / 280 ↔ 279 / 301 / 278): kural ağırlıksızken tarafsız, sayım
+tekrarlanabilir. (ii) Art arda çift sayısı 1.619–1.653 → 1.600–1.609
+(−%1–3): model cezadan kaçmak için araya boş gün koymaya **hafifçe**
+meylediyor ("boş gün sıfırlar"ın kaçınılmaz yan etkisi; hafta tatili ve
+6 günlük desen sınırlıyor). (iii) **B8 artık kalan geri geçişlerin
+yarısı:** sonra planlarında D tanımıyla sayım 22 / 16 / 25 — bugünkü
+tanımın görmediği S-GECE → (boş görünen gün) → S-AKSAM çifti 7 / 8 / 11
+(önce planlarında 10–17; model bu deliği büyütmedi ama kapatmadı da).
+D onayı gelirse kapanacak kısım bu.
+
 **Dürüst sınır.** Küçük ölçekte bedel amacın ~%1'i görünüyordu; 500 kişide
 "önce" planlarının geri saati amacın ~%15'ine denk — ödünleşme gerçek,
 ölçülmeden "zararsız" denmez. K-61 ilkesi değişmez (fazla mesai 0 kalmalı
@@ -3541,6 +3601,33 @@ başladığı gün"*: 23:00–07:00 gecesinden sonra bir gün boş görünür ve
 ertesi akşam 13:45 ile kıyaslanmaz (literatür gece→akşam geçişini geri
 sayar). Bugünkü tanım senin "boş gün sıfırlar" kararının sonucu; istersen
 "gece vardiyasının bittiği gün de çalışma günü sayılsın" diye genişletilir.
+
+**12 Ekim 04:03–04:50 — B8 için iki yorum, bir öneri (D).** Mustafa 04:03:
+*"Vardiyanın %50'sinden fazlası hangi dilimdeyse o günün vardiyası sayılır
+diye karar vermemiş miydik?"* (K-46) → önerim C (K-46 çoğunluk gününü
+rotasyona uygulamak). Mustafa 04:13: *"biz rotasyonu çalışanın mesaisinin
+bittiği saatten itibaren belirlemiyor muyuz? … adamın salı çalıştığını ve
+saat kaçta bittiğini biliyoruz. Sadece C demek için elvermedi."* Önce
+planlarında sayıldı (üç plan, bugünkü doğrulayıcı): bugünkü tanım 279 / 301 /
+278 geri çift; **C 269 / 283 / 260** — B8'in 10–17 çiftini kazanıyor ama
+**27–31 çift kaybediyor** (S-SABAH → ertesi gün S-GECE: gece ertesi güne
+yazılınca araya boş gün girmiş görünüyor; IARC'ın "geri" dediği sabah→gece
+atlaması kaybolur) → **C bugünkünden kötü, elendi**; **D 296 / 314 / 288** —
+bugünkünün üstüne +10–17, kayıp yok (kazanılanların hepsi B8: S-GECE
+23:00–07:30 → boş görünen gün → S-AKSAM 13:45, 9,25 sa geri). HSE'nin
+"gündüz↔gece geçişinde iki tam gece uyku" ölçüsü de D'yi destekliyor.
+**D'nin tanımı** (madde 1'in yerine geçecek): *(a) vardiya başladığı güne ve
+gece yarısını aşıyorsa bittiği güne aittir (tam 24:00'da biten aşmaz); (b)
+aynı kişinin art arda iki vardiyası, ikincisi birincinin son gününde ya da
+ertesinde başlıyorsa kıyaslanır; arada dokunulmamış bir takvim günü varsa
+sıfırlanır; (c) yön yine **başlangıç** saatlerinden, ceza aynen.* Pazar→
+Pazartesi için gün −1 ve gün −2'nin taşan geceleri de buna göre sayılır.
+Bedel: modelde yalnız gece yarısını aşan şablonlar için ek kısıt
+(`ro_<kişi>_<d+1>` yeniden kullanılır, `g ≥ hy·(x[d,s] + x[d+2,t] − 1 −
+calisiyor(d+1))`), doğrulayıcı + metrik son günü okur, ~8 test, ~8 mutasyon,
+şartname §6.3 madde 1/8, literatür §4.2(b); ardından tam ölçekte "sonra-2"
+(1 sa 45). **Onay bekliyor; kod yazılmadı.** Ayrıntı: oturum kaydı
+`00-DEVIR/oturumlar/2026-10-11-konteyner-karari-ve-sira-3-durumu.md` §7.
 
 → §6.3 · §11.3 · K-61 · K-54 · K-42 · O-7 · T-60 ·
 `02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md` ·
