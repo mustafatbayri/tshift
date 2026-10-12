@@ -259,6 +259,25 @@ def _(g, p):
               "bas": 9, "bit": 17, "molalar": []})
 
 
+@vaka("VARDIYA_ROTASYON_YONU", "Aksamdan ertesi gun sabaha: baslangic 3,75 saat GERI (11 saat dinlenme tutar)")
+def _(g, p):
+    """K-65 (11 Ekim). Art arda iki calisma gununde sonraki vardiya erken
+    basliyor: gun 1 13:45-22:00, gun 2 10:00-18:00 -> 12 saat dinlenme (sert
+    kural susar), rotasyon 3,75 saat geri -> tek satir. DAR: tek kisi, iki gun.
+
+    ⚠ 12 Ekim: CI bunu yakaladi -- kuralin govdesi 11 Ekim'de yazildi, vakasi
+      yazilmadi, `test_HER_KURAL_kirmizi_yanabiliyor` kirmizi yandi (K-40'ta da
+      ayni olmustu; bu testin var olma sebebi).
+    """
+    c = p[0]["calisan"]
+    ekip = p[0]["ekip"]
+    p[:] = [a for a in p if a["calisan"] != c]
+    p.append({"calisan": c, "ekip": ekip, "sablon": "X", "gun": 1,
+              "bas": 13.75, "bit": 22, "molalar": []})
+    p.append({"calisan": c, "ekip": ekip, "sablon": "X", "gun": 2,
+              "bas": 10, "bit": 18, "molalar": []})
+
+
 @vaka("CAKISMA_YOK", "Ayni kisiye ayni gun ortusen iki vardiya")
 def _(g, p):
     a = p[0]
