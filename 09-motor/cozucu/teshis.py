@@ -27,7 +27,7 @@ EN IYI PLAN -- K-10
 
 from ortools.sat.python import cp_model
 
-from .model import Model, _q, _dilimler, cekirdek_sayisi
+from .model import Model, _q, _dilimler, cekirdek_sayisi, _kural, _par
 
 
 def ulasilamayan_hucre(girdi, kuruldu):
@@ -88,6 +88,52 @@ def ulasilamayan_hucre(girdi, kuruldu):
     return None
 
 
+def asim_sert_mi(girdi):
+    """HEDEF_ASIMI aktif ve SERT mi -- K-67 (12 Ekim 2026)."""
+    k = _kural(girdi, "HEDEF_ASIMI")
+    return bool(k) and k.get("tur") == "SERT"
+
+
+def celisen_talep(girdi, kuruldu):
+    """K-67 ON KONTROLU: HEDEF_ASIMI SERT iken hedefin ASILMADAN tutulamayacagi
+    bir hucre -- ya da None. COZUCU CALISTIRMADAN.
+
+    Uc kaynak hucreye hedeften fazla kisi DAYATABILIR:
+      * talep satirinin `asgari`si (ASGARI_KAPSAMA aktifse) hedeften buyuk,
+      * firmanin saha tabani (SAHADA_ASGARI, K-33) hedeften buyuk,
+      * onceki haftadan tasan vardiyalar (K-56 devir) zaten hedeften fazla.
+    Ucu de girdinin kendi celiskisidir; aramaya gerek yoktur. Donmus gun
+    atlanir (K-54: olan oldu). Hedefi olmayan satir atlanir.
+    """
+    if not asim_sert_mi(girdi):
+        return None
+    asgari_aktif = bool(_kural(girdi, "ASGARI_KAPSAMA"))
+    taban = _par(_kural(girdi, "SAHADA_ASGARI"), "asgari_sahada", 0) or 0
+    for t, gun, saat in kuruldu._hucreler():
+        hedef = t.get("hedef")
+        if hedef is None or gun in kuruldu.donmus:
+            continue
+        adaylar = []
+        if asgari_aktif and (t.get("asgari") or 0) > hedef:
+            adaylar.append(("ASGARI_KAPSAMA", t["asgari"],
+                            "talep satirinin asgarisi %d, hedefi %d" % (t["asgari"], hedef)))
+        if taban > hedef:
+            adaylar.append(("SAHADA_ASGARI", taban,
+                            "sahada en az %d kisi kurali, hedef %d" % (taban, hedef)))
+        devir = kuruldu._devir_sayisi(t.get("ekip"), gun, saat)
+        if devir > hedef:
+            adaylar.append(("GECMIS_DEVIR", devir,
+                            "onceki haftadan tasan %d vardiya zaten sahada, hedef %d"
+                            % (devir, hedef)))
+        if adaylar:
+            return {"ekip": t.get("ekip"), "gun": gun, "saat": saat,
+                    "gereken": max(a[1] for a in adaylar), "hedef": hedef,
+                    "neden": "celisen_talep",
+                    "kurallar": [a[0] for a in adaylar if a[0] != "GECMIS_DEVIR"] + ["HEDEF_ASIMI"],
+                    "gerekce": "hedef asilmadan tutulamaz: " + "; ".join(a[2] for a in adaylar)}
+    return None
+
+
 def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
     """Cozumsuzluk teshisi. `kesin` KANIT olup olmadigini soyler -- K-37.
 
@@ -108,7 +154,27 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
       saklanmis yanlis bir cumle, ekranda duran yanlis cumleden daha iyi
       degildir.
     """
-    if on_kontrol:
+    asim_hucreleri = None
+    if on_kontrol and on_kontrol.get("neden") == "celisen_talep":
+        # K-67 ON KONTROLU: hedef asilmadan tutulamayan hucre. Engelleyen
+        # kurallar celiskinin iki tarafidir; taslak plan da yok -- hucreyi
+        # hedefte tutmak, girdinin kendisini degistirmeden mumkun degil.
+        kapsam = "hucre"
+        hucre = {"ekip": on_kontrol["ekip"], "gun": on_kontrol["gun"],
+                 "saat": on_kontrol["saat"]}
+        gereken, mumkun = on_kontrol["gereken"], on_kontrol["hedef"]
+        engelleyen = [{"kod": k["kod"],
+                       "yasal": k.get("yasal", False),
+                       "kabul_edilebilir": k.get("kabul_edilebilir", False),
+                       "etkilenen_hucre": hucre,
+                       "gerekce": on_kontrol["gerekce"]}
+                      for k in (girdi.get("kurallar") or [])
+                      if k.get("kod") in on_kontrol["kurallar"]
+                      and k.get("aktif", True)]
+        belirsiz = []
+        en_iyi = {"var": False,
+                  "sebep": "on kontrol: girdi celiskisi -- " + on_kontrol["gerekce"]}
+    elif on_kontrol:
         # ON KONTROL yolu: hucre zaten belli, aramaya gerek yok.
         kapsam = "hucre"
         hucre = {"ekip": on_kontrol["ekip"], "gun": on_kontrol["gun"],
@@ -139,7 +205,14 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
     else:
         kapsam, hucre, gereken, mumkun = _nerede_tikaniyor(girdi, kuruldu)
         engelleyen, belirsiz = _engelleyen_kurallar(girdi, kuruldu, hucre, ayar)
-        en_iyi = _en_iyi_plan(girdi, ayar)
+        en_iyi = None
+        if asim_sert_mi(girdi):
+            # K-67: once YALNIZ HEDEF_ASIMI yumusatilir. Plan cikarsa tikanma
+            # asimdir: hangi hucrede en az kac kisi fazla gerektigi ve o plan
+            # (taslak, K-10) doner. Cikmazsa tikanma baska yerdedir.
+            en_iyi, asim_hucreleri = _asim_gevsek_plan(girdi, ayar)
+        if not en_iyi or not en_iyi.get("var"):
+            en_iyi = _en_iyi_plan(girdi, ayar)
 
     cevap = {
         "durum": "cozumsuz" if kesin else "sure_yetmedi",
@@ -159,6 +232,8 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
         "cozum_istatistikleri": istatistik,
         "uygulanmayan_notlar": kuruldu.notlar,
     }
+    if asim_hucreleri is not None:
+        cevap["teshis"]["asim_hucreleri"] = asim_hucreleri
     if not engelleyen and belirsiz:
         cevap["teshis"]["not"] = (
             "Engelleyen kural KANITLANAMADI: %d sert kuralin denemesi %s "
@@ -332,6 +407,12 @@ def _en_iyi_plan(girdi, ayar, saniye=30):
     GEVSETILEBILIR = {"ASGARI_KAPSAMA", "ROL_KAPSAMASI", "YETKINLIK_KAPSAMASI"}
     kalan = [k for k in girdi.get("kurallar", []) or []
              if not (k.get("kod") in GEVSETILEBILIR and not k.get("yasal", False))]
+    # K-67: HEDEF_ASIMI silinmez, YUMUSAK'a cevrilir -- silinse asim bedava
+    # olurdu ve taslak plan hedefin cok ustune yazardi.
+    kalan = [dict(k, tur="YUMUSAK") if (k.get("kod") == "HEDEF_ASIMI"
+                                         and k.get("tur") == "SERT"
+                                         and not k.get("yasal", False)) else k
+             for k in kalan]
     gevsek = dict(girdi, kurallar=kalan)
 
     m = Model(gevsek).kur()
@@ -355,5 +436,92 @@ def _en_iyi_plan(girdi, ayar, saniye=30):
                 "(#4.5) kabul_edilebilir bayragina bakar."),
         "gevsetilen_kurallar": sorted(
             {k["kod"] for k in girdi.get("kurallar", []) or []
-             if k.get("kod") in GEVSETILEBILIR and not k.get("yasal", False)}),
+             if (k.get("kod") in GEVSETILEBILIR or
+                 (k.get("kod") == "HEDEF_ASIMI" and k.get("tur") == "SERT"))
+             and not k.get("yasal", False)}),
     }
+
+
+# ----------------------------------------------------------------------
+# 4. Hedef asimi -- K-67
+# ----------------------------------------------------------------------
+
+def _asim_gevsek_plan(girdi, ayar, saniye=None):
+    """K-67: HEDEF_ASIMI SERT iken cozumsuzluk -- YALNIZ asim YUMUSAK'a cevrilip
+    model yeniden kurulur; obur butun sert kurallar AYNEN kalir. Iki adim:
+
+      1. Amac YALNIZ toplam asim (kisi-saat): en az kac kisi fazla gerekiyor?
+         Cozucu OPTIMAL derse bu sayi KANITLIDIR (`en_az_kanitli`); sure
+         dolarsa bulunan en iyi sayidir, TAHMINDIR (K-37).
+      2. Toplam asim o sayida sabitlenir, ilk adimin plani ipucu olur ve
+         urunun normal amaci (obur yumusak kurallar) iyilestirilir -- taslak
+         plan (K-10) "en az asimli planlarin en iyisi"ne yaklassin. Bu adim
+         plan bulamazsa ilk adimin plani doner.
+
+    Butce `teshis_asim_saniye` (varsayilan 30), iki adima yari yariya.
+    Donen: (en_iyi_plan, asim_hucreleri); `asim_hucreleri`:
+      {"hucreler": [{ekip, gun, saat, hedef, atanan, fazla}],
+       "toplam_fazla", "en_az_kanitli", "saniye"}
+    Yumusatilmis model de cozulemiyorsa tikanma asimda degildir: (None, None).
+    """
+    saniye = float(saniye if saniye is not None else (ayar or {}).get("teshis_asim_saniye", 30))
+    kurallar = [dict(k, tur="YUMUSAK") if k.get("kod") == "HEDEF_ASIMI" else k
+                for k in girdi.get("kurallar", []) or []]
+    m = Model(dict(girdi, kurallar=kurallar)).kur()
+    toplam_asim = sum(m.asim.values())
+    normal_amac = sum(a * v for a, v in m.cezalar)
+
+    # 1. adim: yalniz asim
+    m.m.Minimize(toplam_asim)
+    c = cp_model.CpSolver()
+    c.parameters.max_time_in_seconds = saniye / 2.0
+    c.parameters.num_search_workers = cekirdek_sayisi()
+    durum = c.Solve(m.m)
+    if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return None, None
+    en_az = int(round(c.ObjectiveValue()))
+    kanitli = durum == cp_model.OPTIMAL
+    degerler = {}
+    for t, gun, saat in m._hucreler():
+        v = m.asim.get((t.get("ekip"), gun, saat))
+        if v is not None:
+            degerler[(t.get("ekip"), gun, saat)] = int(c.Value(v))
+    from .coz import _atamalari_cikar
+    atamalar = _atamalari_cikar(m, c)
+
+    # 2. adim: asim o sayida, normal amac
+    proto = m.m.Proto()
+    for i in range(len(proto.variables)):
+        v = m.m.GetIntVarFromProtoIndex(i)
+        m.m.AddHint(v, c.Value(v))
+    m.m.Add(toplam_asim <= en_az)
+    m.m.Minimize(normal_amac)
+    c2 = cp_model.CpSolver()
+    c2.parameters.max_time_in_seconds = saniye / 2.0
+    c2.parameters.num_search_workers = cekirdek_sayisi()
+    if c2.Solve(m.m) in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        atamalar = _atamalari_cikar(m, c2)
+        for k, v in m.asim.items():
+            degerler[k] = int(c2.Value(v))
+
+    hucreler = []
+    for t, gun, saat in m._hucreler():
+        fazla = degerler.get((t.get("ekip"), gun, saat), 0)
+        if fazla > 0:
+            hucreler.append({"ekip": t.get("ekip"), "gun": gun, "saat": saat,
+                             "hedef": t.get("hedef"), "atanan": t.get("hedef") + fazla,
+                             "fazla": fazla})
+    en_iyi = {
+        "var": bool(atamalar),
+        "atamalar": atamalar,
+        "not": ("K-10/K-67: bu bir TASLAKTIR, otomatik kaydedilmez. HEDEF_ASIMI "
+                "yumusatilarak bulundu; asim satirlari bagimsiz dogrulayicida "
+                "SERT gorunur ve yayin kapisinda BILGI verir (durdurmaz) -- bu "
+                "taslagi yayinlamak yoneticinin kararidir."),
+        "gevsetilen_kurallar": ["HEDEF_ASIMI"],
+    }
+    asim = {"hucreler": hucreler,
+            "toplam_fazla": sum(h["fazla"] for h in hucreler),
+            "en_az_kanitli": kanitli,
+            "saniye": saniye}
+    return en_iyi, asim

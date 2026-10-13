@@ -73,6 +73,13 @@ VARSAYILAN = {
     # Urun kodu bunu BOS birakir; kalite-olc.py yapilandirmalari doldurur.
     # Sure ve isci sayisi buradan verilmez (yukaridaki alanlar esastir).
     "cozucu_parametreleri": {},
+    # K-62 ilke 1 (12 Ekim, merdiven referansi): birinci asamanin fazla
+    #   mesaisiz denemeleri tohum 1, 2, 3 ile arar (K-61). Referans plan
+    #   urunun varsayilan aramasindan BASKA bir baslangicla uretilmeli
+    #   (ayni baslangicla motor kendi planini yeniden bulur, olcu motoru
+    #   kayirir -- bulgu 22). `tohum_kaydirma: 6` -> tohumlar 7, 8, 9.
+    #   OLCUM secenegi; urun 0 (degismez).
+    "tohum_kaydirma": 0,
     # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
     #   bir plana "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya
     #   indirdi) ama ipucusuz arama guvenilir degil (yedi kosunun ikisi plan
@@ -541,10 +548,11 @@ def _fazla_mesaisiz_ara(kuruldu, ayar, pay):
         c = cp_model.CpSolver()
         c.parameters.max_time_in_seconds = parca
         c.parameters.num_search_workers = isci
-        c.parameters.random_seed = i + 1          # 1 = CP-SAT varsayilani (bugunku arama)
+        tohum = i + 1 + int(ayar.get("tohum_kaydirma") or 0)   # K-62 ilke 1 (olcum)
+        c.parameters.random_seed = tohum          # 1 = CP-SAT varsayilani (bugunku arama)
         t0 = time.time()
         durum = c.Solve(kuruldu.m)
-        denemeler.append({"tohum": i + 1, "saniye": round(time.time() - t0, 2),
+        denemeler.append({"tohum": tohum, "saniye": round(time.time() - t0, 2),
                           "durum": c.StatusName(durum)})
         if durum in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE):
             break                                 # plan var, ya da yoklugu kanitli
@@ -1003,8 +1011,12 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
     #
     # Verilen cevap DEGISMEDI, yalnizca fiyati dustu. Ulasilamayan hucre
     # yoksa bu kontrol sessizdir.
-    from .teshis import ulasilamayan_hucre, teshis_koy
+    from .teshis import ulasilamayan_hucre, teshis_koy, celisen_talep
     erisilmez = ulasilamayan_hucre(girdi, kuruldu)
+    # K-67 (12 Ekim): HEDEF_ASIMI SERT iken asgari / saha tabani / devir
+    # hedefi asiyorsa hucre hedefte tutulamaz -- girdinin celiskisi.
+    if not erisilmez:
+        erisilmez = celisen_talep(girdi, kuruldu)
     if erisilmez:
         return teshis_koy(girdi, kuruldu,
                           {"degisken_sayisi": len(kuruldu.x) + len(kuruldu.mola),

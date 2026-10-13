@@ -4937,6 +4937,24 @@ türer; asgari = hedef − 1), S30 setleri YUMUŞAK kalır (tarihsel), sert
 kural + seviye 1 aynı değişiklik setinde; D'nin tam ölçek okuması da o
 tabanda. Ayrıntı K-67.
 
+**Bulgu 30 (12 Ekim 22:40–23:00, bulut, 2 çekirdek) — fazla mesaisiz ilk
+arama 2 çekirdekte 500 kişide bulamıyor.** Seviye 1 referansının bulut
+denemesi (ürün yolu, tohum 7, 900 sn) planı **16 saat fazla mesaiyle**
+döndürdü; kurucu durdu (referans fazla mesaisiz olmalı). Ayırmak için yalnız
+ilk arama ölçüldü (`_fazla_mesaisiz_ara`, 3 × 40 sn): yeni tabanda tohum
+7-8-9 **ve** 1-2-3 hepsi UNKNOWN; **kontrol — eski S30-95'te de 1-2-3
+UNKNOWN**. Yani sebep yeni set değil bulutun 2 çekirdeği (Mustafa'nın 6
+çekirdeğinde aynı arama 9–21 sn; bulgu 25 kuyruk ölçümü). Sonuçlar: (i) 500
+kişilik referans yalnız Mustafa'nın makinesinde (K-62 zaten öyle); referans
+yolu `fazla_mesai_sifirda_tut` ile sağlamlaştırıldı (ürün yolu değil — O-18
+sert kesim; referansın geçerli ve fazla mesaisiz olması yeter); (ii) haftalık
+500 bekçisi (GitHub 2 çekirdek) "fazla mesai 0"ı **zorlamaz**, raporlar —
+yalnız sert kurallar (aşım 0, sert 0); (iii) **ürün için açık soru:** 2–4
+çekirdekli bir müşteri sunucusunda K-61'in "önce fazla mesaisiz" yolu 500
+kişide çalışmaz; plan fazla mesaiyle döner. Barındırma kararı (satış sonrası)
+çekirdek sayısını şart koymalı ya da ilk arama süresi çekirdeğe göre
+ölçeklenmeli — ölçülmedi, karar Mustafa'da (M-16 konteyner sorularına eklenmeli).
+
 *Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
 makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı
 yetişmezse plan) ve K-64 kod; (3) hibrit ölçümü KAPSAMA; (4) K-62 merdiven

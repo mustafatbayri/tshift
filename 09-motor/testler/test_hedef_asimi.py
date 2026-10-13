@@ -129,3 +129,144 @@ def test_TAM_zamanli_45_saat_tabani_cezaya_ragmen_DOLAR():
     # tatillerini FARKLI talep gunlerine koyar -> 4 gun cakisir, 4 x 8 = 32
     # hucre asim. (Ayni gunu tatil yapsalar 5 x 8 = 40 olurdu.)
     assert len([i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]) == 32
+
+
+# ----------------------------------------------------------------------
+# 3. K-67 (Mustafa, 12 Ekim 2026): HEDEF_ASIMI SERT -- "Hicbir isletme talebin
+#    ustunde eleman calistirmaz." Tur girdiden okunur; YUMUSAK yol (ustteki
+#    testler) aynen kalir. Kabul olcutleri 1-5 (12 Ekim 22:03 onayi) ve eki
+#    (22:09): yoneticinin elle ekledigi fazla kisi yayini DURDURMAZ, kabul
+#    ISTEMEZ -- `bilgi_ihlaller`de gorunur.
+# ----------------------------------------------------------------------
+
+from cozucu.teshis import _en_iyi_plan                        # noqa: E402
+
+
+def _sert(g):
+    for k in g["kurallar"]:
+        if k["kod"] == "HEDEF_ASIMI":
+            k["tur"] = "SERT"
+    return g
+
+
+def _tam_zamanli_sahne():
+    """Iki 45 saatlik tam zamanli, 6 gun x 7,5 net; talep 6 gun 09-17 hedef 1.
+    Ikisi 12 vardiya yazmak zorunda; asim yasakken talepli gunlere en fazla
+    6 + talepsiz 7. gune 2 = 8 sigar -> SERT'te COZUMSUZ. En az asim: 4 gun x
+    8 hucre = 32 (yumusak yolun buldugu sayi; ust test)."""
+    g = _sahne(kisi=2)
+    g["vardiya_sablonlari"] = [dict(V, bit=17.5)]
+    for c in g["calisanlar"]:
+        c["sozlesme"] = {"tip": "tam_zamanli", "haftalik_saat": 45, "gun_sayisi": 6}
+    g["talep"] = [{"ekip": "E", "gun": d, "saat": s, "asgari": 1, "hedef": 1}
+                  for d in range(6) for s in range(9, 17)]
+    g["kurallar"] += [_kural("SAAT_DENGESI", tolerans_saat=0),
+                      _kural("HAFTALIK_AZAMI", yasal=True, azami_saat=45)]
+    return g
+
+
+def test_K67_SERT_motor_hedefin_ustune_HIC_yazmaz_amac_kiriliminda_yok():
+    g = _sert(_sahne())
+    m = Model(dict(g)).kur()
+    assert m.asim == {} and not [v for _, v in m.cezalar if v.Name().startswith("ha_")]
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c["durum"]
+    r = degerlendir(g, c["atamalar"])
+    assert not [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert "HEDEF_ASIMI" not in c["cozum_istatistikleri"]["amac_dagilimi"]
+    # yumusak yolda degisken ve kirilim var (ayni sahne)
+    m2 = Model(_sahne()).kur()
+    assert len(m2.asim) == 45
+
+
+def test_K67_SERT_dogrulayici_SERT_satir_yayini_DURDURMAZ_bilgi_verir():
+    g = _sert(_sahne())
+    r = degerlendir(g, _plan(["P1", "P2", "P3"]))
+    ih = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert len(ih) == 45 and all(i["agirlik"] == "SERT" for i in ih)
+    k = r["yayin_kapisi"]
+    assert k["yayinlanabilir"] is True                          # K-67 eki: durdurmaz
+    assert len(k["bilgi_ihlaller"]) == 45
+    assert k["kabul_bekleyen_ihlaller"] == [] and k["engelleyen_ihlaller"] == []
+    assert k["kabul_secenegi_sunulur"] is False                  # kabul istemez
+    # obur sert kurallar kapiyi eskisi gibi kapatir: bilgi yolu yalniz HEDEF_ASIMI
+    g2 = _sert(_sahne())
+    g2["kurallar"].append(_kural("GUNLUK_AZAMI", yasal=True, azami_saat=4))
+    r2 = degerlendir(g2, _plan(["P1"]))
+    assert r2["yayin_kapisi"]["yayinlanabilir"] is False
+
+
+def test_K67_SERT_sablon_geometrisi_COZUMSUZ_teshis_asim_hucreleri_ve_taslak():
+    g = _sert(_tam_zamanli_sahne())
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5, "teshis_kural_saniye": 10})
+    assert c["durum"] == "cozumsuz", c["durum"]
+    t = c["teshis"]
+    kodlar = {k["kod"] for k in t["engelleyen_kurallar"]}
+    assert "HEDEF_ASIMI" in kodlar, kodlar
+    a = t["asim_hucreleri"]
+    assert a["toplam_fazla"] == 32 and a["en_az_kanitli"] is True
+    assert len(a["hucreler"]) == 32 and all(h["fazla"] == 1 and h["hedef"] == 1 for h in a["hucreler"])
+    ei = c["en_iyi_plan"]
+    assert ei["var"] is True and ei["gevsetilen_kurallar"] == ["HEDEF_ASIMI"]
+    r = degerlendir(g, ei["atamalar"])
+    sert_disi = [i for i in r["ihlaller"] if i["agirlik"] == "SERT" and i["kural"] != "HEDEF_ASIMI"]
+    assert sert_disi == []                                       # obur sert kurallar AYNEN tuttu
+    assert len([i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]) == 32
+    assert r["yayin_kapisi"]["yayinlanabilir"] is True           # taslagi yayinlamak yoneticinin karari
+
+
+def test_K67_en_iyi_plan_HEDEF_ASIMI_SILMEZ_yumusatir():
+    g = _sert(_tam_zamanli_sahne())
+    ei = _en_iyi_plan(g, {"azami_saniye": 20})
+    assert ei["var"] is True and "HEDEF_ASIMI" in ei["gevsetilen_kurallar"]
+    r = degerlendir(g, ei["atamalar"])
+    # yumusatilinca en az asimli dagilim (32); silinseydi asim bedava olurdu ve
+    # 12 Ekim'de olculdu: 5 kosuda 5'i 48 (iki kisi alti gunun hepsinde ust uste)
+    assert len([i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]) == 32
+
+
+def test_K67_ON_KONTROL_asgari_hedeften_buyuk_COZUCU_CALISMADAN_cozumsuz():
+    g = _sert(_sahne())
+    g["talep"][10]["asgari"] = 2                                  # gun 1 saat 10: asgari 2, hedef 1
+    c = coz(g, {"azami_saniye": 20})
+    assert c["durum"] == "cozumsuz"
+    assert c["cozum_istatistikleri"]["durma_sebebi"] == "on_kontrol"
+    t = c["teshis"]
+    assert t["hucre"] == {"ekip": "E", "gun": 1, "saat": 10} and t["gereken"] == 2 and t["mumkun"] == 1
+    assert {k["kod"] for k in t["engelleyen_kurallar"]} == {"ASGARI_KAPSAMA", "HEDEF_ASIMI"}
+    assert "asgarisi 2, hedefi 1" in t["engelleyen_kurallar"][0]["gerekce"]
+    assert c["en_iyi_plan"]["var"] is False
+    # YUMUSAK'ta celiski degildir: plan cikar (asgari 2, 1 kisi asim cezasi)
+    g2 = _sahne(kisi=4)
+    g2["talep"][10]["asgari"] = 2
+    assert coz(g2, {"azami_saniye": 20, "durgunluk_saniye": 5})["durum"] == "cozuldu"
+
+
+def test_K67_ON_KONTROL_saha_tabani_ve_gecmis_devir_hedefi_asiyorsa():
+    g = _sert(_sahne())
+    g["kurallar"].append(_kural("SAHADA_ASGARI", asgari_sahada=2))
+    c = coz(g, {"azami_saniye": 20})
+    assert c["durum"] == "cozumsuz" and c["cozum_istatistikleri"]["durma_sebebi"] == "on_kontrol"
+    assert "SAHADA_ASGARI" in {k["kod"] for k in c["teshis"]["engelleyen_kurallar"]}
+    # onceki haftanin iki gecesi pazartesi 00-07'yi kapliyor; o saatlerin hedefi 1
+    g2 = _sert(_sahne())
+    for cc in g2["calisanlar"][:2]:
+        cc["gecmis_vardiyalar"] = [{"gun": -1, "bas": 23, "bit": 31}]
+    g2["talep"].append({"ekip": "E", "gun": 0, "saat": 3, "asgari": 0, "hedef": 1})
+    c2 = coz(g2, {"azami_saniye": 20})
+    assert c2["durum"] == "cozumsuz" and c2["cozum_istatistikleri"]["durma_sebebi"] == "on_kontrol"
+    assert c2["teshis"]["hucre"] == {"ekip": "E", "gun": 0, "saat": 3}
+    assert "onceki haftadan tasan 2" in c2["teshis"]["engelleyen_kurallar"][0]["gerekce"]
+
+
+def test_K67_K54_donmus_gundeki_asim_cozumu_KILITLEMEZ_gecmis_isaretli():
+    plan0 = _plan(["P1", "P2"], gunler=[0])                      # gun 0'da iki kisi (hedef 1)
+    g = _sert(_sahne())
+    g["donmus_gunler"] = [0]
+    g["mevcut_plan"] = plan0
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c["durum"]
+    r = degerlendir(g, c["atamalar"])
+    ih = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert ih and all(i["gun"] == 0 and i.get("gecmis") for i in ih)   # olan oldu
+    assert r["yayin_kapisi"]["bilgi_ihlaller"] == []             # gecmis bilgiye de girmez

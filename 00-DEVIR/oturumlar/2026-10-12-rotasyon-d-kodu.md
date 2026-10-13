@@ -97,10 +97,76 @@ korkuluk → `09-motor` testleri (649) → zor veri seti (50) → `DENETIM.py`
 (0 hata beklenir) → commit + push → `py mutasyon_kostur.py` (374, yaşayan 0
 beklenir) → damga commit'i. CI beklentisi: 09 işi 649, 08 işi 50.
 
+**21:28 — blok koştu (Mustafa'nın makinesi):** 649 passed (1 dk 34 sn), 50
+passed (7 dk 7 sn), DENETIM HATA 0 / 17 uyarı, `573ee6e` push
+(`2f16729..573ee6e`), tam mutasyon **374 · yaşayan 0 · atlanan 0** (damga
+19:57). Bulut kopyası `573ee6e` ile birebir (stash karşılaştırması). Damga
+dosyası + bu ek ayrı commit.
+
 ## 5 · Açık kalanlar
 
-1. Mustafa'nın bloğu (yukarıda).
+1. ~~Mustafa'nın bloğu~~ ✅ (21:28).
 2. Sıra 2: K-62 seviye 1 aracı + K-67 `HEDEF_ASIMI` sert + teşhis + testler,
    mutasyonlar, şartname §6.4 (BURADAN ⚠ 16:00).
 3. Sıra 3: seviye 1 taban ölçümü (Mustafa'nın makinesi, 900 sn × 3) — D'nin
    tam ölçek okuması da orada.
+
+## 6 · Sıra 2 — K-67 + K-62 seviye 1: açılış ve kabul ölçütleri (21:30)
+
+Okunan: K-67 tamamı, K-62 tamamı (seviye 1 satırı, kadro tablosu),
+`08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/` (OKU-BENI §3, `b_gomulu.py`),
+`model.py _kapsama`, `teshis.py`, `kurallar.py hedef_asimi`,
+`test_hedef_asimi.py`, `uret_veri_seti.py` (TALEP_PROFILI, kadro).
+Kabul ölçütleri 1–10 ve iki soru sohbette Mustafa'ya soruldu; cevap
+gelmeden kod yok.
+
+**22:03–22:11 — cevaplar.** *"1- ok 2- ok 3- ok 4- neden böyle anlamadım 5- ok
+6 20 satışçı fazla bence bunu 10 yapalım. 7- ok 8- ok 9 - bunu tam anlamadım.
+10 ok"*; Back Office gece hedefi 3 ✅. 4 ve 9 açıldı (puan dökümü / bekçiler
+ve maliyetleri) → 22:09 *"Gerekçeli kabul istemesine gerek yok sadece
+yöneticiyi bilgilendirsin ve bu aksiyonun yönetici tarafından alındığını
+görelim yeter"* (K-67 eki), 22:11 *"ok önerine katılıyorum"* (500 çözüm
+bekçisi haftalık CI). Ayrıca 21:31 sorusu: *"koşu sonuçlarında hâlâ hedef
+aşımını yumuşak görüyorum"* → cevap: sert hâli o an kodda değildi (sıra 2);
+eski S30 seti sertle çözümsüz (bulgu 29), K-67 madde 4 ile tarihsel.
+
+## 7 · K-67 + merdiven seviye 1 koda indi (22:05–23:15, bulut)
+
+- **Motor:** `_kapsama` SERT → `atanan ≤ hedef` (K-54 süzgecinden geçer);
+  `teshis.py` `celisen_talep` (asgari / `SAHADA_ASGARI` / devir > hedef →
+  çözücüsüz `cozumsuz`), `_asim_gevsek_plan` (önce yalnız aşım — OPTIMAL ise
+  kanıtlı en az; sonra o tavanda normal amaç; ilk taslakta tek ağırlıkla
+  "kanıtlı" diyecektim, kanıt olmadığını görüp iki adıma çevirdim),
+  `_en_iyi_plan` HEDEF_ASIMI'yi siler yerine yumuşatır (silinince taslak 48
+  aşım, yumuşatınca 32 — 5/5 ölçüldü, test tam sayıya sıkılaştırıldı);
+  `denetle.py` `BILGI_VEREN_KURALLAR` → `yayin_kapisi.bilgi_ihlaller`.
+- **Tuzak bulundu:** fazla mesaisiz ilk arama tohumları 1-2-3 sabit, dışarıdan
+  `random_seed` görmüyordu → referans ürünle aynı başlangıçtan üretilecekti
+  (K-62 ilke 1). `tohum_kaydirma` ölçüm seçeneği (ürün 0); test + mutant.
+- **Merdiven:** `merdiven.py` — taban (S30-95 + 10 çift yetkinlikli satışçı
+  `random.Random(TOHUM+62)` ile + BO gece 00–08 asgari 2 / hedef 3),
+  referans (tohum 7, `fazla_mesai_sifirda_tut`; şartlar: 0 sert, fazla mesai
+  0), seviye 1 (hedef = doğrulayıcının kendi sayımı — HEDEF_KAPSAMA /
+  HEDEF_ASIMI satırlarından; asgari = hedef − 1, en az 1; HEDEF_ASIMI SERT),
+  `plan_puani` (planı modele eşitlikle sabitleyip motorun ölçüsüyle puan).
+  Küçük kopya (0,1; 49 kişi): referans tabanda 156 aşım + 13 eksik → seviye
+  1'de 0/0/0; referansın seviye 1 puanı **3.404** (mola 2.170, adalet 1.210,
+  rotasyon 24); motor 120 sn'de (ilk sürümde) **2.863**, aşım 0, sert 0,
+  fazla mesai 0, ilk plan 1,4 sn.
+- **Bulut denemesi 500 (bulgu 30):** ürün yoluyla tohum 7 referansı 16 saat
+  fazla mesaiyle döndü; ilk arama ölçüldü — yeni ve eski sette 1-2-3 ve
+  7-8-9 hepsi UNKNOWN (2 çekirdek). Referans yolu sert kesime alındı; haftalık
+  bekçi fazla mesaiyi zorlamıyor. Sıkı setin 500'de çözülme süresi bulutta
+  ÖLÇÜLEMEDİ (500 referansı yok) — ilk ölçüm Mustafa'nın taban koşusu.
+- **Testler/mutasyon (bulut):** 09-motor 657; `k67` 14 + `hedef_asimi` 4
+  (hepsi öldü; toplam 388); `test_merdiven.py` küçük kopyada 7 geçti, 500
+  dosyaları yokken 2 kırmızı (bilerek — referans Mustafa'nın koşusunda
+  üretilir), haftalık test atlandı.
+- **Şartname:** §6.4 satırı (SERT, kabul ✅ bilgi verir), §4.5 alt başlık,
+  §11.3 `asim_hucreleri` + ön kontrol, `bilgi_ihlaller`, değişiklik 68.
+
+**Blok (Mustafa, sohbette verildi):** korkuluk → 09 testleri (657) →
+`py merdiven.py referans --olcek 1.0 --saniye 900 --tohum 7` → 08 testleri
+(59 + 1 atlanan) → DENETIM → commit/push → `py kalite-olc.py --seviye 1
+--saniye 900 --tekrar 3 --yapilandirma varsayilan --etiket taban-900` → tam
+mutasyon (388). Karar kuralı K-67 *"Ölçü"* ve kabul ölçütü 10.

@@ -678,6 +678,15 @@ def kapsama_yuzdeleri(girdi, atamalar):
 # Yayin kapisi -- #4.5, K-16 / K-20 / K-24
 # ----------------------------------------------------------------------
 
+# K-67 eki (Mustafa, 12 Ekim 2026 22:09): "Gerekceli kabul istemesine gerek
+# yok sadece yoneticiyi bilgilendirsin ve bu aksiyonun yonetici tarafindan
+# alindigini gorelim yeter." Bu kurallar SERTtir -- motor onlari ASLA
+# cignemez -- ama plandaki ihlalleri (yoneticinin elle ekledigi kisi) yayini
+# DURDURMAZ ve kabul ISTEMEZ: `bilgi_ihlaller` listesinde gorunur. Kimin
+# ekledigi motorun degil plan editorunun (backend) degisiklik kaydidir.
+BILGI_VEREN_KURALLAR = {"HEDEF_ASIMI"}
+
+
 def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
     """Bu plan yayinlanabilir mi, yayinlanamazsa neden.
 
@@ -703,11 +712,20 @@ def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
                          kabul degildir.
         YUMUSAK       -> yalniz RAPOR; kapiyi etkilemez.
 
+      DORDUNCU YOL -- BILGI (K-67 eki, 12 Ekim): SERT ama yayini durdurmayan
+      kural (`BILGI_VEREN_KURALLAR`, bugun yalniz HEDEF_ASIMI). Motor
+      cignemez; plandaki satiri yoneticinin elle karari demektir ve
+      `bilgi_ihlaller`de gorunur.
+
       `okunmayan_alanlar` (T-19) kapiya BAGLANMADI: o bir girdi alani
       meselesidir, kural denetimi degil; rapor olarak kalir.
     """
+    bilgi = [i for i in ihlaller
+             if i.get("agirlik") == "SERT" and i.get("kural") in BILGI_VEREN_KURALLAR
+             and not i.get("gecmis")]               # K-67 eki: bilgi verir, durdurmaz
     acik_sert = [i for i in ihlaller
                  if i.get("agirlik") == "SERT" and i.get("durum") != "kabul_edildi"
+                 and i.get("kural") not in BILGI_VEREN_KURALLAR
                  and not i.get("gecmis")]          # K-54: olan oldu, kapi saymaz
     engelleyen = [i for i in acik_sert if not i.get("kabul_edilebilir")]
     kabul_bekleyen = [i for i in acik_sert if i.get("kabul_edilebilir")]
@@ -719,6 +737,8 @@ def yayin_kapisi(ihlaller, girdi=None, uygulanmayan=None, eksik_boyutlar=None):
         "yayinlanabilir": not acik_sert and not d_engelleyen and not d_bekleyen,
         "engelleyen_ihlaller": engelleyen,       # kabul secenegi SUNULMAZ
         "kabul_bekleyen_ihlaller": kabul_bekleyen,  # gerekceyle kabul edilebilir
+        # K-67 eki: yoneticinin karari -- yayini durdurmaz, kabul istemez
+        "bilgi_ihlaller": bilgi,
         # T-18: "bakamadim" satirlari -- her birinde `etki` ve cumle var
         "denetlenemeyen_kurallar": denetlenemeyen,
         "kabul_secenegi_sunulur": (bool(kabul_bekleyen) or bool(d_bekleyen))

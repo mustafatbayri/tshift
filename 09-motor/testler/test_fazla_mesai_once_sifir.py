@@ -1124,3 +1124,17 @@ def test_UCTAN_UCA_uc_deneme_butceyi_ASMAZ(monkeypatch):
     assert 2.9 < b["saniye"] < 3.6, b
     assert ist["ilk_asama_sn"] + ist["ana_asama_butce_sn"] <= 10.0 + 0.05, ist
     assert c["metrikler"]["fazla_mesai_saat"] == 0
+
+
+def test_TOHUM_KAYDIRMA_referans_icin_baska_baslangic_urunde_0(monkeypatch):
+    """K-62 ilke 1 (12 Ekim): merdivenin referans plani urunun varsayilan
+    aramasindan BASKA bir baslangicla uretilir. `tohum_kaydirma: 6` ->
+    fazla mesaisiz denemeler 7, 8, 9 ile arar; urunun varsayilani 0
+    (tohumlar 1, 2, 3 -- K-61 aynen)."""
+    assert C.VARSAYILAN["tohum_kaydirma"] == 0
+    cagri = _kaydeden_cozucu(monkeypatch, ilk_unknown=2)
+    k = Model(_sahne(gun=5)).kur()
+    ayar = dict(C.VARSAYILAN, **dict(UZUN, fazla_mesaisiz_deneme=3, tohum_kaydirma=6))
+    assert C._ipucu_ver(k, ayar) is True
+    assert [t for _, t in cagri[:3]] == [7, 8, 9], cagri
+    assert [d["tohum"] for d in k.fazla_mesai_once_sifir["denemeler"]] == [7, 8, 9]

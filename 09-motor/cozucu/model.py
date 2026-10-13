@@ -734,6 +734,7 @@ class Model(object):
         self.mola = {}       # (e,d,t,s) -> BoolVar
         self.cezalar = []    # (agirlik, IntVar) ciftleri
         self.rotasyon = {}   # VARDIYA_ROTASYON_YONU (K-65): (kisi, gun) -> geri saat degiskeni
+        self.asim = {}       # HEDEF_ASIMI YUMUSAK (K-53/K-67): (ekip, gun, saat) -> asim degiskeni
         self.notlar = []     # uygulanmayan/atlanan seyler -- sessiz gecmemek icin
         self.profil = self._profil_sec(girdi.get("profil"))
         self.mola_penceresi = self._mola_penceresi_sec()
@@ -2230,8 +2231,18 @@ class Model(object):
         # HEDEF_ASIMI (K-53, T-54): hedefi ASAN kisi-saat ceza. Bu olmadan
         # bir saatin bedeli yoktu; 4 yari zamanli, 1 kisilik talep icin
         # dordu de 45 saate dolduruluyordu (29 Eylul'de olculdu).
+        #
+        # K-67 (Mustafa, 12 Ekim 2026: "Hicbir isletme talebin ustunde eleman
+        # calistirmaz ... Bu kriterin de sert ihlal olmasi gerekiyor"):
+        # tur girdiden okunur. SERT -> `atanan <= hedef` KISITI (ceza degiskeni
+        # yok, amac kiriliminda gorunmez); YUMUSAK -> K-53'teki ceza (kiraci
+        # `tur_gecersiz_kilma` ile yumusatmissa ya da K-67 oncesi S30 setleri).
+        # Cozumsuzlukte teshis.py `asim_hucreleri` verir (asim yumusatilarak).
         asim_kural = _kural(self.girdi, "HEDEF_ASIMI")
-        asim_agirlik = self._agirlik("HEDEF_ASIMI", asim_kural) if asim_kural else 0
+        asim_sert = bool(asim_kural) and asim_kural.get("tur") == "SERT"
+        asim_agirlik = (self._agirlik("HEDEF_ASIMI", asim_kural)
+                        if asim_kural and not asim_sert else 0)
+        self.asim = {}       # (ekip, gun, saat) -> asim degiskeni (yalniz YUMUSAK)
         kisi_sayisi = max(1, len(self.calisanlar))
         # SAHADA_ASGARI (K-33): firmanin "sahada en az N kisi" cumlesi.
         # Talep tablosunun `asgari`si ile SINIRLANMAZ -- ikisi ayri sey
@@ -2249,9 +2260,13 @@ class Model(object):
                 self._kisit(eksik >= t["hedef"] - sum(atanmis))
                 self.cezalar.append((hedef_agirlik, eksik))
             if asim_kural and t.get("hedef") is not None:
-                asim = self.m.NewIntVar(0, kisi_sayisi, "ha_%d_%d" % (gun, saat))
-                self._kisit(asim >= sum(atanmis) - t["hedef"])
-                self.cezalar.append((asim_agirlik, asim))
+                if asim_sert:
+                    self._kisit(sum(atanmis) <= t["hedef"])     # K-67
+                else:
+                    asim = self.m.NewIntVar(0, kisi_sayisi, "ha_%d_%d" % (gun, saat))
+                    self._kisit(asim >= sum(atanmis) - t["hedef"])
+                    self.cezalar.append((asim_agirlik, asim))
+                    self.asim[(t.get("ekip"), gun, saat)] = asim
             # MOLA_KAPSAMASI (yumusak) -- K-34: hucrenin DORT ceyregi ayri
             # ayri olculur ama CEZA DEGISKENI TEK KALIR ve hucrenin EN KOTU
             # anini tasir.

@@ -3347,9 +3347,9 @@ sınanmıyor, en iyi plan bilinmiyor (bulgu 22; O-17).
 |---|---|---|
 | Ekipler | Satış 285 · Back Office 145 · Müşteri Hizmetleri 70 (bugünkü kadro) | Mustafa: *"285 145 70 kalsın"* |
 | İki işi yapabilen kişiler | Bütün seviyelerde; satışçıların bir kısmı back office'e de üye | Mustafa (yukarıdaki alıntı); K-50 |
-| Kaç kişi | ~~30 satışçı (yaklaşık %10) — varsayım~~ **20 satışçı** (yaklaşık %7) | Mustafa, 7 Ekim 07:18: *"4- 30 fazla bence 20"* |
+| Kaç kişi | ~~30 satışçı (yaklaşık %10) — varsayım~~ ~~20 satışçı (yaklaşık %7)~~ **10 satışçı** (yaklaşık %3,5) | Mustafa, 7 Ekim 07:18: *"4- 30 fazla bence 20"*; **12 Ekim 22:03: *"20 satışçı fazla bence bunu 10 yapalım"*** |
 | Gece 00:00–08:00 back office talebi | Asgari **2** kişi (bugünkü sette hafta içi 13, hafta sonu 6) | Mustafa: *"en az 2 olsun mesela"* |
-| Aynı saatlerin hedefi | 3 kişi — **varsayım** (bugünkü hedef/asgari oranı ≈1,5) | ⚠ merdiven aracı yazılırken teyit |
+| Aynı saatlerin hedefi | 3 kişi | ✅ Mustafa, 12 Ekim 21:58: *"Backoffice 3 ok"* |
 | **Seviye 1'de asgari** 🆕 | **hedef − 1 (en az 1)** — hedef/1,5 varsayımı kalktı | Mustafa, 12 Ekim 15:55: *"asgariyi hedefe yakın tutalım"* (K-67) |
 
 Bugünkü iki set (`08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-S30-85.json`
@@ -3470,7 +3470,7 @@ puanla kısa bir arama; bulunursa o döner (süre bütçesinden pay ister).
 
 ---
 
-## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat** — ✅ **KAPANDI (12 Ekim 14:48): "sonra" ölçüldü, geri geçiş −%95, ağırlık 3 kalır; gün tanımı D (B8) koda indi (12 Ekim 18:00, bulut; Mustafa'nın tam mutasyonu bekleniyor)**
+## K-65 · `VARDIYA_ROTASYON_YONU` tanımı: art arda günlerde geri (erkene) kayma, **dairesel** okunur, ceza **ağırlık × geri saat** — ✅ **KAPANDI (12 Ekim 14:48): "sonra" ölçüldü, geri geçiş −%95, ağırlık 3 kalır; gün tanımı D (B8) koda indi (12 Ekim 18:00; `573ee6e`, tam mutasyon 374 hepsi öldü)**
 
 **Karar (8 ve 11 Ekim 2026, Mustafa).** Sıranın 3. maddesi (dört yumuşak
 kural) için ilk tanım sorusu 8 Ekim 05:05'te soruldu; üç karar:
@@ -3707,8 +3707,11 @@ kaldı), 6 düz anlatıldı, 7: *"sen yorumla ve karar ver"* → üç sayım ayn
   ile aynı koşu, Mustafa 15:57). 500 kişi kurulum: kısıt 809.888 →
   **811.258 (+1.370, +%0,17)**, değişken aynı (636.495), kurma 72,6 → 74,4
   sn (tek ölçüm; `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-rotasyon-D/kisit_say.py`).
-- **Bekleyen:** Mustafa'nın makinesinde testler + DENETIM + commit + tam
-  mutasyon (374).
+- **Mustafa'nın makinesi (12 Ekim 19:00–21:28):** 09-motor 649 passed
+  (1 dk 34 sn), zor veri seti 50 passed (7 dk 7 sn), DENETIM HATA 0
+  (17 uyarı), commit `573ee6e` push; **tam mutasyon 374 · yaşayan 0 ·
+  atlanan 0** (damga 19:57). D tamamlandı; tam ölçek okuması K-62 seviye 1
+  taban ölçümünde.
 
 → §6.3 · §11.3 · K-61 · K-54 · K-42 · O-7 · T-60 ·
 `02-spec/v1.4-hazirlik/03-vardiya-rotasyon-yonu-literatur.md` ·
@@ -3814,7 +3817,7 @@ asgari = hedef − 1, en az 1).
 
 1. *Katalog / şartname §6.4:* `HEDEF_ASIMI` türü **SERT**, yasal ❌, kabul
    ✅ (yönetici bilerek fazla kişi koyarsa K-49 ile kabul ederek yayınlar).
-   Değişiklik satırı 67; katalog sayısı değişmez (41).
+   Değişiklik satırı ~~67~~ **68** (67 D oldu); katalog sayısı değişmez (41).
 2. *Motor:* `_kapsama` türü girdiden okur — SERT ise `atanan ≤ hedef`
    kısıtı (SAAT_DENGESI'nin yaptığı gibi), YUMUŞAK ise bugünkü ceza
    (kiracı `tur_gecersiz_kilma` ile yumuşatabilir — §8'deki alan zaten var).
@@ -3848,6 +3851,41 @@ müşteriyi (şablonlarına oturmayan talep) **çözümsüze** götürür; ürü
 teşhisle açıklar, susmaz. Bu, "yumuşak ceza ile yaklaşık plan" yerine
 "önce veriyi düzelt" tercihidir — Mustafa'nın sahadan söylediği kural
 (*"hep eksik eleman olur ya da ucu ucuna yetişir"*) bunu gerektiriyor.
+
+**Kabul ölçütleri (12 Ekim 22:03 onayı) ve iki ek karar.** Mustafa:
+*"1- ok 2- ok 3- ok 4- neden böyle anlamadım 5- ok 6 20 satışçı fazla bence
+bunu 10 yapalım. 7- ok 8- ok 9 - bunu tam anlamadım. 10 ok"*; açıklamadan
+sonra (22:09–22:11):
+
+- **K-67 eki — kapıda "bilgi verir":** *"Gerekçeli kabul istemesine gerek
+  yok sadece yöneticiyi bilgilendirsin ve bu aksiyonun yönetici tarafından
+  alındığını görelim yeter. 4 bu yorumumla tamamdır."* → hedef aşımı motor
+  için SERT (hiç aşılmaz), yayın kapısında **bilgi** (durdurmaz, kabul
+  istemez; `bilgi_ihlaller`); kimin eklediği plan editörünün `audit_log`
+  kaydı (şartname §4.5 yeni alt başlık). Puan dökümünde görünmez (sert).
+- **Bekçiler (9):** (a) referans bekçisi ✅ (500 ve küçük kopya, çözücüsüz);
+  (b) küçük kopya her commit'te ✅; *"500 için bekçi olması daha sağlıklı
+  olmaz mı bu bize neye mal olur?"* → bedel anlatıldı (her push +5–20 dk,
+  yanlış kırmızı riski) → *"ok önerine katılıyorum"*: **500 kişilik çözüm
+  bekçisi haftalık + elle tetiklenen ayrı CI işi**
+  (`.github/workflows/haftalik-merdiven.yml`); (c) eski setler aynen ✅.
+
+**Koda indi (12 Ekim 22:05–, bulut).** Motor `_kapsama` (SERT → `atanan ≤
+hedef`; YUMUŞAK → K-53 cezası, `Model.asim`), `teshis.py` (`celisen_talep`
+ön kontrolü: asgari / saha tabanı / devir > hedef; `_asim_gevsek_plan`: iki
+adım — önce yalnız aşım, OPTIMAL ise kanıtlı en az; sonra o tavanda normal
+amaç; `_en_iyi_plan` aşımı silmez, yumuşatır), `coz.py` ön kontrol çağrısı
+ve **`tohum_kaydirma`** ölçüm seçeneği (K-62 ilke 1: referans ürünün 1-2-3
+tohumlarıyla değil 7-8-9 ile; ürün 0), `denetle.py` `BILGI_VEREN_KURALLAR`.
+Testler `test_hedef_asimi.py` 6 → **13**, `test_fazla_mesai_once_sifir.py`
++1; mutasyon `k67` **13** (hepsi öldü) + `hedef_asimi` 4 (biri yeniden
+bağlandı, hepsi öldü). Şartname §6.4 satırı, §4.5 alt başlık, §11.3
+`teshis.asim_hucreleri`, `yayin_kapisi.bilgi_ihlaller`, değişiklik **68**
+(67'yi D aldı). Merdiven: `08-motor-testleri/gercekci-veri-seti/merdiven.py`
+(taban → referans → seviye 1; `plan_puani` referansın yeni sahnedeki
+puanını motorun ölçüsüyle hesaplar), bekçiler
+`08-motor-testleri/gercekci-veri-seti/testler/test_merdiven.py`, `kalite-olc.py --seviye 1` (referans
+kıyası kalem kalem).
 
 → K-53 · K-62 · K-39 · K-49 · T-60 bulgu 29 · şartname §6.4, §1.3, §8 ·
 `09-motor/cozucu/model.py` (`_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) ·

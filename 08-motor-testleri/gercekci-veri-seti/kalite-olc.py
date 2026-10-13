@@ -320,12 +320,19 @@ ETIKET = _arg("--etiket", "")       # dosya adina ek: --etiket tekrar3 -> ...-te
 #   HTML olarak planlar/<olcum-dosyasi-adi>/<yapilandirma>-<tekrar>.json|.html
 #   dosyalarina yazilir. --plansiz ile kapatilir (yalniz hizli duman icin).
 PLANSIZ = "--plansiz" in sys.argv
+# K-62 / K-67 (12 Ekim): `--seviye 1` -> merdivenin seviye 1 seti
+#   (fikstur/_sahne-L1-95[-olcek].json; talep referans plandan, HEDEF_ASIMI
+#   SERT). Referansin bu sahnedeki puani kayittan okunur ve her kosunun
+#   yanina kalem kalem yazilir (K-62 ilke 3). Verilmezse S30 seti (tarihsel).
+SEVIYE = _arg("--seviye", None)
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
 def dosya_adi():
     ad = ("kalite-olcumu-%d" % round(DOLULUK * 100) if OLCEK == 1.0
           else "kalite-olcumu-%g-%d" % (OLCEK, round(DOLULUK * 100)))
+    if SEVIYE:
+        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s-" % SEVIYE)
     if ETIKET:
         ad += "-" + ETIKET
     return os.path.join(BURASI, ad + ".json")
@@ -344,6 +351,17 @@ def yaz(d):
 
 def sahne_yukle():
     from uret_veri_seti import sahne_uret
+    if SEVIYE:
+        if SEVIYE != "1" or DOLULUK != 0.95:
+            raise SystemExit("yalniz --seviye 1 (doluluk 0.95) var")
+        import merdiven
+        yol = merdiven.sahne_yolu(OLCEK)
+        if not os.path.exists(yol):
+            raise SystemExit("%s yok -- once: py merdiven.py referans --olcek %g" % (yol, OLCEK))
+        g = json.load(io.open(yol, encoding="utf-8"))
+        print("SAHNE : %s (merdiven seviye 1; HEDEF_ASIMI SERT; referans puani %s)"
+              % (os.path.basename(yol), g["_merdiven"]["referans_puani"]["amac"]))
+        return g
     if OLCEK == 1.0:
         ad = "_sahne-S30-%d.json" % round(DOLULUK * 100)
         g = json.load(io.open(os.path.join(BURASI, "fikstur", ad), encoding="utf-8"))
@@ -1039,8 +1057,34 @@ def main():
             yaz(sonuc)
 
     ozet(sonuc)
+    if SEVIYE:
+        referans_kiyasi(g, sonuc)
     yaz(sonuc)
     print("\nSonuc yazildi: %s" % os.path.basename(dosya_adi()))
+
+
+def referans_kiyasi(g, sonuc):
+    """K-62 ilke 3: her kosu referansla KALEM KALEM (ayni sahne, ayni olcu)."""
+    ref = g["_merdiven"]["referans_puani"]
+    sonuc["referans"] = ref
+    kalemler = sorted(set(ref["dagilim"]) | {k for s in sonuc["kosular"]
+                                              for k in (s.get("amac_dagilimi") or {})})
+    print("\nREFERANS KIYASI (seviye 1; referans 'en az bu kadar iyisi var' -- K-62)")
+    print("  %-22s %10s" % ("kalem", "referans") + "".join(
+        " %12s" % ("%s-%s" % (s["yapilandirma"][:8], s.get("tekrar", 1))) for s in sonuc["kosular"]))
+    for k in ["AMAC"] + kalemler:
+        r = ref["amac"] if k == "AMAC" else ref["dagilim"].get(k, {}).get("ceza", 0)
+        satir = "  %-22s %10s" % (k, r)
+        for s in sonuc["kosular"]:
+            v = s.get("amac_degeri") if k == "AMAC" else (s.get("amac_dagilimi") or {}).get(k, {}).get("ceza", 0)
+            satir += " %12s" % v
+        print(satir)
+    for s in sonuc["kosular"]:
+        if s.get("amac_degeri") is not None:
+            s["referansa_gore_yuzde"] = round(100.0 * (s["amac_degeri"] - ref["amac"]) / ref["amac"], 2)
+            print("  %s-%s: motor %s, referans %s -> %+.2f%% (eksi = motor daha iyi)"
+                  % (s["yapilandirma"], s.get("tekrar", 1), s["amac_degeri"], ref["amac"],
+                     s["referansa_gore_yuzde"]))
 
 
 if __name__ == "__main__":
