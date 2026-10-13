@@ -4955,6 +4955,34 @@ kişide çalışmaz; plan fazla mesaiyle döner. Barındırma kararı (satış s
 çekirdek sayısını şart koymalı ya da ilk arama süresi çekirdeğe göre
 ölçeklenmeli — ölçülmedi, karar Mustafa'da (M-16 konteyner sorularına eklenmeli).
 
+**Bulgu 31 (13 Ekim 04:55–05:44 Mustafa'nın makinesi, 6 çekirdek; okuma
+08:30–09:40 bulut) — seviye 1'de motor ilk geçerli planı bulamıyor.** Taban
+ölçümü (`08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-taban-900.json`, 500 kişi, 900 sn × 3,
+`68cd4cc`): **1 / 3 koşu plan buldu** — aşım 0 ✅, sert 0 ✅, **fazla mesai
+7,5 sa** ❌ (fazla mesaisiz ilk arama 3 × 40 sn UNKNOWN); amaç 62.953 ↔
+referans 55.248 (+%13,95; fazla mesai hariç 40.453 = referanstan **−%27** —
+mola 28.819 ↔ 43.715, adalet 11.400 ↔ 11.515, hedef eksiği 144, rotasyon 90
+↔ 18). **2 / 3 koşu 900 sn'de HİÇ plan bulamadı** (`sure_yetmedi`; birinci
+aşama 245 sn'de yok, tam model kalan 655 sn'de yok). Referans aynı tabanda
+(eski asgariyle, aşım yumuşak) fazla mesaisiz ilk aramayı 8,8 sn'de bulmuştu.
+Kabul ölçütü 10 (*"üçü de çözülür; aşım 0, sert 0, fazla mesai 0"*)
+**tutmadı.** Yapı: seviye 1'de asgari toplamı **21.272** kişi-saat (S30'da
+12.723), hedef 21.687 — her hücre [hedef − 1, hedef] bandında; tam zamanlılar
+45 saati doldurmak zorunda (`SAAT_DENGESI` sert). Plan **var** (referans),
+ama sıfırdan bulmak boşluksuz bir yapboz. **Bulut ayırması (2 çekirdek, 600
+sn, birer koşu; `/tmp` betiği, sonuç bu satırlarda):** olduğu gibi — yok;
+aşım YUMUŞAK (asgari hedef − 1) — yok; eski asgari (aşım SERT) — yok;
+**kontrol S30-95 — buldu** (ilk plan 26 sn, fazla mesai 21 sa). Bulut
+seviye 1'i S30'dan ayırabiliyor; tek kilidi açmak orada yetmiyor — yön
+gösterir, kesin değil (2 çekirdek). **Ürün riski:** talebi kadroya tam eşit
+("ucu ucuna") bir müşteride motor plansız dönebilir — K-10 (*eller boş
+dönülmez*) ve K-63 ile çelişir. **Karar (13 Ekim 14:00, Mustafa): (c)** —
+*"C seçmek istiyorum ama ölçerek gitmek istiyorum tabiki"*: bugünkü sıkı
+set "zor bekçi" kalır; motora sıkı sette ilk planı bulan **yapıcı başlangıç**
+(b) yazılır; merdiven ölçümü **pay'lı ayrı setle** (a) sürer. Önce ayırma
+Mustafa'nın makinesinde (`kalite-olc.py --cesit asim_yumusak | eski_asgari |
+pay1`, 900 sn × 2); karar kuralı oturum kaydında koşudan önce yazıldı.
+
 *Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
 makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı
 yetişmezse plan) ve K-64 kod; (3) hibrit ölçümü KAPSAMA; (4) K-62 merdiven

@@ -160,3 +160,35 @@ def test_HAFTALIK_500_motor_sifirdan_cozer_ASIM_0_sert_0():
     print("HAFTALIK 500: motor %s  referans %s  (%+.1f%%)  eksik %d  fazla mesai %s sa  kirilim %s"
           % (amac, ref, 100.0 * (amac - ref) / ref, d["eksik"], d["fazla_mesai_saat"],
              {k: v["ceza"] for k, v in c["cozum_istatistikleri"]["amac_dagilimi"].items()}))
+
+
+# ----------------------------------------------------------------------
+# Ayirma cesitleri (13 Ekim, bulgu 31) -- seviye 1'den turer, referans gecerli kalir
+# ----------------------------------------------------------------------
+
+@pytest.mark.parametrize("ad", sorted(MD.CESITLER))
+def test_CESIT_referans_gecerli_kalir_ve_tanimi_tutar(ad):
+    g = _yukle(MD.sahne_yolu(0.1))
+    ref = _yukle(MD.referans_yolu(0.1))
+    c = MD.cesit_sahne(g, ad, 0.1)
+    assert c["_merdiven"]["cesit"] == ad and "referans_puani" not in c["_merdiven"]
+    d = MD.referans_denetle(c, ref["atamalar"])
+    assert d["sert"] == 0 and d["asim"] == 0 and d["fazla_mesai_saat"] == 0.0, (ad, d)
+    tur = {k["tur"] for k in c["kurallar"] if k["kod"] == "HEDEF_ASIMI"}
+    eski = {(t["ekip"], t["gun"], t["saat"]): t for t in g["talep"]}
+    if ad == "asim_yumusak":
+        assert tur == {"YUMUSAK"} and c["talep"] == g["talep"]
+        assert d["eksik"] == 0
+    elif ad == "eski_asgari":
+        taban = {(t["ekip"], t["gun"], t["saat"]): t["asgari"] for t in MD.taban_sahne(0.1)["talep"]}
+        assert tur == {"SERT"} and d["eksik"] == 0
+        for t in c["talep"]:
+            a = (t["ekip"], t["gun"], t["saat"])
+            assert t["hedef"] == eski[a]["hedef"] and t["asgari"] == min(eski[a]["hedef"], taban[a])
+    elif ad == "pay1":
+        assert tur == {"SERT"}
+        for t in c["talep"]:
+            a = (t["ekip"], t["gun"], t["saat"])
+            assert t["hedef"] == eski[a]["hedef"] + 1 and t["asgari"] == MD.asgari_kurali(eski[a]["hedef"])
+        assert d["eksik"] == len(c["talep"])          # referans her hucrede tam 1 eksik (bilinen)
+    assert g["_merdiven"].get("referans_puani")       # kaynak sahne degismedi

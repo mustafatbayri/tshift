@@ -325,6 +325,10 @@ PLANSIZ = "--plansiz" in sys.argv
 #   SERT). Referansin bu sahnedeki puani kayittan okunur ve her kosunun
 #   yanina kalem kalem yazilir (K-62 ilke 3). Verilmezse S30 seti (tarihsel).
 SEVIYE = _arg("--seviye", None)
+# 13 Ekim (bulgu 31): `--cesit asim_yumusak|eski_asgari|pay1` -> seviye 1'den
+#   turetilmis ayirma cesidi (merdiven.CESITLER); referans puani o sahnede
+#   yeniden hesaplanir. Dosya adina cesit eklenir.
+CESIT = _arg("--cesit", None)
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
@@ -332,7 +336,7 @@ def dosya_adi():
     ad = ("kalite-olcumu-%d" % round(DOLULUK * 100) if OLCEK == 1.0
           else "kalite-olcumu-%g-%d" % (OLCEK, round(DOLULUK * 100)))
     if SEVIYE:
-        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s-" % SEVIYE)
+        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s-" % (SEVIYE, ("-" + CESIT) if CESIT else ""))
     if ETIKET:
         ad += "-" + ETIKET
     return os.path.join(BURASI, ad + ".json")
@@ -359,8 +363,19 @@ def sahne_yukle():
         if not os.path.exists(yol):
             raise SystemExit("%s yok -- once: py merdiven.py referans --olcek %g" % (yol, OLCEK))
         g = json.load(io.open(yol, encoding="utf-8"))
-        print("SAHNE : %s (merdiven seviye 1; HEDEF_ASIMI SERT; referans puani %s)"
-              % (os.path.basename(yol), g["_merdiven"]["referans_puani"]["amac"]))
+        if CESIT:
+            g = merdiven.cesit_sahne(g, CESIT, OLCEK)
+            ref = json.load(io.open(merdiven.referans_yolu(OLCEK), encoding="utf-8"))
+            t0 = time.time()
+            p = merdiven.plan_puani(g, ref["atamalar"])
+            if not p or p.get("durum") != "OPTIMAL":
+                raise SystemExit("cesitte referans puani hesaplanamadi: %s" % p)
+            g["_merdiven"]["referans_puani"] = p
+            print("CESIT : %s -- %s (referans puani %d sn'de yeniden hesaplandi)"
+                  % (CESIT, merdiven.CESITLER[CESIT], time.time() - t0))
+        print("SAHNE : %s (merdiven seviye 1%s; referans puani %s)"
+              % (os.path.basename(yol), (", cesit " + CESIT) if CESIT else "",
+                 g["_merdiven"]["referans_puani"]["amac"]))
         return g
     if OLCEK == 1.0:
         ad = "_sahne-S30-%d.json" % round(DOLULUK * 100)

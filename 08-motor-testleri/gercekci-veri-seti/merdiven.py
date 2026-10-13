@@ -164,6 +164,54 @@ def seviye1_sahne(taban, referans_atamalar):
     return g
 
 
+# ----------------------------------------------------------------------
+# 3b. Cesitler -- AYIRMA OLCUMU (13 Ekim; bulgu 31)
+# ----------------------------------------------------------------------
+#
+# 13 Ekim taban olcumu: seviye 1'de (500 kisi, 900 sn x 3) yalniz 1 kosu plan
+# buldu (fazla mesai 7,5 sa); 2 kosu HIC plan bulamadi. Bulutta (2 cekirdek)
+# asim yumusatilinca da, eski asgariyle de bulamadi; eski S30 buldu. Mustafa
+# (13 Ekim 14:00): "C secmek istiyorum ama olcerek gitmek istiyorum" -- sebep
+# onun 6 cekirdeginde ayrilir. Cesitler seviye 1'den TURER; seviye 1 dosyasi
+# degismez. "pay1" (a) adayi: setin KOLAYLASTIRILMIS hali (sartname #6
+# madde 7: kolaylastiran ayar acikca yazilir).
+CESITLER = {
+    "asim_yumusak": "HEDEF_ASIMI YUMUSAK; asgari hedef - 1 AYNEN (ayirma: sert asim mi tikiyor?)",
+    "eski_asgari": "asgari = min(hedef, taban asgarisi); HEDEF_ASIMI SERT (ayirma: dar asgari mi tikiyor?)",
+    "pay1": "hedef = referans + 1, asgari = referans - 1 (en az 1; 0 ise 0); HEDEF_ASIMI SERT "
+            "-- (a) adayi, KOLAYLASTIRILMIS (referansin eksigi = hucre basina 1)",
+}
+
+
+def cesit_sahne(g, ad, olcek=1.0):
+    """Seviye 1 sahnesinden ayirma cesidi. Referans plan her cesitte GECERLIDIR
+    (0 sert); `pay1`de hedefin 1 altinda kalir (eksik bilinir)."""
+    if ad not in CESITLER:
+        raise SystemExit("bilinmeyen cesit %s (olanlar: %s)" % (ad, ", ".join(CESITLER)))
+    g = copy.deepcopy(g)
+    if ad == "asim_yumusak":
+        for k in g["kurallar"]:
+            if k["kod"] == "HEDEF_ASIMI":
+                k["tur"] = "YUMUSAK"
+    elif ad == "eski_asgari":
+        eski = {(t["ekip"], t["gun"], t["saat"]): t["asgari"] for t in taban_sahne(olcek)["talep"]}
+        for t in g["talep"]:
+            t["asgari"] = min(t["hedef"], eski[(t["ekip"], t["gun"], t["saat"])])
+    elif ad == "pay1":
+        for t in g["talep"]:
+            ref = t["hedef"]                       # seviye 1'de hedef = referans sayimi
+            t["hedef"] = ref + 1
+            t["asgari"] = asgari_kurali(ref)
+    for t in g["talep"]:
+        if "_sahada_taban" in t:
+            t["_sahada_taban"] = min(t["_sahada_taban"], t["asgari"]) if t["asgari"] else 0
+    g["_merdiven"] = dict(g["_merdiven"], cesit=ad, cesit_aciklama=CESITLER[ad],
+                          hedef_kisi_saat=sum(t["hedef"] for t in g["talep"]),
+                          asgari_kisi_saat=sum(t["asgari"] for t in g["talep"]))
+    g["_merdiven"].pop("referans_puani", None)    # cesitte yeniden hesaplanir (plan_puani)
+    return g
+
+
 def referans_denetle(g, atamalar):
     """Referansin sartlari -- bekci (a) ve uretim ayni fonksiyonu kullanir.
     Donen: {sert, asim, eksik, fazla_mesai_saat} (hepsi 0 beklenir)."""

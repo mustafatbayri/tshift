@@ -3371,7 +3371,11 @@ bugünkü S30 setleri çözümsüz (aşım şablon geometrisinden: SATIS 14:00�
 hedef 122, atanan 186); yeni taban seviye 1 seti, K-67 ile aynı değişiklik
 setinde. S30 setleri olduğu gibi kalır (YUMUŞAK).
 
-**Durum (7 Ekim 00:45): karar verildi, araç yazılmadı.** Yöntemin ön denemesi
+**Durum (13 Ekim):** seviye 1 kuruldu (`08-motor-testleri/gercekci-veri-seti/merdiven.py`, K-67) ve
+ölçüldü — **motor 3 koşunun 2'sinde ilk planı bulamadı** (bulgu 31). Karar
+(c): bu set zor bekçi; merdiven ölçümü pay'lı bir çeşitle (`pay1`: hedef =
+referans + 1, asgari = referans − 1 — kolaylaştırılmış, açıkça etiketli)
+ayırma ölçümünden sonra. ~~**Durum (7 Ekim 00:45): karar verildi, araç yazılmadı.**~~ Yöntemin ön denemesi
 (49 ve 151 kişi, bulut):
 `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/OKU-BENI.md`.
 
@@ -3845,6 +3849,15 @@ asgari = hedef − 1, en az 1).
 **Ölçü (koşudan önce yazılacak):** seviye 1'de `varsayilan` 900 sn × 3 →
 aşım 0 (kısıt), 0 sert, fazla mesai 0, eksik referansa göre; rotasyon (D
 dâhil) sayımı; referans planla kalem kalem kıyas (K-62 ilke 3).
+
+**Ölçüldü (13 Ekim 04:55–05:44, Mustafa'nın makinesi; `68cd4cc`) — karar
+kuralı TUTMADI → bulgu 31.** Seviye 1, 900 sn × 3: 1 koşu plan (aşım 0, sert
+0, **fazla mesai 7,5 sa**; fazla mesai hariç referanstan −%27), **2 koşu
+plansız**. D'nin tam ölçek sayısı: motor planında 5 geri geçiş / 30 sa
+(referans 2 / 6); D'nin eski tanıma göre fazladan gördüğü çift **0**. Tam
+mutasyon 388 · yaşayan 0 (06:11). **Karar (13 Ekim 14:00): (c)** — sıkı set
+zor bekçi kalır, motora yapıcı başlangıç, merdiven pay'lı ayrı setle; önce
+ayırma ölçümü (bulgu 31).
 
 **Dürüst sınır.** Sert kural, talebini saatlik eğri olarak giren bir
 müşteriyi (şablonlarına oturmayan talep) **çözümsüze** götürür; ürün bunu
