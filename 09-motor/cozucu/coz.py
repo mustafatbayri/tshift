@@ -80,6 +80,17 @@ VARSAYILAN = {
     #   kayirir -- bulgu 22). `tohum_kaydirma: 6` -> tohumlar 7, 8, 9.
     #   OLCUM secenegi; urun 0 (degismez).
     "tohum_kaydirma": 0,
+    # K-68 eki (Mustafa, 13 Ekim 17:15: "gevsek plandan serte gecis dogru bir
+    #   yaklasim ... nerede tikandigimizi gorur"; 17:31 "(ii) uygundur"): ilk
+    #   gecerli plan bulunamazsa HEDEF_ASIMI SERT'in ust siniri gecici acilir,
+    #   plan bulunur, sinir adim adim (tolerans + 3, + 1, + 0) kapatilir.
+    #   Butce: toplam surenin en cok `gevsek_orani`; bunun `gevsek_acik_orani`
+    #   kadari ACIK adima (bulgu 31: darbogaz HERHANGI bir plani bulmak; plan
+    #   yoksa daraltmanin anlami yok), kalani daraltma adimlarina esit.
+    #   False = kapali (olcum). Ikisi de KALIBRASYON: 500'de olculmedi.
+    "gevsekten_serte": True,
+    "gevsek_orani": 0.5,
+    "gevsek_acik_orani": 0.5,
     # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
     #   bir plana "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya
     #   indirdi) ama ipucusuz arama guvenilir degil (yedi kosunun ikisi plan
@@ -418,6 +429,7 @@ def _ipucu_ver(kuruldu, ayar):
     mola_sabit = bool(ayar.get("ilk_asama_sabit_mola", True))
     sabitlenen = _molalari_sabitle(kuruldu) if mola_sabit else []
     kuruldu.fazla_mesai_once_sifir = None
+    kuruldu.gevsekten_serte = None
     fm_eski = (_fazla_mesaiyi_sifirla(kuruldu)
                if ayar.get("fazla_mesai_once_sifir") else [])
     try:
@@ -428,10 +440,7 @@ def _ipucu_ver(kuruldu, ayar):
             # (bulgu 25; varsayilan 1 = tek deneme, payin tamami).
             durum, c, denemeler = _fazla_mesaisiz_ara(kuruldu, ayar, pay)
         else:
-            c = cp_model.CpSolver()
-            c.parameters.max_time_in_seconds = pay
-            c.parameters.num_search_workers = isci_sayisi(ayar)
-            durum = c.Solve(kuruldu.m)
+            durum, c = _ilk_arama(kuruldu, ayar, pay)
         dusulecek = 0.0
         if fm_eski:
             bulundu = durum in (cp_model.OPTIMAL, cp_model.FEASIBLE)
@@ -486,6 +495,16 @@ def _ipucu_ver(kuruldu, ayar):
                 #   kalan sure deneme yapilmamis gibi kalir (120 + 720).
                 dusulecek = deneme_sn
                 durum, c = _gecerli_plan_yeniden_ara(kuruldu, ayar, basladi)
+        if (durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE)
+                and kuruldu.asim_sinirli and ayar.get("gevsekten_serte", True)):
+            # K-68 eki: gecerli plan bu surede yok (kanit da yok) ve sinirlari
+            # acilabilir bir sert kural var -> gevsekten serte. Harcanan sure
+            # iyilestirmenin payindan duser (yukaridaki `dusulecek` gerekcesi).
+            t_g = time.time()
+            durum, c = _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=mola_sabit,
+                                        fm_sifirda=bool((kuruldu.fazla_mesai_once_sifir or {})
+                                                        .get("sifirda_tutuldu")))
+            dusulecek += time.time() - t_g
         if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
         # ⚠ IPUCU TAM YAZILIR (T-60, 1 Ekim). Eskiden yalniz x/mola/dinlenme
@@ -502,6 +521,176 @@ def _ipucu_ver(kuruldu, ayar):
     finally:
         _molalari_serbest_birak(kuruldu, sabitlenen)
         amaci_geri_koy()
+
+
+def _ilk_arama(kuruldu, ayar, pay):
+    """Birinci asamanin tek denemelik gecerli plan aramasi (fazla mesaisiz
+    deneme kapaliyken). Ayri fonksiyon: testler "bu surede bulunamadi"
+    yolunu (gevsekten serte, K-68 eki) buradan zorlar."""
+    c = cp_model.CpSolver()
+    c.parameters.max_time_in_seconds = pay
+    c.parameters.num_search_workers = isci_sayisi(ayar)
+    return c.Solve(kuruldu.m), c
+
+
+GEVSEK_ADIMLARI = (3, 1, 0)        # tavan = tolerans + adim; None (acik) once
+GEVSEK_KALAN_AGIRLIGI = 1000       # tam serte inilemezse toleransin USTU amacta bu agirlikla
+#   (profil agirliklari 0-20; 1000 her yumusak kuraldan once gelir: iyilestirme
+#   once tolerans ustunu eritir, sonra kaliteye bakar)
+
+
+def _alan_yaz(kuruldu, v, ust):
+    dom = kuruldu.m.Proto().variables[v.Index()].domain
+    dom.clear()
+    dom.extend([0, int(ust)])
+
+
+def _sert_disi_asim(kuruldu, cozucu):
+    """Toleransin USTUNDE kalan toplam kisi-saat (cozumdeki degerlerden)."""
+    return sum(max(0, int(cozucu.Value(v)) - tol) for v, tol in kuruldu.asim_sinirli.values())
+
+
+def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=False):
+    """K-68 eki (Mustafa, 13 Ekim) -- "once gevsegi bulup sertlige giderse
+    nerede tikandigimizi gorur".
+
+    NEDEN (bulgu 31): seviye 1'de (her hucre [hedef - 1, hedef]) birinci asama
+    500 kiside 900 sn'nin 2/3'unde HIC gecerli plan bulamadi; plan VAR
+    (referans), ama sifirdan bulmak bosluksuz bir yapboz. Ayni sahnede
+    HEDEF_ASIMI yumusatilinca plan daha kolay bulundu (1/2).
+
+    NASIL (birinci asamanin icinde; molalar sabit, amac yok):
+      1. HEDEF_ASIMI SERT degiskenlerinin alani [0, kisi] yapilir (sinir acik),
+         amac = toplam asim; gecerli plan aranir.
+      2. Alan sirayla [0, tolerans + 3], [0, tolerans + 1], [0, tolerans]
+         yapilir; her adimda onceki plan ipucu, amac yine toplam asim.
+         Toleransin ustunde asim kalmadiginda durulur.
+      3. Tam serte inildiyse alanlar [0, tolerans]'ta kalir -- plan urunun
+         normal yolundan devam eder (iyilestirme, mola adimi). Inilemediyse
+         alanlar ULASILAN tavanda kalir, toleransin USTU amaca yuksek
+         agirlikla (GEVSEK_KALAN_AGIRLIGI) eklenir ve iyilestirme onu once
+         eritmeye calisir. Son planda hala tolerans ustu varsa plan TASLAK
+         olarak doner (Mustafa 17:31: "(ii) uygundur") -- asan hucreler
+         ciktida listelenir, "kanitlanmadi" notuyla (K-37: yetistiremedim
+         != yok). Karar `coz`un cevap adiminda, SON plandan verilir.
+
+    Butce: toplam surenin en cok `gevsek_orani` (varsayilan %50); acik adim
+    bunun `gevsek_acik_orani` (%50) kadarini alir, daraltma adimlari kalani
+    esit boler (onceki adim erken biterse artan sonrakine kalir). Tolerans
+    > 0'da acik adimin amaci butun asimdir (bant ici dahil) -- bant ici zaten
+    cezali; ilk plani bulmayi zorlastirirsa olcumde gorunur.
+    Donen: (durum, cozucu) -- son basarili adimin cozumu.
+    Ne oldugu `kuruldu.gevsekten_serte`e yazilir (ciktiya gider)."""
+    t0 = time.time()
+    azami = float(ayar["azami_saniye"])
+    kalan = azami - (t0 - basladi) - 1.0
+    butce = max(1.0, min(kalan, azami * float(ayar.get("gevsek_orani", 0.5))))
+    isci = isci_sayisi(ayar)
+    kisi = max(1, len(kuruldu.calisanlar))
+    degiskenler = list(kuruldu.asim_sinirli.values())
+    bilgi = {"denendi": True, "adimlar": [], "ulasilan_tavan": None,
+             "tam_sert": False, "kalan_asim": None, "saniye": 0.0,
+             # True = son adim (tavan = tolerans) INFEASIBLE dondu: toleransi
+             # asmayan plan YOK -- ama ARANAN modelde: molalar sablonun ideal
+             # yerinde sabitken (`molalar_sabit`) ve fazla mesai sifirda
+             # tutulduysa o haliyle (yalniz olcum secenegi; o zaman False yazilir).
+             "kanitlandi_yok": False, "molalar_sabit": bool(molalar_sabit)}
+    kuruldu.gevsekten_serte = bilgi
+    for v, tol in degiskenler:
+        _alan_yaz(kuruldu, v, kisi)
+    kuruldu.m.Minimize(sum(v for v, _ in degiskenler))
+    adimlar = [None] + list(GEVSEK_ADIMLARI)
+    son, son_durum, son_tavan = None, cp_model.UNKNOWN, None
+    for i, k in enumerate(adimlar):
+        if k is not None:
+            for v, tol in degiskenler:
+                _alan_yaz(kuruldu, v, tol + k)
+            if son is not None:
+                _tam_ipucu_yaz(kuruldu, son)   # tavani asan hucreleri CP-SAT onarir
+        kalan_butce = butce - (time.time() - t0)
+        if k is None:
+            pay = min(kalan_butce, butce * float(ayar.get("gevsek_acik_orani", 0.5)))
+        else:
+            pay = kalan_butce / (len(adimlar) - i)
+        if pay < 0.5:
+            break
+        c = cp_model.CpSolver()
+        c.parameters.max_time_in_seconds = pay
+        c.parameters.num_search_workers = isci
+        t1 = time.time()
+        d = c.Solve(kuruldu.m)
+        bulundu = d in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+        bilgi["adimlar"].append({
+            "tavan": "acik" if k is None else "tolerans+%d" % k,
+            "durum": c.StatusName(d), "saniye": round(time.time() - t1, 2),
+            "toleransin_ustunde_asim": _sert_disi_asim(kuruldu, c) if bulundu else None})
+        if not bulundu:
+            if k == 0 and d == cp_model.INFEASIBLE and not fm_sifirda:
+                bilgi["kanitlandi_yok"] = True
+            break
+        son, son_durum, son_tavan = c, d, k
+        if _sert_disi_asim(kuruldu, c) == 0:
+            break                              # tam serte inildi (belki erken)
+    bilgi["saniye"] = round(time.time() - t0, 2)
+    if son is None:
+        for v, tol in degiskenler:             # plan yok: sert hale geri don
+            _alan_yaz(kuruldu, v, tol)
+        return cp_model.UNKNOWN, None
+    kalan_asim = _sert_disi_asim(kuruldu, son)
+    bilgi["kalan_asim"] = kalan_asim
+    bilgi["tam_sert"] = kalan_asim == 0
+    bilgi["ulasilan_tavan"] = "acik" if son_tavan is None else "tolerans+%d" % son_tavan
+    if kalan_asim == 0:
+        for v, tol in degiskenler:
+            _alan_yaz(kuruldu, v, tol)
+        return son_durum, son
+    # Tam serte inilemedi: alanlar ULASILAN tavanda kalir (acik adimdan sonra
+    # daralmadiysa her hucre kendi degerinde -- kaba tavan). Yalniz toleransin
+    # USTU cezalanir: gk >= asim - tolerans. Tolerans icindeki asim eski
+    # agirligiyla kalir; boylece sert kurala uyan her plan, bu modelde de
+    # AYNI amaci alir (gk = 0) -- alt sinir sert modelin alt siniri olarak
+    # gecerli kalir. Yeni kisit yalniz bu yolda yazilir.
+    ek = []
+    for n, (v, tol) in enumerate(degiskenler):
+        tavan = tol + son_tavan if son_tavan is not None else max(tol, int(son.Value(v)))
+        _alan_yaz(kuruldu, v, tavan)
+        if tavan > tol:
+            gk = kuruldu.m.NewIntVar(0, tavan - tol, "gk_%d" % n)
+            kuruldu.m.Add(gk >= v - tol)
+            kuruldu.cezalar.append((GEVSEK_KALAN_AGIRLIGI, gk))
+            ek.append((gk, max(0, int(son.Value(v)) - tol)))
+    # gk degiskenleri `son`un cozumunde yok; ipucu TAM kalsin diye (T-60:
+    # yarim ipucu onarilamayabilir) son plan bu degerlerle tamamlanir.
+    return son_durum, _EkliCozum(son, ek)
+
+
+class _EkliCozum(object):
+    """Bir CpSolver cozumu + SONRADAN eklenmis degiskenlerin degerleri.
+    `_tam_ipucu_yaz` (ResponseProto().solution) ve `_ilk_asamada_iyilestir`
+    (Value) bunu cozucu gibi kullanir. Eklenen degiskenler modelin SONUNA
+    eklenmis olmali (NewIntVar sirasi); degilse hata -- sessiz yanlis ipucu
+    yerine."""
+
+    def __init__(self, cozucu, ek):
+        self._c = cozucu
+        self._cozum = list(cozucu.ResponseProto().solution)
+        self._ek = {}
+        for i, (v, deger) in enumerate(ek):
+            if v.Index() != len(self._cozum) + i:
+                raise AssertionError("gevsek ek degiskeni modelin sonunda degil: %d" % v.Index())
+            self._ek[v.Index()] = int(deger)
+
+    def Value(self, v):
+        if hasattr(v, "Index") and v.Index() in self._ek:
+            return self._ek[v.Index()]
+        return self._c.Value(v)
+
+    def ResponseProto(self):
+        class _P(object):
+            pass
+        p = _P()
+        p.solution = self._cozum + [self._ek[k] for k in sorted(self._ek)]
+        return p
 
 
 def _deneme_siniri(ayar):
@@ -1192,6 +1381,9 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         # `bulundu` / `kanitlandi_yok` / `saniye` denemenin sonucu;
         # `sifirda_tutuldu` yalniz olcum secenegiyle True (sert kesim).
         "fazla_mesai_once_sifir": getattr(kuruldu, "fazla_mesai_once_sifir", None),
+        # K-68 eki: gevsekten serte denendi mi, adimlari, ulasilan tavan. None =
+        # gerek olmadi (ilk gecerli plan normal yoldan bulundu).
+        "gevsekten_serte": getattr(kuruldu, "gevsekten_serte", None),
         # K-63: ana asama plansizken ikinci asamanin plani alindi mi; None =
         # gerek olmadi. {"bulundu", "saniye", "durum"} -- `saniye` butcenin
         # disindaki tek kalem.
@@ -1221,7 +1413,7 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         metrikler = _metrikler(kuruldu, atamalar, cozucu, sure)
         if kapsam or ipucu_plani_dondu:
             metrikler["optimuma_uzaklik_yuzde"] = None      # O-16 / K-63: kuresel kanit yok
-        return {
+        cevap = {
             "durum": "cozuldu",
             "motor_surumu": SURUM,
             "atamalar": atamalar,
@@ -1229,6 +1421,47 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
             "cozum_istatistikleri": istatistik,
             "uygulanmayan_notlar": kuruldu.notlar,
         }
+        gs = getattr(kuruldu, "gevsekten_serte", None)
+        if gs and gs.get("kalan_asim") and not gs.get("tam_sert"):
+            # K-68 eki (ii): ilk plan gevsek modelden geldi ve sert ust sinira
+            # inilemedi. KARAR SON PLANDAN: iyilestirme (tolerans ustu x 1000)
+            # asimi eritmis olabilir -- o zaman plan sert kurala uyar, taslak
+            # DEGILDIR (alt sinir da gecerli: sert plan bu modelde ayni amaci alir).
+            hucreler = []
+            for (ekip, gun, saat), (v, tol) in sorted(kuruldu.asim_sinirli.items(),
+                                                      key=lambda kv: (str(kv[0][0]), kv[0][1], kv[0][2])):
+                fazla = int(cozucu.Value(v)) - tol
+                if fazla > 0:
+                    hucreler.append({"ekip": ekip, "gun": gun, "saat": saat, "fazla": fazla})
+            gs["son_plan_toleransin_ustunde"] = sum(h["fazla"] for h in hucreler)
+            if hucreler:
+                metrikler["optimuma_uzaklik_yuzde"] = None   # plan sert modelin plani degil
+                cevap["taslak"] = True
+                kanit = bool(gs.get("kanitlandi_yok"))
+                cevap["taslak_asim"] = {
+                    "hucreler": hucreler, "toplam_fazla": gs["son_plan_toleransin_ustunde"],
+                    # K-37: kanit varsa "yok", yoksa "yetistiremedim". Kanit
+                    # molalar sabitken aranan modelindir (`molalar_sabit`).
+                    "kanitlandi_yok": kanit, "molalar_sabit": gs.get("molalar_sabit"),
+                    "aciklama": (("Hedef + tolerans asilmadan plan YOK (molalar sablonun ideal "
+                                  "yerinde sabitken kanitlandi); bu plan asan hucrelerle TASLAKTIR. "
+                                  "Talebi, kadroyu ya da toleransi gozden gecirin.")
+                                 if kanit else
+                                 ("Verilen surede hedef + tolerans asilmadan plan bulunamadi; "
+                                  "bu plan asan hucrelerle TASLAKTIR. Asmayan bir planin "
+                                  "OLMADIGI kanitlanmadi -- daha uzun sure ile bulunabilir."))}
+                kuruldu.notlar.append(
+                    "HEDEF_ASIMI: hedef + tolerans %d hucrede asildi (toplam %d kisi-saat; "
+                    "gevsekten serte, ulasilan tavan %s). Plan TASLAKTIR; %s"
+                    % (len(hucreler), gs["son_plan_toleransin_ustunde"], gs["ulasilan_tavan"],
+                       "asmayan plan yok (molalar sabitken kanitlandi)." if kanit
+                       else "asmayan bir planin OLMADIGI kanitlanmadi."))
+            else:
+                kuruldu.notlar.append(
+                    "HEDEF_ASIMI: ilk plan gevsek modelden geldi (ulasilan tavan %s); "
+                    "iyilestirme tolerans ustunu sifirladi -- plan sert kurala uyar."
+                    % gs["ulasilan_tavan"])
+        return cevap
 
     # ------------------------------------------------------------------
     # K-37 -- "IMKANSIZ" ile "YETISTIREMEDIM" ayri cevaplardir
@@ -1563,7 +1796,8 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
 # Ceza degiskeni adi -> kural (model.py'deki NewIntVar adlari).
 _CEZA_ONEKI = {"he": "HEDEF_KAPSAMA", "ha": "HEDEF_ASIMI", "me": "MOLA_KAPSAMASI",
                "fm": "FAZLA_MESAI", "ag": "ADALET_DENGESI", "sd": "SAAT_DENGESI",
-               "ro": "VARDIYA_ROTASYON_YONU"}          # K-65 (11 Ekim)
+               "ro": "VARDIYA_ROTASYON_YONU",          # K-65 (11 Ekim)
+               "gk": "HEDEF_ASIMI_TOLERANS_USTU"}      # K-68 eki: yalniz gevsekten serte taslak yolunda
 
 
 def _amac_dagilimi(kuruldu, cozucu):

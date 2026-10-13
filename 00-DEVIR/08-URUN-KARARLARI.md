@@ -3904,3 +3904,120 @@ kıyası kalem kalem).
 `09-motor/cozucu/model.py` (`_kapsama`) · `09-motor/dogrulayici/kurallar.py` (`hedef_asimi`) ·
 `09-motor/testler/test_hedef_asimi.py` · `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
 `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-12-hedef-asimi-ve-gun-tanimi/`
+
+---
+
+## K-68 · Hedef aşımına **üst tolerans** — vardiya planı başına verilir (ekip ayarı değil); eki: motor **gevşekten serte** arar, inemezse plan **taslak** döner
+
+**Soru (13 Ekim 17:15, Mustafa; bulgu 31'in ayırma sonucundan sonra):**
+*"gevşek plandan serte geçiş doğru bir yaklaşım bence de. Önce gevşeği bulup
+sertliğe giderse nerede tıkandığımızı görür, hatta bu planın en iyi hali bu
+diyebiliriz gibime geliyor. Bu +1 −1 kısmını parametrik yapalım derim, yani
+firma hedeflediği kişi sayısını aralık versin, hedef min 8 max 10 gibi
+mesela. … Veya firma hedef girer, − + olabilecek değer girer 1 veya 2 veya
+3 veya.... gibi."*
+
+**Önerim (17:20) ve düzeltmem.** Yalnız **üst** tolerans (alt taraf
+`asgari` ile zaten tanımlı): asgari altına inilmez (sert), hedef ideal,
+hedef + tolerans üstüne çıkılmaz (sert), aradaki fazla kişi puan kaybettirir.
+Tolerans 0 = K-67'nin kendisi. "Planın en iyi hâli" denemez — yalnız "bu
+sürede ulaşılan en iyi"; "daha iyisi yok" ancak çözücü kanıtlarsa yazılır.
+Tolerans motoru güçlendirmenin yerini tutmaz (`pay1` = hedef + 1 ayırmada
+2/2 plansızdı); ikisi birlikte. Kabul ölçütleri 1–7 (aşağıda) ve iki soru.
+
+**Karar (13 Ekim 17:31, Mustafa):** *"şu 15 dk yı 20 dk yapalım testlerde
+bakalım bir şey değişecek mi bunu da ekle. (i) – vardiya bazında
+eklenmelidir. Ekip bazında olmaz. Daha önce de bu mantığı söylemiştim,
+ekipler kriterler ve kuralları vardiya planı bazlı değiştirebilir. Bunun
+tatil dönemi var mesela daha az kişi çalışır bazı kurallar esnektir, sektöre
+bağlı sezon dediğimiz yoğun dönemler vardır, bu dönemlerde kuralları
+sıkılaştırabilir vs. Ekip bazında tanımlamamız doğru değil. Zaman değişkeni
+önemli burada. (ii) – uygundur."* Ölçütlere itiraz gelmedi.
+
+**1. Üst tolerans (K-68).**
+
+- `HEDEF_ASIMI` SERT'in parametresi `ust_tolerans` (kişi, tam sayı ≥ 0,
+  varsayılan **0**). Sert üst sınır = `hedef + ust_tolerans`; hedefle sınır
+  arasındaki her fazla kişi-saat `HEDEF_ASIMI` ağırlığıyla **yumuşak** ceza
+  (DENGELİ 3).
+- **Nerede verilir: vardiya planının kendisinde** (plan dönemi). Tatil
+  haftasında 2, sezon haftasında 0 gibi; kalıcı ekip ayarı **yok**. Motor
+  girdisi zaten plan başınadır: değer o planın kural listesinden okunur.
+  Arka uçta yeri `plans.kural_degerleri` (şartname §8.6, yeni kolon).
+- **Genel ilke (Mustafa'nın cümlesi):** kural değerleri **vardiya planı
+  bazında** değişebilir — zaman değişkeni. Şartname §5.2'nin kademeleri
+  (çalışan → sözleşme → ekip/departman → kiracı → sistem) bunu bugün
+  ifade etmiyor; **T-81 açıldı** (plan kademesi, bütün kurallar için;
+  hangi kuralın plan bazında değişebileceği katalogda ayrı sütun). Şimdilik
+  yalnız `ust_tolerans` için uygulandı.
+- Yönetici elle sınırın üstüne çıkarsa bugünkü gibi **bilgi verir** (K-67
+  eki); sınırın altındaki fazla doğrulayıcıda YUMUŞAK satır
+  (*"tolerans k içinde"*).
+- Ön kontrol (`celisen_talep`) ve teşhisin aşım hücreleri artık **üst
+  sınırı** sayar: `asgari ≤ hedef + tolerans` çelişki değildir.
+
+**2. Gevşekten serte (K-68 eki).**
+
+- **Ne zaman:** birinci aşama (iki aşamalı arama, 50 000+ değişkenli model;
+  500 kişi ~1,5 milyon) geçerli plan bulamadıysa — süre doldu (UNKNOWN).
+  INFEASIBLE kanıttır, o yol teşhistir (K-37); gevşek yol açılmaz.
+- **Nasıl:** sert aşım değişkenlerinin alanı açılır, amaç yalnız toplam
+  aşım; sonra tavan hedef + tolerans **+3, +1, +0**. Her adım öncekinin
+  planını ipucu alır; tolerans üstü 0'a inince durur. Bütçe en çok
+  `gevsek_orani` (%50; açık ayar), adımlara eşit pay. Harcanan süre
+  iyileştirmenin payından düşer (K-61 gerekçesi). `gevsekten_serte: False`
+  kapatır (ölçüm).
+- **Tam serte inerse:** plan ürünün normal yolundan devam eder (iyileştirme,
+  mola adımı); sonuç normal "çözüldü".
+- **İnemezse (ii):** alanlar ulaşılan tavanda kalır, **yalnız tolerans
+  üstü** amaçta ×1000 (`HEDEF_ASIMI_TOLERANS_USTU`; profil ağırlıkları
+  0–20) — iyileştirme önce onu eritmeye çalışır. Karar **son plandan**
+  verilir: hâlâ tolerans üstü varsa `taslak: true` + `taslak_asim`
+  (hücreler, kaç kişi fazla, `kanitlandi_yok`); iyileştirme sıfırladıysa
+  plan normaldir.
+- **"Kanıtlanmadı" / "yok":** son adım (tavan = tolerans) INFEASIBLE
+  döndüyse `kanitlandi_yok: true` — ama arandığı modelde (molalar şablonun
+  ideal yerinde sabitken; K-61'deki aynı dürüst sınır). Süre dolduysa
+  "kanıtlanmadı — daha uzun süreyle bulunabilir".
+- Taslakta `optimuma_uzaklik_yuzde` yazılmaz (plan sert modelin planı
+  değil). Yayın kapısı K-67 ekiyle aynı: tolerans üstü SERT satır **bilgi
+  verir**; taslağı yayınlamak yöneticinin kararıdır.
+
+**Kabul ölçütleri (17:20 önerisi, 17:31'de itirazsız).**
+
+1. Motor ilk planı bulamazsa aşımı geçici açıp plan bulur, sonra adım adım
+   sıfıra indirir; teslim edilen planda tolerans üstü 0 ise normal
+   "çözüldü".
+2. Süre biterken tolerans üstü varsa plan taslak: aşan hücreler ve kaç kişi
+   fazla, "kanıtlanmadı" notu; eli boş dönmez.
+3. Seviye 1, 500 kişi, **900 sn × 3 ve 1200 sn × 3** (Mustafa 17:31: *"15
+   dk yı 20 dk yapalım"*): üç koşu da plan döndürür; aşımı 0 olanların
+   sayısı raporlanır, hedef 3/3.
+4. İlk plan normal yoldan bulunursa bu yol hiç devreye girmez; eski setler
+   değişmez, bütün testler yeşil.
+5. Sert üst sınır hedef + tolerans; aradaki fazla puan kaybettirir;
+   varsayılan 0 = bugünkü kural.
+6. Yönetici elle sınırın üstüne çıkarsa yalnız bilgi.
+7. Ölçüm: seviye 1'de tolerans 1 ve 2 ile plan bulma oranı (`--cesit tol1`,
+   `tol2`).
+
+**Koda indi (13 Ekim 17:35–, bulut; ölçüm Mustafa'nın makinesinde).**
+`09-motor/cozucu/model.py` (`asim_sinirli`: SERT'te aşım değişkeni alanı
+[0, tolerans], kısıt `asim ≥ atanan − hedef`; tolerans > 0 ise bant içi
+ceza), `09-motor/dogrulayici/kurallar.py` (`hedef_asimi` toleransı okur),
+`09-motor/cozucu/teshis.py` (`_ust_tolerans`; ön kontrol ve aşım hücreleri
+üst sınıra göre), `09-motor/cozucu/coz.py` (`_ilk_arama`,
+`_gevsekten_serte`, `_EkliCozum`, `taslak` / `taslak_asim`,
+`cozum_istatistikleri.gevsekten_serte`). Testler
+`09-motor/testler/test_hedef_asimi.py` 13 → **21**,
+`09-motor/testler/test_gevsekten_serte.py` **15** (yeni); 09 paketi 657 →
+**680**. Mutasyon `k68` **32** (bulut grup koşusu: yaşayan 0; ilk koşuda
+yaşayan "taslakta optimuma uzaklık yazılsın" ortak arama testiyle kapandı),
+`k67` 6'sı, `hedef_asimi` 2'si, `rotasyon` 1'i yeni koda yeniden bağlandı
+(hepsi öldü). **Bulut yatağı** (seviye 1, 0,3 ölçek, 300 sn, n = 1): gevşek
+yol kapalı → plansız; açık → açık adım 5,25 sn'de aşım 0, sert plan. Merdiven: `08-motor-testleri/gercekci-veri-seti/merdiven.py`
+çeşit `tol1`, `tol2`; `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` gevşek yolu ve taslağı yazar.
+
+→ K-67 · K-37 · K-61 · K-62 · T-60 bulgu 31 · T-81 · şartname §5.2, §6.4,
+§8.6, §11.3 · `09-motor/cozucu/coz.py` (`_gevsekten_serte`) ·
+`09-motor/testler/test_gevsekten_serte.py`

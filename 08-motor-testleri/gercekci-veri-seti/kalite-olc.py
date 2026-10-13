@@ -325,7 +325,7 @@ PLANSIZ = "--plansiz" in sys.argv
 #   SERT). Referansin bu sahnedeki puani kayittan okunur ve her kosunun
 #   yanina kalem kalem yazilir (K-62 ilke 3). Verilmezse S30 seti (tarihsel).
 SEVIYE = _arg("--seviye", None)
-# 13 Ekim (bulgu 31): `--cesit asim_yumusak|eski_asgari|pay1` -> seviye 1'den
+# 13 Ekim (bulgu 31): `--cesit asim_yumusak|eski_asgari|pay1|tol1|tol2` -> seviye 1.den
 #   turetilmis ayirma cesidi (merdiven.CESITLER); referans puani o sahnede
 #   yeniden hesaplanir. Dosya adina cesit eklenir.
 CESIT = _arg("--cesit", None)
@@ -751,6 +751,28 @@ def ipucu_plani_yazisi(s):
     return "K-63: ana asama plansiz dondu, ipucu plani ALINAMADI (%s)" % ip.get("durum")
 
 
+def gevsek_yazisi(s):
+    """K-68 eki: gevsekten serte denendiyse adimlari ve sonucu tek satir."""
+    gs = s.get("gevsekten_serte")
+    if not gs:
+        return None
+    adim = ", ".join("%s %s %s sn%s" % (a["tavan"], a["durum"], a["saniye"],
+                                       "" if a["toleransin_ustunde_asim"] is None
+                                       else " (ustu %d)" % a["toleransin_ustunde_asim"])
+                     for a in gs.get("adimlar") or [])
+    if s.get("taslak"):
+        son = "TASLAK: %d hucre, %s kisi-saat tolerans ustu (%s)" % (
+            s["taslak_asim"]["hucre"], s["taslak_asim"]["toplam_fazla"],
+            "yok KANITLI" if s["taslak_asim"]["kanitlandi_yok"] else "kanitlanmadi")
+    elif gs.get("tam_sert"):
+        son = "tam serte inildi"
+    elif gs.get("kalan_asim") is None:
+        son = "gevsek yolda da plan YOK"
+    else:
+        son = "iyilestirme tolerans ustunu sifirladi (taslak degil)"
+    return "GEVSEKTEN SERTE (%s sn): %s  ->  %s" % (gs.get("saniye"), adim or "adim yok", son)
+
+
 def etkin_ayar(ayar):
     """Kosuda GECERLI olan ayar: motorun varsayilani + yapilandirmanin
     yazdiklari. Bir yapilandirmanin YAZMADIGI secenek varsayilandan gelir;
@@ -798,8 +820,14 @@ def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
                  "ilk_asama_sn", "ana_asama_butce_sn", "ilk_cozum_sn", "isci_sayisi",
                  "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
                  "mola_adimi", "atamalar_sabit", "mola_adimi_alt_sinir",
-                 "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir", "ipucu_plani"):
+                 "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir", "ipucu_plani",
+                 "gevsekten_serte"):                      # K-68 eki (13 Ekim)
         s[alan] = ist.get(alan)
+    # K-68 eki (ii): tam serte inilemediyse plan TASLAK; asan hucreler.
+    s["taslak"] = bool(c.get("taslak"))
+    ta = c.get("taslak_asim") or {}
+    s["taslak_asim"] = ({"hucre": len(ta.get("hucreler") or []), "toplam_fazla": ta.get("toplam_fazla"),
+                         "kanitlandi_yok": ta.get("kanitlandi_yok")} if ta else None)
     s["uygulanmayan_notlar"] = list(c.get("uygulanmayan_notlar") or [])
     s["optimuma_uzaklik_yuzde"] = m.get("optimuma_uzaklik_yuzde")
     s["metrikler"] = m
@@ -809,6 +837,8 @@ def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
             print("         " + fm_once_yazisi(s, etkin))
         if ipucu_plani_yazisi(s):
             print("         " + ipucu_plani_yazisi(s))
+        if gevsek_yazisi(s):
+            print("         " + gevsek_yazisi(s))
         return s
     r = degerlendir(g, c["atamalar"])
     if not PLANSIZ:                                   # K-66: cizelge her kosuda
@@ -844,10 +874,12 @@ def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
         print("         " + fm_once_yazisi(s, etkin))
     if ipucu_plani_yazisi(s):
         print("         " + ipucu_plani_yazisi(s))
+    if gevsek_yazisi(s):
+        print("         " + gevsek_yazisi(s))
     # Notlarin hepsi dosyaya yazilir; ekrana yalniz bu secenegin notu (tam
     # olcekte "departman kapali" notlari onlarca satir).
     for n in s["uygulanmayan_notlar"]:
-        if "fazla mesaisiz" in n or "ikinci asamanin plani" in n:
+        if "fazla mesaisiz" in n or "ikinci asamanin plani" in n or n.startswith("HEDEF_ASIMI"):
             print("         not: %s" % n)
     print("         ilk plan %s sn  |  kazancin %%50'si %s sn, %%90'i %s sn, %%99'u %s sn  |  son iyilesme %s sn"
           % (s["ilk_cozum_sn"], iy.get("yuzde50_sn"), iy.get("yuzde90_sn"),
@@ -1097,9 +1129,12 @@ def referans_kiyasi(g, sonuc):
     for s in sonuc["kosular"]:
         if s.get("amac_degeri") is not None:
             s["referansa_gore_yuzde"] = round(100.0 * (s["amac_degeri"] - ref["amac"]) / ref["amac"], 2)
-            print("  %s-%s: motor %s, referans %s -> %+.2f%% (eksi = motor daha iyi)"
+            print("  %s-%s: motor %s, referans %s -> %+.2f%% (eksi = motor daha iyi)%s"
                   % (s["yapilandirma"], s.get("tekrar", 1), s["amac_degeri"], ref["amac"],
-                     s["referansa_gore_yuzde"]))
+                     s["referansa_gore_yuzde"],
+                     ("  [TASLAK: amacta tolerans ustu x %d]"
+                      % importlib.import_module("cozucu.coz").GEVSEK_KALAN_AGIRLIGI)
+                     if s.get("taslak") else ""))
 
 
 if __name__ == "__main__":

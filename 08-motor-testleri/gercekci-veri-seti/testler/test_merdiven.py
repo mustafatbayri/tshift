@@ -191,4 +191,10 @@ def test_CESIT_referans_gecerli_kalir_ve_tanimi_tutar(ad):
             a = (t["ekip"], t["gun"], t["saat"])
             assert t["hedef"] == eski[a]["hedef"] + 1 and t["asgari"] == MD.asgari_kurali(eski[a]["hedef"])
         assert d["eksik"] == len(c["talep"])          # referans her hucrede tam 1 eksik (bilinen)
+    elif ad in ("tol1", "tol2"):                      # K-68: talep aynen, sinir hedef + k
+        assert tur == {"SERT"} and c["talep"] == g["talep"] and d["eksik"] == 0
+        hk = [k for k in c["kurallar"] if k["kod"] == "HEDEF_ASIMI"]
+        assert [k["parametreler"]["ust_tolerans"] for k in hk] == [int(ad[3:])]
+        assert all(not (k.get("parametreler") or {}).get("ust_tolerans")
+                   for k in g["kurallar"] if k["kod"] == "HEDEF_ASIMI")   # kaynak sahne degismedi
     assert g["_merdiven"].get("referans_puani")       # kaynak sahne degismedi

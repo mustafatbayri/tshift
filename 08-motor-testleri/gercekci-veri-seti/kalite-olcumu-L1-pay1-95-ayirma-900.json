@@ -1,0 +1,222 @@
+{
+ "olcek": 1.0,
+ "doluluk": 0.95,
+ "saniye": 900,
+ "tekrar": 2,
+ "kisi": 500,
+ "hucre": 415,
+ "kural": 46,
+ "yapilandirmalar": [
+  "varsayilan"
+ ],
+ "tarih": "2026-10-13 15:29",
+ "cekirdek": 6,
+ "kosular": [
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 900
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 61.3,
+   "toplam_sn": 902.7,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 245.13,
+   "ana_asama_butce_sn": 654.87,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "ilk_asama_iyilestirme": null,
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": false,
+   "mola_adimi_alt_sinir": null,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": false,
+    "degisken": 359,
+    "saniye": 122.81,
+    "deneme_siniri": 3,
+    "denemeler": [
+     {
+      "tohum": 1,
+      "saniye": 40.17,
+      "durum": "UNKNOWN"
+     },
+     {
+      "tohum": 2,
+      "saniye": 40.18,
+      "durum": "UNKNOWN"
+     },
+     {
+      "tohum": 3,
+      "saniye": 40.14,
+      "durum": "UNKNOWN"
+     }
+    ],
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "ipucu_plani": null,
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "fazla mesaisiz plan bu surede bulunamadi (3 denemede); fazla mesai serbest birakildi (agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 1
+  },
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 900
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 56.5,
+   "toplam_sn": 903.5,
+   "durum": "sure_yetmedi",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": false,
+   "cozum_sayisi": 0,
+   "amac_degeri": null,
+   "alt_sinir": null,
+   "ilk_asama_sn": 244.96,
+   "ana_asama_butce_sn": 655.04,
+   "ilk_cozum_sn": null,
+   "isci_sayisi": 6,
+   "amac_dagilimi": null,
+   "iyilesme": null,
+   "ilk_asama_iyilestirme": null,
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": false,
+   "mola_adimi_alt_sinir": null,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": false,
+    "degisken": 359,
+    "saniye": 122.75,
+    "deneme_siniri": 3,
+    "denemeler": [
+     {
+      "tohum": 1,
+      "saniye": 40.15,
+      "durum": "UNKNOWN"
+     },
+     {
+      "tohum": 2,
+      "saniye": 40.22,
+      "durum": "UNKNOWN"
+     },
+     {
+      "tohum": 3,
+      "saniye": 40.16,
+      "durum": "UNKNOWN"
+     }
+    ],
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "ipucu_plani": null,
+   "uygulanmayan_notlar": [
+    "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+    "C0066: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0088: yil ici fazla mesai 266.0 saat, yillik tavana 4.0 saat kaldi; bu hafta fazla mesai payi 4.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0148: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0171: yil ici fazla mesai 264.0 saat, yillik tavana 6.0 saat kaldi; bu hafta fazla mesai payi 6.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0184: yil ici fazla mesai 269.0 saat, yillik tavana 1.0 saat kaldi; bu hafta fazla mesai payi 1.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0243: yil ici fazla mesai 263.0 saat, yillik tavana 7.0 saat kaldi; bu hafta fazla mesai payi 7.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0246: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0279: yil ici fazla mesai 267.0 saat, yillik tavana 3.0 saat kaldi; bu hafta fazla mesai payi 3.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "C0448: yil ici fazla mesai 262.0 saat, yillik tavana 8.0 saat kaldi; bu hafta fazla mesai payi 8.0 saate indirildi (YILLIK_FAZLA_MESAI_TAVANI)",
+    "fazla mesaisiz plan bu surede bulunamadi (3 denemede); fazla mesai serbest birakildi (agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)"
+   ],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {},
+   "tekrar": 2
+  }
+ ],
+ "kapasite_tabani": {
+  "hedef": {
+   "toplam_kisi_saat": 22102.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  },
+  "asgari": {
+   "toplam_kisi_saat": 21272.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  }
+ },
+ "fazla_mesai_tabani": {
+  "kisi": 359,
+  "saat": 0.0,
+  "dakika": 0,
+  "ceza": 0,
+  "borcunu_tutturamayan": 0,
+  "saat_dengesi_sert": true,
+  "borc_toplam_saat": 14680.5
+ },
+ "degisken": 646790,
+ "kisit": 822846,
+ "bagimsiz_alt_sinir": 0,
+ "referans": {
+  "durum": "OPTIMAL",
+  "amac": 58983,
+  "dagilim": {
+   "MOLA_KAPSAMASI": {
+    "ceza": 43715,
+    "deger": 6245
+   },
+   "ADALET_DENGESI": {
+    "ceza": 11515,
+    "deger": 2303
+   },
+   "HEDEF_KAPSAMA": {
+    "ceza": 3735,
+    "deger": 415
+   },
+   "VARDIYA_ROTASYON_YONU": {
+    "ceza": 18,
+    "deger": 6
+   },
+   "FAZLA_MESAI": {
+    "ceza": 0,
+    "deger": 0
+   }
+  }
+ }
+}

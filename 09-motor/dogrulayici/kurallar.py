@@ -1635,6 +1635,16 @@ def hedef_asimi(girdi, atamalar, tanim):
     Hucre basina tek satir, `olculen` atanan kisi, `gereken` hedef; fazla
     kisi sayisi mesajda. Kim sayilir: K-50 (`ekibe_sayilir`).
     """
+    # K-68 (13 Ekim): SERT turde `ust_tolerans` (plan parametresi, varsayilan 0):
+    # hedef < sayi <= hedef + tolerans -> YUMUSAK satir (puan duser, sinir icinde);
+    # sayi > hedef + tolerans -> SERT satir (K-67; kapida bilgi verir). Ayni olcu
+    # cozucude ayrica yazili (#7.6).
+    tolerans = 0
+    if tanim.get("tur", "SERT") == "SERT":
+        try:
+            tolerans = max(0, int(_p(tanim, "ust_tolerans", 0) or 0))
+        except (TypeError, ValueError):
+            tolerans = 0
     cikan = []
     uyelik, mod = uyelik_haritasi(girdi), cok_ekipli_sayim(girdi)
     atamalar = _kapsama_atamalari(girdi, atamalar)       # K-56
@@ -1646,11 +1656,19 @@ def hedef_asimi(girdi, atamalar, tanim):
                    if ekibe_sayilir(a, t.get("ekip"), uyelik, mod)
                    and zaman.atanmis_mi(a, gun, saat))
         if sayi > hedef:
-            cikan.append(_ihlal("HEDEF_ASIMI", tanim, ekip=t.get("ekip"),
-                                gun=gun, saat=saat, olculen=sayi, gereken=hedef,
-                                mesaj="gun %d saat %d: %d kisi atanmis, hedef %d "
-                                      "(%d kisi fazla)" % (gun, saat, sayi, hedef,
-                                                           sayi - hedef)))
+            satir = _ihlal("HEDEF_ASIMI", tanim, ekip=t.get("ekip"),
+                           gun=gun, saat=saat, olculen=sayi, gereken=hedef,
+                           mesaj="gun %d saat %d: %d kisi atanmis, hedef %d "
+                                 "(%d kisi fazla)" % (gun, saat, sayi, hedef,
+                                                      sayi - hedef))
+            if tolerans:
+                satir["ust_sinir"] = hedef + tolerans
+                if sayi <= hedef + tolerans:
+                    satir["agirlik"] = "YUMUSAK"         # tolerans icinde
+                    satir["mesaj"] += ", tolerans %d icinde" % tolerans
+                else:
+                    satir["mesaj"] += ", ust sinir %d asildi" % (hedef + tolerans)
+            cikan.append(satir)
     return cikan
 
 

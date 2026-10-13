@@ -735,6 +735,7 @@ class Model(object):
         self.cezalar = []    # (agirlik, IntVar) ciftleri
         self.rotasyon = {}   # VARDIYA_ROTASYON_YONU (K-65): (kisi, gun) -> geri saat degiskeni
         self.asim = {}       # HEDEF_ASIMI YUMUSAK (K-53/K-67): (ekip, gun, saat) -> asim degiskeni
+        self.asim_sinirli = {}   # HEDEF_ASIMI SERT (K-67/K-68): (ekip, gun, saat) -> (degisken, tolerans)
         self.notlar = []     # uygulanmayan/atlanan seyler -- sessiz gecmemek icin
         self.profil = self._profil_sec(girdi.get("profil"))
         self.mola_penceresi = self._mola_penceresi_sec()
@@ -2240,9 +2241,21 @@ class Model(object):
         # Cozumsuzlukte teshis.py `asim_hucreleri` verir (asim yumusatilarak).
         asim_kural = _kural(self.girdi, "HEDEF_ASIMI")
         asim_sert = bool(asim_kural) and asim_kural.get("tur") == "SERT"
-        asim_agirlik = (self._agirlik("HEDEF_ASIMI", asim_kural)
-                        if asim_kural and not asim_sert else 0)
-        self.asim = {}       # (ekip, gun, saat) -> asim degiskeni (yalniz YUMUSAK)
+        asim_agirlik = self._agirlik("HEDEF_ASIMI", asim_kural) if asim_kural else 0
+        # K-68 (Mustafa, 13 Ekim 17:15-17:31): UST TOLERANS -- "firma hedefledigi
+        # kisi sayisini aralik versin"; "vardiya [plani] bazinda eklenmelidir. Ekip
+        # bazinda olmaz ... tatil donemi ... sezon ... Zaman degiskeni onemli."
+        # Kuralin PLAN girdisindeki parametresi: `ust_tolerans` (kisi, >= 0,
+        # varsayilan 0 = K-67'nin kendisi). Sert ust sinir = hedef + tolerans;
+        # hedef ile sinir arasindaki fazla kisi YUMUSAK ceza (HEDEF_ASIMI agirligi).
+        tolerans = 0
+        if asim_sert:
+            try:
+                tolerans = max(0, int(_par(asim_kural, "ust_tolerans", 0) or 0))
+            except (TypeError, ValueError):
+                self.notlar.append("HEDEF_ASIMI: ust_tolerans okunamadi, 0 uygulandi")
+        self.asim = {}           # (ekip, gun, saat) -> asim degiskeni (yalniz YUMUSAK)
+        self.asim_sinirli = {}   # (ekip, gun, saat) -> (degisken, tolerans) -- SERT
         kisi_sayisi = max(1, len(self.calisanlar))
         # SAHADA_ASGARI (K-33): firmanin "sahada en az N kisi" cumlesi.
         # Talep tablosunun `asgari`si ile SINIRLANMAZ -- ikisi ayri sey
@@ -2261,7 +2274,16 @@ class Model(object):
                 self.cezalar.append((hedef_agirlik, eksik))
             if asim_kural and t.get("hedef") is not None:
                 if asim_sert:
-                    self._kisit(sum(atanmis) <= t["hedef"])     # K-67
+                    # K-67: hedef + tolerans SERT ust sinirdir -- degiskenin ALANI
+                    # [0, tolerans]. Alan daraltma kisit yazmaktan farksizdir ama
+                    # "gevsekten serte" aramasi (coz.py) alani gecici acip adim
+                    # adim kapatabilir (K-68 eki, Mustafa 13 Ekim). Tolerans
+                    # icindeki fazla kisi cezalidir; tolerans 0'da amacta yoktur.
+                    asim = self.m.NewIntVar(0, tolerans, "ha_%d_%d" % (gun, saat))
+                    self._kisit(asim >= sum(atanmis) - t["hedef"])     # K-67
+                    self.asim_sinirli[(t.get("ekip"), gun, saat)] = (asim, tolerans)
+                    if tolerans:
+                        self.cezalar.append((asim_agirlik, asim))
                 else:
                     asim = self.m.NewIntVar(0, kisi_sayisi, "ha_%d_%d" % (gun, saat))
                     self._kisit(asim >= sum(atanmis) - t["hedef"])

@@ -180,6 +180,10 @@ CESITLER = {
     "eski_asgari": "asgari = min(hedef, taban asgarisi); HEDEF_ASIMI SERT (ayirma: dar asgari mi tikiyor?)",
     "pay1": "hedef = referans + 1, asgari = referans - 1 (en az 1; 0 ise 0); HEDEF_ASIMI SERT "
             "-- (a) adayi, KOLAYLASTIRILMIS (referansin eksigi = hucre basina 1)",
+    # K-68 (13 Ekim): ust tolerans -- talep AYNEN, sert ust sinir hedef + k;
+    # hedef ile sinir arasi YUMUSAK ceza. Referans (asim 0) gecerli ve ayni puanda.
+    "tol1": "HEDEF_ASIMI SERT, ust_tolerans 1 (hucre [hedef - 1, hedef + 1]; ust bant cezali) -- K-68",
+    "tol2": "HEDEF_ASIMI SERT, ust_tolerans 2 (hucre [hedef - 1, hedef + 2]; ust bant cezali) -- K-68",
 }
 
 
@@ -202,6 +206,10 @@ def cesit_sahne(g, ad, olcek=1.0):
             ref = t["hedef"]                       # seviye 1'de hedef = referans sayimi
             t["hedef"] = ref + 1
             t["asgari"] = asgari_kurali(ref)
+    elif ad in ("tol1", "tol2"):
+        for k in g["kurallar"]:
+            if k["kod"] == "HEDEF_ASIMI":
+                k["parametreler"] = dict(k.get("parametreler") or {}, ust_tolerans=int(ad[3:]))
     for t in g["talep"]:
         if "_sahada_taban" in t:
             t["_sahada_taban"] = min(t["_sahada_taban"], t["asgari"]) if t["asgari"] else 0

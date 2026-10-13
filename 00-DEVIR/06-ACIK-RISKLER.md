@@ -3204,6 +3204,40 @@ yayını etkilemez.
 
 ---
 
+## 🟡 T-81 · Kural değerleri **vardiya planı bazında** değişebilmeli — şartname §5.2'de plan kademesi yok
+
+**Kaynak:** 13 Ekim 17:31, Mustafa (K-68): *"ekipler kriterler ve kuralları
+vardiya planı bazlı değiştirebilir. Bunun tatil dönemi var mesela daha az
+kişi çalışır bazı kurallar esnektir, sektöre bağlı sezon dediğimiz yoğun
+dönemler vardır, bu dönemlerde kuralları sıkılaştırabilir vs. Ekip bazında
+tanımlamamız doğru değil. Zaman değişkeni önemli burada."* — *"Daha önce de
+bu mantığı söylemiştim"*: kayıtta bulunamadı (08 / şartname taraması, 13
+Ekim); bu madde ilk yazılı hâli.
+
+**Bugün ne var.** §5.2'nin kademeleri: çalışan → sözleşme tipi → ekip /
+departman → kiracı → sistem; `rule_overrides.gecerlilik_bas/bitis` tarih
+aralığı var ama kademe **hedefe** bağlı (ekip, çalışan), plana değil.
+Talepte dönem kavramı zaten var (`demand_profiles`: "Yaz sezonu", "Normal
+hafta"; `plans.demand_profile_id`). Motor girdisi plan başınadır — motor
+tarafında iş yok; değer girdinin kural listesinden okunur.
+
+**Şimdilik:** yalnız `HEDEF_ASIMI.ust_tolerans` plan bazında (K-68;
+`plans.kural_degerleri`, şartname §8.6).
+
+**Yapılacak (arka uç / şartname penceresi):** (1) §5.2'ye **plan kademesi**
+(en dar zaman kademesi; hedef kademeleriyle nasıl birleştiği: "plan değeri
+ekibin değerini mi ezer, ekip içinde mi geçerli" — Mustafa'ya sorulacak);
+(2) katalogda hangi kuralın plan bazında değişebileceği sütunu (yasal
+kurallar değişmez, K-18); (3) plan şablonu/dönem profili mi, plan başına
+elle mi — `demand_profiles` ile birleşir mi.
+
+**Neden 🟡:** motor ve ölçümler etkilenmez; arka uç yazılmadan karar
+verilmeli.
+
+→ K-68 · K-18 · şartname §5.2, §8.4 (`rule_overrides`), §8.5, §8.6
+
+---
+
 ## 🔴 T-60 · Tam ölçekte plan **üretiliyor ama optimize edilemiyor** — optimuma %98,3 uzak
 
 **Ölçüldü:** 29 Eylül, 500 kişi, 900 saniye bütçe, Mustafa'nın makinesi
@@ -4982,6 +5016,26 @@ set "zor bekçi" kalır; motora sıkı sette ilk planı bulan **yapıcı başlan
 (b) yazılır; merdiven ölçümü **pay'lı ayrı setle** (a) sürer. Önce ayırma
 Mustafa'nın makinesinde (`kalite-olc.py --cesit asim_yumusak | eski_asgari |
 pay1`, 900 sn × 2); karar kuralı oturum kaydında koşudan önce yazıldı.
+
+**Ayırma ölçüldü (13 Ekim öğleden sonra, Mustafa'nın makinesi, 6 çekirdek,
+900 sn × 2, `b75547d` kodu; çıktılar
+`08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-<çeşit>-95-ayirma-900.json`):**
+`asim_yumusak` **1 / 2** plan — amaç 38.737 (referans 55.248, −%29,9; fazla
+mesai 0,5 sa) ama hedefin üstüne **1.690 kişi-saat** (157 hücre); `eski_asgari`
+**0 / 2**; `pay1` (hedef + 1) **0 / 2**. Altı koşunun altısında fazla mesaisiz
+ilk arama 3 × 40 sn UNKNOWN. Karar kuralına göre tek kilit yok, sorun setin
+genel darlığı; (a) pay'lı set bu hâliyle işe yaramıyor → (b) motoru
+güçlendirmek. **Karar (17:15–17:31, Mustafa): K-68** — gevşekten serte
+(motor) + hedef aşımına plan bazında üst tolerans (ürün); kabul ölçütleri
+K-68'de; ölçüm 900 **ve 1200** sn × 3, tolerans 1 ve 2 çeşitleri.
+**Koda indi (bulut, 13 Ekim akşamı):** `09-motor/cozucu/coz.py`
+`_gevsekten_serte` — birinci aşama UNKNOWN dönerse açık → +3 → +1 → +0;
+inemezse taslak. Yalnız iki aşamalı aramada (50 000+ değişken) çalışır.
+**Bulut yatağı (seviye 1, 0,3 ölçek, 300 sn, 2 çekirdek, n = 1):** gevşek yol
+kapalı → plansız (bulgu 31 bulutta tekrarlandı); açık → açık adım 5,25 sn'de
+toplam aşımı **0**'a indirdi (OPTIMAL) — plan sert kurala uyuyor, taslak
+değil. 500'de ölçülmedi — sıradaki blok (oturum 13 Ekim §7: 900 ve 1200 sn ×
+3, `tol1` / `tol2` × 2).
 
 *Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
 makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı

@@ -270,3 +270,109 @@ def test_K67_K54_donmus_gundeki_asim_cozumu_KILITLEMEZ_gecmis_isaretli():
     ih = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
     assert ih and all(i["gun"] == 0 and i.get("gecmis") for i in ih)   # olan oldu
     assert r["yayin_kapisi"]["bilgi_ihlaller"] == []             # gecmis bilgiye de girmez
+
+
+# ----------------------------------------------------------------------
+# 4. K-68 (Mustafa, 13 Ekim 17:15-17:31): UST TOLERANS -- "firma hedefledigi
+#    kisi sayisini aralik versin ... hedef girer, + olabilecek deger girer".
+#    "Vardiya [plani] bazinda eklenmelidir. Ekip bazinda olmaz ... Zaman
+#    degiskeni onemli." Kuralin plan girdisindeki parametresi `ust_tolerans`
+#    (kisi, varsayilan 0). Sert ust sinir hedef + tolerans; aradaki fazla
+#    kisi YUMUSAK (ceza HEDEF_ASIMI agirligiyla).
+# ----------------------------------------------------------------------
+
+def _tolerans(g, k):
+    for kk in g["kurallar"]:
+        if kk["kod"] == "HEDEF_ASIMI":
+            kk.setdefault("parametreler", {})["ust_tolerans"] = k
+    return g
+
+
+def test_K68_tolerans_0_VARSAYILAN_K67_birebir():
+    m = Model(_sert(_sahne())).kur()
+    assert m.asim_sinirli and all(t == 0 for _, t in m.asim_sinirli.values())
+    assert all(list(m.m.Proto().variables[v.Index()].domain) == [0, 0]
+               for v, _ in m.asim_sinirli.values())
+    m0 = Model(_tolerans(_sert(_sahne()), 0)).kur()
+    assert not [v for _, v in m0.cezalar if v.Name().startswith("ha_")]
+
+
+def test_K68_motor_UST_SINIR_hedef_arti_tolerans_bant_ici_CEZALI():
+    m = Model(_tolerans(_sert(_sahne()), 2)).kur()
+    assert len(m.asim_sinirli) == 45
+    assert all(list(m.m.Proto().variables[v.Index()].domain) == [0, 2] and t == 2
+               for v, t in m.asim_sinirli.values())
+    ha = [(a, v) for a, v in m.cezalar if v.Name().startswith("ha_")]
+    assert len(ha) == 45 and all(a == m._agirlik("HEDEF_ASIMI") for a, _ in ha)
+
+
+def test_K68_okunamayan_tolerans_0_ve_NOT():
+    m = Model(_tolerans(_sert(_sahne()), "iki")).kur()
+    assert all(t == 0 for _, t in m.asim_sinirli.values())
+    assert any("ust_tolerans okunamadi" in n for n in m.notlar)
+    m2 = Model(_tolerans(_sert(_sahne()), -3)).kur()               # eksi -> 0
+    assert all(t == 0 for _, t in m2.asim_sinirli.values())
+
+
+def test_K68_YUMUSAK_turde_tolerans_YOK_SAYILIR():
+    """Tolerans yalniz SERT'in ust siniridir; YUMUSAK'ta her fazla kisi zaten ceza."""
+    g = _tolerans(_sahne(), 2)
+    assert Model(g).kur().asim_sinirli == {}
+    ih = [i for i in degerlendir(g, _plan(["P1", "P2"]))["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert len(ih) == 45 and all(i["agirlik"] == "YUMUSAK" and "ust_sinir" not in i for i in ih)
+
+
+def test_K68_dogrulayici_BANT_ICI_yumusak_USTU_sert_bilgi():
+    g = _tolerans(_sert(_sahne()), 1)
+    r = degerlendir(g, _plan(["P1", "P2"]))                         # 2 kisi: hedef 1 + 1
+    ih = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert len(ih) == 45 and all(i["agirlik"] == "YUMUSAK" and i["ust_sinir"] == 2 for i in ih)
+    assert "tolerans 1 icinde" in ih[0]["mesaj"]
+    assert r["yayin_kapisi"]["bilgi_ihlaller"] == []
+    r3 = degerlendir(g, _plan(["P1", "P2", "P3"]))                  # 3 kisi: sinir 2 asildi
+    ih3 = [i for i in r3["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert len(ih3) == 45 and all(i["agirlik"] == "SERT" for i in ih3)
+    assert "ust sinir 2 asildi" in ih3[0]["mesaj"]
+    k = r3["yayin_kapisi"]
+    assert k["yayinlanabilir"] is True and len(k["bilgi_ihlaller"]) == 45   # K-67 eki
+
+
+def test_K68_tolerans_1_sertte_COZUMSUZ_sahneyi_COZER_32_bant_ici():
+    """Ust bolumun sahnesi: tolerans 0'da cozumsuz (en az 32 hucre asim, her
+    biri 1 fazla). Tolerans 1'de plan cikar; 32 hucre bant icinde (YUMUSAK),
+    sert satir yok."""
+    g = _tolerans(_sert(_tam_zamanli_sahne()), 1)
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c["durum"]
+    r = degerlendir(g, c["atamalar"])
+    assert not [i for i in r["ihlaller"] if i["agirlik"] == "SERT"], r["ihlaller"]
+    ih = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI"]
+    assert len(ih) == 32 and all(i["agirlik"] == "YUMUSAK" for i in ih)
+    assert c["cozum_istatistikleri"]["amac_dagilimi"]["HEDEF_ASIMI"]["deger"] == 32
+
+
+def test_K68_ON_KONTROL_tolerans_icindeki_asgari_CELISKI_DEGIL():
+    g = _tolerans(_sert(_sahne()), 1)
+    g["talep"][10]["asgari"] = 2                                  # asgari 2 <= hedef 1 + 1
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5})
+    assert c["durum"] == "cozuldu", c["durum"]
+    g["talep"][10]["asgari"] = 3                                  # 3 > 2: celiski
+    c3 = coz(g, {"azami_saniye": 20})
+    assert c3["durum"] == "cozumsuz" and c3["cozum_istatistikleri"]["durma_sebebi"] == "on_kontrol"
+    assert c3["teshis"]["mumkun"] == 2 and c3["teshis"]["gereken"] == 3
+    assert "(+ tolerans 1)" in c3["teshis"]["engelleyen_kurallar"][0]["gerekce"]
+
+
+def test_K68_TESHIS_asim_hucreleri_UST_SINIRIN_ustunu_sayar():
+    """Uc tam zamanli, hedef 1, tolerans 1: talepli gunlere 18 vardiya
+    sigmaz -> cozumsuz. Asim hucreleri ust sinirin (2) USTUNU sayar."""
+    g = _tolerans(_sert(_tam_zamanli_sahne()), 1)
+    g["calisanlar"].append(dict(g["calisanlar"][0], id="P3"))
+    c = coz(g, {"azami_saniye": 20, "durgunluk_saniye": 5, "teshis_kural_saniye": 10})
+    assert c["durum"] == "cozumsuz", c["durum"]
+    a = c["teshis"]["asim_hucreleri"]
+    assert a["toplam_fazla"] > 0 and a["en_az_kanitli"] is True
+    assert all(h["ust_sinir"] == 2 and h["atanan"] == 2 + h["fazla"] for h in a["hucreler"])
+    r = degerlendir(g, c["en_iyi_plan"]["atamalar"])
+    sert = [i for i in r["ihlaller"] if i["kural"] == "HEDEF_ASIMI" and i["agirlik"] == "SERT"]
+    assert sum(i["olculen"] - 2 for i in sert) == a["toplam_fazla"]

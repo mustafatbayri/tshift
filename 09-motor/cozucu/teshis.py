@@ -94,6 +94,17 @@ def asim_sert_mi(girdi):
     return bool(k) and k.get("tur") == "SERT"
 
 
+def _ust_tolerans(girdi):
+    """K-68: HEDEF_ASIMI SERT'in `ust_tolerans`i (plan parametresi; kisi,
+    varsayilan 0). Okunamazsa 0 -- model notu ayrica yazar."""
+    if not asim_sert_mi(girdi):
+        return 0
+    try:
+        return max(0, int(_par(_kural(girdi, "HEDEF_ASIMI"), "ust_tolerans", 0) or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
 def celisen_talep(girdi, kuruldu):
     """K-67 ON KONTROLU: HEDEF_ASIMI SERT iken hedefin ASILMADAN tutulamayacagi
     bir hucre -- ya da None. COZUCU CALISTIRMADAN.
@@ -107,27 +118,31 @@ def celisen_talep(girdi, kuruldu):
     """
     if not asim_sert_mi(girdi):
         return None
+    tol = _ust_tolerans(girdi)       # K-68: sert ust sinir = hedef + tolerans
     asgari_aktif = bool(_kural(girdi, "ASGARI_KAPSAMA"))
     taban = _par(_kural(girdi, "SAHADA_ASGARI"), "asgari_sahada", 0) or 0
     for t, gun, saat in kuruldu._hucreler():
         hedef = t.get("hedef")
         if hedef is None or gun in kuruldu.donmus:
             continue
+        ust = hedef + tol
+        ek = " (+ tolerans %d)" % tol if tol else ""
         adaylar = []
-        if asgari_aktif and (t.get("asgari") or 0) > hedef:
+        if asgari_aktif and (t.get("asgari") or 0) > ust:
             adaylar.append(("ASGARI_KAPSAMA", t["asgari"],
-                            "talep satirinin asgarisi %d, hedefi %d" % (t["asgari"], hedef)))
-        if taban > hedef:
+                            "talep satirinin asgarisi %d, hedefi %d%s" % (t["asgari"], hedef, ek)))
+        if taban > ust:
             adaylar.append(("SAHADA_ASGARI", taban,
-                            "sahada en az %d kisi kurali, hedef %d" % (taban, hedef)))
+                            "sahada en az %d kisi kurali, hedef %d%s" % (taban, hedef, ek)))
         devir = kuruldu._devir_sayisi(t.get("ekip"), gun, saat)
-        if devir > hedef:
+        if devir > ust:
             adaylar.append(("GECMIS_DEVIR", devir,
-                            "onceki haftadan tasan %d vardiya zaten sahada, hedef %d"
-                            % (devir, hedef)))
+                            "onceki haftadan tasan %d vardiya zaten sahada, hedef %d%s"
+                            % (devir, hedef, ek)))
         if adaylar:
             return {"ekip": t.get("ekip"), "gun": gun, "saat": saat,
                     "gereken": max(a[1] for a in adaylar), "hedef": hedef,
+                    "ust_sinir": ust,
                     "neden": "celisen_talep",
                     "kurallar": [a[0] for a in adaylar if a[0] != "GECMIS_DEVIR"] + ["HEDEF_ASIMI"],
                     "gerekce": "hedef asilmadan tutulamaz: " + "; ".join(a[2] for a in adaylar)}
@@ -162,7 +177,7 @@ def teshis_koy(girdi, kuruldu, istatistik, ayar, on_kontrol=None, kesin=True):
         kapsam = "hucre"
         hucre = {"ekip": on_kontrol["ekip"], "gun": on_kontrol["gun"],
                  "saat": on_kontrol["saat"]}
-        gereken, mumkun = on_kontrol["gereken"], on_kontrol["hedef"]
+        gereken, mumkun = on_kontrol["gereken"], on_kontrol.get("ust_sinir", on_kontrol["hedef"])
         engelleyen = [{"kod": k["kod"],
                        "yasal": k.get("yasal", False),
                        "kabul_edilebilir": k.get("kabul_edilebilir", False),
@@ -465,10 +480,21 @@ def _asim_gevsek_plan(girdi, ayar, saniye=None):
     Yumusatilmis model de cozulemiyorsa tikanma asimda degildir: (None, None).
     """
     saniye = float(saniye if saniye is not None else (ayar or {}).get("teshis_asim_saniye", 30))
+    tol = _ust_tolerans(girdi)
     kurallar = [dict(k, tur="YUMUSAK") if k.get("kod") == "HEDEF_ASIMI" else k
                 for k in girdi.get("kurallar", []) or []]
     m = Model(dict(girdi, kurallar=kurallar)).kur()
-    toplam_asim = sum(m.asim.values())
+    # K-68: sayilan, UST SINIRIN (hedef + tolerans) ustudur. Tolerans 0'da
+    # m.asim'in kendisi (eski davranis birebir); degilse u >= asim - tolerans.
+    if tol:
+        ust = {}
+        for k, v in m.asim.items():
+            u = m.m.NewIntVar(0, max(0, len(m.calisanlar)), "ut_%d_%d" % (k[1], k[2]))
+            m.m.Add(u >= v - tol)
+            ust[k] = u
+    else:
+        ust = m.asim
+    toplam_asim = sum(ust.values())
     normal_amac = sum(a * v for a, v in m.cezalar)
 
     # 1. adim: yalniz asim
@@ -485,7 +511,7 @@ def _asim_gevsek_plan(girdi, ayar, saniye=None):
     for t, gun, saat in m._hucreler():
         v = m.asim.get((t.get("ekip"), gun, saat))
         if v is not None:
-            degerler[(t.get("ekip"), gun, saat)] = int(c.Value(v))
+            degerler[(t.get("ekip"), gun, saat)] = int(c.Value(v))   # hedefin ustu
     from .coz import _atamalari_cikar
     atamalar = _atamalari_cikar(m, c)
 
@@ -506,11 +532,15 @@ def _asim_gevsek_plan(girdi, ayar, saniye=None):
 
     hucreler = []
     for t, gun, saat in m._hucreler():
-        fazla = degerler.get((t.get("ekip"), gun, saat), 0)
+        hedef_ustu = degerler.get((t.get("ekip"), gun, saat), 0)
+        fazla = hedef_ustu - tol                 # ust sinirin ustu (K-68)
         if fazla > 0:
-            hucreler.append({"ekip": t.get("ekip"), "gun": gun, "saat": saat,
-                             "hedef": t.get("hedef"), "atanan": t.get("hedef") + fazla,
-                             "fazla": fazla})
+            h = {"ekip": t.get("ekip"), "gun": gun, "saat": saat,
+                 "hedef": t.get("hedef"), "atanan": t.get("hedef") + hedef_ustu,
+                 "fazla": fazla}
+            if tol:
+                h["ust_sinir"] = t.get("hedef") + tol
+            hucreler.append(h)
     en_iyi = {
         "var": bool(atamalar),
         "atamalar": atamalar,
