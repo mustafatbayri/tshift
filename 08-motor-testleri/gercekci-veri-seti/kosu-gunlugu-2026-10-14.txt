@@ -1,0 +1,21 @@
+﻿04:34:44  BLOK BASLADI
+04:34:44  07 klasoru yeniden adlandirma cikis 0
+04:34:44  CI yamasi cikis 0
+04:36:16  09 testleri cikis 0
+04:44:11  08 testleri cikis 0
+04:45:15  10 testleri cikis 0
+04:45:15  DENETIM cikis 0 (0 = HATA yok)
+04:45:20  commit + push cikis 0
+04:45:20  VS1 500 referansi basliyor (900 sn)
+05:00:32  VS1 500 referansi cikis 0
+05:00:32  eski L1 varsayilan 1800 x 3 basliyor
+06:34:31  eski L1 varsayilan 1800 x 3 cikis 0
+06:34:31  VS1 L1 varsayilan 1800 x 3 basliyor
+08:08:33  VS1 L1 varsayilan 1800 x 3 cikis 0
+08:08:33  VS1 L1 tavan 7200 x 1 basliyor
+09:52:56  VS1 L1 tavan 7200 x 1 cikis 0
+09:52:56  eski L1 gevsek_parca 1800 x 2 basliyor
+10:55:54  eski L1 gevsek_parca 1800 x 2 cikis 0
+10:55:54  tam mutasyon basliyor
+11:27:31  tam mutasyon cikis 0
+11:27:31  BLOK BITTI

@@ -5140,7 +5140,20 @@ referansta 0; fazla mesai hariç motor referanstan −%24…−%27 iyi.
 `_gecerli_plan_yeniden_ara` (aşım sert, fazla mesai serbest, 120 sn) gevşek
 yolun koştuğu 5 koşunun 5'inde boşa gitti. `tol1` / `tol2` ve tam mutasyon
 koşmadı (Ctrl-C, `tol1`'in başında; iz yok, izlenen dosyalar temiz).
+*(⚠ Düzeltme, 14 Ekim: blok durmamıştı — `tol1` 2/2 koştu: 1 plan, 1
+plansız; oturum 14 Ekim §5.)*
 **Önerilen sıradaki üç ayar Mustafa'nın onayında** (oturum 13 Ekim §8).
+
+**Üç ayarla ölçüldü (14 Ekim 04:34–11:27, Mustafa'nın makinesi, 1.800 sn;
+oturum 14 Ekim §7):** eski L1'de **5/5 plan** (ürün yolu 3/3, parçalı 2/2;
+açık adım 66–462 sn, bir kez 1.114), fazla mesai hariç referanstan
+−%26,6…−%27,1, fazla mesai 5–7,5 sa (bir parçalı koşuda 28,75). **VS1
+L1'de 2/4** (1.800 sn'de 1/3; açık adım 287 / 793 / > 1.226 / > 1.226 sn) —
+plansızlık yeni sette büyüdü. **Fazla mesai onarımı 0/7** (açık adımın
+planından başlıyor, orada 326–465 sa fazla mesai var); fazla mesaisiz ilk
+arama 0/10. Tavan (7.200 sn, VS1): fazla mesai hariç 30 dk'ya göre −%1,1;
+fark fazla mesaide (8,75 → 5 sa). Öneriler: onarım iyileştirmenin sonuna;
+VS1'de plan bulma (süre, arama ayarları, bütçe) — karar Mustafa'da.
 
 *Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
 makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı

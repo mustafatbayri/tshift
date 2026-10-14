@@ -4,6 +4,11 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-14 (14:30) · Gece bloğu sonucu (04:34–11:27): `7dfd610` push; VS1 500 referansı (835 sn, seviye 1 puanı 62.606); eski L1 1.800 sn 5/5 plan (ürün 3/3, parçalı 2/2), fazla mesai hariç referanstan −%26,6…−%27,1, fazla mesai 5–7,5 sa; VS1 L1 1.800 sn 1/3 plan, 7.200 sn 1/1 (tavan: fazla mesai hariç −%1,1); fazla mesai onarımı 0/7, fazla mesaisiz ilk arama 0/10; tam mutasyon 437 · yaşayan 0. Öneriler Mustafa'da. Kod değişmedi.**
+→ `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-k68-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-k68-parca-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-VS1-95-k68-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-VS1-95-tavan-7200.json` (+ `planlar/` altında çizelgeleri) · `08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-L1-VS1-95.json` · `08-motor-testleri/gercekci-veri-seti/fikstur/_referans-L1-VS1-95.json` · `08-motor-testleri/gercekci-veri-seti/kosu-gunlugu-2026-10-14.txt` · `09-motor/mutasyon-tam-kosu.txt` · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §7 · `00-DEVIR/06-ACIK-RISKLER.md` (bulgu 31) · `00-DEVIR/00-BURADAN-BASLA.md`
+
+---
+
 **2026-10-14 (02:00) · T-82 açıldı — küçük ölçekte kalite ölçülmedi (Yılmaz'ın endişesi); iki aşama eşiği 50.000 değişken ≈ 40 kişi (Mustafa'nın adayı 100.000, ölçümle); ölçek merdiveni 10 kademe; ikinci makine kuralları. Kod değişmedi.**
 → `00-DEVIR/06-ACIK-RISKLER.md` (T-82) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §6 · `00-DEVIR/00-BURADAN-BASLA.md`
 

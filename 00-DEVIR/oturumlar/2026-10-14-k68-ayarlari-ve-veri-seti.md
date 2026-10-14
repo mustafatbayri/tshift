@@ -11,6 +11,7 @@
 4. Veri seti işi (Yılmaz için) — kapsam ve kararlar
 5. 01:30–01:45 — eski blok hiç durmamıştı; `tol1` sonucu; `07-motor/` adı; R7 sorusu
 6. 01:40–02:00 — Yılmaz'ın küçük ölçek endişesi → T-82 (ölçek merdiveni 10 kademe, iki aşama eşiği), ikinci makine
+7. Blok sonucu (04:34–11:27) — eski sette 5/5 plan, VS1'de 2/4; fazla mesai onarımı 0/7; tavan
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -262,3 +263,86 @@ her kademede ürün yolu / tek aşamalı yol, ≤ 100 kişide 1 saatlik uzun ko�
 koşudan önce (X Mustafa'da); ikinci makinenin kuralları (aynı makinede
 kıyas, makine adı çıktıda, tek yazar). 100.000'e geçiş ölçümden önce
 yapılmadı: hangi yönün iyi olduğu bilinmiyor.
+
+## 7 · Blok sonucu (14 Ekim 04:34–11:27, Mustafa'nın makinesi, 6 çekirdek)
+
+Blok 04:34'te başladı (Mustafa ~04:30), 11:27'de bitti; Mustafa 13:49'da
+konsol çıktısını attı. Koşu günlüğü:
+`08-motor-testleri/gercekci-veri-seti/kosu-gunlugu-2026-10-14.txt`.
+
+**Akış.** `07-motor/` taşındı, CI yaması uygulandı (ikisi çıkış 0); 09 →
+691 ✅; 08 → 66 ✅ + 2 atlanan; 10 → 16 ✅ + 3 atlanan (makinede `jsonschema`
+ve `openpyxl` kurulu değil); DENETIM HATA 0; **`7dfd610` push**. VS1 500
+referansı 835 sn'de (sert 0, fazla mesai 0, yayınlanabilir; seviye 1 puanı
+**62.606** — ADALET 20.890, MOLA 41.608, ROTASYON 108; eski setin referansı
+55.248). Tam mutasyon **437 · yaşayan 0**.
+
+**Eski L1** (13 Ekim'in setiyle aynı; referans 55.248, fazla mesai 0):
+
+| koşu | açık adım | fm onarımı | sonuç | fm (sa) | eksik (k-s) | amaç (fm hariç) | fm hariç, referansa göre |
+|---|---|---|---|---|---|---|---|
+| `varsayilan` 1800-1 | OPTIMAL 146 sn | bulamadı (300 sn) | plan | 7,5 | 34 | 63.072 (40.572) | −%26,6 |
+| `varsayilan` 1800-2 | OPTIMAL 462 sn | bulamadı (300 sn) | plan | 7,5 | 13 | 62.792 (40.292) | −%27,1 |
+| `varsayilan` 1800-3 | OPTIMAL 130 sn | bulamadı (300 sn) | plan | 6,25 | 20 | 59.109 (40.359) | −%26,9 |
+| `gevsek_parca` 1800-1 | 1. parça OPTIMAL 66 sn | bulamadı (300 sn) | plan | 5,0 | 27 | 55.537 (40.537) | −%26,6 |
+| `gevsek_parca` 1800-2 | 7 parça × 150 sn boş, 8.'si 62 sn → **1.114 sn** | bulamadı (112 sn) | plan | **28,75** | 64 | 128.301 (42.051) | −%23,9 |
+
+Aşım 0, sert 0 hepsinde.
+
+**VS1 L1** (veri setinden; referans 62.606, fazla mesai 0):
+
+| koşu | açık adım | fm onarımı | sonuç | fm (sa) | eksik (k-s) | amaç (fm hariç) | fm hariç, referansa göre |
+|---|---|---|---|---|---|---|---|
+| `varsayilan` 1800-1 | **UNKNOWN 1.227 sn** | — | **plansız** | — | — | — | — |
+| `varsayilan` 1800-2 | **UNKNOWN 1.226 sn** | — | **plansız** | — | — | — | — |
+| `varsayilan` 1800-3 | OPTIMAL 287 sn | bulamadı (300 sn) | plan | 8,75 | 31 | 75.992 (49.742) | −%20,5 |
+| `varsayilan` 7200 (tavan) | OPTIMAL 793 sn | bulamadı (300 sn) | plan; 6.145 sn'de durgunlukla bitti | 5,0 | 15 | 64.215 (49.215) | −%21,4 |
+
+**§3'ün kuralıyla okuma.**
+
+- **Plan bulma.** Eski sette **5/5** (13 Ekim'de 5/6) — ayar 1 + 2 eski
+  sette kuyruğu kapattı görünüyor (n küçük). **VS1'de 2/4** (1.800 sn'de
+  1/3). Açık adımın süresi VS1'de belirgin uzun: 287 / 793 / > 1.226 /
+  > 1.226 sn (eski sette 66–462, bir kez 1.114). Yeni set (geçmiş hafta,
+  K-58 sözleşmeleri, gerçek kural bayrakları) ilk geçerli planı bulmayı
+  zorlaştırdı. **Plansızlık bugün ürünün en büyük açığı.**
+- **Fazla mesai.** Onarım (ayar 3) 500'de **0/7**. Sebep: onarım açık
+  adımın planından başlıyor; açık adım yalnız aşıma bakar, fazla mesaiye
+  bakmaz → başlangıç planında **326–465 saat** fazla mesai (çıktıdaki
+  19.575–27.900 dk). İpucu fazla mesaisiz plana çok uzak; her koşuda 300 sn
+  boşa. Son planlarda fazla mesai 5–8,75 sa (iyileştirme indiriyor,
+  sıfırlayamıyor); referansta 0 → fazla mesaisiz plan VAR. Fazla mesaisiz
+  ilk arama (3 × 40 sn) da 500'de bu blokta **0/10** (13 Ekim 1/9; 49
+  kişide 0,9 sn'de buluyor). 500'de bu iki adım koşu başına ~420 sn harcadı,
+  hiç tutmadı.
+- **Kalite (fazla mesai hariç).** Eski sette referanstan −%26,6…−%27,1
+  (13 Ekim 900 sn: −%23,6…−%25,3; 1.200 sn: −%26,5…−%26,7): 30 dk 15 dk'ya
+  göre ~%2–3 iyileştirdi. Toplam amaçtaki fark neredeyse tamamen fazla mesai
+  (1 saat = 3.000 puan; 7,5 sa = 22.500).
+- **Tavan.** 2 saatlik koşu fazla mesai hariç 49.215, 30 dk'lık 49.742
+  (−%1,1 — eski setteki üç koşunun kendi arasındaki farkı ~%0,7; yani
+  ölçüm gürültüsüne yakın). Toplam fark (64.215 / 75.992) neredeyse tamamen
+  fazla mesai (5 / 8,75 sa). İyileştirme aşamasının eğrisi düzleşmedi: son
+  iyileşme 4.466. sn'de; 1.785 → 4.466 sn arası sabit molalı amaç 112.707 →
+  93.888 — sıçramalar fazla mesai kaldırılması. Yani: fazla mesai dışı
+  kalite 30 dk'da tavana yakın; fazla mesaiyi sıfırlamak çözücü için yavaş
+  iş — uzun süre bunu kısmen yapıyor.
+- **Parçalı arama.** Plan bulmayı iyileştirmedi: 2. koşuda 7 tohum 150'şer
+  sn boş, 8.'si 62 sn'de buldu (1.114 sn), iyileştirmeye 91 sn kaldı, plan
+  kötü (fazla mesai 28,75 sa). Ürün yolu tek uzun arama kalır; parça ölçüm
+  seçeneği olarak durur.
+
+**Öneriler (karar Mustafa'da; 14:00 mesajı):**
+
+1. **Fazla mesai onarımını iyileştirmenin sonuna taşı.** Onarım açık
+   adımın planından değil, iyileştirmenin bulduğu plandan (5–9 sa, 4–8
+   kişi) başlasın: ipucu fazla mesaisiz plana çok yakın; 300 sn'lik boşa
+   harcama da kalkar. Küçük kod işi + test + ölçüm (eski L1 ve VS1).
+2. **VS1'de plan bulma.** (a) 500'de hiç tutmayan fazla mesaisiz ilk
+   aramanın süresi açık adıma verilsin (K-61'in ilkesi — önce fazla
+   mesaisiz — 1. öneriyle sona taşınır; karar Mustafa'nın); (b) CP-SAT'in
+   ilk çözüm bulmaya yönelik arama ayarları açık adımda ölçüm seçeneği
+   olarak denensin; (c) bütçe: K-69 gereği 30 dk sabit değil — 45 / 60
+   dk'da açık adım ~1.700–2.400 sn alır. Ölçüm VS1'de 5 tekrar, karar kuralı
+   koşudan önce.
+3. **T-82 ölçek merdiveni** bundan sonra (ikinci makine hazırsa paralel).
