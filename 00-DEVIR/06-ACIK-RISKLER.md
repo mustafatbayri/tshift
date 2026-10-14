@@ -3292,8 +3292,10 @@ bakmadan değiştirmek tahmin olur; hangi yönün iyi olduğu bilinmiyor).
   100.000 adayları buradan okunur.
 - **≤ 100 kişide 1 saatlik uzun koşu** → en iyi bilinen plan ya da kanıtlı
   alt sınır → ürün yolunun gerçek mesafesi (%).
-- **Karar kuralı koşudan önce yazılır** (ör. "herhangi bir kademede ürün yolu
-  en iyi alternatiften %X kötüyse ayar boyuta bağlanır"; X Mustafa'da).
+- **Karar kuralı ölçümden** (Mustafa 14 Ekim 14:56: *"karar eşiğini
+  ölçerek belirleyemiyor muyuz?"*): her kademede iki yol 3'er koşu;
+  aralıklar örtüşmüyorsa fark gerçek, iyi olan seçilir; örtüşüyorsa gürültü,
+  bugünkü ayar kalır.
 
 **İkinci makine (Mustafa, 01:53):** eski oyun laptopu, merdiven testlerinde
 ikinci koşu hattı. Kurallar: kıyaslanan iki yapılandırma **aynı makinede**
@@ -3310,6 +3312,68 @@ kalite kanıtı yok ve eşiğin yeri tahmin.
 
 → T-50 · K-62 · K-69 · `09-motor/cozucu/coz.py` (`iki_asama_esigi`) ·
 `08-motor-testleri/gercekci-veri-seti/merdiven.py`
+
+---
+
+## 🟡 T-83 · Yarı zamanlının haftalık saatine **alt sınır yok** — motor bir hafta 0, öteki hafta 45 saat yazabilir; mevzuat sözleşme süresini sabit sayıyor (`TERCIH_KARSILAMA`'nın yeni anlamı adayı)
+
+**Kaynak:** 14 Ekim 15:26, Mustafa (`TERCIH_KARSILAMA` sorusuna): *"Bunun
+yasal zeminini araştırır mısın? karar veremiyorum. Öğrenci vakasındaki
+durum ok, ama şu zaman mevzusunu ayarlamak için mevzuata falan bakalım. Part
+time aldığımız adamı da bir hafta 4 saat VEYA HİÇ, diğer hafta 30 saat
+kafamıza göre planlayamayız gibime geliyor."*
+
+**Bugün ne var.** K-58 (2 Ekim): yarı zamanlıya kişi başına saat
+tanımlanmaz; baz 30 saat, 45'e kadar yazılabilir. Motorda yarı zamanlının
+yalnız **üst** sınırı var (`PART_TIME_LIMIT`, 45 sa — K-39); alt sınır ya da
+"bazı doldur" yok. Tam zamanlıda 45 saat SERT doldurulur (K-39). Küçük
+keşifte (100 kişi) 33 yarı zamanlının 2'si haftayı hiç vardiyasız geçirdi.
+
+**Mevzuat taraması (14 Ekim, bulut; hukukçu teyidi YOK — A-16 listesine):**
+
+- **Kısmi süreli iş sözleşmesi (İş K. m. 13):** işçinin *normal haftalık
+  çalışma süresi* emsal tam süreliye göre önemli ölçüde az **belirlenir**;
+  Kısmi Süreli Çalışma Yönetmeliği m. 6: emsalin **üçte ikisine kadar**
+  (45 → 30). Çalışma süresinin kısaltılması ancak **işçi ve işverenin ortak
+  iradesiyle** (hukuk bürosu özeti). Yani süre sözleşmenin parçası; işveren
+  haftadan haftaya tek başına inip çıkamaz.
+- **Çağrı üzerine çalışma (İş K. m. 14):** değişken sürenin yasal biçimi —
+  **yazılı** sözleşme; süre belirlenmemişse haftada **20 saat** kararlaştırılmış
+  sayılır; işçi belirlenen süre için **çağrılsın çağrılmasın ücrete hak
+  kazanır**; günlük süre belirlenmemişse her çağrıda **en az 4 saat üst
+  üste**; çağrı (aksi kararlaştırılmadıkça) **en az 4 gün önceden**; süre
+  haftalık, aylık ya da yıllık kararlaştırılabilir.
+- Sonuç (hukukçu teyidine kadar): *"bir hafta 4 saat ya da hiç, öteki hafta
+  30"* ancak çağrı üzerine sözleşmeyle ve onun kurallarıyla mümkün; o
+  durumda bile kararlaştırılan süre ödenir. Olağan kısmi süreli sözleşmede
+  sözleşme süresi her hafta ödenen süredir — eksik planlamak boşa ödenen
+  saat, fazla planlamak sözleşme dışı çalışma.
+
+**Kaynaklar:** [Av. Kazım Ceylan — çağrı üzerine çalışma sözleşmesi](https://www.kazimceylan.av.tr/cagri-uzerine-calisma-sozlesmesi) ·
+[Hukuki Haber — çağrı üzerine çalışma usulü ve Yargıtay uygulaması](https://www.hukukihaber.net/cagri-uzerine-calisma-usulu-bu-tur-is-sozlesmelerinin-unsurlari-ve-yargitay-uygulamasi/amp) ·
+[Mıhcı Hukuk — kısmi süreli (part-time) iş sözleşmesi](https://mihci.av.tr/kismi-sureli-part-time-is-sozlesmesi-nedir/).
+Resmî metin (mevzuat.gov.tr) bu taramada okunamadı (erişim onayı
+gelmedi); maddeler hukuk bürosu yazılarından.
+
+**Karar (14 Ekim 17:05) → K-71:** (1) evet, yarı zamanlıya kişi başına
+sözleşme süresi; (2) motor bu süreye getirmeye çalışır (yumuşak; ağırlık
+2.000 puan / boşa ödenen saat — 18:40 onaylandı); (3) çağrı üzerine çalışma
+**kapsam dışı** (18:40). Uygulanmadı (K-71). Açık kalan: hukukçu teyidi
+(A-16).
+
+*Önceki karar soruları:* (1) Yarı zamanlıya kişi başına **sözleşme
+süresi** gerekir mi (yalnız yarı zamanlıda; K-58'in o kısmı yeniden açılır)?
+Yoksa herkes 30 baz mı? (2) Motor yarı zamanlıyı bu süreye **getirsin** mi —
+tam zamanlıdaki gibi SERT mi, ağırlıklı (yumuşak) mı? Bu, `TERCIH_KARSILAMA`'nın
+yeni anlamı olur (uygunluk takvimi zaten ayrı ve sert, K-13). (3) Çağrı
+üzerine çalışma ayrı bir sözleşme tipi olarak gerekir mi (4 saat / 4 gün
+kuralları)? Yılmaz'ın import'unu etkiler (`employee_contracts`).
+
+**Neden 🟡:** motor bugün kurala aykırı plan üretmiyor; ama yarı zamanlıyı
+haftadan haftaya keyfî dağıtabiliyor ve maliyet / hukuk tarafı tanımsız.
+
+→ K-13 · K-22 · K-39 · K-58 · A-16 · şartname §6.8, §8.3 ·
+`02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 2
 
 ---
 

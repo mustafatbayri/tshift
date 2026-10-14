@@ -357,11 +357,15 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
              "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
     rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
-    gevsek = {"gevsek_parca"}                                           # K-68 ayar 2 olcum secenegi: urun yolu + parcali acik adim
+    gevsek = {"gevsek_parca", "acik_lin0", "acik_ls"}                   # K-68 ayar 2 / oneri 2b olcum secenekleri: urun yolu + acik adim ayari
     assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek
     assert KO.YAPILANDIRMALAR["gevsek_parca"][1] == {"gevsek_acik_parca_saniye": 150}
     assert KO.YAPILANDIRMALAR["gevsek_parca"][2] == {}
     assert KO.COZ_VARSAYILAN["gevsek_acik_parca_saniye"] is None          # urun yolu: tek uzun arama
+    assert KO.YAPILANDIRMALAR["acik_lin0"][1] == {"gevsek_acik_cozucu_parametreleri": {"linearization_level": 0}}
+    assert KO.YAPILANDIRMALAR["acik_ls"][1] == {"gevsek_acik_cozucu_parametreleri": {"use_ls_only": True}}
+    assert KO.YAPILANDIRMALAR["acik_lin0"][2] == {} and KO.YAPILANDIRMALAR["acik_ls"][2] == {}
+    assert KO.COZ_VARSAYILAN["gevsek_acik_cozucu_parametreleri"] == {}     # urun: acik adim ek ayarsiz
     assert KO.YAPILANDIRMALAR["rotasyon_0"][1] == {} and KO.YAPILANDIRMALAR["rotasyon_0"][2] == {"agirliklar": {"VARDIYA_ROTASYON_YONU": 0}}
     for ad in urun | iki_asamasiz | gevsek:
         assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad

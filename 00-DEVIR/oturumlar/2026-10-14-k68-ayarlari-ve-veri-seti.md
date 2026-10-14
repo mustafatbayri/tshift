@@ -12,6 +12,9 @@
 5. 01:30–01:45 — eski blok hiç durmamıştı; `tol1` sonucu; `07-motor/` adı; R7 sorusu
 6. 01:40–02:00 — Yılmaz'ın küçük ölçek endişesi → T-82 (ölçek merdiveni 10 kademe, iki aşama eşiği), ikinci makine
 7. Blok sonucu (04:34–11:27) — eski sette 5/5 plan, VS1'de 2/4; fazla mesai onarımı 0/7; tavan
+8. 14:30–15:30 — öneriler onaylandı ve koda indi; kabul ölçütleri; üç kuralın tanım konuşması
+9. 15:26 — `PLAN_KARARLILIGI` kararı (K-70); yarı zamanlı saat için mevzuat taraması (T-83); bu gecenin bloğu
+10. 17:05 — K-71 (yarı zamanlı sözleşme süresi) ve K-72 (ekip sürekliliği) kararları; çağrı üzerine çalışma sorusu
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -346,3 +349,121 @@ Aşım 0, sert 0 hepsinde.
    dk'da açık adım ~1.700–2.400 sn alır. Ölçüm VS1'de 5 tekrar, karar kuralı
    koşudan önce.
 3. **T-82 ölçek merdiveni** bundan sonra (ikinci makine hazırsa paralel).
+
+## 8 · 14:30–15:30 — öneriler onaylandı ve koda indi; kabul ölçütleri; üç kuralın tanım konuşması
+
+**14:33, Mustafa:** *"sorularına ok diyorum. Henüz laptop'ın gelmesine var.
+Onu ben sana söylerim. Şu an kriterler tarafında eksik var mı?"* → öneri 1
+(onarım sona), 2a (fazla mesaisiz ilk arama kısa), 2b (açık adım ayarları,
+ölçüm), 2c (bütçe 30 / 45 / 60 dk) onaylandı. f9994e2 (blok sonucu) Mustafa'nın
+makinesinde push edildi (merdiven testleri 17 ✅ + 1 atlanan).
+
+**Koda indi (bulut):** `coz.py` — onarım iyileştirmenin sonunda
+(`_fazla_mesai_onar` amaçla, kabul kuralı, süre iyileştirmeden en çok yarısı;
+`_ilk_asamada_iyilestir` `ayrilan` alır, ipucuyu yazan çözücüyü döndürür),
+ayar 4 (`gevsek_fazla_mesaisiz_saniye` 20), öneri 2b
+(`gevsek_acik_cozucu_parametreleri`); `kalite-olc.py` — `acik_lin0`,
+`acik_ls`, onarım ve kısa deneme satırları. 2a'nın uygulanışı: fazla
+mesaisiz ilk arama **tamamen atlanmadı**, gevşek yol mümkünken tek 20 sn'lik
+denemeye indi (önce 3 × 40). Sebep: küçük modelde saniyenin altında plan
+buluyor ya da fazla mesaisiz planın yokluğunu kanıtlıyor; tamamen atlansa
+kanıtlı çözümsüzlükte çıktı "çözümsüz + teşhis"ten "taslak"a dönerdi (13
+Ekim'de ayar 1 için bilerek korunan yol, K-37). 500'de 120 sn'nin 100'ü
+açık adıma kalır. **Ekleme (15:15):** onarımın kullanmadığı süre
+iyileştirmeye geri döner (`_iyilestirmeye_devam`) — bulut uçtan uca denemesi
+(VS1 0,1, 180 sn, fazla mesaisiz arama atlanmış yol) devam yokken 87. sn'de
+bitiyordu (ayrılan 71 sn boşa); devamla 157 sn, amaç 3.526 → 3.469. Ürün
+yolunda (kısa deneme açık) 49 kişide fazla mesaisiz plan 2,2 sn'de bulundu,
+gevşek yola gerek olmadı (amaç 3.478). Testler 09 → **705**
+(`test_gevsekten_serte.py` 26 → 40), 08 merdiven + ölçüm 37 ✅ + 1 atlanan,
+10 → 19 ✅; mutasyon bulut grup koşuları `k68` **78 · yaşayan 0**,
+`fm_sifir` **63 · 0**, `demir` **40 · 0** (çapaları yeni koda bağlandı);
+toplam mutant 466.
+
+**Kriterler — Mustafa'nın sorusuna cevap (14:40):** (A) üç kuralın gövdesi
+yok (`TERCIH_KARSILAMA`, `PLAN_KARARLILIGI`, `EKIP_SUREKLILIGI`; tanım
+soruları 11 Ekim'den beri sorulmamıştı); yazılı her kuralın CI'da kendi ihlal
+vakası var (`ihlal-vakalari.py`). (B) Ölçüm kabul ölçütü önerisi.
+
+**14:56, Mustafa — B:** *"1- ok 2 ok 3 … hedef mantığı ok. yasak değil,
+hedef 0 yapmak, ama yapamıyorsak bu çözümsüzlük yaratmamalı. 4 ok 6- ok.
+Ölçek merdiveni için karar eşiğini ölçerek belirleyemiyor muyuz?"* →
+**Kabul ölçütü (VS1 L1, 5 tekrar):** (1) plan 5/5; (2) aşım 0, sert 0; (3)
+son planda fazla mesai 0 en az 4/5'te — **hedef**, yasak değil: onarım
+bulamazsa plan olduğu gibi döner, çözümsüzlük yaratmaz (bugünkü davranış,
+K-38); (4) fazla mesai hariç referanstan iyi; (5) eski setler ve bütün
+testler değişmez; (6) süre: 1–3'ü tutturan en kısa bütçe (30 / 45 / 60 dk;
+K-69 — müşteriye söylenecek süre adayı). **Ölçek merdiveninin eşiği
+ölçümden:** her kademede iki yol 3'er koşu; aralıklar örtüşmüyorsa fark
+gerçek (iyi olan seçilir), örtüşüyorsa gürültü (bugünkü ayar kalır) —
+T-82'deki "%X" sorusu böylece kalktı.
+
+**14:56, Mustafa — A (üç kural):**
+- `TERCIH_KARSILAMA`: *"Yarı zamanlığının esnekliği söz konusu … öğrenci
+  ptesi salı ve perşembe çalışamıyor … çarş cuma cumartesi ve pazar günleri
+  mesai yazabiliyoruz. Tercih karşılama dediğin sende başka bir şey mi?"* →
+  Cevap: anlattığı **uygunluk takvimi** (sert, K-13; motorda var). Açık
+  soru: üstüne yumuşak bir şey var mı — yarı zamanlıyı uygun günlerinde boş
+  bırakmamak / saatini makul düzeye getirmek (küçük keşifte 33 yarı
+  zamanlının 2'si hiç planlanmadı)? Yoksa kural katalogdan kalkar.
+- `PLAN_KARARLILIGI`: *"Geçtiğimiz haftanın planı ile aynı planı tutturmaya
+  çalışmak çok zor … belki de bu konuyu plan klonlama ile çözmek daha mı
+  mantıklı olur?"* → Cevap: kural **aynı haftanın yeniden planlanması**
+  (K-54 akışı: yayınlanmış plan, biri hastalandı, yönetici düzenler / kilitler,
+  motor yeniden koşar); bugün motor yayınlanmış plandan uzaklaşmanın bedelini
+  bilmiyor. Öneri: yalnız aynı hafta, birim kişi-gün. Klonlama ayrı ürün
+  özelliği (yeni haftayı geçen haftadan başlatmak; motor girdisi K-54'te
+  hazır) — ayrıca VS1'de ilk planı bulmak için güçlü başlangıç olabilir
+  (ölçülecek).
+- `EKIP_SUREKLILIGI`: *"sadece tam zamanlı çalışanlar için mi çalıştırmalıyız
+  … uzun zamandır aynı iş yerinde çalışanlar için değerli olabilir. Çok
+  yumuşak bir kriter olacağına neredeyse eminim"* → Cevap: tanım (a) birincil
+  ekipte kal; ayrımı sözleşme tipine değil **veriye** bırak — `employee_teams`
+  önceliği eşitse (gezici) ceza yok, birincil ekip varsa var (sezonluk tipi
+  zaten yok, K-58). Ağırlık 2 / 1 / 4.
+- Karar Mustafa'da (üç soru, 15:00 mesajı).
+
+## 9 · 15:26 — `PLAN_KARARLILIGI` kararı (K-70); yarı zamanlı saat için mevzuat taraması (T-83); bu gecenin bloğu
+
+**Mustafa 15:26:** `TERCIH_KARSILAMA` için *"Bunun yasal zeminini araştırır
+mısın? karar veremiyorum … Part time aldığımız adamı da bir hafta 4 saat
+VEYA HİÇ, diğer hafta 30 saat kafamıza göre planlayamayız gibime geliyor."*
+`PLAN_KARARLILIGI` için *"edit ekranında tamamını kitle, çoklu seçim yapıp
+kitleme gibi fonksiyonlar olacak. Önerine katılıyorum, aynı haftanın
+yeniden planlanmasında çalışsın."* → **K-70** yazıldı. `EKIP_SUREKLILIGI`
+cevabı gelmedi (öneri: birincil ekip önceliğine göre).
+
+**Mevzuat taraması → T-83:** kısmi süreli sözleşmede normal haftalık süre
+sözleşmede belirlenir (İş K. m. 13; yönetmelik: emsalin 2/3'üne kadar),
+kısaltılması ortak iradeyle; değişken sürenin yasal biçimi çağrı üzerine
+çalışma (m. 14: yazılı, belirlenmemişse haftada 20 saat, çağrılsın
+çağrılmasın ücret, çağrı başına en az 4 saat, en az 4 gün önceden). Motorda
+yarı zamanlının alt sınırı yok; K-58 kişi başına saat tutmuyor. Üç karar
+sorusu T-83'te; hukukçu teyidi gerekir (A-16).
+
+**Bu gecenin bloğu (Mustafa'da, ~8 sa 15 dk):** testler (09: 705, 08, 10)
++ DENETIM + commit/push → VS1 L1 `varsayilan` 1.800 sn × 5 (kabul ölçütü)
+→ VS1 L1 `varsayilan` 3.600 sn × 3 (süre) → VS1 L1 `acik_lin0` 1.800 sn × 3
+(öneri 2b) → tam mutasyon (466). Koşu günlüğü
+`08-motor-testleri/gercekci-veri-seti/kosu-gunlugu-2026-10-14-b.txt`.
+
+## 10 · 17:05 — K-71 ve K-72 kararları; çağrı üzerine çalışma sorusu
+
+**Mustafa 17:05:** *"Ekip sürekliliği ok. Bizdeki boşluk için çalışan
+sözleşmesine süre girelim. uygundur. 2- motor yarı zamanlıya bu süreyi
+getirmeye çalışsın. Sonuçta sözleşmenin altında çağırırsak yine para
+ödüyoruz yani şirket boşa para yakıyor. 3- çağrı üzerine çalışma konusunu
+anlamadım."* → **K-71** (yarı zamanlı sözleşme süresi kişi başına; motor
+o süreye getirmeye çalışır — yumuşak; ağırlık önerisi 2.000 puan / boşa
+ödenen saat, onay bekliyor) ve **K-72** (`EKIP_SUREKLILIGI` birincil ekip
+önceliğine göre). Sıra 3'ün üç kuralının üçü de tanımlandı (K-70, K-71,
+K-72); **uygulama bu gecenin bloğundan sonra, tek pakette** — veri seti
+v2 (yarı zamanlı süreleri), şartname §8.3 / §11.2, motor + doğrulayıcı,
+merdiven referansı yeniden. Çağrı üzerine çalışma 17:10 mesajında anlatıldı;
+öneri: şimdilik kapsam dışı.
+
+Bu kayıtlar bu gecenin commit'ine girer (blok başlamadan makineye yazıldı).
+
+**18:40, Mustafa:** *"Ağırlık ok, mantıklı. Bu çağrı üzerineyi şimdilik
+kapsam dışı bırakalım."* → K-71'de ağırlık 2.000 puan / boşa ödenen saat
+(üç profilde aynı) onaylandı; çağrı üzerine çalışma kapsam dışı (T-83).

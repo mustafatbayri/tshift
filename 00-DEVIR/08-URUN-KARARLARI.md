@@ -4043,6 +4043,42 @@ gevşek yolun dört planında 5–12,5 sa (referans 0). Ölçüt 7 (`tol1`, `tol
 ve tam mutasyon koşmadı (Ctrl-C). Ayrıntı ve okuma: `06-ACIK-RISKLER.md`
 bulgu 31; öneriler oturum 13 Ekim §8.
 
+**Üç ayar (13 Ekim 23:20, Mustafa: *"olur"*) ve 14 Ekim düzeltmeleri.**
+Ayar 1 (yeniden aramayı atla), ayar 2 (açık adım bütçenin %25 yedeği
+dışını kullanır), ayar 3 (fazla mesai onarımı) 14 Ekim gecesi ölçüldü
+(oturum 14 Ekim §7): eski sette 5/5 plan, VS1'de 2/4; **onarım 0/7**
+(açık adımın planından başlıyordu: 326–465 sa fazla mesai), fazla mesaisiz
+ilk arama 0/10. Mustafa 14:33: *"sorularına ok diyorum"* →
+
+- **Ayar 3 düzeltmesi — onarım iyileştirmenin sonunda:** iyileştirmenin
+  planından (5–9 sa, 4–8 kişi) başlar, **amaçla** arar, bulunan plan
+  **amacı daha küçükse** alınır (hakem ağırlıklar, K-61/O-18); süre
+  iyileştirmenin payından ayrılır (en çok yarısı), mola adımının payı
+  değişmez; plan bulununca 60 sn iyileşmesizlikte durur. Yalnız gevşek
+  yolda ve fazla mesaisiz başlangıç yoksa.
+- **Ayar 4 — gevşek yol mümkünken fazla mesaisiz ilk arama tek kısa
+  deneme** (`gevsek_fazla_mesaisiz_saniye`, 20 sn; önce 3 × 40 sn): süre
+  açık adıma kalır. Tamamen atlanmadı (0 = atla, ölçüm): küçük modelde
+  saniyenin altında plan buluyor ya da yokluğunu kanıtlıyor — kanıtlı yol
+  (K-37: teşhis) değişmez.
+- **Öneri 2b — ölçüm seçeneği:** açık adımın CP-SAT parametreleri
+  (`gevsek_acik_cozucu_parametreleri`; ürün `{}`); `kalite-olc.py`
+  yapılandırmaları `acik_lin0` (LP yok), `acik_ls` (yalnız yerel arama).
+- **Öneri 2c:** bütçe 30 / 45 / 60 dk ölçülür (K-69); kod değişikliği yok.
+- **Ekleme (15:15, bulut ölçümünden):** onarımın kullanmadığı süre
+  (plan zaten fazla mesaisiz / onarım erken durdu) **iyileştirmeye geri
+  döner** (`_iyilestirmeye_devam`; daha iyiyse alınır, mola adımının payına
+  girmez). Bulut, 49 kişi, 180 sn, fazla mesaisiz arama atlanmış yol: devam
+  yokken koşu 87. sn'de bitiyordu (ayrılan 71 sn boşa), devamla 157 sn,
+  amaç 3.526 → 3.469.
+
+Testler `test_gevsekten_serte.py` 26 → 40; mutasyon `k68` 49 → 78
+(onarımın eski 8 mutantı yeni koda; 29 yeni), `demir` 1 ve `fm_sifir` 4
+mutantın çapası yeni koda bağlandı. Kabul ölçütü önerisi (Mustafa'nın
+onayında; oturum 14 Ekim §8): VS1, 5 tekrar — 5/5 plan, aşım / sert 0,
+fazla mesai 0 en az 4/5'te (hedef), fazla mesai hariç referanstan iyi;
+süre: bunu tutturan en kısa bütçe.
+
 → K-67 · K-37 · K-61 · K-62 · T-60 bulgu 31 · T-81 · şartname §5.2, §6.4,
 §8.6, §11.3 · `09-motor/cozucu/coz.py` (`_gevsekten_serte`) ·
 `09-motor/testler/test_gevsekten_serte.py`
@@ -4087,3 +4123,115 @@ yeni değerler Mustafa'nın test stratejisinden sonra yazılır. K-63'ün "süre
 aralığı" cümlesi aynı yere bağlanır.
 
 → K-35 · K-48 · K-63 · K-68 · O-16 · şartname §9.4, §13.4
+
+---
+
+## K-70 · `PLAN_KARARLILIGI` yalnız **aynı haftanın yeniden planlanmasında** çalışır (birim kişi-gün); haftadan haftaya benzerlik arayüzün işi (klonla + kilitle)
+
+**Soru (14 Ekim 14:40, üç kuralın tanım soruları; sıra 3):** şartname §6.5
+*"Yeniden planlamada mevcut atamalar korunsun"*, ağırlık 6/6/6; ölçülebilir
+tanımı yazılmamıştı.
+
+**Mustafa (14:56):** *"Plan kararlılığı zor bir konu gibime geliyor. İyi
+karar vermeliyiz. Geçtiğimiz haftanın planı ile aynı planı tutturmaya
+çalışmak çok zor olacaktır … belki de bu konuyu plan klonlama ile çözmek
+daha mı mantıklı olur? Örneğin yönetici planı klonlar, sonra editler
+yayınlamadan, istediği kişileri kitler veya kaldırır sonra küçük bir update
+ile yayınlayabilir."*
+
+**Öneri (15:00):** kural *"geçen haftayı tutturmak"* değil, **aynı haftanın
+yeniden planlanması** (K-54 akışı: yayınlanmış plan, biri hastalandı,
+yönetici düzenler / kilitler, motor yeniden koşar). Bugün motor yayınlanmış
+planı yalnız başlangıç alıyor, ondan uzaklaşmanın bedeli yok — bir kişi için
+onlarca kişinin vardiyası değişebilir; 500 kişiyi tek tek kilitletmek pratik
+değil. Kural *"kilitlemediğin herkes de mümkünse aynı kalsın"*ı yapar;
+rotasyon / gece gibi sert kurallar önce gelir. Birim **kişi-gün** (bir
+kişinin bir günü değiştiyse 1). Klonlama ayrı ürün özelliği.
+
+**Karar (14 Ekim 15:26, Mustafa):** *"edit ekranında tamamını kitle, çoklu
+seçim yapıp kitleme gibi fonksiyonlar olacak. Önerine katılıyorum, aynı
+haftanın yeniden planlanmasında çalışsın. Ben zaten dediğim gibi diğer
+konuyu UI fonksiyonlarıyla çözeceğim."*
+
+- `PLAN_KARARLILIGI` yalnız girdide `mevcut_plan` (aynı haftanın
+  yayınlanmış planı) varken etkindir; ceza = değişen kişi-gün × ağırlık.
+- Haftadan haftaya benzerlik motor kuralı **değil**: arayüz — planı klonla,
+  düzenle, tamamını / çoklu seçimle kilitle, motor iyileştirsin (K-54'ün
+  girdisi hazır).
+- **Açık ayrıntılar (koda inerken sorulacak):** yalnız mola yeri değişmişse
+  sayılır mı (öneri: hayır); boş güne eklenen vardiya sayılır mı (öneri:
+  evet); kaldırılan vardiya (öneri: evet).
+- **Uygulanmadı** — ölçüm VS1'e "yeniden planlama" sahnesi eklenince
+  (yayınlanmış plan + bir değişiklik).
+
+→ K-54 · K-50 · şartname §6.5 · `02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 3
+
+---
+
+## K-71 · Yarı zamanlının **sözleşme süresi** kişi başına tutulur; motor yarı zamanlıyı bu süreye **getirmeye çalışır** (`TERCIH_KARSILAMA`'nın yeni anlamı)
+
+**Soru:** T-83 (14 Ekim 15:26–16:15) — motorda yarı zamanlının alt sınırı
+yok; K-58 kişi başına saat tutmuyor; mevzuat taraması (İş K. m. 13 / m. 14,
+hukuk bürosu yazıları): kısmi süreli sözleşmede haftalık süre sözleşmede
+belirlenir ve her hafta ödenir.
+
+**Karar (14 Ekim 17:05, Mustafa):** *"Bizdeki boşluk için çalışan
+sözleşmesine süre girelim. uygundur. 2- motor yarı zamanlıya bu süreyi
+getirmeye çalışsın. Sonuçta sözleşmenin altında çağırırsak yine para
+ödüyoruz yani şirket boşa para yakıyor."*
+
+- **Veri:** `employee_contracts.haftalik_saat` **yarı zamanlıda zorunlu**
+  (sözleşmedeki haftalık süre; en çok emsalin 2/3'ü = 30, yönetmelik);
+  tam zamanlıda boş (45 kanundan, K-58 aynen). K-58'in *"çalışana saat
+  tanımlanmaz"* cümlesi yarı zamanlı için kalktı; *"30 baz"* yerine
+  kişinin süresi. Üst sınır **45** (K-58 / K-39) değişmez.
+- **Motor:** yarı zamanlının planlanan haftalık süresi sözleşme süresinin
+  **altında kalırsa** eksik saat cezalanır (YUMUŞAK — *"getirmeye
+  çalışsın"*; talep yetmiyorsa plan çözümsüz olmaz). Kural kodu
+  `TERCIH_KARSILAMA` (K-22'deki ad korunur; anlam: *"yarı zamanlının sözleşme
+  süresi kullanılır"*). İzin / rapor günleri süreden düşer (tam zamanlıdaki
+  K-39 mantığı).
+- **Ağırlık — onaylandı (14 Ekim 18:40, Mustafa: *"Ağırlık ok, mantıklı"*):**
+  boşa ödenen saat bir **maliyet** kalemidir, profil zevki değil → fazla
+  mesaiyle aynı ölçekte: fazla mesai 1 saat = 3.000 puan (≈ 1,5 saatlik
+  ücret, %50 zamlı) → boşa ödenen 1 saat = **2.000 puan** (dakika başı
+  33,3), üç profilde aynı. Şartnamedeki 3 / 1 / 9 kalkar (eski "tercih"
+  anlamının ağırlığı).
+- **Çağrı üzerine çalışma** (m. 14): **kapsam dışı** (14 Ekim 18:40,
+  Mustafa: *"şimdilik kapsam dışı bırakalım"*). Bütün yarı zamanlılar
+  kısmi süreli sayılır; böyle sözleşmesi olan müşteri çıkarsa ayrı tip
+  (aylık süre, çağrı başına en az 4 saat, en az 4 gün önceden yayın).
+- **Etkisi:** şartname §8.3 / §11.2 (`sozlesme.haftalik_saat` yarı zamanlıda
+  geri), veri seti **v2** (yarı zamanlılara gerçekçi süreler; Yılmaz'ın
+  import'u bu alanı alır), motor + doğrulayıcı + test + mutasyon, merdiven
+  referansı yeniden (kural planı değiştirir).
+- **Uygulanmadı** — 14 Ekim gece bloğundan sonra (o blok K-68
+  düzeltmelerini ölçüyor; kural planı değiştireceği için araya girmez).
+
+→ K-13 · K-22 · K-39 · K-57 · K-58 · T-83 · A-16 · şartname §6.8, §8.3, §11.2
+
+---
+
+## K-72 · `EKIP_SUREKLILIGI`: kişi **birincil ekibinde** kalsın; ayrım sözleşme tipine değil ekip önceliğine göre
+
+**Soru (14 Ekim 14:40, sıra 3):** şartname §6.5 *"Aynı kişiler mümkün
+olduğunca aynı ekiple çalışsın"*, ağırlık 2 / 1 / 4. Mustafa (14:56):
+*"sadece tam zamanlı çalışanlar için mi çalıştırmalıyız … part time veya
+sezonluk elemanlar için ne kadar değerli olabilir? … uzun zamandır aynı iş
+yerinde çalışanlar için değerli olabilir. Çok yumuşak bir kriter
+olacağına neredeyse eminim."*
+
+**Öneri (15:00):** tanım (a) — çok ekipli kişi (K-50) birincil ekibinin
+şablonunda çalışsın; başka ekibe her atama 1 × ağırlık ("ödünç" yalnız
+gerekince). Ayrımı sözleşme tipi değil **veri** yapar: `employee_teams`
+önceliği eşitse kişi "gezici"dir, ceza yazılmaz; birincil ekibi olan
+kişide yazılır. Sezonluk tipi zaten yok (K-58).
+
+**Karar (14 Ekim 17:05, Mustafa):** *"Ekip sürekliliği ok."*
+
+- Yalnız birden çok ekibe üye kişilerde etkili (VS1'de 10 kişi); tek
+  ekiplide hiç ceza yok.
+- Ağırlık şartnamedeki 2 / 1 / 4 (yumuşakların en düşüklerinden).
+- **Uygulanmadı** — K-71 ile aynı pakette.
+
+→ K-50 · K-58 · şartname §6.5 · `02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 4

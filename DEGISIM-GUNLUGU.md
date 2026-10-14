@@ -4,6 +4,16 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-14 (18:45) · K-71 (yarı zamanlıya kişi başına sözleşme süresi; motor o süreye getirmeye çalışır — `TERCIH_KARSILAMA`'nın yeni anlamı, yumuşak; ağırlık 2.000 puan / boşa ödenen saat, 18:40 onaylandı; çağrı üzerine çalışma kapsam dışı) ve K-72 (`EKIP_SUREKLILIGI` birincil ekip önceliğine göre) kararları; T-83 güncellendi. Sıra 3'ün üç kuralı tanımlandı; uygulanmadı (gece bloğundan sonra). Kod değişmedi.**
+→ `00-DEVIR/08-URUN-KARARLARI.md` (K-71, K-72) · `00-DEVIR/06-ACIK-RISKLER.md` (T-83) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §10 · `00-DEVIR/00-BURADAN-BASLA.md`
+
+---
+
+**2026-10-14 (16:15) · K-68 düzeltmeleri (Mustafa 14:33 "ok"): fazla mesai onarımı iyileştirmenin sonuna (amaçla; daha iyiyse alınır; süre iyileştirmeden en çok yarısı, kullanılmayanı iyileştirmeye döner); gevşek yol mümkünken fazla mesaisiz ilk arama tek 20 sn'lik deneme (`gevsek_fazla_mesaisiz_saniye`); açık adım CP-SAT ayarları ölçüm seçeneği (`gevsek_acik_cozucu_parametreleri`, `acik_lin0`, `acik_ls`). Testler 09 → 705, mutasyon `k68` 78 · yaşayan 0 (toplam 466). Kabul ölçütü onaylandı (14:56); T-82 eşiği ölçümden. K-70 (`PLAN_KARARLILIGI` yalnız aynı haftanın yeniden planlaması; klon + kilit arayüzde); T-83 (yarı zamanlı haftalık saat — mevzuat taraması, karar soruları).**
+→ `09-motor/cozucu/coz.py` · `09-motor/testler/test_gevsekten_serte.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `08-motor-testleri/gercekci-veri-seti/testler/test_kalite_olc.py` · `02-spec/v1.4-master-spec.md` (değişiklik 71) · `00-DEVIR/08-URUN-KARARLARI.md` (K-68) · `00-DEVIR/06-ACIK-RISKLER.md` (T-82, T-83) · `00-DEVIR/08-URUN-KARARLARI.md` (K-70) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §8–§9 · `00-DEVIR/00-BURADAN-BASLA.md`
+
+---
+
 **2026-10-14 (14:30) · Gece bloğu sonucu (04:34–11:27): `7dfd610` push; VS1 500 referansı (835 sn, seviye 1 puanı 62.606); eski L1 1.800 sn 5/5 plan (ürün 3/3, parçalı 2/2), fazla mesai hariç referanstan −%26,6…−%27,1, fazla mesai 5–7,5 sa; VS1 L1 1.800 sn 1/3 plan, 7.200 sn 1/1 (tavan: fazla mesai hariç −%1,1); fazla mesai onarımı 0/7, fazla mesaisiz ilk arama 0/10; tam mutasyon 437 · yaşayan 0. Öneriler Mustafa'da. Kod değişmedi.**
 → `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-k68-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-k68-parca-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-VS1-95-k68-1800.json` · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-VS1-95-tavan-7200.json` (+ `planlar/` altında çizelgeleri) · `08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-L1-VS1-95.json` · `08-motor-testleri/gercekci-veri-seti/fikstur/_referans-L1-VS1-95.json` · `08-motor-testleri/gercekci-veri-seti/kosu-gunlugu-2026-10-14.txt` · `09-motor/mutasyon-tam-kosu.txt` · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §7 · `00-DEVIR/06-ACIK-RISKLER.md` (bulgu 31) · `00-DEVIR/00-BURADAN-BASLA.md`
 

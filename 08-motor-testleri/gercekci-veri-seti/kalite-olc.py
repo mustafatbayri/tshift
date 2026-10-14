@@ -156,13 +156,20 @@ YAPILANDIRMALAR = {
     # ⚠ O-18 (7 Ekim): urun yolu = once fazla mesaisiz ARA, bulunca o plandan
     #   agirlikli aramaya devam et (alanlar acik). Sert kesim (`SERT`) yalniz
     #   olcum; bulgu 21 o haldir.
-    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
+    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim; asim sertken 1 x 20 sn, K-68 ayar 4), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), gevsek yolda fazla mesai onarimi iyilestirmenin sonunda (K-68 ayar 3), mola adimi (K-60)",
                      {}, {}),
     # K-68 ayar 2'nin olcum secenegi (13 Ekim 23:20): gevsek yolun acik adimi
     #   150 sn'lik parcalarla, her parcada baska tohumla (bulgu 25'in kuyruk
     #   dersi; acik adim 52-204 sn, bir kez > 300 sn). Geri kalani urun yolu.
     "gevsek_parca": ("urun yolu + gevsek acik adim 150 sn'lik parcalarla yeniden baslar (K-68 ayar 2 olcum secenegi)",
                      {"gevsek_acik_parca_saniye": 150}, {}),
+    # Oneri 2b (14 Ekim, Mustafa: "ok"): VS1'de acik adim 287 / 793 / > 1.226 /
+    #   > 1.226 sn. Ilk plani bulmaya yonelik CP-SAT ayarlari YALNIZ acik adimda
+    #   (geri kalani urun yolu). OLCUM secenekleri; urun `{}`.
+    "acik_lin0":    ("urun yolu + gevsek acik adimda LP yok (linearization_level 0) -- oneri 2b olcum secenegi",
+                     {"gevsek_acik_cozucu_parametreleri": {"linearization_level": 0}}, {}),
+    "acik_ls":      ("urun yolu + gevsek acik adim yalniz yerel arama (use_ls_only) -- oneri 2b olcum secenegi",
+                     {"gevsek_acik_cozucu_parametreleri": {"use_ls_only": True}}, {}),
     # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
     #   bulgu 23'un kaydidir (7 Ekim sabahi, TEK deneme) -- anlami degismesin
     #   diye `fazla_mesaisiz_deneme: 1` ACIKCA yazili. Bugunku urun yolu
@@ -731,6 +738,8 @@ def fm_once_yazisi(s, ayar):
             sonuc = "BULUNDU -- SERT KESIM: fazla mesai butun asamalarda 0'da tutuldu (olcum)"
         else:
             sonuc = "BULUNDU -- ipucu oldu, alanlar geri acildi; karari agirliklar verdi"
+    elif f.get("atlandi"):
+        sonuc = "ATLANDI (gevsek yol; `gevsek_fazla_mesaisiz_saniye` 0) -- alanlar geri acildi"
     elif f["kanitlandi_yok"]:
         sonuc = ("YOK (%skanitlandi) -- alanlar geri acildi"
                  % ("molalar sabitken " if f.get("molalar_sabit", True) else ""))
@@ -744,8 +753,11 @@ def fm_once_yazisi(s, ayar):
             len(denemeler), f.get("deneme_siniri", "?"),
             ", ".join("tohum %s %s %ss" % (d.get("tohum"), d.get("durum"), d.get("saniye"))
                       for d in denemeler))
-    return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni%s"
-            % (sonuc, f["saniye"], f["degisken"], deneme))
+    # K-68 ayar 4 (14 Ekim): gevsek yol mumkunken tek kisa deneme
+    kisa = ("  |  gevsek yol: tek deneme, en cok %s sn" % f["gevsek_kisa_saniye"]
+            if f.get("gevsek_kisa_saniye") is not None else "")
+    return ("once fazla mesaisiz: %s  |  %s sn  |  %d fazla mesai degiskeni%s%s"
+            % (sonuc, f["saniye"], f["degisken"], deneme, kisa))
 
 
 def ipucu_plani_yazisi(s):
@@ -758,6 +770,27 @@ def ipucu_plani_yazisi(s):
         return ("K-63: ana asama plansiz dondu, IKINCI ASAMANIN PLANI alindi (%s sn; molalar "
                 "sablonun ideal yerinde; sebep %s)" % (ip.get("saniye"), s.get("durma_sebebi")))
     return "K-63: ana asama plansiz dondu, ipucu plani ALINAMADI (%s)" % ip.get("durum")
+
+
+def onarim_yazisi(o):
+    """K-68 ayar 3: fazla mesai onarimi. 14 Ekim'den once gevsek plandan hemen
+    sonra (alan `asama` yok), sonra iyilestirmenin sonunda (`asama`,
+    `kabul`, `once_amac` / `sonra_amac`)."""
+    yer = " (iyilestirme sonu)" if o.get("asama") == "iyilestirme_sonu" else ""
+    if not o.get("once_dakika"):
+        return "fazla mesai onarimi%s: gerek yok" % yer
+    if not o.get("denendi"):
+        return "fazla mesai onarimi%s: %d dk, denenmedi (sure yok)" % (yer, o["once_dakika"])
+    if not o.get("bulundu"):
+        sonuc = "BULUNAMADI"
+    elif "kabul" not in o:
+        sonuc = "0"                                  # eski kayit: bulunan plan hep alinirdi
+    elif o["kabul"]:
+        sonuc = "0, amac %s -> %s ALINDI" % (o.get("once_amac"), o.get("sonra_amac"))
+    else:
+        sonuc = "0 ama amac %s -> %s (daha kotu), ALINMADI" % (o.get("once_amac"), o.get("sonra_amac"))
+    return "fazla mesai onarimi%s: %d dk -> %s (%s, %s sn)" % (
+        yer, o["once_dakika"], sonuc, o.get("durum"), o.get("saniye"))
 
 
 def gevsek_yazisi(s):
@@ -785,13 +818,11 @@ def gevsek_yazisi(s):
     if gs.get("acik_parcalar"):
         ek.append("acik adim parcalari: " + ", ".join(
             "tohum %s %s %s sn" % (p["tohum"], p["durum"], p["saniye"]) for p in gs["acik_parcalar"]))
+    if gs.get("acik_parametreler"):
+        ek.append("acik adim parametreleri %s" % gs["acik_parametreler"])
     o = s.get("fazla_mesai_onarimi")
     if o:
-        ek.append("fazla mesai onarimi: %s" % (
-            "gerek yok" if not o.get("once_dakika") else
-            "%d dk -> %s (%s, %s sn)" % (o["once_dakika"], "0" if o.get("bulundu") else "BULUNAMADI",
-                                         o.get("durum"), o.get("saniye"))
-            if o.get("denendi") else "%d dk, denenmedi (sure yok)" % o["once_dakika"]))
+        ek.append(onarim_yazisi(o))
     return "GEVSEKTEN SERTE (%s sn; yedek %s sn): %s  ->  %s%s" % (
         gs.get("saniye"), gs.get("yedek_saniye"), adim or "adim yok", son,
         ("  |  " + "  |  ".join(ek)) if ek else "")

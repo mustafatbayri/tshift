@@ -413,70 +413,110 @@ def test_AYAR2_PARCALI_tohum_kaydirma_eklenir(monkeypatch):
     assert tohumlar[0] == 7
 
 
-def _fazla_mesaili_gevsek(monkeypatch):
-    """Gevsek yolun plani fazla mesaili olsun: gercek gevsek yoldan sonra bir
-    fm degiskeni gecici olarak >= 60'a zorlanip plan yeniden aranir (seviye
-    1'de gevsek planlar 5-12,5 sa fazla mesailiydi)."""
-    asil = C._gevsekten_serte
-
-    def fazla_mesaili(kuruldu, ayar, basladi, **kw):
-        d, c = asil(kuruldu, ayar, basladi, **kw)
-        v = _fm(kuruldu)[0]
-        dom = kuruldu.m.Proto().variables[v.Index()].domain
-        eski = list(dom)
+def _fazla_mesaili_plan(kuruldu, amaci_geri_koy=None):
+    """Bir fm degiskeni gecici olarak >= 60'a zorlanip plan aranir (amacli
+    ya da amacsiz); alan geri acilir. Seviye 1'de iyilestirmenin planlari 5-9
+    sa fazla mesailiydi (14 Ekim)."""
+    v = _fm(kuruldu)[0]
+    dom = kuruldu.m.Proto().variables[v.Index()].domain
+    eski = list(dom)
+    dom.clear()
+    dom.extend([60, eski[-1]])
+    try:
+        if amaci_geri_koy:
+            amaci_geri_koy()
+        c2 = cp_model.CpSolver()
+        c2.parameters.max_time_in_seconds = 10
+        d2 = c2.Solve(kuruldu.m)
+    finally:
         dom.clear()
-        dom.extend([60, eski[-1]])
-        try:
-            c2 = cp_model.CpSolver()
-            c2.parameters.max_time_in_seconds = 10
-            d2 = c2.Solve(kuruldu.m)
-        finally:
-            dom.clear()
-            dom.extend(eski)
-        assert d2 in (cp_model.OPTIMAL, cp_model.FEASIBLE)
-        return d2, c2
-    monkeypatch.setattr(C, "_gevsekten_serte", fazla_mesaili)
+        dom.extend(eski)
+    assert d2 in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+    return c2
 
 
-def test_AYAR3_gevsek_plan_fazla_mesailiyse_ONARIM_fazla_mesaisiz_plani_bulur(fm_siz_bulamaz,
-                                                                            monkeypatch):
-    _fazla_mesaili_gevsek(monkeypatch)
+def _fazla_mesaili_iyilestirme(monkeypatch):
+    """Iyilestirme fazla mesaili bir plan birakssin: gercek iyilestirmeden
+    sonra fm >= 60 zorlanmis plan ipucu yazilir ve DONER (onarim onu alir)."""
+    asil = C._ilk_asamada_iyilestir
+
+    def fazla_mesaili(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusulecek=0.0, ayrilan=0.0):
+        asil(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusulecek, ayrilan=ayrilan)
+        c2 = _fazla_mesaili_plan(kuruldu, amaci_geri_koy)
+        C._tam_ipucu_yaz(kuruldu, c2)
+        return c2
+    monkeypatch.setattr(C, "_ilk_asamada_iyilestir", fazla_mesaili)
+
+
+def _amac(k):
+    return lambda: k.m.Minimize(sum(a * v for a, v in k.cezalar))
+
+
+# ---- Ayar 3, 14 Ekim surumu (Mustafa: "ok", oneri 1): onarim IYILESTIRMENIN
+# ---- SONUNDA. Eski yerinde (gevsek plandan hemen sonra) 500'de 0/7 tuttu:
+# ---- gevsek planda 326-465 sa fazla mesai vardi, ipucu cok uzaktaydi.
+
+def test_AYAR3_onarim_IYILESTIRMENIN_SONUNDA_fazla_mesaisiz_plani_bulur_ve_ALIR(fm_siz_bulamaz,
+                                                                                monkeypatch):
+    _fazla_mesaili_iyilestirme(monkeypatch)
     g = _fm_sert()
     c = coz(g, dict(AYAR_FM))
-    assert c["durum"] == "cozuldu"
+    assert c["durum"] == "cozuldu", c["durum"]
+    assert c["cozum_istatistikleri"]["gevsekten_serte"]["tam_sert"] is True
     o = c["cozum_istatistikleri"]["fazla_mesai_onarimi"]
-    assert o["denendi"] is True and o["bulundu"] is True and o["once_dakika"] >= 60
-    assert o["durum"] == "OPTIMAL"                                 # amacsiz: ilk bulunan
-    assert any("fazla mesai onarimi" in n for n in c["uygulanmayan_notlar"])
+    assert o["asama"] == "iyilestirme_sonu"
+    assert o["denendi"] is True and o["bulundu"] is True and o["kabul"] is True
+    assert o["once_dakika"] >= 60 and o["sonra_amac"] < o["once_amac"]
+    assert any("fazla mesai onarimi" in n and "sifirlandi" in n for n in c["uygulanmayan_notlar"])
     assert c["metrikler"]["fazla_mesai_saat"] == 0
+    assert c["cozum_istatistikleri"]["ilk_asama_iyilestirme"]["onarima_ayrilan_saniye"] > 0
     r = degerlendir(g, c["atamalar"])
     assert not [i for i in r["ihlaller"] if i["agirlik"] == "SERT"]
 
 
-def test_AYAR3_onarim_ALANLARI_geri_acar_hakem_agirliklar(fm_siz_bulamaz, monkeypatch):
-    """Onarim bulsa da bulmasa da fm alanlari eski haline doner (K-61/O-18)."""
-    _fazla_mesaili_gevsek(monkeypatch)
-    gorulen = {}
-    asil = C._ilk_asamada_iyilestir
-
-    def bak(kuruldu, ayar, amacsiz, *a, **k):
-        proto = kuruldu.m.Proto()
-        gorulen["fm"] = [list(proto.variables[v.Index()].domain) for v in _fm(kuruldu)]
-        gorulen["baslangic_fm"] = sum(int(amacsiz.Value(v)) for v in _fm(kuruldu))
-        return asil(kuruldu, ayar, amacsiz, *a, **k)
-    monkeypatch.setattr(C, "_ilk_asamada_iyilestir", bak)
-    c = coz(_fm_sert(), dict(AYAR_FM))
-    assert gorulen["fm"] and all(d != [0, 0] for d in gorulen["fm"])
-    # iyilestirmenin BASLANGIC plani onarilmis (fazla mesaisiz) plandir
-    assert c["cozum_istatistikleri"]["fazla_mesai_onarimi"]["bulundu"] is True
-    assert gorulen["baslangic_fm"] == 0
+def test_AYAR3_BIRIM_onarim_AMACLA_arar_alirsa_ipucu_onun_alanlar_GERI_ACIK():
+    k = Model(_fm_sert()).kur()
+    fm = _fm(k)
+    alan_once = [list(k.m.Proto().variables[v.Index()].domain) for v in fm]
+    cz = _fazla_mesaili_plan(k, _amac(k))
+    C._tam_ipucu_yaz(k, cz)
+    k.m.ClearObjective()                         # iyilestirme kapaliysa amac silinmis olur: onarim KOYAR
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20), time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert r is not None and o["kabul"] is True and o["sonra_amac"] < o["once_amac"]
+    assert o["sonra_amac"] == int(sum(a * int(r.Value(v)) for a, v in k.cezalar)) > 0   # amacli arama
+    assert sum(int(r.Value(v)) for v in fm) == 0
+    p = k.m.Proto()
+    assert list(p.solution_hint.values) == list(r.ResponseProto().solution)   # ipucu onarilmis plan
+    assert [list(p.variables[v.Index()].domain) for v in fm] == alan_once     # K-61/O-18
 
 
-def test_AYAR3_onarim_suresi_AYARDAN_ve_yedegi_yemez(monkeypatch):
-    """Onarim en cok `fazla_mesai_onarim_saniye` arar; yedek payina girmez."""
+def test_AYAR3_BIRIM_onarim_plani_amaci_DAHA_KOTUYSE_ALINMAZ_hakem_agirliklar(monkeypatch):
+    """Bulunan fazla mesaisiz plan agirliklara gore kotuyse fazla mesaili plan
+    kalir (Mustafa 6 Ekim: "en optimum olani secmeliyiz")."""
+    k = Model(_fm_sert()).kur()
+    cz = _fazla_mesaili_plan(k, _amac(k))
+    C._tam_ipucu_yaz(k, cz)
+    ipucu = list(k.m.Proto().solution_hint.values)
+    asil = cp_model.CpSolver
+
+    class Kotu(asil):
+        def ObjectiveValue(self):
+            return 10 ** 9
+    monkeypatch.setattr(C.cp_model, "CpSolver", Kotu)
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20), time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert r is None and o["bulundu"] is True and o["kabul"] is False
+    assert list(k.m.Proto().solution_hint.values) == ipucu
+    assert any("daha kotu" in n for n in k.notlar)
+
+
+def test_AYAR3_onarim_suresi_AYARDAN_ve_mola_adiminin_payina_GIRMEZ(monkeypatch):
+    """Onarim en cok `fazla_mesai_onarim_saniye`; mola adiminin payi (butcenin
+    1 - `ilk_asama_iyilestirme_orani`) ayrilir."""
     k = Model(_fm_sert(gun=6)).kur()
     cz = cp_model.CpSolver()
-    d = cz.Solve(k.m)                                              # fazla mesaili plan (zorunlu)
+    cz.Solve(k.m)                                                  # fazla mesaili plan (zorunlu)
     asil = cp_model.CpSolver
     sureler = []
 
@@ -485,33 +525,248 @@ def test_AYAR3_onarim_suresi_AYARDAN_ve_yedegi_yemez(monkeypatch):
             sureler.append(self.parameters.max_time_in_seconds)
             return asil.Solve(self, model, *a, **kw)
     monkeypatch.setattr(C.cp_model, "CpSolver", Kaydet)
-    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 13}, time.time(), d, cz)
+    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 13}, time.time(), cz, _amac(k))
     assert sureler == [13.0]
     sureler.clear()
-    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 500}, time.time(), d, cz)
-    assert len(sureler) == 1 and abs(sureler[0] - 74.0) < 0.5        # 100 - 1 - %25 yedek
+    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 500}, time.time(), cz, _amac(k))
+    assert len(sureler) == 1 and abs(sureler[0] - 79.0) < 0.5        # 100 - 1 - %20 mola payi
+    sureler.clear()
+    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 500,
+                            "ilk_asama_iyilestirme_orani": 0.5}, time.time(), cz, _amac(k))
+    assert len(sureler) == 1 and abs(sureler[0] - 49.0) < 0.5        # oran okunur
 
 
-def test_AYAR3_fazla_mesaisiz_plan_YOKSA_gevsek_plan_AYNEN_doner(fm_siz_bulamaz):
-    """Alti gun x alti kisi: herkes 48 saat, fazla mesai zorunlu. Gevsek plan
-    fazla mesaili; onarim INFEASIBLE; plan aynen (eli bos donulmez)."""
+def test_AYAR3_onarim_DURGUNLUK_bekcisiyle_kosar(monkeypatch):
+    gorulen = []
+    asil = C._durgunluk_bekcisiyle_coz
+
+    def bak(cozucu, model, geri, ayar):
+        gorulen.append(ayar["durgunluk_saniye"])
+        return asil(cozucu, model, geri, ayar)
+    monkeypatch.setattr(C, "_durgunluk_bekcisiyle_coz", bak)
+    k = Model(_fm_sert()).kur()
+    cz = _fazla_mesaili_plan(k, _amac(k))
+    C._fazla_mesai_onar(k, dict(AYAR_FM, gevsek_durgunluk_saniye=17, fazla_mesai_onarim_saniye=20),
+                        time.time(), cz, _amac(k))
+    assert gorulen == [17.0]
+
+
+def test_AYAR3_fazla_mesaisiz_plan_YOKSA_plan_AYNEN_doner(fm_siz_bulamaz):
+    """Alti gun x alti kisi: herkes 48 saat, fazla mesai zorunlu. Iyilestirmenin
+    plani fazla mesaili; onarim INFEASIBLE; plan aynen (eli bos donulmez)."""
     c = coz(_fm_sert(gun=6), dict(AYAR_FM))
     assert c["durum"] == "cozuldu"
     o = c["cozum_istatistikleri"]["fazla_mesai_onarimi"]
     assert o["denendi"] is True and o["bulundu"] is False and o["durum"] == "INFEASIBLE"
+    assert o["kabul"] is False and o["once_dakika"] > 0
     assert c["metrikler"]["fazla_mesai_saat"] > 0
 
 
-def test_AYAR3_KAPALIYKEN_ve_GEREK_YOKKEN_denenmez(fm_siz_bulamaz, monkeypatch):
+def test_AYAR3_KAPALIYKEN_GEREK_YOKKEN_ve_GEVSEK_YOL_YOKKEN_denenmez(fm_siz_bulamaz):
     c = coz(_fm_sert(), dict(AYAR_FM, fazla_mesai_onarimi=False))
     assert c["cozum_istatistikleri"]["fazla_mesai_onarimi"] is None
-    # gerek yok: plan zaten fazla mesaisiz -> denenmez, ayni cozucu doner
+    # gevsek yol yok (HEDEF_ASIMI yok): yeniden arama yolu -- onarim denenmez
+    c = coz(_fm_sahne(), dict(AYAR_FM))
+    assert c["cozum_istatistikleri"]["gevsekten_serte"] is None
+    assert c["cozum_istatistikleri"]["fazla_mesai_onarimi"] is None
+    # gerek yok: plan zaten fazla mesaisiz -> denenmez
     k = Model(_fm_sert()).kur()
     eski = C._fazla_mesaiyi_sifirla(k)
     cz = cp_model.CpSolver()
-    d = cz.Solve(k.m)
+    cz.Solve(k.m)
     C._fazla_mesaiyi_serbest_birak(k, eski)
-    d2, c2 = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20), time.time(), d, cz)
-    assert c2 is cz and d2 == d
-    assert k.fazla_mesai_onarimi == {"denendi": False, "once_dakika": 0, "bulundu": False,
-                                     "saniye": 0.0, "durum": None}
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20), time.time(), cz, _amac(k))
+    assert r is None
+    assert k.fazla_mesai_onarimi["denendi"] is False and k.fazla_mesai_onarimi["once_dakika"] == 0
+
+
+def test_AYAR3_iyilestirme_onarima_SURE_AYIRIR_en_cok_YARISI_ve_ipucuyu_yazan_cozucuyu_DONDURUR(
+        monkeypatch):
+    k = Model(_fm_sert()).kur()
+    k.m.ClearObjective()
+    amacsiz = cp_model.CpSolver()
+    amacsiz.Solve(k.m)
+    C._tam_ipucu_yaz(k, amacsiz)
+    asil = C._iyilestirme_coz
+    sureler = []
+
+    def kaydet(model, saniye, isci):
+        sureler.append(saniye)
+        return asil(model, saniye, isci)
+    monkeypatch.setattr(C, "_iyilestirme_coz", kaydet)
+    ayar = {"azami_saniye": 100, "ilk_asama_iyilestirme_saniye": 40}
+    r = C._ilk_asamada_iyilestir(k, ayar, amacsiz, _amac(k), time.time(), 0.0, ayrilan=300)
+    assert abs(sureler[-1] - 20.0) < 0.5                               # 40'in yarisi
+    assert k.ilk_asama_iyilestirme["onarima_ayrilan_saniye"] == 20.0
+    assert r is not None                                               # iyilesmis plan ipucu oldu
+    assert list(k.m.Proto().solution_hint.values) == list(r.ResponseProto().solution)
+    r = C._ilk_asamada_iyilestir(k, ayar, amacsiz, _amac(k), time.time(), 0.0, ayrilan=5)
+    assert abs(sureler[-1] - 35.0) < 0.5
+    C._ilk_asamada_iyilestir(k, ayar, amacsiz, _amac(k), time.time(), 0.0)
+    assert abs(sureler[-1] - 40.0) < 0.5 and "onarima_ayrilan_saniye" not in k.ilk_asama_iyilestirme
+
+
+# ---- Ayar 4 (14 Ekim, Mustafa: "ok", oneri 2a): gevsek yol mumkunken fazla
+# ---- mesaisiz ilk arama TEK kisa deneme (500'de 0/10); sure acik adima.
+
+@pytest.fixture
+def fm_arama_kaydi(monkeypatch):
+    cagri = []
+
+    def kaydet(kuruldu, ayar, pay):
+        cagri.append((C._deneme_siniri(ayar), pay))
+        return cp_model.UNKNOWN, cp_model.CpSolver(), [{"tohum": 1, "saniye": 0.0, "durum": "UNKNOWN"}]
+    monkeypatch.setattr(C, "_fazla_mesaisiz_ara", kaydet)
+    return cagri
+
+
+def test_AYAR4_gevsek_yol_mumkunken_fazla_mesaisiz_arama_TEK_ve_KISA(fm_arama_kaydi):
+    c = coz(_fm_sert(), dict(AYAR_FM, gevsek_fazla_mesaisiz_saniye=3))
+    assert fm_arama_kaydi == [(1, 3.0)]                             # pay 30 x 0,2 = 6 -> 3
+    f = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert f["gevsek_kisa_saniye"] == 3.0 and f["deneme_siniri"] == 1 and f["atlandi"] is False
+    assert c["cozum_istatistikleri"]["gevsekten_serte"]["denendi"] is True
+
+
+def test_AYAR4_varsayilan_20_sn_paydan_buyukse_PAY_kalir(fm_arama_kaydi):
+    assert C.VARSAYILAN["gevsek_fazla_mesaisiz_saniye"] == 20
+    coz(_fm_sert(), dict(AYAR_FM))
+    assert fm_arama_kaydi == [(1, 6.0)]                             # min(6, 20)
+
+
+def test_AYAR4_gevsek_yol_YOKKEN_eski_politika_3_deneme_TAM_pay(fm_arama_kaydi):
+    c = coz(_fm_sahne(), dict(AYAR_FM, gevsek_fazla_mesaisiz_saniye=3))   # HEDEF_ASIMI yok
+    assert fm_arama_kaydi == [(3, 6.0)]
+    f = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert f["gevsek_kisa_saniye"] is None and f["deneme_siniri"] == 3
+    fm_arama_kaydi.clear()
+    coz(_fm_sert(), dict(AYAR_FM, gevsek_fazla_mesaisiz_saniye=3, gevsekten_serte=False))
+    assert fm_arama_kaydi == [(3, 6.0)]
+
+
+def test_AYAR4_sifir_fazla_mesaisiz_aramayi_ATLAR(fm_arama_kaydi):
+    c = coz(_fm_sert(), dict(AYAR_FM, gevsek_fazla_mesaisiz_saniye=0))
+    assert fm_arama_kaydi == []
+    assert c["durum"] == "cozuldu"
+    f = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert f["atlandi"] is True and f["bulundu"] is False and f["denemeler"] == []
+    assert any("atlandi" in n for n in c["uygulanmayan_notlar"])
+    assert c["cozum_istatistikleri"]["gevsekten_serte"]["yeniden_arama_atlandi"] is True
+
+
+def test_AYAR4_KANITLI_yol_DEGISMEZ_gercek_kisa_arama_INFEASIBLE_kanitlar():
+    """Gercek (yamasiz) kisa arama kucuk sahnede fazla mesaisiz planin YOKLUGUNU
+    kanitlar; yeniden arama kosar, gevsek yol denenmez (K-37)."""
+    c = coz(_fm_sert(gun=6), dict(AYAR_FM))
+    f = c["cozum_istatistikleri"]["fazla_mesai_once_sifir"]
+    assert f["kanitlandi_yok"] is True and f["deneme_siniri"] == 1
+    assert c["cozum_istatistikleri"]["gevsekten_serte"] is None
+
+
+def test_AYAR3_fazla_mesaisiz_baslangic_KAPALIYKEN_onarim_denenmez(ilk_arama_bulamaz):
+    """`fazla_mesai_once_sifir` kapali (eski yol): gevsek yol kossa da onarim
+    yok -- onarim, fazla mesaisiz BASLANGICIN yerini tutar."""
+    c = coz(_fm_sert(), dict(AYAR_FM, fazla_mesai_once_sifir=False))
+    assert c["cozum_istatistikleri"]["gevsekten_serte"]["denendi"] is True
+    assert c["cozum_istatistikleri"]["fazla_mesai_onarimi"] is None
+
+
+# ---- Oneri 2b (14 Ekim, olcum): acik adimin ek CP-SAT parametreleri
+
+def _parametre_kaydi(monkeypatch):
+    asil = cp_model.CpSolver
+    gorulen = []
+
+    class Kaydet(asil):
+        def Solve(self, model, *a, **k):
+            gorulen.append(self.parameters.linearization_level)
+            return asil.Solve(self, model, *a, **k)
+    monkeypatch.setattr(C.cp_model, "CpSolver", Kaydet)
+    return gorulen
+
+
+def test_ONERI2B_acik_adim_parametreleri_YALNIZ_acik_adimda(monkeypatch):
+    assert C.VARSAYILAN["gevsek_acik_cozucu_parametreleri"] == {}
+    gorulen = _parametre_kaydi(monkeypatch)
+    k = Model(_sert(_tam_zamanli_sahne())).kur()
+    C._gevsekten_serte(k, {"azami_saniye": 30,
+                           "gevsek_acik_cozucu_parametreleri": {"linearization_level": 0}}, time.time())
+    assert gorulen == [0, 1, 1, 1]                                  # acik + uc daraltma (varsayilan 1)
+    assert k.gevsekten_serte["acik_parametreler"] == {"linearization_level": 0}
+    gorulen.clear()
+    k = Model(_sert(_tam_zamanli_sahne())).kur()
+    C._gevsekten_serte(k, {"azami_saniye": 30}, time.time())
+    assert gorulen == [1, 1, 1, 1] and k.gevsekten_serte["acik_parametreler"] == {}
+
+
+def test_ONERI2B_parcali_acik_adimda_da_uygulanir(monkeypatch):
+    gorulen = _parametre_kaydi(monkeypatch)
+    k = Model(_sert(_sahne())).kur()
+    C._gevsekten_serte(k, {"azami_saniye": 100, "gevsek_acik_parca_saniye": 7,
+                           "gevsek_acik_cozucu_parametreleri": {"linearization_level": 0}}, time.time())
+    assert gorulen[0] == 0 and k.gevsekten_serte["acik_parcalar"]
+
+
+# ---- Ayar 3'un tamamlayicisi (14 Ekim): onarimin kullanmadigi sure
+# ---- iyilestirmeye geri doner (bulut, 49 kisi: devam yokken 180 sn'lik kosu
+# ---- 87. sn'de bitiyordu).
+
+def test_AYAR3_onarima_gerek_yoksa_ayrilan_sure_IYILESTIRMEYE_DEVAM_eder(fm_siz_bulamaz):
+    c = coz(_fm_sert(), dict(AYAR_FM))
+    ist = c["cozum_istatistikleri"]
+    assert ist["gevsekten_serte"]["denendi"] is True
+    assert ist["fazla_mesai_onarimi"]["denendi"] is False             # plan zaten fazla mesaisiz
+    d = ist["ilk_asama_iyilestirme"]["devam"]
+    assert d["pay"] > 0 and d["sonra_amac"] is not None              # kostu, plan buldu
+
+
+def _amacsiz_plan(k):
+    k.m.ClearObjective()
+    cz = cp_model.CpSolver()
+    cz.parameters.max_time_in_seconds = 10
+    cz.Solve(k.m)
+    C._tam_ipucu_yaz(k, cz)
+    return cz
+
+
+def test_AYAR3_BIRIM_devam_DAHA_IYIYSE_alir_amac_KONUR_ve_mola_payina_GIRMEZ(monkeypatch):
+    k = Model(_fm_sert()).kur()
+    cz = _fazla_mesaili_plan(k, _amac(k))         # iyilesebilir plan (fazla mesaili)
+    C._tam_ipucu_yaz(k, cz)
+    k.m.ClearObjective()                          # amac silinmis: devam geri koyar
+    k.ilk_asama_iyilestirme = {"istenen_saniye": 10}
+    asil = C._iyilestirme_coz
+    sureler = []
+
+    def kaydet(model, saniye, isci):
+        sureler.append(saniye)
+        return asil(model, saniye, isci)
+    monkeypatch.setattr(C, "_iyilestirme_coz", kaydet)
+    r = C._iyilestirmeye_devam(k, {"azami_saniye": 30}, time.time(), cz, _amac(k))
+    d = k.ilk_asama_iyilestirme["devam"]
+    assert abs(sureler[0] - 23.0) < 0.5                            # 30 - 1 - %20 mola payi
+    assert r is not None and d["alindi"] is True and d["sonra_amac"] < d["once_amac"]
+    assert d["sonra_amac"] == int(sum(a * int(r.Value(v)) for a, v in k.cezalar))   # amacli arama
+    assert list(k.m.Proto().solution_hint.values) == list(r.ResponseProto().solution)
+    sureler.clear()
+    C._iyilestirmeye_devam(k, {"azami_saniye": 30, "ilk_asama_iyilestirme_orani": 0.5}, time.time(), r, _amac(k))
+    assert abs(sureler[0] - 14.0) < 0.5                            # oran okunur: 30 - 1 - 15
+
+
+def test_AYAR3_BIRIM_devam_DAHA_KOTUYSE_ipucu_DEGISMEZ_iyilestirme_KAPALIYSA_kosmaz(monkeypatch):
+    k = Model(_fm_sert()).kur()
+    cz = _amacsiz_plan(k)
+    ipucu = list(k.m.Proto().solution_hint.values)
+    k.ilk_asama_iyilestirme = {"istenen_saniye": 0}
+    assert C._iyilestirmeye_devam(k, {"azami_saniye": 30}, time.time(), cz, _amac(k)) is None
+    assert "devam" not in k.ilk_asama_iyilestirme
+    asil = cp_model.CpSolver
+
+    class Kotu(asil):
+        def ObjectiveValue(self):
+            return 10 ** 9
+    monkeypatch.setattr(C.cp_model, "CpSolver", Kotu)
+    k.ilk_asama_iyilestirme = {"istenen_saniye": 10}
+    r = C._iyilestirmeye_devam(k, {"azami_saniye": 30}, time.time(), cz, _amac(k))
+    assert r is None and k.ilk_asama_iyilestirme["devam"]["alindi"] is False
+    assert list(k.m.Proto().solution_hint.values) == ipucu

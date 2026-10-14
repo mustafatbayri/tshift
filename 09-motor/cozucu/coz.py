@@ -97,10 +97,28 @@ VARSAYILAN = {
     #      (asim 0'a inerse kendiliginden, kanitli). `gevsek_acik_parca_saniye`
     #      (OLCUM; None = tek uzun arama): acik adim bu uzunlukta parcalarla,
     #      her parcada baska tohumla yeniden baslar (bulgu 25'in kuyruk dersi).
-    #   3. `fazla_mesai_onarimi`: gevsek plan fazla mesaili ve fazla mesaisiz
-    #      arama basta bulamadiysa: fazla mesai alanlari 0'a, plan ipucu, en
-    #      cok `fazla_mesai_onarim_saniye` (300) arama. Bulunursa o plan BASLANGIC
-    #      olur (alanlar geri acilir, hakem agirliklar -- K-61/O-18).
+    #   3. `fazla_mesai_onarimi`: gevsek yoldan gelen ve fazla mesaisiz arama
+    #      basta bulamadiysa: fazla mesai alanlari 0'a, en cok
+    #      `fazla_mesai_onarim_saniye` (300) arama. ⚠ 14 Ekim (Mustafa: "ok",
+    #      oneri 1): onarim IYILESTIRMENIN SONUNA tasindi. Eski yerinde (gevsek
+    #      plandan hemen sonra) 500'de 0/7 tuttu: acik adim fazla mesaiye
+    #      bakmaz, plani 326-465 sa fazla mesailiydi -- ipucu fazla mesaisiz
+    #      plana cok uzak. Simdi iyilestirmenin planindan baslar (5-9 sa, 4-8
+    #      kisi), AMACLA arar; bulunan plan amaci DAHA KUCUKSE alinir (hakem
+    #      agirliklar -- K-61/O-18), degilse iyilestirmenin plani kalir. Sure
+    #      iyilestirmenin payindan ayrilir (en cok yarisi); mola adiminin payi
+    #      degismez.
+    #   4. `gevsek_fazla_mesaisiz_saniye` (14 Ekim, Mustafa: "ok", oneri 2a):
+    #      gevsek yol mumkunken (asim sert) fazla mesaisiz ilk arama TEK deneme,
+    #      en cok bu kadar saniye (3 x 40 sn yerine). 500'de 0/10 tuttu (13
+    #      Ekim 1/9: 17,9 sn); sure acik adima kalir. Tamamen atlanmadi: kucuk
+    #      modelde saniyenin altinda plan buluyor (49 kisi 0,9 sn) ya da fazla
+    #      mesaisiz planin YOKLUGUNU kanitliyor -- kanitli yol (K-37: teshis)
+    #      degismesin. 0 = atla (olcum).
+    #   `gevsek_acik_cozucu_parametreleri` (14 Ekim, oneri 2b; OLCUM): acik
+    #      adimin CP-SAT parametreleri ({"linearization_level": 0} gibi; ad ->
+    #      deger, cozucuye aynen). VS1'de acik adim 287 / 793 / > 1.226 / > 1.226
+    #      sn -- ilk plani bulmaya yonelik ayarlar olculecek. Urun BOS birakir.
     #   Oranlar ve sureler KALIBRASYON: 500'de olculecek (K-69: sure dusman
     #   degil, hedef en iyi plan).
     "gevsekten_serte": True,
@@ -110,6 +128,8 @@ VARSAYILAN = {
     "gevsek_acik_parca_saniye": None,
     "fazla_mesai_onarimi": True,
     "fazla_mesai_onarim_saniye": 300,   # bulut 0,3 olcek: 105 sa fazla mesai 101 sn'de sifirlandi
+    "gevsek_fazla_mesaisiz_saniye": 20,
+    "gevsek_acik_cozucu_parametreleri": {},
     # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
     #   bir plana "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya
     #   indirdi) ama ipucusuz arama guvenilir degil (yedi kosunun ikisi plan
@@ -452,15 +472,28 @@ def _ipucu_ver(kuruldu, ayar):
     kuruldu.fazla_mesai_onarimi = None
     yeniden_atlandi = False
     fm_bulunamadi = False
+    gevsek_kullanildi = False
+    # Gevsek yol mumkun mu (asim sert + K-68 eki acik): ayar 1 ve 4 buna bakar.
+    gevsek_var = bool(kuruldu.asim_sinirli and ayar.get("gevsekten_serte", True))
     fm_eski = (_fazla_mesaiyi_sifirla(kuruldu)
                if ayar.get("fazla_mesai_once_sifir") else [])
     try:
         pay = _ilk_asama_payi(ayar)
         denemeler = None
+        fm_ayar, fm_pay, fm_atlandi = ayar, pay, False
         if fm_eski:
-            # Fazla mesaisiz arama: payi `fazla_mesaisiz_deneme` denemeye boler
-            # (bulgu 25; varsayilan 1 = tek deneme, payin tamami).
-            durum, c, denemeler = _fazla_mesaisiz_ara(kuruldu, ayar, pay)
+            if gevsek_var:
+                # K-68 ayar 4 (14 Ekim): gevsek yol mumkunken TEK kisa deneme;
+                # payin kalani acik adima (bkz. VARSAYILAN).
+                fm_ayar = dict(ayar, fazla_mesaisiz_deneme=1)
+                fm_pay = min(pay, float(ayar.get("gevsek_fazla_mesaisiz_saniye", 20) or 0))
+            if fm_pay > 0:
+                # Fazla mesaisiz arama: payi `fazla_mesaisiz_deneme` denemeye boler
+                # (bulgu 25; varsayilan 1 = tek deneme, payin tamami).
+                durum, c, denemeler = _fazla_mesaisiz_ara(kuruldu, fm_ayar, fm_pay)
+            else:
+                fm_atlandi = True               # 0 = atla (olcum): sure acik adima
+                durum, c, denemeler = cp_model.UNKNOWN, None, []
         else:
             durum, c = _ilk_arama(kuruldu, ayar, pay)
         dusulecek = 0.0
@@ -477,8 +510,12 @@ def _ipucu_ver(kuruldu, ayar):
                 # Bulgu 25: her denemenin tohumu, suresi, durumu; `deneme_siniri`
                 # istenen en cok deneme (politika). Tek denemede de yazilir ki
                 # kuyruk urun kosularinda gorunur kalsin.
-                "deneme_siniri": _deneme_siniri(ayar),
+                "deneme_siniri": _deneme_siniri(fm_ayar),
                 "denemeler": denemeler,
+                # K-68 ayar 4: gevsek yol mumkunken kisaltilan pay (yoksa None);
+                # `atlandi` = pay 0, arama yapilmadi.
+                "gevsek_kisa_saniye": round(fm_pay, 1) if gevsek_var else None,
+                "atlandi": fm_atlandi,
                 # INFEASIBLE = fazla mesaisiz plan YOK (kanit); UNKNOWN = sure
                 # yetmedi, var mi yok mu bilinmiyor.
                 # ⚠ Kanit ARANAN MODELINDIR: molalar sablonun ideal yerinde
@@ -502,6 +539,8 @@ def _ipucu_ver(kuruldu, ayar):
                 _fazla_mesaiyi_serbest_birak(kuruldu, fm_eski)
             if not bulundu:
                 kuruldu.notlar.append(
+                    "fazla mesaisiz ilk arama atlandi (gevsek yol; "
+                    "`gevsek_fazla_mesaisiz_saniye` 0); fazla mesai serbest" if fm_atlandi else
                     "fazla mesaisiz plan %s; fazla mesai serbest birakildi "
                     "(agirlikli arama azaltmaya calisir; en azi oldugu kanitli degildir)"
                     % ("yok (%skanitlandi)" % ("molalar sabitken " if mola_sabit else "")
@@ -538,9 +577,7 @@ def _ipucu_ver(kuruldu, ayar):
                                         fm_sifirda=bool((kuruldu.fazla_mesai_once_sifir or {})
                                                         .get("sifirda_tutuldu")))
             kuruldu.gevsekten_serte["yeniden_arama_atlandi"] = yeniden_atlandi
-            if (durum in (cp_model.OPTIMAL, cp_model.FEASIBLE) and fm_bulunamadi
-                    and ayar.get("fazla_mesai_onarimi", True)):
-                durum, c = _fazla_mesai_onar(kuruldu, ayar, basladi, durum, c)
+            gevsek_kullanildi = True
             dusulecek += time.time() - t_g
         if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
@@ -553,7 +590,19 @@ def _ipucu_ver(kuruldu, ayar):
         #   degiskenlerin degeri var; hepsi yazilir, ipucu tam ve gecerli
         #   olur, ana asama onu ilk cozum olarak hemen alir.
         _tam_ipucu_yaz(kuruldu, c)
-        _ilk_asamada_iyilestir(kuruldu, ayar, c, amaci_geri_koy, basladi, dusulecek)
+        # K-68 ayar 3 (14 Ekim): fazla mesai onarimi IYILESTIRMENIN SONUNDA --
+        # gevsek yoldan gelen plan ve fazla mesaisiz baslangic yoksa. Suresi
+        # iyilestirmenin payindan ayrilir (`ayrilan`, en cok yarisi).
+        onarim = (gevsek_kullanildi and fm_bulunamadi
+                  and ayar.get("fazla_mesai_onarimi", True))
+        ayrilan = float(ayar.get("fazla_mesai_onarim_saniye") or 0) if onarim else 0.0
+        iyi = _ilk_asamada_iyilestir(kuruldu, ayar, c, amaci_geri_koy, basladi, dusulecek,
+                                     ayrilan=ayrilan)
+        if onarim:
+            r = _fazla_mesai_onar(kuruldu, ayar, basladi, iyi or c, amaci_geri_koy)
+            # Onarimin kullanmadigi sure (gerek yoktu / erken durdu) bosa
+            # gitmesin: iyilestirme kaldigi plandan devam eder.
+            _iyilestirmeye_devam(kuruldu, ayar, basladi, r or iyi or c, amaci_geri_koy)
         return True
     finally:
         _molalari_serbest_birak(kuruldu, sabitlenen)
@@ -602,12 +651,15 @@ class _GevsekSayac(cp_model.CpSolverSolutionCallback):
         self.son_iyilesme = time.time()
 
 
-def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None):
+def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None, parametreler=None):
     """Gevsek yolun bir adimi: en cok `pay` sn; plan bulunduktan sonra
-    `durgunluk` sn iyilesme yoksa durur (0 = kapali). Donen (durum, cozucu)."""
+    `durgunluk` sn iyilesme yoksa durur (0 = kapali). `parametreler`: ek CP-SAT
+    parametreleri (yalniz acik adim; oneri 2b, olcum). Donen (durum, cozucu)."""
     c = cp_model.CpSolver()
     c.parameters.max_time_in_seconds = float(pay)
     c.parameters.num_search_workers = isci
+    for ad, deger in (parametreler or {}).items():
+        setattr(c.parameters, ad, deger)
     if tohum is not None:
         c.parameters.random_seed = int(tohum)
     sayac = _GevsekSayac()
@@ -627,7 +679,8 @@ def _gevsek_acik_parcali(kuruldu, ayar, kalan, parca, isci, durgunluk, bilgi):
             break
         tohum = i + 1 + int(ayar.get("tohum_kaydirma") or 0)
         t = time.time()
-        d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=tohum)
+        d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=tohum,
+                                parametreler=ayar.get("gevsek_acik_cozucu_parametreleri"))
         bilgi["acik_parcalar"].append({"tohum": tohum, "saniye": round(time.time() - t, 2),
                                        "durum": c.StatusName(d)})
         if d in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE):
@@ -636,50 +689,110 @@ def _gevsek_acik_parcali(kuruldu, ayar, kalan, parca, isci, durgunluk, bilgi):
     return d, c
 
 
-def _fazla_mesai_onar(kuruldu, ayar, basladi, durum, c):
-    """K-68 ayar 3 (13 Ekim 23:20): gevsek yoldan gelen plan fazla mesailiyse
-    ve fazla mesaisiz arama basta bulamadiysa -- fazla mesai alanlari 0'a,
-    plan ipucu, amacsiz arama (ilk bulunan yeter), en cok
-    `fazla_mesai_onarim_saniye`. Bulunursa donen plan fazla mesaisizdir; alanlar
-    HER YOLDA geri acilir (K-61/O-18: plan yalniz baslangic, hakem agirliklar).
-    Bulunamazsa gevsek plan aynen doner. Ne oldugu `kuruldu.fazla_mesai_onarimi`."""
+def _fazla_mesai_onar(kuruldu, ayar, basladi, c, amaci_geri_koy):
+    """K-68 ayar 3 -- 14 Ekim surumu (Mustafa: "ok", oneri 1): IYILESTIRMENIN
+    SONUNDA fazla mesai onarimi.
+
+    NEDEN TASINDI (14 Ekim gece blogu, 500 kisi, 1.800 sn): eski yerinde
+    (gevsek plandan hemen sonra, amacsiz) 7 kosunun 7'sinde 300 sn'de
+    bulamadi. Acik adim yalniz asima bakar; plani 326-465 saat fazla
+    mesailiydi -- ipucu fazla mesaisiz plana cok uzak. Iyilestirmenin sonunda
+    fazla mesai 5-9 saat, 4-8 kiside: ipucu yakin.
+
+    NASIL: `c` iyilestirmenin plani (ipucu odur; iyilestirme plan
+    bulamadiysa gevsek plan). Fazla mesaisizsa denenmez. Degilse fm_*
+    alanlari [0,0], AMAC ACIK (ayni model: molalar sabit, ayni cezalar),
+    ipucu yerinde; en cok `fazla_mesai_onarim_saniye`, ve mola adiminin payina
+    (butcenin 1 - `ilk_asama_iyilestirme_orani`) girmeden; plan bulunduktan
+    sonra `gevsek_durgunluk_saniye` iyilesmesizlikte durur. Bulunan plan
+    alinir YALNIZ amaci daha kucukse (HAKEM AGIRLIKLARDIR -- K-61/O-18:
+    agirliklara gore daha iyi fazla mesaili plan disarida kalmaz). Alanlar
+    HER YOLDA geri acilir. Donen: alinan cozucu ya da None (ipucu degismedi).
+    Ne oldugu `kuruldu.fazla_mesai_onarimi`."""
     fm = [v for _, v in kuruldu.cezalar if v.Name().startswith("fm_")]
     once = sum(int(c.Value(v)) for v in fm)
-    bilgi = {"denendi": False, "once_dakika": once, "bulundu": False,
-             "saniye": 0.0, "durum": None}
+    once_amac = int(sum(a * int(c.Value(v)) for a, v in kuruldu.cezalar))
+    bilgi = {"denendi": False, "asama": "iyilestirme_sonu", "once_dakika": once,
+             "once_amac": once_amac, "bulundu": False, "sonra_amac": None,
+             "kabul": False, "saniye": 0.0, "durum": None}
     kuruldu.fazla_mesai_onarimi = bilgi
     if once == 0:
-        return durum, c                        # gerek yok
+        return None                            # gerek yok
     azami = float(ayar["azami_saniye"])
-    yedek = azami * float(ayar.get("gevsek_yedek_orani", 0.25))
+    mola_payi = azami * (1.0 - float(ayar.get("ilk_asama_iyilestirme_orani", 0.8)))
     pay = min(float(ayar.get("fazla_mesai_onarim_saniye") or 0),
-              azami - (time.time() - basladi) - 1.0 - yedek)
+              azami - (time.time() - basladi) - 1.0 - mola_payi)
     if pay < 0.5:
-        return durum, c
+        return None
     eski = _fazla_mesaiyi_sifirla(kuruldu)
     if not eski:
-        return durum, c
+        return None
     bilgi["denendi"] = True
     t = time.time()
     try:
-        _tam_ipucu_yaz(kuruldu, c)
-        kuruldu.m.ClearObjective()             # amac `_ipucu_ver`de geri konur
+        amaci_geri_koy()                       # iyilestirme kapaliysa amac silinmis olabilir
         c2 = cp_model.CpSolver()
         c2.parameters.max_time_in_seconds = pay
         c2.parameters.num_search_workers = isci_sayisi(ayar)
-        d2 = c2.Solve(kuruldu.m)
+        d2 = _durgunluk_bekcisiyle_coz(
+            c2, kuruldu.m, _GevsekSayac(),
+            {"durgunluk_saniye": float(ayar.get("gevsek_durgunluk_saniye") or 0)})
     finally:
         _fazla_mesaiyi_serbest_birak(kuruldu, eski)
     bilgi["saniye"] = round(time.time() - t, 2)
     bilgi["durum"] = c2.StatusName(d2)
-    if d2 in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-        bilgi["bulundu"] = True
+    if d2 not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return None
+    bilgi["bulundu"] = True
+    sonra = int(round(c2.ObjectiveValue()))
+    bilgi["sonra_amac"] = sonra
+    if sonra < once_amac:
+        bilgi["kabul"] = True
+        _tam_ipucu_yaz(kuruldu, c2)
         kuruldu.notlar.append(
-            "fazla mesai onarimi: gevsek plandaki %d dk fazla mesai %.0f sn'de sifirlandi; "
-            "iyilestirme bu plandan basladi (fazla mesai yine serbest, karari agirliklar verir)"
-            % (once, bilgi["saniye"]))
-        return d2, c2
-    return durum, c
+            "fazla mesai onarimi: iyilestirilmis plandaki %d dk fazla mesai %.0f sn'de "
+            "sifirlandi, amac %d -> %d (fazla mesai yine serbest, karari agirliklar verir)"
+            % (once, bilgi["saniye"], once_amac, sonra))
+        return c2
+    kuruldu.notlar.append(
+        "fazla mesai onarimi: fazla mesaisiz plan bulundu ama agirliklara gore daha kotu "
+        "(amac %d -> %d); fazla mesaili plan kaldi (K-61: hakem agirliklar)" % (once_amac, sonra))
+    return None
+
+
+def _iyilestirmeye_devam(kuruldu, ayar, basladi, c, amaci_geri_koy):
+    """K-68 ayar 3'un tamamlayicisi (14 Ekim): onarima ayrilan sure
+    kullanilmadiysa (plan zaten fazla mesaisiz, ya da onarim erken durdu)
+    iyilestirme ipucudaki plandan (`c`) DEVAM eder -- mola adiminin payina
+    girmeden. Bulunan plan YALNIZ amaci daha kucukse ipucu olur (ipucu
+    korunur: `_ilk_asamada_iyilestir` ile ayni kural). Iyilestirme kapaliysa
+    (`ilk_asama_iyilestirme_saniye` 0) calismaz. Ne oldugu
+    `kuruldu.ilk_asama_iyilestirme["devam"]`. Bulut, 49 kisi, 180 sn: devam
+    yokken kosu 87. sn'de bitiyordu (ayrilan 71 sn bosa)."""
+    bilgi_a = kuruldu.ilk_asama_iyilestirme
+    if not bilgi_a or not bilgi_a.get("istenen_saniye"):
+        return None
+    azami = float(ayar["azami_saniye"])
+    mola_payi = azami * (1.0 - float(ayar.get("ilk_asama_iyilestirme_orani", 0.8)))
+    pay = azami - (time.time() - basladi) - 1.0 - mola_payi
+    once = int(sum(a * int(c.Value(v)) for a, v in kuruldu.cezalar))
+    bilgi = {"saniye": 0.0, "pay": round(max(0.0, pay), 1), "once_amac": once,
+             "sonra_amac": None, "alindi": False}
+    bilgi_a["devam"] = bilgi
+    if pay < 1.0:
+        return None
+    amaci_geri_koy()                           # onarim erken donduyse amac silinmis olabilir
+    t = time.time()
+    durum, c2, _ = _iyilestirme_coz(kuruldu.m, pay, isci_sayisi(ayar))
+    bilgi["saniye"] = round(time.time() - t, 2)
+    if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return None
+    bilgi["sonra_amac"] = int(round(c2.ObjectiveValue()))
+    if bilgi["sonra_amac"] < once:
+        bilgi["alindi"] = True
+        _tam_ipucu_yaz(kuruldu, c2)
+        return c2
+    return None
 
 
 def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=False):
@@ -728,10 +841,13 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
     isci = isci_sayisi(ayar)
     kisi = max(1, len(kuruldu.calisanlar))
     degiskenler = list(kuruldu.asim_sinirli.values())
+    acik_parametreler = dict(ayar.get("gevsek_acik_cozucu_parametreleri") or {})
     bilgi = {"denendi": True, "adimlar": [], "ulasilan_tavan": None,
              "tam_sert": False, "kalan_asim": None, "saniye": 0.0,
              "yedek_saniye": round(yedek, 1), "butce_saniye": round(max(0.0, kalan()), 1),
              "acik_parcalar": None,
+             # oneri 2b (olcum): acik adimin ek CP-SAT parametreleri; urunde {}
+             "acik_parametreler": acik_parametreler,
              # True = son adim (tavan = tolerans) INFEASIBLE dondu: toleransi
              # asmayan plan YOK -- ama ARANAN modelde: molalar sablonun ideal
              # yerinde sabitken (`molalar_sabit`) ve fazla mesai sifirda
@@ -756,7 +872,8 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
             pay = kalan() if k is None else kalan() / (len(adimlar) - i)
             if pay < 0.5:
                 break
-            d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk)
+            d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk,
+                                    parametreler=acik_parametreler if k is None else None)
         if c is None:                          # parcali acik adimda hic parca kosamadi
             break
         bulundu = d in (cp_model.OPTIMAL, cp_model.FEASIBLE)
@@ -959,7 +1076,8 @@ class _CozumSayaci(cp_model.CpSolverSolutionCallback):
                           self.ObjectiveValue(), self.BestObjectiveBound()))
 
 
-def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusulecek=0.0):
+def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusulecek=0.0,
+                           ayrilan=0.0):
     """(a) secenegi -- T-60 bulgu 8 (2 Ekim). K-59 (3 Ekim): URUNUN
     VARSAYILANI; K-60 (4 Ekim) ile sure butcenin %80'i
     (`ilk_asama_iyilestirme_orani`, kalibrasyon); `ilk_asama_iyilestirme_saniye: 0`
@@ -984,6 +1102,11 @@ def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusu
       deneme yapilmamis gibi kalir. Deneme plan bulduysa 0'dir (o arama
       birinci asamanin kendisidir).
     Ne oldugu `kuruldu.ilk_asama_iyilestirme`e yazilir (ciktiya gider).
+      `ayrilan` (K-68 ayar 3, 14 Ekim): sonra gelecek fazla mesai onarimina
+      ayrilacak saniye -- iyilestirmenin suresinden, EN COK YARISI kadar
+      dusulur (onarim iyilestirmeyi yemesin). Mola adiminin payi degismez.
+    Donen: ipucuyu YAZAN cozucu (iyilesmis plan) ya da None (ipucu
+    degismedi: iyilestirme yok / plan bulamadi / ipucu korundu).
     """
     tavan = float(ayar["azami_saniye"]) * float(ayar.get("ilk_asama_iyilestirme_orani", 0.8))
     istenen = ayar.get("ilk_asama_iyilestirme_saniye")
@@ -998,6 +1121,10 @@ def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusu
              "amacsiz_amac": amacsiz_amac, "iyilesmis_amac": None,
              "plan_bulundu": False, "cozum_sayisi": 0, "optimum": False}
     kuruldu.ilk_asama_iyilestirme = bilgi
+    if ayrilan > 0 and saniye > 0:
+        ayir = min(float(ayrilan), saniye / 2.0)
+        saniye -= ayir
+        bilgi["onarima_ayrilan_saniye"] = round(ayir, 1)
     if saniye <= 0:
         return
     proto = kuruldu.m.Proto()
@@ -1033,11 +1160,13 @@ def _ilk_asamada_iyilestir(kuruldu, ayar, amacsiz, amaci_geri_koy, basladi, dusu
             proto.solution_hint.values.extend(yedek[1])
         else:
             _tam_ipucu_yaz(kuruldu, c2)
+            return c2
     else:
         proto.solution_hint.vars.clear()
         proto.solution_hint.values.clear()
         proto.solution_hint.vars.extend(yedek[0])
         proto.solution_hint.values.extend(yedek[1])
+    return None
 
 
 def _atamalari_sabitle(kuruldu):
