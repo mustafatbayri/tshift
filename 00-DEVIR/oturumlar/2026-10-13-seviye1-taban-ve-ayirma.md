@@ -12,6 +12,7 @@ Aynı pencerenin devamı (12 Ekim kaydı: `oturumlar/2026-10-12-rotasyon-d-kodu.
 5. Ayırma sonucu (Mustafa'nın makinesi) ve K-68 kararı
 6. K-68 koda indi (bulut)
 7. Ölçüm bloğu — karar kuralı (koşudan önce)
+8. Ölçüm sonucu (900 ve 1200) ve önerilen üç ayar
 
 ## 1 · Gece bloğu ve taban ölçümü (04:31–06:11; okuma 08:30–09:40)
 
@@ -168,4 +169,55 @@ Mustafa'nın makinesi, `--seviye 1 --yapilandirma varsayilan`:
 - `tol1` / `tol2`: plan bulma oranı ve gevşek yolun tetiklenip
   tetiklenmediği; referans kıyası (bant içi aşımın neye harcandığı).
 - Gerileme: tam paket (09 + 08) yeşil, tam mutasyon yaşayan 0.
+
+## 8 · Ölçüm sonucu (900 ve 1200) ve önerilen üç ayar
+
+> ⚠ **Düzeltme (14 Ekim 01:45):** aşağıdaki "Ctrl-C ile durdu … makinede iz yok" YANLIŞ. Ctrl-C metin seçiliyken basıldığı için kopyalamış; blok sürdü, `tol1` 2/2 koştu (1 plan, 1 plansız), pencere 23:3x–01:35 seçim modunda dondu, `tol2` 01:36'da başladı ve 01:39'da pencere kapatılarak durduruldu. Ayrıntı: `oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §5.
+
+Blok 19:31'de başladı (testler 680 ve 34 + 1 yeşil, `17779f3` push); 900 ×
+3 ve 1200 × 3 bitti; `tol1`'in başında Ctrl-C ile durdu (22:58 Mustafa:
+*"yanlışlıkla CTRL C yaptım"*). Makinede iz yok: `.mutasyon-suruyor` yok,
+izlenen dosyalar temiz, iki ölçüm dosyası ve çizelgeleri commit'lenmemiş.
+
+| koşu | fazla mesaisiz ilk arama (3 × 40 sn) | gevşek açık adım | sonuç | aşım | sert | fazla mesai | amaç (fazla mesai hariç) |
+|---|---|---|---|---|---|---|---|
+| 900-1 | yok | OPTIMAL **204 sn** | plan | 0 | 0 | 5,0 sa | 57.053 (42.053) |
+| 900-2 | yok | OPTIMAL **52 sn** | plan | 0 | 0 | 8,75 sa | 67.537 (41.287) |
+| 900-3 | yok | OPTIMAL **132 sn** | plan | 0 | 0 | 12,5 sa | 79.737 (42.237) |
+| 1200-1 | **tohum 3, 17,9 sn** | — (gerek olmadı) | plan, normal yol | 0 | 0 | **0** | **40.492** (40.492) |
+| 1200-2 | yok | **UNKNOWN 300 sn** | **plansız** | — | — | — | — |
+| 1200-3 | yok | OPTIMAL **122 sn** | plan | 0 | 0 | 5,0 sa | 55.627 (40.627) |
+
+Referans 55.248, fazla mesai 0. "OPTIMAL" açık adımda = toplam aşım 0'a indi (alt sınır 0): plan doğrudan sert kurala uydu, daraltma adımlarına ve taslağa hiç gerek olmadı.
+
+**§7'nin kuralıyla okuma.** Ölçüt 3 tuttu (900: 3/3 plan, 3/3 aşım 0); ama
+6 koşuda 1 plansız — açık adımın süresi ağır kuyruklu (52 / 122 / 132 / 204 /
+> 300 sn). 20 dk plan bulmayı değiştirmedi; kaliteyi az iyileştirdi.
+Fazla mesai gevşek yolun planlarında kalıyor (referans 0 olduğuna göre
+fazla mesaisiz plan VAR; iyileştirme bulamıyor).
+
+**Önerilen üç ayar (motor içi; kabul Mustafa'da, sonra 900 × 5 ölçülür):**
+
+1. **Aşım sertken `_gecerli_plan_yeniden_ara` atlanır** — fazla mesaisiz
+   arama bulamayınca doğrudan gevşek yol. Gerekçe: bu arama seviye 1'de
+   5/5 boşa gitti (120 sn); açık adım bunun bir üst kümesini arıyor (aşım
+   açık + fazla mesai serbest) ve aşımı enazlarken sert planı zaten
+   buluyor. ⚠ Ölçüt 4'ün ("normal yol değişmez") kapsamını daraltır: aşım
+   sert ve fazla mesaisiz arama bulamadıysa yol değişir.
+2. **Açık adım bulamazsa süre açık adımda kalır** — bugün 300 sn sonra
+   vazgeçip süreyi sert modele (seviye 1'de umutsuz; 1200-2'de 654 sn boşa)
+   veriyor. Öneri: açık adım, iyileştirme + mola adımına ayrılan pay (ör.
+   bütçenin %25'i) dışındaki bütün süreyi kullanabilir; bulduğu an kalanı
+   iyileştirmeye geçer.
+3. **Fazla mesai onarımı** — gevşek plan bulunduktan sonra fazla mesai
+   alanları 0'a sabitlenir, plan ipucu verilir, kısa arama (ör. 60 sn):
+   bulunursa fazla mesaisiz plandan devam; bulunamazsa plan olduğu gibi.
+   K-61'in niyeti ("önce fazla mesaisiz"), gevşek yolun sonuna.
+
+**Kabul ölçütü önerisi:** seviye 1, 900 × 5: 5/5 plan; aşım 0, sert 0;
+fazla mesai raporlanır (hedef: çoğunda 0); eski setler ve bütün testler
+değişmez.
+
+**Sıradaki blok (bu ayarlardan bağımsız, şimdiki kodla):** ölçüm
+dosyalarının commit'i, `tol1` / `tol2` 900 × 2, tam mutasyon.
 

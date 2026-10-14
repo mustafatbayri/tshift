@@ -5,11 +5,12 @@ gerektiğini, motor yazılmadan **önce** ve motora bakmadan tanımlar.
 
 **Ne YOK:** Motor yok. Ürünün doğrulayıcısı da yok. **Testler koşuyor ama
 yedisi bilerek kırmızı** — motor olmadığı için (§16.4 kırmızı kanıt).
-Analiz betikleri de burada değil (onlar `07-motor/`'da ve onlar da motor
-değil — bkz. `07-motor/OKU-BENI.md`).
+Analiz betikleri de burada değil (onlar `07-gercek-veri-analizi/`'nde ve onlar
+da motor değil — bkz. `07-gercek-veri-analizi/OKU-BENI.md`).
 
-**Neden ayrı klasör (karar: 14 Eylül 2026):** `07-motor/` adı yanıltıcı ve
-yeniden adlandırma kararı bekliyor; senaryolar oraya karışmasın. Fikstürleri
+**Neden ayrı klasör (karar: 14 Eylül 2026):** o günkü adıyla `07-motor/`
+yanıltıcıydı ve yeniden adlandırma kararı bekliyordu (14 Ekim'de
+`07-gercek-veri-analizi/` oldu); senaryolar oraya karışmasın. Fikstürleri
 koşan test iskeleti de 16 Eylül'de buraya geldi: `v5/testler/`.
 
 ## Buradan başla

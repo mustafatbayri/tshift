@@ -84,13 +84,32 @@ VARSAYILAN = {
     #   yaklasim ... nerede tikandigimizi gorur"; 17:31 "(ii) uygundur"): ilk
     #   gecerli plan bulunamazsa HEDEF_ASIMI SERT'in ust siniri gecici acilir,
     #   plan bulunur, sinir adim adim (tolerans + 3, + 1, + 0) kapatilir.
-    #   Butce: toplam surenin en cok `gevsek_orani`; bunun `gevsek_acik_orani`
-    #   kadari ACIK adima (bulgu 31: darbogaz HERHANGI bir plani bulmak; plan
-    #   yoksa daraltmanin anlami yok), kalani daraltma adimlarina esit.
-    #   False = kapali (olcum). Ikisi de KALIBRASYON: 500'de olculmedi.
+    #   False = kapali (olcum).
+    # K-68 ayarlari (13 Ekim 23:20, Mustafa: "olur"; olcum bulgu 31 son bolum):
+    #   1. `gevsek_yeniden_arama_atla`: fazla mesaisiz arama bulamayinca,
+    #      gevsek yol mumkunse `_gecerli_plan_yeniden_ara` (asim sert, fazla
+    #      mesai serbest, 120 sn) KOSMAZ -- seviye 1'de 5/5 bosa gitti; acik
+    #      adim onun ust kumesini arar.
+    #   2. `gevsek_yedek_orani`: butcenin bu kadari iyilestirme + mola adimina
+    #      AYRILIR; gevsek yol kalanin tamamini kullanabilir (1200-2: acik adim
+    #      300 sn'de vazgecti, sure sert modelde 654 sn bosa gitti). Plan
+    #      bulununca adim `gevsek_durgunluk_saniye` iyilesmesizlikte biter
+    #      (asim 0'a inerse kendiliginden, kanitli). `gevsek_acik_parca_saniye`
+    #      (OLCUM; None = tek uzun arama): acik adim bu uzunlukta parcalarla,
+    #      her parcada baska tohumla yeniden baslar (bulgu 25'in kuyruk dersi).
+    #   3. `fazla_mesai_onarimi`: gevsek plan fazla mesaili ve fazla mesaisiz
+    #      arama basta bulamadiysa: fazla mesai alanlari 0'a, plan ipucu, en
+    #      cok `fazla_mesai_onarim_saniye` (300) arama. Bulunursa o plan BASLANGIC
+    #      olur (alanlar geri acilir, hakem agirliklar -- K-61/O-18).
+    #   Oranlar ve sureler KALIBRASYON: 500'de olculecek (K-69: sure dusman
+    #   degil, hedef en iyi plan).
     "gevsekten_serte": True,
-    "gevsek_orani": 0.5,
-    "gevsek_acik_orani": 0.5,
+    "gevsek_yeniden_arama_atla": True,
+    "gevsek_yedek_orani": 0.25,
+    "gevsek_durgunluk_saniye": 60,
+    "gevsek_acik_parca_saniye": None,
+    "fazla_mesai_onarimi": True,
+    "fazla_mesai_onarim_saniye": 300,   # bulut 0,3 olcek: 105 sa fazla mesai 101 sn'de sifirlandi
     # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
     #   bir plana "demirliyor" (tam olcekte ipucusuz kosu fazla mesaiyi yariya
     #   indirdi) ama ipucusuz arama guvenilir degil (yedi kosunun ikisi plan
@@ -430,6 +449,9 @@ def _ipucu_ver(kuruldu, ayar):
     sabitlenen = _molalari_sabitle(kuruldu) if mola_sabit else []
     kuruldu.fazla_mesai_once_sifir = None
     kuruldu.gevsekten_serte = None
+    kuruldu.fazla_mesai_onarimi = None
+    yeniden_atlandi = False
+    fm_bulunamadi = False
     fm_eski = (_fazla_mesaiyi_sifirla(kuruldu)
                if ayar.get("fazla_mesai_once_sifir") else [])
     try:
@@ -494,7 +516,18 @@ def _ipucu_ver(kuruldu, ayar):
                 #   doner (900 sn'de: 120 + 120 + 659). Dusulunce mola adimina
                 #   kalan sure deneme yapilmamis gibi kalir (120 + 720).
                 dusulecek = deneme_sn
-                durum, c = _gecerli_plan_yeniden_ara(kuruldu, ayar, basladi)
+                fm_bulunamadi = True
+                if (durum == cp_model.UNKNOWN and kuruldu.asim_sinirli
+                        and ayar.get("gevsekten_serte", True)
+                        and ayar.get("gevsek_yeniden_arama_atla", True)):
+                    # K-68 ayar 1: fazla mesaisiz arama SURE doldurduysa yeniden
+                    # arama atlanir, dogrudan gevsek yol (seviye 1'de 5/5 bosa
+                    # gitti). INFEASIBLE dondurduyse (fazla mesai 0 iken plan
+                    # yok) ATLANMAZ: girdi sertte cozumsuz olabilir; yeniden
+                    # arama bunu kanitlarsa yol teshistir (K-37), taslak degil.
+                    yeniden_atlandi = True
+                else:
+                    durum, c = _gecerli_plan_yeniden_ara(kuruldu, ayar, basladi)
         if (durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE)
                 and kuruldu.asim_sinirli and ayar.get("gevsekten_serte", True)):
             # K-68 eki: gecerli plan bu surede yok (kanit da yok) ve sinirlari
@@ -504,6 +537,10 @@ def _ipucu_ver(kuruldu, ayar):
             durum, c = _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=mola_sabit,
                                         fm_sifirda=bool((kuruldu.fazla_mesai_once_sifir or {})
                                                         .get("sifirda_tutuldu")))
+            kuruldu.gevsekten_serte["yeniden_arama_atlandi"] = yeniden_atlandi
+            if (durum in (cp_model.OPTIMAL, cp_model.FEASIBLE) and fm_bulunamadi
+                    and ayar.get("fazla_mesai_onarimi", True)):
+                durum, c = _fazla_mesai_onar(kuruldu, ayar, basladi, durum, c)
             dusulecek += time.time() - t_g
         if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             return False
@@ -550,6 +587,101 @@ def _sert_disi_asim(kuruldu, cozucu):
     return sum(max(0, int(cozucu.Value(v)) - tol) for v, tol in kuruldu.asim_sinirli.values())
 
 
+class _GevsekSayac(cp_model.CpSolverSolutionCallback):
+    """Gevsek adimin cozum sayaci -- `_durgunluk_bekcisiyle_coz`un bekcisi
+    `cozum_sayisi`, `son_iyilesme`, `durma_sebebi` okur."""
+
+    def __init__(self):
+        cp_model.CpSolverSolutionCallback.__init__(self)
+        self.cozum_sayisi = 0
+        self.son_iyilesme = time.time()
+        self.durma_sebebi = None
+
+    def on_solution_callback(self):
+        self.cozum_sayisi += 1
+        self.son_iyilesme = time.time()
+
+
+def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None):
+    """Gevsek yolun bir adimi: en cok `pay` sn; plan bulunduktan sonra
+    `durgunluk` sn iyilesme yoksa durur (0 = kapali). Donen (durum, cozucu)."""
+    c = cp_model.CpSolver()
+    c.parameters.max_time_in_seconds = float(pay)
+    c.parameters.num_search_workers = isci
+    if tohum is not None:
+        c.parameters.random_seed = int(tohum)
+    sayac = _GevsekSayac()
+    d = _durgunluk_bekcisiyle_coz(c, kuruldu.m, sayac, {"durgunluk_saniye": durgunluk})
+    return d, c
+
+
+def _gevsek_acik_parcali(kuruldu, ayar, kalan, parca, isci, durgunluk, bilgi):
+    """K-68 ayar 2'nin olcum secenegi: acik adim `parca` sn'lik denemelerle,
+    her denemede baska tohumla (1, 2, 3...; `tohum_kaydirma` eklenir) --
+    ilk plan bulunan denemede durur. Denemeler `bilgi["acik_parcalar"]`a."""
+    bilgi["acik_parcalar"] = []
+    d, c, i = cp_model.UNKNOWN, None, 0
+    while True:
+        pay = min(parca, kalan())
+        if pay < 0.5:
+            break
+        tohum = i + 1 + int(ayar.get("tohum_kaydirma") or 0)
+        t = time.time()
+        d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=tohum)
+        bilgi["acik_parcalar"].append({"tohum": tohum, "saniye": round(time.time() - t, 2),
+                                       "durum": c.StatusName(d)})
+        if d in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE):
+            break
+        i += 1
+    return d, c
+
+
+def _fazla_mesai_onar(kuruldu, ayar, basladi, durum, c):
+    """K-68 ayar 3 (13 Ekim 23:20): gevsek yoldan gelen plan fazla mesailiyse
+    ve fazla mesaisiz arama basta bulamadiysa -- fazla mesai alanlari 0'a,
+    plan ipucu, amacsiz arama (ilk bulunan yeter), en cok
+    `fazla_mesai_onarim_saniye`. Bulunursa donen plan fazla mesaisizdir; alanlar
+    HER YOLDA geri acilir (K-61/O-18: plan yalniz baslangic, hakem agirliklar).
+    Bulunamazsa gevsek plan aynen doner. Ne oldugu `kuruldu.fazla_mesai_onarimi`."""
+    fm = [v for _, v in kuruldu.cezalar if v.Name().startswith("fm_")]
+    once = sum(int(c.Value(v)) for v in fm)
+    bilgi = {"denendi": False, "once_dakika": once, "bulundu": False,
+             "saniye": 0.0, "durum": None}
+    kuruldu.fazla_mesai_onarimi = bilgi
+    if once == 0:
+        return durum, c                        # gerek yok
+    azami = float(ayar["azami_saniye"])
+    yedek = azami * float(ayar.get("gevsek_yedek_orani", 0.25))
+    pay = min(float(ayar.get("fazla_mesai_onarim_saniye") or 0),
+              azami - (time.time() - basladi) - 1.0 - yedek)
+    if pay < 0.5:
+        return durum, c
+    eski = _fazla_mesaiyi_sifirla(kuruldu)
+    if not eski:
+        return durum, c
+    bilgi["denendi"] = True
+    t = time.time()
+    try:
+        _tam_ipucu_yaz(kuruldu, c)
+        kuruldu.m.ClearObjective()             # amac `_ipucu_ver`de geri konur
+        c2 = cp_model.CpSolver()
+        c2.parameters.max_time_in_seconds = pay
+        c2.parameters.num_search_workers = isci_sayisi(ayar)
+        d2 = c2.Solve(kuruldu.m)
+    finally:
+        _fazla_mesaiyi_serbest_birak(kuruldu, eski)
+    bilgi["saniye"] = round(time.time() - t, 2)
+    bilgi["durum"] = c2.StatusName(d2)
+    if d2 in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        bilgi["bulundu"] = True
+        kuruldu.notlar.append(
+            "fazla mesai onarimi: gevsek plandaki %d dk fazla mesai %.0f sn'de sifirlandi; "
+            "iyilestirme bu plandan basladi (fazla mesai yine serbest, karari agirliklar verir)"
+            % (once, bilgi["saniye"]))
+        return d2, c2
+    return durum, c
+
+
 def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=False):
     """K-68 eki (Mustafa, 13 Ekim) -- "once gevsegi bulup sertlige giderse
     nerede tikandigimizi gorur".
@@ -574,22 +706,32 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
          ciktida listelenir, "kanitlanmadi" notuyla (K-37: yetistiremedim
          != yok). Karar `coz`un cevap adiminda, SON plandan verilir.
 
-    Butce: toplam surenin en cok `gevsek_orani` (varsayilan %50); acik adim
-    bunun `gevsek_acik_orani` (%50) kadarini alir, daraltma adimlari kalani
-    esit boler (onceki adim erken biterse artan sonrakine kalir). Tolerans
-    > 0'da acik adimin amaci butun asimdir (bant ici dahil) -- bant ici zaten
-    cezali; ilk plani bulmayi zorlastirirsa olcumde gorunur.
+    Butce (K-68 ayar 2, 13 Ekim 23:20): butcenin `gevsek_yedek_orani` (%25)
+    kadari iyilestirme + mola adimina AYRILIR; gevsek yol kalanin tamamini
+    kullanabilir. Acik adim plan bulana kadar arar (`gevsek_acik_parca_saniye`
+    verilirse parca parca, her parcada baska tohumla); plan bulununca
+    `gevsek_durgunluk_saniye` iyilesmesizlikte durur (asim 0'a inerse kanitli
+    optimumla kendiliginden). Daraltma adimlari o anki kalani esit boler.
+    Tolerans > 0'da acik adimin amaci butun asimdir (bant ici dahil) -- bant
+    ici zaten cezali; ilk plani bulmayi zorlastirirsa olcumde gorunur.
     Donen: (durum, cozucu) -- son basarili adimin cozumu.
     Ne oldugu `kuruldu.gevsekten_serte`e yazilir (ciktiya gider)."""
     t0 = time.time()
     azami = float(ayar["azami_saniye"])
-    kalan = azami - (t0 - basladi) - 1.0
-    butce = max(1.0, min(kalan, azami * float(ayar.get("gevsek_orani", 0.5))))
+    yedek = azami * float(ayar.get("gevsek_yedek_orani", 0.25))
+    durgunluk = float(ayar.get("gevsek_durgunluk_saniye") or 0)
+    parca = ayar.get("gevsek_acik_parca_saniye")
+
+    def kalan():
+        return azami - (time.time() - basladi) - 1.0 - yedek
+
     isci = isci_sayisi(ayar)
     kisi = max(1, len(kuruldu.calisanlar))
     degiskenler = list(kuruldu.asim_sinirli.values())
     bilgi = {"denendi": True, "adimlar": [], "ulasilan_tavan": None,
              "tam_sert": False, "kalan_asim": None, "saniye": 0.0,
+             "yedek_saniye": round(yedek, 1), "butce_saniye": round(max(0.0, kalan()), 1),
+             "acik_parcalar": None,
              # True = son adim (tavan = tolerans) INFEASIBLE dondu: toleransi
              # asmayan plan YOK -- ama ARANAN modelde: molalar sablonun ideal
              # yerinde sabitken (`molalar_sabit`) ve fazla mesai sifirda
@@ -607,18 +749,16 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
                 _alan_yaz(kuruldu, v, tol + k)
             if son is not None:
                 _tam_ipucu_yaz(kuruldu, son)   # tavani asan hucreleri CP-SAT onarir
-        kalan_butce = butce - (time.time() - t0)
-        if k is None:
-            pay = min(kalan_butce, butce * float(ayar.get("gevsek_acik_orani", 0.5)))
-        else:
-            pay = kalan_butce / (len(adimlar) - i)
-        if pay < 0.5:
-            break
-        c = cp_model.CpSolver()
-        c.parameters.max_time_in_seconds = pay
-        c.parameters.num_search_workers = isci
         t1 = time.time()
-        d = c.Solve(kuruldu.m)
+        if k is None and parca:
+            d, c = _gevsek_acik_parcali(kuruldu, ayar, kalan, float(parca), isci, durgunluk, bilgi)
+        else:
+            pay = kalan() if k is None else kalan() / (len(adimlar) - i)
+            if pay < 0.5:
+                break
+            d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk)
+        if c is None:                          # parcali acik adimda hic parca kosamadi
+            break
         bulundu = d in (cp_model.OPTIMAL, cp_model.FEASIBLE)
         bilgi["adimlar"].append({
             "tavan": "acik" if k is None else "tolerans+%d" % k,
@@ -1384,6 +1524,9 @@ def coz(girdi, ayar=None, baslangic_plani=None, kuruldu=None):
         # K-68 eki: gevsekten serte denendi mi, adimlari, ulasilan tavan. None =
         # gerek olmadi (ilk gecerli plan normal yoldan bulundu).
         "gevsekten_serte": getattr(kuruldu, "gevsekten_serte", None),
+        # K-68 ayar 3: gevsek plandan sonra fazla mesai onarimi. None = gerek
+        # olmadi; {denendi, once_dakika, bulundu, saniye, durum}.
+        "fazla_mesai_onarimi": getattr(kuruldu, "fazla_mesai_onarimi", None),
         # K-63: ana asama plansizken ikinci asamanin plani alindi mi; None =
         # gerek olmadi. {"bulundu", "saniye", "durum"} -- `saniye` butcenin
         # disindaki tek kalem.

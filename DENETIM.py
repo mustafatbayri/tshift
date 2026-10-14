@@ -76,8 +76,18 @@ YOL_ATLA = ("bin/", "obj/", "node_modules/", ".next/", "dist/")
 # Yeni satir eklerken GEREKCE yazilir; gerekcesiz satir bu listeyi cope cevirir.
 YOK_AMA_KASITLI = {
     "Directory.Packages.props": "merkezi paket surum yonetimi yok -- A-11'de borc olarak yazili",
-    "08-analiz/": "07-motor/ icin ONERILEN ilk yeni ad; 08-motor-testleri/ ile\n                   cakistigi gorulunce birakildi. Mustafa karar vermedi",
-    "10-analiz/": "07-motor/ icin onerilen ikinci ad (16 Eylul). Henuz bir\n                   klasor degil, bir oneri; Mustafa karar vermedi",
+    "08-analiz/": "07-motor/ icin ONERILEN ilk yeni ad; 08-motor-testleri/ ile\n                   cakistigi gorulunce birakildi. Kullanilmadi (14 Ekim: 07-gercek-veri-analizi/)",
+    "10-analiz/": "07-motor/ icin onerilen ikinci ad (16 Eylul). Kullanilmadi\n                   (14 Ekim: 07-gercek-veri-analizi/)",
+    # 14 Ekim 2026 (Mustafa 01:36: "Evet 07 ismini oyle degistir"): 07-motor/
+    # -> 07-gercek-veri-analizi/. Karar, risk, bulgu ve oturum kayitlari klasoru
+    # O GUNUN adiyla anar; kayitlar yeniden yazilmadi (surumleme kurali).
+    # Yasayan isaretler (README, BURADAN klasor tablosu, OKU-BENI'ler) yeni adda.
+    "07-motor/": "14 Ekim'de 07-gercek-veri-analizi/ oldu; eski kayitlar eski adla",
+    "07-motor/OKU-BENI.md": "14 Ekim'de 07-gercek-veri-analizi/OKU-BENI.md oldu; eski kayitlar eski adla",
+    "07-motor/donusturucu.py": "14 Ekim'de 07-gercek-veri-analizi/donusturucu.py oldu; eski kayitlar eski adla",
+    "07-motor/dogrulayici.py": "14 Ekim'de 07-gercek-veri-analizi/dogrulayici.py oldu; eski kayitlar eski adla",
+    "07-motor/kurallar.json": "14 Ekim'de 07-gercek-veri-analizi/kurallar.json oldu; eski kayitlar eski adla",
+    "07-motor/pdks-ms-gece-yarisi.py": "14 Ekim'de 07-gercek-veri-analizi/pdks-ms-gece-yarisi.py oldu; eski kayitlar eski adla",
     "DEVIR.md": "kalite arastirmasinda onerilen dosya; biz 00-DEVIR/ klasorunu sectik",
     "ai_yazilim_kalite_arastirmasi.docx": "depo disi kaynak, git'e alinmadi",
     "Vardiya_Otomasyonu_Urun_Teknik_Analiz_v2.docx":

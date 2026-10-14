@@ -15,7 +15,7 @@ NE YAPMAZ
   Hicbir dosyayi kopyalamaz.
 
 CALISTIRMA (PowerShell)
-  cd C:\Users\PC\Desktop\Tshift\07-motor
+  cd C:\Users\PC\Desktop\Tshift\07-gercek-veri-analizi
   py pdks-ms-gece-yarisi.py "C:\...\pdks\2026-07" "C:\...\pdks\2026-08" "C:\...\pdks\2026-09"
   Klasor verilmezse ..\06-veri\ham altinda arar.
 CIKTI

@@ -256,15 +256,13 @@ Bu yüzden `cozum_istatistikleri.amac_degeri` çıktıya eklendi: aynı girdi, i
 farklı seçim **sabitlenmiş** hâlde çözülüp amaç değerleri karşılaştırılıyor.
 Arama sırasından bağımsız, kesin ölçüm.
 
-## 9. Klasör adı hakkında — açık bir sorun
+## 9. Klasör adı hakkında — KAPANDI (14 Ekim 2026)
 
-`07-motor/` klasöründe **motor yok**, müşteri Excel'ini okuyan analiz
-betikleri var. Oradaki OKU-BENİ `08-analiz/` olarak yeniden adlandırılmasını
-öneriyor, karar bekliyor.
-
-⚠ **O ada geçilirse çakışma olur:** `08-analiz/` ile `08-motor-testleri/`
-aynı numarayı paylaşır. Yeniden adlandırma kararı verilirken bu göz önüne
-alınmalı — örneğin `10-analiz/`.
+Müşteri Excel'ini ve PDKS'i okuyan analiz betiklerinin klasörü 14 Eylül'den
+beri `07-motor/` adını taşıyordu; içinde motor yoktu. Önerilen `08-analiz/`
+`08-motor-testleri/` ile çakışıyordu, `10-analiz/` önerisine karar
+verilmemişti. **14 Ekim'de `07-gercek-veri-analizi/` oldu** (Mustafa: *"Evet
+07 ismini öyle değiştir"*). Numara korundu, klasör sırası değişmedi.
 
 ## 10. Sıradaki
 

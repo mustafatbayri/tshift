@@ -1,4 +1,12 @@
-# 07-motor — DİKKAT: burada henüz MOTOR YOK
+# 07-gercek-veri-analizi — gerçek müşteri verisinin analiz araçları (MOTOR DEĞİL)
+
+> **14 Ekim 2026 — klasörün adı değişti.** Eski adı `07-motor/` idi; içinde
+> motor olmadığı halde adı "motor" diyordu (motor `09-motor/`). Mustafa, 14
+> Ekim 01:36: *"Evet 07 ismini öyle değiştir."* Karar, risk ve oturum
+> kayıtlarında klasör **eski adıyla** geçer; o kayıtlar o günün doğrusudur,
+> yeniden yazılmadı (`DENETIM.py` eski yolları "bilerek yok" listesinde tutar).
+
+## Eski başlık (14 Eylül): "DİKKAT: burada henüz MOTOR YOK"
 
 > **Bu klasördeki dosyalar ürünün motoru değildir.**
 > Yanlış anlaşılmaya yol açtığı için bu not yazıldı (14 Eylül 2026).
@@ -44,16 +52,18 @@ yazılırken bunların **büyük kısmı atılır.** Kalıcı olan:
 - Doğrulayıcının kendi girdi tamlığını raporlaması fikri
 - `07-GERCEK-VERI-BULGULARI.md`'deki öğrenilenler
 
-## Açık karar
+## Karar (14 Ekim 2026): `07-gercek-veri-analizi/`
 
-Klasör adı yanıltıcı. **`08-analiz/` olarak yeniden adlandırılması önerildi,
-Mustafa henüz karar vermedi.** Karar verilene kadar bu not burada durur.
+Klasör adı yanıltıcıydı. Önce `08-analiz/` önerildi (`08-motor-testleri/` ile
+çakıştığı için bırakıldı), sonra `10-analiz/` (16 Eylül; karar verilmedi).
+14 Eylül'den 14 Ekim'e kadar ad `07-motor/` kaldı. Seçilen ad numarayı korur
+(klasör sırası değişmez) ve içeriği söyler.
 
 ## Çalıştırma
 
 ```
 py -m pip install openpyxl pandas       (bir kereliğine)
-cd C:\Users\PC\Desktop\Tshift\07-motor
+cd C:\Users\PC\Desktop\Tshift\07-gercek-veri-analizi
 py donusturucu.py
 py dogrulayici.py
 ```
@@ -63,7 +73,7 @@ Girdi: `../06-veri/ham/plan` · Çıktı: `../06-veri/kanonik` ve `../06-veri/ra
 PDKS betiği (klasörleri komut satırında ver; vermezsen `../06-veri/ham` altında arar):
 
 ```
-cd C:\Users\PC\Desktop\Tshift\07-motor
+cd C:\Users\PC\Desktop\Tshift\07-gercek-veri-analizi
 py pdks-ms-gece-yarisi.py "C:\...\pdks\2026-07" "C:\...\pdks\2026-08" "C:\...\pdks\2026-09"
 ```
 

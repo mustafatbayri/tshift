@@ -357,9 +357,13 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
              "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
     rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
-    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon
+    gevsek = {"gevsek_parca"}                                           # K-68 ayar 2 olcum secenegi: urun yolu + parcali acik adim
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek
+    assert KO.YAPILANDIRMALAR["gevsek_parca"][1] == {"gevsek_acik_parca_saniye": 150}
+    assert KO.YAPILANDIRMALAR["gevsek_parca"][2] == {}
+    assert KO.COZ_VARSAYILAN["gevsek_acik_parca_saniye"] is None          # urun yolu: tek uzun arama
     assert KO.YAPILANDIRMALAR["rotasyon_0"][1] == {} and KO.YAPILANDIRMALAR["rotasyon_0"][2] == {"agirliklar": {"VARDIYA_ROTASYON_YONU": 0}}
-    for ad in urun | iki_asamasiz:
+    for ad in urun | iki_asamasiz | gevsek:
         assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad
         assert "fazla_mesai_sifirda_tut" not in KO.YAPILANDIRMALAR[ad][1], ad
         assert "fazla_mesaisiz_deneme" not in KO.YAPILANDIRMALAR[ad][1], ad   # motorun varsayilani (1)

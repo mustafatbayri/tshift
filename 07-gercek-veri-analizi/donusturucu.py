@@ -12,7 +12,7 @@ NEDEN AYRI BIR PARCA
   yalniz bu dosya degisir.
 
 CALISTIRMA
-  cd C:\\Users\\PC\\Desktop\\Tshift\\07-motor
+  cd C:\\Users\\PC\\Desktop\\Tshift\\07-gercek-veri-analizi
   py donusturucu.py
 
 GIRDI   ../06-veri/ham/plan/**/*.xlsx|xlsm

@@ -2892,6 +2892,12 @@ ya da 45/5 = 9 saat). Bu bir *saat* değil *gün deseni* alanı; *"çalışana s
 tanımlamıyoruz"* kararının onu kapsayıp kapsamadığı soruldu, cevap yalnız
 tipleri kapsadı. Kaldırılırsa izin düşümü için tek bir varsayılan (6) kalır.
 
+✅ **Kapandı (14 Ekim ~00:05, Mustafa):** haftalık gün sayısı (5 | 6)
+**sözleşmede tutulur** — saat değil, firmanın çalışma düzeni
+(`employee_contracts.haftalik_gun`). Eski tiplerin karşılığı: **sezonluk →
+tam zamanlı** (sözleşmenin `bitis` tarihi dolu: sezon sonu), **stajyer →
+yarı zamanlı**. Veri seti işinde uygulanıyor (oturum 14 Ekim §4, T-80).
+
 **Yan açık iş:** yarı zamanlının 30–45 arası *ek mesai* saati ayrı bir sayı
 olarak raporlanmıyor.
 
@@ -4018,6 +4024,66 @@ yaşayan "taslakta optimuma uzaklık yazılsın" ortak arama testiyle kapandı),
 yol kapalı → plansız; açık → açık adım 5,25 sn'de aşım 0, sert plan. Merdiven: `08-motor-testleri/gercekci-veri-seti/merdiven.py`
 çeşit `tol1`, `tol2`; `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` gevşek yolu ve taslağı yazar.
 
+**Ölçüldü (13 Ekim 19:31–21:23, Mustafa'nın makinesi; `17779f3`).**
+
+| koşu | fazla mesaisiz ilk arama (3 × 40 sn) | gevşek açık adım | sonuç | aşım | sert | fazla mesai | amaç (fazla mesai hariç) |
+|---|---|---|---|---|---|---|---|
+| 900-1 | yok | OPTIMAL **204 sn** | plan | 0 | 0 | 5,0 sa | 57.053 (42.053) |
+| 900-2 | yok | OPTIMAL **52 sn** | plan | 0 | 0 | 8,75 sa | 67.537 (41.287) |
+| 900-3 | yok | OPTIMAL **132 sn** | plan | 0 | 0 | 12,5 sa | 79.737 (42.237) |
+| 1200-1 | **tohum 3, 17,9 sn** | — (gerek olmadı) | plan, normal yol | 0 | 0 | **0** | **40.492** (40.492) |
+| 1200-2 | yok | **UNKNOWN 300 sn** | **plansız** | — | — | — | — |
+| 1200-3 | yok | OPTIMAL **122 sn** | plan | 0 | 0 | 5,0 sa | 55.627 (40.627) |
+
+Referans 55.248, fazla mesai 0. "OPTIMAL" açık adımda = toplam aşım 0'a indi (alt sınır 0): plan doğrudan sert kurala uydu, daraltma adımlarına ve taslağa hiç gerek olmadı.
+
+Ölçüt 3 **tuttu** (900 × 3: 3/3 plan, 3/3 aşım 0, sert 0); 1200'ün bir
+koşusu **plansız** (açık adım 300 sn'de bulamadı) — 6'da 5. Fazla mesai
+gevşek yolun dört planında 5–12,5 sa (referans 0). Ölçüt 7 (`tol1`, `tol2`)
+ve tam mutasyon koşmadı (Ctrl-C). Ayrıntı ve okuma: `06-ACIK-RISKLER.md`
+bulgu 31; öneriler oturum 13 Ekim §8.
+
 → K-67 · K-37 · K-61 · K-62 · T-60 bulgu 31 · T-81 · şartname §5.2, §6.4,
 §8.6, §11.3 · `09-motor/cozucu/coz.py` (`_gevsekten_serte`) ·
 `09-motor/testler/test_gevsekten_serte.py`
+
+---
+
+## K-69 · Süre ürünün kısıtı değildir: hedef, en zor şartta kurallara en iyi uyan plan; müşteriye söylenecek süreyi ölçüm belirler
+
+**Karar (13 Ekim 23:08, Mustafa):** *"bu koşulara ayrılan süre bizim
+düşmanımız değil. 15 dk da planlama yapmak da artık ürünün bir sloganı
+değil, böyle düşünmüyorum artık. Sonuçta 3 4 kişinin günlerce uğraşacağı ve
+yine de bizim kadar iyi plan yapmasının imkânsız olduğu bir vakada, zaman
+satmak hiç mantıklı gelmiyor. Uzun vadede testler konusunda bir stratejim
+olacak, bunu uyguladıktan sonra zaman konusunu daha net ifade edebileceğiz
+ama şu an bizim odağımız en zor şartlarda bile kaliteli ve kurallara en iyi
+uyan yani en optimum planı yapmak olmalı. … baktık 30 dk da planı en iyi
+çıkarabiliyorsak müşterilere 30 dk hatta 40 dk diyebilirim. Bu kısım benim
+sorumluluğumda."* 23:20: *"bu bloğu daha uzun tutalım. 7 saat sürecek bir
+koşu olabilir çok rahat … Yeter ki en iyi ölçümleri yapalım. Doğru değerlere
+ulaşalım."*
+
+**Ne demek.**
+
+1. Motorun işi **plan kalitesi** (kurallara uyum, referansa göre puan);
+   süre bir ayar, hedef değil. "15 dakikada plan" ürünün iddiası değil.
+2. **Müşteriye söylenecek süre ölçümden çıkar** ve Mustafa'nın kararıdır
+   (30–40 dk olabilir). Ölçüm "hangi sürede ne kadar iyi" eğrisini verir.
+3. **Ölçümlerin varsayılanı 30 dk** (1.800 sn); bir de **tavan koşusu**
+   (2 sa): iyileşmenin nerede durduğunu görmek için. 13 Ekim'in altı
+   koşusunda iyileştirme eğrisi her seferinde süre bitince hâlâ iniyordu.
+4. **Dürüst sınır.** 500 kişide motor "bu en iyisi" diyemez (küresel alt
+   sınır yok, O-16). "En optimum"un ölçüsü: cevabı bilinen sette (K-62
+   merdiveni) referansa göre puan + süre-kalite eğrisinin düzleştiği yer.
+5. Motorun kod varsayılanı (`azami_saniye` 900) **şimdilik değişmez** —
+   ürün süresi her koşuda arka uçtan gelir (`plan_runs.sure_butcesi_sn`);
+   kalibrasyonlar (birinci aşama payı, iyileştirme oranı, K-68 yedek payı)
+   900 sn'de ayarlandı, 1.800 sn'de yeniden ölçülür.
+
+**Ne değişir.** Şartname §9.4 süre seçenekleri (10 / 15 / 30 dk) ve §13.4
+"plan üretimi 5–15 dk" hedefi **ölçüm sonuna kadar askıda** (not düşüldü);
+yeni değerler Mustafa'nın test stratejisinden sonra yazılır. K-63'ün "süre
+aralığı" cümlesi aynı yere bağlanır.
+
+→ K-35 · K-48 · K-63 · K-68 · O-16 · şartname §9.4, §13.4

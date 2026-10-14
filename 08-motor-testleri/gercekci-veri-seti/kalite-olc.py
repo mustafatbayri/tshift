@@ -158,6 +158,11 @@ YAPILANDIRMALAR = {
     #   olcum; bulgu 21 o haldir.
     "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), mola adimi (K-60)",
                      {}, {}),
+    # K-68 ayar 2'nin olcum secenegi (13 Ekim 23:20): gevsek yolun acik adimi
+    #   150 sn'lik parcalarla, her parcada baska tohumla (bulgu 25'in kuyruk
+    #   dersi; acik adim 52-204 sn, bir kez > 300 sn). Geri kalani urun yolu.
+    "gevsek_parca": ("urun yolu + gevsek acik adim 150 sn'lik parcalarla yeniden baslar (K-68 ayar 2 olcum secenegi)",
+                     {"gevsek_acik_parca_saniye": 150}, {}),
     # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
     #   bulgu 23'un kaydidir (7 Ekim sabahi, TEK deneme) -- anlami degismesin
     #   diye `fazla_mesaisiz_deneme: 1` ACIKCA yazili. Bugunku urun yolu
@@ -329,6 +334,9 @@ SEVIYE = _arg("--seviye", None)
 #   turetilmis ayirma cesidi (merdiven.CESITLER); referans puani o sahnede
 #   yeniden hesaplanir. Dosya adina cesit eklenir.
 CESIT = _arg("--cesit", None)
+# 14 Ekim: `--kaynak veri-seti` -> seviye 1 seti depodaki veri setinden
+#   (10-veri-seti/v1; merdiven.py --kaynak). Dosya adina -VS1 eklenir.
+KAYNAK = _arg("--kaynak", "uretec")
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
@@ -336,7 +344,8 @@ def dosya_adi():
     ad = ("kalite-olcumu-%d" % round(DOLULUK * 100) if OLCEK == 1.0
           else "kalite-olcumu-%g-%d" % (OLCEK, round(DOLULUK * 100)))
     if SEVIYE:
-        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s-" % (SEVIYE, ("-" + CESIT) if CESIT else ""))
+        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s%s-" % (SEVIYE, "-VS1" if KAYNAK == "veri-seti" else "",
+                                                                     ("-" + CESIT) if CESIT else ""))
     if ETIKET:
         ad += "-" + ETIKET
     return os.path.join(BURASI, ad + ".json")
@@ -359,13 +368,13 @@ def sahne_yukle():
         if SEVIYE != "1" or DOLULUK != 0.95:
             raise SystemExit("yalniz --seviye 1 (doluluk 0.95) var")
         import merdiven
-        yol = merdiven.sahne_yolu(OLCEK)
+        yol = merdiven.sahne_yolu(OLCEK, KAYNAK)
         if not os.path.exists(yol):
-            raise SystemExit("%s yok -- once: py merdiven.py referans --olcek %g" % (yol, OLCEK))
+            raise SystemExit("%s yok -- once: py merdiven.py referans --olcek %g --kaynak %s" % (yol, OLCEK, KAYNAK))
         g = json.load(io.open(yol, encoding="utf-8"))
         if CESIT:
             g = merdiven.cesit_sahne(g, CESIT, OLCEK)
-            ref = json.load(io.open(merdiven.referans_yolu(OLCEK), encoding="utf-8"))
+            ref = json.load(io.open(merdiven.referans_yolu(OLCEK, KAYNAK), encoding="utf-8"))
             t0 = time.time()
             p = merdiven.plan_puani(g, ref["atamalar"])
             if not p or p.get("durum") != "OPTIMAL":
@@ -770,7 +779,22 @@ def gevsek_yazisi(s):
         son = "gevsek yolda da plan YOK"
     else:
         son = "iyilestirme tolerans ustunu sifirladi (taslak degil)"
-    return "GEVSEKTEN SERTE (%s sn): %s  ->  %s" % (gs.get("saniye"), adim or "adim yok", son)
+    ek = []
+    if gs.get("yeniden_arama_atlandi"):
+        ek.append("yeniden arama atlandi")
+    if gs.get("acik_parcalar"):
+        ek.append("acik adim parcalari: " + ", ".join(
+            "tohum %s %s %s sn" % (p["tohum"], p["durum"], p["saniye"]) for p in gs["acik_parcalar"]))
+    o = s.get("fazla_mesai_onarimi")
+    if o:
+        ek.append("fazla mesai onarimi: %s" % (
+            "gerek yok" if not o.get("once_dakika") else
+            "%d dk -> %s (%s, %s sn)" % (o["once_dakika"], "0" if o.get("bulundu") else "BULUNAMADI",
+                                         o.get("durum"), o.get("saniye"))
+            if o.get("denendi") else "%d dk, denenmedi (sure yok)" % o["once_dakika"]))
+    return "GEVSEKTEN SERTE (%s sn; yedek %s sn): %s  ->  %s%s" % (
+        gs.get("saniye"), gs.get("yedek_saniye"), adim or "adim yok", son,
+        ("  |  " + "  |  ".join(ek)) if ek else "")
 
 
 def etkin_ayar(ayar):
@@ -821,7 +845,7 @@ def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
                  "amac_dagilimi", "iyilesme", "ilk_asama_iyilestirme", "paralel",
                  "mola_adimi", "atamalar_sabit", "mola_adimi_alt_sinir",
                  "fazla_mesaisiz_alt_sinir", "fazla_mesai_once_sifir", "ipucu_plani",
-                 "gevsekten_serte"):                      # K-68 eki (13 Ekim)
+                 "gevsekten_serte", "fazla_mesai_onarimi"):   # K-68 eki ve ayar 3 (13 Ekim)
         s[alan] = ist.get(alan)
     # K-68 eki (ii): tam serte inilemediyse plan TASLAK; asan hucreler.
     s["taslak"] = bool(c.get("taslak"))

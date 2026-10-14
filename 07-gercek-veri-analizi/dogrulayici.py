@@ -16,7 +16,7 @@ NEDEN "BAGIMSIZ"
   kurallar.json'dan okunur (M-10: kurallar veride, kodda degil).
 
 CALISTIRMA
-  cd C:\\Users\\PC\\Desktop\\Tshift\\07-motor
+  cd C:\\Users\\PC\\Desktop\\Tshift\\07-gercek-veri-analizi
   py donusturucu.py      (once)
   py dogrulayici.py
 

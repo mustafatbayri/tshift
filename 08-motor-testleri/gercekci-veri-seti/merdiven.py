@@ -49,6 +49,16 @@ KULLANIM (PowerShell, 08-motor-testleri\\gercekci-veri-seti icinde)
   py merdiven.py turet --olcek 1.0
       -> fikstur/_sahne-L1-95.json      (referans dosyasindan; saniyeler)
   Kucuk kopya: --olcek 0.1 (dosya adlarina -0.1 eklenir).
+
+KAYNAK (14 Ekim, Mustafa 13 Ekim 23:20: "bundan sonraki testler bu json veri
+seti ... kullanarak kossun")
+  --kaynak uretec     (varsayilan) taban `uret_veri_seti` ile BELLEKTE kurulur;
+                      dosyalar _sahne-L1-95*, _referans-L1-95* (13 Ekim'e kadarki
+                      butun olcumler).
+  --kaynak veri-seti  taban DEPODAKI veri setinden (10-veri-seti/v1/veri/
+                      tshift-500.json | tshift-49.json, donustur.py); dosyalar
+                      _sahne-L1-VS1-95*, _referans-L1-VS1-95*. Yeni set (T-80):
+                      K-58 sozlesmeleri, iki haftalik gecmis, devir gecmisten.
 """
 
 import copy
@@ -72,18 +82,27 @@ BO_GECE_SAATLERI = range(0, 8)
 BO_GECE_ASGARI, BO_GECE_HEDEF = 2, 3   # K-62; hedef 3 Mustafa 12 Ekim 21:58
 DOLULUK = 0.95
 VARSAYILAN_TOHUM = 7                   # 6 Ekim on denemesinde de 7 (varsayilan arama 0..)
+KAYNAKLAR = ("uretec", "veri-seti")
+VERI_SETI = os.path.join(os.path.dirname(os.path.dirname(BURASI)), "10-veri-seti", "v1")
+VERI_SETI_DOSYASI = {1.0: "tshift-500.json", 0.1: "tshift-49.json"}
 
 
 def dosya_eki(olcek):
     return "" if float(olcek) == 1.0 else "-%s" % ("%g" % float(olcek))
 
 
-def sahne_yolu(olcek):
-    return os.path.join(BURASI, "fikstur", "_sahne-L1-95%s.json" % dosya_eki(olcek))
+def _set_eki(kaynak):
+    if kaynak not in KAYNAKLAR:
+        raise SystemExit("bilinmeyen kaynak %s (olanlar: %s)" % (kaynak, ", ".join(KAYNAKLAR)))
+    return "-VS1" if kaynak == "veri-seti" else ""
 
 
-def referans_yolu(olcek):
-    return os.path.join(BURASI, "fikstur", "_referans-L1-95%s.json" % dosya_eki(olcek))
+def sahne_yolu(olcek, kaynak="uretec"):
+    return os.path.join(BURASI, "fikstur", "_sahne-L1%s-95%s.json" % (_set_eki(kaynak), dosya_eki(olcek)))
+
+
+def referans_yolu(olcek, kaynak="uretec"):
+    return os.path.join(BURASI, "fikstur", "_referans-L1%s-95%s.json" % (_set_eki(kaynak), dosya_eki(olcek)))
 
 
 # ----------------------------------------------------------------------
@@ -94,8 +113,11 @@ def cift_yetkinlikli_sayisi(olcek):
     return max(1, int(round(CIFT_YETKINLIKLI_SATISCI * float(olcek))))
 
 
-def taban_sahne(olcek=1.0):
-    """S30-95 sahnesi + K-62 kadro kararlari. HEDEF_ASIMI YUMUSAK kalir."""
+def taban_sahne(olcek=1.0, kaynak="uretec"):
+    """S30-95 sahnesi + K-62 kadro kararlari. HEDEF_ASIMI YUMUSAK kalir.
+    `kaynak="veri-seti"`: ayni taban DEPODAKI veri setinden (bkz. modul basi)."""
+    if _set_eki(kaynak):
+        return _veri_seti_tabani(olcek)
     g = U.sahne_uret(olcek, DOLULUK)
     satiscilar = [c for c in g["calisanlar"]
                   if c.get("ekipler") == ["SATIS"] and c.get("durum", "aktif") == "aktif"]
@@ -111,6 +133,25 @@ def taban_sahne(olcek=1.0):
             t["_sahada_taban"] = min(t.get("_sahada_taban", asgari), asgari)
     g["_merdiven"] = {"seviye": "taban-1", "cift_yetkinlikli": [satiscilar[i]["id"] for i in secilen],
                       "bo_gece": {"asgari": asgari, "hedef": hedef}}
+    return g
+
+
+def _veri_seti_tabani(olcek):
+    """Veri seti v1 -> motor girdisi (`donustur.py`, backend'in yapacagi is);
+    merdiven tabani olarak HEDEF_ASIMI YUMUSAK (referans uretimi; K-67 ile
+    firma ayari SERT). Kadro kararlari (10 cift yetkinlikli, BO gece 2/3)
+    veri setinin icinde zaten var."""
+    if VERI_SETI not in sys.path:
+        sys.path.insert(0, VERI_SETI)
+    import donustur
+    g = donustur.motor_girdisi(donustur.yukle(os.path.join(VERI_SETI, "veri", VERI_SETI_DOSYASI[float(olcek)])))
+    for k in g["kurallar"]:
+        if k["kod"] == "HEDEF_ASIMI":
+            k["tur"] = "YUMUSAK"
+    g["_merdiven"] = {"seviye": "taban-1", "kaynak": "veri-seti v1 (%s)" % VERI_SETI_DOSYASI[float(olcek)],
+                      "cift_yetkinlikli": [c["id"] for c in g["calisanlar"] if len(c["ekipler"]) > 1],
+                      "bo_gece": {"asgari": max(1, int(round(BO_GECE_ASGARI * float(olcek)))),
+                                  "hedef": max(1, int(round(BO_GECE_HEDEF * float(olcek))))}}
     return g
 
 
@@ -198,7 +239,8 @@ def cesit_sahne(g, ad, olcek=1.0):
             if k["kod"] == "HEDEF_ASIMI":
                 k["tur"] = "YUMUSAK"
     elif ad == "eski_asgari":
-        eski = {(t["ekip"], t["gun"], t["saat"]): t["asgari"] for t in taban_sahne(olcek)["talep"]}
+        kaynak = "veri-seti" if str((g.get("_merdiven") or {}).get("kaynak", "")).startswith("veri-seti") else "uretec"
+        eski = {(t["ekip"], t["gun"], t["saat"]): t["asgari"] for t in taban_sahne(olcek, kaynak)["talep"]}
         for t in g["talep"]:
             t["asgari"] = min(t["hedef"], eski[(t["ekip"], t["gun"], t["saat"])])
     elif ad == "pay1":
@@ -267,10 +309,10 @@ def plan_puani(g, atamalar, saniye=120):
                         for kod, d in _amac_dagilimi(k, c).items()}}
 
 
-def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM):
+def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
     """Tabanda motoru BASKA TOHUMLA kostur; sartlari saglamazsa hata ver."""
     from cozucu.coz import coz
-    taban = taban_sahne(olcek)
+    taban = taban_sahne(olcek, kaynak)
     # Baska baslangic: birinci asamanin fazla mesaisiz denemeleri `tohum`dan
     # baslar (urun 1'den), ana aramanin tohumu da `tohum` (K-62 ilke 1).
     # Fazla mesaisiz plan bulununca fazla mesai BUTUN asamalarda 0'da tutulur
@@ -296,7 +338,7 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM):
     return {
         "atamalar": c["atamalar"],
         "kayit": {"olcek": olcek, "doluluk": DOLULUK, "tohum": int(tohum), "saniye": int(saniye),
-                  "sure_sn": round(sure, 1), "tarih": time.strftime("%Y-%m-%d %H:%M"),
+                  "kaynak": kaynak, "sure_sn": round(sure, 1), "tarih": time.strftime("%Y-%m-%d %H:%M"),
                   "cekirdek": os.cpu_count(), "makine": os.environ.get("COMPUTERNAME") or "bulut",
                   "amac_degeri": ist.get("amac_degeri"),
                   "amac_dagilimi": ist.get("amac_dagilimi"),
@@ -321,17 +363,18 @@ def _arg(ad, varsayilan, tur=str):
 if __name__ == "__main__":
     komut = sys.argv[1] if len(sys.argv) > 1 else ""
     olcek = _arg("--olcek", 1.0, float)
+    kaynak = _arg("--kaynak", "uretec")
     if komut == "referans":
-        ref = referans_uret(olcek, _arg("--saniye", 900, int), _arg("--tohum", VARSAYILAN_TOHUM, int))
-        _yaz(referans_yolu(olcek), ref)
+        ref = referans_uret(olcek, _arg("--saniye", 900, int), _arg("--tohum", VARSAYILAN_TOHUM, int), kaynak)
+        _yaz(referans_yolu(olcek, kaynak), ref)
         k = ref["kayit"]
-        print("REFERANS yazildi: %s" % referans_yolu(olcek))
+        print("REFERANS yazildi: %s" % referans_yolu(olcek, kaynak))
         print("  %d atama | amac %s | %.0f sn | tabanda denetim %s"
               % (len(ref["atamalar"]), k["amac_degeri"], k["sure_sn"], k["tabanda_denetim"]))
         komut = "turet"                                 # referanstan hemen turet
     if komut == "turet":
-        ref = json.load(io.open(referans_yolu(olcek), encoding="utf-8"))
-        g = seviye1_sahne(taban_sahne(olcek), ref["atamalar"])
+        ref = json.load(io.open(referans_yolu(olcek, kaynak), encoding="utf-8"))
+        g = seviye1_sahne(taban_sahne(olcek, kaynak), ref["atamalar"])
         d = referans_denetle(g, ref["atamalar"])
         if d["sert"] or d["asim"] or d["eksik"] or d["fazla_mesai_saat"]:
             raise SystemExit("SEVIYE 1 TUTARSIZ: referans yeni sahnede %s" % d)
@@ -339,9 +382,9 @@ if __name__ == "__main__":
         if not p or p.get("durum") != "OPTIMAL":
             raise SystemExit("REFERANSIN SEVIYE 1 PUANI HESAPLANAMADI: %s" % p)
         g["_merdiven"]["referans_puani"] = p
-        _yaz(sahne_yolu(olcek), g)
+        _yaz(sahne_yolu(olcek, kaynak), g)
         m = g["_merdiven"]
-        print("SEVIYE 1 yazildi: %s" % sahne_yolu(olcek))
+        print("SEVIYE 1 yazildi: %s" % sahne_yolu(olcek, kaynak))
         print("  %d kisi | %d hucre | hedef %d kisi-saat | asgari %d | cift yetkinlikli %d | "
               "referans yeni sahnede %s"
               % (len(g["calisanlar"]), len(g["talep"]), m["hedef_kisi_saat"],

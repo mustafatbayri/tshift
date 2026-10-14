@@ -198,3 +198,47 @@ def test_CESIT_referans_gecerli_kalir_ve_tanimi_tutar(ad):
         assert all(not (k.get("parametreler") or {}).get("ust_tolerans")
                    for k in g["kurallar"] if k["kod"] == "HEDEF_ASIMI")   # kaynak sahne degismedi
     assert g["_merdiven"].get("referans_puani")       # kaynak sahne degismedi
+
+
+# ----------------------------------------------------------------------
+# Veri seti kaynagi (14 Ekim; Mustafa 13 Ekim 23:20: "bundan sonraki testler bu
+# json veri seti ... kullanarak kossun") -- taban DEPODAKI veri setinden
+# (10-veri-seti/v1), dosyalar _sahne-L1-VS1-95*, _referans-L1-VS1-95*.
+# ----------------------------------------------------------------------
+
+def test_VS1_TABAN_veri_setinden_donusturucu_ciktisi_HEDEF_ASIMI_YUMUSAK():
+    import importlib
+    if MD.VERI_SETI not in sys.path:
+        sys.path.insert(0, MD.VERI_SETI)
+    donustur = importlib.import_module("donustur")
+    t = MD.taban_sahne(0.1, "veri-seti")
+    g = donustur.motor_girdisi(donustur.yukle(os.path.join(MD.VERI_SETI, "veri", "tshift-49.json")))
+    assert {k: v for k, v in t.items() if k not in ("_merdiven", "kurallar")} == \
+        {k: v for k, v in g.items() if k != "kurallar"}
+    assert [k["tur"] for k in t["kurallar"] if k["kod"] == "HEDEF_ASIMI"] == ["YUMUSAK"]
+    assert [k["tur"] for k in g["kurallar"] if k["kod"] == "HEDEF_ASIMI"] == ["SERT"]     # firma ayari (K-67)
+    assert t["_merdiven"]["kaynak"].startswith("veri-seti")
+    assert t["_merdiven"]["cift_yetkinlikli"] == [c["id"] for c in t["calisanlar"] if len(c["ekipler"]) > 1]
+    assert MD.sahne_yolu(0.1, "veri-seti").endswith("_sahne-L1-VS1-95-0.1.json")
+    assert MD.referans_yolu(1.0, "veri-seti").endswith("_referans-L1-VS1-95.json")
+    assert MD.sahne_yolu(1.0).endswith("_sahne-L1-95.json")                              # eski adlar aynen
+    with pytest.raises(SystemExit):
+        MD.sahne_yolu(1.0, "baska")
+
+
+@pytest.mark.parametrize("olcek", [1.0, 0.1], ids=["500", "0.1"])
+def test_VS1_REFERANS_bekcisi_seviye1_sahnesinde_TEMIZ(olcek):
+    yol_s, yol_r = MD.sahne_yolu(olcek, "veri-seti"), MD.referans_yolu(olcek, "veri-seti")
+    if olcek == 1.0 and not os.path.exists(yol_r):
+        pytest.skip("500 kisilik VS1 referansi henuz uretilmedi (Mustafa'nin makinesi: "
+                    "py merdiven.py referans --olcek 1.0 --kaynak veri-seti --saniye 900)")
+    g, ref = _yukle(yol_s), _yukle(yol_r)
+    d = MD.referans_denetle(g, ref["atamalar"])
+    assert d == {"sert": 0, "sert_kurallar": [], "asim": 0, "eksik": 0,
+                 "fazla_mesai_saat": 0.0, "yayinlanabilir": True}, (olcek, d)
+    assert ref["kayit"]["kaynak"] == "veri-seti"
+    t = MD.taban_sahne(olcek, "veri-seti")
+    sayim = MD.hucre_sayimi(t, ref["atamalar"])
+    for x in g["talep"]:
+        h = sayim[(x["ekip"], x["gun"], x["saat"])]
+        assert x["hedef"] == h and x["asgari"] == MD.asgari_kurali(h), (olcek, x)

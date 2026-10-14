@@ -17,9 +17,10 @@ Bu klasör projenin **tek doğru kaynağı**: analiz, testler, spec, demo ve kod
 | `04-kod/` | Gerçek yazılım: .NET API + Next.js arayüz + PostgreSQL. Çalışıyor. |
 | `05-inceleme/` | Dış inceleme işleri. `05-inceleme/beceriler/` altında **incelemenin nasıl yapılacağı** yazılı. |
 | `06-veri/` | Gerçek müşteri verisi. **Git'e gitmez** (gitignore). |
-| `07-motor/` | Gerçek veri analiz araçları. ⚠ Motor burada **değil**. |
+| `07-gercek-veri-analizi/` | Gerçek müşteri verisinin analiz araçları (geçmiş Excel planları, PDKS). Motor **değil**. *(14 Ekim'e kadar adı `07-motor/` idi.)* |
 | `08-motor-testleri/` | Altın senaryolar ve fikstürler. Güncel sürüm `08-motor-testleri/v5/`. |
 | **`09-motor/`** | **Planlama motoru.** `09-motor/dogrulayici/` · `09-motor/cozucu/` (CP-SAT) · `09-motor/orkestra.py`. |
+| `10-veri-seti/` | **Uydurma isimli, gerçekçi veri seti** (14 Ekim): şartname §8 tabloları, 500 + 49 kişi, JSON Schema, Excel import örneği, veri sözlüğü. Import'un (Yılmaz) ve motor testlerinin verisi. **Git'e girer** — gerçek müşteri verisi değildir (o `06-veri/`). Güncel sürüm `10-veri-seti/v1/`. |
 | `DENETIM.py` | Devir paketi denetim betiği. Her oturum sonunda koşar: `py DENETIM.py` |
 | `DEGISIM-GUNLUGU.md` | Ne zaman ne değişti — tek satırlık kayıtlar. Bir şey aradığında önce buraya bak. |
 

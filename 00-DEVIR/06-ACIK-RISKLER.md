@@ -3188,6 +3188,10 @@ birinci aşamanın payı 120'den **48**'e indi.
 saatini kişiden okuyor; K-57'nin tanımı *"sezonluk 40, stajyer 30"* örneğini
 taşıyor.
 
+**14 Ekim:** (1) kapandı — gün sayısı sözleşmede (`haftalik_gun`); eski
+tipler sezonluk → tam zamanlı, stajyer → yarı zamanlı. (2)–(3) veri seti
+işinde (`10-veri-seti/`, oturum 14 Ekim §4) başladı.
+
 **Yapılacak (sırayla, tek pencere):** (1) `gun_sayisi` sorusu Mustafa'ya
 (K-58 *"açık"*); (2) şartname §8.3 / §11.2 / K-57 metni; (3) veri seti
 üreticisi iki tipe iner — **set değişir**; (4) iki motor yarısı saati tipten
@@ -3235,6 +3239,77 @@ elle mi — `demand_profiles` ile birleşir mi.
 verilmeli.
 
 → K-68 · K-18 · şartname §5.2, §8.4 (`rule_overrides`), §8.5, §8.6
+
+---
+
+## 🟡 T-82 · Küçük ölçekte kalite **ölçülmedi** — iki aşama eşiği (50.000 değişken ≈ 40 kişi) 500'e göre konmuş
+
+**Kaynak:** 14 Ekim 01:40, Mustafa — Yılmaz'ın endişesi (13 Ekim
+toplantısı): *"500 kişi ile yaptığımız kompleks testler için kurgulanan
+çözücü 50 veya 100 kişilik basit bir senaryoda aynı kalitede çıktı
+vermeyebilir veya bozulabilir."* 01:53, Mustafa: *"Somut noktayı 50k değil
+de 100k mı yapsak … not al, merdiven verisini oluşturduğumuzda bu iki aşama
+olayını da test edelim. Merdiven testlerinde 5 kademe değil 10 kademe
+yapalım."*
+
+**Bugün ne var — iki ayrı soru.**
+
+- **Bozulma (plan çıkmaz / kurala aykırı plan):** küçük ölçek her push'ta
+  kapıda — altın senaryolar (küçük elle kurulmuş vakalar), birim testlerinin
+  çoğu 3–20 kişilik sahneler, 49 kişilik merdiven kopyası (seviye 1); her
+  plan bağımsız doğrulayıcıdan geçer, sert ihlal boyuttan bağımsız yakalanır.
+- **Kalite — ölçülmedi:**
+  1. **İki aşama eşiği 50.000 değişken** (`iki_asama_esigi`). Ölçüldü (14
+     Ekim, bulut): 49 kişi 61.220 değişken, 500 kişi 647.205 → kişi başına
+     ~1.300; eşik ≈ **40 kişi**, 100.000 ≈ **77 kişi**. Eşiğin altı tek
+     aşamalı arama; üstü iki aşama (geçerli plan → molalar sabitken
+     iyileştirme → son adımda atamalar sabit, yalnız molalar). Eşiğin rolü
+     *"çözücü hiç plan bulamıyorsa ona bir tane ver"*di; kaliteye etkisi T-50'de
+     "ölçülmedi" diye kayıtlı. 25 kişilik müşteri ile 50 kişilik müşteri bugün
+     farklı yoldan geçiyor.
+  2. 49 kişideki kalite ölçüsü **referansa göre** (referans motorun kendisi,
+     başka tohumla — K-62 ilke 1); optimuma uzaklık değil. Küçük problemde
+     uzun koşuyla en iyi plan ya da kanıtlı alt sınır alınabilir; 500'de
+     alınamıyor.
+  3. Ara boyutlar (100–400) hiç ölçülmedi.
+
+**Ticari ağırlık:** gerçek müşteri verisi 936 kişi / 7 firma
+(`07-GERCEK-VERI-BULGULARI.md` §7) → firma başına ortalama ~134 kişi.
+Ürünün asıl kullanımı küçük-orta ölçek olabilir.
+
+**Mustafa'nın önerisi: eşik 100.000.** Karar ölçümle verilecek (eşiğe
+bakmadan değiştirmek tahmin olur; hangi yönün iyi olduğu bilinmiyor).
+
+**Yapılacak — ölçek merdiveni (14 Ekim gece bloğundan sonra):**
+
+- VS1 veri setinden **10 kademe**. Öneri (Mustafa'nın onayında): 25 · 50 ·
+  75 · 100 · 150 · 200 · 250 · 300 · 400 · 500 kişi — 25–75 eşiğin iki
+  yanı, 100–200 müşterilerin çoğu. Veri seti üreticisi ölçek alıyor;
+  `merdiven.py`'nin ölçek listesi genişler (bugün 1,0 ve 0,1).
+- Her kademede aynı sürede: **(a)** ürün yolu (bugünkü eşik), **(b)** tek
+  aşamalı yol (`ipucu_kapali` = eşik sonsuz; eşiğin altında ürün yolu zaten
+  budur). (a) ile (b)'nin yer değiştirdiği kademe eşiği verir; 50.000 /
+  100.000 adayları buradan okunur.
+- **≤ 100 kişide 1 saatlik uzun koşu** → en iyi bilinen plan ya da kanıtlı
+  alt sınır → ürün yolunun gerçek mesafesi (%).
+- **Karar kuralı koşudan önce yazılır** (ör. "herhangi bir kademede ürün yolu
+  en iyi alternatiften %X kötüyse ayar boyuta bağlanır"; X Mustafa'da).
+
+**İkinci makine (Mustafa, 01:53):** eski oyun laptopu, merdiven testlerinde
+ikinci koşu hattı. Kurallar: kıyaslanan iki yapılandırma **aynı makinede**
+koşar (çekirdek ve ısınma farkı sonuçları karıştırır); her çıktıda makine
+adı ve çekirdek sayısı (`kalite-olc.py` bugün yalnız çekirdek yazıyor —
+makine adı eklenecek); laptop prizde, yüksek performans güç planı, uyku
+kapalı; kurulum: Python 3.14 + `09-motor/requirements.txt` (sabit sürümler),
+ana makineyle aynı commit; **commit yalnız ana makineden** (tek yazar) —
+laptop çıktıları ana makineye taşınır, sonra commit'lenir. Bulut köprüsü
+tek makineye bağlanıyor; laptopun izlenmesi o gün konuşulacak.
+
+**Neden 🟡:** ürün bugün bozuk değil; ama müşterilerin çoğunun boyutunda
+kalite kanıtı yok ve eşiğin yeri tahmin.
+
+→ T-50 · K-62 · K-69 · `09-motor/cozucu/coz.py` (`iki_asama_esigi`) ·
+`08-motor-testleri/gercekci-veri-seti/merdiven.py`
 
 ---
 
@@ -5036,6 +5111,36 @@ kapalı → plansız (bulgu 31 bulutta tekrarlandı); açık → açık adım 5,
 toplam aşımı **0**'a indirdi (OPTIMAL) — plan sert kurala uyuyor, taslak
 değil. 500'de ölçülmedi — sıradaki blok (oturum 13 Ekim §7: 900 ve 1200 sn ×
 3, `tol1` / `tol2` × 2).
+
+**K-68 ölçüldü (13 Ekim 19:31–21:23, Mustafa'nın makinesi, 6 çekirdek,
+`17779f3`; `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-gevsek-900.json`,
+`08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-gevsek-1200.json`):**
+
+| koşu | fazla mesaisiz ilk arama (3 × 40 sn) | gevşek açık adım | sonuç | aşım | sert | fazla mesai | amaç (fazla mesai hariç) |
+|---|---|---|---|---|---|---|---|
+| 900-1 | yok | OPTIMAL **204 sn** | plan | 0 | 0 | 5,0 sa | 57.053 (42.053) |
+| 900-2 | yok | OPTIMAL **52 sn** | plan | 0 | 0 | 8,75 sa | 67.537 (41.287) |
+| 900-3 | yok | OPTIMAL **132 sn** | plan | 0 | 0 | 12,5 sa | 79.737 (42.237) |
+| 1200-1 | **tohum 3, 17,9 sn** | — (gerek olmadı) | plan, normal yol | 0 | 0 | **0** | **40.492** (40.492) |
+| 1200-2 | yok | **UNKNOWN 300 sn** | **plansız** | — | — | — | — |
+| 1200-3 | yok | OPTIMAL **122 sn** | plan | 0 | 0 | 5,0 sa | 55.627 (40.627) |
+
+Referans 55.248, fazla mesai 0. "OPTIMAL" açık adımda = toplam aşım 0'a indi (alt sınır 0): plan doğrudan sert kurala uydu, daraltma adımlarına ve taslağa hiç gerek olmadı.
+
+Okuma (oturum 13 Ekim §7'nin kuralıyla): **ölçüt 3 tuttu** — 900 × 3'te 3/3
+plan, 3/3 aşım 0, sert 0 (taban 1/3'tü). **Ama 6 koşuda 1 plansız** (1200-2):
+açık adım 300 sn'de bulamadı, ardından ana aşama sert modelde 654 sn aradı,
+bulamadı. Açık adımın süresi 52–204 sn, bir kez > 300 sn — ağır kuyruk
+(bulgu 25'in ailesi). 1200 ↔ 900: plan bulmayı değiştirmedi; fazla mesai
+hariç amaç ~%2–3 iyi (iyileştirme 394–545 → 715–960 sn, eğri her koşuda
+sona kadar iniyor); 1200-1'in iyiliği süreden değil fazla mesaisiz aramanın
+3. tohumda tutmasından. **Yeni darboğaz fazla mesai:** gevşek yoldan gelen
+4 planın 4'ünde 5–12,5 sa (kişi başı 1,2 sa, 4–8 kişi; 15.000–37.500 puan) —
+referansta 0; fazla mesai hariç motor referanstan −%24…−%27 iyi.
+`_gecerli_plan_yeniden_ara` (aşım sert, fazla mesai serbest, 120 sn) gevşek
+yolun koştuğu 5 koşunun 5'inde boşa gitti. `tol1` / `tol2` ve tam mutasyon
+koşmadı (Ctrl-C, `tol1`'in başında; iz yok, izlenen dosyalar temiz).
+**Önerilen sıradaki üç ayar Mustafa'nın onayında** (oturum 13 Ekim §8).
 
 *Önerilen sıra (17:45).* (1) ~~kuyruk ölçümü (~15–25 dk, Mustafa'nın
 makinesi)~~ *(yapıldı, 18:00)* → yeniden başlatma politikası; (2) K-63 (süre aralığı + mola adımı

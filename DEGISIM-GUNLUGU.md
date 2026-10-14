@@ -4,6 +4,31 @@ En yeni en üstte. Her satır: tarih · ne oldu · nerede.
 
 ---
 
+**2026-10-14 (02:00) · T-82 açıldı — küçük ölçekte kalite ölçülmedi (Yılmaz'ın endişesi); iki aşama eşiği 50.000 değişken ≈ 40 kişi (Mustafa'nın adayı 100.000, ölçümle); ölçek merdiveni 10 kademe; ikinci makine kuralları. Kod değişmedi.**
+→ `00-DEVIR/06-ACIK-RISKLER.md` (T-82) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §6 · `00-DEVIR/00-BURADAN-BASLA.md`
+
+---
+
+**2026-10-14 (01:45) · `07-motor/` → `07-gercek-veri-analizi/` (Mustafa 01:36: "Evet 07 ismini öyle değiştir"): adı içeriğine uymayan analiz klasörü (motor `09-motor/`); yaşayan işaretler yeni adda, karar / risk / oturum kayıtları eski adla, `DENETIM.py` eski yolları gerekçesiyle "bilerek yok"ta. 13 Ekim bloğunun "Ctrl-C ile durdu" kaydı düzeltildi (blok sürmüştü; `tol1` 2/2: 1 plan, 1 plansız).**
+→ `07-gercek-veri-analizi/` (taşındı; `OKU-BENI.md` ve üç betiğin çalıştırma satırı) · `README.md` · `00-DEVIR/00-BURADAN-BASLA.md` · `08-motor-testleri/OKU-BENI.md` · `09-motor/OKU-BENI.md` §9 · `DENETIM.py` · `00-DEVIR/oturumlar/2026-10-13-seviye1-taban-ve-ayirma.md` (düzeltme notu) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §5
+
+---
+
+**2026-10-14 (01:15) · Veri seti v1 (Yılmaz'ın import'u ve motor testleri için): şartname §8'in 23 tablosu, kiracısız (M-16), 500 + 49 kişi, uydurma Türkçe isimler, iki yayınlanmış geçmiş hafta; JSON Schema, Excel import örneği, veri sözlüğü, dönüştürücü (tablolar → motor girdisi), 19 test; merdiven ve ölçüm aracına `--kaynak veri-seti` (VS1). Bulgular: üreticinin 6 kural bayrağı katalogdan sapmış; geçmiş + sert hedef aşımı → ön kontrolde çözümsüz.**
+→ `.github/workflows/testler.yml` (motor işine "Veri seti v1" adımı) · `08-motor-testleri/gercekci-veri-seti/fikstur/_sahne-L1-VS1-95-0.1.json` + `_referans-L1-VS1-95-0.1.json` (yeni; bulutta üretildi) · `10-veri-seti/` (yeni: `OKU-BENI.md`, `v1/tablolar.py`, `v1/uret.py`, `v1/donustur.py`, `v1/belgeler.py`, `v1/VERI-SOZLUGU.md`, `v1/veri/tshift-500.json`, `v1/veri/tshift-49.json`, `v1/sema/tshift-veri-semasi.schema.json`, `v1/excel/tshift-calisan-import-ornegi.xlsx`, `v1/testler/test_veri_seti.py`) · `08-motor-testleri/gercekci-veri-seti/merdiven.py` (`--kaynak`) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` (`--kaynak`) · `08-motor-testleri/gercekci-veri-seti/testler/test_merdiven.py` · `02-spec/v1.4-master-spec.md` (§8 girişi notu) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` §4 · `00-DEVIR/00-BURADAN-BASLA.md`
+
+---
+
+**2026-10-14 (00:30) · K-68'in üç ayarı koda indi (yeniden aramayı atla — yalnız süre dolunca; gevşek yol %25 yedek dışındaki bütçeyi kullanır + 60 sn durgunluk + ölçüm seçeneği parçalı yeniden başlatma; gevşek plandan sonra fazla mesai onarımı); K-69: süre ürünün kısıtı değil (§9.4, §13.4 askıda); K-58'in açık sorusu kapandı (gün sayısı sözleşmede; sezonluk → tam, stajyer → yarı); 7 saatlik ölçüm bloğu; veri seti işi başladı.**
+→ `09-motor/cozucu/coz.py` · `09-motor/testler/test_gevsekten_serte.py` · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` (`gevsek_parca`) · `02-spec/v1.4-master-spec.md` (§9.4, §13.4, §11.3; değişiklik 70) · `00-DEVIR/08-URUN-KARARLARI.md` (K-69, K-58 kapanışı) · `00-DEVIR/06-ACIK-RISKLER.md` (T-80) · `00-DEVIR/oturumlar/2026-10-14-k68-ayarlari-ve-veri-seti.md` (yeni) · `00-DEVIR/00-BURADAN-BASLA.md` (⚠ 14 Ekim 00:30)
+
+---
+
+**2026-10-13 (23:30) · K-68 500'de ölçüldü (Mustafa'nın makinesi, `17779f3`): 900 × 3 → 3/3 plan, aşım 0, sert 0 — ölçüt 3 tuttu (taban 1/3'tü); 1200 × 3 → 2/3, bir koşu plansız (açık adım 300 sn'de bulamadı); açık adım 52–204 sn, taslağa hiç gerek olmadı; gevşek yol planlarında fazla mesai 5–12,5 sa (referans 0); 20 dk plan bulmayı değiştirmedi. `tol1` / `tol2` ve tam mutasyon Ctrl-C ile koşmadı. Üç ayar önerisi (yeniden aramayı atla, açık adıma süre, fazla mesai onarımı) Mustafa'da.**
+→ `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-gevsek-900.json` (yeni, Mustafa'nın koşusu) · `08-motor-testleri/gercekci-veri-seti/kalite-olcumu-L1-95-gevsek-1200.json` (yeni) · `08-motor-testleri/gercekci-veri-seti/planlar/kalite-olcumu-L1-95-gevsek-900/` (yeni) · `08-motor-testleri/gercekci-veri-seti/planlar/kalite-olcumu-L1-95-gevsek-1200/` (yeni) · `00-DEVIR/06-ACIK-RISKLER.md` (bulgu 31) · `00-DEVIR/08-URUN-KARARLARI.md` (K-68 ölçüldü) · `00-DEVIR/oturumlar/2026-10-13-seviye1-taban-ve-ayirma.md` §8 · `00-DEVIR/00-BURADAN-BASLA.md` (⚠ 13 Ekim 23:30)
+
+---
+
 **2026-10-13 (19:00) · K-68: hedef aşımına plan bazında üst tolerans + motor "gevşekten serte" (bulut; 500 ölçümü Mustafa'da).** Ayırma (Mustafa'nın makinesi, 900 sn × 2): `asim_yumusak` 1/2 (1.690 kişi-saat aşımla), `eski_asgari` 0/2, `pay1` 0/2 — tek kilit değil, setin darlığı. Mustafa 17:15–17:31: gevşekten serte ✅, *"firma hedeflediği kişi sayısını aralık versin"*, tolerans *"vardiya bazında … ekip bazında olmaz … zaman değişkeni önemli"*, (ii) taslak ✅, ölçüme 20 dk. Motor: SERT aşım bir değişkenin alanı [0, tolerans]; birinci aşama UNKNOWN dönerse açık → +3 → +1 → +0, inemezse taslak (`taslak_asim`, `kanitlandi_yok`); doğrulayıcı bant içi YUMUŞAK; ön kontrol ve teşhis üst sınıra göre. Bulut yatağı (seviye 1, 0,3, 300 sn, n = 1): gevşek kapalı plansız, açık 5,25 sn'de aşım 0. Testler +23, mutasyon `k68` 32; genel ilke T-81 (plan kademesi).
 → `09-motor/cozucu/coz.py` · `09-motor/cozucu/model.py` · `09-motor/cozucu/teshis.py` · `09-motor/dogrulayici/kurallar.py` · `09-motor/testler/test_hedef_asimi.py` · `09-motor/testler/test_gevsekten_serte.py` (yeni) · `09-motor/mutasyon_kostur.py` · `08-motor-testleri/gercekci-veri-seti/merdiven.py` (`tol1`, `tol2`) · `08-motor-testleri/gercekci-veri-seti/kalite-olc.py` · `08-motor-testleri/gercekci-veri-seti/testler/test_merdiven.py` · `02-spec/v1.4-master-spec.md` (§5.2 not, §6.4, §8.6, §11.3; değişiklik 69) · `00-DEVIR/08-URUN-KARARLARI.md` (K-68) · `00-DEVIR/06-ACIK-RISKLER.md` (bulgu 31 ayırma + K-68, T-81 yeni) · `00-DEVIR/oturumlar/2026-10-13-seviye1-taban-ve-ayirma.md` §5–7 · `00-DEVIR/00-BURADAN-BASLA.md` (⚠ 13 Ekim 19:00)
 
