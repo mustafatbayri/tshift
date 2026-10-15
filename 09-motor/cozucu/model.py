@@ -106,7 +106,15 @@ PROFILLER = ("DENGELI", "KAPSAMA", "CALISAN")
 AGIRLIK_TABLOSU = {
     "HEDEF_KAPSAMA":         {"DENGELI": 9, "KAPSAMA": 20, "CALISAN": 5},
     "SAAT_DENGESI":          {"DENGELI": 5, "KAPSAMA": 2,  "CALISAN": 8},
-    "TERCIH_KARSILAMA":      {"DENGELI": 3, "KAPSAMA": 1,  "CALISAN": 9},
+    # TERCIH_KARSILAMA -- K-71 (Mustafa, 14 Ekim): yari zamanlinin SOZLESME
+    # SURESININ altinda kalan her DAKIKA ceza. "Sozlesmenin altinda cagirirsak
+    # yine para oduyoruz, sirket bosa para yakiyor" -> maliyet kalemi, profil
+    # zevki degil: uc profilde ayni. Olcek fazla mesaiyle ayni mantikla: fazla
+    # mesai 1 saat = 3.000 puan (~1,5 saatlik ucret, %50 zamli) -> bosa odenen
+    # 1 saat ~ 2.000 puan (Mustafa 18:40: "agirlik ok"). CP-SAT tam sayi ister:
+    # dakika basina 33 = saatte 1.980 (2.000'e en yakin tam sayi). Eski
+    # 3 / 1 / 9 "calisan tercihi" anlaminin agirligiydi (K-22), kalkti.
+    "TERCIH_KARSILAMA":      {"DENGELI": 33, "KAPSAMA": 33, "CALISAN": 33},
     "ADALET_DENGESI":        {"DENGELI": 5, "KAPSAMA": 2,  "CALISAN": 8},
     "EKIP_SUREKLILIGI":      {"DENGELI": 2, "KAPSAMA": 1,  "CALISAN": 4},
     "PLAN_KARARLILIGI":      {"DENGELI": 6, "KAPSAMA": 6,  "CALISAN": 6},
@@ -2439,6 +2447,9 @@ class Model(object):
     def _amac(self):
         self._adalet()
         self._saat_dengesi()
+        self._tercih_karsilama()
+        self._ekip_surekliligi()
+        self._plan_kararliligi()
         self._rotasyon()
         if self.cezalar:
             self.m.Minimize(sum(a * v for a, v in self.cezalar))
@@ -2738,6 +2749,158 @@ class Model(object):
                 sapma = self.m.NewIntVar(0, 100000, "sd_%s" % c["id"])
                 self._kisit(sapma >= gereken_dk - dakika)
                 self.cezalar.append((agirlik, sapma))
+
+
+    def _tercih_karsilama(self):
+        """TERCIH_KARSILAMA -- K-71 (Mustafa, 14 Ekim 2026). YUMUSAK.
+
+        Yari zamanli calisan SOZLESME SURESINE getirilir. Sartname #6.8'in
+        eski anlami ("calisan tercihi", sonra "uygunluk esnekliginin kullanim
+        orani" -- K-13 / K-22) olculebilir degildi; 14 Ekim mevzuat taramasi
+        (T-83): kismi sureli sozlesmede haftalik sure sozlesmede BELIRLENIR ve
+        her hafta ODENIR (Is K. m. 13; yonetmelik: emsalin 2/3'une kadar).
+        Mustafa (17:05): "calisan sozlesmesine sure girelim ... motor yari
+        zamanliya bu sureyi getirmeye calissin. Sonucta sozlesmenin altinda
+        cagirirsak yine para oduyoruz."
+
+        KURULUM: `sozlesme.haftalik_saat` dolu yari zamanli icin
+            tk_<kisi> >= borc_dakika - planlanan_dakika,   ceza = agirlik x tk
+        Borc tam zamanlidaki gibi hesaplanir (`_borc_dakika`: izin gunu
+        dusurur, `gun_sayisi` yoksa 6). Ust sinir ayri ve SERT
+        (PART_TIME_LIMIT, 45 sa -- K-39); bu kural yalniz ALT tarafa bakar.
+
+        ⚠ YUMUSAK, SERT DEGIL (Mustafa: "getirmeye calissin"): talep
+          yetmiyorsa plan cozumsuz olmaz, puan kaybeder. Tam zamanlida ayni
+          is SERT (K-39): orada eksik calisma "boyle plan yapilmaz"; burada
+          sozlesme kucuk, talep dalgali -- karar Mustafa'nin.
+        ⚠ `haftalik_saat` YOKSA kural o kisiye uygulanmaz (eski setler: yari
+          zamanlida alan yok -> plan degismez; K-58'in o kismi K-71 ile yalniz
+          yari zamanli icin acildi, veri seti v2 alani doldurur).
+        ⚠ Dogrulayicida AYNI kural bagimsiz yazili (kurallar.tercih_karsilama,
+          saat cinsinden) -- #7.6.
+        """
+        k = _kural(self.girdi, "TERCIH_KARSILAMA")
+        if not k:
+            return
+        agirlik = self._agirlik("TERCIH_KARSILAMA", k)
+        for c in self.calisanlar:
+            soz = c.get("sozlesme") or {}
+            if soz.get("tip") != "yari_zamanli" or soz.get("haftalik_saat") is None:
+                continue
+            gereken_dk = _borc_dakika(c)
+            if gereken_dk <= 0:
+                continue
+            dakika = sum(int(round(_net_saat(t) * 60)) * self._X(c["id"], d, t["id"])
+                         for d in self.gunler for t in self._sablonlari(c))
+            eksik = self.m.NewIntVar(0, gereken_dk, "tk_%s" % c["id"])
+            self._kisit(eksik >= gereken_dk - dakika)
+            self.cezalar.append((agirlik, eksik))
+
+
+    def _ekip_surekliligi(self):
+        """EKIP_SUREKLILIGI -- K-72 (Mustafa, 14 Ekim 2026: "Ekip surekliligi
+        ok"). YUMUSAK. Sartname #6.5: "Ayni kisiler mumkun oldugunca ayni
+        ekiple calissin", agirlik 2 / 1 / 4.
+
+        TANIM (a): birden cok ekibe uye kisi (K-50) BIRINCIL ekibinin
+        sablonunda calissin; baska ekibin sablonuna her atama 1 x agirlik --
+        "odunc" yalniz gerekince. Ayrimi sozlesme tipi degil VERI yapar:
+          * `birincil_ekip` dolu -> kisi o ekibin kisisidir, odunc cezalidir;
+          * `birincil_ekip` YOK -> kisi "gezici"dir (employee_teams onceligi
+            esit), ceza yazilmaz. Eski fiksturlerde alan yok -> plan degismez.
+        Tek ekipli kisiye hic etkisi yok (atama zaten o ekibe).
+
+        KURULUM: kisi basina `es_<kisi>` = birincil disi atama sayisi (0..7);
+        ceza = agirlik x es. `birincil_ekip` kisinin ekipleri arasinda degilse
+        not dusulur, kural o kisiye uygulanmaz (sessiz gecmemek icin).
+        ⚠ Dogrulayicida ayni kural bagimsiz yazili (kurallar.ekip_surekliligi).
+        """
+        k = _kural(self.girdi, "EKIP_SUREKLILIGI")
+        if not k:
+            return
+        agirlik = self._agirlik("EKIP_SUREKLILIGI", k)
+        for c in self.calisanlar:
+            birincil = c.get("birincil_ekip")
+            if not birincil:
+                continue                                   # gezici: ceza yok
+            if birincil not in (c.get("ekipler") or []):
+                self.notlar.append("EKIP_SUREKLILIGI: %s'in birincil ekibi %r ekipleri arasinda degil; "
+                                   "kural bu kisiye uygulanmadi" % (c["id"], birincil))
+                continue
+            disarida = [self._X(c["id"], d, t["id"])
+                        for d in self.gunler for t in self._sablonlari(c)
+                        if t.get("ekip") is not None and t["ekip"] != birincil]
+            disarida = [x for x in disarida if not isinstance(x, int)]
+            if not disarida:
+                continue                                   # tek ekip ya da baska ekibin sablonu yok
+            es = self.m.NewIntVar(0, len(self.gunler), "es_%s" % c["id"])
+            self._kisit(es == sum(disarida))
+            self.cezalar.append((agirlik, es))
+
+
+    def _plan_kararliligi(self):
+        """PLAN_KARARLILIGI -- K-70 (Mustafa, 14 Ekim 2026). YUMUSAK, 6 / 6 / 6.
+
+        Sartname #6.5 "Yeniden planlamada mevcut atamalar korunsun". Kapsam
+        (Mustafa 15:26: "aynı haftanın yeniden planlanmasında çalışsın"): kural
+        YALNIZ `mevcut_plan` (ayni haftanin yayinlanmis plani, K-54 akisi)
+        varken etkindir -- biri hastalandi, yonetici duzenledi / kilitledi,
+        motor yeniden kosuyor. Haftadan haftaya benzerlik motor kurali DEGIL:
+        arayuz (klonla, duzenle, kilitle). Eskiden `mevcut_plan` yalniz
+        baslangic ipucuydu; ondan uzaklasmanin bedeli yoktu -- bir kisi icin
+        onlarca kisinin vardiyasi degisebiliyordu.
+
+        BIRIM: KISI-GUN. Donmus olmayan her (kisi, gun) icin `pk_<kisi>_<gun>`
+        (0/1):
+          * mevcut planda vardiya VARDI -> pk >= 1 - (ayni sablonlardan biri
+            korundu): sablon degisti ya da vardiya kaldirildi = 1;
+          * mevcut planda vardiya YOKTU -> pk >= calisiyor: bos gune vardiya
+            eklendi = 1 (calisanin serbest gunu gitti).
+        Yalniz mola yeri degisirse SAYILMAZ (x uzerinden; mola adimi K-60'in
+        isi). Bu uc ayrinti K-70'te "koda inerken sorulacak" diye yazili --
+        oneri uygulandi, Mustafa itiraz ederse degisir.
+        Donmus gunler kiyas disi (zaten sabit, K-54). Mevcut plandaki kisi
+        kadroda yoksa (ayrildi / pasif) satiri atlanir, not duser (degisim
+        kacinilmaz). Satir hicbir sablona oturmazsa not duser.
+        ⚠ Dogrulayicida ayni kural bagimsiz yazili (kurallar.plan_kararliligi).
+        """
+        k = _kural(self.girdi, "PLAN_KARARLILIGI")
+        if not k or self.mevcut_plan is None:
+            return
+        agirlik = self._agirlik("PLAN_KARARLILIGI", k)
+        kisiler = {c["id"]: c for c in self.calisanlar}
+        eski = {}
+        kadro_disi = set()
+        for a in self.mevcut_plan or []:
+            d = a.get("gun")
+            if d not in self.gunler or d in self.donmus:
+                continue
+            c = kisiler.get(a.get("calisan"))
+            if c is None:
+                kadro_disi.add(a.get("calisan"))
+                continue
+            t = self._sablon_esle(c, a)
+            if t is None:
+                self.notlar.append("PLAN_KARARLILIGI: mevcut planda %s gun %s satiri hicbir sablona "
+                                   "oturmadi; kiyas disi" % (a.get("calisan"), d))
+                continue
+            eski.setdefault((c["id"], d), set()).add(t["id"])
+        if kadro_disi:
+            self.notlar.append("PLAN_KARARLILIGI: mevcut plandaki %d kisi kadroda yok (%s); "
+                               "satirlari kiyas disi (degisim kacinilmaz)"
+                               % (len(kadro_disi), ", ".join(sorted(map(str, kadro_disi)))))
+        for c in self.calisanlar:
+            for d in self.gunler:
+                if d in self.donmus:
+                    continue
+                pk = self.m.NewBoolVar("pk_%s_%d" % (c["id"], d))
+                sablonlar = eski.get((c["id"], d))
+                if sablonlar:
+                    korunan = sum(self._X(c["id"], d, tid) for tid in sablonlar)
+                    self._kisit(pk >= 1 - korunan)
+                else:
+                    self._kisit(pk >= self._calisiyor(c["id"], d))
+                self.cezalar.append((agirlik, pk))
 
 
 def _borc_dakika(c):

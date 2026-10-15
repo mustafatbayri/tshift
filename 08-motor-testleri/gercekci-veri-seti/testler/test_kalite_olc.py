@@ -18,6 +18,7 @@ KOSTURMA
 """
 
 import importlib.util
+import json
 import os
 import sys
 
@@ -476,3 +477,136 @@ def test_kosu_ve_ozet_mola_adimi_kosusunda_None_sinirla_COKMEZ_yeni_alanlari_SAK
     assert "once fazla mesaisiz: UYGULANMADI" in capsys.readouterr().out
     assert "None%" not in cikti and "%None" not in cikti, cikti
     assert "fm disi" in cikti
+
+
+# ----------------------------------------------------------------------
+# OPTIMUM HESABI (Mustafa 14 Ekim 22:09: "puan puan, % bilgileriyle; ne ne
+# kadar etkiledi") -- kayittaki sayilari duzenler, yeniden hesaplamaz.
+# ----------------------------------------------------------------------
+
+def _kosu_kaydi():
+    """14 Ekim kisa blogunun 3. tekrari (VS1 1800, Mustafa'nin makinesi) --
+    sayilar kayittan; egri ve plan alanlari kirpildi."""
+    return {"yapilandirma": "varsayilan", "tekrar": 3, "durum": "cozuldu", "amac_degeri": 116313,
+            "mola_adimi": True, "mola_adimi_alt_sinir": 116271, "ana_asama_butce_sn": 358.13,
+            "amac_dagilimi": {"FAZLA_MESAI": {"ceza": 66000, "deger": 1320, "degisken": 345, "pay_yuzde": 56.7},
+                              "MOLA_KAPSAMASI": {"ceza": 28539, "deger": 4077, "degisken": 415, "pay_yuzde": 24.5},
+                              "ADALET_DENGESI": {"ceza": 21270, "deger": 4254, "degisken": 9196, "pay_yuzde": 18.3},
+                              "HEDEF_KAPSAMA": {"ceza": 297, "deger": 33, "degisken": 415, "pay_yuzde": 0.3},
+                              "VARDIYA_ROTASYON_YONU": {"ceza": 207, "deger": 69, "degisken": 3118, "pay_yuzde": 0.2}},
+            "fazla_mesai_once_sifir": {"bulundu": False, "saniye": 22.28},
+            "gevsekten_serte": {"denendi": True, "tam_sert": True, "saniye": 772.96,
+                                "adimlar": [{"tavan": "acik", "durum": "OPTIMAL", "saniye": 772.95,
+                                             "ilk_cozum_saniye": 700.5, "cozum_sayisi": 3, "toleransin_ustunde_asim": 0}]},
+            "ilk_asama_iyilestirme": {"saniye": 345.31, "amacsiz_amac": 1330895, "iyilesmis_amac": 145888,
+                                      "cozum_sayisi": 637, "optimum": False, "ipucusuz": False, "plan_bulundu": True,
+                                      "amac_dagilimi": {"FAZLA_MESAI": {"ceza": 66000, "deger": 1320},
+                                                        "MOLA_KAPSAMASI": {"ceza": 58114, "deger": 8302},
+                                                        "ADALET_DENGESI": {"ceza": 21270, "deger": 4254},
+                                                        "HEDEF_KAPSAMA": {"ceza": 297, "deger": 33},
+                                                        "VARDIYA_ROTASYON_YONU": {"ceza": 207, "deger": 69}}},
+            "fazla_mesai_onarimi": {"denendi": True, "asama": "iyilestirme_sonu", "once_dakika": 1320,
+                                    "once_amac": 145888, "bulundu": False, "sonra_amac": None, "kabul": False,
+                                    "saniye": 297.93, "durum": "UNKNOWN"},
+            "iyilesme": {"ilk_amac": 145888.0, "son_amac": 116313.0, "cozum": 269}}
+
+
+REFERANS_VS1 = {"amac": 62606, "dagilim": {"ADALET_DENGESI": {"ceza": 20890}, "FAZLA_MESAI": {"ceza": 0},
+                                           "HEDEF_KAPSAMA": {"ceza": 0}, "MOLA_KAPSAMASI": {"ceza": 41608},
+                                           "VARDIYA_ROTASYON_YONU": {"ceza": 108}}}
+
+
+def test_OPTIMUM_HESABI_kalem_kalem_puan_yuzde_ve_referans_farki():
+    h = KO.optimum_hesabi(_kosu_kaydi(), REFERANS_VS1)
+    oz = h["ozet"]
+    assert oz["amac"] == 116313 and oz["referans"] == 62606 and oz["fark"] == 53707 and oz["fark_yuzde"] == 85.8
+    assert oz["fm_disi_amac"] == 50313 and oz["fm_disi_referans"] == 62606 and oz["fm_disi_fark_yuzde"] == -19.6
+    k = {x["kural"]: x for x in h["kalemler"]}
+    assert [x["kural"] for x in h["kalemler"]][:2] == ["FAZLA_MESAI", "MOLA_KAPSAMASI"]      # cezaya gore sirali
+    fm = k["FAZLA_MESAI"]
+    assert fm["ham"] == 1320 and fm["birim"] == "dakika" and fm["agirlik"] == 50.0 and fm["ceza"] == 66000
+    assert fm["pay_yuzde"] == 56.7 and fm["referans_ceza"] == 0 and fm["fark"] == 66000
+    assert fm["fark_yuzde"] is None                                 # referansta 0: yuzde tanimsiz
+    assert fm["toplam_farka_pay_yuzde"] == 122.9                     # fark 53.707'nin %122,9'u fazla mesai
+    mo = k["MOLA_KAPSAMASI"]
+    assert mo["agirlik"] == 7.0 and mo["ilk_asama_ceza"] == 58114 and mo["ceza"] == 28539
+    assert mo["fark"] == -13069 and mo["fark_yuzde"] == -31.4 and mo["toplam_farka_pay_yuzde"] == -24.3
+    assert sum(x["ceza"] for x in h["kalemler"]) == 116313
+    assert abs(sum(x["pay_yuzde"] for x in h["kalemler"]) - 100.0) < 0.3
+
+
+def test_OPTIMUM_HESABI_asama_asama_ilk_plan_iyilestirme_onarim_mola():
+    h = KO.optimum_hesabi(_kosu_kaydi(), REFERANS_VS1)
+    a = h["asamalar"]
+    assert [x["asama"] for x in a] == ["ilk plan (gevsek yol, acik adim)", "ilk asama iyilestirmesi",
+                                       "fazla mesai onarimi (BULUNAMADI)", "mola adimi (atamalar sabit)"]
+    assert [x["amac"] for x in a] == [1330895, 145888, 145888, 116313]
+    assert [x["fark"] for x in a] == [None, -1185007, 0, -29575]
+    assert a[1]["fark_yuzde"] == -89.0 and a[3]["fark_yuzde"] == -20.3
+    assert a[0]["saniye"] == 772.96 and "ilk plan 700.5. sn" in a[0]["aciklama"]
+    assert "1320 dk fazla mesai kaldi" in a[2]["aciklama"]
+    assert "116271" in a[3]["aciklama"]
+    # onarim KABUL edilirse amac onarim sonrasina iner; devam adimi varsa yazilir
+    s = _kosu_kaydi()
+    s["fazla_mesai_onarimi"].update(bulundu=True, sonra_amac=140000, kabul=True)
+    s["ilk_asama_iyilestirme"]["devam"] = {"saniye": 12.5, "once_amac": 140000, "sonra_amac": 139000, "alindi": True}
+    a = KO.optimum_hesabi(s, REFERANS_VS1)["asamalar"]
+    assert [(x["asama"], x["amac"]) for x in a][2:4] == [("fazla mesai onarimi (KABUL)", 140000),
+                                                         ("iyilestirmeye devam (alindi)", 139000)]
+    assert a[2]["fark"] == -5888 and a[3]["fark"] == -1000
+    # fazla mesaisiz arama bulduysa ilk plan oradan
+    s = _kosu_kaydi()
+    s["gevsekten_serte"] = None
+    s["fazla_mesai_once_sifir"] = {"bulundu": True, "saniye": 2.48}
+    s["fazla_mesai_onarimi"] = None
+    a = KO.optimum_hesabi(s, REFERANS_VS1)["asamalar"]
+    assert a[0]["asama"] == "ilk plan (fazla mesaisiz arama)" and a[0]["saniye"] == 2.48
+
+
+def test_OPTIMUM_HESABI_referanssiz_ve_plansiz(capsys):
+    h = KO.optimum_hesabi(_kosu_kaydi(), None)
+    assert h["ozet"]["referans"] is None and h["ozet"]["fark"] is None
+    assert all(x["referans_ceza"] is None and x["fark"] is None for x in h["kalemler"])
+    KO.optimum_yazisi(h)
+    out = capsys.readouterr().out
+    assert "OPTIMUM HESABI -- amac 116313  |  fazla mesai haric 50313" in out and "referans" not in out.split("\n")[0]
+    assert KO.optimum_hesabi({"durum": "sure_yetmedi", "amac_degeri": None}, REFERANS_VS1) is None
+
+
+def test_OPTIMUM_HESABI_konsol_yazisi_ve_kayitli_dosya_raporu(tmp_path, capsys):
+    h = KO.optimum_hesabi(_kosu_kaydi(), REFERANS_VS1)
+    KO.optimum_yazisi(h)
+    out = capsys.readouterr().out
+    assert "fark +53707 puan (+85.8%)" in out and "fazla mesai haric 50313 / 62606 (-19.6%)" in out
+    assert "FAZLA_MESAI" in out and "+66000" in out and "122.9" in out
+    assert "mola adimi (atamalar sabit)" in out and "-29575" in out and "-20.3" in out
+    assert "None" not in out, out
+    # --optimum-raporu <dosya>: kayitli dosyanin her kosusu, referans dosyadan
+    dosya = tmp_path / "kalite-olcumu-test.json"
+    dosya.write_text(json.dumps({"kisi": 500, "hucre": 415, "saniye": 1800, "cekirdek": 6, "tarih": "2026-10-14 19:35",
+                                 "referans": REFERANS_VS1,
+                                 "kosular": [{"yapilandirma": "varsayilan", "tekrar": 1, "durum": "sure_yetmedi",
+                                              "amac_degeri": None}, _kosu_kaydi()]}, ensure_ascii=False),
+                     encoding="utf-8")
+    KO.optimum_raporu(str(dosya))
+    out = capsys.readouterr().out
+    assert "DOSYA : kalite-olcumu-test.json" in out and "500 kisi" in out
+    assert "varsayilan (tekrar 1): sure_yetmedi" in out and "plan yok -- optimum hesabi yok" in out
+    assert "varsayilan (tekrar 3): cozuldu" in out and "fark +53707 puan (+85.8%)" in out
+
+
+def test_OPTIMUM_HESABI_kosu_kaydinda_ve_yazim_hatasi_olcumu_DURDURMAZ(monkeypatch, capsys):
+    """kosu() sonunda `optimum_hesabi` alani yazilir; sunum hatasi kosuyu
+    bozmaz (plan ve sayilar kayitta kalir, hata ayri alana)."""
+    g = _fm_sahnesi()
+    ayar = dict(azami_saniye=20, durgunluk_saniye=3, iki_asama_esigi=0, isci_sayisi=2)
+    s = KO.kosu(g, "varsayilan", dict(ayar))
+    assert s["optimum_hesabi"]["ozet"]["amac"] == s["amac_degeri"]
+    assert s["optimum_hesabi"]["ozet"]["referans"] is None               # seviye 1 degil: referans yok
+    assert sum(x["ceza"] for x in s["optimum_hesabi"]["kalemler"]) == s["amac_degeri"]
+    assert "OPTIMUM HESABI -- amac %d" % s["amac_degeri"] in capsys.readouterr().out
+    monkeypatch.setattr(KO, "optimum_yazisi", lambda h, girinti="": (_ for _ in ()).throw(RuntimeError("yazim")))
+    s = KO.kosu(g, "varsayilan", dict(ayar))
+    assert s["durum"] == "cozuldu" and s["amac_degeri"] is not None
+    assert s["optimum_hesabi_hatasi"] == "yazim"
+    assert "optimum hesabi yazilamadi: yazim" in capsys.readouterr().out

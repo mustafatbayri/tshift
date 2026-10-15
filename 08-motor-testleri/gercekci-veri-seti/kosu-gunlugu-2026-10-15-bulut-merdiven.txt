@@ -1,0 +1,19 @@
+23:59:16  MERDIVEN ZINCIRI BASLADI (bulut, 2 cekirdek)
+23:59:16  kademe 0.05: uretec referansi (180 sn)
+00:02:21  kademe 0.05: uretec referansi cikis 1
+00:02:21  kademe 0.05: uretec referansi YOK (plan bulunamadi) -- kademe atlandi
+00:02:21  kademe 0.15: uretec referansi (300 sn)
+00:05:38  ZINCIR DURDURULDU (kademe listesi degisti: 1000'e kadar; referans yolu iki asamaya zorlanacak)
+00:06:58  MERDIVEN ZINCIRI YENIDEN BASLADI (bulut, 2 cekirdek; 1000 kisiye kadar; referans iki asamaya zorlandi)
+00:06:58  kademe 0.05: uretec referansi (180 sn)
+00:09:29  kademe 0.05: uretec referansi cikis 1
+00:09:29  kademe 0.05: uretec referansi YOK (plan bulunamadi) -- kademe atlandi
+00:09:29  kademe 0.2: uretec referansi (420 sn)
+00:12:03  kademe 0.05: uretec referansi YENIDEN (180 sn; fazla mesaisiz kanitli yoksa kabul)
+00:14:34  kademe 0.05: uretec referansi cikis 1
+00:14:35  kademe 0.05: veri seti v2 cikis 0
+00:14:35  kademe 0.05: VS2 referansi (180 sn)
+00:14:35  kademe 0.05: VS2 referansi cikis 1
+00:15:30  kademe 0.2: uretec referansi cikis 1
+00:15:30  kademe 0.2: uretec referansi YOK (plan bulunamadi) -- kademe atlandi
+00:15:30  kademe 0.3: uretec referansi (600 sn)

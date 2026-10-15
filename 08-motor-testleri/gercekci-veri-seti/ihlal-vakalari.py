@@ -278,6 +278,39 @@ def _(g, p):
               "bas": 10, "bit": 18, "molalar": []})
 
 
+@vaka("TERCIH_KARSILAMA", "Yari zamanliya 30 saatlik sozlesme suresi yazilir, planda vardiyasi SILINIR (0 sa)")
+def _(g, p):
+    """K-71 (14 Ekim). Sozlesme suresinin altinda planlanan yari zamanli:
+    eksik saat bosa odenen saattir. DAR: tek kisi, yalniz bu kural (saat
+    kurallari ust sinira bakar, 0 saat onlari kirmaz). Eski sette yari
+    zamanlinin `haftalik_saat`i yok -> vaka alani yazar."""
+    c = next(c for c in g["calisanlar"]
+             if (c.get("sozlesme") or {}).get("tip") == "yari_zamanli" and c.get("durum", "aktif") == "aktif")
+    c["sozlesme"]["haftalik_saat"] = 30
+    p[:] = [a for a in p if a["calisan"] != c["id"]]
+
+
+@vaka("EKIP_SUREKLILIGI", "Tek ekipli kisiye ikinci ekip + birincil ekip yazilir, bir vardiyasi OTEKI ekibe cevrilir")
+def _(g, p):
+    """K-72 (14 Ekim). `birincil_ekip` dolu kisinin baska ekibin vardiyasina
+    atanmasi "odunc"tur; kisi basina sayilir. DAR: tek kisi, tek vardiya;
+    atamanin `ekip`i degisir, saatleri degil (saat kurallari susar)."""
+    a = next(a for a in p if a.get("ekip"))
+    c = next(c for c in g["calisanlar"] if c["id"] == a["calisan"])
+    oteki = next(e for e in {t["ekip"] for t in g["vardiya_sablonlari"] if t.get("ekip")} if e != a["ekip"])
+    c["ekipler"] = list(dict.fromkeys(list(c.get("ekipler") or [a["ekip"]]) + [oteki]))
+    c["birincil_ekip"] = a["ekip"]
+    a["ekip"] = oteki
+
+
+@vaka("PLAN_KARARLILIGI", "Mevcut plan = plan eksi bir satir: o kisi-gun 'eklenen' sayilir")
+def _(g, p):
+    """K-70 (14 Ekim). Ayni haftanin yeniden planlanmasi: `mevcut_plan`
+    (yayinlanmis plan) verilir, yeni planda bir kisi-gun fazla -> 1 ihlal.
+    DAR: plan degismez, yalniz girdiye mevcut plan eklenir."""
+    g["mevcut_plan"] = copy.deepcopy(p[1:])
+
+
 @vaka("CAKISMA_YOK", "Ayni kisiye ayni gun ortusen iki vardiya")
 def _(g, p):
     a = p[0]

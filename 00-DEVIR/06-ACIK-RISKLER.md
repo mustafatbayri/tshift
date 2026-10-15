@@ -3282,10 +3282,30 @@ bakmadan değiştirmek tahmin olur; hangi yönün iyi olduğu bilinmiyor).
 
 **Yapılacak — ölçek merdiveni (14 Ekim gece bloğundan sonra):**
 
-- VS1 veri setinden **10 kademe**. Öneri (Mustafa'nın onayında): 25 · 50 ·
-  75 · 100 · 150 · 200 · 250 · 300 · 400 · 500 kişi — 25–75 eşiğin iki
-  yanı, 100–200 müşterilerin çoğu. Veri seti üreticisi ölçek alıyor;
-  `merdiven.py`'nin ölçek listesi genişler (bugün 1,0 ve 0,1).
+- ~~VS1 veri setinden **10 kademe**. Öneri (Mustafa'nın onayında): 25 · 50 ·
+  75 · 100 · 150 · 200 · 250 · 300 · 400 · 500 kişi.~~ **Mustafa 15 Ekim
+  00:03: *"Ölçekleri böyle düşünmüyorum, daha stratejik ve zora doğru
+  götürmek istiyorum. 1000'e kadar gitmeli."*** Yeni öneri (onayında):
+  **25 · 49 · 100 · 151 · 200 · 300 · 400 · 500 · 751 · 1000** (üreteç
+  ölçeği 0,05 · 0,1 · 0,2 · 0,3 · 0,4 · 0,6 · 0,8 · 1,0 · 1,5 · 2,0) —
+  alt uç eşiğin iki yanı, orta müşterilerin çoğu, 500 bugünkü referans,
+  751 ve 1000 zora doğru (gerçek veri 936 kişi / 7 firma; tek firma 1000
+  bugünkü müşterilerin ötesi, strateji Mustafa'nın). Üreteç 2,0'da temiz
+  ölçekliyor (1000 kişi: Satış 570 / BO 310 / MH 140; 240 yarı zamanlı;
+  BO gece asgari 4 / hedef 6). **Dosya kararı (00:03, "hepsi gitsin"):**
+  her kademenin ham tabloları (tshift-⟨kişi⟩.json), şema ve fikstürleri git'e
+  girer. Her kademe bir **zincir**: üreteç referansı (geçmiş haftalar için)
+  → veri seti v2 (`uret.py --olcek`) → VS2 referansı; bulut zinciri
+  `kosu-gunlugu-2026-10-15-bulut-merdiven.txt` (15 Ekim 00:07'den; 751 ve
+  1000 bulutta büyük bütçeyle denenir, bulamazsa Mustafa'nın makinesi).
+- **İlk bulgu (15 Ekim 00:02, 25 kişi):** referans üretimi 180 sn'de plan
+  buldu ama **4,5 sa fazla mesaili** — model iki aşama eşiğinin (50.000
+  değişken ≈ 40 kişi) **altında** kalınca ürün yolu tek aşamalı koşuyor;
+  fazla mesaisiz ilk arama ve sert kesim yalnız iki aşamalı yolda var.
+  Yılmaz'ın endişesinin somut hali: eşiğin iki yanında **farklı yol**. Referans
+  üretimi artık her boyutta iki aşamaya zorlanır (`referans_uret`:
+  `iki_asama_esigi: 0`; test); ürün yolunun eşik davranışı merdivenin
+  ölçümü.
 - Her kademede aynı sürede: **(a)** ürün yolu (bugünkü eşik), **(b)** tek
   aşamalı yol (`ipucu_kapali` = eşik sonsuz; eşiğin altında ürün yolu zaten
   budur). (a) ile (b)'nin yer değiştirdiği kademe eşiği verir; 50.000 /
@@ -3315,7 +3335,7 @@ kalite kanıtı yok ve eşiğin yeri tahmin.
 
 ---
 
-## 🟡 T-83 · Yarı zamanlının haftalık saatine **alt sınır yok** — motor bir hafta 0, öteki hafta 45 saat yazabilir; mevzuat sözleşme süresini sabit sayıyor (`TERCIH_KARSILAMA`'nın yeni anlamı adayı)
+## 🟡 T-83 · ~~Yarı zamanlının haftalık saatine **alt sınır yok**~~ → K-71 ile `TERCIH_KARSILAMA` sözleşme süresinin altını cezalar (14 Ekim akşamı, uygulandı); açık kalan **hukukçu teyidi** (m. 13 / Yön. m. 6 okuması)
 
 **Kaynak:** 14 Ekim 15:26, Mustafa (`TERCIH_KARSILAMA` sorusuna): *"Bunun
 yasal zeminini araştırır mısın? karar veremiyorum. Öğrenci vakasındaki
@@ -3358,8 +3378,11 @@ gelmedi); maddeler hukuk bürosu yazılarından.
 **Karar (14 Ekim 17:05) → K-71:** (1) evet, yarı zamanlıya kişi başına
 sözleşme süresi; (2) motor bu süreye getirmeye çalışır (yumuşak; ağırlık
 2.000 puan / boşa ödenen saat — 18:40 onaylandı); (3) çağrı üzerine çalışma
-**kapsam dışı** (18:40). Uygulanmadı (K-71). Açık kalan: hukukçu teyidi
-(A-16).
+**kapsam dışı** (18:40). ~~Uygulanmadı (K-71).~~ **K-71 uygulandı (14 Ekim
+19:40, bulut; motor + doğrulayıcı + veri seti v2; K-71 maddesi).** Açık
+kalan yalnız hukukçu teyidi (A-16): m. 13 / Yön. m. 6 okuması hukuk bürosu
+sayfalarından; yanlışsa değişecek olan **ağırlık ve zorunluluk** (sözleşme
+süresi alanı yine kalır), kuralın kendisi değil.
 
 *Önceki karar soruları:* (1) Yarı zamanlıya kişi başına **sözleşme
 süresi** gerekir mi (yalnız yarı zamanlıda; K-58'in o kısmı yeniden açılır)?

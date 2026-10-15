@@ -1,0 +1,2204 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://tshift.example/sema/v2/tshift-veri-semasi.schema.json",
+ "title": "TShift veri seti v2",
+ "description": "Şartname §8 tabloları (M-16: kiracı alanı yok). Her tablo bir dizi; her satır tablonun kolonlarının tamamını taşır, zorunlu olmayan kolon null olabilir. Üretim: 10-veri-seti/v2/belgeler.py (tablolar.py'den).",
+ "type": "object",
+ "properties": {
+  "_meta": {
+   "type": "object",
+   "description": "Veri setinin kimliği ve sayıları."
+  },
+  "tenants": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/tenants"
+   }
+  },
+  "departments": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/departments"
+   }
+  },
+  "teams": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/teams"
+   }
+  },
+  "operational_roles": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/operational_roles"
+   }
+  },
+  "skills": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/skills"
+   }
+  },
+  "employees": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employees"
+   }
+  },
+  "employee_contracts": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employee_contracts"
+   }
+  },
+  "employee_teams": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employee_teams"
+   }
+  },
+  "employee_skills": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employee_skills"
+   }
+  },
+  "employee_availability": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employee_availability"
+   }
+  },
+  "leaves": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/leaves"
+   }
+  },
+  "employee_balances": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/employee_balances"
+   }
+  },
+  "shift_templates": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/shift_templates"
+   }
+  },
+  "rule_types": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/rule_types"
+   }
+  },
+  "tenant_rules": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/tenant_rules"
+   }
+  },
+  "plan_profiles": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/plan_profiles"
+   }
+  },
+  "demand_profiles": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/demand_profiles"
+   }
+  },
+  "demand_cells": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/demand_cells"
+   }
+  },
+  "plans": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/plans"
+   }
+  },
+  "plan_versions": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/plan_versions"
+   }
+  },
+  "assignments": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/assignments"
+   }
+  },
+  "assignment_breaks": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/assignment_breaks"
+   }
+  },
+  "plan_locks": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/plan_locks"
+   }
+  }
+ },
+ "required": [
+  "tenants",
+  "departments",
+  "teams",
+  "operational_roles",
+  "skills",
+  "employees",
+  "employee_contracts",
+  "employee_teams",
+  "employee_skills",
+  "employee_availability",
+  "leaves",
+  "employee_balances",
+  "shift_templates",
+  "rule_types",
+  "tenant_rules",
+  "plan_profiles",
+  "demand_profiles",
+  "demand_cells",
+  "plans",
+  "plan_versions",
+  "assignments",
+  "assignment_breaks",
+  "plan_locks"
+ ],
+ "additionalProperties": false,
+ "$defs": {
+  "tenants": {
+   "type": "object",
+   "title": "tenants",
+   "description": "Firmanın kendisi. M-16 ile her müşteri ayrı konteynerde olduğu için **tek satır**; başka tablolar buna anahtar tutmaz.",
+   "x-bolum": "8.1 Firma",
+   "x-kaynak": "ayar",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Firma adı."
+    },
+    "slug": {
+     "type": "string",
+     "description": "Kısa ad (adres / alt alan adı)."
+    },
+    "sektor_paketi": {
+     "enum": [
+      "cagri_merkezi",
+      "otel",
+      "perakende",
+      "saglik",
+      "uretim",
+      "bos"
+     ],
+     "description": "Kurulum sihirbazının yüklediği hazır kural seti; hiçbir kuralı bağlamaz."
+    },
+    "birim_adi": {
+     "enum": [
+      "Departman",
+      "Şube",
+      "Birim"
+     ],
+     "description": "Arayüzde \"departman\" yerine kullanılan kelime."
+    },
+    "zaman_dilimi": {
+     "type": "string",
+     "description": "IANA zaman dilimi. Motor: kiraci_saat_dilimi."
+    },
+    "hafta_baslangic": {
+     "type": "integer",
+     "description": "Haftanın ilk günü (1 = Pazartesi). Motorda gün 0 bu gündür."
+    },
+    "sektor": {
+     "enum": [
+      "turizm",
+      "ozel_guvenlik",
+      "saglik",
+      "petrol",
+      null
+     ],
+     "description": "**Yasal** sektör (K-26): gece 7,5 saat istisnasını açar. Boş = istisna yok. Motor: sektor."
+    },
+    "durum": {
+     "enum": [
+      "aktif",
+      "askida",
+      "deneme"
+     ],
+     "description": "Firma hesabının durumu."
+    },
+    "deneme_bitis": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "Deneme süresinin bitişi."
+    },
+    "cok_ekipli_sayim": {
+     "enum": [
+      "hepsi",
+      "tek"
+     ],
+     "x-sartnamede-yok": true,
+     "description": "K-50: birden çok ekibe üye çalışan bütün ekiplerine mi (`hepsi`), yalnız vardiyanın ekibine mi (`tek`) sayılır. Motor: cok_ekipli_sayim."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "ad",
+    "slug",
+    "sektor_paketi",
+    "birim_adi",
+    "zaman_dilimi",
+    "hafta_baslangic",
+    "sektor",
+    "durum",
+    "deneme_bitis",
+    "cok_ekipli_sayim"
+   ],
+   "additionalProperties": false
+  },
+  "departments": {
+   "type": "object",
+   "title": "departments",
+   "description": "Departmanlar; `ust_department_id` ile hiyerarşi. Plan bir departman için üretilir ve **alt departmanlarını kapsar** (örnekte \"Operasyon\" → Satış, Back Office, Müşteri Hizmetleri).",
+   "x-bolum": "8.2 Organizasyon",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kod": {
+     "type": "string",
+     "description": "Kısa kod; dış sistemle eşleştirme anahtarı. Motor: departmanlar[].id."
+    },
+    "ust_department_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Üst departman (hiyerarşi). Boş = en üst. → departments.id"
+    },
+    "calisma_tipi": {
+     "enum": [
+      "yedi_yirmidort",
+      "saatli"
+     ],
+     "description": "7/24 mü, saatli mi (`acik` alanından türer)."
+    },
+    "acik": {
+     "anyOf": [
+      {
+       "oneOf": [
+        {
+         "const": "7/24"
+        },
+        {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "gunler",
+           "bas",
+           "bit"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "gunler": {
+            "type": "array",
+            "items": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 6
+            }
+           },
+           "bas": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 24
+           },
+           "bit": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 48
+           }
+          }
+         }
+        }
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "x-sartnamede-yok": true,
+     "description": "K-52 çalışma günleri ve saatleri: `\"7/24\"` ya da pencereler `[{gunler, bas, bit}]` (`bit` 24'ü aşabilir). Boş = kural uygulanmaz (üst departman gibi). Şartnamedeki `acilis_saat` / `kapanis_saat` bunun yerine geçti. Motor: departmanlar[].acik."
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Pasif departman planlanmaz."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "ad",
+    "kod",
+    "ust_department_id",
+    "calisma_tipi",
+    "acik",
+    "aktif"
+   ],
+   "additionalProperties": false
+  },
+  "teams": {
+   "type": "object",
+   "title": "teams",
+   "description": "Ekipler. Talep (`demand_cells`) ve vardiya şablonları ekibe bağlıdır; motorda \"ekip\".",
+   "x-bolum": "8.2 Organizasyon",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "department_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Bağlı olduğu departman. → departments.id"
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kod": {
+     "type": "string",
+     "description": "Kısa kod; motorda ekip kimliği. Motor: calisanlar[].ekipler[], talep[].ekip, vardiya_sablonlari[].ekip."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Serbest açıklama."
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Pasif ekip planlanmaz."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "department_id",
+    "ad",
+    "kod",
+    "aciklama",
+    "aktif"
+   ],
+   "additionalProperties": false
+  },
+  "operational_roles": {
+   "type": "object",
+   "title": "operational_roles",
+   "description": "Operasyonel roller (takım lideri vb.). `ROL_KAPSAMASI` kuralı bunları sayar.",
+   "x-bolum": "8.2 Organizasyon",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kod": {
+     "type": "string",
+     "description": "Kısa kod; motorda rol kimliği. Motor: calisanlar[].operasyonel_rol."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Serbest açıklama."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "ad",
+    "kod",
+    "aciklama"
+   ],
+   "additionalProperties": false
+  },
+  "skills": {
+   "type": "object",
+   "title": "skills",
+   "description": "Yetkinlikler (dil, ürün bilgisi…). `YETKINLIK_KAPSAMASI` kuralı bunları sayar.",
+   "x-bolum": "8.2 Organizasyon",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kod": {
+     "type": "string",
+     "description": "Kısa kod; motorda yetkinlik kimliği. Motor: calisanlar[].yetkinlikler[]."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Serbest açıklama."
+    },
+    "sertifika_gerekli": {
+     "type": "boolean",
+     "description": "Öyleyse çalışanda geçerlilik tarihi tutulur."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "ad",
+    "kod",
+    "aciklama",
+    "sertifika_gerekli"
+   ],
+   "additionalProperties": false
+  },
+  "employees": {
+   "type": "object",
+   "title": "employees",
+   "description": "Çalışan kartı. LDAP / API / Excel import'unun ana tablosu; eşleştirme anahtarı `personel_no`.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "personel_no": {
+     "type": "string",
+     "description": "Firma sicil no — İK entegrasyonunun eşleştirme anahtarı; benzersiz. Motorda çalışan kimliği olarak gider. Motor: calisanlar[].id."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Ad (veri setinde **uydurma**)."
+    },
+    "soyad": {
+     "type": "string",
+     "description": "Soyad (veri setinde **uydurma**)."
+    },
+    "eposta": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "E-posta (veri setinde `.test` alan adı)."
+    },
+    "telefon": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Telefon (veri setinde uydurma)."
+    },
+    "department_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Departman (birincil ekibinin departmanı). → departments.id"
+    },
+    "birincil_team_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "teams",
+     "description": "İdari ana ekip (departmanını belirler); `employee_teams`'te önceliği 1 olan ekiplerden biri. **K-72:** motorun `birincil_ekip`i buradan değil `employee_teams.oncelik`ten türetilir; gezicide (eşit öncelik) bu alan yine doludur, motor ceza uygulamaz. → teams.id"
+    },
+    "operational_role_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "operational_roles",
+     "description": "Operasyonel rol. Motor: calisanlar[].operasyonel_rol. → operational_roles.id"
+    },
+    "ise_giris": {
+     "type": "string",
+     "format": "date",
+     "description": "İşe giriş tarihi."
+    },
+    "isten_cikis": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "İşten çıkış tarihi; durum `ayrildi` ise dolu."
+    },
+    "durum": {
+     "enum": [
+      "aktif",
+      "pasif",
+      "ayrildi"
+     ],
+     "description": "Pasif ve ayrılmış çalışana atama yapılmaz (`AKTIF_CALISAN`). Motor: calisanlar[].durum (aktifse gönderilmez)."
+    },
+    "user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Uygulamaya girişi varsa kullanıcı (kimlik tabloları veri setinde yok)."
+    },
+    "dis_sistem_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "İK / LDAP sistemindeki kimlik."
+    },
+    "gece_calisma_onayi": {
+     "type": "boolean",
+     "description": "Gece 7,5 saati aşmaya yazılı onay (§6.3; sektör istisnasıyla birlikte)."
+    },
+    "gece_calisma_onay_tarihi": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "Onayın tarihi."
+    },
+    "gece_calisma_onay_belge": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Onay belgesi referansı."
+    },
+    "gece_calisamaz": {
+     "type": "boolean",
+     "x-sartnamede-yok": true,
+     "description": "K-40: \"gece vardiyası yapamaz\" işareti (`GECE_UYGUNLUGU`). Kartta tutulur, tahmin edilmez. Motor: calisanlar[].gece_calisamaz."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "personel_no",
+    "ad",
+    "soyad",
+    "eposta",
+    "telefon",
+    "department_id",
+    "birincil_team_id",
+    "operational_role_id",
+    "ise_giris",
+    "isten_cikis",
+    "durum",
+    "user_id",
+    "dis_sistem_id",
+    "gece_calisma_onayi",
+    "gece_calisma_onay_tarihi",
+    "gece_calisma_onay_belge",
+    "gece_calisamaz"
+   ],
+   "additionalProperties": false
+  },
+  "employee_contracts": {
+   "type": "object",
+   "title": "employee_contracts",
+   "description": "Sözleşmeler (dönemsel; bir çalışanın birden çok sözleşmesi olabilir, motor plan haftasında geçerli olanı kullanır). K-58: tam zamanlıya **saat tanımlanmaz** — 45 kanundan gelir. **K-71 (14 Ekim, v2):** yarı zamanlının **sözleşme süresi** `haftalik_saat`ta tutulur (zorunlu; İş K. m. 13: haftalık süre sözleşmede belirlenir, her hafta ödenir) — motor çalışanı bu süreye getirmeye çalışır (`TERCIH_KARSILAMA`, yumuşak); üst sınır 45 (K-39) ayrı. Çağrı üzerine çalışma (m. 14) kapsam dışı.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "tip": {
+     "enum": [
+      "tam_zamanli",
+      "yari_zamanli"
+     ],
+     "description": "Sözleşme tipi (K-58: yalnız iki). Motor: calisanlar[].sozlesme.tip."
+    },
+    "haftalik_saat": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "**Yarı zamanlıda zorunlu (K-71):** sözleşmedeki haftalık süre (saat; en çok emsalin 2/3'ü = 30, Kısmi Süreli Çalışma Yön. m. 6). Tam zamanlıda **boş** (45 kanundan, K-58). Motor eksik kalan dakikayı cezalar (2.000 puan / saat ≈ 33 / dk); fazlası 45'e kadar serbest (K-39). Motor: calisanlar[].sozlesme.haftalik_saat (yalnız yarı zamanlı; tam zamanlıda 45 sabit)."
+    },
+    "haftalik_gun": {
+     "enum": [
+      5,
+      6,
+      null
+     ],
+     "x-sartnamede-yok": true,
+     "description": "Tam zamanlının haftalık çalışma günü (5 | 6) — saat değil, çalışma düzeni; izin gününü saate çevirmek için (45/6 = 7,5; 45/5 = 9). Yarı zamanlıda boş. (K-58'in açık sorusu, 14 Ekim: sözleşmede tutulur.) Motor: calisanlar[].sozlesme.gun_sayisi."
+    },
+    "baslangic": {
+     "type": "string",
+     "format": "date",
+     "description": "Sözleşme başlangıcı."
+    },
+    "bitis": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "Sözleşme bitişi; boş = süresiz (sezonluk çalışanda dolu)."
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Yürürlükte mi."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "tip",
+    "haftalik_saat",
+    "haftalik_gun",
+    "baslangic",
+    "bitis",
+    "aktif"
+   ],
+   "additionalProperties": false
+  },
+  "employee_teams": {
+   "type": "object",
+   "title": "employee_teams",
+   "description": "Ekip üyelikleri (çoğul). K-50: çalışan üye olduğu **bütün** ekiplerin kapsamasına sayılır.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "team_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "teams",
+     "description": "Ekip. Motor: calisanlar[].ekipler[]. → teams.id"
+    },
+    "oncelik": {
+     "type": "integer",
+     "description": "1 = birincil ekip; motorda listedeki sıra. **K-72 (14 Ekim, v2):** tek bir en düşük öncelik varsa o ekip `calisanlar[].birincil_ekip` olur ve `EKIP_SUREKLILIGI` kişiyi orada tutar; öncelikler **eşitse** kişi gezicidir, alan yazılmaz, ceza yok. Motor: calisanlar[].birincil_ekip (türetilir)."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "team_id",
+    "oncelik"
+   ],
+   "additionalProperties": false
+  },
+  "employee_skills": {
+   "type": "object",
+   "title": "employee_skills",
+   "description": "Çalışanın yetkinlikleri.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "skill_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "skills",
+     "description": "Yetkinlik. Motor: calisanlar[].yetkinlikler[]. → skills.id"
+    },
+    "seviye": {
+     "type": "integer",
+     "description": "1–5."
+    },
+    "sertifika_bitis": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "Geçmişse yetkinlik sayılmaz."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "skill_id",
+    "seviye",
+    "sertifika_bitis"
+   ],
+   "additionalProperties": false
+  },
+  "employee_availability": {
+   "type": "object",
+   "title": "employee_availability",
+   "description": "Uygunluk takvimi: uygun olmadığı (sert) ya da tercih ettiği / etmediği (yumuşak) zamanlar.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "tip": {
+     "enum": [
+      "uygun_degil",
+      "tercih_ediyor",
+      "tercih_etmiyor"
+     ],
+     "description": "`uygun_degil` sert (`UYGUNLUK_TAKVIMI`); tercihler yumuşak. Motor: calisanlar[].uygunluk[].tip."
+    },
+    "tekrar": {
+     "enum": [
+      "haftalik",
+      "tarihli"
+     ],
+     "description": "Her hafta mı, belli tarihler mi."
+    },
+    "gun": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "`haftalik` ise 0–6 (0 = Pazartesi). Motor: calisanlar[].uygunluk[].gun."
+    },
+    "baslangic_tarih": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "`tarihli` ise."
+    },
+    "bitis_tarih": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date",
+     "description": "`tarihli` ise."
+    },
+    "baslangic_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat (0–24). Motor: calisanlar[].uygunluk[].bas."
+    },
+    "bitis_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat (24'ü aşabilir). Motor: calisanlar[].uygunluk[].bit."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Örnek: \"Üniversite dersi\"."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "tip",
+    "tekrar",
+    "gun",
+    "baslangic_tarih",
+    "bitis_tarih",
+    "baslangic_saat",
+    "bitis_saat",
+    "aciklama"
+   ],
+   "additionalProperties": false
+  },
+  "leaves": {
+   "type": "object",
+   "title": "leaves",
+   "description": "İzinler. Motora yalnız plan haftasına düşen **tüm gün** izinler gider (K-31); onaylı olanlar bağlar, öteki durumlar bilgi olarak gider.",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "tip": {
+     "enum": [
+      "yillik",
+      "mazeret",
+      "rapor",
+      "ucretsiz",
+      "dogum",
+      "diger"
+     ],
+     "description": "İzin tipi. Motor: calisanlar[].izinler[].tip."
+    },
+    "baslangic": {
+     "type": "string",
+     "format": "date",
+     "description": "İlk izin günü."
+    },
+    "bitis": {
+     "type": "string",
+     "format": "date",
+     "description": "Son izin günü (dahil)."
+    },
+    "tum_gun": {
+     "type": "boolean",
+     "description": "Değilse saat aralığı (motora gitmez, K-31)."
+    },
+    "baslangic_saat": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "`tum_gun` değilse."
+    },
+    "bitis_saat": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "`tum_gun` değilse."
+    },
+    "durum": {
+     "enum": [
+      "talep",
+      "onayli",
+      "reddedildi",
+      "iptal"
+     ],
+     "description": "Yalnız onaylı izin motoru bağlar. Motor: calisanlar[].izinler[].durum."
+    },
+    "onaylayan_user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Onaylayan kullanıcı."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Serbest açıklama."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "tip",
+    "baslangic",
+    "bitis",
+    "tum_gun",
+    "baslangic_saat",
+    "bitis_saat",
+    "durum",
+    "onaylayan_user_id",
+    "aciklama"
+   ],
+   "additionalProperties": false
+  },
+  "employee_balances": {
+   "type": "object",
+   "title": "employee_balances",
+   "description": "**Hesaplanmış ara sonuçlar** (şartname §8'de yok — öneri). Backend bunları plan geçmişinden (yayınlanmış planların atamaları) ve PDKS ham verisinden (K-55) hesaplar; veri setinde hesaplanmış hâli verilir. Dönem = takvim ayı (`ADALET_DENGESI` penceresi).",
+   "x-bolum": "8.3 Çalışan",
+   "x-kaynak": "hesap",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "donem": {
+     "type": "string",
+     "description": "Takvim ayı, `YYYY-AA`."
+    },
+    "yil_ici_fazla_mesai_saat": {
+     "type": "number",
+     "description": "Yıl başından plan haftasına kadar fazla mesai (K-55: PDKS hamından TShift hesabı). `YILLIK_FAZLA_MESAI_TAVANI` (270) bunu okur. Motor: calisanlar[].yil_ici_fazla_mesai_saat."
+    },
+    "devir_gece": {
+     "type": "integer",
+     "description": "Bu ay plan haftasından önce tutulan gece vardiyası sayısı (`ADALET_DENGESI`). Motor: calisanlar[].devir_yuk.gece."
+    },
+    "devir_hafta_sonu": {
+     "type": "integer",
+     "description": "Bu ay önce çalışılan hafta sonu günü sayısı (K-46 gün tanımı). Motor: calisanlar[].devir_yuk.hafta_sonu."
+    },
+    "devir_cumartesi": {
+     "type": "integer",
+     "description": "Bu ay önce çalışılan cumartesi sayısı. Motor: calisanlar[].devir_yuk.cumartesi."
+    },
+    "devir_saat": {
+     "type": "number",
+     "description": "Saat boyutu — T-13 (yazılmadı); 0. Motor: calisanlar[].devir_yuk.saat."
+    },
+    "hesaplanma_zamani": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Ne zaman hesaplandı."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "employee_id",
+    "donem",
+    "yil_ici_fazla_mesai_saat",
+    "devir_gece",
+    "devir_hafta_sonu",
+    "devir_cumartesi",
+    "devir_saat",
+    "hesaplanma_zamani"
+   ],
+   "additionalProperties": false,
+   "x-sartnamede-yok": true
+  },
+  "shift_templates": {
+   "type": "object",
+   "title": "shift_templates",
+   "description": "Vardiya şablonları. Saatler **genişletilmiş saattir**: 23 – 32,25 = 23:00 – ertesi gün 08:15.",
+   "x-bolum": "8.4 Vardiya ve kural",
+   "x-kaynak": "ayar",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "department_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Boş = tüm departmanlar. → departments.id"
+    },
+    "team_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "teams",
+     "x-sartnamede-yok": true,
+     "description": "Şablonun ekibi (motor şablonu ekibe bağlar). Boş = ekipsiz (kişinin ilk ekibi). Motor: vardiya_sablonlari[].ekip. → teams.id"
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kod": {
+     "type": "string",
+     "description": "Kısa kod; motorda şablon kimliği. Motor: vardiya_sablonlari[].id."
+    },
+    "baslangic_saat": {
+     "type": "number",
+     "description": "Başlangıç (0–24). Motor: vardiya_sablonlari[].bas."
+    },
+    "bitis_saat": {
+     "type": "number",
+     "description": "Bitiş; gece yarısını aşan vardiyada 24'ten büyük. Motor: vardiya_sablonlari[].bit."
+    },
+    "mola_dk": {
+     "type": "integer",
+     "description": "Toplam mola süresi. Motor: vardiya_sablonlari[].mola_dk."
+    },
+    "mola_politikasi": {
+     "type": [
+      "array",
+      "null"
+     ],
+     "items": {
+      "type": "object",
+      "required": [
+       "tip",
+       "dakika",
+       "adet",
+       "ucretli"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "tip": {
+        "enum": [
+         "yemek",
+         "dinlenme"
+        ]
+       },
+       "dakika": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "adet": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "ucretli": {
+        "type": "boolean"
+       }
+      }
+     },
+     "description": "Mola tipleri, süreleri, adetleri (K-32). Boş = firma politikası. Motor: vardiya_sablonlari[].mola_politikasi."
+    },
+    "gunler": {
+     "type": [
+      "array",
+      "null"
+     ],
+     "items": {
+      "type": "integer"
+     },
+     "description": "Kullanılabileceği günler (0 = Pazartesi). Boş = her gün. Motor: vardiya_sablonlari[].gunler."
+    },
+    "gece_mi": {
+     "type": "boolean",
+     "description": "**Yasal** gece postası mı — yönetmelikten hesaplanır (md. 7/2), saklanır."
+    },
+    "gece_vardiyasi": {
+     "type": [
+      "boolean",
+      "null"
+     ],
+     "description": "Firma işareti (K-40 / K-43): `true` yasal olmayan şablonu da gece sayar; `false` yasal geceyi geri alamaz. Motor: vardiya_sablonlari[].gece_vardiyasi."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "x-sartnamede-yok": true,
+     "description": "Serbest açıklama."
+    },
+    "renk": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Takvim rengi."
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Pasif şablon kullanılmaz."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "department_id",
+    "team_id",
+    "ad",
+    "kod",
+    "baslangic_saat",
+    "bitis_saat",
+    "mola_dk",
+    "mola_politikasi",
+    "gunler",
+    "gece_mi",
+    "gece_vardiyasi",
+    "aciklama",
+    "renk",
+    "aktif"
+   ],
+   "additionalProperties": false
+  },
+  "rule_types": {
+   "type": "object",
+   "title": "rule_types",
+   "description": "Kural kataloğu (sistem tablosu, firmadan bağımsız) — şartname §6'nın 41 satırı. Birincil anahtar `kod`.",
+   "x-bolum": "8.4 Vardiya ve kural",
+   "x-kaynak": "sistem",
+   "properties": {
+    "kod": {
+     "type": "string",
+     "description": "Kural kodu (birincil anahtar). Motor: kurallar[].kod."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "aciklama": {
+     "type": "string",
+     "description": "Katalogdaki tanım (şartname §6)."
+    },
+    "tur": {
+     "enum": [
+      "SERT",
+      "YUMUSAK"
+     ],
+     "description": "Varsayılan tür."
+    },
+    "kategori": {
+     "enum": [
+      "uygunluk",
+      "sure",
+      "gece",
+      "kapsama",
+      "adalet",
+      "duzenleme",
+      "fazla_mesai",
+      "tercih"
+     ],
+     "description": "Katalog bölümü."
+    },
+    "yasal": {
+     "type": "boolean",
+     "description": "Kanundan mı geliyor (K-18). Satır bazlı kurallarda `false`; bayrak satırda. Motor: kurallar[].yasal."
+    },
+    "kabul_edilebilir": {
+     "type": [
+      "boolean",
+      "null"
+     ],
+     "description": "Yönetici bu ihlali kabul edip yayınlayabilir mi (K-20). Yumuşakta boş. Motor: kurallar[].kabul_edilebilir."
+    },
+    "bayrak_satir_bazli": {
+     "type": "boolean",
+     "description": "Bayraklar her gereklilik satırında mı (§5.3)."
+    },
+    "kapsam_seviyeleri": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "description": "Değerin belirlenebildiği kademeler (S sistem, K kiracı, D departman, Z sözleşme tipi, C çalışan)."
+    }
+   },
+   "required": [
+    "kod",
+    "ad",
+    "aciklama",
+    "tur",
+    "kategori",
+    "yasal",
+    "kabul_edilebilir",
+    "bayrak_satir_bazli",
+    "kapsam_seviyeleri"
+   ],
+   "additionalProperties": false
+  },
+  "tenant_rules": {
+   "type": "object",
+   "title": "tenant_rules",
+   "description": "Firmanın kural ayarları — her kural tipi için **tek satır**. Satır bazlı kurallarda (`ROL_KAPSAMASI`, `YETKINLIK_KAPSAMASI`) her gereklilik `parametreler.gereklilikler[]` içinde; motora her biri ayrı kural olarak gider.",
+   "x-bolum": "8.4 Vardiya ve kural",
+   "x-kaynak": "ayar",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "rule_type_kod": {
+     "type": "string",
+     "x-ref": "rule_types",
+     "description": "Kural tipi. Motor: kurallar[].kod. → rule_types.kod"
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Kapalı kural motora gönderilmez. Motor: kurallar[].aktif."
+    },
+    "tur_gecersiz_kilma": {
+     "enum": [
+      "SERT",
+      "YUMUSAK",
+      null
+     ],
+     "description": "Firma türü değiştirdiyse; boş = katalog türü. Motor: kurallar[].tur."
+    },
+    "agirlik": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "Yumuşaksa özel ağırlık; boş = profil ağırlığı."
+    },
+    "parametreler": {
+     "description": "Kural parametreleri. Satır bazlıda `{gereklilikler: [...]}`. Motor: kurallar[].parametreler."
+    },
+    "not": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Neden değiştirildi."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "rule_type_kod",
+    "aktif",
+    "tur_gecersiz_kilma",
+    "agirlik",
+    "parametreler",
+    "not"
+   ],
+   "additionalProperties": false
+  },
+  "plan_profiles": {
+   "type": "object",
+   "title": "plan_profiles",
+   "description": "Plan profilleri ve yumuşak kural ağırlıkları (§5.4).",
+   "x-bolum": "8.4 Vardiya ve kural",
+   "x-kaynak": "ayar",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "kod": {
+     "enum": [
+      "DENGELI",
+      "KAPSAMA",
+      "CALISAN"
+     ],
+     "description": "Profil. Motor: profil."
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Kullanıcıya açıklama."
+    },
+    "agirliklar": {
+     "description": "Kural kodu → ağırlık. Motor: agirliklar."
+    },
+    "varsayilan_mi": {
+     "type": "boolean",
+     "description": "Varsayılan profil (tek)."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "kod",
+    "ad",
+    "aciklama",
+    "agirliklar",
+    "varsayilan_mi"
+   ],
+   "additionalProperties": false
+  },
+  "demand_profiles": {
+   "type": "object",
+   "title": "demand_profiles",
+   "description": "Talep profilleri (\"Normal hafta\", \"Yaz sezonu\"…). Plan bir profili seçer.",
+   "x-bolum": "8.5 Talep",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "department_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Departman (üst departman olabilir; hücreler ekibe bağlı). → departments.id"
+    },
+    "ad": {
+     "type": "string",
+     "description": "Görünen ad."
+    },
+    "kaynak": {
+     "enum": [
+      "dogrudan",
+      "hacim",
+      "gecmis"
+     ],
+     "description": "Talep nereden geldi."
+    },
+    "kapanma_payi": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "Erlang C için (kaynak = hacim)."
+    },
+    "aktif": {
+     "type": "boolean",
+     "description": "Kullanımda mı."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "department_id",
+    "ad",
+    "kaynak",
+    "kapanma_payi",
+    "aktif"
+   ],
+   "additionalProperties": false
+  },
+  "demand_cells": {
+   "type": "object",
+   "title": "demand_cells",
+   "description": "Saatlik talep: ekip × gün × saat için asgari (sert) ve hedef (yumuşak; üstü K-67 ile sert) kişi.",
+   "x-bolum": "8.5 Talep",
+   "x-kaynak": "import",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "demand_profile_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "demand_profiles",
+     "description": "Talep profili. → demand_profiles.id"
+    },
+    "team_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "teams",
+     "description": "Ekip. Motor: talep[].ekip. → teams.id"
+    },
+    "gun": {
+     "type": "integer",
+     "description": "0–6 (0 = Pazartesi). Motor: talep[].gun."
+    },
+    "saat": {
+     "type": "integer",
+     "description": "0–23. Motor: talep[].saat."
+    },
+    "asgari_kisi": {
+     "type": "integer",
+     "description": "Altına inilemez (`ASGARI_KAPSAMA`). Motor: talep[].asgari."
+    },
+    "hedef_kisi": {
+     "type": "integer",
+     "description": "İdeal sayı (`HEDEF_KAPSAMA`; üstü `HEDEF_ASIMI`). Motor: talep[].hedef."
+    },
+    "elle_duzeltildi": {
+     "type": "boolean",
+     "description": "Erlang'dan üretilen sayı elle değiştirildi mi."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "demand_profile_id",
+    "team_id",
+    "gun",
+    "saat",
+    "asgari_kisi",
+    "hedef_kisi",
+    "elle_duzeltildi"
+   ],
+   "additionalProperties": false
+  },
+  "plans": {
+   "type": "object",
+   "title": "plans",
+   "description": "Haftalık plan (departman + hafta). Örnekte iki yayınlanmış geçmiş hafta ve üretilecek hafta.",
+   "x-bolum": "8.6 Plan",
+   "x-kaynak": "sistem",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "department_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "departments",
+     "description": "Planın departmanı; alt departmanları da kapsar. → departments.id"
+    },
+    "hafta_baslangic": {
+     "type": "string",
+     "format": "date",
+     "description": "Pazartesi. Motor: hafta_baslangic."
+    },
+    "durum": {
+     "enum": [
+      "taslak",
+      "adaylar_hazir",
+      "secildi",
+      "onayda",
+      "onayli",
+      "yayinda",
+      "arsiv"
+     ],
+     "description": "Plan durumu."
+    },
+    "demand_profile_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "demand_profiles",
+     "description": "Talep profili. → demand_profiles.id"
+    },
+    "secili_version_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "plan_versions",
+     "description": "Seçilen versiyon. → plan_versions.id"
+    },
+    "olusturan_user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Kimlik tabloları veri setinde yok; boş."
+    },
+    "onaylayan_user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Kimlik tabloları veri setinde yok; boş."
+    },
+    "onay_zamani": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Onay zamanı."
+    },
+    "yayin_zamani": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Yayın zamanı."
+    },
+    "kural_degerleri": {
+     "x-sartnamede-yok": true,
+     "description": "K-68: bu planın kural değerleri (zaman kademesi; tatil / sezon). Örnek `{\"HEDEF_ASIMI\": {\"ust_tolerans\": 1}}`. Genellemesi T-81. Motor: kurallar[].parametreler (birleştirilir)."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "department_id",
+    "hafta_baslangic",
+    "durum",
+    "demand_profile_id",
+    "secili_version_id",
+    "olusturan_user_id",
+    "onaylayan_user_id",
+    "onay_zamani",
+    "yayin_zamani",
+    "kural_degerleri"
+   ],
+   "additionalProperties": false
+  },
+  "plan_versions": {
+   "type": "object",
+   "title": "plan_versions",
+   "description": "Bir planın aday versiyonları; seçili olan yayınlanır.",
+   "x-bolum": "8.6 Plan",
+   "x-kaynak": "sistem",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "plan_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "plans",
+     "description": "Plan. → plans.id"
+    },
+    "plan_run_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Üreten motor koşusu (veri setinde yok)."
+    },
+    "profil_kod": {
+     "enum": [
+      "DENGELI",
+      "KAPSAMA",
+      "CALISAN"
+     ],
+     "description": "Profil."
+    },
+    "metrikler": {
+     "description": "Özet metrikler."
+    },
+    "secili_mi": {
+     "type": "boolean",
+     "description": "Seçili versiyon."
+    },
+    "ai_aciklama": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Üretilmiş özet."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "plan_id",
+    "plan_run_id",
+    "profil_kod",
+    "metrikler",
+    "secili_mi",
+    "ai_aciklama"
+   ],
+   "additionalProperties": false
+  },
+  "assignments": {
+   "type": "object",
+   "title": "assignments",
+   "description": "Atamalar. Yayınlanmış geçen haftanın atamaları motora `gecmis_vardiyalar` (gün −7…−1) olarak gider.",
+   "x-bolum": "8.6 Plan",
+   "x-kaynak": "sistem",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "plan_version_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "plan_versions",
+     "description": "Versiyon. → plan_versions.id"
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. → employees.id"
+    },
+    "team_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "teams",
+     "description": "Vardiyanın ekibi. → teams.id"
+    },
+    "shift_template_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "shift_templates",
+     "description": "Şablon; serbest saatte boş. → shift_templates.id"
+    },
+    "gun": {
+     "type": "integer",
+     "description": "0–6. Motor: calisanlar[].gecmis_vardiyalar[].gun (geçen hafta: gün − 7)."
+    },
+    "baslangic_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat. Motor: calisanlar[].gecmis_vardiyalar[].bas."
+    },
+    "bitis_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat. Motor: calisanlar[].gecmis_vardiyalar[].bit."
+    },
+    "kilitli": {
+     "type": "boolean",
+     "description": "Elle yapılan atamalar kilitli."
+    },
+    "kaynak": {
+     "enum": [
+      "motor",
+      "manuel",
+      "sabit",
+      "devir"
+     ],
+     "description": "Atamanın kaynağı."
+    },
+    "olusturan_user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Manuelse."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "plan_version_id",
+    "employee_id",
+    "team_id",
+    "shift_template_id",
+    "gun",
+    "baslangic_saat",
+    "bitis_saat",
+    "kilitli",
+    "kaynak",
+    "olusturan_user_id"
+   ],
+   "additionalProperties": false
+  },
+  "assignment_breaks": {
+   "type": "object",
+   "title": "assignment_breaks",
+   "description": "Atamanın molaları.",
+   "x-bolum": "8.6 Plan",
+   "x-kaynak": "sistem",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "assignment_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "assignments",
+     "description": "Atama. → assignments.id"
+    },
+    "tip": {
+     "enum": [
+      "yemek",
+      "dinlenme"
+     ],
+     "x-sartnamede-yok": true,
+     "description": "Mola tipi (motor çıktısında var)."
+    },
+    "baslangic_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat."
+    },
+    "bitis_saat": {
+     "type": "number",
+     "description": "Genişletilmiş saat."
+    },
+    "dakika": {
+     "type": "integer",
+     "description": "Süre."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "assignment_id",
+    "tip",
+    "baslangic_saat",
+    "bitis_saat",
+    "dakika"
+   ],
+   "additionalProperties": false
+  },
+  "plan_locks": {
+   "type": "object",
+   "title": "plan_locks",
+   "description": "Kilitler: yöneticinin \"bunu buraya koy\" (`sabit`) ya da \"koyma\" (`yasak`) dediği atamalar.",
+   "x-bolum": "8.6 Plan",
+   "x-kaynak": "sistem",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "description": "Birincil anahtar."
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "description": "Kaydın oluşturulma zamanı."
+    },
+    "updated_at": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "date-time",
+     "description": "Son güncelleme; hiç güncellenmediyse boş."
+    },
+    "plan_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "plans",
+     "description": "Plan. → plans.id"
+    },
+    "employee_id": {
+     "type": "string",
+     "format": "uuid",
+     "x-ref": "employees",
+     "description": "Çalışan. Motor: kilitler[].calisan. → employees.id"
+    },
+    "team_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "x-ref": "teams",
+     "x-sartnamede-yok": true,
+     "description": "Kilidin ekibi (motor kilidi ekiple alır). Motor: kilitler[].ekip. → teams.id"
+    },
+    "tip": {
+     "enum": [
+      "sabit",
+      "yasak"
+     ],
+     "description": "`sabit` = buraya koy; `yasak` = koyma."
+    },
+    "gun": {
+     "type": "integer",
+     "description": "0–6. Motor: kilitler[].gun."
+    },
+    "baslangic_saat": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "Genişletilmiş saat. Motor: kilitler[].bas."
+    },
+    "bitis_saat": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "Genişletilmiş saat. Motor: kilitler[].bit."
+    },
+    "ekleyen_user_id": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "format": "uuid",
+     "description": "Kimlik tabloları veri setinde yok; boş."
+    },
+    "not": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Serbest not."
+    }
+   },
+   "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "plan_id",
+    "employee_id",
+    "team_id",
+    "tip",
+    "gun",
+    "baslangic_saat",
+    "bitis_saat",
+    "ekleyen_user_id",
+    "not"
+   ],
+   "additionalProperties": false
+  }
+ }
+}

@@ -204,15 +204,17 @@ jobs:
         working-directory: 08-motor-testleri/gercekci-veri-seti
         run: python -m pytest testler -q
 
-      # VERI SETI v1 (14 Ekim) -- Yilmaz'in import'u ve motor testleri icin
+      # VERI SETI (14 Ekim) -- Yilmaz'in import'u ve motor testleri icin
       # sartname 8 tablolari (10-veri-seti/). Kapida olmasinin sebebi:
       # dosya, sema, sozluk ve donusturucu birbirinden kopmasin -- biri
       # degisip oteki unutulursa import'un sozlesmesi sessizce bozulur.
       # jsonschema ve openpyxl requirements'ta yok: o iki test burada
       # ATLANIR (importorskip), bagimliliksiz sema denetimi kosar.
       # Bulutta (2 cekirdek) ~70 sn; 49 kisilik cozum testi 60 sn.
-      - name: Veri seti v1 (sema, butunluk, donusturucu)
-        working-directory: 10-veri-seti/v1
+      # Yalniz GUNCEL surum kosar (v2, 14 Ekim aksami: K-71, K-72); v1 dondu,
+      # testleri elle kosulabilir (cd 10-veri-seti/v1; py -m pytest testler).
+      - name: Veri seti v2 (sema, butunluk, donusturucu)
+        working-directory: 10-veri-seti/v2
         run: python -m pytest testler -q
 
       - name: Hata halinde motor kaydi

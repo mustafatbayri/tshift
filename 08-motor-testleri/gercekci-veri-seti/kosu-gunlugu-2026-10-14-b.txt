@@ -1,0 +1,9 @@
+﻿19:23:21  KISA BLOK BASLADI
+19:25:02  09 testleri cikis 0
+19:34:17  08 testleri cikis 0
+19:35:20  10 testleri cikis 0
+19:35:20  DENETIM cikis 0 (0 = HATA yok)
+19:35:23  commit + push cikis 0
+19:35:23  VS1 varsayilan 1800 x 3 basliyor
+21:08:02  VS1 varsayilan 1800 x 3 cikis 0
+21:08:02  KISA BLOK BITTI

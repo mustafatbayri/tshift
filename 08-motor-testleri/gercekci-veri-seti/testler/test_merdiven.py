@@ -203,10 +203,11 @@ def test_CESIT_referans_gecerli_kalir_ve_tanimi_tutar(ad):
 # ----------------------------------------------------------------------
 # Veri seti kaynagi (14 Ekim; Mustafa 13 Ekim 23:20: "bundan sonraki testler bu
 # json veri seti ... kullanarak kossun") -- taban DEPODAKI veri setinden
-# (10-veri-seti/v1), dosyalar _sahne-L1-VS1-95*, _referans-L1-VS1-95*.
+# (10-veri-seti/<MD.VERI_SETI_SURUM>), dosyalar _sahne-L1-VS<n>-95*,
+# _referans-L1-VS<n>-95*. 14 Ekim gunduz v1 (-VS1), aksam v2 (-VS2: K-71, K-72).
 # ----------------------------------------------------------------------
 
-def test_VS1_TABAN_veri_setinden_donusturucu_ciktisi_HEDEF_ASIMI_YUMUSAK():
+def test_VS_TABAN_veri_setinden_donusturucu_ciktisi_HEDEF_ASIMI_YUMUSAK():
     import importlib
     if MD.VERI_SETI not in sys.path:
         sys.path.insert(0, MD.VERI_SETI)
@@ -219,18 +220,96 @@ def test_VS1_TABAN_veri_setinden_donusturucu_ciktisi_HEDEF_ASIMI_YUMUSAK():
     assert [k["tur"] for k in g["kurallar"] if k["kod"] == "HEDEF_ASIMI"] == ["SERT"]     # firma ayari (K-67)
     assert t["_merdiven"]["kaynak"].startswith("veri-seti")
     assert t["_merdiven"]["cift_yetkinlikli"] == [c["id"] for c in t["calisanlar"] if len(c["ekipler"]) > 1]
-    assert MD.sahne_yolu(0.1, "veri-seti").endswith("_sahne-L1-VS1-95-0.1.json")
-    assert MD.referans_yolu(1.0, "veri-seti").endswith("_referans-L1-VS1-95.json")
+    assert MD.VERI_SETI_SURUM == "v2" and MD.VERI_SETI_EKI == "-VS2"                   # 14 Ekim aksami
+    assert os.path.isdir(MD.VERI_SETI) and MD.VERI_SETI.endswith(os.path.join("10-veri-seti", "v2"))
+    assert MD.sahne_yolu(0.1, "veri-seti").endswith("_sahne-L1-VS2-95-0.1.json")
+    assert MD.referans_yolu(1.0, "veri-seti").endswith("_referans-L1-VS2-95.json")
+    assert t["_merdiven"]["kaynak"] == "veri-seti v2 (tshift-49.json)"
+    # v2'nin motor girdisine getirdigi alanlar (K-71, K-72) tabanda da var
+    assert all(c["sozlesme"].get("haftalik_saat") is not None for c in t["calisanlar"])
+    assert all(0 < c["sozlesme"]["haftalik_saat"] <= 30 for c in t["calisanlar"]
+               if c["sozlesme"]["tip"] == "yari_zamanli")
     assert MD.sahne_yolu(1.0).endswith("_sahne-L1-95.json")                              # eski adlar aynen
     with pytest.raises(SystemExit):
         MD.sahne_yolu(1.0, "baska")
 
 
+def test_REFERANS_URETIMI_her_boyutta_IKI_ASAMA_ve_sert_kesim(monkeypatch):
+    """15 Ekim (T-82 ilk bulgu): 25 kisilik kademede referans fazla mesaili cikti,
+    cunku esigin altinda urun yolu tek asamali -- fazla mesaisiz arama yok.
+    Referans uretimi `iki_asama_esigi: 0` ile her boyutta iki asamaya zorlanir;
+    `fazla_mesai_sifirda_tut` ve tohum kaydirma yerinde kalir."""
+    yakalanan = {}
+
+    def sahte_coz(girdi, ayar):
+        yakalanan.update(ayar)
+        return {"durum": "sure_yetmedi"}
+    import importlib
+    C = importlib.import_module("cozucu.coz")     # paket `cozucu.coz` adini fonksiyonla golgeliyor
+    monkeypatch.setattr(C, "coz", sahte_coz)
+    with pytest.raises(SystemExit):
+        MD.referans_uret(0.1, 5, tohum=7)
+    assert yakalanan["iki_asama_esigi"] == 0 and yakalanan["fazla_mesai_sifirda_tut"] is True
+    assert yakalanan["tohum_kaydirma"] == 6 and yakalanan["cozucu_parametreleri"] == {"random_seed": 7}
+    assert yakalanan["azami_saniye"] == 5
+
+
+def test_REFERANS_fazla_mesaili_yalniz_KANITLI_imkansizsa_kabul(monkeypatch):
+    """25 kisilik kademe (15 Ekim 00:09): fazla mesaisiz ilk arama INFEASIBLE ->
+    fazla mesaisiz plan kanitli yok -> referans fazla mesaili kabul edilir, kayit
+    soyler. Kanit yoksa (UNKNOWN) fazla mesaili referans REDDEDILIR (eski kural)."""
+    import importlib
+    C = importlib.import_module("cozucu.coz")
+    taban = MD.taban_sahne(0.1)
+    ref = _yukle(MD.referans_yolu(0.1))
+    kisi = [a for a in ref["atamalar"] if a["gun"] == 0][0]["calisan"]
+    fm_plan = copy.deepcopy(ref["atamalar"])
+    for a in fm_plan:                                   # bir kisiye 2 saat fazla mesai yaz
+        if a["calisan"] == kisi:
+            a["bit"] += 2
+            break
+
+    def sahte(kanit):
+        def sahte_coz(girdi, ayar):
+            return {"durum": "cozuldu", "atamalar": fm_plan, "metrikler": {},
+                    "cozum_istatistikleri": {"amac_degeri": 1, "amac_dagilimi": {},
+                                             "fazla_mesai_once_sifir": {"kanitlandi_yok": kanit, "denemeler": []}}}
+        return sahte_coz
+    d = MD.referans_denetle(taban, fm_plan)
+    assert d["fazla_mesai_saat"] > 0 and d["sert"] == 0, d
+    monkeypatch.setattr(C, "coz", sahte(False))
+    with pytest.raises(SystemExit):                     # kanit yok: red
+        MD.referans_uret(0.1, 5)
+    monkeypatch.setattr(C, "coz", sahte(True))
+    r = MD.referans_uret(0.1, 5)                        # kanitli yok: kabul, kayitta
+    assert r["kayit"]["fazla_mesaisiz_kanitli_yok"] is True
+    assert r["kayit"]["fazla_mesai_saat"] == d["fazla_mesai_saat"] > 0
+    assert "iki_asama_esigi 0" in r["kayit"]["yol"]
+
+
+def test_VS_surumu_komut_satirindan_ve_ortamdan_SECILIR_bilinmeyen_REDDEDILIR(monkeypatch):
+    """`--veri-seti v1` (kalite-olc.py ile paylasilan argv) ya da TSHIFT_VERI_SETI
+    eski surumle kosturur -- 14 Ekim -VS1 kayitlariyla kiyas icin; varsayilan v2."""
+    monkeypatch.setattr(sys, "argv", ["kalite-olc.py", "--kaynak", "veri-seti"])
+    monkeypatch.delenv("TSHIFT_VERI_SETI", raising=False)
+    assert MD._veri_seti_surumu() == "v2"
+    monkeypatch.setenv("TSHIFT_VERI_SETI", "v1")
+    assert MD._veri_seti_surumu() == "v1"
+    monkeypatch.setattr(sys, "argv", ["kalite-olc.py", "--kaynak", "veri-seti", "--veri-seti", "v2"])
+    assert MD._veri_seti_surumu() == "v2"                               # argv ortami ezer
+    monkeypatch.setattr(sys, "argv", ["x", "--veri-seti", "v9"])
+    with pytest.raises(SystemExit):
+        MD._veri_seti_surumu()
+    # modul sabitleri birbiriyle tutarli (surum -> klasor -> dosya eki)
+    assert MD.VERI_SETI.endswith(MD.VERI_SETI_SURUM) and MD.VERI_SETI_EKI == "-VS" + MD.VERI_SETI_SURUM[1:]
+    assert os.path.isdir(os.path.join(os.path.dirname(MD.VERI_SETI), "v1"))      # v1 dondu ama duruyor
+
+
 @pytest.mark.parametrize("olcek", [1.0, 0.1], ids=["500", "0.1"])
-def test_VS1_REFERANS_bekcisi_seviye1_sahnesinde_TEMIZ(olcek):
+def test_VS_REFERANS_bekcisi_seviye1_sahnesinde_TEMIZ(olcek):
     yol_s, yol_r = MD.sahne_yolu(olcek, "veri-seti"), MD.referans_yolu(olcek, "veri-seti")
     if olcek == 1.0 and not os.path.exists(yol_r):
-        pytest.skip("500 kisilik VS1 referansi henuz uretilmedi (Mustafa'nin makinesi: "
+        pytest.skip("500 kisilik %s referansi henuz uretilmedi (Mustafa'nin makinesi: " % MD.VERI_SETI_EKI[1:] +
                     "py merdiven.py referans --olcek 1.0 --kaynak veri-seti --saniye 900)")
     g, ref = _yukle(yol_s), _yukle(yol_r)
     d = MD.referans_denetle(g, ref["atamalar"])

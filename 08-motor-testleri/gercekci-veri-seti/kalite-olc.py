@@ -342,8 +342,15 @@ SEVIYE = _arg("--seviye", None)
 #   yeniden hesaplanir. Dosya adina cesit eklenir.
 CESIT = _arg("--cesit", None)
 # 14 Ekim: `--kaynak veri-seti` -> seviye 1 seti depodaki veri setinden
-#   (10-veri-seti/v1; merdiven.py --kaynak). Dosya adina -VS1 eklenir.
+#   (10-veri-seti/<merdiven.VERI_SETI_SURUM>; merdiven.py --kaynak). Dosya adina
+#   -VS<n> eklenir (14 Ekim gunduz -VS1, aksamdan sonra -VS2). `--veri-seti v1`
+#   eski surumle kosar (merdiven okur; kiyas icin).
 KAYNAK = _arg("--kaynak", "uretec")
+# 14 Ekim 22:09 (Mustafa): "kosu sonuclarina optimum hesaplamasinin detaylarini
+#   ekle -- puan puan, % bilgileriyle, ne ne kadar etkiledi". Her kosunun
+#   sonunda OPTIMUM HESABI bolumu (optimum_hesabi / optimum_yazisi); kayitli
+#   bir sonuc dosyasi icin: `py kalite-olc.py --optimum-raporu <sonuc.json>`.
+OPTIMUM_RAPORU = _arg("--optimum-raporu", None)
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
@@ -351,7 +358,8 @@ def dosya_adi():
     ad = ("kalite-olcumu-%d" % round(DOLULUK * 100) if OLCEK == 1.0
           else "kalite-olcumu-%g-%d" % (OLCEK, round(DOLULUK * 100)))
     if SEVIYE:
-        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s%s-" % (SEVIYE, "-VS1" if KAYNAK == "veri-seti" else "",
+        import merdiven
+        ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s%s-" % (SEVIYE, merdiven._set_eki(KAYNAK),
                                                                      ("-" + CESIT) if CESIT else ""))
     if ETIKET:
         ad += "-" + ETIKET
@@ -691,6 +699,170 @@ def fm_disi_amac(s):
     return s["amac_degeri"] - fm.get("ceza", 0)
 
 
+# ----------------------------------------------------------------------
+# OPTIMUM HESABI -- Mustafa 14 Ekim 22:09: "kosu sonuclarina optimum
+# hesaplamasinin detaylarini ekle; puan puan, % bilgileriyle; ne ne kadar
+# etkiledi". Iki tablo: (1) KALEM KALEM -- her yumusak kuralin ham degeri,
+# birimi, agirligi (puan/birim), cezasi, amactaki payi; referans varsa
+# referansin ayni kalemi, fark (puan ve %), ve bu farkin toplam farktaki payi;
+# ilk asama sonundaki cezasi (mola adimi neyi degistirdi). (2) ASAMA ASAMA --
+# ilk plan -> ilk asama iyilestirmesi -> fazla mesai onarimi -> devam -> mola
+# adimi: her adimda amac, fark (puan, %), sure. Sayilar hep motorun kendi
+# kaydindan (amac_dagilimi, ilk_asama_iyilestirme, fazla_mesai_onarimi,
+# iyilesme); yeniden hesap yok. Kayitli bir dosya icin `--optimum-raporu`.
+# ----------------------------------------------------------------------
+
+BIRIM = {"FAZLA_MESAI": "dakika", "HEDEF_KAPSAMA": "kisi-saat eksik", "HEDEF_ASIMI": "kisi-saat asim",
+         "HEDEF_ASIMI_TOLERANS_USTU": "kisi-saat (tolerans ustu)", "MOLA_KAPSAMASI": "hucre x en kotu ceyrek eksik kisi",
+         "ADALET_DENGESI": "ucgensel sapma birimi", "VARDIYA_ROTASYON_YONU": "geri kaydirilan saat",
+         "TERCIH_KARSILAMA": "dakika (sozlesme alti)", "EKIP_SUREKLILIGI": "birincil disi atama",
+         "PLAN_KARARLILIGI": "degisen kisi-gun", "SAAT_DENGESI": "saat"}
+
+
+def _yuzde(pay, butun):
+    if pay is None or not butun:
+        return None
+    return round(100.0 * pay / butun, 1) + 0.0          # -0.0 -> 0.0
+
+
+def optimum_hesabi(s, ref=None):
+    """Amacin nasil olustugu -- kalem kalem ve asama asama (bkz. ustteki not).
+    `ref`: merdiven referans puani {"amac", "dagilim"} ya da None. Plan yoksa
+    None. Yalniz kayittaki sayilari duzenler; hesaplamaz."""
+    if s.get("amac_degeri") is None:
+        return None
+    toplam = s["amac_degeri"]
+    dag = s.get("amac_dagilimi") or {}
+    ref_amac = ref.get("amac") if ref else None
+    ref_dag = (ref or {}).get("dagilim") or {}
+    ilk_dag = ((s.get("ilk_asama_iyilestirme") or {}).get("amac_dagilimi")) or {}
+    toplam_fark = (toplam - ref_amac) if ref_amac is not None else None
+    kalemler = []
+    for kural in sorted(set(dag) | set(ref_dag), key=lambda k: -(dag.get(k, {}).get("ceza", 0))):
+        d = dag.get(kural) or {}
+        ceza = d.get("ceza", 0)
+        ham = d.get("deger")
+        r = ref_dag.get(kural, {}).get("ceza") if ref else None
+        fark = (ceza - r) if r is not None else None
+        kalemler.append({
+            "kural": kural, "birim": BIRIM.get(kural, "birim"), "ham": ham,
+            "agirlik": (round(float(ceza) / ham, 2) if ham else None),      # puan / birim
+            "ceza": ceza, "pay_yuzde": _yuzde(ceza, toplam),
+            "ilk_asama_ceza": ilk_dag.get(kural, {}).get("ceza") if ilk_dag else None,
+            "referans_ceza": r, "fark": fark, "fark_yuzde": _yuzde(fark, r),
+            "toplam_farka_pay_yuzde": _yuzde(fark, toplam_fark) if toplam_fark else None})
+    asamalar = []
+
+    def ekle(ad, amac, saniye=None, aciklama=None):
+        onceki = next((x["amac"] for x in reversed(asamalar) if x["amac"] is not None), None)
+        fark = (amac - onceki) if (amac is not None and onceki is not None) else None
+        asamalar.append({"asama": ad, "amac": amac, "saniye": saniye, "fark": fark,
+                         "fark_yuzde": _yuzde(fark, onceki), "aciklama": aciklama})
+
+    fm0 = s.get("fazla_mesai_once_sifir") or {}
+    gs = s.get("gevsekten_serte") or {}
+    b = s.get("ilk_asama_iyilestirme") or {}
+    if b:
+        if gs.get("denendi") and gs.get("adimlar"):
+            son_adim = gs["adimlar"][-1]
+            kaynak, sn = "gevsek yol, acik adim", gs.get("saniye")
+            acik = "adim %s sn%s" % (son_adim.get("saniye"),
+                                     ("; ilk plan %s. sn" % son_adim["ilk_cozum_saniye"])
+                                     if son_adim.get("ilk_cozum_saniye") is not None else "")
+        elif fm0.get("bulundu"):
+            kaynak, sn, acik = "fazla mesaisiz arama", fm0.get("saniye"), "fazla mesai 0 ile bulundu"
+        else:
+            kaynak, sn, acik = "ilk arama", None, None
+        ekle("ilk plan (%s)" % kaynak, b.get("amacsiz_amac"), sn,
+             (acik + "; " if acik else "") + "amacsiz plan, amac degeri bu plandan")
+        ekle("ilk asama iyilestirmesi", b.get("iyilesmis_amac"), b.get("saniye"),
+             "%s cozum%s" % (b.get("cozum_sayisi"), "; OPTIMUM" if b.get("optimum") else ""))
+    o = s.get("fazla_mesai_onarimi")
+    if o and o.get("denendi"):
+        if o.get("bulundu") and o.get("kabul"):
+            ekle("fazla mesai onarimi (KABUL)", o.get("sonra_amac"), o.get("saniye"),
+                 "fazla mesaisiz plan amaci kucultt\u00fc")
+        elif o.get("bulundu"):
+            ekle("fazla mesai onarimi (RED)", o.get("once_amac"), o.get("saniye"),
+                 "fazla mesaisiz plan bulundu (%s) ama amac buyuyordu, eski plan kaldi" % o.get("sonra_amac"))
+        else:
+            ekle("fazla mesai onarimi (BULUNAMADI)", o.get("once_amac"), o.get("saniye"),
+                 "%s dk fazla mesai kaldi" % o.get("once_dakika"))
+    dv = b.get("devam") if b else None
+    if dv and dv.get("saniye"):
+        ekle("iyilestirmeye devam (%s)" % ("alindi" if dv.get("alindi") else "iyilesme yok"),
+             dv.get("sonra_amac") if dv.get("alindi") else dv.get("once_amac"), dv.get("saniye"), None)
+    iy = s.get("iyilesme") or {}
+    if s.get("mola_adimi"):
+        ekle("mola adimi (atamalar sabit)", toplam, s.get("ana_asama_butce_sn"),
+             "%s cozum; adimin kaniti %s (planin tamami icin degil, O-16)"
+             % (iy.get("cozum"), s.get("mola_adimi_alt_sinir")))
+    elif iy or not asamalar:
+        ekle("ana asama", toplam, s.get("ana_asama_butce_sn"), "%s cozum" % iy.get("cozum"))
+    fm = dag.get("FAZLA_MESAI", {}).get("ceza", 0)
+    ref_fm = ref_dag.get("FAZLA_MESAI", {}).get("ceza", 0) if ref else None
+    ozet = {"amac": toplam, "referans": ref_amac, "fark": toplam_fark,
+            "fark_yuzde": _yuzde(toplam_fark, ref_amac),
+            "fm_disi_amac": toplam - fm,
+            "fm_disi_referans": (ref_amac - ref_fm) if ref_amac is not None else None,
+            "fm_disi_fark_yuzde": _yuzde((toplam - fm) - (ref_amac - ref_fm), ref_amac - ref_fm)
+            if ref_amac is not None else None}
+    return {"kalemler": kalemler, "asamalar": asamalar, "ozet": ozet}
+
+
+def optimum_yazisi(h, girinti="         "):
+    """optimum_hesabi() ciktisini satir satir yazar (konsol)."""
+    if not h:
+        return
+    oz = h["ozet"]
+    print(girinti + "OPTIMUM HESABI -- amac %s%s" % (
+        oz["amac"],
+        ("  |  referans %s  ->  fark %+d puan (%+.1f%%)  |  fazla mesai haric %s / %s (%+.1f%%)"
+         % (oz["referans"], oz["fark"], oz["fark_yuzde"], oz["fm_disi_amac"], oz["fm_disi_referans"],
+            oz["fm_disi_fark_yuzde"])) if oz.get("referans") is not None else
+        ("  |  fazla mesai haric %s" % oz["fm_disi_amac"])))
+    ref_var = oz.get("referans") is not None
+    bas = girinti + "  %-24s %10s %-30s %8s %10s %6s %10s" % ("kalem", "ham", "birim", "agirlik", "ceza", "pay%", "ilk asama")
+    if ref_var:
+        bas += " %10s %9s %8s %8s" % ("referans", "fark", "fark%", "farkta%")
+    print(bas)
+    for k in h["kalemler"]:
+        satir = girinti + "  %-24s %10s %-30s %8s %10s %6s %10s" % (
+            k["kural"], _tire(k["ham"]), k["birim"][:30], _tire(k["agirlik"]), k["ceza"],
+            _tire(k["pay_yuzde"]), _tire(k["ilk_asama_ceza"]))
+        if ref_var:
+            satir += " %10s %9s %8s %8s" % (_tire(k["referans_ceza"]),
+                                            ("%+d" % k["fark"]) if k["fark"] is not None else "-",
+                                            ("%+.1f" % k["fark_yuzde"]) if k["fark_yuzde"] is not None else "-",
+                                            _tire(k["toplam_farka_pay_yuzde"]))
+        print(satir)
+    print(girinti + "  (ceza = ham x agirlik; pay% = amactaki payi; ilk asama = mola adimindan onceki ceza; "
+          "fark = motor - referans; farkta% = bu kalemin toplam farktaki payi)")
+    print(girinti + "  %-44s %10s %10s %8s %8s  %s" % ("asama", "amac", "fark", "fark%", "sn", "aciklama"))
+    for a in h["asamalar"]:
+        print(girinti + "  %-44s %10s %10s %8s %8s  %s" % (
+            a["asama"][:44], _tire(a["amac"]),
+            ("%+d" % a["fark"]) if a["fark"] is not None else "-",
+            ("%+.1f" % a["fark_yuzde"]) if a["fark_yuzde"] is not None else "-",
+            _tire(a["saniye"]), a.get("aciklama") or ""))
+
+
+def optimum_raporu(yol):
+    """Kayitli bir olcum dosyasinin her kosusu icin OPTIMUM HESABI (konsol).
+    Referans dosyada varsa (`referans`, seviye 1 kosulari) kiyas da yazilir."""
+    r = json.load(io.open(yol, encoding="utf-8"))
+    ref = r.get("referans")
+    print("DOSYA : %s  |  %s kisi, %s hucre, arama %s sn, %s cekirdek, %s"
+          % (os.path.basename(yol), r.get("kisi"), r.get("hucre"), r.get("saniye"), r.get("cekirdek"), r.get("tarih")))
+    for s in r.get("kosular", []):
+        print("\n%s (tekrar %s): %s" % (s.get("yapilandirma"), s.get("tekrar", 1), s.get("durum")))
+        h = optimum_hesabi(s, ref)
+        if h is None:
+            print("         plan yok -- optimum hesabi yok")
+            continue
+        optimum_yazisi(h)
+
+
 def sinir_yazisi(s):
     """Kosu satirindaki "alt sinir / uzaklik" parcasi -- O-16 (6 Ekim).
 
@@ -798,9 +970,11 @@ def gevsek_yazisi(s):
     gs = s.get("gevsekten_serte")
     if not gs:
         return None
-    adim = ", ".join("%s %s %s sn%s" % (a["tavan"], a["durum"], a["saniye"],
-                                       "" if a["toleransin_ustunde_asim"] is None
-                                       else " (ustu %d)" % a["toleransin_ustunde_asim"])
+    adim = ", ".join("%s %s %s sn%s%s" % (a["tavan"], a["durum"], a["saniye"],
+                                         "" if a.get("ilk_cozum_saniye") is None
+                                         else " (ilk plan %s. sn, %s cozum)" % (a["ilk_cozum_saniye"], a.get("cozum_sayisi")),
+                                         "" if a["toleransin_ustunde_asim"] is None
+                                         else " (ustu %d)" % a["toleransin_ustunde_asim"])
                      for a in gs.get("adimlar") or [])
     if s.get("taslak"):
         son = "TASLAK: %d hucre, %s kisi-saat tolerans ustu (%s)" % (
@@ -985,6 +1159,14 @@ def kosu(g, ad, ayar, girdi_ek=None, tekrar=1):
     for kural, d in (s["amac_dagilimi"] or {}).items():
         print("           %-16s ceza %10d  (%%%5.1f)   ham %8s   degisken %6d"
               % (kural, d["ceza"], d["pay_yuzde"], "-" if d["deger"] is None else d["deger"], d["degisken"]))
+    # OPTIMUM HESABI (Mustafa 14 Ekim 22:09). Yazim hatasi olcumu durdurmasin:
+    # kosu bitti, plan ve sayilar kayitta; bu yalniz sunum.
+    try:
+        s["optimum_hesabi"] = optimum_hesabi(s, (g.get("_merdiven") or {}).get("referans_puani"))
+        optimum_yazisi(s["optimum_hesabi"])
+    except Exception as e:                           # noqa: BLE001
+        s["optimum_hesabi_hatasi"] = str(e)[:300]
+        print("         optimum hesabi yazilamadi: %s" % s["optimum_hesabi_hatasi"])
     # FAZLA MESAI KIMDE, HANGI VARDIYA KARISIMIYLA? Taban sifirsa bile plan
     # fazla mesai yaziyorsa sebebi kisi duzeyinde gorulmeli (kilit mi,
     # uygunluk mu, dinlenme mi, yoksa cozucu mu bulamadi).
@@ -1108,6 +1290,9 @@ def ozet(sonuc):
 
 
 def main():
+    if OPTIMUM_RAPORU:                                # kayitli dosya: yalniz rapor, kosu yok
+        optimum_raporu(OPTIMUM_RAPORU)
+        return
     g = sahne_yukle()
     sonuc = {"olcek": OLCEK, "doluluk": DOLULUK, "saniye": SANIYE, "tekrar": TEKRAR,
              "kisi": len(g["calisanlar"]), "hucre": len(g["talep"]),

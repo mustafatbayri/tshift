@@ -15,6 +15,10 @@
 8. 14:30–15:30 — öneriler onaylandı ve koda indi; kabul ölçütleri; üç kuralın tanım konuşması
 9. 15:26 — `PLAN_KARARLILIGI` kararı (K-70); yarı zamanlı saat için mevzuat taraması (T-83); bu gecenin bloğu
 10. 17:05 — K-71 (yarı zamanlı sözleşme süresi) ve K-72 (ekip sürekliliği) kararları; çağrı üzerine çalışma sorusu
+11. 19:20 — gece bloğu ikiye bölündü (kısa blok koşuyor); ölçüm için bulut makinesi araştırması
+12. 19:40–21:10 — K-70 / K-71 / K-72 koda indi (bulut); veri seti v2; VS2 0,1 ilk ölçüm ve veri düzeltmesi (sözleşme süresi müsaitlikle tutarlı); kısa blok sonucu
+13. 22:09 — optimum hesabı çıktıda (kalem kalem, aşama aşama); ipucu fikri hayır; blok 03:00–04:00; `--veri-seti` anahtarı ve bloğun VS2 düzeltmesi
+14. 23:56–04:20 — ölçek merdiveni (T-82) başladı: 1000'e kadar; bulut zinciri ve üç bulgu (eşik altı tek yol, 25'te fm kanıtlı kaçınılmaz, 100'de PART_TIME_LIMIT sert ihlal); zincir boşta öldü; gece bloğu
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -467,3 +471,245 @@ Bu kayıtlar bu gecenin commit'ine girer (blok başlamadan makineye yazıldı).
 **18:40, Mustafa:** *"Ağırlık ok, mantıklı. Bu çağrı üzerineyi şimdilik
 kapsam dışı bırakalım."* → K-71'de ağırlık 2.000 puan / boşa ödenen saat
 (üç profilde aynı) onaylandı; çağrı üzerine çalışma kapsam dışı (T-83).
+
+## 11 · 19:20 — gece bloğu ikiye bölündü; ölçüm için bulut makinesi araştırması
+
+**19:21, Mustafa:** *"8 saat 15 dklık koşuyu koşmak istemiyorum hemen.
+Yatarken koşmak istediğim bir blok o. Laptop yerine cloud ortamda
+kurabileceğim bir makine olabilir mi? Hatta ölçek olarak daha güçlü
+olabilir."* → Blok ikiye bölündü: **kısa blok** (testler + commit/push +
+VS1 `varsayilan` 1.800 × 3; ~1 sa 50 dk) 19:23'te başladı
+(`kosu-gunlugu-2026-10-14-b.txt`); kalan (1.800 × 2, 3.600 × 3,
+`acik_lin0` 1.800 × 3, tam mutasyon; ~6,5 sa) yatarken. Kabul ölçütünün 5
+koşusu = kısa bloğun 3'ü + gecenin 2'si (aynı makine, aynı kod — birleşik
+okunur).
+
+**Bulut makinesi araştırması (14 Ekim 19:30–20:00, bulut; fiyatlar üçüncü
+taraf sayfalardan, Ekim 2026):**
+
+| Seçenek | Çekirdek | Bellek | Saatlik | 8 sa blok | Not |
+|---|---|---|---|---|---|
+| Hetzner CCX43 (ayrılmış vCPU, AMD EPYC) | 16 vCPU = **8 fiziksel** çekirdek | 64 GB | ≈ €0,40 (aylık €276,49; saatlik faturalama, aylık tavan) | ≈ €3,3 | Haziran 2026'da fiyatlar iki kattan fazla arttı; Nürnberg / Falkenstein / Helsinki |
+| Hetzner CCX53 | 32 vCPU = **16 fiziksel** | 128 GB | ≈ €0,80 (aylık €533,99) | ≈ €6,4 | |
+| AWS c7a.4xlarge (Frankfurt) | **16 fiziksel** (SMT yok, EPYC 9R14) | 32 GB | $0,94 talep üzerine; spot ≈ $0,37 | ≈ $7,5 / $3 | spot kesilebilir — uzun ölçüm için talep üzerine |
+| GitHub Actions büyük koşucu 16 çekirdek | 16 vCPU | — | $0,042/dk = **$2,52/sa** | ≈ $20 | yalnız **Team / Enterprise** planındaki **organizasyon** depolarında (bizimki kişisel); iş en çok **6 saat** |
+| GitHub Actions **kendi koşucumuz** (self-hosted; Hetzner VM üstünde) | VM'in | VM'in | VM ücreti; dakika ücreti yok | VM | iş sınırı **5 gün**; `workflow_dispatch` ile tetiklenir, sonuçlar artifact |
+| Mustafa'nın masaüstü (bugün) | 6 | — | 0 | 0 | tek makine; kıyas tabanı burada |
+
+CP-SAT tarafı (OR-Tools belgeleri): 8 işçi paralel aramanın tabanı; 16'da
+sürekli araştırma + ek ilk-çözüm alt çözücüleri (rastgele arama,
+feasibility jump) + alt sınır işçileri; 24 ve 32'de daha fazla LNS ve
+ilk-çözüm işçisi. **Yeni setteki plansızlık ilk-çözüm sorunu** → 16 fiziksel
+çekirdek doğrudan buna çalışır. Bulutta (2 çekirdek) fazla mesaisiz ilk plan
+500'de hiç bulunamadı (bulgu 30); 6 çekirdekte 13 Ekim'de 1/9, 14 Ekim'de
+0/10.
+
+**Öneri (istişare 21:30):**
+1. **Hetzner CCX43 ya da CCX53**, yalnız ölçüm sırasında açık (saatlik
+   faturalama; silinip yeniden kurulur — kurulum betiği depoda). Aylık
+   bırakmak ~€276 / €534; blok başına €3–7. CCX53'ün 16 fiziksel çekirdeği
+   ilk-çözüm sorununa daha çok işçi verir; önce CCX43 ile taban, gerekirse
+   CCX53 denenir (ikisi aynı CPU ailesi, aynı tabanla okunur).
+2. **Koşuyu kim başlatır:** (a) Mustafa SSH ile — bugünkü blok mantığı, bir
+   `.sh` dosyası; (b) GitHub Actions kendi koşucusu VM'de — `workflow_dispatch`
+   ile tetikleme, sonuçlar artifact olarak iner; koşucu dakika ücreti yok.
+   (b) laptop için de aynı yol.
+3. **Sonuçlar depoya nasıl gelir:** commit **yalnız Mustafa'nın
+   makinesinden** (tek yazar kuralı) — VM'den ölçüm dosyaları `scp` / artifact
+   ile iner, Mustafa commit'ler. VM'den commit yok.
+4. **Kıyas kuralı:** her makinenin kendi tabanı; kıyaslanan iki yapılandırma
+   aynı makinede (T-82 kuralları). `kalite-olc.py` çıktısına makine adı
+   (`COMPUTERNAME` / `hostname`) eklenecek.
+5. **Ürün için yan kazanç:** müşteri konteynerinin çekirdek sayısı sorusu
+   (bulgu 30, açık) aynı ölçümle cevaplanır — 6 / 8 / 16 çekirdekte aynı
+   sahne.
+
+Kaynaklar: [agentdeals — Hetzner fiyatları (API, 7 Ekim 2026)](https://agentdeals.dev/hetzner-pricing-2026) ·
+[privatedevops — Hetzner Haziran 2026 zammı](https://privatedevops.com/news/hetzner-june-2026-cloud-price-increase-what-to-do) ·
+[sparecores — CCX43](https://sparecores.com/server/hcloud/ccx43) ·
+[aws-pricing — c7a.4xlarge](https://aws-pricing.com/c7a.4xlarge.html) ·
+[GitHub Docs — koşucu fiyatları](https://docs.github.com/en/enterprise-cloud@latest/billing/reference/actions-runner-pricing) ·
+[GitHub Docs — Actions sınırları](https://docs.github.com/en/actions/reference/limits) ·
+[OR-Tools CP-SAT — sorun giderme (işçi sayısı)](https://github.com/google/or-tools/blob/stable/ortools/sat/docs/troubleshooting.md).
+
+
+## 12 · 19:40–21:10 — üç kural koda indi; veri seti v2; VS2 0,1 ilk ölçüm
+
+Mustafa koşuda (kısa blok makinesinde); bulutta iş: §9–§10 kararlarının
+(K-70, K-71, K-72) kodu, veri seti v2 ve ilk ölçüm. Commit yok (tek yazar
+kuralı); dosyalar bulutta, Mustafa gelince makinesine kopyalanacak.
+
+**Kod (09-motor).** `model.py`: `_tercih_karsilama` (yarı zamanlı +
+`sozlesme.haftalik_saat` → eksik dakika, 33 / dk), `_ekip_surekliligi`
+(`birincil_ekip` dışı atama sayısı, 2/1/4), `_plan_kararliligi` (`mevcut_plan`
+varken donmuş olmayan kişi-günde değişim, 6/6/6); hepsi `_amac`a `cezalar`
+ile girer, ön ekleri `coz._CEZA_ONEKI` (tk / es / pk) amaç dağılımına eşler.
+`coz.py`: `metrikler.plan_degisikligi` (korunan / değişen / kaldırılan /
+eklenen; `mevcut_plan` yoksa `null`). Doğrulayıcı: üç kural bağımsız
+(`kurallar.tercih_karsilama`, `ekip_surekliligi`, `plan_kararliligi`; #7.6).
+Testler: `test_tercih_karsilama.py` 13, `test_ekip_surekliligi.py` 9,
+`test_plan_kararliligi.py` 12 → **09 toplam 739** (geçti). Mutasyon grupları
+`k71` 13, `k72` 10, `k70` 17 — **yaşayan 0** (bulut grup koşusu; tam koşu
+Mustafa'nın makinesinde, toplam 506). `ihlal-vakalari.py`'de üç yeni vaka,
+üçü kırmızı yanıyor. 08 testleri 66 geçti + 2 atlandı (500 VS2 referansı
+yok). DENETIM: yalnız bulutta olmayan `06-veri/` (git dışı) hataları.
+
+**Eski sahneler değişmedi — ölçümle doğrulandı:** üreteç L1, kayıtlı
+`_sahne-L1-95.json` ve `_sahne-L1-VS1-95.json`'da `haftalik_saat`li yarı
+zamanlı 0, `birincil_ekip` 0, `mevcut_plan` yok → üç kural o sahnelerde
+değişken üretmez, amaç aynı. **Gece bloğu (VS1) yeni kodla da
+karşılaştırılabilir**; paket makineye bu gece kopyalanabilir.
+
+**Veri seti v2** (`10-veri-seti/v2/`, v1'den kopya; isimler aynı):
+`employee_contracts.haftalik_saat` yarı zamanlıda zorunlu (16 / 20 / 24 / 30;
+kişi başına ayrı tohum, v1'in rastgele dizisi bozulmadı); `employee_teams.
+oncelik` çok ekiplilerin ~%30'unda eşit (gezici: 500'de 10'un 2'si, 49'da
+1'in 1'i); `donustur.py` `sozlesme.haftalik_saat` ve türetilmiş
+`birincil_ekip` yazar; sözlük / şema / Excel yeniden üretildi; testler 20
+(yeni: K-71/K-72 dönüşümü, tutarlılık). `merdiven.VERI_SETI_SURUM = "v2"`
+→ dosya eki **-VS2**; `kalite-olc.py` eki merdivenden alır; CI adımı v2;
+`10-veri-seti/OKU-BENI.md` sürüm tablosu; şartname değişiklik satırı 72.
+v1 dondu (-VS1 dosyaları 14 Ekim gündüz ölçümlerinin kaydı).
+
+**İlk VS2 0,1 referansı (bulut, 300 sn) bir VERİ HATASI gösterdi.** Amaç
+61.812, bunun **57.420'si `TERCIH_KARSILAMA`** (16 yarı zamanlının 6'sı
+toplam 29 sa eksik). Neden: v2 taslağı sözleşme süresini **müsaitlikten
+bağımsız** çekmişti — haftada yalnız 2 gün müsait öğrenciye (C0011: pazartesi,
+çarşamba, cuma, cumartesi, pazar kapalı) 30 saatlik sözleşme yazılmıştı;
+9 saatlik şablonlarla 18 saatin üstü imkânsız. Motorun aynı sahnedeki 240
+sn'si de 57.915 verdi (referanstan −%1,6; TERCIH oynamadı) — **seviye 1
+sahnesinde TERCIH zaten oynamaz:** hedef = referansın sayımı ve HEDEF_ASIMI
+SERT → toplam saat sabit, tam zamanlılar 45'e SERT dolu, yarı zamanlıya kalan
+tam referansın verdiği kadar. **Düzeltme (`uret.py`, 20:45):** süre, kişinin
+uygun gün sayısı × 9 saati aşmayan değerlerden çekilir (2 gün → 16; 3 gün →
+16 / 20 / 24; 4+ gün → hepsi). Yeni dağılım 500: 16 × 42, 20 × 20, 24 × 61,
+30 × 23; 49: 4 / 2 / 8 / 2. Testte tutarlılık bekçisi. Referans yeniden
+(300 sn, 250 sn): amaç **16.132**, seviye 1 puanı **17.135**, TERCIH 11.880
+(= 6 sa: C0002, sözleşme 24, müsait 3 gün, referans 2 gün yazmış — referans
+yolu bu kuralı aramıyor, "en az bu kadar iyisi var"). **Motor aynı sahnede
+(bulut, 2 çekirdek, 240 sn):** fazla mesaisiz ilk plan 2,4 sn'de OPTIMAL
+(gevşek yola girmedi), 22 çözüm, mola adımı optimumda durdu (203 sn), amaç
+**15.637 → referanstan −%8,7**; aşım 0, sert 0, fazla mesai 0; TERCIH
+**11.880 = referansla aynı** (beklendiği gibi oynamadı), kazanç mola
+kapsaması (2.877 → 1.386) ve rotasyon. Dosya
+`kalite-olcumu-L1-VS2-0.1-95-bulut.json` (+ `planlar/…/varsayilan-1.json`).
+Kıyas için VS1 0,1 (sabah): −%26,3 — iki sahne farklı (v2'de TERCIH sabit
+terimi payı büyütüyor, yüzde küçülüyor; mutlak kazanç benzer).
+
+**Ders (K-71 ölçümü için):** seviye 1 sahnesi K-71'i ölçmez; kuralın etkisi
+**taban sahnede** (HEDEF_ASIMI YUMUŞAK, referans üretim yolu) ya da referansı
+bu kuralla aranmış yeni bir referansla görülür. 500 VS2 referansı Mustafa'nın
+makinesinde (gece bloğu) — orada da aynı sınır geçerli. 49'da **K-72'nin
+etkisi yok** (tek çok ekipli gezici); 500'de 8 kişi birincil ekipli.
+
+**Kısa blok sonucu (Mustafa'nın makinesi, 6 çekirdek, 19:23–21:08;
+`kosu-gunlugu-2026-10-14-b.txt`, `kalite-olcumu-L1-VS1-95-k68b-1800.json`):**
+testler yeşil (09 / 08 / 10), DENETIM 0, `fe6909d` push 19:35. **VS1 L1
+`varsayilan` 1.800 sn × 3 → 1/3 plan.** Üçünde de fazla mesaisiz tek deneme
+20 sn'de UNKNOWN (K-68 ayar 4 çalıştı: 22 sn, önceki 3 × 40 yerine). Açık
+adım: tekrar 1 ve 2'de **1.327 sn'de plan yok** (bütçenin %75'i; yeniden
+arama atlandı), tekrar 3'te **773 sn'de** plan (durgunlukta durdu, aşım 0,
+doğrudan tam sert) → iyileştirme 345 sn (1.229.574 → 145.888; alt sınır
+78.445; hâlâ iyileşiyordu) → **fazla mesai onarımı 298 sn, fazla mesaisiz
+plan bulunamadı (UNKNOWN), kabul yok** → devam + mola → amaç **116.313 =
+referanstan +%85,8**, fazla mesai **22,0 sa** (20 kişi × 1,25 sa: 6 günlük
+tam zamanlılar 46,25 sa'da — şablon net süreleri 45'i tam tutturamıyor;
+referans planında fazla mesai 0, yani tutturan bileşim var). Gece bloğuyla
+birlikte **VS1 1.800 sn: 2/6 plan** (açık adım bulduğunda 287 / 773 / 793
+sn; bulamadığında 1.226–1.327 sn yetmedi). **Kabul ölçütü (5/5 plan) bu
+bütçede sağlanamıyor** — 1.800 × 2 tamamlama koşusu anlamını yitirdi, gece
+bloğundan çıkarıldı; yerine `acik_ls` 1.800 × 3 girdi. Bu gecenin sorusu:
+açık adım planı **ne zaman** buluyor (yeni `ilk_cozum_saniye` kaydı, 3.600 ×
+3), CP-SAT ayarları (lin0 / ls) bulma süresini değiştiriyor mu.
+
+~~**Not (ürün fikri, karar Mustafa'nın):** üründe her hafta bir önceki haftanın
+yayınlanmış planı vardır … geçen haftanın planını ipucu vermek ilk planı
+saniyeler içine çekebilir.~~ **Mustafa 22:09: hayır** — *"geçtiğimiz haftaya
+ait değer aslında PDKS gibi gerçekleşen veriden alınacak, plandan değil. Bu
+senaryo çalışmaz."* Kapandı; ilk plan sorunu motorun kendi işi (CP-SAT
+ayarları, bütçe, çekirdek).
+
+## 13 · 22:09 — Mustafa'nın üç isteği: optimum hesabı çıktıda; ipucu fikri hayır; blok 03:00–04:00; "testler v2 ile mi?"
+
+**(1) "Koşu sonuçlarına optimum hesaplamasının detaylarını ekle — puan puan,
+% bilgileriyle; ne ne kadar etkiledi."** `kalite-olc.py`'ye **OPTIMUM
+HESABI** bölümü (her koşunun sonunda; kayıtta `optimum_hesabi`): (a) **kalem
+kalem** — her yumuşak kuralın ham değeri, birimi, ağırlığı (puan/birim),
+cezası, amaçtaki payı, ilk aşama sonundaki cezası (mola adımı neyi
+değiştirdi), referansın aynı kalemi, fark (puan ve %), farkın toplam farktaki
+payı; (b) **aşama aşama** — ilk plan (kaynağı: fazla mesaisiz arama / açık
+adım, ilk plan saniyesi) → ilk aşama iyileştirmesi → fazla mesai onarımı
+(kabul / red / bulunamadı) → devam → mola adımı; her adımda amaç, fark
+(puan, %), süre. Yalnız kayıttaki sayılar düzenlenir, yeniden hesap yok;
+yazım hatası ölçümü durdurmaz (`optimum_hesabi_hatasi`). Kayıtlı dosya
+için: `py kalite-olc.py --optimum-raporu <dosya.json>` (14 Ekim'in bütün
+sonuçlarına geriye dönük uygulanır). Kısa bloğun 3. tekrarı bu gözle:
+fark +53.707'nin **%122,9'u fazla mesai** (+66.000; referansta 0), mola
+kapsaması referanstan **13.069 daha iyi** (−%31,4; farkın −%24,3'ü), adalet
++380, hedef eksiği +297, rotasyon +99. Aşamalar: açık adım 1.330.895 →
+iyileştirme 145.888 (−%89, 345 sn) → onarım bulunamadı (298 sn boşa) →
+mola adımı 116.313 (−%20,3; tamamı mola kapsamasından 58.114 → 28.539).
+Testler 5 (`test_kalite_olc.py` 25).
+
+**(2) Geçen haftanın planı ipucu — hayır** (§12 sonu).
+
+**(3) Blok 03:00–04:00'te başlar** (uzun blok). **(4) "Testleri en son
+oluşturduğumuz veri şemasıyla yapıyorsun değil mi?"** — Evet: veri seti
+testleri v2 (20), CI v2, merdiven/kalite ölçümü -VS2. Ama soru bir hatayı
+yakaladı: merdiven v2'ye dönünce **ilk verilen gece bloğu kırılacaktı** —
+`--kaynak veri-seti` artık `_sahne-L1-VS2-95.json` arıyor, 500'lük VS2
+sahnesi makinede yok (referans bloğun sonundaydı) → üç ölçüm "sahne yok"
+ile düşerdi. Düzeltme: (a) `merdiven.py` `--veri-seti v1|v2` (argv; ortam
+`TSHIFT_VERI_SETI`; varsayılan v2) — -VS1 kayıtlarıyla kıyas için eski sürüm
+hâlâ koşulabilir; (b) blok sırası: **VS2 500 referansı önce (1.800 sn)** →
+sahne yoksa (referans plan bulamazsa) ölçümler **VS1'e düşer** (günlüğe
+yazar) → `varsayilan` 1.800 × 3 (VS2 tabanı) → `acik_lin0` 1.800 × 3 →
+`varsayilan` 3.600 × 3 → tam mutasyon (~7,7 sa). `acik_ls` bu geceden
+çıktı (süre); bulut makinesine ya da yarına. Motor birim testleri (739)
+kendi küçük sahneleriyle koşar — veri setinden bağımsız; VS'yi 08 ve 10
+testleri kullanır.
+
+
+## 14 · 23:56–04:20 — ölçek merdiveni (T-82) başladı: liste 1000'e kadar; bulut zinciri ve üç bulgu; gece bloğu 04:20'de
+
+**Mustafa 23:56:** *"Merdiven setlerini oluşturdun mu yoksa?"* — hayır, henüz
+yoktu; zincir (üreteç referansı → veri seti v2 → VS2 referansı) bulutta
+başlatıldı. **00:03:** *"Ölçekleri böyle düşünmüyorum, daha stratejik ve zora
+doğru götürmek istiyorum. 1000'e kadar gitmeli. 2 hepsi gitsin."* → kademe
+listesi **25 · 49 · 100 · 151 · 200 · 300 · 400 · 500 · 751 · 1000**
+(onayında; üreteç 2,0'da temiz), ham tablolar dahil her şey git'e.
+
+**Bulgular (bulut zinciri, 00:02–00:15):**
+1. **25 kişi, eşiğin altı → tek aşamalı yol → fazla mesaili referans (4,5 sa).**
+   Fazla mesaisiz ilk arama ve sert kesim yalnız iki aşamalı yolda. Referans
+   üretimi artık her boyutta iki aşamaya zorlanır (`iki_asama_esigi: 0`).
+2. **25 kişide fazla mesaisiz plan KANITLI yok** (ilk arama 0,35 sn
+   INFEASIBLE; 16 tam zamanlı × 45 sa sert, 9 saatlik şablonlar). Kural:
+   kanıtlı imkânsızsa referans fazla mesaili kabul (`fazla_mesaisiz_kanitli_yok`,
+   `fazla_mesai_saat` kayıtta), seviye 1 sahnesi o kadar fazla mesaiye izin
+   verir; kabul ölçütü o kademede "referansın fazla mesaisi". 25'in üreteç
+   referansı 2,0 sa ile üretildi (seviye 1 puanı 7.361; `_sahne-L1-95-0.05`),
+   veri seti `tshift-25.json` yazıldı; VS2 25 referansı henüz yok.
+3. **100 kişi (üreteç sahnesi): motorun planı doğrulayıcıda `PART_TIME_LIMIT`
+   SERT ihlal** (eksik 22, fm 0; fazla mesaisiz ilk arama 2,35 sn'de bulmuş).
+   Motor ile doğrulayıcı aynı kuralı farklı okuyor olabilir (eski tipler
+   `stajyer` / `sezonluk` yalnız üreteç sahnesinde; v1/v2 K-58 ile çevirdi) —
+   **açık, incelenecek** (#7.6'nın yakalaması gereken tür). 100 kademesi bu
+   yüzden üretilemedi.
+
+**Zincir öldü (ders):** bulutta arka plana atılan iş (nohup) oturum
+boşta kalınca durdu — 0,3 kademesi 00:15'te başladı, dört saat sonra hiç
+çıktı yok, süreç yok. **Bulutta uzun koşu yalnız oturum çalışırken**
+(araç çağrısı içinde beklenerek) yürür; gece boyu bırakılamaz. Ölçüm
+makinesi sorusu (oturum §11) bir kez daha.
+
+**Kod:** `merdiven.py` — `veri_seti_dosyasi(olcek)` (kişi sayısından ad),
+`_veri_seti_tabani` dosya yoksa açık hata, `referans_uret` iki aşama + kanıtlı
+fm kabulü, `turet` izinli fm; `uret.py` — `--olcek`, `MERDIVEN_OLCEKLERI`,
+`dosya_yolu(olcek, kisi)`; testler 2 (merdiven). T-82 metni güncel.
+
+**Gece bloğu (Mustafa 04:10: *"8–9 saat kadar vaktimiz var"*):** yama
+`paket-k70-71-72-c.patch` → testler → commit/push → VS2 500 referansı
+(1.800) → `varsayilan` 1.800 × 3 → `acik_lin0` 1.800 × 3 → `varsayilan`
+3.600 × 3 → tam mutasyon → **751 üreteç referansı (3.600 sn)** (merdivenin
+büyük ucu; sığmazsa sabah kapatılır). Günlük `kosu-gunlugu-2026-10-14-c.txt`.

@@ -88,6 +88,10 @@ def test_ilk_arama_bulamazsa_GEVSEKTEN_baslar_TAM_serte_iner(ilk_arama_bulamaz):
     assert gs["denendi"] is True and gs["tam_sert"] is True and gs["kalan_asim"] == 0
     assert [a["tavan"] for a in gs["adimlar"]] == ["acik"]          # asim 0 bulundu: erken durur
     assert gs["adimlar"][-1]["toleransin_ustunde_asim"] == 0
+    # 14 Ekim: adimin ilk plani kacinci saniyede buldugu ve cozum sayisi kayitli (olcum)
+    a0 = gs["adimlar"][0]
+    assert a0["ilk_cozum_saniye"] is not None and 0 <= a0["ilk_cozum_saniye"] <= a0["saniye"] + 0.01
+    assert a0["cozum_sayisi"] >= 1
     assert "taslak" not in c and "taslak_asim" not in c
     r = degerlendir(g, c["atamalar"])
     assert _hedef_asimi(r) == []
@@ -270,6 +274,8 @@ def test_BIRIM_plan_bulunamazsa_alanlar_SERT_haline_doner_UNKNOWN(monkeypatch):
     d, c = C._gevsekten_serte(k, {"azami_saniye": 10}, time.time())
     assert d == cp_model.UNKNOWN and c is None
     assert [(a["tavan"], a["durum"]) for a in k.gevsekten_serte["adimlar"]] == [("acik", "UNKNOWN")]
+    assert k.gevsekten_serte["adimlar"][0]["ilk_cozum_saniye"] is None        # plan yok -> sure yok
+    assert k.gevsekten_serte["adimlar"][0]["cozum_sayisi"] == 0
     assert k.gevsekten_serte["tam_sert"] is False and k.gevsekten_serte["kalan_asim"] is None
     assert all(_alan(k, v) == [0, t] for v, t in k.asim_sinirli.values())
 

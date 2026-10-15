@@ -55,10 +55,15 @@ seti ... kullanarak kossun")
   --kaynak uretec     (varsayilan) taban `uret_veri_seti` ile BELLEKTE kurulur;
                       dosyalar _sahne-L1-95*, _referans-L1-95* (13 Ekim'e kadarki
                       butun olcumler).
-  --kaynak veri-seti  taban DEPODAKI veri setinden (10-veri-seti/v1/veri/
+  --kaynak veri-seti  taban DEPODAKI veri setinden (10-veri-seti/<surum>/veri/
                       tshift-500.json | tshift-49.json, donustur.py); dosyalar
-                      _sahne-L1-VS1-95*, _referans-L1-VS1-95*. Yeni set (T-80):
-                      K-58 sozlesmeleri, iki haftalik gecmis, devir gecmisten.
+                      _sahne-L1-VS<n>-95*, _referans-L1-VS<n>-95*. Surum
+                      `VERI_SETI_SURUM`: v1 (14 Ekim, T-80: K-58 sozlesmeleri,
+                      iki haftalik gecmis, devir gecmisten) -> v2 (14 Ekim aksami:
+                      K-71 yari zamanli sozlesme suresi, K-72 birincil ekip /
+                      gezici). v1 dondu; -VS1 dosyalari 14 Ekim olcumlerinin kaydi.
+  --veri-seti v1      eski surumle kos (kiyas icin); varsayilan v2. Ortam
+                      degiskeni TSHIFT_VERI_SETI de ayni isi yapar.
 """
 
 import copy
@@ -83,8 +88,36 @@ BO_GECE_ASGARI, BO_GECE_HEDEF = 2, 3   # K-62; hedef 3 Mustafa 12 Ekim 21:58
 DOLULUK = 0.95
 VARSAYILAN_TOHUM = 7                   # 6 Ekim on denemesinde de 7 (varsayilan arama 0..)
 KAYNAKLAR = ("uretec", "veri-seti")
-VERI_SETI = os.path.join(os.path.dirname(os.path.dirname(BURASI)), "10-veri-seti", "v1")
-VERI_SETI_DOSYASI = {1.0: "tshift-500.json", 0.1: "tshift-49.json"}
+VERI_SETI_SURUMLERI = ("v1", "v2")
+
+
+def _veri_seti_surumu():
+    """Hangi veri seti surumu: `--veri-seti v1|v2` (komut satiri; kalite-olc.py
+    ile paylasilir) > TSHIFT_VERI_SETI ortam degiskeni > guncel (v2).
+    14 Ekim aksami: v2 (K-71, K-72) guncel; v1 dondu ama -VS1 kayitlariyla
+    kiyas icin `--veri-seti v1` ile hala kosulabilir."""
+    if "--veri-seti" in sys.argv:
+        s = sys.argv[sys.argv.index("--veri-seti") + 1]
+    else:
+        s = os.environ.get("TSHIFT_VERI_SETI", "v2")
+    if s not in VERI_SETI_SURUMLERI:
+        raise SystemExit("bilinmeyen veri seti surumu %s (olanlar: %s)" % (s, ", ".join(VERI_SETI_SURUMLERI)))
+    return s
+
+
+VERI_SETI_SURUM = _veri_seti_surumu()  # 14 Ekim aksami: v2 (K-71, K-72); v1 dondu
+VERI_SETI = os.path.join(os.path.dirname(os.path.dirname(BURASI)), "10-veri-seti", VERI_SETI_SURUM)
+VERI_SETI_DOSYASI = {1.0: "tshift-500.json", 0.1: "tshift-49.json"}   # bilinenler; oteki kademeler kisi sayisindan
+
+
+def veri_seti_dosyasi(olcek):
+    """`tshift-<kisi>.json` -- T-82 merdiveni (15 Ekim): dosya adi kisi sayisi,
+    kisi sayisi uretecin o olcekteki kadrosundan (veri seti ayni uretecten)."""
+    o = float(olcek)
+    if o in VERI_SETI_DOSYASI:
+        return VERI_SETI_DOSYASI[o]
+    return "tshift-%d.json" % len(U.sahne_uret(o, DOLULUK)["calisanlar"])
+VERI_SETI_EKI = "-VS" + VERI_SETI_SURUM[1:]                                   # "-VS2" / "-VS1"
 
 
 def dosya_eki(olcek):
@@ -94,7 +127,7 @@ def dosya_eki(olcek):
 def _set_eki(kaynak):
     if kaynak not in KAYNAKLAR:
         raise SystemExit("bilinmeyen kaynak %s (olanlar: %s)" % (kaynak, ", ".join(KAYNAKLAR)))
-    return "-VS1" if kaynak == "veri-seti" else ""
+    return VERI_SETI_EKI if kaynak == "veri-seti" else ""
 
 
 def sahne_yolu(olcek, kaynak="uretec"):
@@ -137,18 +170,22 @@ def taban_sahne(olcek=1.0, kaynak="uretec"):
 
 
 def _veri_seti_tabani(olcek):
-    """Veri seti v1 -> motor girdisi (`donustur.py`, backend'in yapacagi is);
+    """Veri seti (VERI_SETI_SURUM) -> motor girdisi (`donustur.py`, backend'in yapacagi is);
     merdiven tabani olarak HEDEF_ASIMI YUMUSAK (referans uretimi; K-67 ile
     firma ayari SERT). Kadro kararlari (10 cift yetkinlikli, BO gece 2/3)
     veri setinin icinde zaten var."""
     if VERI_SETI not in sys.path:
         sys.path.insert(0, VERI_SETI)
     import donustur
-    g = donustur.motor_girdisi(donustur.yukle(os.path.join(VERI_SETI, "veri", VERI_SETI_DOSYASI[float(olcek)])))
+    dosya = veri_seti_dosyasi(olcek)
+    yol = os.path.join(VERI_SETI, "veri", dosya)
+    if not os.path.exists(yol):
+        raise SystemExit("%s yok -- once: cd 10-veri-seti/%s; py uret.py --olcek %g" % (yol, VERI_SETI_SURUM, float(olcek)))
+    g = donustur.motor_girdisi(donustur.yukle(yol))
     for k in g["kurallar"]:
         if k["kod"] == "HEDEF_ASIMI":
             k["tur"] = "YUMUSAK"
-    g["_merdiven"] = {"seviye": "taban-1", "kaynak": "veri-seti v1 (%s)" % VERI_SETI_DOSYASI[float(olcek)],
+    g["_merdiven"] = {"seviye": "taban-1", "kaynak": "veri-seti %s (%s)" % (VERI_SETI_SURUM, dosya),
                       "cift_yetkinlikli": [c["id"] for c in g["calisanlar"] if len(c["ekipler"]) > 1],
                       "bo_gece": {"asgari": max(1, int(round(BO_GECE_ASGARI * float(olcek)))),
                                   "hedef": max(1, int(round(BO_GECE_HEDEF * float(olcek))))}}
@@ -322,8 +359,15 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
     # 12 Ekim bulut denemesi: urun yoluyla tohum 7 plani 16 saat fazla
     # mesaiyle dondu (2 cekirdekte fazla mesaisiz ilk arama 3 x 40 sn'de
     # bulamadi -- eski S30'da da; Mustafa'nin 6 cekirdeginde 9-21 sn).
+    # 15 Ekim 00:02 (T-82 ilk bulgu): 25 kisilik kademede referans FAZLA MESAILI
+    # cikti (4,5 sa) -- model iki asama esiginin (50.000 degisken ~ 40 kisi)
+    # ALTINDA kalinca urun yolu tek asamali kosar, fazla mesaisiz ilk arama ve
+    # sert kesim o yolda yok. Referansin isi gecerli + fazla mesaisiz plan
+    # vermek; bu yuzden referans uretimi her boyutta IKI ASAMAYA zorlanir
+    # (`iki_asama_esigi: 0`). 49+ kiside esigin ustunde zaten iki asamaydi,
+    # eski referanslar degismez. Urun yolunun esik davranisi T-82'nin olcumu.
     ayar = {"azami_saniye": int(saniye), "tohum_kaydirma": int(tohum) - 1,
-            "fazla_mesai_sifirda_tut": True,
+            "fazla_mesai_sifirda_tut": True, "iki_asama_esigi": 0,
             "cozucu_parametreleri": {"random_seed": int(tohum)}}
     basla = time.time()
     c = coz(copy.deepcopy(taban), ayar)
@@ -332,9 +376,20 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
         raise SystemExit("REFERANS BULUNAMADI: durum %s" % c.get("durum"))
     d = referans_denetle(taban, c["atamalar"])
     ist = c.get("cozum_istatistikleri") or {}
-    if d["sert"] or d["fazla_mesai_saat"]:
+    fm0 = ist.get("fazla_mesai_once_sifir") or {}
+    # 15 Ekim 00:09 (T-82, 25 kisi): fazla mesaisiz ilk arama 0,35 sn'de INFEASIBLE --
+    # bu boyutta fazla mesaisiz plan KANITLI yok (16 tam zamanli x 45 sa, 9 saatlik
+    # sablonlar). Referans sarti "fazla mesai 0" ancak boyle bir plan varsa
+    # istenebilir; kanitli yoksa referans fazla mesaili kabul edilir ve kayit
+    # bunu soyler (`fazla_mesaisiz_kanitli_yok`, `fazla_mesai_saat`). O kademede
+    # kabul olcutu "fazla mesai 0" degil "referansin fazla mesaisi" olur.
+    fm_kanitli_yok = bool(fm0.get("kanitlandi_yok"))
+    if d["sert"] or (d["fazla_mesai_saat"] and not fm_kanitli_yok):
         raise SystemExit("REFERANS SARTI TUTMADI (tabanda): %s | fazla mesaisiz ilk arama: %s"
-                         % (d, (ist.get("fazla_mesai_once_sifir") or {}).get("denemeler")))
+                         % (d, fm0.get("denemeler")))
+    if d["fazla_mesai_saat"]:
+        print("UYARI: fazla mesaisiz plan bu boyutta KANITLI yok (ilk arama INFEASIBLE); referans %.1f sa fazla mesaili kabul edildi"
+              % d["fazla_mesai_saat"])
     return {
         "atamalar": c["atamalar"],
         "kayit": {"olcek": olcek, "doluluk": DOLULUK, "tohum": int(tohum), "saniye": int(saniye),
@@ -343,8 +398,10 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
                   "amac_degeri": ist.get("amac_degeri"),
                   "amac_dagilimi": ist.get("amac_dagilimi"),
                   "metrikler": c.get("metrikler"),
-                  "fazla_mesaisiz_ilk_arama": (ist.get("fazla_mesai_once_sifir") or {}).get("denemeler"),
-                  "yol": "tohum_kaydirma + fazla_mesai_sifirda_tut (sert kesim; urun yolu degil)",
+                  "fazla_mesaisiz_ilk_arama": fm0.get("denemeler"),
+                  "fazla_mesaisiz_kanitli_yok": fm_kanitli_yok,          # 15 Ekim: kucuk kademe
+                  "fazla_mesai_saat": d["fazla_mesai_saat"],
+                  "yol": "tohum_kaydirma + fazla_mesai_sifirda_tut (sert kesim; urun yolu degil) + iki_asama_esigi 0 (her boyutta iki asama; 15 Ekim)",
                   "tabanda_denetim": d,
                   "not": ("K-62 ilke 1: referans en iyi plan degil, 'en az bu kadar iyisi "
                           "var'. Tohum varsayilan aramadan farkli (baska baslangic).")},
@@ -376,8 +433,12 @@ if __name__ == "__main__":
         ref = json.load(io.open(referans_yolu(olcek, kaynak), encoding="utf-8"))
         g = seviye1_sahne(taban_sahne(olcek, kaynak), ref["atamalar"])
         d = referans_denetle(g, ref["atamalar"])
-        if d["sert"] or d["asim"] or d["eksik"] or d["fazla_mesai_saat"]:
-            raise SystemExit("SEVIYE 1 TUTARSIZ: referans yeni sahnede %s" % d)
+        # 15 Ekim (T-82, 25 kisi): fazla mesaisiz plan kanitli yoksa referans fazla
+        # mesaili kabul edildi (referans_uret); seviye 1 sahnesinde de o kadar
+        # fazla mesai beklenir -- fazlasi tutarsizlik.
+        izinli_fm = float(ref["kayit"].get("fazla_mesai_saat") or 0) if ref["kayit"].get("fazla_mesaisiz_kanitli_yok") else 0.0
+        if d["sert"] or d["asim"] or d["eksik"] or d["fazla_mesai_saat"] > izinli_fm + 1e-9:
+            raise SystemExit("SEVIYE 1 TUTARSIZ: referans yeni sahnede %s (izinli fazla mesai %.1f sa)" % (d, izinli_fm))
         p = plan_puani(g, ref["atamalar"])
         if not p or p.get("durum") != "OPTIMAL":
             raise SystemExit("REFERANSIN SEVIYE 1 PUANI HESAPLANAMADI: %s" % p)

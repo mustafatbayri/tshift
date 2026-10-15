@@ -643,18 +643,26 @@ class _GevsekSayac(cp_model.CpSolverSolutionCallback):
     def __init__(self):
         cp_model.CpSolverSolutionCallback.__init__(self)
         self.cozum_sayisi = 0
-        self.son_iyilesme = time.time()
+        self.basladi = time.time()
+        self.son_iyilesme = self.basladi
+        self.ilk_cozum_saniye = None           # 14 Ekim: ilk planin kacinci saniyede bulundugu (olcum)
         self.durma_sebebi = None
 
     def on_solution_callback(self):
         self.cozum_sayisi += 1
         self.son_iyilesme = time.time()
+        if self.ilk_cozum_saniye is None:
+            self.ilk_cozum_saniye = round(self.son_iyilesme - self.basladi, 2)
 
 
-def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None, parametreler=None):
+def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None, parametreler=None, sayac_cikti=None):
     """Gevsek yolun bir adimi: en cok `pay` sn; plan bulunduktan sonra
     `durgunluk` sn iyilesme yoksa durur (0 = kapali). `parametreler`: ek CP-SAT
-    parametreleri (yalniz acik adim; oneri 2b, olcum). Donen (durum, cozucu)."""
+    parametreleri (yalniz acik adim; oneri 2b, olcum). `sayac_cikti`: verilirse
+    (dict) adimin `ilk_cozum_saniye` ve `cozum_sayisi` degerleri yazilir --
+    14 Ekim VS1 olcumu: plan bulunamayan 1.800 sn'lik kosularda "kacinci
+    saniyede bulunurdu" sorusu icin 3.600 sn kosulari okunabilsin.
+    Donen (durum, cozucu)."""
     c = cp_model.CpSolver()
     c.parameters.max_time_in_seconds = float(pay)
     c.parameters.num_search_workers = isci
@@ -664,6 +672,9 @@ def _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=None, parametreler=Non
         c.parameters.random_seed = int(tohum)
     sayac = _GevsekSayac()
     d = _durgunluk_bekcisiyle_coz(c, kuruldu.m, sayac, {"durgunluk_saniye": durgunluk})
+    if sayac_cikti is not None:
+        sayac_cikti["ilk_cozum_saniye"] = sayac.ilk_cozum_saniye
+        sayac_cikti["cozum_sayisi"] = sayac.cozum_sayisi
     return d, c
 
 
@@ -679,10 +690,11 @@ def _gevsek_acik_parcali(kuruldu, ayar, kalan, parca, isci, durgunluk, bilgi):
             break
         tohum = i + 1 + int(ayar.get("tohum_kaydirma") or 0)
         t = time.time()
+        sayac = {}
         d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk, tohum=tohum,
-                                parametreler=ayar.get("gevsek_acik_cozucu_parametreleri"))
+                                parametreler=ayar.get("gevsek_acik_cozucu_parametreleri"), sayac_cikti=sayac)
         bilgi["acik_parcalar"].append({"tohum": tohum, "saniye": round(time.time() - t, 2),
-                                       "durum": c.StatusName(d)})
+                                       "durum": c.StatusName(d), "ilk_cozum_saniye": sayac.get("ilk_cozum_saniye")})
         if d in (cp_model.OPTIMAL, cp_model.FEASIBLE, cp_model.INFEASIBLE):
             break
         i += 1
@@ -866,6 +878,7 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
             if son is not None:
                 _tam_ipucu_yaz(kuruldu, son)   # tavani asan hucreleri CP-SAT onarir
         t1 = time.time()
+        sayac = {}
         if k is None and parca:
             d, c = _gevsek_acik_parcali(kuruldu, ayar, kalan, float(parca), isci, durgunluk, bilgi)
         else:
@@ -873,13 +886,15 @@ def _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=True, fm_sifirda=Fals
             if pay < 0.5:
                 break
             d, c = _gevsek_adim_coz(kuruldu, pay, isci, durgunluk,
-                                    parametreler=acik_parametreler if k is None else None)
+                                    parametreler=acik_parametreler if k is None else None, sayac_cikti=sayac)
         if c is None:                          # parcali acik adimda hic parca kosamadi
             break
         bulundu = d in (cp_model.OPTIMAL, cp_model.FEASIBLE)
         bilgi["adimlar"].append({
             "tavan": "acik" if k is None else "tolerans+%d" % k,
             "durum": c.StatusName(d), "saniye": round(time.time() - t1, 2),
+            "ilk_cozum_saniye": sayac.get("ilk_cozum_saniye"),      # 14 Ekim: olcum icin
+            "cozum_sayisi": sayac.get("cozum_sayisi"),
             "toleransin_ustunde_asim": _sert_disi_asim(kuruldu, c) if bulundu else None})
         if not bulundu:
             if k == 0 and d == cp_model.INFEASIBLE and not fm_sifirda:
@@ -2062,13 +2077,53 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         #   baslangic oncekinden erken (dairesel). Kural aktif degilse None.
         "rotasyon_geri_gecis": rot_gecis,
         "rotasyon_geri_saat": rot_saat,
+        # K-70 (14 Ekim): ayni haftanin yeniden planlanmasinda mevcut plana
+        #   gore degisim, kisi-gun. `mevcut_plan` yoksa None.
+        "plan_degisikligi": plan_degisikligi(kuruldu.girdi, atamalar),
     }
+
+
+def plan_degisikligi(girdi, atamalar):
+    """K-70: `mevcut_plan`a gore kisi-gun degisimi -- {korunan, degisen,
+    kaldirilan, eklenen}; donmus gunler kiyas disi; yalniz mola degisen gun
+    KORUNAN sayilir. `mevcut_plan` yoksa None. Satirlar `sablon` kimligiyle,
+    yoksa bas+bit ile kiyaslanir. Kadroda olmayan kisinin eski satirlari
+    `kaldirilan`a girer (gercek: o vardiya artik yok)."""
+    mevcut = girdi.get("mevcut_plan")
+    if mevcut is None:
+        return None
+    donmus = {int(d) for d in (girdi.get("donmus_gunler") or [])}
+
+    def anahtar(a):
+        return a.get("sablon") if a.get("sablon") is not None else (a.get("ekip"), a.get("bas"), a.get("bit"))
+
+    def harita(satirlar):
+        h = {}
+        for a in satirlar or []:
+            if a.get("gun") in donmus or a.get("donmus"):
+                continue
+            h.setdefault((a.get("calisan"), a.get("gun")), set()).add(anahtar(a))
+        return h
+    eski, yeni = harita(mevcut), harita(atamalar)
+    sayac = {"korunan": 0, "degisen": 0, "kaldirilan": 0, "eklenen": 0}
+    for kg in set(eski) | set(yeni):
+        e, y = eski.get(kg), yeni.get(kg)
+        if e and y:
+            sayac["korunan" if e & y else "degisen"] += 1
+        elif e:
+            sayac["kaldirilan"] += 1
+        else:
+            sayac["eklenen"] += 1
+    return sayac
 
 
 # Ceza degiskeni adi -> kural (model.py'deki NewIntVar adlari).
 _CEZA_ONEKI = {"he": "HEDEF_KAPSAMA", "ha": "HEDEF_ASIMI", "me": "MOLA_KAPSAMASI",
                "fm": "FAZLA_MESAI", "ag": "ADALET_DENGESI", "sd": "SAAT_DENGESI",
                "ro": "VARDIYA_ROTASYON_YONU",          # K-65 (11 Ekim)
+               "tk": "TERCIH_KARSILAMA",               # K-71 (14 Ekim): yari zamanli eksik dakika
+               "es": "EKIP_SUREKLILIGI",               # K-72 (14 Ekim): birincil ekip disi atama sayisi
+               "pk": "PLAN_KARARLILIGI",               # K-70 (14 Ekim): mevcut plana gore degisen kisi-gun
                "gk": "HEDEF_ASIMI_TOLERANS_USTU"}      # K-68 eki: yalniz gevsekten serte taslak yolunda
 
 

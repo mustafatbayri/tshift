@@ -1,0 +1,8569 @@
+{
+ "kayit": {
+  "arac": "kalite-olc.py",
+  "yapilandirma": "varsayilan",
+  "tekrar": 1,
+  "saniye": 240,
+  "etiket": "bulut",
+  "olcek": 0.1,
+  "doluluk": 0.95,
+  "ayar": {
+   "azami_saniye": 240
+  },
+  "girdi_ek": {},
+  "tarih": "2026-10-14 20:52",
+  "cekirdek": 2,
+  "olcum_dosyasi": "kalite-olcumu-L1-VS2-0.1-95-bulut.json",
+  "baslik": "varsayilan-1",
+  "bicim": "tshift-plan-kaydi/1"
+ },
+ "girdi_ozeti": {
+  "kisi": 49,
+  "hucre": 415,
+  "kural": 46,
+  "sablon": 17,
+  "hafta_baslangic": "2026-10-12",
+  "profil": "DENGELI",
+  "donmus_gunler": [],
+  "sure_butcesi_sn": 240
+ },
+ "cikti": {
+  "durum": "cozuldu",
+  "motor_surumu": "0.2.0-cozucu",
+  "atamalar": [
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 1,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 3,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 4,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 16.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 5,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.25,
+      "bit": 19.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0001",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0002",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 5,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 14.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0002",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 0,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 1,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.25,
+      "bit": 11.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.75,
+      "bit": 11.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 3,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 16.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 4,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 17.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0003",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 6,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0006",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0006",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0006",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0006",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 5,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 26.0,
+      "bit": 26.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 28.0,
+      "bit": 29.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 31.0,
+      "bit": 31.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0006",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 0,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.25,
+      "bit": 11.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 4,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 5,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0007",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 0,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.0,
+      "bit": 27.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 27.75,
+      "bit": 28.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 4,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 5,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0008",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 6,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0009",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 0,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 16.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0009",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 1,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.5,
+      "bit": 14.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0009",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 2,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 17.0,
+      "bit": 17.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0009",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 3,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.0,
+      "bit": 28.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.25,
+      "bit": 28.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0009",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0010",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 0,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0010",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0010",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 3,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0010",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 6,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0011",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 1,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 17.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0011",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 14.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 0,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 1,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 2,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 3,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 25.25,
+      "bit": 25.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.0,
+      "bit": 27.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 30.0,
+      "bit": 30.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 4,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 25.25,
+      "bit": 25.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.0,
+      "bit": 27.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.25,
+      "bit": 28.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 31.0,
+      "bit": 31.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0012",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 6,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0013",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0013",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0013",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 14.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0013",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 14.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0013",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 5,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 0,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.25,
+      "bit": 17.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 1,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.75,
+      "bit": 28.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 28.0,
+      "bit": 29.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 2,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.75,
+      "bit": 28.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 28.0,
+      "bit": 29.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 31.0,
+      "bit": 31.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 4,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 5,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0014",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 6,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 0,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 1,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 4,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 17.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 5,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0015",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0016",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0016",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0016",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0016",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0016",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 0,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 25.25,
+      "bit": 25.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.5,
+      "bit": 27.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 28.0,
+      "bit": 29.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 30.0,
+      "bit": 30.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 2,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.25,
+      "bit": 11.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 4,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 5,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.0,
+      "bit": 9.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0017",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 6,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0018",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 1,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 25.25,
+      "bit": 25.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.0,
+      "bit": 27.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 27.25,
+      "bit": 27.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 30.0,
+      "bit": 30.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0018",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 2,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 25.25,
+      "bit": 25.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.0,
+      "bit": 27.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 27.0,
+      "bit": 27.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 30.75,
+      "bit": 31.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0018",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 5,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0019",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0019",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.25,
+      "bit": 13.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0019",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.25,
+      "bit": 16.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0019",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0019",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0020",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 0,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.75,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0020",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 1,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 14.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0020",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 3,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.5,
+      "bit": 14.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0020",
+    "ekip": "SATIS",
+    "sablon": "S-KISA",
+    "gun": 4,
+    "bas": 10,
+    "bit": 16,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 15.5,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0020",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0021",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 0,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 17.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0021",
+    "ekip": "SATIS",
+    "sablon": "S-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.75,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0021",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0022",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 1,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.5,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0022",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 2,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0022",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 3,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0022",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 4,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0022",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 1,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 11.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 2,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 3,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 4,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 5,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0024",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 28.0,
+      "bit": 28.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 0,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 18.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 21.0,
+      "bit": 21.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 1,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 19.25,
+      "bit": 19.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.5,
+      "bit": 20.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.25,
+      "bit": 21.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 2,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.25,
+      "bit": 18.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 21.0,
+      "bit": 21.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 3,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.5,
+      "bit": 20.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.25,
+      "bit": 21.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 4,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 19.25,
+      "bit": 19.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.5,
+      "bit": 20.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.0,
+      "bit": 21.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0025",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 6,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 0,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.25,
+      "bit": 18.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.25,
+      "bit": 19.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 1,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 3,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 4,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 9.25,
+      "bit": 9.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.0,
+      "bit": 11.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 5,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0026",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.5,
+      "bit": 26.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 0,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 17.0,
+      "bit": 17.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.5,
+      "bit": 18.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 1,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 2,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 3,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 4,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0027",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 6,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-SABAH",
+    "gun": 0,
+    "bas": 7,
+    "bit": 16.25,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 10.25,
+      "bit": 11.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 1,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-ARA",
+    "gun": 2,
+    "bas": 11,
+    "bit": 20.25,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.25,
+      "bit": 18.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-AKSAM",
+    "gun": 3,
+    "bas": 13.75,
+    "bit": 23,
+    "molalar": [
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.75,
+      "bit": 17.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.5,
+      "bit": 18.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 4,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.0,
+      "bit": 27.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 27.25,
+      "bit": 28.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 30.75,
+      "bit": 31.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0028",
+    "ekip": "SATIS",
+    "sablon": "S-GECE",
+    "gun": 6,
+    "bas": 23,
+    "bit": 32.25,
+    "molalar": [
+     {
+      "bas": 24.25,
+      "bit": 24.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.5,
+      "bit": 26.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 26.75,
+      "bit": 27.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 29.0,
+      "bit": 29.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0029",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0029",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-YARIM",
+    "gun": 1,
+    "bas": 9,
+    "bit": 13,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.25,
+      "bit": 13.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0029",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-YARIM",
+    "gun": 2,
+    "bas": 9,
+    "bit": 13,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.25,
+      "bit": 13.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0029",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-YARIM",
+    "gun": 3,
+    "bas": 9,
+    "bit": 13,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.25,
+      "bit": 13.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0029",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 4,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 14.25,
+      "bit": 14.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0030",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0030",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0030",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0030",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0030",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0031",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 0,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.25,
+      "bit": 21.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 22.0,
+      "bit": 22.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0031",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.25,
+      "bit": 12.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0031",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 5,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 17.5,
+      "bit": 17.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.25,
+      "bit": 20.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 20.25,
+      "bit": 20.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 0,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.25,
+      "bit": 16.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 1,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 17.25,
+      "bit": 17.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.25,
+      "bit": 21.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.0,
+      "bit": 21.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 2,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.25,
+      "bit": 21.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 22.0,
+      "bit": 22.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 3,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 17.75,
+      "bit": 18.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.25,
+      "bit": 21.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.0,
+      "bit": 21.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 5,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 3.75,
+      "bit": 4.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 5.0,
+      "bit": 5.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 5.75,
+      "bit": 6.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0032",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 6,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0033",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 1,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0033",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.75,
+      "bit": 12.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0033",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 5,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.25,
+      "bit": 17.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0034",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.25,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0034",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0034",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0034",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 0,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 3.0,
+      "bit": 3.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 4.0,
+      "bit": 4.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 4.75,
+      "bit": 5.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 1,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.25,
+      "bit": 10.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 2,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 3,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.25,
+      "bit": 17.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 4,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 14.0,
+      "bit": 14.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0035",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 5,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0036",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 1,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 4.0,
+      "bit": 4.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 5.0,
+      "bit": 5.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 5.75,
+      "bit": 6.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0036",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 0,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 1,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 16.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 2,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 3,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 15.0,
+      "bit": 15.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 16.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 4,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 19.0,
+      "bit": 19.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.25,
+      "bit": 21.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 21.25,
+      "bit": 21.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0037",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 6,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 2.75,
+      "bit": 3.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 4.0,
+      "bit": 4.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 4.75,
+      "bit": 5.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 0,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 1,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.5,
+      "bit": 14.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 2,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 3,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 15.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-ARA",
+    "gun": 4,
+    "bas": 11.25,
+    "bit": 20,
+    "molalar": [
+     {
+      "bas": 13.5,
+      "bit": 13.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.75,
+      "bit": 18.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0038",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-AKSAM",
+    "gun": 6,
+    "bas": 15.25,
+    "bit": 24,
+    "molalar": [
+     {
+      "bas": 17.25,
+      "bit": 17.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.25,
+      "bit": 20.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 22.0,
+      "bit": 22.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0039",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 11.0,
+      "bit": 11.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0039",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0039",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.75,
+      "bit": 11.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.75,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0039",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0039",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-UZUN",
+    "gun": 5,
+    "bas": 8,
+    "bit": 18.25,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.75,
+      "bit": 16.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0041",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 3,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.25,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0041",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 4,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.5,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0041",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-SABAH",
+    "gun": 5,
+    "bas": 8,
+    "bit": 16.75,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.75,
+      "bit": 13.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0042",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 2,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 3.25,
+      "bit": 3.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 5.0,
+      "bit": 5.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 5.75,
+      "bit": 6.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0042",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 3,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 3.0,
+      "bit": 3.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 4.0,
+      "bit": 4.25,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 4.75,
+      "bit": 5.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0042",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-GECE",
+    "gun": 4,
+    "bas": 0,
+    "bit": 8.75,
+    "molalar": [
+     {
+      "bas": 3.5,
+      "bit": 3.75,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 4.0,
+      "bit": 4.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 4.75,
+      "bit": 5.0,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0042",
+    "ekip": "BACKOFFICE",
+    "sablon": "B-YARIM",
+    "gun": 5,
+    "bas": 9,
+    "bit": 13,
+    "molalar": [
+     {
+      "bas": 9.75,
+      "bit": 10.0,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 11.5,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.75,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0043",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0043",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0043",
+    "ekip": "MHIZMET",
+    "sablon": "M-HSONU",
+    "gun": 5,
+    "bas": 10,
+    "bit": 18,
+    "molalar": [
+     {
+      "bas": 11.5,
+      "bit": 11.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.083333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 0,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 15.0,
+      "bit": 15.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.5,
+      "bit": 17.833333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 1,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.5,
+      "bit": 17.833333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.5,
+      "bit": 20.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 2,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.5,
+      "bit": 18.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 3,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 15.5,
+      "bit": 15.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.0,
+      "bit": 16.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.5,
+      "bit": 20.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 4,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0044",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 6,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.75,
+      "bit": 15.083333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0045",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 0,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.583333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0045",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.833333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0045",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0045",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.75,
+      "bit": 12.25,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0045",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 5,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.583333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 0,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 1,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 15.0,
+      "bit": 15.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.5,
+      "bit": 19.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 2,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 16.0,
+      "bit": 16.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 17.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.25,
+      "bit": 19.583333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 3,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.5,
+      "bit": 18.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 19.75,
+      "bit": 20.083333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAM",
+    "gun": 4,
+    "bas": 13,
+    "bit": 22,
+    "molalar": [
+     {
+      "bas": 14.5,
+      "bit": 14.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.5,
+      "bit": 17.833333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 18.0,
+      "bit": 18.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 20.5,
+      "bit": 20.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0046",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 6,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.25,
+      "bit": 13.583333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.25,
+      "bit": 14.583333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0047",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 1,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.833333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0047",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 2,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0047",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 3,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 10.0,
+      "bit": 10.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 16.5,
+      "bit": 16.833333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0047",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 4,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.833333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0047",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.0,
+      "bit": 11.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.5,
+      "bit": 13.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.583333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 0,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.5,
+      "bit": 13.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 15.5,
+      "bit": 15.833333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 1,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 2,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 3,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 14.0,
+      "bit": 14.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 4,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 10.5,
+      "bit": 10.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.25,
+      "bit": 11.75,
+      "tip": "yemek"
+     },
+     {
+      "bas": 12.5,
+      "bit": 12.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.0,
+      "bit": 15.333333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0048",
+    "ekip": "MHIZMET",
+    "sablon": "M-SABAH",
+    "gun": 5,
+    "bas": 8,
+    "bit": 17,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 12.0,
+      "bit": 12.5,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.0,
+      "bit": 13.333333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 15.25,
+      "bit": 15.583333333333334,
+      "tip": "dinlenme"
+     }
+    ]
+   },
+   {
+    "calisan": "C0049",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAMK",
+    "gun": 1,
+    "bas": 17,
+    "bit": 21,
+    "molalar": [
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.5,
+      "bit": 21.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0049",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAMK",
+    "gun": 2,
+    "bas": 17,
+    "bit": 21,
+    "molalar": [
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.0,
+      "bit": 19.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.5,
+      "bit": 21.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0049",
+    "ekip": "MHIZMET",
+    "sablon": "M-AKSAMK",
+    "gun": 3,
+    "bas": 17,
+    "bit": 21,
+    "molalar": [
+     {
+      "bas": 18.0,
+      "bit": 18.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 19.25,
+      "bit": 19.583333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.0,
+      "bit": 20.333333333333332,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 20.5,
+      "bit": 21.0,
+      "tip": "yemek"
+     }
+    ]
+   },
+   {
+    "calisan": "C0049",
+    "ekip": "MHIZMET",
+    "sablon": "M-UZUN",
+    "gun": 6,
+    "bas": 8,
+    "bit": 18.5,
+    "molalar": [
+     {
+      "bas": 9.5,
+      "bit": 9.833333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 11.5,
+      "bit": 12.0,
+      "tip": "yemek"
+     },
+     {
+      "bas": 13.75,
+      "bit": 14.083333333333334,
+      "tip": "dinlenme"
+     },
+     {
+      "bas": 17.0,
+      "bit": 17.333333333333332,
+      "tip": "dinlenme"
+     }
+    ]
+   }
+  ],
+  "metrikler": {
+   "asgari_kapsama_yuzde": 100.0,
+   "hedef_kapsama_yuzde": 100.0,
+   "eksik_hedef_dakika": 0,
+   "toplam_saat": 1672.0,
+   "fazla_mesai_saat": 0.0,
+   "optimuma_uzaklik_yuzde": null,
+   "cozum_suresi_sn": 7.76,
+   "rotasyon_geri_gecis": 1,
+   "rotasyon_geri_saat": 1.5,
+   "plan_degisikligi": null
+  },
+  "cozum_istatistikleri": {
+   "degisken_sayisi": 17850,
+   "kisit_sayisi": 81479,
+   "cozum_sayisi": 22,
+   "motor": "CP-SAT",
+   "profil": "DENGELI",
+   "amac_degeri": 15637,
+   "alt_sinir": null,
+   "mola_adimi_alt_sinir": 15637,
+   "fazla_mesaisiz_alt_sinir": null,
+   "durma_sebebi": "mola_adimi_optimum",
+   "cozum_suresi_sn": 7.76,
+   "model_kurma_sn": 0.0,
+   "ilk_asama_sn": 194.72,
+   "ana_asama_butce_sn": 45.28,
+   "ilk_cozum_sn": 1.38,
+   "isci_sayisi": 2,
+   "iki_asama": true,
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 192.0,
+    "saniye": 192.02,
+    "ipucusuz": false,
+    "amacsiz_amac": 257237,
+    "iyilesmis_amac": 18129,
+    "plan_bulundu": true,
+    "cozum_sayisi": 108,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 250895.0,
+     "son_amac": 18129.0,
+     "cozum": 108,
+     "son_iyilesme_sn": 189.98,
+     "alt_sinir_son": 18080.0,
+     "egri": [
+      [
+       0.71,
+       250895.0,
+       15402.0
+      ],
+      [
+       1.42,
+       165893.0,
+       17878.0
+      ],
+      [
+       2.13,
+       137912.0,
+       18039.0
+      ],
+      [
+       3.12,
+       134816.0,
+       18046.0
+      ],
+      [
+       3.99,
+       112839.0,
+       18046.0
+      ],
+      [
+       4.45,
+       92447.0,
+       18046.0
+      ],
+      [
+       5.63,
+       78484.0,
+       18046.0
+      ],
+      [
+       6.34,
+       78403.0,
+       18046.0
+      ],
+      [
+       7.35,
+       71429.0,
+       18046.0
+      ],
+      [
+       9.4,
+       69908.0,
+       18046.0
+      ],
+      [
+       10.94,
+       62898.0,
+       18046.0
+      ],
+      [
+       12.43,
+       55350.0,
+       18049.0
+      ],
+      [
+       16.39,
+       53821.0,
+       18050.0
+      ],
+      [
+       24.29,
+       50824.0,
+       18052.0
+      ],
+      [
+       25.57,
+       41357.0,
+       18052.0
+      ],
+      [
+       27.09,
+       37254.0,
+       18052.0
+      ],
+      [
+       31.39,
+       30277.0,
+       18052.0
+      ],
+      [
+       33.53,
+       28252.0,
+       18052.0
+      ],
+      [
+       35.73,
+       23344.0,
+       18052.0
+      ],
+      [
+       37.15,
+       23272.0,
+       18052.0
+      ],
+      [
+       41.32,
+       21222.0,
+       18067.0
+      ],
+      [
+       42.59,
+       18236.0,
+       18067.0
+      ],
+      [
+       48.17,
+       18211.0,
+       18067.0
+      ],
+      [
+       55.22,
+       18157.0,
+       18074.0
+      ],
+      [
+       189.98,
+       18129.0,
+       18080.0
+      ]
+     ],
+     "yuzde50_sn": 3.16,
+     "yuzde90_sn": 25.13,
+     "yuzde99_sn": 42.13
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "TERCIH_KARSILAMA": {
+      "ceza": 11880,
+      "deger": 360,
+      "degisken": 15,
+      "pay_yuzde": 65.5
+     },
+     "MOLA_KAPSAMASI": {
+      "ceza": 3878,
+      "deger": 554,
+      "degisken": 415,
+      "pay_yuzde": 21.4
+     },
+     "ADALET_DENGESI": {
+      "ceza": 2365,
+      "deger": 473,
+      "degisken": 900,
+      "pay_yuzde": 13.0
+     },
+     "VARDIYA_ROTASYON_YONU": {
+      "ceza": 6,
+      "deger": 2,
+      "degisken": 293,
+      "pay_yuzde": 0.0
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 30,
+      "pay_yuzde": 0.0
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 415,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 30,
+    "saniye": 2.48,
+    "deneme_siniri": 1,
+    "denemeler": [
+     {
+      "tohum": 1,
+      "saniye": 2.36,
+      "durum": "OPTIMAL"
+     }
+    ],
+    "gevsek_kisa_saniye": 20.0,
+    "atlandi": false,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "gevsekten_serte": null,
+   "fazla_mesai_onarimi": null,
+   "ipucu_plani": null,
+   "baslangic_plani_kullanildi": false,
+   "donmus_gun": null,
+   "amac_dagilimi": {
+    "TERCIH_KARSILAMA": {
+     "ceza": 11880,
+     "deger": 360,
+     "degisken": 15,
+     "pay_yuzde": 76.0
+    },
+    "ADALET_DENGESI": {
+     "ceza": 2365,
+     "deger": 473,
+     "degisken": 900,
+     "pay_yuzde": 15.1
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 1386,
+     "deger": 198,
+     "degisken": 415,
+     "pay_yuzde": 8.9
+    },
+    "VARDIYA_ROTASYON_YONU": {
+     "ceza": 6,
+     "deger": 2,
+     "degisken": 293,
+     "pay_yuzde": 0.0
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 30,
+     "pay_yuzde": 0.0
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 415,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 17996.0,
+    "son_amac": 15637.000000000002,
+    "cozum": 22,
+    "son_iyilesme_sn": 7.15,
+    "alt_sinir_son": 15588.000000000002,
+    "egri": [
+     [
+      1.38,
+      17996.0,
+      14412.000000000002
+     ],
+     [
+      1.48,
+      17198.0,
+      15399.000000000002
+     ],
+     [
+      1.76,
+      16722.0,
+      15574.000000000002
+     ],
+     [
+      1.95,
+      16652.0,
+      15588.000000000002
+     ],
+     [
+      2.14,
+      16498.0,
+      15588.000000000002
+     ],
+     [
+      2.28,
+      16470.0,
+      15588.000000000002
+     ],
+     [
+      2.3,
+      16302.000000000002,
+      15588.000000000002
+     ],
+     [
+      2.6,
+      16008.000000000002,
+      15588.000000000002
+     ],
+     [
+      2.61,
+      16001.000000000002,
+      15588.000000000002
+     ],
+     [
+      2.7,
+      15994.000000000002,
+      15588.000000000002
+     ],
+     [
+      2.75,
+      15721.000000000002,
+      15588.000000000002
+     ],
+     [
+      3.09,
+      15714.000000000002,
+      15588.000000000002
+     ],
+     [
+      3.22,
+      15707.000000000002,
+      15588.000000000002
+     ],
+     [
+      3.23,
+      15700.000000000002,
+      15588.000000000002
+     ],
+     [
+      3.86,
+      15686.000000000002,
+      15588.000000000002
+     ],
+     [
+      3.87,
+      15679.000000000002,
+      15588.000000000002
+     ],
+     [
+      4.04,
+      15672.000000000002,
+      15588.000000000002
+     ],
+     [
+      4.94,
+      15665.000000000002,
+      15588.000000000002
+     ],
+     [
+      5.23,
+      15658.000000000002,
+      15588.000000000002
+     ],
+     [
+      5.52,
+      15651.000000000002,
+      15588.000000000002
+     ],
+     [
+      6.83,
+      15644.000000000002,
+      15588.000000000002
+     ],
+     [
+      7.15,
+      15637.000000000002,
+      15588.000000000002
+     ]
+    ],
+    "yuzde50_sn": 1.76,
+    "yuzde90_sn": 2.75,
+    "yuzde99_sn": 5.23
+   },
+   "baslangic_amac": null
+  },
+  "uygulanmayan_notlar": [
+   "sablon M-AKSAM gun 5: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+   "sablon M-AKSAM gun 6: departman kapali (MHIZMET ekibi, 13:00-22:00), atama yapilamaz (CALISMA_SAATLERI)",
+   "sablon M-AKSAMK gun 5: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)",
+   "sablon M-AKSAMK gun 6: departman kapali (MHIZMET ekibi, 17:00-21:00), atama yapilamaz (CALISMA_SAATLERI)"
+  ],
+  "bagimsiz_denetim": {
+   "sert_ihlal": 0,
+   "yumusak_ihlal": 115,
+   "ihlaller": [],
+   "uygulanmayan_kurallar": [],
+   "eksik_boyutlar": [
+    {
+     "kural": "ADALET_DENGESI",
+     "boyut": "saat",
+     "sebep": "sayilabilir boyut degil; T-13",
+     "denetlenemedi": true
+    }
+   ],
+   "gecmis_ihlaller": [],
+   "yayin_kapisi": {
+    "yayinlanabilir": true,
+    "engelleyen_ihlaller": [],
+    "kabul_bekleyen_ihlaller": [],
+    "bilgi_ihlaller": [],
+    "denetlenemeyen_kurallar": [
+     {
+      "kod": "ADALET_DENGESI",
+      "parca": "saat",
+      "tur": "YUMUSAK",
+      "yasal": false,
+      "etki": "rapor",
+      "mesaj": "ADALET_DENGESI kurali (saat parcasi) aktif ama denetlenemedi (sayilabilir boyut degil; T-13); kural yumusak, yayin etkilenmez -- yalniz bildirilir"
+     }
+    ],
+    "kabul_secenegi_sunulur": false,
+    "gecmis_sert_ihlal": 0
+   }
+  }
+ },
+ "dogrulama": {
+  "ihlaller": [
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0001",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 3.04,
+    "gereken": 2,
+    "mesaj": "C0001 bu ay ortalamadan 3.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0016",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0016 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0019",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0019 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0024",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0024 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0026",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0026 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0029",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0029 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0032",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0032 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0035",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 3.04,
+    "gereken": 2,
+    "mesaj": "C0035 bu ay ortalamadan 3.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0037",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 2.04,
+    "gereken": 2,
+    "mesaj": "C0037 bu ay ortalamadan 2.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0038",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "gece",
+    "olculen": 5.04,
+    "gereken": 2,
+    "mesaj": "C0038 bu ay ortalamadan 5.0 gece fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0007",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "hafta_sonu",
+    "olculen": 2.57,
+    "gereken": 2,
+    "mesaj": "C0007 bu ay ortalamadan 2.6 hafta_sonu fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0015",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "hafta_sonu",
+    "olculen": 2.57,
+    "gereken": 2,
+    "mesaj": "C0015 bu ay ortalamadan 2.6 hafta_sonu fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0026",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "hafta_sonu",
+    "olculen": 2.57,
+    "gereken": 2,
+    "mesaj": "C0026 bu ay ortalamadan 2.6 hafta_sonu fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0039",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "hafta_sonu",
+    "olculen": 2.57,
+    "gereken": 2,
+    "mesaj": "C0039 bu ay ortalamadan 2.6 hafta_sonu fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "ADALET_DENGESI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0047",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "boyut": "hafta_sonu",
+    "olculen": 2.57,
+    "gereken": 2,
+    "mesaj": "C0047 bu ay ortalamadan 2.6 hafta_sonu fazla calisiyor (esik 2)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 8.25,
+    "sahada": 6,
+    "asgari": 12,
+    "olculen": 6,
+    "gereken": 12,
+    "mesaj": "gun 0 saat 08:15: molalar dusulunce sahada 6 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 10.0,
+    "sahada": 6,
+    "asgari": 7,
+    "olculen": 6,
+    "gereken": 7,
+    "mesaj": "gun 0 saat 10: molalar dusulunce sahada 6 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 11.0,
+    "sahada": 9,
+    "asgari": 11,
+    "olculen": 9,
+    "gereken": 11,
+    "mesaj": "gun 0 saat 11: molalar dusulunce sahada 9 kisi kaliyor (asgari 11)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 12.0,
+    "sahada": 9,
+    "asgari": 11,
+    "olculen": 9,
+    "gereken": 11,
+    "mesaj": "gun 0 saat 12: molalar dusulunce sahada 9 kisi kaliyor (asgari 11)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 13.0,
+    "sahada": 10,
+    "asgari": 11,
+    "olculen": 10,
+    "gereken": 11,
+    "mesaj": "gun 0 saat 13: molalar dusulunce sahada 10 kisi kaliyor (asgari 11)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 14.25,
+    "sahada": 12,
+    "asgari": 14,
+    "olculen": 12,
+    "gereken": 14,
+    "mesaj": "gun 0 saat 14:15: molalar dusulunce sahada 12 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 15.0,
+    "sahada": 11,
+    "asgari": 14,
+    "olculen": 11,
+    "gereken": 14,
+    "mesaj": "gun 0 saat 15: molalar dusulunce sahada 11 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 16.0,
+    "sahada": 8,
+    "asgari": 12,
+    "olculen": 8,
+    "gereken": 12,
+    "mesaj": "gun 0 saat 16: molalar dusulunce sahada 8 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 17.0,
+    "sahada": 6,
+    "asgari": 8,
+    "olculen": 6,
+    "gereken": 8,
+    "mesaj": "gun 0 saat 17: molalar dusulunce sahada 6 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 18.0,
+    "sahada": 7,
+    "asgari": 8,
+    "olculen": 7,
+    "gereken": 8,
+    "mesaj": "gun 0 saat 18: molalar dusulunce sahada 7 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 0,
+    "saat": 20.25,
+    "sahada": 3,
+    "asgari": 6,
+    "olculen": 3,
+    "gereken": 6,
+    "mesaj": "gun 0 saat 20:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 8.25,
+    "sahada": 7,
+    "asgari": 8,
+    "olculen": 7,
+    "gereken": 8,
+    "mesaj": "gun 1 saat 08:15: molalar dusulunce sahada 7 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 10.75,
+    "sahada": 6,
+    "asgari": 8,
+    "olculen": 6,
+    "gereken": 8,
+    "mesaj": "gun 1 saat 10:45: molalar dusulunce sahada 6 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 11.0,
+    "sahada": 10,
+    "asgari": 12,
+    "olculen": 10,
+    "gereken": 12,
+    "mesaj": "gun 1 saat 11: molalar dusulunce sahada 10 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 12.0,
+    "sahada": 9,
+    "asgari": 12,
+    "olculen": 9,
+    "gereken": 12,
+    "mesaj": "gun 1 saat 12: molalar dusulunce sahada 9 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 13.0,
+    "sahada": 9,
+    "asgari": 12,
+    "olculen": 9,
+    "gereken": 12,
+    "mesaj": "gun 1 saat 13: molalar dusulunce sahada 9 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 15.0,
+    "sahada": 12,
+    "asgari": 14,
+    "olculen": 12,
+    "gereken": 14,
+    "mesaj": "gun 1 saat 15: molalar dusulunce sahada 12 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 16.0,
+    "sahada": 8,
+    "asgari": 13,
+    "olculen": 8,
+    "gereken": 13,
+    "mesaj": "gun 1 saat 16: molalar dusulunce sahada 8 kisi kaliyor (asgari 13)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 18.0,
+    "sahada": 7,
+    "asgari": 9,
+    "olculen": 7,
+    "gereken": 9,
+    "mesaj": "gun 1 saat 18: molalar dusulunce sahada 7 kisi kaliyor (asgari 9)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 1,
+    "saat": 20.25,
+    "sahada": 3,
+    "asgari": 6,
+    "olculen": 3,
+    "gereken": 6,
+    "mesaj": "gun 1 saat 20:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 8.25,
+    "sahada": 11,
+    "asgari": 12,
+    "olculen": 11,
+    "gereken": 12,
+    "mesaj": "gun 2 saat 08:15: molalar dusulunce sahada 11 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 10.0,
+    "sahada": 7,
+    "asgari": 10,
+    "olculen": 7,
+    "gereken": 10,
+    "mesaj": "gun 2 saat 10: molalar dusulunce sahada 7 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 11.0,
+    "sahada": 10,
+    "asgari": 14,
+    "olculen": 10,
+    "gereken": 14,
+    "mesaj": "gun 2 saat 11: molalar dusulunce sahada 10 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 12.0,
+    "sahada": 10,
+    "asgari": 14,
+    "olculen": 10,
+    "gereken": 14,
+    "mesaj": "gun 2 saat 12: molalar dusulunce sahada 10 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 14.0,
+    "sahada": 14,
+    "asgari": 17,
+    "olculen": 14,
+    "gereken": 17,
+    "mesaj": "gun 2 saat 14: molalar dusulunce sahada 14 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 15.0,
+    "sahada": 16,
+    "asgari": 17,
+    "olculen": 16,
+    "gereken": 17,
+    "mesaj": "gun 2 saat 15: molalar dusulunce sahada 16 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 16.25,
+    "sahada": 9,
+    "asgari": 17,
+    "olculen": 9,
+    "gereken": 17,
+    "mesaj": "gun 2 saat 16:15: molalar dusulunce sahada 9 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 17.0,
+    "sahada": 9,
+    "asgari": 10,
+    "olculen": 9,
+    "gereken": 10,
+    "mesaj": "gun 2 saat 17: molalar dusulunce sahada 9 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 18.0,
+    "sahada": 7,
+    "asgari": 10,
+    "olculen": 7,
+    "gereken": 10,
+    "mesaj": "gun 2 saat 18: molalar dusulunce sahada 7 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 2,
+    "saat": 20.25,
+    "sahada": 3,
+    "asgari": 6,
+    "olculen": 3,
+    "gereken": 6,
+    "mesaj": "gun 2 saat 20:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 8.25,
+    "sahada": 10,
+    "asgari": 11,
+    "olculen": 10,
+    "gereken": 11,
+    "mesaj": "gun 3 saat 08:15: molalar dusulunce sahada 10 kisi kaliyor (asgari 11)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 10.0,
+    "sahada": 8,
+    "asgari": 10,
+    "olculen": 8,
+    "gereken": 10,
+    "mesaj": "gun 3 saat 10: molalar dusulunce sahada 8 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 11.0,
+    "sahada": 11,
+    "asgari": 15,
+    "olculen": 11,
+    "gereken": 15,
+    "mesaj": "gun 3 saat 11: molalar dusulunce sahada 11 kisi kaliyor (asgari 15)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 12.0,
+    "sahada": 12,
+    "asgari": 15,
+    "olculen": 12,
+    "gereken": 15,
+    "mesaj": "gun 3 saat 12: molalar dusulunce sahada 12 kisi kaliyor (asgari 15)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 13.0,
+    "sahada": 11,
+    "asgari": 15,
+    "olculen": 11,
+    "gereken": 15,
+    "mesaj": "gun 3 saat 13: molalar dusulunce sahada 11 kisi kaliyor (asgari 15)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 14.0,
+    "sahada": 16,
+    "asgari": 17,
+    "olculen": 16,
+    "gereken": 17,
+    "mesaj": "gun 3 saat 14: molalar dusulunce sahada 16 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 15.0,
+    "sahada": 14,
+    "asgari": 17,
+    "olculen": 14,
+    "gereken": 17,
+    "mesaj": "gun 3 saat 15: molalar dusulunce sahada 14 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 16.0,
+    "sahada": 11,
+    "asgari": 17,
+    "olculen": 11,
+    "gereken": 17,
+    "mesaj": "gun 3 saat 16: molalar dusulunce sahada 11 kisi kaliyor (asgari 17)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 18.25,
+    "sahada": 8,
+    "asgari": 11,
+    "olculen": 8,
+    "gereken": 11,
+    "mesaj": "gun 3 saat 18:15: molalar dusulunce sahada 8 kisi kaliyor (asgari 11)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 3,
+    "saat": 20.25,
+    "sahada": 3,
+    "asgari": 7,
+    "olculen": 3,
+    "gereken": 7,
+    "mesaj": "gun 3 saat 20:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 8.25,
+    "sahada": 8,
+    "asgari": 9,
+    "olculen": 8,
+    "gereken": 9,
+    "mesaj": "gun 4 saat 08:15: molalar dusulunce sahada 8 kisi kaliyor (asgari 9)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 10.0,
+    "sahada": 6,
+    "asgari": 8,
+    "olculen": 6,
+    "gereken": 8,
+    "mesaj": "gun 4 saat 10: molalar dusulunce sahada 6 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 11.0,
+    "sahada": 10,
+    "asgari": 12,
+    "olculen": 10,
+    "gereken": 12,
+    "mesaj": "gun 4 saat 11: molalar dusulunce sahada 10 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 12.0,
+    "sahada": 9,
+    "asgari": 12,
+    "olculen": 9,
+    "gereken": 12,
+    "mesaj": "gun 4 saat 12: molalar dusulunce sahada 9 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 13.0,
+    "sahada": 11,
+    "asgari": 12,
+    "olculen": 11,
+    "gereken": 12,
+    "mesaj": "gun 4 saat 13: molalar dusulunce sahada 11 kisi kaliyor (asgari 12)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 14.0,
+    "sahada": 13,
+    "asgari": 14,
+    "olculen": 13,
+    "gereken": 14,
+    "mesaj": "gun 4 saat 14: molalar dusulunce sahada 13 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 15.0,
+    "sahada": 13,
+    "asgari": 14,
+    "olculen": 13,
+    "gereken": 14,
+    "mesaj": "gun 4 saat 15: molalar dusulunce sahada 13 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 16.0,
+    "sahada": 7,
+    "asgari": 14,
+    "olculen": 7,
+    "gereken": 14,
+    "mesaj": "gun 4 saat 16: molalar dusulunce sahada 7 kisi kaliyor (asgari 14)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 18.25,
+    "sahada": 7,
+    "asgari": 9,
+    "olculen": 7,
+    "gereken": 9,
+    "mesaj": "gun 4 saat 18:15: molalar dusulunce sahada 7 kisi kaliyor (asgari 9)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 4,
+    "saat": 20.25,
+    "sahada": 3,
+    "asgari": 6,
+    "olculen": 3,
+    "gereken": 6,
+    "mesaj": "gun 4 saat 20:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 8.25,
+    "sahada": 6,
+    "asgari": 7,
+    "olculen": 6,
+    "gereken": 7,
+    "mesaj": "gun 5 saat 08:15: molalar dusulunce sahada 6 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 10.0,
+    "sahada": 4,
+    "asgari": 5,
+    "olculen": 4,
+    "gereken": 5,
+    "mesaj": "gun 5 saat 10: molalar dusulunce sahada 4 kisi kaliyor (asgari 5)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 11.25,
+    "sahada": 7,
+    "asgari": 8,
+    "olculen": 7,
+    "gereken": 8,
+    "mesaj": "gun 5 saat 11:15: molalar dusulunce sahada 7 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 12.0,
+    "sahada": 5,
+    "asgari": 8,
+    "olculen": 5,
+    "gereken": 8,
+    "mesaj": "gun 5 saat 12: molalar dusulunce sahada 5 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 15.0,
+    "sahada": 8,
+    "asgari": 10,
+    "olculen": 8,
+    "gereken": 10,
+    "mesaj": "gun 5 saat 15: molalar dusulunce sahada 8 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 16.0,
+    "sahada": 6,
+    "asgari": 10,
+    "olculen": 6,
+    "gereken": 10,
+    "mesaj": "gun 5 saat 16: molalar dusulunce sahada 6 kisi kaliyor (asgari 10)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 18.25,
+    "sahada": 5,
+    "asgari": 6,
+    "olculen": 5,
+    "gereken": 6,
+    "mesaj": "gun 5 saat 18:15: molalar dusulunce sahada 5 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 5,
+    "saat": 20.25,
+    "sahada": 2,
+    "asgari": 4,
+    "olculen": 2,
+    "gereken": 4,
+    "mesaj": "gun 5 saat 20:15: molalar dusulunce sahada 2 kisi kaliyor (asgari 4)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 2.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 6 saat 2: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 6 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 11.0,
+    "sahada": 5,
+    "asgari": 6,
+    "olculen": 5,
+    "gereken": 6,
+    "mesaj": "gun 6 saat 11: molalar dusulunce sahada 5 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 12.0,
+    "sahada": 6,
+    "asgari": 7,
+    "olculen": 6,
+    "gereken": 7,
+    "mesaj": "gun 6 saat 12: molalar dusulunce sahada 6 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 15.0,
+    "sahada": 7,
+    "asgari": 9,
+    "olculen": 7,
+    "gereken": 9,
+    "mesaj": "gun 6 saat 15: molalar dusulunce sahada 7 kisi kaliyor (asgari 9)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 16.0,
+    "sahada": 6,
+    "asgari": 9,
+    "olculen": 6,
+    "gereken": 9,
+    "mesaj": "gun 6 saat 16: molalar dusulunce sahada 6 kisi kaliyor (asgari 9)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 18.0,
+    "sahada": 5,
+    "asgari": 6,
+    "olculen": 5,
+    "gereken": 6,
+    "mesaj": "gun 6 saat 18: molalar dusulunce sahada 5 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "SATIS",
+    "gun": 6,
+    "saat": 20.0,
+    "sahada": 2,
+    "asgari": 3,
+    "olculen": 2,
+    "gereken": 3,
+    "mesaj": "gun 6 saat 20: molalar dusulunce sahada 2 kisi kaliyor (asgari 3)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 0,
+    "saat": 3.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 0 saat 3: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 0,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 0 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 0,
+    "saat": 18.25,
+    "sahada": 4,
+    "asgari": 6,
+    "olculen": 4,
+    "gereken": 6,
+    "mesaj": "gun 0 saat 18:15: molalar dusulunce sahada 4 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 1,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 1 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 1,
+    "saat": 5.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 1 saat 5: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 1,
+    "saat": 16.75,
+    "sahada": 6,
+    "asgari": 7,
+    "olculen": 6,
+    "gereken": 7,
+    "mesaj": "gun 1 saat 16:45: molalar dusulunce sahada 6 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 1,
+    "saat": 18.25,
+    "sahada": 4,
+    "asgari": 5,
+    "olculen": 4,
+    "gereken": 5,
+    "mesaj": "gun 1 saat 18:15: molalar dusulunce sahada 4 kisi kaliyor (asgari 5)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 2,
+    "saat": 3.25,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 2 saat 03:15: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 2,
+    "saat": 5.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 2 saat 5: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 2,
+    "saat": 18.25,
+    "sahada": 4,
+    "asgari": 6,
+    "olculen": 4,
+    "gereken": 6,
+    "mesaj": "gun 2 saat 18:15: molalar dusulunce sahada 4 kisi kaliyor (asgari 6)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 3,
+    "saat": 3.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 3 saat 3: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 3,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 3 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 3,
+    "saat": 18.25,
+    "sahada": 5,
+    "asgari": 7,
+    "olculen": 5,
+    "gereken": 7,
+    "mesaj": "gun 3 saat 18:15: molalar dusulunce sahada 5 kisi kaliyor (asgari 7)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 4,
+    "saat": 3.5,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 4 saat 03:30: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 4,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 4 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 4,
+    "saat": 18.25,
+    "sahada": 5,
+    "asgari": 8,
+    "olculen": 5,
+    "gereken": 8,
+    "mesaj": "gun 4 saat 18:15: molalar dusulunce sahada 5 kisi kaliyor (asgari 8)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 5,
+    "saat": 3.75,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 5 saat 03:45: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 5,
+    "saat": 5.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 5 saat 5: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 5,
+    "saat": 20.25,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 5 saat 20:15: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 6,
+    "saat": 2.75,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 6 saat 02:45: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 6,
+    "saat": 4.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 6 saat 4: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 6,
+    "saat": 18.25,
+    "sahada": 3,
+    "asgari": 4,
+    "olculen": 3,
+    "gereken": 4,
+    "mesaj": "gun 6 saat 18:15: molalar dusulunce sahada 3 kisi kaliyor (asgari 4)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "BACKOFFICE",
+    "gun": 6,
+    "saat": 22.0,
+    "sahada": 0,
+    "asgari": 1,
+    "olculen": 0,
+    "gereken": 1,
+    "mesaj": "gun 6 saat 22: molalar dusulunce sahada 0 kisi kaliyor (asgari 1)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 0,
+    "saat": 18.0,
+    "sahada": 2,
+    "asgari": 3,
+    "olculen": 2,
+    "gereken": 3,
+    "mesaj": "gun 0 saat 18: molalar dusulunce sahada 2 kisi kaliyor (asgari 3)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 1,
+    "saat": 18.0,
+    "sahada": 3,
+    "asgari": 4,
+    "olculen": 3,
+    "gereken": 4,
+    "mesaj": "gun 1 saat 18: molalar dusulunce sahada 3 kisi kaliyor (asgari 4)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 1,
+    "saat": 20.5,
+    "sahada": 1,
+    "asgari": 2,
+    "olculen": 1,
+    "gereken": 2,
+    "mesaj": "gun 1 saat 20:30: molalar dusulunce sahada 1 kisi kaliyor (asgari 2)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 2,
+    "saat": 18.0,
+    "sahada": 3,
+    "asgari": 4,
+    "olculen": 3,
+    "gereken": 4,
+    "mesaj": "gun 2 saat 18: molalar dusulunce sahada 3 kisi kaliyor (asgari 4)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 2,
+    "saat": 19.25,
+    "sahada": 1,
+    "asgari": 2,
+    "olculen": 1,
+    "gereken": 2,
+    "mesaj": "gun 2 saat 19:15: molalar dusulunce sahada 1 kisi kaliyor (asgari 2)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 3,
+    "saat": 18.0,
+    "sahada": 3,
+    "asgari": 4,
+    "olculen": 3,
+    "gereken": 4,
+    "mesaj": "gun 3 saat 18: molalar dusulunce sahada 3 kisi kaliyor (asgari 4)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 3,
+    "saat": 20.0,
+    "sahada": 1,
+    "asgari": 2,
+    "olculen": 1,
+    "gereken": 2,
+    "mesaj": "gun 3 saat 20: molalar dusulunce sahada 1 kisi kaliyor (asgari 2)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 4,
+    "saat": 18.0,
+    "sahada": 2,
+    "asgari": 3,
+    "olculen": 2,
+    "gereken": 3,
+    "mesaj": "gun 4 saat 18: molalar dusulunce sahada 2 kisi kaliyor (asgari 3)"
+   },
+   {
+    "kural": "MOLA_KAPSAMASI",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": null,
+    "ekip": "MHIZMET",
+    "gun": 6,
+    "saat": 13.25,
+    "sahada": 2,
+    "asgari": 3,
+    "olculen": 2,
+    "gereken": 3,
+    "mesaj": "gun 6 saat 13:15: molalar dusulunce sahada 2 kisi kaliyor (asgari 3)"
+   },
+   {
+    "kural": "TERCIH_KARSILAMA",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0002",
+    "ekip": null,
+    "gun": null,
+    "saat": null,
+    "olculen": 18.0,
+    "gereken": 24.0,
+    "mesaj": "C0002 yari zamanli, sozlesmesi 24 saat, planda 18.0 saat var (izin dusuldukten sonra gereken 24.0) -- eksik 6.0 saat bosa odenir"
+   },
+   {
+    "kural": "VARDIYA_ROTASYON_YONU",
+    "agirlik": "YUMUSAK",
+    "yasal": false,
+    "kabul_edilebilir": false,
+    "calisan": "C0025",
+    "ekip": null,
+    "gun": 2,
+    "saat": null,
+    "olculen": 1.5,
+    "gereken": 0,
+    "mesaj": "C0025: gun 1 15:15 -> gun 2 13:45, 1.50 saat geri"
+   }
+  ],
+  "metrikler": {
+   "sert_ihlal": 0,
+   "gecmis_sert_ihlal": 0,
+   "yumusak_ihlal": 115,
+   "asgari_kapsama_yuzde": 100.0,
+   "hedef_kapsama_yuzde": 100.0,
+   "eksik_hedef_dakika": 0,
+   "baska_ekipten_kapsama": {
+    "mod": "hepsi",
+    "hucre": 50,
+    "kisi_saat": 50
+   },
+   "toplam_saat": 1672.0,
+   "ucret_saat": 1830.25,
+   "brut_saat": 2017.25,
+   "fazla_mesai_saat": 3.552713678800501e-14,
+   "sozlesme_ustu_ucret_saat": 113.75
+  },
+  "uygulanmayan_kurallar": [],
+  "eksik_boyutlar": [
+   {
+    "kural": "ADALET_DENGESI",
+    "boyut": "saat",
+    "sebep": "sayilabilir boyut degil; T-13",
+    "denetlenemedi": true
+   }
+  ],
+  "okunmayan_alanlar": [
+   {
+    "alan": "ad",
+    "yer": "girdi",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "tip",
+    "yer": "calisanlar.izinler",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "ekip",
+    "yer": "kilitler",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "kiraci_saat_dilimi",
+    "yer": "girdi",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "surum",
+    "yer": "girdi",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "ekip",
+    "yer": "vardiya_sablonlari",
+    "sebep": "motor bu alani okumuyor"
+   },
+   {
+    "alan": "mola_politikasi",
+    "yer": "vardiya_sablonlari",
+    "sebep": "motor bu alani okumuyor"
+   }
+  ],
+  "gecmis_eksik": [],
+  "gecmis_eksik_ozet": {
+   "satir": 0,
+   "kisi": 0,
+   "yasal_kontrol_yapilamayan_kisi": 0,
+   "kisiler": []
+  },
+  "gecmis_ihlaller": [],
+  "yayin_kapisi": {
+   "yayinlanabilir": true,
+   "engelleyen_ihlaller": [],
+   "kabul_bekleyen_ihlaller": [],
+   "bilgi_ihlaller": [],
+   "denetlenemeyen_kurallar": [
+    {
+     "kod": "ADALET_DENGESI",
+     "parca": "saat",
+     "tur": "YUMUSAK",
+     "yasal": false,
+     "etki": "rapor",
+     "mesaj": "ADALET_DENGESI kurali (saat parcasi) aktif ama denetlenemedi (sayilabilir boyut degil; T-13); kural yumusak, yayin etkilenmez -- yalniz bildirilir"
+    }
+   ],
+   "kabul_secenegi_sunulur": false,
+   "gecmis_sert_ihlal": 0
+  }
+ }
+}

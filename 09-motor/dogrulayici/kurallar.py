@@ -519,6 +519,125 @@ def saat_dengesi(girdi, atamalar, tanim):
     return cikan
 
 
+@kural("TERCIH_KARSILAMA")
+def tercih_karsilama(girdi, atamalar, tanim):
+    """Yari zamanli calisan SOZLESME SURESINE getirilmis mi -- K-71 (14 Ekim).
+
+    Sartname #6.8'in eski anlami ("calisan tercihi" -> K-13 ile kalkti;
+    "uygunluk esnekliginin kullanim orani" -> K-22, olculebilir degildi)
+    yerine: kismi sureli sozlesmenin haftalik suresi her hafta ODENIR (Is K.
+    m. 13; T-83 mevzuat taramasi). Sozlesmenin altinda planlanan sure, bosa
+    odenen suredir (Mustafa 17:05: "sirket bosa para yakiyor").
+
+    YUMUSAK: ihlal yayin kapisini durdurmaz, puan dusurur. Uygunluk takvimi
+    (UYGUNLUK_TAKVIMI, K-13) ayri ve SERT'tir; bu kural onun ustune yalniz
+    "uygun gunlerde bos birakma, sureyi doldur" der.
+
+    ⚠ `haftalik_saat` olmayan yari zamanli DENETLENMEZ (eski setler). Pasif
+      calisan sayilmaz. Borc tam zamanlidaki gibi (`_borc_saat`: izin dusurur).
+    ⚠ Cozucude ayni kural bagimsiz yazili (model._tercih_karsilama, dakika
+      cinsinden) -- #7.6.
+    """
+    tolerans = _p(tanim, "tolerans_saat", 0)
+    toplam = {}
+    for a in atamalar:
+        toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
+    cikan = []
+    for c in girdi.get("calisanlar", []) or []:
+        soz = c.get("sozlesme") or {}
+        if soz.get("tip") != "yari_zamanli" or soz.get("haftalik_saat") is None:
+            continue
+        if c.get("durum", "aktif") != "aktif":
+            continue
+        gereken = _borc_saat(c) - tolerans
+        if gereken <= 0:
+            continue
+        calisilan = toplam.get(c["id"], 0.0)
+        if calisilan + 1e-6 < gereken:
+            cikan.append(_ihlal(
+                "TERCIH_KARSILAMA", tanim, calisan=c["id"],
+                olculen=round(calisilan, 2), gereken=round(gereken, 2),
+                mesaj=("%s yari zamanli, sozlesmesi %s saat, planda %.1f saat var (izin "
+                       "dusuldukten sonra gereken %.1f) -- eksik %.1f saat bosa odenir"
+                       % (c["id"], soz.get("haftalik_saat"), calisilan, gereken,
+                          gereken - calisilan))))
+    return cikan
+
+
+@kural("EKIP_SUREKLILIGI")
+def ekip_surekliligi(girdi, atamalar, tanim):
+    """Cok ekipli kisi BIRINCIL ekibinde mi calisiyor -- K-72 (14 Ekim).
+
+    Sartname #6.5 "ayni kisiler mumkun oldugunca ayni ekiple calissin" --
+    tanim (a): `birincil_ekip` dolu kisinin baska ekibin vardiyasina her
+    atamasi bir "odunc"tur; kisi basina sayilir ve YUMUSAK ihlal yazilir.
+    `birincil_ekip` yoksa kisi gezicidir (onceligi esit), denetlenmez; tek
+    ekipli kisi zaten kendi ekibinde. Atamanin `ekip`i sablonun ekibidir (K-50).
+
+    ⚠ Cozucude ayni kural bagimsiz yazili (model._ekip_surekliligi) -- #7.6.
+    """
+    sayim = {}
+    for a in atamalar:
+        c = _calisan(girdi, a["calisan"]) or {}
+        birincil = c.get("birincil_ekip")
+        if not birincil or birincil not in (c.get("ekipler") or []):
+            continue
+        if a.get("ekip") is not None and a["ekip"] != birincil:
+            sayim.setdefault(a["calisan"], []).append((a["gun"], a["ekip"]))
+    cikan = []
+    for kimlik, liste in sorted(sayim.items()):
+        c = _calisan(girdi, kimlik)
+        cikan.append(_ihlal(
+            "EKIP_SUREKLILIGI", tanim, calisan=kimlik, olculen=len(liste), gereken=0,
+            mesaj=("%s birincil ekibi %s; %d vardiya baska ekipte (%s)"
+                   % (kimlik, c.get("birincil_ekip"), len(liste),
+                      ", ".join("gun %s %s" % (g, e) for g, e in sorted(liste))))))
+    return cikan
+
+
+@kural("PLAN_KARARLILIGI")
+def plan_kararliligi(girdi, atamalar, tanim):
+    """Ayni haftanin yeniden planlanmasinda mevcut plan korunmus mu -- K-70.
+
+    Yalniz `mevcut_plan` varken (K-54: yayinlanmis plan, yonetici duzenledi,
+    motor yeniden kostu). Birim KISI-GUN; donmus gunler kiyas disi (zaten
+    sabit). Her degisen kisi-gun bir YUMUSAK ihlal: tip `degisen` (baska
+    sablon), `kaldirilan` (vardiya gitti), `eklenen` (bos gune vardiya).
+    Yalniz mola yeri degisirse ihlal yok. Satirlar `sablon` ile, yoksa
+    ekip + bas + bit ile kiyaslanir. `mevcut_plan` yoksa kural uygulanmaz
+    (yeniden planlama degil) -- bos liste.
+
+    ⚠ Cozucude ayni kural bagimsiz yazili (model._plan_kararliligi) -- #7.6.
+    """
+    mevcut = girdi.get("mevcut_plan")
+    if mevcut is None:
+        return []
+    donmus = {int(d) for d in (girdi.get("donmus_gunler") or [])}
+
+    def anahtar(a):
+        return a.get("sablon") if a.get("sablon") is not None else (a.get("ekip"), a.get("bas"), a.get("bit"))
+
+    def harita(satirlar):
+        h = {}
+        for a in satirlar or []:
+            if a.get("gun") in donmus or a.get("donmus"):
+                continue
+            h.setdefault((a.get("calisan"), a.get("gun")), set()).add(anahtar(a))
+        return h
+    eski, yeni = harita(mevcut), harita(atamalar)
+    cikan = []
+    for kimlik, gun in sorted(set(eski) | set(yeni), key=lambda kg: (str(kg[0]), kg[1])):
+        e, y = eski.get((kimlik, gun)), yeni.get((kimlik, gun))
+        if e and y and e & y:
+            continue
+        tip = "degisen" if (e and y) else ("kaldirilan" if e else "eklenen")
+        cikan.append(_ihlal(
+            "PLAN_KARARLILIGI", tanim, calisan=kimlik, gun=gun, olculen=1, gereken=0,
+            mesaj="%s gun %s: %s (mevcut plan %s -> yeni %s)"
+                  % (kimlik, gun, tip, sorted(map(str, e)) if e else "yok", sorted(map(str, y)) if y else "yok")))
+    return cikan
+
+
 def _gece_sablonu(sablon):
     """Bu sablon GECE VARDIYASI mi -- K-40. Donen: (gece_mi, tahmin_mi)
 

@@ -1,0 +1,19 @@
+REFERANS SARTI TUTMADI (tabanda): {'sert': 0, 'sert_kurallar': [], 'asim': 181, 'eksik': 0, 'fazla_mesai_saat': 4.5, 'yayinlanabilir': True} | fazla mesaisiz ilk arama: None
+REFERANS SARTI TUTMADI (tabanda): {'sert': 0, 'sert_kurallar': [], 'asim': 187, 'eksik': 0, 'fazla_mesai_saat': 2.0, 'yayinlanabilir': True} | fazla mesaisiz ilk arama: [{'tohum': 7, 'saniye': 0.35, 'durum': 'INFEASIBLE'}]
+UYARI: fazla mesaisiz plan bu boyutta KANITLI yok (ilk arama INFEASIBLE); referans 2.0 sa fazla mesaili kabul edildi
+REFERANS yazildi: /home/claude/mustafatbayri/tshift/08-motor-testleri/gercekci-veri-seti/fikstur/_referans-L1-95-0.05.json
+  91 atama | amac 7702 | 150 sn | tabanda denetim {'sert': 0, 'sert_kurallar': [], 'asim': 203, 'eksik': 0, 'fazla_mesai_saat': 2.0, 'yayinlanabilir': True}
+SEVIYE 1 TUTARSIZ: referans yeni sahnede {'sert': 0, 'sert_kurallar': [], 'asim': 0, 'eksik': 0, 'fazla_mesai_saat': 2.0, 'yayinlanabilir': True}
+veri/tshift-25.json  {'tenants': 1, 'departments': 4, 'teams': 3, 'operational_roles': 4, 'skills': 5, 'employees': 25, 'employee_contracts': 25, 'employee_teams': 26, 'employee_skills': 31, 'employee_availability': 24, 'leaves': 3, 'employee_balances': 25, 'shift_templates': 17, 'rule_types': 41, 'tenant_rules': 41, 'plan_profiles': 3, 'demand_profiles': 1, 'demand_cells': 415, 'plans': 3, 'plan_versions': 2, 'assignments': 182, 'assignment_breaks': 662, 'plan_locks': 6}
+Traceback (most recent call last):
+  File "/home/claude/mustafatbayri/tshift/08-motor-testleri/gercekci-veri-seti/merdiven.py", line 412, in <module>
+    ref = referans_uret(olcek, _arg("--saniye", 900, int), _arg("--tohum", VARSAYILAN_TOHUM, int), kaynak)
+  File "/home/claude/mustafatbayri/tshift/08-motor-testleri/gercekci-veri-seti/merdiven.py", line 339, in referans_uret
+    taban = taban_sahne(olcek, kaynak)
+  File "/home/claude/mustafatbayri/tshift/08-motor-testleri/gercekci-veri-seti/merdiven.py", line 144, in taban_sahne
+    return _veri_seti_tabani(olcek)
+  File "/home/claude/mustafatbayri/tshift/08-motor-testleri/gercekci-veri-seti/merdiven.py", line 171, in _veri_seti_tabani
+    g = donustur.motor_girdisi(donustur.yukle(os.path.join(VERI_SETI, "veri", VERI_SETI_DOSYASI[float(olcek)])))
+                                                                              ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+KeyError: 0.05
+REFERANS SARTI TUTMADI (tabanda): {'sert': 1, 'sert_kurallar': ['PART_TIME_LIMIT'], 'asim': 168, 'eksik': 22, 'fazla_mesai_saat': 0.0, 'yayinlanabilir': False} | fazla mesaisiz ilk arama: [{'tohum': 7, 'saniye': 2.35, 'durum': 'OPTIMAL'}]

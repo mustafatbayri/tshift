@@ -4161,8 +4161,19 @@ konuyu UI fonksiyonlarıyla çözeceğim."*
 - **Açık ayrıntılar (koda inerken sorulacak):** yalnız mola yeri değişmişse
   sayılır mı (öneri: hayır); boş güne eklenen vardiya sayılır mı (öneri:
   evet); kaldırılan vardiya (öneri: evet).
-- **Uygulanmadı** — ölçüm VS1'e "yeniden planlama" sahnesi eklenince
-  (yayınlanmış plan + bir değişiklik).
+- ~~**Uygulanmadı** — ölçüm VS1'e "yeniden planlama" sahnesi eklenince
+  (yayınlanmış plan + bir değişiklik).~~
+- **Uygulandı (14 Ekim 19:40, bulut) ✅.** Açık ayrıntılar öneri gibi
+  kapandı: yalnız mola farkı sayılmaz; boş güne eklenen sayılır; kaldırılan
+  sayılır; donmuş gün dışarıda. Motor `model._plan_kararliligi` (kişi-gün
+  başına `pk_<id>_<gün>` Bool; `mevcut_plan` satırları `_sablon_esle` ile
+  şablona eşlenir, oturmayan satır ve kadro dışı kişi not düşer), ağırlık
+  6/6/6; doğrulayıcı `kurallar.plan_kararliligi` (bağımsız, #7.6); çıktıda
+  `metrikler.plan_degisikligi` {korunan, degisen, kaldirilan, eklenen}
+  (`coz.plan_degisikligi`). Testler `test_plan_kararliligi.py` (12),
+  mutasyon `k70` 17 (yaşayan 0), ihlal vakası `PLAN_KARARLILIGI` (kırmızı
+  yanıyor). **Ölçüm yok:** veri setinde yeniden planlama sahnesi yok (plan
+  koşusu girdisi); VS2'ye "yayınlanmış plan + değişiklik" sahnesi ayrı iş.
 
 → K-54 · K-50 · şartname §6.5 · `02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 3
 
@@ -4205,8 +4216,26 @@ getirmeye çalışsın. Sonuçta sözleşmenin altında çağırırsak yine para
   geri), veri seti **v2** (yarı zamanlılara gerçekçi süreler; Yılmaz'ın
   import'u bu alanı alır), motor + doğrulayıcı + test + mutasyon, merdiven
   referansı yeniden (kural planı değiştirir).
-- **Uygulanmadı** — 14 Ekim gece bloğundan sonra (o blok K-68
-  düzeltmelerini ölçüyor; kural planı değiştireceği için araya girmez).
+- ~~**Uygulanmadı** — 14 Ekim gece bloğundan sonra (o blok K-68
+  düzeltmelerini ölçüyor; kural planı değiştireceği için araya girmez).~~
+- **Uygulandı (14 Ekim 19:40, bulut) ✅.** Motor `model._tercih_karsilama`:
+  yarı zamanlı + `sozlesme.haftalik_saat` dolu kişide `tk_<id>` = eksik
+  dakika (`gereken − planlanan`, izin borcu `_borc_dakika` ile düşülür),
+  ağırlık `AGIRLIK_TABLOSU["TERCIH_KARSILAMA"]` = 33 / dk her profilde
+  (≈ 1.980 / sa; Mustafa 17:30 *"ağırlık ok mantıklı"*); doğrulayıcı
+  `kurallar.tercih_karsilama` (saat cinsinden, `tolerans_saat` 0). Alan
+  yoksa kişiye uygulanmaz → **eski sahneler (üreteç L1, VS1) değişmez**
+  (ölçümle doğrulandı: o sahnelerde `haftalik_saat`li yarı zamanlı 0).
+  Testler `test_tercih_karsilama.py` (13), mutasyon `k71` 13 (yaşayan 0),
+  ihlal vakası. **Veri seti v2** (`10-veri-seti/v2/`): yarı zamanlıların
+  süresi 16 / 20 / 24 / 30 (500'de 23 / 27 / 57 / 39 kişi; 49'da 1 / 3 / 6 /
+  6). **İlk gözlem (VS2 0,1 referansı, bulut, 300 sn):** 16 yarı zamanlının
+  6'sı toplam 29 sa eksik (ceza 57.420 = amacın %93'ü) — referans yolu
+  (tohum kaydırma, sert fazla mesai kesimi) bu kurala göre aranmamış; sahne
+  müsaitliği kontrol edildi, hepsinin süresine erişmesi mümkün (4 uygun gün
+  × 9 sa). Motorun aynı sahnede ne yaptığı: oturum 14 Ekim §12.
+  ⚠ Şablonlar 9 saat net: 20 saatlik sözleşme ya 18 (2 sa eksik) ya 27
+  (serbest fazla); süre tam tutturulamaz, kural "en az" diye okunur.
 
 → K-13 · K-22 · K-39 · K-57 · K-58 · T-83 · A-16 · şartname §6.8, §8.3, §11.2
 
@@ -4232,6 +4261,18 @@ kişide yazılır. Sezonluk tipi zaten yok (K-58).
 - Yalnız birden çok ekibe üye kişilerde etkili (VS1'de 10 kişi); tek
   ekiplide hiç ceza yok.
 - Ağırlık şartnamedeki 2 / 1 / 4 (yumuşakların en düşüklerinden).
-- **Uygulanmadı** — K-71 ile aynı pakette.
+- ~~**Uygulanmadı** — K-71 ile aynı pakette.~~
+- **Uygulandı (14 Ekim 19:40, bulut) ✅.** Motor `model._ekip_surekliligi`:
+  `birincil_ekip` dolu ve üyelikte olan kişide `es_<id>` = başka ekibin
+  şablonlarındaki atama sayısı; birincil üyelikte değilse not düşer, kural
+  uygulanmaz; gezici (alan yok) → değişken yok. Doğrulayıcı
+  `kurallar.ekip_surekliligi` (atama.ekip ≠ birincil sayar). `birincil_ekip`
+  **backend türetir** (`10-veri-seti/v2/donustur.py`: `employee_teams`'te
+  tek bir en düşük öncelik varsa o ekip; eşit = gezici). Veri seti v2:
+  çok ekiplilerin ~%30'u gezici (500'de 10 çok ekiplinin 2'si; **49'da tek
+  çok ekipli gezici çıktı → VS2 0,1 sahnesinde kuralın etkisi yok**, ihlal
+  vakası el ile `birincil_ekip` yazarak kırmızıyı gösterir). Testler
+  `test_ekip_surekliligi.py` (9; sahne `cok_ekipli_sayim: "tek"` — "hepsi"nde
+  ödünç kavramı kapsamada görünmez, K-50), mutasyon `k72` 10 (yaşayan 0).
 
 → K-50 · K-58 · şartname §6.5 · `02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 4
