@@ -1,0 +1,8 @@
+﻿16:21:03  OGLE BLOGU (b) BASLADI (yama g sabah commit edildi: c3a2d77; yama h: 500 EK-VS2 tanik sahnesi; gece blogu ciktilarinin commit'i)
+16:21:03  paket-16ekim-g.patch yok (daha once uygulanmis olabilir), devam
+16:21:03  paket-16ekim-h.patch md5 c1de9ffbad3b0ba2cad7fed7b66a546b
+16:21:03  paket-16ekim-h.patch uygulandi cikis 0
+16:23:36  09 testleri cikis 0
+16:31:47  08 testleri cikis 0
+16:31:47  DENETIM cikis 0 (0 = HATA yok)
+16:32:08  capraz denetim (fikstur) cikis 0 (0 = sart tutmayan yok)

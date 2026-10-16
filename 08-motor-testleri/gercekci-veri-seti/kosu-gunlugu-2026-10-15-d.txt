@@ -1,0 +1,18 @@
+﻿05:46:49  DEVAM BLOGU BASLADI (kesilirse ayni komut kaldigi yerden surer)
+05:46:49  yama -f uygulandi cikis 0
+05:48:32  09 testleri cikis 0
+05:56:21  08 testleri cikis 0
+05:57:24  10/v2 testleri cikis 0
+05:57:25  DENETIM cikis 0 (0 = HATA yok)
+05:57:29  commit + push cikis 0
+05:57:29  VS2 500 referansi basliyor (1800 sn; cikti kosu-gunlugu-2026-10-15-d-referans-VS2-500.txt)
+06:25:02  VS2 500 referansi cikis 0
+06:25:02  VS1 L1 varsayilan 3600 x 3 basliyor (--devam)
+09:28:58  VS1 L1 varsayilan 3600 x 3 cikis 0
+09:28:58  VS2 L1 varsayilan 1800 x 3 basliyor (--devam)
+11:02:15  VS2 L1 varsayilan 1800 x 3 cikis 0
+11:02:15  tam mutasyon basliyor
+11:39:25  tam mutasyon cikis 0
+11:39:25  merdiven 751 kisi: uretec referansi basliyor (3600 sn; cikti kosu-gunlugu-2026-10-15-d-referans-751.txt)
+12:33:24  merdiven 751 kisi: uretec referansi cikis 0
+12:33:24  DEVAM BLOGU BITTI
