@@ -346,8 +346,17 @@ def plan_puani(g, atamalar, saniye=120):
                         for kod, d in _amac_dagilimi(k, c).items()}}
 
 
+def hata_yolu(olcek, kaynak="uretec"):
+    """Sarti tutmayan referans denemesinin plani buraya yazilir (15 Ekim):
+    100 kisilik kademede motor plani dogrulayicida PART_TIME_LIMIT SERT cikti,
+    plan kaydedilmedigi icin incelenemedi. Dosya git'e bilerek eklenmez (blok
+    `git add` listelerinde yok) -- ilk incelemeden sonra silinebilir."""
+    return os.path.join(BURASI, "fikstur", "_referans-HATA-L1%s-95%s.json" % (_set_eki(kaynak), dosya_eki(olcek)))
+
+
 def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
-    """Tabanda motoru BASKA TOHUMLA kostur; sartlari saglamazsa hata ver."""
+    """Tabanda motoru BASKA TOHUMLA kostur; sartlari saglamazsa hata ver
+    (sarti tutmayan plan `hata_yolu`na yazilir, mesaj yolu soyler)."""
     from cozucu.coz import coz
     taban = taban_sahne(olcek, kaynak)
     # Baska baslangic: birinci asamanin fazla mesaisiz denemeleri `tohum`dan
@@ -366,8 +375,16 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
     # vermek; bu yuzden referans uretimi her boyutta IKI ASAMAYA zorlanir
     # (`iki_asama_esigi: 0`). 49+ kiside esigin ustunde zaten iki asamaydi,
     # eski referanslar degismez. Urun yolunun esik davranisi T-82'nin olcumu.
+    # 15 Ekim 05:01 (gece blogu): VS2 500 referansi 1.576 sn'de "sart tutmadi"
+    # ile dustu -- fazla mesaisiz ilk arama urun payiyla (3 x 40 sn) bulamayinca
+    # fazla mesaili plana dusuyor, referans da reddediliyor. Referansin derdi
+    # urun yolu degil, GECERLI + FAZLA MESAISIZ plan: fazla mesaisiz aramaya
+    # butcenin yarisi (3 deneme x saniye/6; 1.800 sn -> 3 x 300 sn) verilir.
+    # 49 ve 500 VS1 referanslarinda ilk arama saniyeler icinde bulmustu;
+    # bu ayar onlari degistirmez (ilk deneme buluyorsa kalan sure kullanilmaz).
     ayar = {"azami_saniye": int(saniye), "tohum_kaydirma": int(tohum) - 1,
             "fazla_mesai_sifirda_tut": True, "iki_asama_esigi": 0,
+            "ilk_asama_saniye": max(120, int(saniye) // 2), "ilk_asama_orani": 0.5,
             "cozucu_parametreleri": {"random_seed": int(tohum)}}
     basla = time.time()
     c = coz(copy.deepcopy(taban), ayar)
@@ -385,8 +402,15 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
     # kabul olcutu "fazla mesai 0" degil "referansin fazla mesaisi" olur.
     fm_kanitli_yok = bool(fm0.get("kanitlandi_yok"))
     if d["sert"] or (d["fazla_mesai_saat"] and not fm_kanitli_yok):
-        raise SystemExit("REFERANS SARTI TUTMADI (tabanda): %s | fazla mesaisiz ilk arama: %s"
-                         % (d, fm0.get("denemeler")))
+        from dogrulayici import degerlendir
+        ihlaller = degerlendir(taban, c["atamalar"])["ihlaller"]
+        _yaz(hata_yolu(olcek, kaynak), {"atamalar": c["atamalar"], "tabanda_denetim": d,
+                                        "sert_ihlaller": [i for i in ihlaller if i.get("agirlik") == "SERT"],
+                                        "cozum_istatistikleri": ist, "olcek": olcek, "kaynak": kaynak,
+                                        "saniye": int(saniye), "tohum": int(tohum),
+                                        "tarih": time.strftime("%Y-%m-%d %H:%M")})
+        raise SystemExit("REFERANS SARTI TUTMADI (tabanda): %s | fazla mesaisiz ilk arama: %s | plan: %s"
+                         % (d, fm0.get("denemeler"), hata_yolu(olcek, kaynak)))
     if d["fazla_mesai_saat"]:
         print("UYARI: fazla mesaisiz plan bu boyutta KANITLI yok (ilk arama INFEASIBLE); referans %.1f sa fazla mesaili kabul edildi"
               % d["fazla_mesai_saat"])
@@ -401,7 +425,8 @@ def referans_uret(olcek, saniye, tohum=VARSAYILAN_TOHUM, kaynak="uretec"):
                   "fazla_mesaisiz_ilk_arama": fm0.get("denemeler"),
                   "fazla_mesaisiz_kanitli_yok": fm_kanitli_yok,          # 15 Ekim: kucuk kademe
                   "fazla_mesai_saat": d["fazla_mesai_saat"],
-                  "yol": "tohum_kaydirma + fazla_mesai_sifirda_tut (sert kesim; urun yolu degil) + iki_asama_esigi 0 (her boyutta iki asama; 15 Ekim)",
+                  "yol": ("tohum_kaydirma + fazla_mesai_sifirda_tut (sert kesim; urun yolu degil) + iki_asama_esigi 0 "
+                          "(her boyutta iki asama; 15 Ekim) + fazla mesaisiz aramaya butcenin yarisi (15 Ekim 14:00)"),
                   "tabanda_denetim": d,
                   "not": ("K-62 ilke 1: referans en iyi plan degil, 'en az bu kadar iyisi "
                           "var'. Tohum varsayilan aramadan farkli (baska baslangic).")},

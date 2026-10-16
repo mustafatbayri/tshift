@@ -286,6 +286,16 @@ def uygunluk_takvimi(girdi, atamalar, tanim):
 # 6.2 Sure ve dinlenme
 # ----------------------------------------------------------------------
 
+def _dk(saat):
+    """Saat -> tam dakika. SURE KIYASLARI DAKIKAYLA YAPILIR (15 Ekim, T-82
+    ucuncu bulgu): 100 kisilik sahnede 5 x M-UZUN = tam 45 saat olan yari
+    zamanli, 20 dakikalik molalarin 1/3 saatlik kayan noktali toplamiyla
+    45,00000000000002 cikti ve PART_TIME_LIMIT SERT yazildi -- motor dogru,
+    dogrulayici yanlis kirmizi. Motor da dakikayla calisir; burada dakikaya
+    yuvarlamak modele yaslanmak degil, olcu birimini duzeltmektir (#7.6)."""
+    return int(round(float(saat) * 60))
+
+
 @kural("GUNLUK_AZAMI")
 def gunluk_azami(girdi, atamalar, tanim):
     sinir = _p(tanim, "azami_saat", 11)       # #6.2 K-18: kanunun degeri
@@ -296,7 +306,7 @@ def gunluk_azami(girdi, atamalar, tanim):
     return [_ihlal("GUNLUK_AZAMI", tanim, calisan=k, gun=g,
                    olculen=v, gereken=sinir,
                    mesaj="%s gun %d'de %.1f saat net calisiyor (azami %s)" % (k, g, v, sinir))
-            for (k, g), v in sorted(toplam.items()) if v > sinir]
+            for (k, g), v in sorted(toplam.items()) if _dk(v) > _dk(sinir)]
 
 
 @kural("YILLIK_FAZLA_MESAI_TAVANI")
@@ -448,7 +458,7 @@ def haftalik_azami(girdi, atamalar, tanim):
         toplam[a["calisan"]] = toplam.get(a["calisan"], 0.0) + zaman.net_saat(a)
     return [_ihlal("HAFTALIK_AZAMI", tanim, calisan=k, olculen=v, gereken=sinir,
                    mesaj="%s haftada %.1f saat net calisiyor (azami %s)" % (k, v, sinir))
-            for k, v in sorted(toplam.items()) if v > sinir]
+            for k, v in sorted(toplam.items()) if _dk(v) > _dk(sinir)]
 
 
 def _borc_saat(c):
@@ -880,7 +890,7 @@ def part_time_limit(girdi, atamalar, tanim):
         soz = c.get("sozlesme") or {}
         if soz.get("tip") != "yari_zamanli":
             continue
-        if saat > tavan + tolerans:
+        if _dk(saat) > _dk(tavan + tolerans):
             cikan.append(_ihlal(
                 "PART_TIME_LIMIT", tanim, calisan=kimlik,
                 olculen=saat, gereken=tavan + tolerans,
@@ -2131,6 +2141,15 @@ def donmus_gun(girdi, atamalar, tanim):
 
 @kural("FAZLA_MESAI_TAVANI")
 def fazla_mesai_tavani(girdi, atamalar, tanim):
+    """Haftalik fazla mesai tavani -- sozlesme saatinin ustu, en cok `azami_saat_hafta`.
+
+    ⚠ YARI ZAMANLIYA UYGULANMAZ (15 Ekim, T-82 / VS2 151 kisi): K-71 ile yari
+      zamanlinin sozlesmesine `haftalik_saat` (16-30) geldi; bu govde onu
+      fazla mesai tabani sayip 20 saatlik sozlesmeyle 32 saat calisani SERT
+      yazdi. Oysa K-39: yari zamanlida 45 saate kadar calisma fazla mesai
+      DEGIL ("fazla surelerle calisma"), tavan `PART_TIME_LIMIT`; motor da
+      yari zamanliya fazla mesai degiskeni kurmaz. Olcu `denetle` metrigiyle
+      ayni (orada da yari zamanli atlanir)."""
     tavan = _p(tanim, "azami_saat_hafta", 10)
     toplam = {}
     for a in atamalar:
@@ -2138,11 +2157,14 @@ def fazla_mesai_tavani(girdi, atamalar, tanim):
     cikan = []
     for kimlik, saat in sorted(toplam.items()):
         c = _calisan(girdi, kimlik) or {}
-        soz = (c.get("sozlesme") or {}).get("haftalik_saat")
+        sozlesme = c.get("sozlesme") or {}
+        if sozlesme.get("tip") == "yari_zamanli":
+            continue
+        soz = sozlesme.get("haftalik_saat")
         if soz is None:
             continue
         fazla = saat - soz
-        if fazla > tavan:
+        if _dk(fazla) > _dk(tavan):
             cikan.append(_ihlal("FAZLA_MESAI_TAVANI", tanim, calisan=kimlik,
                                 olculen=fazla, gereken=tavan,
                                 mesaj="%s %.1f saat fazla mesai (tavan %s)" % (kimlik, fazla, tavan)))

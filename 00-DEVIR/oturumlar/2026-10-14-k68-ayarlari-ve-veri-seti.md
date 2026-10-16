@@ -19,6 +19,9 @@
 12. 19:40–21:10 — K-70 / K-71 / K-72 koda indi (bulut); veri seti v2; VS2 0,1 ilk ölçüm ve veri düzeltmesi (sözleşme süresi müsaitlikle tutarlı); kısa blok sonucu
 13. 22:09 — optimum hesabı çıktıda (kalem kalem, aşama aşama); ipucu fikri hayır; blok 03:00–04:00; `--veri-seti` anahtarı ve bloğun VS2 düzeltmesi
 14. 23:56–04:20 — ölçek merdiveni (T-82) başladı: 1000'e kadar; bulut zinciri ve üç bulgu (eşik altı tek yol, 25'te fm kanıtlı kaçınılmaz, 100'de PART_TIME_LIMIT sert ihlal); zincir boşta öldü; gece bloğu
+15. 15 Ekim 04:24–08:48 — gece bloğu: `6a2ab5d` push; VS2 500 referansı tutmadı (fm'siz arama bütçesi → düzeltme); VS1 1.800 × 3 → 2/3, lin0 1/3; bilgisayar 08:48'de yeniden başladı, 3.600 kesildi; `--devam`; devam bloğu
+16. 15 Ekim 14:30–17:15 — fazla mesai onarımı komşuluk aramasıyla (K-68 ayar 3 ekleme); PART_TIME_LIMIT yeniden üretilemedi (HATA planı kaydı); yama `-e`
+17. 15 Ekim 17:07–20:00 — merdiven zinciri 2. tur (bulut); iki doğrulayıcı hatası kapandı (kayan nokta; K-71 alanı FAZLA_MESAI_TAVANI'nda); 25 VS2, 151 üretildi
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -713,3 +716,129 @@ fm kabulü, `turet` izinli fm; `uret.py` — `--olcek`, `MERDIVEN_OLCEKLERI`,
 (1.800) → `varsayilan` 1.800 × 3 → `acik_lin0` 1.800 × 3 → `varsayilan`
 3.600 × 3 → tam mutasyon → **751 üreteç referansı (3.600 sn)** (merdivenin
 büyük ucu; sığmazsa sabah kapatılır). Günlük `kosu-gunlugu-2026-10-14-c.txt`.
+
+
+## 15 · 15 Ekim 04:24–08:48 gece bloğu: `6a2ab5d` push; VS2 500 referansı tutmadı; VS1 1.800 × 3 → 2/3, lin0 1/3; **bilgisayar 08:48'de kendi kendine yeniden başladı**, 3.600 × 3 kesildi
+
+**Zaman çizelgesi (`kosu-gunlugu-2026-10-14-c.txt`):** 04:24 yama `-c` →
+09/08/10-v2 testleri yeşil, DENETIM 0 → **04:35 commit + push `6a2ab5d`**
+(bulut 13:45'te çekti, stash düştü) → 04:35–05:01 **VS2 500 referansı çıkış 1
+(1.576 sn'de; süre dolmadan)** → ölçümler planlanan yedeğe, **VS1**'e düştü
+→ 05:01–06:35 `varsayilan` 1.800 × 3 → 06:35–08:09 `acik_lin0` 1.800 × 3 →
+08:09 `varsayilan` 3.600 × 3 başladı → **08:48:43 bilgisayar yeniden başladı**
+(Mustafa, `LastBootUpTime`): PowerShell penceresi ve Claude uygulaması
+birlikte kapandı; 3.600'ün 1. tekrarı 39. dakikadaydı, dosyada 0 koşu.
+Tam mutasyon ve 751 referansı koşmadı. Bulut oturumu kapanmadı (bağlam
+yerinde); kapanan makinedeki uygulama penceresiydi.
+
+**VS2 500 referansı neden tutmadı (çıktı pencereyle gitti; çıkarım):**
+1.576 sn < 1.800 → süre değil, "REFERANS ŞARTI TUTMADI". Referans yolu fazla
+mesaisiz ilk aramayı ürün payıyla (3 × 40 sn) yapıyor; VS1 500'de bu arama
+saniyeler içinde bulmuştu, VS2'de (aynı sert kurallar, amaçta K-71 terimi)
+bulamamış olmalı → gevşek yol → fazla mesaili plan → red. Düzeltme
+(`referans_uret`): fazla mesaisiz aramaya **bütçenin yarısı** (3 deneme ×
+saniye/6; 1.800 → 3 × 300 sn); eski referansları değiştirmez (ilk deneme
+bulunca kalan süre kullanılmaz). Bir de ders: referans adımının çıktısı
+dosyaya yazılmıyordu — devam bloğunda `Tee-Object` ile dosyaya.
+
+**Sonuçlar (VS1 L1, 6 çekirdek; optimum hesabı çıktıda):**
+
+| koşu | plan | açık adım ilk plan | amaç (ref 62.606) | fm | fm hariç | mola kaps. ref'e göre |
+|---|---|---|---|---|---|---|
+| `varsayilan` 1 | var | **346. sn** | 80.354 (+%28,3) | 10,25 sa | **−%20,8** | −13.097 |
+| `varsayilan` 2 | var | **979. sn** | 144.546 (+%130,9) | 31,25 sa | −%18,9 | −12.971 |
+| `varsayilan` 3 | yok | 1.327 sn yetmedi | — | — | — | — |
+| `acik_lin0` 1, 2 | yok | 1.327 sn yetmedi | — | — | — | — |
+| `acik_lin0` 3 | var | 654. sn | 90.851 (+%45,1) | 13,75 sa | −%20,8 | −13.146 |
+
+Birleşik VS1 1.800 sn, `varsayilan`: **4/9 plan** (ilk plan 287 / 346 / 773 /
+979. sn; bulamayanlar 1.327 sn bütçeyi tüketti); `acik_lin0` 1/3 (654. sn) —
+yardım ettiğine dair işaret yok, örnek az. Bulunan her planda **fazla mesai
+hariç referanstan %19–21 iyi, mola kapsaması ~13.000 puan iyi**; farkın
+tamamı fazla mesai (10–31 sa; 50 puan/dk × 615–1.875 dk = farkın %114–173'ü),
+**onarım 0/3 kabul** (300 sn'de fazla mesaisiz plan bulamıyor). İki ayrı
+sorun: **planı bulma** (ilk plan 5–16 dk, kuyruklu; 3.600 ölçümü kuyruğu
+görecekti) ve **fazla mesaiyi sıfırlama** (onarım tutmuyor).
+
+**Yapılanlar (bulut, 13:45–14:10):** `kalite-olc.py --devam` — kayıtlı sonuç
+dosyasındaki bitmiş (yapılandırma, tekrar) çiftleri atlanır, eksikler
+koşulur; kesilen blok aynı komutla kaldığı yerden sürer (test + 49'da uçtan
+uca denendi). `referans_uret` fazla mesaisiz arama bütçesi (üstte).
+**Devam bloğu** (`kosu-gunlugu-2026-10-15-d.txt`): yama `-d` → 08 testleri
+→ gece sonuçlarının commit'i → VS2 500 referansı (1.800 sn, çıktı dosyaya;
+sahne varsa atlanır) → VS1 `varsayilan` 3.600 × 3 (`--devam`; kuyruk
+sorusu VS1'in 9 koşusuyla okunur) → VS2 `varsayilan` 1.800 × 3 (referans
+olduysa) → tam mutasyon → 751 üreteç referansı (3.600 sn). ~7 sa.
+**Makine için:** Windows Update'i bir hafta duraklat, uyku kapalı — blok
+gece koşacaksa.
+
+
+## 16 · 15 Ekim 14:30–17:15 — gündüz PC'ye dokunmadan: fazla mesai onarımı komşuluk aramasıyla; PART_TIME_LIMIT incelemesi; gece bloğu yaması `-e`
+
+**Mustafa 14:32:** *"Şu an 7 saatlik bir koşu açamam … iş yaparsam PC
+yavaşlıyor. Artık geceye kaldı. Şimdi ne yapmamızı öneriyorsun?"* → üç
+bulut işi önerildi; 15:19 *"Çalış bakalım, bulut olayını Yılmaz'la
+görüştükten sonra karar vericem."*
+
+**1. Fazla mesai onarımı → komşuluk araması (K-68 ayar 3 ekleme; kod).**
+Gece planlarının fazla mesaisi 6 günlük tam zamanlılarda +0,5 / +1,25 sa
+(şablon bölünebilirliği), onarım bütün modeli yeniden çözüyordu (7/7
+UNKNOWN). Yeni yöntem: fm'li kişiler + ortak hücre / boş kapasite komşuları
+serbest, geri kalan ipucuya sabit (alan daraltma), fm [0,0], amaç açık;
+tur tur büyür. Ayarlar `fazla_mesai_onarim_yontemi` (komsuluk | tam),
+`_tur` (4), `_komsu` (2). Testler 6, mutasyon `onarim` 16 (0 yaşayan),
+`kalite-olc.py onarim_tam` kıyas yapılandırması, çıktıda yöntem ve turlar.
+Ayrıntı K-68 maddesinde.
+
+**2. PART_TIME_LIMIT (100 kişi) — yeniden üretilemedi.** Aynı sahne, aynı
+tohum, bulutta 266 sn: sert 0, fm 0. Kod okuması iki tarafın tavanı ve net
+süreyi aynı okuduğunu gösterdi; 500 planında 2.362 atamada model/doğrulayıcı
+net farkı 0. Açık (T-82 üçüncü bulgu); şartı tutmayan referans planı artık
+`_referans-HATA-…json`a yazılıyor ki bir dahaki görülüşte incelenebilsin.
+
+**3. Merdiven küçük kademeleri bulutta** — bu gece Mustafa'nın makinesi
+boşken bulut saatleri boşa gitmesin diye ertelendi; VS2 25 referansı ve
+151 / 200 / 300 / 400 kademeleri bir sonraki gündüz oturumunda (oturum açık
+tutularak).
+
+**Ders (bulut):** mutasyon koşusuyla eş zamanlı test koşulmaz (O-20/O-21)
+— bulutta bir kez çakıştı, 1 yanlış kırmızı; tekrar tek başına yeşil.
+
+**Gece için:** yama `paket-15ekim-e.patch` (`-d`'nin yerine; `-d`
+uygulanmadı, bayat): komşuluk onarımı + `--devam` + referans düzeltmeleri +
+belgeler. Blok sırası aynı (§15); her ölçümde onarım artık komşulukla —
+**bu gecenin ikinci sorusu:** onarım kaç koşuda fazla mesaiyi sıfırlıyor,
+kaç saniyede, kaç turda.
+
+
+## 17 · 15 Ekim 17:07–20:00 — merdiven zinciri 2. tur (bulut, oturum açık); iki doğrulayıcı hatası bulundu ve kapandı
+
+**Mustafa 17:07:** *"Gece bloğu dursun, biz şu an gündüz ne yapabiliriz
+oralardan devam edelim."* → merdiven zinciri 2. tur (25 VS2 → 100 → 151 →
+200 → 300 → 400) bulutta, oturum açık tutularak (`kosu-gunlugu-2026-10-15-
+bulut-merdiven.txt`). Referans üretimi artık şartı tutmayan planı kaydediyor
+— ve bu iki hatayı aynı saat içinde çözdürdü:
+
+1. **100 kişi, `PART_TIME_LIMIT` SERT — doğrulayıcıda kayan nokta hatası.**
+   C0088 (yarı zamanlı) 5 × M-UZUN = tam 45,00 sa; doğrulayıcının toplamı
+   45,00000000000002 (20 dk mola = 1/3 saat, ikili kesirde tam değil) →
+   "aştı". Motor dakikayla çalışır, doğruydu. Düzeltme: doğrulayıcıda süre
+   kıyasları tam dakikayla (`kurallar._dk`: GUNLUK_AZAMI, HAFTALIK_AZAMI,
+   PART_TIME_LIMIT, FAZLA_MESAI_TAVANI); 2 test (`test_net_saat_uyumu.py`).
+2. **151 kişi VS2, `FAZLA_MESAI_TAVANI` SERT ×2 (fm 0 iken) — K-71'in yan
+   etkisi.** Yarı zamanlıya gelen `haftalik_saat` (16–30) doğrulayıcının
+   FAZLA_MESAI_TAVANI gövdesinde fazla mesai tabanı sayıldı; 20 saatlik
+   sözleşmeyle 32 saat çalışan "12 sa fazla mesai > 10" oldu. K-39: yarı
+   zamanlıda 45'e kadar çalışma fazla mesai değil, tavan PART_TIME_LIMIT;
+   motor da yarı zamanlıya fm değişkeni kurmaz; `denetle` metriği zaten
+   atlıyordu. Düzeltme: gövde yarı zamanlıyı atlar; test
+   (`test_tercih_karsilama.py`). **Ders:** K-71 paketi 14 Ekim'de 739
+   testle yeşildi ama bu gövdeye dokunulmamıştı — yeni bir alan eski bir
+   kuralın anlamını değiştirdi, bunu veri seti v2'nin 151 kişilik referansı
+   yakaladı (49'da kimse 45'e yaklaşmıyordu). Her iki kaydedilen plan yeni
+   doğrulayıcıyla temiz.
+
+**Üretilenler (bulut, 2 çekirdek):** 25 VS2 (referans 152 sn, fm 2,0
+kanıtlı; seviye 1 puanı 20.669 — TERCIH 11.880), 151 üreteç (526 sn, fm 0;
+puan 13.837), `tshift-25.json`, `tshift-151.json`; zincir 200 / 300 / 400
+ile sürüyor; 100 ve 151-VS2 düzeltilmiş doğrulayıcıyla yeniden üretilir.

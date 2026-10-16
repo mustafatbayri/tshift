@@ -4079,6 +4079,30 @@ onayında; oturum 14 Ekim §8): VS1, 5 tekrar — 5/5 plan, aşım / sert 0,
 fazla mesai 0 en az 4/5'te (hedef), fazla mesai hariç referanstan iyi;
 süre: bunu tutturan en kısa bütçe.
 
+**Ekleme (15 Ekim 15:20–17:00, bulut) — ayar 3 onarımı KOMŞULUK aramasıyla.**
+Gece bloklarında (VS1 500, 1.800 sn) bütün-model onarımı **7/7 bulamadı**
+(300 sn UNKNOWN). Planlardan okunan (CPU'suz): fazla mesai 10 / 27 / 13 /
+20 kişide, **hepsi 6 günlük tam zamanlı, +0,5 ya da +1,25 sa** (45,5 /
+46,25): 5 × S-UZUN (9 sa net) = tam 45; 6 şablonun toplamı 45'e oturmuyor,
+çözücü yuvarlıyor. Referans aynı sahnede 140 kişiyi 6 günde tam 45'te
+tutmuş — bileşim var, çözücü 500 kişilik modeli yeniden çözerken bulamıyor.
+Mustafa 15:19 *"Çalış bakalım."* **Yöntem:** `fazla_mesai_onarim_yontemi:
+"komsuluk"` (varsayılan) — fazla mesaili kişiler + her biri için iki
+kaynaktan iş arkadaşları (en çok ortak (ekip, gün) hücresi olanlar: vardiya
+takası; aynı ekipten en az saatli olanlar: boş kapasite) **serbest**, geri
+kalan herkesin `x` alanı ipucudaki değere **daraltılır** (kısıt eklenmez),
+fm alanları [0,0], amaç açık; bulunamazsa komşuluk büyür (kişi başı
+`fazla_mesai_onarim_komsu` (2) × tur), en çok `fazla_mesai_onarim_tur` (4)
+tur; bütçe (`fazla_mesai_onarim_saniye`) kalan turlara eşit bölünür, erken
+biten turun süresi sonrakine kalır. Kabul kuralı aynı (amaç daha küçükse,
+hakem ağırlıklar). `"tam"` = 14 Ekim'in bütün-model araması (ölçüm:
+`kalite-olc.py onarim_tam`). Çıktı: `fazla_mesai_onarimi.yontem`,
+`fazla_mesaili_kisi`, `turlar[]` (serbest kişi, sabit değişken, sn, durum).
+Testler 6 (`test_gevsekten_serte.py` 46), mutasyon grubu `onarim` 16
+(yaşayan 0), k68'in 1 mutantı iki yönteme bağlandı (toplam 522). **Gerçek
+sınav bu gece VS1 500'de** (oturum 14 Ekim §16); küçük sahnede: 3 kişilik
+alt problem, 1. turda ms'ler içinde.
+
 → K-67 · K-37 · K-61 · K-62 · T-60 bulgu 31 · T-81 · şartname §5.2, §6.4,
 §8.6, §11.3 · `09-motor/cozucu/coz.py` (`_gevsekten_serte`) ·
 `09-motor/testler/test_gevsekten_serte.py`

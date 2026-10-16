@@ -252,9 +252,14 @@ def test_REFERANS_URETIMI_her_boyutta_IKI_ASAMA_ve_sert_kesim(monkeypatch):
     assert yakalanan["iki_asama_esigi"] == 0 and yakalanan["fazla_mesai_sifirda_tut"] is True
     assert yakalanan["tohum_kaydirma"] == 6 and yakalanan["cozucu_parametreleri"] == {"random_seed": 7}
     assert yakalanan["azami_saniye"] == 5
+    assert yakalanan["ilk_asama_saniye"] == 120 and yakalanan["ilk_asama_orani"] == 0.5   # kucuk butce: taban 120
+    yakalanan.clear()
+    with pytest.raises(SystemExit):
+        MD.referans_uret(0.1, 1800, tohum=7)
+    assert yakalanan["ilk_asama_saniye"] == 900                        # 1.800 sn -> fm'siz aramaya 900 (3 x 300)
 
 
-def test_REFERANS_fazla_mesaili_yalniz_KANITLI_imkansizsa_kabul(monkeypatch):
+def test_REFERANS_fazla_mesaili_yalniz_KANITLI_imkansizsa_kabul(monkeypatch, tmp_path):
     """25 kisilik kademe (15 Ekim 00:09): fazla mesaisiz ilk arama INFEASIBLE ->
     fazla mesaisiz plan kanitli yok -> referans fazla mesaili kabul edilir, kayit
     soyler. Kanit yoksa (UNKNOWN) fazla mesaili referans REDDEDILIR (eski kural)."""
@@ -278,8 +283,14 @@ def test_REFERANS_fazla_mesaili_yalniz_KANITLI_imkansizsa_kabul(monkeypatch):
     d = MD.referans_denetle(taban, fm_plan)
     assert d["fazla_mesai_saat"] > 0 and d["sert"] == 0, d
     monkeypatch.setattr(C, "coz", sahte(False))
-    with pytest.raises(SystemExit):                     # kanit yok: red
+    hata = tmp_path / "_referans-HATA-test.json"
+    monkeypatch.setattr(MD, "hata_yolu", lambda olcek, kaynak="uretec": str(hata))
+    with pytest.raises(SystemExit) as e:                # kanit yok: red; plan hata dosyasina
         MD.referans_uret(0.1, 5)
+    assert str(hata) in str(e.value) and hata.exists()
+    kayit = json.load(io.open(str(hata), encoding="utf-8"))
+    assert kayit["atamalar"] == fm_plan and kayit["tabanda_denetim"]["fazla_mesai_saat"] == d["fazla_mesai_saat"]
+    assert kayit["sert_ihlaller"] == [] and kayit["olcek"] == 0.1
     monkeypatch.setattr(C, "coz", sahte(True))
     r = MD.referans_uret(0.1, 5)                        # kanitli yok: kabul, kayitta
     assert r["kayit"]["fazla_mesaisiz_kanitli_yok"] is True

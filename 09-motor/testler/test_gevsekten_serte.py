@@ -531,18 +531,32 @@ def test_AYAR3_onarim_suresi_AYARDAN_ve_mola_adiminin_payina_GIRMEZ(monkeypatch)
             sureler.append(self.parameters.max_time_in_seconds)
             return asil.Solve(self, model, *a, **kw)
     monkeypatch.setattr(C.cp_model, "CpSolver", Kaydet)
-    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 13}, time.time(), cz, _amac(k))
+    TAM = {"fazla_mesai_onarim_yontemi": "tam"}                      # 14 Ekim'in butun-model aramasi
+    C._fazla_mesai_onar(k, dict(TAM, azami_saniye=100, fazla_mesai_onarim_saniye=13), time.time(), cz, _amac(k))
     assert sureler == [13.0]
     sureler.clear()
-    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 500}, time.time(), cz, _amac(k))
+    C._fazla_mesai_onar(k, dict(TAM, azami_saniye=100, fazla_mesai_onarim_saniye=500), time.time(), cz, _amac(k))
     assert len(sureler) == 1 and abs(sureler[0] - 79.0) < 0.5        # 100 - 1 - %20 mola payi
     sureler.clear()
-    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 500,
-                            "ilk_asama_iyilestirme_orani": 0.5}, time.time(), cz, _amac(k))
+    C._fazla_mesai_onar(k, dict(TAM, azami_saniye=100, fazla_mesai_onarim_saniye=500,
+                                ilk_asama_iyilestirme_orani=0.5), time.time(), cz, _amac(k))
     assert len(sureler) == 1 and abs(sureler[0] - 49.0) < 0.5        # oran okunur
+    # 15 Ekim, komsuluk (varsayilan): ayni toplam butce TURLARA bolunur -- bu sahnede
+    # fazla mesai zorunlu (herkes 48 sa), her tur INFEASIBLE, 4 tur kosar; ilk tur pay/4
+    sureler.clear()
+    C._fazla_mesai_onar(k, {"azami_saniye": 100, "fazla_mesai_onarim_saniye": 13}, time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert o["yontem"] == "komsuluk" and len(o["turlar"]) == 4 and len(sureler) == 4
+    assert abs(sureler[0] - 13.0 / 4) < 0.05                             # ilk tur pay / tur
+    assert all(sn <= 13.0 + 0.01 for sn in sureler)                       # her tur kalan butceyi asmaz
+    assert sureler[1] > sureler[0] and sureler[3] > sureler[2]            # erken biten turun suresi sonrakilere kalir
+    assert sum(t["saniye"] for t in o["turlar"]) <= 13.0 and o["saniye"] <= 13.0   # gercek harcanan sure butceyi asmaz
+    assert all(t["durum"] == "INFEASIBLE" for t in o["turlar"]) and o["bulundu"] is False
+    assert o["fazla_mesaili_kisi"] == 6 and all(t["serbest_kisi"] == 6 for t in o["turlar"])   # herkes fm'li: hepsi serbest
 
 
-def test_AYAR3_onarim_DURGUNLUK_bekcisiyle_kosar(monkeypatch):
+@pytest.mark.parametrize("yontem", ["komsuluk", "tam"])
+def test_AYAR3_onarim_DURGUNLUK_bekcisiyle_kosar(monkeypatch, yontem):
     gorulen = []
     asil = C._durgunluk_bekcisiyle_coz
 
@@ -552,9 +566,9 @@ def test_AYAR3_onarim_DURGUNLUK_bekcisiyle_kosar(monkeypatch):
     monkeypatch.setattr(C, "_durgunluk_bekcisiyle_coz", bak)
     k = Model(_fm_sert()).kur()
     cz = _fazla_mesaili_plan(k, _amac(k))
-    C._fazla_mesai_onar(k, dict(AYAR_FM, gevsek_durgunluk_saniye=17, fazla_mesai_onarim_saniye=20),
-                        time.time(), cz, _amac(k))
-    assert gorulen == [17.0]
+    C._fazla_mesai_onar(k, dict(AYAR_FM, gevsek_durgunluk_saniye=17, fazla_mesai_onarim_saniye=20,
+                                fazla_mesai_onarim_yontemi=yontem), time.time(), cz, _amac(k))
+    assert gorulen and set(gorulen) == {17.0}                      # her tur / tek arama ayni durgunluk
 
 
 def test_AYAR3_fazla_mesaisiz_plan_YOKSA_plan_AYNEN_doner(fm_siz_bulamaz):
@@ -776,3 +790,145 @@ def test_AYAR3_BIRIM_devam_DAHA_KOTUYSE_ipucu_DEGISMEZ_iyilestirme_KAPALIYSA_kos
     r = C._iyilestirmeye_devam(k, {"azami_saniye": 30}, time.time(), cz, _amac(k))
     assert r is None and k.ilk_asama_iyilestirme["devam"]["alindi"] is False
     assert list(k.m.Proto().solution_hint.values) == ipucu
+
+
+# ---- 15 Ekim: onarim KOMSULUK aramasiyla. Gece bloklari (VS1 500): butun-model
+# ---- onarimi 7/7 bulamadi; fazla mesai 10-31 kisideydi, hepsi 6 gunluk tam
+# ---- zamanli, +0,5 / +1,25 sa (5 x 9 sa = 45; 6 sablon 45'e oturmuyor).
+
+def _komsuluk_sahnesi():
+    """A, B tam zamanli (45 sa, 5 gun), P yari zamanli; sablon U 9 sa net, K 5 sa.
+    Hafta ici 5 gun U'da 2 kisi (A + B = 45'er), cumartesi K'da 1 kisi.
+    K'yi A alirsa A 50 sa (5 sa fazla mesai); fazla mesaisiz plan: K -> P."""
+    kural = lambda kod, tur="SERT", **par: dict({"kod": kod, "tur": tur, "aktif": True, "yasal": False,   # noqa: E731
+                                                "kabul_edilebilir": True}, **({"parametreler": par} if par else {}))
+    return {"profil": "DENGELI",
+            "calisanlar": [{"id": "A", "ekipler": ["E"], "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45, "gun_sayisi": 5}, "izinler": [], "uygunluk": []},
+                           {"id": "B", "ekipler": ["E"], "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45, "gun_sayisi": 5}, "izinler": [], "uygunluk": []},
+                           {"id": "P", "ekipler": ["E"], "sozlesme": {"tip": "yari_zamanli"}, "izinler": [], "uygunluk": []}],
+            "vardiya_sablonlari": [{"id": "U", "ekip": "E", "bas": 8, "bit": 18, "mola_dk": 60},
+                                   {"id": "K", "ekip": "E", "bas": 8, "bit": 13, "mola_dk": 0}],
+            "talep": [{"ekip": "E", "gun": d, "saat": s,
+                       "asgari": 2 if d < 5 else (1 if d == 5 and s < 13 else 0),
+                       "hedef": 2 if d < 5 else (1 if d == 5 and s < 13 else 0)}
+                      for d in range(7) for s in range(8, 18)],
+            "kurallar": [kural("ASGARI_KAPSAMA"), kural("HEDEF_KAPSAMA", "YUMUSAK"), kural("HEDEF_ASIMI"),
+                         kural("HAFTA_TATILI", asgari_gun=1), kural("SAAT_DENGESI", tolerans_saat=0),
+                         kural("FAZLA_MESAI_TAVANI", azami_saat_hafta=10)],      # fazla mesai ancak bu kuralla mumkun
+            "kilitler": [], "donmus_gunler": []}
+
+
+def _zorla(k, anahtar, deger):
+    v = k.x[anahtar]
+    dom = k.m.Proto().variables[v.Index()].domain
+    eski = list(dom)
+    dom.clear()
+    dom.extend([deger, deger])
+    return v.Index(), eski
+
+
+def _ipucu_A_fazla_mesaili(k):
+    """A cumartesi K'da (zorla) -> 50 sa, 5 sa fazla mesai; P bos."""
+    ix, eski = _zorla(k, ("A", 5, "K"), 1)
+    try:
+        k.m.Minimize(sum(a * v for a, v in k.cezalar))
+        cz = cp_model.CpSolver()
+        cz.parameters.max_time_in_seconds = 10
+        d = cz.Solve(k.m)
+    finally:
+        dom = k.m.Proto().variables[ix].domain
+        dom.clear()
+        dom.extend(eski)
+    assert d in (cp_model.OPTIMAL, cp_model.FEASIBLE), cz.StatusName(d)
+    assert int(cz.Value([v for v in _fm(k) if v.Name() == "fm_A"][0])) >= 60      # A fazla mesaili
+    C._tam_ipucu_yaz(k, cz)
+    return cz
+
+
+def test_KOMSULUK_fazla_mesaili_kisi_ve_komsulari_SERBEST_geri_kalan_SABIT_plan_bulunur():
+    k = Model(_komsuluk_sahnesi()).kur()
+    cz = _ipucu_A_fazla_mesaili(k)
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20), time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert o["yontem"] == "komsuluk" and o["fazla_mesaili_kisi"] == 1
+    assert r is not None and o["bulundu"] is True and o["kabul"] is True and o["sonra_amac"] < o["once_amac"]
+    assert sum(int(r.Value(v)) for v in _fm(k)) == 0                              # fazla mesai sifirlandi
+    assert int(r.Value(k.x[("P", 5, "K")])) == 1 and int(r.Value(k.x[("A", 5, "K")])) == 0   # K -> P
+    # ilk turda cozuldu: A + (ortak hucre) B + (bos kapasite) P serbest; sabitlenen degisken yok (3 kisi)
+    assert len(o["turlar"]) == 1 and o["turlar"][0]["serbest_kisi"] == 3 and o["turlar"][0]["durum"] in ("OPTIMAL", "FEASIBLE")
+    p = k.m.Proto()
+    assert list(p.solution_hint.values) == list(r.ResponseProto().solution)         # ipucu onarilmis plan
+    assert all(list(p.variables[v.Index()].domain) != [0, 0] for v in _fm(k))        # fm alanlari geri acik
+    assert all(list(p.variables[v.Index()].domain) == [0, 1] for v in k.x.values())  # x alanlari geri acik
+
+
+def test_KOMSULUK_komsu_SECIMI_ortak_hucre_ve_bos_kapasite_SABITLEME_ipucu_degerine():
+    k = Model(_komsuluk_sahnesi()).kur()
+    cz = _ipucu_A_fazla_mesaili(k)
+    assert C._fm_kisileri(k, cz, _fm(k)) == ["A"]
+    h = C._kisi_hucreleri(k, cz)
+    assert h["A"][1] == 50.0 and h["B"][1] == 45.0 and h["P"] == (set(), 0.0)
+    assert C._komsular(k, cz, ["A"], 1) == ["B", "P"]          # B: 5 ortak hucre; P: en az saat (0)
+    assert C._komsular(k, cz, ["A"], 0) == []
+    eski = C._kisileri_sabitle(k, cz, ["A"])                    # B ve P sabit, A serbest
+    p = k.m.Proto()
+    sabit = {ix for ix, _ in eski}
+    assert all(k.x[("A", d, t)].Index() not in sabit for d in range(7) for t in ("U", "K"))
+    for d in range(7):
+        assert list(p.variables[k.x[("B", d, "U")].Index()].domain) == [int(cz.Value(k.x[("B", d, "U")]))] * 2
+    assert list(p.variables[k.x[("P", 5, "K")].Index()].domain) == [0, 0]
+    C._fazla_mesaiyi_serbest_birak(k, eski)
+    assert all(list(p.variables[v.Index()].domain) == [0, 1] for v in k.x.values())
+
+
+def test_KOMSULUK_yontem_TAM_eski_davranis_ve_ayar_kaydi():
+    k = Model(_komsuluk_sahnesi()).kur()
+    cz = _ipucu_A_fazla_mesaili(k)
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20, fazla_mesai_onarim_yontemi="tam"),
+                            time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert o["yontem"] == "tam" and "turlar" not in o and r is not None and o["kabul"] is True
+    assert C.VARSAYILAN["fazla_mesai_onarim_yontemi"] == "komsuluk"
+    assert C.VARSAYILAN["fazla_mesai_onarim_tur"] == 4 and C.VARSAYILAN["fazla_mesai_onarim_komsu"] == 2
+
+
+def test_KOMSULUK_ilk_tur_YETMEZSE_komsuluk_BUYUR_ikinci_turda_bulur():
+    """P2 cumartesi musait degil: 1. tur (A + B + en bos P2) K'yi kimseye
+    veremez -> INFEASIBLE; 2. tur komsu x 2 -> P1 de serbest -> K -> P1."""
+    g = _komsuluk_sahnesi()
+    g["calisanlar"].append({"id": "P2", "ekipler": ["E"], "sozlesme": {"tip": "yari_zamanli"}, "izinler": [],
+                            "uygunluk": [{"tip": "uygun_degil", "gun": 5, "bas": 0, "bit": 24}]})
+    g["calisanlar"][2]["id"] = "P1"
+    for t in g["talep"]:
+        if t["gun"] == 6 and t["saat"] < 13:
+            t["asgari"] = t["hedef"] = 1                     # pazar K
+    g["kilitler"] = [{"calisan": "P1", "gun": 6, "bas": 8, "bit": 13}]   # pazar K P1'de (kilit) -> P1 5 sa, P2 0 sa
+    k = Model(g).kur()
+    cz = _ipucu_A_fazla_mesaili(k)
+    assert int(cz.Value(k.x[("P1", 6, "K")])) == 1 and C._kisi_hucreleri(k, cz)["P2"][1] == 0.0
+    assert C._komsular(k, cz, ["A"], 1) == ["B", "P2"]                     # 1. tur: P1 disarida
+    assert C._komsular(k, cz, ["A"], 2) == ["B", "P1", "P2"]               # 2. tur: P1 de girer
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20, fazla_mesai_onarim_komsu=1),
+                            time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert r is not None and o["kabul"] is True and sum(int(r.Value(v)) for v in _fm(k)) == 0
+    assert [(t["tur"], t["serbest_kisi"], t["durum"]) for t in o["turlar"]][0] == (1, 3, "INFEASIBLE")
+    assert o["turlar"][1]["tur"] == 2 and o["turlar"][1]["serbest_kisi"] == 4 and o["turlar"][1]["durum"] in ("OPTIMAL", "FEASIBLE")
+    assert int(r.Value(k.x[("P1", 5, "K")])) == 1 and int(r.Value(k.x[("A", 5, "K")])) == 0
+    assert int(r.Value(k.x[("P1", 6, "K")])) == 1                                # pazar yine P1
+
+
+def test_KOMSULUK_tur_sayisi_SINIRI_bulamazsa_plan_AYNEN_kalir():
+    """Komsuluk hic yetmezse (tur 1, komsu 0: yalniz A serbest) plan degismez,
+    kayit bunu soyler; alanlar geri acik."""
+    k = Model(_komsuluk_sahnesi()).kur()
+    cz = _ipucu_A_fazla_mesaili(k)
+    ipucu = list(k.m.Proto().solution_hint.values)
+    r = C._fazla_mesai_onar(k, dict(AYAR_FM, fazla_mesai_onarim_saniye=20, fazla_mesai_onarim_komsu=0,
+                                    fazla_mesai_onarim_tur=1), time.time(), cz, _amac(k))
+    o = k.fazla_mesai_onarimi
+    assert r is None and o["bulundu"] is False and o["kabul"] is False
+    assert [(t["tur"], t["serbest_kisi"], t["durum"]) for t in o["turlar"]] == [(1, 1, "INFEASIBLE")]
+    assert list(k.m.Proto().solution_hint.values) == ipucu
+    p = k.m.Proto()
+    assert all(list(p.variables[v.Index()].domain) == [0, 1] for v in k.x.values())

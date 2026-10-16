@@ -128,6 +128,19 @@ VARSAYILAN = {
     "gevsek_acik_parca_saniye": None,
     "fazla_mesai_onarimi": True,
     "fazla_mesai_onarim_saniye": 300,   # bulut 0,3 olcek: 105 sa fazla mesai 101 sn'de sifirlandi
+    # 15 Ekim (gece bloklari, VS1 500): onarim 7/7 bulamadi. Fazla mesai 10-31
+    #   kiside, hepsi 6 gunluk tam zamanli, +0,5 / +1,25 sa (sablon
+    #   bolunebilirligi: 5 x 9 sa = 45; 6 sablon 45'e tam oturmuyor). Eski
+    #   onarim 500 kisilik modelin TAMAMINI yeniden cozuyordu (300 sn UNKNOWN).
+    #   "komsuluk": yalniz fazla mesaili kisiler + onlarla ayni hucrelerde
+    #   calisan birkac is arkadasi serbest, HERKES BASKA olduğu gibi sabit (x
+    #   alanlari ipucu degerine daraltilir); fm alanlari [0,0]; amac acik.
+    #   Bulunamazsa komsuluk buyutulur (tur basina kisi basi `komsu` x tur),
+    #   en cok `tur` tur; butce turlar arasinda kalanla paylasilir. "tam" =
+    #   14 Ekim'in davranisi (butun model), olcum/kiyas icin.
+    "fazla_mesai_onarim_yontemi": "komsuluk",
+    "fazla_mesai_onarim_tur": 4,
+    "fazla_mesai_onarim_komsu": 2,
     "gevsek_fazla_mesaisiz_saniye": 20,
     "gevsek_acik_cozucu_parametreleri": {},
     # T-60 (2 Ekim, bulgu 8): birinci asamanin AMACSIZ plani ana aramayi kotu
@@ -701,6 +714,105 @@ def _gevsek_acik_parcali(kuruldu, ayar, kalan, parca, isci, durgunluk, bilgi):
     return d, c
 
 
+def _fm_kisileri(kuruldu, c, fm):
+    """Ipucu planinda fazla mesaisi > 0 olan kisiler (fm_<id> degiskeninden)."""
+    return sorted(v.Name()[3:] for v in fm if int(c.Value(v)) > 0)
+
+
+def _kisi_hucreleri(kuruldu, c):
+    """Ipucu planindan kisi -> ({(ekip, gun)}, net saat) -- x == 1 olan
+    atamalardan; plani olmayan kisi de (bos kume, 0 saat) listede."""
+    sablon = {t["id"]: t for t in kuruldu.girdi.get("vardiya_sablonlari", [])}
+    hucre = {ca["id"]: (set(), 0.0) for ca in kuruldu.girdi.get("calisanlar", [])}
+    for (e, d, tid), v in kuruldu.x.items():
+        if int(c.Value(v)) == 1:
+            t = sablon.get(tid, {})
+            kume, saat = hucre.get(e, (set(), 0.0))
+            kume.add((t.get("ekip"), d))
+            hucre[e] = (kume, saat + float(t.get("bit", 0)) - float(t.get("bas", 0)) - float(t.get("mola_dk", 0)) / 60.0)
+    return hucre
+
+
+def _komsular(kuruldu, c, fm_kisiler, adet):
+    """Komsuluk: her fazla mesaili kisi icin IKI kaynaktan `adet`er kisi --
+    (a) onunla en cok ORTAK HUCREDE (ekip, gun) calisanlar (vardiya takasi),
+    (b) ayni ekiplerden EN AZ SAATI olanlar (saati devralacak bos kapasite;
+    plani hic olmayan kisi dahil). Esitlikte kimlige gore; deterministik.
+    Fazla mesaili kisiler zaten serbesttir, sayilmaz."""
+    hucre = _kisi_hucreleri(kuruldu, c)
+    ekipler = {ca["id"]: set(ca.get("ekipler") or []) for ca in kuruldu.girdi.get("calisanlar", [])}
+    fm_kume = set(fm_kisiler)
+    adet = max(0, int(adet))
+    secilen = set()
+    for e in fm_kisiler:
+        benim, _ = hucre.get(e, (set(), 0.0))
+        digerleri = [p for p in hucre if p not in fm_kume]
+        ortak = sorted(((len(benim & hucre[p][0]), p) for p in digerleri), key=lambda x: (-x[0], x[1]))
+        secilen.update(p for n, p in ortak[:adet] if n > 0)
+        ayni_ekip = [p for p in digerleri if ekipler.get(p, set()) & ekipler.get(e, set())]
+        bos = sorted(((hucre[p][1], p) for p in ayni_ekip), key=lambda x: (x[0], x[1]))
+        secilen.update(p for _, p in bos[:adet])
+    return sorted(secilen)
+
+
+def _kisileri_sabitle(kuruldu, c, serbest):
+    """`serbest` disindaki HERKESIN x alanlarini ipucu planindaki degere
+    daraltir (kisit eklenmez; bkz. _fazla_mesaiyi_sifirla). Donen: (indeks,
+    eski alan) listesi -- `_fazla_mesaiyi_serbest_birak` ile geri acilir."""
+    proto = kuruldu.m.Proto()
+    serbest = set(serbest)
+    eski = []
+    for (e, d, tid), v in kuruldu.x.items():
+        if e in serbest:
+            continue
+        deger = int(c.Value(v))
+        dom = proto.variables[v.Index()].domain
+        if list(dom) == [deger, deger]:
+            continue
+        eski.append((v.Index(), list(dom)))
+        dom.clear()
+        dom.extend([deger, deger])
+    return eski
+
+
+def _komsuluk_onarimi(kuruldu, ayar, c, fm, pay, bilgi):
+    """Fazla mesai onarimi, KOMSULUK aramasiyla (15 Ekim). Tur t (1..`tur`):
+    serbest = fazla mesaili kisiler + kisi basi `komsu` x t is arkadasi; geri
+    kalan herkes ipucudaki atamasina sabit; fm alanlari [0,0] (cagiran
+    daraltti); amac acik. Plan bulunan ilk turda durur. INFEASIBLE / UNKNOWN
+    -> sonraki tur (komsuluk buyur); kalan butce kalan turlara esit bolunur.
+    Her turun kaydi `bilgi["turlar"]`. Donen (durum, cozucu) -- cozucu None
+    olabilir (hic tur kosmadi)."""
+    fm_kisiler = _fm_kisileri(kuruldu, c, fm)
+    bilgi["fazla_mesaili_kisi"] = len(fm_kisiler)
+    bilgi["turlar"] = []
+    azami_tur = max(1, int(ayar.get("fazla_mesai_onarim_tur", VARSAYILAN["fazla_mesai_onarim_tur"]) or 1))
+    komsu = int(ayar.get("fazla_mesai_onarim_komsu", VARSAYILAN["fazla_mesai_onarim_komsu"]) or 0)
+    durgunluk = float(ayar.get("gevsek_durgunluk_saniye") or 0)
+    basla = time.time()
+    d, c2 = cp_model.UNKNOWN, None
+    for tur in range(1, azami_tur + 1):
+        kalan = pay - (time.time() - basla)
+        tur_pay = kalan / (azami_tur - tur + 1)
+        if tur_pay < 0.5:
+            break
+        serbest = set(fm_kisiler) | set(_komsular(kuruldu, c, fm_kisiler, komsu * tur))
+        eski_x = _kisileri_sabitle(kuruldu, c, serbest)
+        t = time.time()
+        try:
+            c2 = cp_model.CpSolver()
+            c2.parameters.max_time_in_seconds = tur_pay
+            c2.parameters.num_search_workers = isci_sayisi(ayar)
+            d = _durgunluk_bekcisiyle_coz(c2, kuruldu.m, _GevsekSayac(), {"durgunluk_saniye": durgunluk})
+        finally:
+            _fazla_mesaiyi_serbest_birak(kuruldu, eski_x)
+        bilgi["turlar"].append({"tur": tur, "serbest_kisi": len(serbest), "sabit_degisken": len(eski_x),
+                                "saniye": round(time.time() - t, 2), "durum": c2.StatusName(d)})
+        if d in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+            break
+    return d, c2
+
+
 def _fazla_mesai_onar(kuruldu, ayar, basladi, c, amaci_geri_koy):
     """K-68 ayar 3 -- 14 Ekim surumu (Mustafa: "ok", oneri 1): IYILESTIRMENIN
     SONUNDA fazla mesai onarimi.
@@ -720,7 +832,12 @@ def _fazla_mesai_onar(kuruldu, ayar, basladi, c, amaci_geri_koy):
     alinir YALNIZ amaci daha kucukse (HAKEM AGIRLIKLARDIR -- K-61/O-18:
     agirliklara gore daha iyi fazla mesaili plan disarida kalmaz). Alanlar
     HER YOLDA geri acilir. Donen: alinan cozucu ya da None (ipucu degismedi).
-    Ne oldugu `kuruldu.fazla_mesai_onarimi`."""
+    Ne oldugu `kuruldu.fazla_mesai_onarimi`.
+
+    15 Ekim: `fazla_mesai_onarim_yontemi` "komsuluk" (varsayilan) -- butun
+    modeli degil, fazla mesaili kisiler + is arkadaslarindan olusan kucuk bir
+    alt problemi cozer (`_komsuluk_onarimi`); "tam" = 14 Ekim'in butun-model
+    aramasi (olcum). Gerekce VARSAYILAN notunda."""
     fm = [v for _, v in kuruldu.cezalar if v.Name().startswith("fm_")]
     once = sum(int(c.Value(v)) for v in fm)
     once_amac = int(sum(a * int(c.Value(v)) for a, v in kuruldu.cezalar))
@@ -740,19 +857,24 @@ def _fazla_mesai_onar(kuruldu, ayar, basladi, c, amaci_geri_koy):
     if not eski:
         return None
     bilgi["denendi"] = True
+    yontem = str(ayar.get("fazla_mesai_onarim_yontemi") or VARSAYILAN["fazla_mesai_onarim_yontemi"])
+    bilgi["yontem"] = yontem
     t = time.time()
     try:
         amaci_geri_koy()                       # iyilestirme kapaliysa amac silinmis olabilir
-        c2 = cp_model.CpSolver()
-        c2.parameters.max_time_in_seconds = pay
-        c2.parameters.num_search_workers = isci_sayisi(ayar)
-        d2 = _durgunluk_bekcisiyle_coz(
-            c2, kuruldu.m, _GevsekSayac(),
-            {"durgunluk_saniye": float(ayar.get("gevsek_durgunluk_saniye") or 0)})
+        if yontem == "komsuluk":
+            d2, c2 = _komsuluk_onarimi(kuruldu, ayar, c, fm, pay, bilgi)
+        else:
+            c2 = cp_model.CpSolver()
+            c2.parameters.max_time_in_seconds = pay
+            c2.parameters.num_search_workers = isci_sayisi(ayar)
+            d2 = _durgunluk_bekcisiyle_coz(
+                c2, kuruldu.m, _GevsekSayac(),
+                {"durgunluk_saniye": float(ayar.get("gevsek_durgunluk_saniye") or 0)})
     finally:
         _fazla_mesaiyi_serbest_birak(kuruldu, eski)
     bilgi["saniye"] = round(time.time() - t, 2)
-    bilgi["durum"] = c2.StatusName(d2)
+    bilgi["durum"] = c2.StatusName(d2) if c2 is not None else "UNKNOWN"
     if d2 not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return None
     bilgi["bulundu"] = True

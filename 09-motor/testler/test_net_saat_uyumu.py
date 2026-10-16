@@ -470,3 +470,62 @@ def test_T78_SIGMAYAN_politika_sessiz_kalmaz():
     ilgili = [n for n in m.notlar if "SIGMIYOR" in n]
     assert len(ilgili) == 1 and "T-KISA" in ilgili[0], m.notlar
     assert not any("M-SABAH" in n for n in ilgili)
+
+
+# ----------------------------------------------------------------------
+# 15 Ekim (T-82 ucuncu bulgu, 100 kisi): dogrulayici KAYAN NOKTA yuzunden
+# yanlis kirmizi yakti -- 5 x M-UZUN (10,5 brut; 30 dk yemek + 3 x 20 dk
+# dinlenme = 9,00 net) = tam 45 saat olan yari zamanli icin toplam
+# 45,00000000000002 cikti, PART_TIME_LIMIT SERT. Motor dakikayla calisir ve
+# dogruydu. Sure kiyaslari artik tam dakikayla (`kurallar._dk`).
+# ----------------------------------------------------------------------
+
+def _yirmi_dakikalik_molali_atama(gun):
+    """M-UZUN 8-18,5; molalar 20 dk (1/3 saat -- ikili kesirde tam degil)."""
+    return {"calisan": "P", "ekip": "E", "sablon": "M", "gun": gun, "bas": 8.0, "bit": 18.5,
+            "molalar": [{"bas": 10.0, "bit": 10.0 + 1 / 3.0, "tip": "dinlenme"},
+                        {"bas": 11.5, "bit": 12.0, "tip": "yemek"},
+                        {"bas": 12.75, "bit": 12.75 + 1 / 3.0, "tip": "dinlenme"},
+                        {"bas": 15.25, "bit": 15.25 + 1 / 3.0, "tip": "dinlenme"}]}
+
+
+def test_T82_kayan_nokta_tam_45_saat_PART_TIME_ve_HAFTALIK_azamiyi_ASMAZ():
+    from dogrulayici import kurallar as KR
+    plan = [_yirmi_dakikalik_molali_atama(d) for d in range(5)]
+    toplam = sum(zaman.net_saat(a) for a in plan)
+    assert toplam != 45.0 and abs(toplam - 45.0) < 1e-9          # kayan nokta: 45,00000000000002
+    assert KR._dk(toplam) == 2700 and KR._dk(45) == 2700
+    g = {"calisanlar": [{"id": "P", "ekipler": ["E"], "sozlesme": {"tip": "yari_zamanli"}}],
+         "kurallar": [{"kod": "HAFTALIK_AZAMI", "tur": "SERT", "aktif": True, "parametreler": {"azami_saat": 45}}]}
+    pt = {"kod": "PART_TIME_LIMIT", "tur": "SERT", "aktif": True}
+    assert KR.part_time_limit(g, plan, pt) == []                   # tam 45: tavan asilmadi
+    ha = {"kod": "HAFTALIK_AZAMI", "tur": "SERT", "aktif": True, "parametreler": {"azami_saat": 45}}
+    assert KR.haftalik_azami(g, plan, ha) == []
+    # gercek asim yine yakalanir: bir dakika fazlasi
+    plan[0]["bit"] = 18.5 + 1 / 60.0
+    assert [i["calisan"] for i in KR.part_time_limit(g, plan, pt)] == ["P"]
+    assert [i["calisan"] for i in KR.haftalik_azami(g, plan, ha)] == ["P"]
+
+
+def test_T82_kayan_nokta_GUNLUK_azami_ve_FAZLA_MESAI_tavani_tam_sinirda_ASMAZ():
+    from dogrulayici import kurallar as KR
+    # gunluk: 11 saat net = 8:00-19:40 brut, 20 dk mola (1/3 saat) -> 11,000000000000002 olabilir
+    a = {"calisan": "T", "ekip": "E", "sablon": "X", "gun": 0, "bas": 8.0, "bit": 19.0 + 2 / 3.0,
+         "molalar": [{"bas": 12.0, "bit": 12.0 + 1 / 3.0, "tip": "dinlenme"},
+                     {"bas": 15.0, "bit": 15.0 + 1 / 3.0, "tip": "dinlenme"}]}
+    net = zaman.net_saat(a)
+    assert abs(net - 11.0) < 1e-9
+    ga = {"kod": "GUNLUK_AZAMI", "tur": "SERT", "aktif": True, "parametreler": {"azami_saat": 11}}
+    assert KR.gunluk_azami({}, [a], ga) == []
+    a["bit"] += 1 / 60.0
+    assert len(KR.gunluk_azami({}, [a], ga)) == 1
+    # fazla mesai tavani: 45 sozlesme + 10 tavan = 55 saat tam sinirda
+    g = {"calisanlar": [{"id": "T", "ekipler": ["E"], "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45}}],
+         "kurallar": []}
+    plan = [dict(_yirmi_dakikalik_molali_atama(d), calisan="T") for d in range(5)]      # 45,000...02
+    plan += [{"calisan": "T", "ekip": "E", "sablon": "Y", "gun": 5, "bas": 8.0, "bit": 18.0 + 1 / 3.0,
+              "molalar": [{"bas": 12.0, "bit": 12.0 + 1 / 3.0, "tip": "dinlenme"}]}]      # +10 saat
+    fm = {"kod": "FAZLA_MESAI_TAVANI", "tur": "SERT", "aktif": True, "parametreler": {"azami_saat_hafta": 10}}
+    assert KR.fazla_mesai_tavani(g, plan, fm) == []
+    plan[-1]["bit"] += 1 / 60.0
+    assert len(KR.fazla_mesai_tavani(g, plan, fm)) == 1

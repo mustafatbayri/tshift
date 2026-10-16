@@ -234,3 +234,25 @@ def test_HEDEF_ASIMI_YUMUSAKKEN_sure_doldurma_hedefin_ustune_kisi_yazdirir_K67_g
     c = coz(_sahne(gun=2, asim="YUMUSAK"), dict(AYAR))
     assert c["durum"] == "cozuldu"
     assert _saat(c, "P1") + _saat(c, "P2") > 16
+
+
+def test_K71_sozlesme_suresi_FAZLA_MESAI_TAVANI_tabani_DEGIL_yari_zamanli_45e_kadar_serbest():
+    """15 Ekim (T-82, VS2 151 kisi): K-71 ile yari zamanliya gelen `haftalik_saat`i
+    dogrulayicinin FAZLA_MESAI_TAVANI govdesi fazla mesai tabani sayip 20 saatlik
+    sozlesmeyle 32 saat calisani SERT yazdi. K-39: yari zamanlida 45'e kadar
+    calisma fazla mesai degil; tavan PART_TIME_LIMIT."""
+    from dogrulayici import kurallar as KR
+    g = {"calisanlar": [{"id": "P", "ekipler": ["E"], "sozlesme": {"tip": "yari_zamanli", "haftalik_saat": 20}},
+                        {"id": "T", "ekipler": ["E"], "sozlesme": {"tip": "tam_zamanli", "haftalik_saat": 45}}],
+         "kurallar": []}
+    def vardiya(kisi, gun, saat):
+        return {"calisan": kisi, "ekip": "E", "sablon": "V", "gun": gun, "bas": 8, "bit": 8 + saat, "molalar": []}
+    plan = [vardiya("P", d, 8) for d in range(4)] + [vardiya("T", d, 11) for d in range(5)]   # P 32 sa, T 55 sa
+    fm = {"kod": "FAZLA_MESAI_TAVANI", "tur": "SERT", "aktif": True, "parametreler": {"azami_saat_hafta": 10}}
+    assert KR.fazla_mesai_tavani(g, plan, fm) == []                              # P: fazla mesai degil; T: 55 = 45 + 10 tam sinir
+    plan.append(vardiya("T", 5, 1))
+    assert [i["calisan"] for i in KR.fazla_mesai_tavani(g, plan, fm)] == ["T"]  # tam zamanli yine yakalanir
+    plan += [vardiya("P", 4, 8), vardiya("P", 5, 8)]                             # P 48 sa: PART_TIME_LIMIT isi
+    assert "P" not in [i["calisan"] for i in KR.fazla_mesai_tavani(g, plan, fm)]
+    pt = {"kod": "PART_TIME_LIMIT", "tur": "SERT", "aktif": True}
+    assert [i["calisan"] for i in KR.part_time_limit(g, plan, pt)] == ["P"]

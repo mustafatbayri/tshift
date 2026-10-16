@@ -1,0 +1,10919 @@
+{
+ "ad": "S-30-95",
+ "surum": "2.0",
+ "_doluluk": 0.95,
+ "_carpan": 3.1071,
+ "_kapasite_saat": 7650.0,
+ "_hedef_kisi_saat": 8204,
+ "_aciklama": [
+  "ZOR OLCEK -- Mustafa'nin 29 Eylul istegi.",
+  "500 kisi, uc ekip, on yedi vardiya sablonu, yedi gun.",
+  "Tam zamanli %70 / yari zamanli %30.",
+  "Sablonlar 45 saati TUTTURABILIR (6x7,5 ve 5x9,0 desenleri).",
+  "Yari zamanlida sozlesme saati YOK; haftayi uygunluk sekillendirir.",
+  "Gece vardiyalari ISARETLI; bir kisim calisan gece calisamaz.",
+  "Hafta ici ve hafta sonu esikleri AYRI.",
+  "Ekip basina ayri mola politikasi ve ayri yemek penceresi.",
+  "Katalogdaki 41 kuralin TAMAMI tanimli: 37'si degerlendirilir,",
+  "4 yumusak kural `uygulanmayan_kurallar` kanalini atesler (yalniz",
+  "rapor -- K-49).",
+  "Departman calisma saatleri: satis ve back office 7/24, musteri",
+  "hizmetleri hafta ici 07-23, hafta sonu 08-19 (K-52).",
+  "Donmus gun YOK: taze hafta; donmus gun yolu coz-olc.py --donmus",
+  "ve bekcideki yeniden planlama testiyle olculur (K-54).",
+  "Yetkinlik gereklilikleri: satis 2 ingilizce (08-20), back office",
+  "1 ingilizce (08-18), musteri hizmetleri 1 ingilizce (08-22) ve",
+  "1 almanca (10-16) -- tabanlar lider tabaniyla ayni hesapla.",
+  "Sektor istisna DISI (cagri merkezi): gece 7,5 saat siniri herkese.",
+  "Tohum sabit (20260928) -- ayni girdi ayni dosyayi uretir."
+ ],
+ "hafta_baslangic": "2026-10-12",
+ "sektor": "cagri_merkezi",
+ "_hafta_notu": "12 Ekim Pazartesi = gun 0 ... 18 Ekim Pazar = gun 6",
+ "kiraci_saat_dilimi": "Europe/Istanbul",
+ "profil": "DENGELI",
+ "calisanlar": [
+  {
+   "id": "C0001",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [
+    {
+     "gun": 3,
+     "tip": "yillik",
+     "durum": "reddedildi"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 74
+  },
+  {
+   "id": "C0002",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37,
+   "_calisabilir_gunler": [
+    3,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0003",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0004",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 2,
+    "saat": 16,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 17,
+   "durum": "ayrildi"
+  },
+  {
+   "id": "C0005",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 3,
+    "hafta_sonu": 4,
+    "saat": 27,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 79,
+   "_calisabilir_gunler": [
+    1,
+    4
+   ],
+   "durum": "ayrildi"
+  },
+  {
+   "id": "C0006",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 4,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
+  },
+  {
+   "id": "C0007",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "teknik",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
+  },
+  {
+   "id": "C0008",
+   "ekipler": [
+    "SATIS",
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 4,
+    "saat": 6,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 128
+  },
+  {
+   "id": "C0009",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 33
+  },
+  {
+   "id": "C0010",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 14,
+   "_calisabilir_gunler": [
+    0,
+    2,
+    3,
+    6
+   ],
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0011",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
+   "_calisabilir_gunler": [
+    1,
+    3
+   ]
+  },
+  {
+   "id": "C0012",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 3,
+    "saat": 37,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
+  },
+  {
+   "id": "C0013",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80
+  },
+  {
+   "id": "C0014",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "sezonluk",
+    "haftalik_saat": 40
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37
+  },
+  {
+   "id": "C0015",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 33
+  },
+  {
+   "id": "C0016",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 139
+  },
+  {
+   "id": "C0017",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
+  },
+  {
+   "id": "C0018",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 95,
+   "_calisabilir_gunler": [
+    1,
+    2,
+    3,
+    5
+   ]
+  },
+  {
+   "id": "C0019",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 51
+  },
+  {
+   "id": "C0020",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "stajyer",
+    "haftalik_saat": 30
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 48
+  },
+  {
+   "id": "C0021",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147,
+   "_calisabilir_gunler": [
+    0,
+    2,
+    6
+   ]
+  },
+  {
+   "id": "C0022",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 0,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106
+  },
+  {
+   "id": "C0023",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133,
+   "durum": "ayrildi"
+  },
+  {
+   "id": "C0024",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147
+  },
+  {
+   "id": "C0025",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 2,
+    "saat": 16,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 111
+  },
+  {
+   "id": "C0026",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125
+  },
+  {
+   "id": "C0027",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0028",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
+  },
+  {
+   "id": "C0029",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
+  },
+  {
+   "id": "C0030",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 144
+  },
+  {
+   "id": "C0031",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 4,
+    "saat": 21,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 23,
+   "_calisabilir_gunler": [
+    0,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "C0032",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 3,
+    "saat": 16,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 113
+  },
+  {
+   "id": "C0033",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 42,
+   "_calisabilir_gunler": [
+    1,
+    4,
+    5
+   ],
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0034",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [
+    {
+     "gun": 1,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
+  },
+  {
+   "id": "C0035",
+   "ekipler": [
+    "SATIS",
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 50
+  },
+  {
+   "id": "C0036",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 4,
+    "saat": 15,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
+   "_calisabilir_gunler": [
+    1,
+    4
+   ]
+  },
+  {
+   "id": "C0037",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 104
+  },
+  {
+   "id": "C0038",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77
+  },
+  {
+   "id": "C0039",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 38
+  },
+  {
+   "id": "C0040",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 5,
+     "tip": "yillik",
+     "durum": "reddedildi"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 24,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0041",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 144,
+   "_calisabilir_gunler": [
+    3,
+    4,
+    5
+   ],
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0042",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 3,
+    "saat": 7,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 36,
+   "_calisabilir_gunler": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "C0043",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
+   "_calisabilir_gunler": [
+    0,
+    1,
+    5
+   ]
+  },
+  {
+   "id": "C0044",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 3,
+    "hafta_sonu": 1,
+    "saat": 7,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 124
+  },
+  {
+   "id": "C0045",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 3,
+    "saat": 33,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
+  },
+  {
+   "id": "C0046",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
+  },
+  {
+   "id": "C0047",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15
+  },
+  {
+   "id": "C0048",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 60,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0049",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
+   "_calisabilir_gunler": [
+    1,
+    2,
+    3,
+    6
+   ]
+  },
+  {
+   "id": "C0050",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 3,
+    "hafta_sonu": 3,
+    "saat": 5,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107
+  },
+  {
+   "id": "C0051",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 64
+  },
+  {
+   "id": "C0052",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 34,
+   "_calisabilir_gunler": [
+    2,
+    3
+   ]
+  },
+  {
+   "id": "C0053",
+   "ekipler": [
+    "SATIS",
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 107,
+   "_calisabilir_gunler": [
+    2,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0054",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 22
+  },
+  {
+   "id": "C0055",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62
+  },
+  {
+   "id": "C0056",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 4,
+    "saat": 29,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18
+  },
+  {
+   "id": "C0057",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 4,
+    "saat": 32,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 141
+  },
+  {
+   "id": "C0058",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
+  },
+  {
+   "id": "C0059",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 6,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 3,
+    "hafta_sonu": 2,
+    "saat": 26,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 88
+  },
+  {
+   "id": "C0060",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 37,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0061",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
+  },
+  {
+   "id": "C0062",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 52
+  },
+  {
+   "id": "C0063",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 76,
+   "_calisabilir_gunler": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": "C0064",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 41
+  },
+  {
+   "id": "C0065",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 3,
+    "saat": 18,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 4
+  },
+  {
+   "id": "C0066",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 267
+  },
+  {
+   "id": "C0067",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "kurumsal",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 140
+  },
+  {
+   "id": "C0068",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45
+  },
+  {
+   "id": "C0069",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 4,
+    "saat": 26,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45,
+   "_calisabilir_gunler": [
+    0,
+    6
+   ]
+  },
+  {
+   "id": "C0070",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 81
+  },
+  {
+   "id": "C0071",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 40,
+   "_calisabilir_gunler": [
+    0,
+    3,
+    6
+   ]
+  },
+  {
+   "id": "C0072",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
+  },
+  {
+   "id": "C0073",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "stajyer",
+    "haftalik_saat": 30
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 0,
+    "saat": 28,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 69,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0074",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 2,
+    "saat": 8,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 9
+  },
+  {
+   "id": "C0075",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
+  },
+  {
+   "id": "C0076",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 4,
+    "saat": 10,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 12,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0077",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 3,
+    "saat": 18,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 116
+  },
+  {
+   "id": "C0078",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 0,
+    "saat": 23,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0079",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 25,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
+  },
+  {
+   "id": "C0080",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "stajyer",
+    "haftalik_saat": 30
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
+  },
+  {
+   "id": "C0081",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54
+  },
+  {
+   "id": "C0082",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
+  },
+  {
+   "id": "C0083",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 77,
+   "_calisabilir_gunler": [
+    2,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0084",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 3,
+    "saat": 17,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 80,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0085",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 93
+  },
+  {
+   "id": "C0086",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [
+    {
+     "gun": 5,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 9
+  },
+  {
+   "id": "C0087",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 10,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
+  },
+  {
+   "id": "C0088",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 2,
+    "saat": 5,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 266
+  },
+  {
+   "id": "C0089",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 5,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
+  },
+  {
+   "id": "C0090",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [
+    {
+     "gun": 6,
+     "tip": "yillik",
+     "durum": "reddedildi"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 10
+  },
+  {
+   "id": "C0091",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106
+  },
+  {
+   "id": "C0092",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 4,
+    "saat": 11,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
+  },
+  {
+   "id": "C0093",
+   "ekipler": [
+    "SATIS",
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 13,
+   "_calisabilir_gunler": [
+    0,
+    2,
+    6
+   ]
+  },
+  {
+   "id": "C0094",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "almanca",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 62
+  },
+  {
+   "id": "C0095",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147,
+   "_calisabilir_gunler": [
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0096",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 0,
+    "saat": 6,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115
+  },
+  {
+   "id": "C0097",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 2,
+    "saat": 21,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
+  },
+  {
+   "id": "C0098",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 59,
+   "_calisabilir_gunler": [
+    1,
+    3,
+    6
+   ]
+  },
+  {
+   "id": "C0099",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 123
+  },
+  {
+   "id": "C0100",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
+  },
+  {
+   "id": "C0101",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32,
+   "_calisabilir_gunler": [
+    1,
+    3,
+    4
+   ]
+  },
+  {
+   "id": "C0102",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 32
+  },
+  {
+   "id": "C0103",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [
+    {
+     "gun": 2,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
+  },
+  {
+   "id": "C0104",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
+  },
+  {
+   "id": "C0105",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 66
+  },
+  {
+   "id": "C0106",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 0,
+    "saat": 32,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 146,
+   "_calisabilir_gunler": [
+    0,
+    1,
+    5
+   ]
+  },
+  {
+   "id": "C0107",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 3,
+    "saat": 10,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
+  },
+  {
+   "id": "C0108",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
+  },
+  {
+   "id": "C0109",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0110",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0111",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "stajyer",
+    "haftalik_saat": 30
+   },
+   "izinler": [
+    {
+     "gun": 2,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 84
+  },
+  {
+   "id": "C0112",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 73
+  },
+  {
+   "id": "C0113",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
+   "_calisabilir_gunler": [
+    2,
+    3
+   ],
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0114",
+   "ekipler": [
+    "SATIS"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 4,
+    "saat": 39,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5
+  },
+  {
+   "id": "C0115",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
+  },
+  {
+   "id": "C0116",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 2,
+    "saat": 38,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 83
+  },
+  {
+   "id": "C0117",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
+  },
+  {
+   "id": "C0118",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 0
+  },
+  {
+   "id": "C0119",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [
+    {
+     "gun": 5,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 49
+  },
+  {
+   "id": "C0120",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 2,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 74
+  },
+  {
+   "id": "C0121",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 30
+  },
+  {
+   "id": "C0122",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 2
+  },
+  {
+   "id": "C0123",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 46,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0124",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 20,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43
+  },
+  {
+   "id": "C0125",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
+  },
+  {
+   "id": "C0126",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 128
+  },
+  {
+   "id": "C0127",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 15,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0128",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 3,
+    "hafta_sonu": 4,
+    "saat": 9,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 44
+  },
+  {
+   "id": "C0129",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 4,
+     "tip": "yillik",
+     "durum": "reddedildi"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 141
+  },
+  {
+   "id": "C0130",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 149
+  },
+  {
+   "id": "C0131",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 125,
+   "_calisabilir_gunler": [
+    2,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0132",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 85
+  },
+  {
+   "id": "C0133",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "sezonluk",
+    "haftalik_saat": 40
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91
+  },
+  {
+   "id": "C0134",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7,
+   "_calisabilir_gunler": [
+    1,
+    3
+   ],
+   "durum": "ayrildi"
+  },
+  {
+   "id": "C0135",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 19
+  },
+  {
+   "id": "C0136",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 106,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0137",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54
+  },
+  {
+   "id": "C0138",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 91
+  },
+  {
+   "id": "C0139",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 16
+  },
+  {
+   "id": "C0140",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 17,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0141",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 85
+  },
+  {
+   "id": "C0142",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 1,
+    "saat": 17,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 7
+  },
+  {
+   "id": "C0143",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
+  },
+  {
+   "id": "C0144",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [
+    {
+     "gun": 6,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39,
+   "_calisabilir_gunler": [
+    1,
+    2,
+    6
+   ]
+  },
+  {
+   "id": "C0145",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
+  },
+  {
+   "id": "C0146",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 147
+  },
+  {
+   "id": "C0147",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "ingilizce",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 137,
+   "_calisabilir_gunler": [
+    2,
+    3,
+    5
+   ]
+  },
+  {
+   "id": "C0148",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "stajyer",
+    "haftalik_saat": 30
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 1,
+    "saat": 16,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 262
+  },
+  {
+   "id": "C0149",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 54,
+   "_calisabilir_gunler": [
+    0,
+    1,
+    3
+   ]
+  },
+  {
+   "id": "C0150",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 132
+  },
+  {
+   "id": "C0151",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 2,
+    "hafta_sonu": 0,
+    "saat": 3,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 102,
+   "_calisabilir_gunler": [
+    4,
+    5
+   ]
+  },
+  {
+   "id": "C0152",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0153",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 43,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0154",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 109
+  },
+  {
+   "id": "C0155",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122,
+   "_calisabilir_gunler": [
+    2,
+    3,
+    5
+   ]
+  },
+  {
+   "id": "C0156",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 63,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0157",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade",
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 1,
+    "saat": 36,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 72
+  },
+  {
+   "id": "C0158",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 8
+  },
+  {
+   "id": "C0159",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 3
+  },
+  {
+   "id": "C0160",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 4,
+    "saat": 3,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 111
+  },
+  {
+   "id": "C0161",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 108
+  },
+  {
+   "id": "C0162",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 2,
+    "saat": 39,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 104
+  },
+  {
+   "id": "C0163",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 110,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0164",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 4,
+    "saat": 7,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 18
+  },
+  {
+   "id": "C0165",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133
+  },
+  {
+   "id": "C0166",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 98
+  },
+  {
+   "id": "C0167",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 26
+  },
+  {
+   "id": "C0168",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "almanca",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 5
+  },
+  {
+   "id": "C0169",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 21
+  },
+  {
+   "id": "C0170",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 138
+  },
+  {
+   "id": "C0171",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "sezonluk",
+    "haftalik_saat": 40
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 1,
+    "saat": 1,
+    "cumartesi": 1
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 264
+  },
+  {
+   "id": "C0172",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 130
+  },
+  {
+   "id": "C0173",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
+   "_calisabilir_gunler": [
+    2,
+    3,
+    4
+   ]
+  },
+  {
+   "id": "C0174",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58,
+   "_calisabilir_gunler": [
+    1,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0175",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 86,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0176",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 4,
+    "saat": 25,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 131,
+   "_calisabilir_gunler": [
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "id": "C0177",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "almanca",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 0,
+    "saat": 30,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 45
+  },
+  {
+   "id": "C0178",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 56
+  },
+  {
+   "id": "C0179",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 38
+  },
+  {
+   "id": "C0180",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 58
+  },
+  {
+   "id": "C0181",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 10,
+   "_calisabilir_gunler": [
+    2,
+    5,
+    6
+   ]
+  },
+  {
+   "id": "C0182",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "iade",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 1,
+    "hafta_sonu": 4,
+    "saat": 35,
+    "cumartesi": 3
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 11
+  },
+  {
+   "id": "C0183",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "uzman",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 112
+  },
+  {
+   "id": "C0184",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "ingilizce",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 269,
+   "_calisabilir_gunler": [
+    1,
+    3,
+    5
+   ]
+  },
+  {
+   "id": "C0185",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 4,
+    "hafta_sonu": 0,
+    "saat": 36,
+    "cumartesi": 2
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 28
+  },
+  {
+   "id": "C0186",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 142
+  },
+  {
+   "id": "C0187",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "kurumsal",
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 25
+  },
+  {
+   "id": "C0188",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 0,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 133,
+   "_calisabilir_gunler": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "C0189",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 115
+  },
+  {
+   "id": "C0190",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 101,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0191",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 35
+  },
+  {
+   "id": "C0192",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 137,
+   "gece_calisamaz": true,
+   "durum": "pasif"
+  },
+  {
+   "id": "C0193",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 31
+  },
+  {
+   "id": "C0194",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "almanca"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [
+    {
+     "gun": 3,
+     "tip": "yillik",
+     "durum": "onayli"
+    }
+   ],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 5,
+    "hafta_sonu": 2,
+    "saat": 32,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 70,
+   "gece_calisamaz": true
+  },
+  {
+   "id": "C0195",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 5
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 130
+  },
+  {
+   "id": "C0196",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "kidemli_agent",
+   "yetkinlikler": [
+    "kurumsal"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 2,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 4,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 6,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 90,
+   "_calisabilir_gunler": [
+    0,
+    3,
+    5
+   ]
+  },
+  {
+   "id": "C0197",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 122
+  },
+  {
+   "id": "C0198",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "takim_lideri",
+   "yetkinlikler": [
+    "teknik"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 39
+  },
+  {
+   "id": "C0199",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "iade"
+   ],
+   "sozlesme": {
+    "tip": "yari_zamanli"
+   },
+   "izinler": [],
+   "uygunluk": [
+    {
+     "tip": "uygun_degil",
+     "gun": 1,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 3,
+     "bas": 0,
+     "bit": 24
+    },
+    {
+     "tip": "uygun_degil",
+     "gun": 5,
+     "bas": 0,
+     "bit": 24
+    }
+   ],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 97,
+   "_calisabilir_gunler": [
+    0,
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "id": "C0200",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "operasyonel_rol": "agent",
+   "yetkinlikler": [
+    "almanca",
+    "ingilizce"
+   ],
+   "sozlesme": {
+    "tip": "tam_zamanli",
+    "haftalik_saat": 45,
+    "gun_sayisi": 6
+   },
+   "izinler": [],
+   "uygunluk": [],
+   "devir_yuk": {
+    "gece": 0,
+    "hafta_sonu": 0,
+    "saat": 0,
+    "cumartesi": 0
+   },
+   "gecmis_vardiyalar": [],
+   "yil_ici_fazla_mesai_saat": 47
+  }
+ ],
+ "vardiya_sablonlari": [
+  {
+   "id": "S-SABAH",
+   "ekip": "SATIS",
+   "bas": 7,
+   "bit": 16.25,
+   "mola_dk": 60,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "S-ARA",
+   "ekip": "SATIS",
+   "bas": 11,
+   "bit": 20.25,
+   "mola_dk": 60,
+   "gece_vardiyasi": false,
+   "_not": "Yogun saat takviyesi -- SABAH ve AKSAM ile bilerek ortusur.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "S-AKSAM",
+   "ekip": "SATIS",
+   "bas": 13.75,
+   "bit": 23,
+   "mola_dk": 60,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "S-GECE",
+   "ekip": "SATIS",
+   "bas": 23,
+   "bit": 32.25,
+   "mola_dk": 60,
+   "gece_vardiyasi": true,
+   "_not": "23:00-07:30. Genisletilmis saat (Z-1): gun sinirini asar.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "S-UZUN",
+   "ekip": "SATIS",
+   "bas": 8,
+   "bit": 18.75,
+   "mola_dk": 60,
+   "gece_vardiyasi": false,
+   "_not": "5 gunluk desen: 9,0 net x 5 = 45 saat.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "S-KISA",
+   "ekip": "SATIS",
+   "bas": 10,
+   "bit": 16,
+   "mola_dk": 30,
+   "gece_vardiyasi": false,
+   "_not": "Yari zamanli bicimi, 5,5 net.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 60,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-SABAH",
+   "ekip": "BACKOFFICE",
+   "bas": 8,
+   "bit": 16.75,
+   "mola_dk": 45,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-ARA",
+   "ekip": "BACKOFFICE",
+   "bas": 11.25,
+   "bit": 20,
+   "mola_dk": 45,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-AKSAM",
+   "ekip": "BACKOFFICE",
+   "bas": 15.25,
+   "bit": 24,
+   "mola_dk": 45,
+   "gece_vardiyasi": true,
+   "_not": "15:45-24:00 -- aksam ama gece penceresine giriyor; isaret KULLANICININ.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-GECE",
+   "ekip": "BACKOFFICE",
+   "bas": 0,
+   "bit": 8.75,
+   "mola_dk": 45,
+   "gece_vardiyasi": true,
+   "_not": "00:00-08:15.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-UZUN",
+   "ekip": "BACKOFFICE",
+   "bas": 8,
+   "bit": 18.25,
+   "mola_dk": 45,
+   "gece_vardiyasi": false,
+   "_not": "5 gunluk desen: 9,0 net x 5 = 45.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "B-YARIM",
+   "ekip": "BACKOFFICE",
+   "bas": 9,
+   "bit": 13,
+   "mola_dk": 0,
+   "gece_vardiyasi": false,
+   "_not": "4 saat -- MOLA_HAKKI'nin en dusuk esigi (<=4sa: 15dk).",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 45,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 15,
+     "adet": 2,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "M-SABAH",
+   "ekip": "MHIZMET",
+   "bas": 8,
+   "bit": 17,
+   "mola_dk": 30,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 30,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 20,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "M-AKSAM",
+   "ekip": "MHIZMET",
+   "bas": 13,
+   "bit": 22,
+   "mola_dk": 30,
+   "gece_vardiyasi": false,
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 30,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 20,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "M-UZUN",
+   "ekip": "MHIZMET",
+   "bas": 8,
+   "bit": 18.5,
+   "mola_dk": 30,
+   "gece_vardiyasi": false,
+   "_not": "5 gunluk desen: 9,0 net x 5 = 45.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 30,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 20,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "M-HSONU",
+   "ekip": "MHIZMET",
+   "bas": 10,
+   "bit": 18,
+   "mola_dk": 30,
+   "gece_vardiyasi": false,
+   "gunler": [
+    5,
+    6
+   ],
+   "_not": "Yalniz hafta sonu -- `gunler` alani kisitlar.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 30,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 20,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  },
+  {
+   "id": "M-AKSAMK",
+   "ekip": "MHIZMET",
+   "bas": 17,
+   "bit": 21,
+   "mola_dk": 0,
+   "gece_vardiyasi": false,
+   "_not": "Yari zamanli aksam bicimi, 4 saat.",
+   "mola_politikasi": [
+    {
+     "tip": "yemek",
+     "dakika": 30,
+     "adet": 1,
+     "ucretli": false
+    },
+    {
+     "tip": "dinlenme",
+     "dakika": 20,
+     "adet": 3,
+     "ucretli": true
+    }
+   ]
+  }
+ ],
+ "talep": [
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 7,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 8,
+   "asgari": 29,
+   "hedef": 30,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 9,
+   "asgari": 29,
+   "hedef": 30,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 10,
+   "asgari": 39,
+   "hedef": 40,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 11,
+   "asgari": 56,
+   "hedef": 57,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 12,
+   "asgari": 56,
+   "hedef": 57,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 13,
+   "asgari": 56,
+   "hedef": 57,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 14,
+   "asgari": 70,
+   "hedef": 71,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 15,
+   "asgari": 70,
+   "hedef": 71,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 16,
+   "asgari": 61,
+   "hedef": 62,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 17,
+   "asgari": 39,
+   "hedef": 40,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 18,
+   "asgari": 39,
+   "hedef": 40,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 19,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 20,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 21,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 22,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 0,
+   "saat": 23,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 0,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 1,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 2,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 3,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 4,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 5,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 6,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 7,
+   "asgari": 27,
+   "hedef": 28,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 8,
+   "asgari": 32,
+   "hedef": 33,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 9,
+   "asgari": 22,
+   "hedef": 23,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 10,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 11,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 12,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 13,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 14,
+   "asgari": 67,
+   "hedef": 68,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 15,
+   "asgari": 67,
+   "hedef": 68,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 16,
+   "asgari": 54,
+   "hedef": 55,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 17,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 18,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 19,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 20,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 21,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 22,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 1,
+   "saat": 23,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 0,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 1,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 2,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 3,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 4,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 5,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 6,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 7,
+   "asgari": 25,
+   "hedef": 26,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 8,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 9,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 10,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 11,
+   "asgari": 52,
+   "hedef": 53,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 12,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 13,
+   "asgari": 52,
+   "hedef": 53,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 14,
+   "asgari": 66,
+   "hedef": 67,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 15,
+   "asgari": 66,
+   "hedef": 67,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 16,
+   "asgari": 52,
+   "hedef": 53,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 17,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 18,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 19,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 20,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 21,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 22,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 2,
+   "saat": 23,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 0,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 1,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 2,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 3,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 4,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 5,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 6,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 7,
+   "asgari": 25,
+   "hedef": 26,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 8,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 9,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 10,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 11,
+   "asgari": 52,
+   "hedef": 53,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 12,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 13,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 14,
+   "asgari": 68,
+   "hedef": 69,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 15,
+   "asgari": 68,
+   "hedef": 69,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 16,
+   "asgari": 53,
+   "hedef": 54,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 17,
+   "asgari": 37,
+   "hedef": 38,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 18,
+   "asgari": 37,
+   "hedef": 38,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 19,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 20,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 21,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 22,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 3,
+   "saat": 23,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 0,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 1,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 2,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 3,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 4,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 5,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 6,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 7,
+   "asgari": 28,
+   "hedef": 29,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 8,
+   "asgari": 32,
+   "hedef": 33,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 9,
+   "asgari": 22,
+   "hedef": 23,
+   "_sahada_taban": 12,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 10,
+   "asgari": 34,
+   "hedef": 35,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 11,
+   "asgari": 50,
+   "hedef": 51,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 12,
+   "asgari": 51,
+   "hedef": 52,
+   "_sahada_taban": 22,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 13,
+   "asgari": 51,
+   "hedef": 52,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 14,
+   "asgari": 65,
+   "hedef": 66,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 15,
+   "asgari": 65,
+   "hedef": 66,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 16,
+   "asgari": 54,
+   "hedef": 55,
+   "_sahada_taban": 27,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 17,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 18,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 19,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 20,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 19,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 21,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 22,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 4,
+   "saat": 23,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 0,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 1,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 2,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 3,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 4,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 5,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 6,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 7,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 8,
+   "asgari": 23,
+   "hedef": 24,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 9,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 10,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 11,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 12,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 13,
+   "asgari": 29,
+   "hedef": 30,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 14,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 15,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 16,
+   "asgari": 33,
+   "hedef": 34,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 17,
+   "asgari": 22,
+   "hedef": 23,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 18,
+   "asgari": 22,
+   "hedef": 23,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 19,
+   "asgari": 19,
+   "hedef": 20,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 20,
+   "asgari": 19,
+   "hedef": 20,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 5,
+   "saat": 23,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 0,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 1,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 2,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 3,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 4,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 5,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 6,
+   "asgari": 5,
+   "hedef": 6,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 7,
+   "asgari": 13,
+   "hedef": 14,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 8,
+   "asgari": 18,
+   "hedef": 19,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 9,
+   "asgari": 13,
+   "hedef": 14,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 10,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 11,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 12,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 13,
+   "asgari": 29,
+   "hedef": 30,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 14,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 15,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 16,
+   "asgari": 32,
+   "hedef": 33,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 17,
+   "asgari": 23,
+   "hedef": 24,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 18,
+   "asgari": 23,
+   "hedef": 24,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 19,
+   "asgari": 19,
+   "hedef": 20,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 20,
+   "asgari": 19,
+   "hedef": 20,
+   "_sahada_taban": 11,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "SATIS",
+   "gun": 6,
+   "saat": 23,
+   "asgari": 13,
+   "hedef": 14,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 8,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 9,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 10,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 11,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 12,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 13,
+   "asgari": 34,
+   "hedef": 35,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 14,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 15,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 16,
+   "asgari": 44,
+   "hedef": 45,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 17,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 18,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 19,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 20,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 0,
+   "saat": 23,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 8,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 9,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 10,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 11,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 12,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 13,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 14,
+   "asgari": 32,
+   "hedef": 33,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 15,
+   "asgari": 32,
+   "hedef": 33,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 16,
+   "asgari": 41,
+   "hedef": 42,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 17,
+   "asgari": 33,
+   "hedef": 34,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 18,
+   "asgari": 33,
+   "hedef": 34,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 19,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 20,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 1,
+   "saat": 23,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 8,
+   "asgari": 19,
+   "hedef": 20,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 9,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 10,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 11,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 12,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 13,
+   "asgari": 29,
+   "hedef": 30,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 14,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 15,
+   "asgari": 30,
+   "hedef": 31,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 16,
+   "asgari": 39,
+   "hedef": 40,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 17,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 18,
+   "asgari": 31,
+   "hedef": 32,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 19,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 20,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 2,
+   "saat": 23,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 8,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 9,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 10,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 11,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 12,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 13,
+   "asgari": 34,
+   "hedef": 35,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 14,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 15,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 16,
+   "asgari": 44,
+   "hedef": 45,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 17,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 18,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 19,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 20,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 3,
+   "saat": 23,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 8,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 9,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 10,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 11,
+   "asgari": 24,
+   "hedef": 25,
+   "_sahada_taban": 14,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 12,
+   "asgari": 36,
+   "hedef": 37,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 13,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 14,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 15,
+   "asgari": 35,
+   "hedef": 36,
+   "_sahada_taban": 16,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 16,
+   "asgari": 45,
+   "hedef": 46,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 17,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 18,
+   "asgari": 38,
+   "hedef": 39,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 19,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 20,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 21,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 22,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 4,
+   "saat": 23,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 8,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 9,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 10,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 11,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 12,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 13,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 14,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 15,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 16,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 17,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 18,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 19,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 20,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 21,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 22,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 5,
+   "saat": 23,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 0,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 1,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 2,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 3,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 4,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 5,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 6,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 7,
+   "asgari": 1,
+   "hedef": 1,
+   "_sahada_taban": 1,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 8,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 9,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 10,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 11,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 12,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 13,
+   "asgari": 15,
+   "hedef": 16,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 14,
+   "asgari": 15,
+   "hedef": 16,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 15,
+   "asgari": 15,
+   "hedef": 16,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 16,
+   "asgari": 20,
+   "hedef": 21,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 17,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 18,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 19,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 20,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 21,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 22,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "BACKOFFICE",
+   "gun": 6,
+   "saat": 23,
+   "asgari": 4,
+   "hedef": 5,
+   "_sahada_taban": 2,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 8,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 9,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 10,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 11,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 12,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 13,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 14,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 15,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 16,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 17,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 18,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 19,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 20,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 0,
+   "saat": 21,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 8,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 9,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 10,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 11,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 12,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 13,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 14,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 15,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 16,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 17,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 18,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 19,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 20,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 1,
+   "saat": 21,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 8,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 9,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 10,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 11,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 12,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 13,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 14,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 15,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 16,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 17,
+   "asgari": 18,
+   "hedef": 19,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 18,
+   "asgari": 18,
+   "hedef": 19,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 19,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 20,
+   "asgari": 8,
+   "hedef": 9,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 2,
+   "saat": 21,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 8,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 9,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 10,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 11,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 12,
+   "asgari": 14,
+   "hedef": 15,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 13,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 14,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 15,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 16,
+   "asgari": 21,
+   "hedef": 22,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 17,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 18,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 19,
+   "asgari": 7,
+   "hedef": 8,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 20,
+   "asgari": 7,
+   "hedef": 8,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 3,
+   "saat": 21,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 8,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 9,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 10,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 11,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 12,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 7,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 13,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 14,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 15,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 16,
+   "asgari": 17,
+   "hedef": 18,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 17,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 10,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 18,
+   "asgari": 16,
+   "hedef": 17,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 19,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 20,
+   "asgari": 10,
+   "hedef": 11,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 4,
+   "saat": 21,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 6,
+   "_gun_tipi": "haftaici"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 10,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 11,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 12,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 13,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 14,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 15,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 16,
+   "asgari": 9,
+   "hedef": 10,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 5,
+   "saat": 17,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 10,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 11,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 12,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 13,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 14,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 15,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 16,
+   "asgari": 11,
+   "hedef": 12,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  },
+  {
+   "ekip": "MHIZMET",
+   "gun": 6,
+   "saat": 17,
+   "asgari": 6,
+   "hedef": 7,
+   "_sahada_taban": 5,
+   "_gun_tipi": "haftasonu"
+  }
+ ],
+ "kurallar": [
+  {
+   "kod": "AKTIF_CALISAN",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "SOZLESME_GECERLI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "CAKISMA_YOK",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "ASGARI_KAPSAMA",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "HEDEF_KAPSAMA",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "GUNLUK_AZAMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat": 11
+   }
+  },
+  {
+   "kod": "HAFTALIK_AZAMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat": 45
+   }
+  },
+  {
+   "kod": "HAFTA_TATILI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "asgari_gun": 1
+   }
+  },
+  {
+   "kod": "VARDIYA_ARASI_DINLENME",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "asgari_saat": 11
+   }
+  },
+  {
+   "kod": "ARDISIK_CALISMA_GUNU",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "azami_gun": 6
+   }
+  },
+  {
+   "kod": "FAZLA_MESAI_TAVANI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat_hafta": 10
+   }
+  },
+  {
+   "kod": "ONAYLI_IZIN",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "UYGUNLUK_TAKVIMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true
+  },
+  {
+   "kod": "PART_TIME_LIMIT",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "DONMUS_GUN",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "KILIT_UYUMU",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "ADALET_DENGESI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false,
+   "parametreler": {
+    "esik": 2
+   }
+  },
+  {
+   "kod": "MOLA_HAKKI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "MOLA_KAPSAMASI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "MOLA_TIPI_ZORUNLU",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true
+  },
+  {
+   "kod": "MOLA_ASGARI_BLOK",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "asgari_dakika": 15
+   }
+  },
+  {
+   "kod": "YEMEK_TEK_BLOK",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "MOLA_YERLESIMI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false,
+   "parametreler": {
+    "en_az_saat": 3,
+    "en_gec_saat": 5
+   }
+  },
+  {
+   "kod": "SAHADA_ASGARI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "asgari_sahada": 0
+   }
+  },
+  {
+   "kod": "SAAT_DENGESI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "tolerans_saat": 0
+   }
+  },
+  {
+   "kod": "GECE_UYGUNLUGU",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "ASGARI_VARDIYA_SURESI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "asgari_saat": 4
+   }
+  },
+  {
+   "kod": "ARDISIK_GECE_LIMIT",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "azami_gece": 3
+   }
+  },
+  {
+   "kod": "GECE_VARDIYASI_AZAMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat": 7.5,
+    "pencere_bas": 20,
+    "pencere_bit": 6
+   }
+  },
+  {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "SATIS",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "BACKOFFICE",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "ROL_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "rol": "takim_lideri",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "SATIS",
+    "asgari": 2,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "BACKOFFICE",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "ingilizce",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21
+    ]
+   }
+  },
+  {
+   "kod": "YETKINLIK_KAPSAMASI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "yetkinlik": "almanca",
+    "ekip": "MHIZMET",
+    "asgari": 1,
+    "saatler": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ]
+   }
+  },
+  {
+   "kod": "GECE_POSTASI_DEVRI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_ardisik_gece_haftasi": 1
+   }
+  },
+  {
+   "kod": "ARDISIK_HAFTA_SONU_LIMIT",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true,
+   "parametreler": {
+    "azami_ardisik": 2
+   }
+  },
+  {
+   "kod": "YILLIK_FAZLA_MESAI_TAVANI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": true,
+   "kabul_edilebilir": false,
+   "parametreler": {
+    "azami_saat_yil": 270
+   }
+  },
+  {
+   "kod": "GECE_YARISI_ASAN",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": false
+  },
+  {
+   "kod": "HEDEF_ASIMI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "CALISMA_SAATLERI",
+   "tur": "SERT",
+   "aktif": true,
+   "yasal": false,
+   "kabul_edilebilir": true
+  },
+  {
+   "kod": "EKIP_SUREKLILIGI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "PLAN_KARARLILIGI",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "TERCIH_KARSILAMA",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  },
+  {
+   "kod": "VARDIYA_ROTASYON_YONU",
+   "tur": "YUMUSAK",
+   "aktif": true,
+   "yasal": false
+  }
+ ],
+ "donmus_gunler": [],
+ "kilitler": [
+  {
+   "calisan": "C0001",
+   "ekip": "SATIS",
+   "gun": 2,
+   "bas": 7,
+   "bit": 16.25
+  },
+  {
+   "calisan": "C0003",
+   "ekip": "SATIS",
+   "gun": 2,
+   "bas": 7,
+   "bit": 16.25
+  },
+  {
+   "calisan": "C0006",
+   "ekip": "SATIS",
+   "gun": 2,
+   "bas": 7,
+   "bit": 16.25
+  },
+  {
+   "calisan": "C0007",
+   "ekip": "SATIS",
+   "gun": 2,
+   "bas": 7,
+   "bit": 16.25
+  },
+  {
+   "calisan": "C0002",
+   "gun": 3,
+   "tip": "yasak"
+  },
+  {
+   "calisan": "C0004",
+   "gun": 3,
+   "tip": "yasak"
+  }
+ ],
+ "sabit_atamalar": [],
+ "devir_kapsama": [],
+ "denetim_disi_kabul": [],
+ "departmanlar": [
+  {
+   "id": "D-SATIS",
+   "ad": "Satis Departmani",
+   "ekipler": [
+    "SATIS"
+   ],
+   "acik": "7/24"
+  },
+  {
+   "id": "D-BACK",
+   "ad": "Back Office",
+   "ekipler": [
+    "BACKOFFICE"
+   ],
+   "acik": "7/24"
+  },
+  {
+   "id": "D-MHIZMET",
+   "ad": "Musteri Hizmetleri",
+   "ekipler": [
+    "MHIZMET"
+   ],
+   "acik": [
+    {
+     "gunler": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "bas": 7,
+     "bit": 23
+    },
+    {
+     "gunler": [
+      5,
+      6
+     ],
+     "bas": 8,
+     "bit": 19
+    }
+   ]
+  }
+ ],
+ "cok_ekipli_sayim": "hepsi",
+ "_olcek": 0.4,
+ "_merdiven": {
+  "seviye": 1,
+  "cift_yetkinlikli": [
+   "C0008",
+   "C0035",
+   "C0053",
+   "C0093"
+  ],
+  "bo_gece": {
+   "asgari": 1,
+   "hedef": 1
+  },
+  "hedef_kisi_saat": 8204,
+  "asgari_kisi_saat": 7845,
+  "referans_puani": {
+   "durum": "OPTIMAL",
+   "amac": 19909,
+   "dagilim": {
+    "MOLA_KAPSAMASI": {
+     "ceza": 15330,
+     "deger": 2190
+    },
+    "ADALET_DENGESI": {
+     "ceza": 4510,
+     "deger": 902
+    },
+    "VARDIYA_ROTASYON_YONU": {
+     "ceza": 69,
+     "deger": 23
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 0,
+     "deger": 0
+    }
+   }
+  }
+ }
+}

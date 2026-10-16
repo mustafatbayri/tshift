@@ -3306,6 +3306,25 @@ bakmadan değiştirmek tahmin olur; hangi yönün iyi olduğu bilinmiyor).
   üretimi artık her boyutta iki aşamaya zorlanır (`referans_uret`:
   `iki_asama_esigi: 0`; test); ürün yolunun eşik davranışı merdivenin
   ölçümü.
+- **İkinci bulgu (00:09, 25 kişi):** fazla mesaisiz plan **kanıtlı yok**
+  (ilk arama 0,35 sn INFEASIBLE; 16 tam zamanlı × 45 sa, 9 saatlik
+  şablonlar) → referans fazla mesaili kabul (`fazla_mesaisiz_kanitli_yok`),
+  seviye 1 sahnesi o kadar fm'ye izin verir; 25'in üreteç referansı 2,0 sa
+  ile üretildi. **Ürün sorusu (Mustafa'ya):** küçük kadroda toleranssız 45 +
+  9 saatlik şablon = yapısal fazla mesai.
+- **Üçüncü bulgu (00:15, 100 kişi) — KAPANDI (15 Ekim 17:30): doğrulayıcı
+  hatası, kayan nokta.** Referans yolunun planı doğrulayıcıda
+  `PART_TIME_LIMIT` SERT çıkmıştı. 17:16'da yeniden görüldü ve bu kez plan
+  kaydedildi (`referans_uret` → `_referans-HATA-…json`): C0088, yarı
+  zamanlı, 5 × M-UZUN = **tam 45,00 saat**; doğrulayıcının toplamı
+  **45,00000000000002** (20 dakikalık molalar = 1/3 saat, ikili kesirde tam
+  değil) > 45 → yanlış kırmızı. Motor dakikayla çalışır, doğruydu.
+  Düzeltme: doğrulayıcıda süre kıyasları **tam dakikayla** (`kurallar._dk`;
+  GUNLUK_AZAMI, HAFTALIK_AZAMI, PART_TIME_LIMIT, FAZLA_MESAI_TAVANI); 2
+  test (`test_net_saat_uyumu.py`: tam sınırda aşmaz, 1 dk fazlası yakalanır).
+  Kaydedilen plan yeni doğrulayıcıyla temiz (sert 0, fm 0, yayınlanabilir).
+  #7.6'nın değeri: iki taraf bağımsız olmasa bu görünmezdi — ama bu kez
+  yanlış olan bekçiydi.
 - Her kademede aynı sürede: **(a)** ürün yolu (bugünkü eşik), **(b)** tek
   aşamalı yol (`ipucu_kapali` = eşik sonsuz; eşiğin altında ürün yolu zaten
   budur). (a) ile (b)'nin yer değiştirdiği kademe eşiği verir; 50.000 /

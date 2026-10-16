@@ -17,3 +17,23 @@
 00:15:30  kademe 0.2: uretec referansi cikis 1
 00:15:30  kademe 0.2: uretec referansi YOK (plan bulunamadi) -- kademe atlandi
 00:15:30  kademe 0.3: uretec referansi (600 sn)
+17:07:46  MERDIVEN ZINCIRI 2. TUR BASLADI (bulut, 2 cekirdek; referans: iki asama + fm'siz aramaya butcenin yarisi + kanitli fm kabulu)
+17:07:46  kademe 0.05: uretec referansi var
+17:07:47  kademe 0.05: veri seti v2 cikis 0
+17:07:47  kademe 0.05: VS2 referansi (180 sn)
+17:10:25  kademe 0.05: VS2 referansi cikis 0
+17:10:25  kademe 0.2: uretec referansi (420 sn)
+17:16:29  kademe 0.2: uretec referansi cikis 1
+17:16:29  kademe 0.2: uretec seviye 1 sahnesi cikis 1
+17:16:29  kademe 0.2: uretec referansi YOK -- kademe atlandi
+17:16:29  kademe 0.3: uretec referansi (600 sn)
+17:25:47  kademe 0.3: uretec referansi cikis 0
+17:25:48  kademe 0.3: veri seti v2 cikis 0
+17:25:48  kademe 0.3: VS2 referansi (600 sn)
+17:34:36  kademe 0.3: VS2 referansi cikis 1
+17:34:36  kademe 0.4: uretec referansi (900 sn)
+17:48:14  kademe 0.4: uretec referansi cikis 0
+17:48:15  kademe 0.4: veri seti v2 cikis 0
+17:48:15  kademe 0.4: VS2 referansi (900 sn)
+18:02:04  kademe 0.4: VS2 referansi cikis 0
+18:02:04  kademe 0.6: uretec referansi (1200 sn)

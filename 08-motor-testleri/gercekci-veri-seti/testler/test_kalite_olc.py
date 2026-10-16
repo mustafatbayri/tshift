@@ -359,7 +359,12 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
     rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
     gevsek = {"gevsek_parca", "acik_lin0", "acik_ls"}                   # K-68 ayar 2 / oneri 2b olcum secenekleri: urun yolu + acik adim ayari
-    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek
+    onarim = {"onarim_tam"}                                             # 15 Ekim: komsuluk onariminin kiyasi (butun model, acikca)
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek | onarim
+    assert KO.YAPILANDIRMALAR["onarim_tam"][1] == {"fazla_mesai_onarim_yontemi": "tam"} and KO.YAPILANDIRMALAR["onarim_tam"][2] == {}
+    assert KO.COZ_VARSAYILAN["fazla_mesai_onarim_yontemi"] == "komsuluk"   # urun yolu: komsuluk
+    for ad in urun | gevsek:
+        assert "fazla_mesai_onarim_yontemi" not in KO.YAPILANDIRMALAR[ad][1], ad
     assert KO.YAPILANDIRMALAR["gevsek_parca"][1] == {"gevsek_acik_parca_saniye": 150}
     assert KO.YAPILANDIRMALAR["gevsek_parca"][2] == {}
     assert KO.COZ_VARSAYILAN["gevsek_acik_parca_saniye"] is None          # urun yolu: tek uzun arama
@@ -610,3 +615,32 @@ def test_OPTIMUM_HESABI_kosu_kaydinda_ve_yazim_hatasi_olcumu_DURDURMAZ(monkeypat
     assert s["durum"] == "cozuldu" and s["amac_degeri"] is not None
     assert s["optimum_hesabi_hatasi"] == "yazim"
     assert "optimum hesabi yazilamadi: yazim" in capsys.readouterr().out
+
+
+def test_DEVAM_tamamlanmis_kosular_atlanir_yarim_ve_istisna_atlanmaz():
+    """15 Ekim 08:48: gece blogu yeniden baslatmayla kesildi; `--devam` ayni
+    komutla kaldigi yerden surer. Plansiz biten (sure_yetmedi) olcumun
+    sonucudur, tekrar kosulmaz; ISTISNA ve durumsuz yarim kayit kosulur."""
+    kosular = [{"yapilandirma": "varsayilan", "tekrar": 1, "durum": "cozuldu"},
+               {"yapilandirma": "varsayilan", "tekrar": 2, "durum": "sure_yetmedi"},
+               {"yapilandirma": "varsayilan", "tekrar": 3, "durum": "ISTISNA"},
+               {"yapilandirma": "acik_lin0", "tekrar": 1}]
+    assert KO.tamamlanmis(kosular, "varsayilan", 1) is True
+    assert KO.tamamlanmis(kosular, "varsayilan", 2) is True
+    assert KO.tamamlanmis(kosular, "varsayilan", 3) is False
+    assert KO.tamamlanmis(kosular, "acik_lin0", 1) is False
+    assert KO.tamamlanmis(kosular, "acik_lin0", 2) is False
+    assert KO.DEVAM is False                                            # testler --devam ile kosmaz
+
+
+def test_onarim_yazisi_KOMSULUK_turlari_ve_yontemi_yazar_eski_kayit_DEGISMEZ():
+    o = {"denendi": True, "asama": "iyilestirme_sonu", "once_dakika": 615, "once_amac": 109971, "bulundu": False,
+         "sonra_amac": None, "kabul": False, "saniye": 297.99, "durum": "UNKNOWN"}
+    assert KO.onarim_yazisi(o) == "fazla mesai onarimi (iyilestirme sonu): 615 dk -> BULUNAMADI (UNKNOWN, 297.99 sn)"
+    o.update(yontem="komsuluk", fazla_mesaili_kisi=10,
+             turlar=[{"tur": 1, "serbest_kisi": 24, "sabit_degisken": 90000, "saniye": 2.1, "durum": "INFEASIBLE"},
+                     {"tur": 2, "serbest_kisi": 41, "sabit_degisken": 88000, "saniye": 9.7, "durum": "OPTIMAL"}],
+             bulundu=True, sonra_amac=80000, kabul=True, durum="OPTIMAL", saniye=11.8)
+    y = KO.onarim_yazisi(o)
+    assert "0, amac 109971 -> 80000 ALINDI" in y and "yontem komsuluk, 10 fm'li kisi" in y
+    assert "1. 24 kisi serbest INFEASIBLE 2.1 sn; 2. 41 kisi serbest OPTIMAL 9.7 sn" in y

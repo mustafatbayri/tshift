@@ -156,7 +156,7 @@ YAPILANDIRMALAR = {
     # ⚠ O-18 (7 Ekim): urun yolu = once fazla mesaisiz ARA, bulunca o plandan
     #   agirlikli aramaya devam et (alanlar acik). Sert kesim (`SERT`) yalniz
     #   olcum; bulgu 21 o haldir.
-    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim; asim sertken 1 x 20 sn, K-68 ayar 4), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), gevsek yolda fazla mesai onarimi iyilestirmenin sonunda (K-68 ayar 3), mola adimi (K-60)",
+    "varsayilan":   ("urunun kostugu hal: once fazla mesaisiz 3 x 40 sn (K-61 kapanisi, 8 Ekim; asim sertken 1 x 20 sn, K-68 ayar 4), bulunca o plandan agirlikli arama (K-61/O-18), molalar sabitken iyilestirme (K-59, %80), gevsek yolda fazla mesai onarimi iyilestirmenin sonunda KOMSULUK aramasiyla (K-68 ayar 3; 15 Ekim), mola adimi (K-60)",
                      {}, {}),
     # K-68 ayar 2'nin olcum secenegi (13 Ekim 23:20): gevsek yolun acik adimi
     #   150 sn'lik parcalarla, her parcada baska tohumla (bulgu 25'in kuyruk
@@ -170,6 +170,11 @@ YAPILANDIRMALAR = {
                      {"gevsek_acik_cozucu_parametreleri": {"linearization_level": 0}}, {}),
     "acik_ls":      ("urun yolu + gevsek acik adim yalniz yerel arama (use_ls_only) -- oneri 2b olcum secenegi",
                      {"gevsek_acik_cozucu_parametreleri": {"use_ls_only": True}}, {}),
+    # 15 Ekim: fazla mesai onarimi KOMSULUK aramasiyla urun yolu oldu (VS1 500'de
+    #   butun-model onarimi 7/7 bulamadi). `onarim_tam` = 14 Ekim'in butun-model
+    #   onarimi, kiyas icin ACIKCA yazili.
+    "onarim_tam":   ("urun yolu + fazla mesai onarimi BUTUN modelle (14 Ekim davranisi) -- komsuluk kiyasi",
+                     {"fazla_mesai_onarim_yontemi": "tam"}, {}),
     # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
     #   bulgu 23'un kaydidir (7 Ekim sabahi, TEK deneme) -- anlami degismesin
     #   diye `fazla_mesaisiz_deneme: 1` ACIKCA yazili. Bugunku urun yolu
@@ -351,6 +356,11 @@ KAYNAK = _arg("--kaynak", "uretec")
 #   sonunda OPTIMUM HESABI bolumu (optimum_hesabi / optimum_yazisi); kayitli
 #   bir sonuc dosyasi icin: `py kalite-olc.py --optimum-raporu <sonuc.json>`.
 OPTIMUM_RAPORU = _arg("--optimum-raporu", None)
+# 15 Ekim 08:48: gece blogu bilgisayarin kendi kendine yeniden baslamasiyla
+#   kesildi (3.600 x 3 adimi 39. dakikada). `--devam`: ayni adla kayitli sonuc
+#   dosyasi varsa yuklenir, tamamlanmis (yapilandirma, tekrar) ciftleri
+#   ATLANIR, eksikler kosulur; kesilen blok ayni komutla kaldigi yerden surer.
+DEVAM = "--devam" in sys.argv
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
@@ -961,8 +971,16 @@ def onarim_yazisi(o):
         sonuc = "0, amac %s -> %s ALINDI" % (o.get("once_amac"), o.get("sonra_amac"))
     else:
         sonuc = "0 ama amac %s -> %s (daha kotu), ALINMADI" % (o.get("once_amac"), o.get("sonra_amac"))
-    return "fazla mesai onarimi%s: %d dk -> %s (%s, %s sn)" % (
-        yer, o["once_dakika"], sonuc, o.get("durum"), o.get("saniye"))
+    ek = ""
+    if o.get("yontem"):                                  # 15 Ekim: komsuluk / tam
+        ek = " | yontem %s" % o["yontem"]
+        if o.get("turlar"):
+            ek += ", %d fm'li kisi, turlar: %s" % (
+                o.get("fazla_mesaili_kisi", 0),
+                "; ".join("%d. %d kisi serbest %s %s sn" % (t["tur"], t["serbest_kisi"], t["durum"], t["saniye"])
+                          for t in o["turlar"]))
+    return "fazla mesai onarimi%s: %d dk -> %s (%s, %s sn)%s" % (
+        yer, o["once_dakika"], sonuc, o.get("durum"), o.get("saniye"), ek)
 
 
 def gevsek_yazisi(s):
@@ -1289,6 +1307,16 @@ def ozet(sonuc):
             ham("MOLA_KAPSAMASI"), s.get("sert_ihlal"), s.get("amac_degeri"), fm_disi_amac(s)))
 
 
+def tamamlanmis(kosular, ad, tekrar):
+    """`--devam` icin: bu (yapilandirma, tekrar) kayitta bitmis mi? Plansiz
+    biten (sure_yetmedi) de bitmistir -- olcumun sonucu o. ISTISNA ve yarim
+    kayit (durum yok) bitmemistir."""
+    for s in kosular:
+        if s.get("yapilandirma") == ad and s.get("tekrar") == tekrar and s.get("durum") not in (None, "ISTISNA"):
+            return True
+    return False
+
+
 def main():
     if OPTIMUM_RAPORU:                                # kayitli dosya: yalniz rapor, kosu yok
         optimum_raporu(OPTIMUM_RAPORU)
@@ -1301,6 +1329,13 @@ def main():
              # bu makine icin TAHMIN degildir (28 Eylul dersi).
              "tarih": time.strftime("%Y-%m-%d %H:%M"), "cekirdek": os.cpu_count(),
              "kosular": []}
+    if DEVAM and os.path.exists(dosya_adi()):
+        onceki = json.load(io.open(dosya_adi(), encoding="utf-8"))
+        sonuc["kosular"] = [k for k in onceki.get("kosular", []) if k.get("durum") not in (None, "ISTISNA")]
+        sonuc["tarih"] = onceki.get("tarih", sonuc["tarih"])
+        sonuc["devam"] = (onceki.get("devam") or []) + [time.strftime("%Y-%m-%d %H:%M")]
+        print("DEVAM : %s -- kayitta %d bitmis kosu, eksikler kosulur (devam %s)"
+              % (os.path.basename(dosya_adi()), len(sonuc["kosular"]), ", ".join(sonuc["devam"])))
     print("SAHNE : %(kisi)d kisi, %(hucre)d hucre, %(kural)d kural  |  arama %(saniye)d sn  |  tekrar %(tekrar)d" % sonuc)
     for ad in SECILEN:
         if ad not in YAPILANDIRMALAR:
@@ -1332,6 +1367,9 @@ def main():
 
     for n, ad in enumerate(SECILEN, 1):
         for tekrar in range(TEKRAR):
+            if DEVAM and tamamlanmis(sonuc["kosular"], ad, tekrar + 1):
+                print("\n%d/%d  %s  (tekrar %d/%d)  -- kayitta var, ATLANDI" % (n, len(SECILEN), ad, tekrar + 1, TEKRAR))
+                continue
             print("\n%d/%d  %s%s" % (n, len(SECILEN), ad,
                                      ("  (tekrar %d/%d)" % (tekrar + 1, TEKRAR)) if TEKRAR > 1 else ""))
             try:
