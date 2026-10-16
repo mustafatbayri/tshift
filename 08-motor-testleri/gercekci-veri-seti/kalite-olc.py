@@ -395,6 +395,9 @@ def sahne_yukle():
         import merdiven
         yol = merdiven.sahne_yolu(OLCEK, KAYNAK)
         if not os.path.exists(yol):
+            if KAYNAK.startswith("ekili"):               # 16 Ekim: tanikli sahne ekili.py ile uretilir
+                raise SystemExit("%s yok -- once: py ekili.py --olcek %g --taban %s"
+                                 % (yol, OLCEK, "veri-seti" if KAYNAK.endswith("veri-seti") else "uretec"))
             raise SystemExit("%s yok -- once: py merdiven.py referans --olcek %g --kaynak %s" % (yol, OLCEK, KAYNAK))
         g = json.load(io.open(yol, encoding="utf-8"))
         if CESIT:
@@ -407,8 +410,10 @@ def sahne_yukle():
             g["_merdiven"]["referans_puani"] = p
             print("CESIT : %s -- %s (referans puani %d sn'de yeniden hesaplandi)"
                   % (CESIT, merdiven.CESITLER[CESIT], time.time() - t0))
-        print("SAHNE : %s (merdiven seviye 1%s; referans puani %s)"
-              % (os.path.basename(yol), (", cesit " + CESIT) if CESIT else "",
+        print("SAHNE : %s (merdiven seviye %s%s; %s puani %s)"
+              % (os.path.basename(yol), g.get("_merdiven", {}).get("seviye", 1),
+                 (", cesit " + CESIT) if CESIT else "",
+                 "TANIK" if KAYNAK.startswith("ekili") else "referans",
                  g["_merdiven"]["referans_puani"]["amac"]))
         return g
     if OLCEK == 1.0:

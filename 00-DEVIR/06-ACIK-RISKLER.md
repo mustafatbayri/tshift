@@ -3346,11 +3346,26 @@ ana makineyle aynı commit; **commit yalnız ana makineden** (tek yazar) —
 laptop çıktıları ana makineye taşınır, sonra commit'lenir. Bulut köprüsü
 tek makineye bağlanıyor; laptopun izlenmesi o gün konuşulacak.
 
+**16 Ekim — ölçünün kendisi düzeltildi (oturum 14 Ekim §18):** bu maddenin
+her kademedeki "referans" aynı motorun planıydı; *"referanstan −%x"* kendi
+kendimizle kıyastı. **Ekili sahne** (`ekili.py`): motorun araması kullanılmadan
+bir desen çözücü **tanık plan** bulur, talep ondan türetilir → fm'siz /
+aşımsız / eksiksiz planın **kesin var olduğu** ve tanık puanının optimumun
+**üst sınırı** olduğu sahne. 49'da motor tanıktan −%3,9 (fm 0, ilk plan 1,3
+sn); **25'te kurulamaz** (fm'siz plan desen çözücüde de yok — buradaki 25
+bulgusunu bağımsız doğrular). Merdivenin her kademesi artık iki ölçüyle
+okunmalı: L1 (motorun referansı) **ve** EK (tanık); 500'de EK ölçümü bulut
+makinesi bloğunun ilk adımı — fm 10–31 sa'nın veri sıkılığı mı arama zaafı mı
+olduğunu bu ayırır. Çapraz denetim (`capraz-denetim.py`): kademelerin bütün
+referansları bugünkü doğrulayıcıyla temiz.
+
 **Neden 🟡:** ürün bugün bozuk değil; ama müşterilerin çoğunun boyutunda
 kalite kanıtı yok ve eşiğin yeri tahmin.
 
 → T-50 · K-62 · K-69 · `09-motor/cozucu/coz.py` (`iki_asama_esigi`) ·
-`08-motor-testleri/gercekci-veri-seti/merdiven.py`
+`08-motor-testleri/gercekci-veri-seti/merdiven.py` ·
+`08-motor-testleri/gercekci-veri-seti/ekili.py` ·
+`08-motor-testleri/gercekci-veri-seti/capraz-denetim.py`
 
 ---
 

@@ -87,7 +87,7 @@ BO_GECE_SAATLERI = range(0, 8)
 BO_GECE_ASGARI, BO_GECE_HEDEF = 2, 3   # K-62; hedef 3 Mustafa 12 Ekim 21:58
 DOLULUK = 0.95
 VARSAYILAN_TOHUM = 7                   # 6 Ekim on denemesinde de 7 (varsayilan arama 0..)
-KAYNAKLAR = ("uretec", "veri-seti")
+KAYNAKLAR = ("uretec", "veri-seti", "ekili", "ekili-veri-seti")   # 16 Ekim: ekili (ekili.py, tanikli sahne)
 VERI_SETI_SURUMLERI = ("v1", "v2")
 
 
@@ -125,9 +125,13 @@ def dosya_eki(olcek):
 
 
 def _set_eki(kaynak):
+    """Dosya adi eki: uretec "", veri-seti "-VS2", ekili "-EK", ekili-veri-seti "-EK-VS2".
+    16 Ekim: "ekili" kaynaklari ekili.py'nin tanikli sahnesi (A1) -- ayni L1 dosya
+    duzeni, kalite-olc ve cesitler degismeden calisir."""
     if kaynak not in KAYNAKLAR:
         raise SystemExit("bilinmeyen kaynak %s (olanlar: %s)" % (kaynak, ", ".join(KAYNAKLAR)))
-    return VERI_SETI_EKI if kaynak == "veri-seti" else ""
+    eki = "-EK" if kaynak.startswith("ekili") else ""
+    return eki + (VERI_SETI_EKI if kaynak.endswith("veri-seti") else "")
 
 
 def sahne_yolu(olcek, kaynak="uretec"):
@@ -149,6 +153,8 @@ def cift_yetkinlikli_sayisi(olcek):
 def taban_sahne(olcek=1.0, kaynak="uretec"):
     """S30-95 sahnesi + K-62 kadro kararlari. HEDEF_ASIMI YUMUSAK kalir.
     `kaynak="veri-seti"`: ayni taban DEPODAKI veri setinden (bkz. modul basi)."""
+    if kaynak.startswith("ekili"):                     # 16 Ekim: ekili sahnenin TABANI uretec / veri seti
+        kaynak = "veri-seti" if kaynak.endswith("veri-seti") else "uretec"
     if _set_eki(kaynak):
         return _veri_seti_tabani(olcek)
     g = U.sahne_uret(olcek, DOLULUK)

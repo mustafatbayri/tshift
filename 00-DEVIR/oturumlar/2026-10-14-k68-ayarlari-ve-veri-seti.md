@@ -22,6 +22,7 @@
 15. 15 Ekim 04:24–08:48 — gece bloğu: `6a2ab5d` push; VS2 500 referansı tutmadı (fm'siz arama bütçesi → düzeltme); VS1 1.800 × 3 → 2/3, lin0 1/3; bilgisayar 08:48'de yeniden başladı, 3.600 kesildi; `--devam`; devam bloğu
 16. 15 Ekim 14:30–17:15 — fazla mesai onarımı komşuluk aramasıyla (K-68 ayar 3 ekleme); PART_TIME_LIMIT yeniden üretilemedi (HATA planı kaydı); yama `-e`
 17. 15 Ekim 17:07–20:00 — merdiven zinciri 2. tur (bulut); iki doğrulayıcı hatası kapandı (kayan nokta; K-71 alanı FAZLA_MESAI_TAVANI'nda); 25 VS2, 151 üretildi
+18. 16 Ekim 01:54–06:40 — test denetimi (A–H planı); Mustafa'nın "başla" talimatı (motor / edit / suggest); **ekili sahne** (A1: motordan bağımsız tanık plan, 49'da motor tanıktan −%3,9, 25'te kurulamaz), **çapraz denetim** (D: 11 fikstür + 30 plan kaydı temiz), **metamorfik testler** (E: 7 ilişki), bulut makinesi rehberi + betikler
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -842,3 +843,134 @@ bulut-merdiven.txt`). Referans üretimi artık şartı tutmayan planı kaydediyo
 kanıtlı; seviye 1 puanı 20.669 — TERCIH 11.880), 151 üreteç (526 sn, fm 0;
 puan 13.837), `tshift-25.json`, `tshift-151.json`; zincir 200 / 300 / 400
 ile sürüyor; 100 ve 151-VS2 düzeltilmiş doğrulayıcıyla yeniden üretilir.
+
+## 18 · 16 Ekim 01:54–06:40 — test denetimi (A–H planı), Mustafa'nın "başla" talimatı; gece işi: ekili sahne (A1), çapraz denetim (D), metamorfik testler (E), bulut rehberi
+
+**01:54 (Mustafa):** *"Şu ana kadar yaptığımız testleri … tamamını düşündüğünde
+hangi konularda testlerimiz olabilir? … Ben hala bu optimum ve son eklediğimiz
+kriterlerden sonra şüphelere sahibim."* → denetim ve öncelikli plan (bu
+sohbette): **A1** ekilmiş çözüm (bilinen tanık planla sahne), **D** çapraz
+denetim (her referans / plan bugünkü doğrulayıcıdan), **A3** insan planı
+referansı, **B** karar/ağırlık testleri, **C** K-70/71/72 sahneleri, **E**
+metamorfik testler, **F** veri fizibilitesi, **G** ölçüm disiplini / CI kalite
+kapısı, **H** sistem testi. Teşhis: bugüne kadarki *"referanstan %x iyi"*
+cümlelerinin hepsi **döngüsel** — referans aynı motorun başka tohumla planı
+(K-62 ilke 1); K-71 L1 sahnesinde ölçülemiyor (toplam saat sabit), K-72 49'da
+etkisiz, K-70'in sahnesi yok.
+
+**05:46 (Mustafa):** *"artık motorun ana gövdesini yazdık … kurgu ve kod
+yapısının gerçekten düzgün çalıştığını, doğru sonuçlar verdiğini görmek
+istiyorum … bana göre 3 konu var: 1 motor 2 edit 3 suggest … ekstra para
+harcamaya hazırım. Cloud ortamda ne gerekirse yapacağım … Başla lütfen, ben
+yatıyorum … kullanım limitimin %30'u gibi bir eforun üzerine geçme."*
+Cevap (05:55 mesajı): üç konu zor çekirdek — katılıyorum; **durum dürüstçe:**
+motor yazıldı ve doğrulanıyor; **edit kısmen** (mevcut_plan + kilitler ile
+yeniden çözüm, K-70, `/evaluate`, `orkestra.coz_ve_onar`); **`/suggest` hiç
+yazılmadı** (`servis.py` 501). Motor dışı kalan riskler: veri kalitesi / içe
+aktarma, çözümsüzlükte kullanıcıya ne gösterilir, makine / işletim, hukukçu
+teyidi (T-83). Gece kuralı: ölçüm koşusu yok, yalnız kod + test + belge;
+yama `paket-16ekim-g.patch`.
+
+**05:57 — Mustafa'nın devam bloğu `f4f16c4` push'ladı** (yama `-f`, 09 / 08 /
+10-v2 yeşil, DENETIM 0). Bulut eşitlendi (stash içeriği commit'le aynı, iki
+stash düşürüldü). Blok VS2 500 referansıyla sürüyor (sabah okunacak).
+
+### 18.1 · A1 — ekili sahne: motordan bağımsız TANIK plan (`ekili.py`)
+
+Fikir: önce **desen çözücü** geçerli bir plan bulur (tabanın `Model`'i, sert
+kuralların tamamı; üstüne iki desen: her kişi haftada **en çok 2 şablon**, fazla
+mesai alanları [0,0]; asgari 0, HEDEF_ASIMI YUMUŞAK; amaç modelin ceza toplamı;
+tek CP-SAT çağrısı). Sonra **talep taniktan türetilir**: hedef = doğrulayıcının
+o saate saydığı kişi (`hucre_sayimi`), asgari = o saatin **en kötü çeyreğinde
+sahadaki** kişi (doğrulayıcının MOLA_KAPSAMASI ölçüsüyle aynı fonksiyonlar),
+yarı zamanlının sözleşme saati = tanıkta çalıştığı saat, HEDEF_ASIMI SERT.
+Böylece tanığın **beş kalemi kuruluş gereği sıfır** (HEDEF_KAPSAMA, HEDEF_ASIMI,
+MOLA_KAPSAMASI, FAZLA_MESAI, TERCIH_KARSILAMA); kalanı ölçülür → **tanık puanı**
+= bu sahnede optimumun **üst sınırı**, ve **fazla mesaisiz / aşımsız / eksiksiz
+planın KESİN var olduğu** bir sahne. Doğrulama motorun değil doğrulayıcının:
+`referans_denetle` sert 0 / aşım 0 / eksik 0 / fm 0 ve beş kalem sıfır değilse
+üretim **durur** (sessiz kabul yok). Dosya düzeni L1 ile aynı
+(`_sahne-L1-EK[-VS2]-95[-ölçek].json`, `_referans-L1-EK…`; merdiven kaynağı
+`ekili` / `ekili-veri-seti`), `kalite-olc.py --seviye 1 --kaynak ekili`
+değişmeden çalışır (REFERANS KIYASI ve OPTIMUM HESABI tanıkla).
+
+**Ölçüm (bulut, 2 çekirdek):**
+- Tek şablon/kişi **25 ve 49'da ÇÖZÜMSÜZ** (saniyede kanıt): ROL/YETKINLIK_
+  KAPSAMASI her gün 08–19 lider / İngilizce ister, tek şablonlu kişi günü
+  kapatamaz → `DESEN_UST = 2` (`--desen`). **25 kişide fm'siz plan desen
+  çözücüde de yok** (INFEASIBLE 0,7 sn) — T-82'nin 25 kişi bulgusuyla aynı;
+  ekili sahne 25'te kurulamaz (test bunu kayda alır).
+- **49 kişi:** tanık 120 sn'de (FEASIBLE; arama amacı 2.058, alt sınır 1.775),
+  185 atama; türetilen talep 1.695 kişi-saat (taban 1.514 — tanık hedefi
+  kovalarken 45 saatlik tam zamanlılar ve sözleşmesiz yarı zamanlılar hedefin
+  üstünü doldurdu), asgari 979; **tanık puanı 1.275** — yalnız ADALET_DENGESI
+  (1.275), diğer her kalem 0. Yarı zamanlılardan 7'si tanıkta çalışmıyor
+  (sözleşme alanı yok), 8'inin saati 2,5–30.
+- **Motor bu sahnede (`varsayilan`, 300 sn × 1):** plan **243 sn'de**, amaç
+  **1.225 = tanıktan −%3,9**; ilk plan **1,34 sn'de** (8 çözüm); fm 0, hedef
+  %100, aşım 0, mola 0, sert 0 — beş kalem tanıkla aynı sıfırda, fark yalnız
+  ADALET 1.225 ↔ 1.275. **İlk döngüsel olmayan doğrulama:** 49'da motor,
+  dışarıdan kurulmuş planın altına iniyor. Dikkat çeken: L1 sahnesinde 500'de
+  ilk plan 287–979 sn iken burada 49'da 1,3 sn — ekili sahnenin asgarisi
+  (çeyrek sahada) L1'in `hedef − 1`inden gevşek ve sözleşmeler tanıkla tutarlı;
+  **500'deki asıl soru** (fm 10–31 sa) bu sahnede ölçülünce cevabı ikili olur:
+  motor fm'siz planı bulur → L1'deki fm veri sıkılığından; bulamaz → arama zaafı
+  kanıtlı. Bu ölçüm bulut makinesi bloğunun ilk adımı (`00-DEVIR/bulut/blok.sh`).
+- Ekili sahne K-70 / K-72 sahnesi için de taban: `mevcut_plan` = tanık + bozulma
+  (izin, hastalık) → yeniden planlama ölçümü (C planı; yazılmadı).
+
+Testler `testler/test_ekili.py` **10**: türetim alanları ve determinizm
+(fikstürdeki sahne taniktan yeniden türetilenle **aynı**), fikstür tutarlılığı
+(sert / aşım / eksik / fm 0, beş kalem 0, puan = toplam, kayıt), desen kısıtı
+değişken sayısı, 25'te çözümsüzlük, bozuk türetim ve sıfır olmayan kalem
+**reddedilir**, bilinmeyen taban, merdiven ekleri.
+
+### 18.2 · D — çapraz denetim (`capraz-denetim.py`)
+
+Her `_sahne-L1*` + `_referans-L1*` çifti (EK dahil) ve `planlar/` altındaki her
+plan kaydı **bugünkü** doğrulayıcıdan geçer: fikstürde sert 0 / aşım 0 / eksik 0,
+fm ≤ kayıttaki izinli fm, `referans_puani` = kalemlerin toplamı (`--puan` ile
+`plan_puani` yeniden); plan kaydında **taze `degerlendir` ↔ kayıtlı `dogrulama`**
+(sert sayısı, yayınlanabilir, fm) ve motorun fm metriği ↔ doğrulayıcının fm'i
+(#7.6). Sahne dosya adından çözülür (L1[-EK][-VS<n>][-çeşit][-ölçek]; S30);
+sahnesi dosyada olmayan kayıt (0,2 ölçek bellekten üretilmişti) **atlanır**.
+Çıkış kodu 0 / 1; `--json`. **Bulut sonucu: 11 fikstür TEMİZ** (iki 25 kişi
+referansı fm 2,0 = izinli), **30 plan kaydı TEMİZ** (eski 500 kişilik planlar
+— 14 Ekim öncesi — 15 Ekim doğrulayıcı düzeltmeleriyle de aynı sert 0 / aynı fm;
+yani düzeltmeler eski kararları değiştirmedi), 4 kayıt atlandı (0,2). Testler
+`testler/test_capraz_denetim.py` **13**: küçük fikstürlerin tamamı (parametreli),
+çift eksiksizliği, ad çözümlemesi, EK plan kaydı taze = kayıtlı, **bozulmuş plan
+(bir satıra +6 sa) SERT FARKI verir**, bilinmeyen biçim atlanır. 500 kişilik
+fikstürler testte değil (4 sn/plan) — blokta `py capraz-denetim.py --puan`.
+
+### 18.3 · E — metamorfik testler (`09-motor/testler/test_metamorfik.py`, 7)
+
+Küçük sahne (3 yarı zamanlı, 2 şablon, 19 vardiya talep ↔ 18 kapasite → en az
+bir eksik, amaç 0 olamaz), tek işçi, **yalnız OPTIMAL** (`durma_sebebi
+"optimum"`, alt sınır = amaç — ilişkiler yaklaşık çözümde kesin değil):
+**M1** kimlik değişimi (kişi / ekip / şablon adları) amacı, dağılımı ve plan
+iskeletini değiştirmez · **M2** boş kalabilen kişi eklemek amacı kötüleştirmez ·
+**M3** HEDEF_KAPSAMA'yı kapatmak amacı kötüleştirmez · **M4** çözümün kendisi
+`mevcut_plan` olunca PLAN_KARARLILIGI 0 ve amaç aynı (K-70 sağlaması) · **M5**
+aynı girdi aynı plan (determinizm) · **M6** çözümün satırları kilit olunca plan
+ve amaç aynı (KILIT_UYUMU çözümle çelişmez). İlk yazımda sahne çok kolaydı
+(amaç 0, hepsi boş geçerdi) — M0 testi *"amaç > 0"* bunu kapıda tutar.
+
+### 18.4 · Bulut ölçüm makinesi rehberi
+
+`00-DEVIR/BULUT-OLCUM-MAKINESI.md` + `00-DEVIR/bulut/kur.sh` (Ubuntu 24.04,
+Python venv, depo salt okunur belirteçle, requirements, üç test paketi) +
+`bulut/blok.sh` (ekili 500 tanık 900 sn → ekili sahnede `varsayilan` 1.800 × 3
+→ VS2 500 referansı → VS2 1.800 × 3 → çapraz denetim `--puan` → tam mutasyon
+→ 751; her adım günlüğe, sonuçlar `/opt/sonuc/`). Kurallar: makine yalnız
+ölçümde açık, bitince **silinir**; **commit yok**; kıyas kendi tabanıyla.
+Karar Yılmaz görüşmesinden sonra (Mustafa 15 Ekim 15:19).
+
+### 18.5 · Bu gece yapılmayanlar (plan açık)
+
+A3 insan planı referansı (Mustafa / Yılmaz'dan gerçek bir haftalık plan),
+B karar/ağırlık testleri (ağırlık değişince plan hangi yöne kayar), C K-70 /
+K-72 sahneleri (ekili tanık + bozulma), F veri fizibilitesi (sözleşme toplamı
+↔ talep toplamı, lider-günü ↔ gereken), G CI kalite kapısı (49 kişi ekili
+sahnede motor ≤ tanık + %x, haftalık), H sistem testi (`servis.py` uçtan uca).
+Edit ve `/suggest` yazımı bunlardan sonra.

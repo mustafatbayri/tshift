@@ -1,0 +1,7 @@
+﻿15:27:21  SABAH BLOGU BASLADI (yama g: ekili sahne, capraz denetim, metamorfik testler, bulut rehberi)
+15:27:22  yama g md5 cf2dbf6668491d9f9bad2cba03964899
+15:27:22  yama g uygulandi cikis 0
+15:30:06  09 testleri cikis 0
+15:38:28  08 testleri cikis 0
+15:38:29  DENETIM cikis 0 (0 = HATA yok)
+15:38:48  capraz denetim (fikstur) cikis 0 (0 = sart tutmayan yok)
