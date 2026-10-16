@@ -173,6 +173,11 @@ YAPILANDIRMALAR = {
     # 15 Ekim: fazla mesai onarimi KOMSULUK aramasiyla urun yolu oldu (VS1 500'de
     #   butun-model onarimi 7/7 bulamadi). `onarim_tam` = 14 Ekim'in butun-model
     #   onarimi, kiyas icin ACIKCA yazili.
+    # 16 Ekim (ekili 500: fm'siz plan KESIN varken acik adim 27 kisiye fazla mesai
+    #   yazdi, onarim geri alamadi): acik adim fazla mesai [0,0] ile; bulursa 0'da
+    #   tutulur, bulamazsa "sure yetmedi" (olcum; urun yolu degil).
+    "gevsek_fm0":   ("urun yolu + gevsek yolun ACIK ADIMI fazla mesai 0 ile (bulursa 0'da tutulur; bulamazsa sure yetmedi) -- 16 Ekim olcum secenegi",
+                     {"gevsek_fazla_mesai_sifir": True}, {}),
     "onarim_tam":   ("urun yolu + fazla mesai onarimi BUTUN modelle (14 Ekim davranisi) -- komsuluk kiyasi",
                      {"fazla_mesai_onarim_yontemi": "tam"}, {}),
     # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
@@ -361,6 +366,10 @@ OPTIMUM_RAPORU = _arg("--optimum-raporu", None)
 #   dosyasi varsa yuklenir, tamamlanmis (yapilandirma, tekrar) ciftleri
 #   ATLANIR, eksikler kosulur; kesilen blok ayni komutla kaldigi yerden surer.
 DEVAM = "--devam" in sys.argv
+# 16 Ekim (A3): `--sahne <dosya>` -> hazir bir sahne dosyasi (insan plani sahnesi, 06-veri/anonim/insan;
+#   `_merdiven.referans_puani` varsa kiyas yapilir, yoksa/oturmadiysa yalniz kalemler). Dosya adina
+#   sahnenin `ad`i gelir (kalite-olcumu-INSAN-2026-06-22-...). --seviye ile birlikte verilmez.
+SAHNE_DOSYASI = _arg("--sahne", None)
 PLAN_KLASORU = _arg("--plan-klasoru", None)   # verilmezse planlar/<olcum-dosyasi-adi>/ (testler gecici klasor verir)
 
 
@@ -371,6 +380,8 @@ def dosya_adi():
         import merdiven
         ad = ad.replace("kalite-olcumu-", "kalite-olcumu-L%s%s%s-" % (SEVIYE, merdiven._set_eki(KAYNAK),
                                                                      ("-" + CESIT) if CESIT else ""))
+    elif SAHNE_DOSYASI:
+        ad = "kalite-olcumu-" + sahne_adi(SAHNE_DOSYASI)
     if ETIKET:
         ad += "-" + ETIKET
     return os.path.join(BURASI, ad + ".json")
@@ -387,8 +398,26 @@ def yaz(d):
         f.write(json.dumps(d, ensure_ascii=False, indent=1))
 
 
+def sahne_adi(yol):
+    """--sahne dosyasinin kisa adi: `_sahne-INSAN-2026-06-22.json` -> INSAN-2026-06-22."""
+    ad = os.path.splitext(yol.replace("\\", "/").rsplit("/", 1)[-1])[0]     # Windows yolu Linux'ta da ayrisir
+    return ad[len("_sahne-"):] if ad.startswith("_sahne-") else ad
+
+
 def sahne_yukle():
     from uret_veri_seti import sahne_uret
+    if SAHNE_DOSYASI:
+        if SEVIYE or CESIT:
+            raise SystemExit("--sahne ile --seviye/--cesit birlikte verilmez")
+        if not os.path.exists(SAHNE_DOSYASI):
+            raise SystemExit("%s yok -- insan plani sahnesi icin: py insan-plani.py --hafta <pazartesi>" % SAHNE_DOSYASI)
+        g = json.load(io.open(SAHNE_DOSYASI, encoding="utf-8"))
+        g.setdefault("_merdiven", {})
+        p = g["_merdiven"].get("referans_puani") or {}
+        print("SAHNE : %s (dosyadan; seviye %s; referans puani %s)"
+              % (os.path.basename(SAHNE_DOSYASI), g["_merdiven"].get("seviye", "?"),
+                 p.get("amac") if p.get("amac") is not None else ("yok" if not p else p.get("durum"))))
+        return g
     if SEVIYE:
         if SEVIYE != "1" or DOLULUK != 0.95:
             raise SystemExit("yalniz --seviye 1 (doluluk 0.95) var")
@@ -1017,6 +1046,10 @@ def gevsek_yazisi(s):
             "tohum %s %s %s sn" % (p["tohum"], p["durum"], p["saniye"]) for p in gs["acik_parcalar"]))
     if gs.get("acik_parametreler"):
         ek.append("acik adim parametreleri %s" % gs["acik_parametreler"])
+    if gs.get("fazla_mesai_sifirda"):                     # 16 Ekim olcum secenegi (gevsek_fm0)
+        fs = gs["fazla_mesai_sifirda"]
+        ek.append("acik adim fazla mesai 0 ile: %s (%d fm degiskeni)"
+                  % ("plan bulundu, 0'da tutuldu" if fs.get("bulundu") else "plan YOK, alanlar acildi", fs.get("degisken", 0)))
     o = s.get("fazla_mesai_onarimi")
     if o:
         ek.append(onarim_yazisi(o))
@@ -1387,7 +1420,7 @@ def main():
             yaz(sonuc)
 
     ozet(sonuc)
-    if SEVIYE:
+    if SEVIYE or SAHNE_DOSYASI:
         referans_kiyasi(g, sonuc)
     yaz(sonuc)
     print("\nSonuc yazildi: %s" % os.path.basename(dosya_adi()))
@@ -1395,8 +1428,13 @@ def main():
 
 def referans_kiyasi(g, sonuc):
     """K-62 ilke 3: her kosu referansla KALEM KALEM (ayni sahne, ayni olcu)."""
-    ref = g["_merdiven"]["referans_puani"]
+    ref = (g.get("_merdiven") or {}).get("referans_puani")
     sonuc["referans"] = ref
+    if not ref or ref.get("amac") is None:
+        # 16 Ekim (A3): insan plani sert ihlalleriyle modele oturmaz -> puani yok; kiyas
+        # dogrulayici raporuyla (referans kayit) kalem kalem yapilir, burada atlanir.
+        print("\nREFERANS KIYASI ATLANDI: referans puani yok (%s)" % ((ref or {}).get("durum") or "sahnede referans_puani yok"))
+        return
     kalemler = sorted(set(ref["dagilim"]) | {k for s in sonuc["kosular"]
                                               for k in (s.get("amac_dagilimi") or {})})
     print("\nREFERANS KIYASI (seviye 1; referans 'en az bu kadar iyisi var' -- K-62)")

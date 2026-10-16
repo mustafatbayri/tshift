@@ -123,6 +123,15 @@ VARSAYILAN = {
     #   degil, hedef en iyi plan).
     "gevsekten_serte": True,
     "gevsek_yeniden_arama_atla": True,
+    #   `gevsek_fazla_mesai_sifir` (16 Ekim; OLCUM): fazla mesaisiz ilk arama
+    #      bulamayinca gevsek yolun acik adimi fazla mesai alanlari [0,0] ile
+    #      kosar ve plan bulunursa fazla mesai sonraki asamalarda da 0'da tutulur
+    #      (sert kesim gibi; `sifirda_tutuldu`). Sebep: ekili 500 sahnesinde
+    #      (fm'siz plan KESIN var) acik adim fm serbestken 27 kisiye fazla mesai
+    #      yazdi ve komsuluk onarimi geri alamadi. Plan bulunamazsa alanlar
+    #      acilir ve kosu "sure yetmedi" doner (yeniden deneme YOK -- olcum).
+    #      Urun BOS birakir (False): K-38 zorunlu fazla mesai yolu kapanmaz.
+    "gevsek_fazla_mesai_sifir": False,
     "gevsek_yedek_orani": 0.25,
     "gevsek_durgunluk_saniye": 60,
     "gevsek_acik_parca_saniye": None,
@@ -586,10 +595,27 @@ def _ipucu_ver(kuruldu, ayar):
             # acilabilir bir sert kural var -> gevsekten serte. Harcanan sure
             # iyilestirmenin payindan duser (yukaridaki `dusulecek` gerekcesi).
             t_g = time.time()
+            fm_bilgi = kuruldu.fazla_mesai_once_sifir or {}
+            sifirda = bool(fm_bilgi.get("sifirda_tutuldu"))
+            # 16 Ekim (OLCUM): acik adim fazla mesai [0,0] ile -- fm'siz ilk arama
+            # bulamadiysa ve alanlar daraltilabiliyorsa. Bulunursa 0'da tutulur.
+            gevsek_fm_eski = []
+            if ayar.get("gevsek_fazla_mesai_sifir") and fm_eski and not sifirda:
+                gevsek_fm_eski = _fazla_mesaiyi_sifirla(kuruldu)
             durum, c = _gevsekten_serte(kuruldu, ayar, basladi, molalar_sabit=mola_sabit,
-                                        fm_sifirda=bool((kuruldu.fazla_mesai_once_sifir or {})
-                                                        .get("sifirda_tutuldu")))
+                                        fm_sifirda=sifirda or bool(gevsek_fm_eski))
             kuruldu.gevsekten_serte["yeniden_arama_atlandi"] = yeniden_atlandi
+            if gevsek_fm_eski:
+                gevsek_bulundu = durum in (cp_model.OPTIMAL, cp_model.FEASIBLE)
+                kuruldu.gevsekten_serte["fazla_mesai_sifirda"] = {"bulundu": gevsek_bulundu,
+                                                                  "degisken": len(gevsek_fm_eski)}
+                if gevsek_bulundu:
+                    if kuruldu.fazla_mesai_once_sifir is not None:
+                        kuruldu.fazla_mesai_once_sifir["sifirda_tutuldu"] = True
+                    kuruldu.notlar.append("gevsek yolun acik adimi fazla mesai 0 ile plan buldu; "
+                                          "fazla mesai sonraki asamalarda da 0'da tutuldu (olcum secenegi)")
+                else:
+                    _fazla_mesaiyi_serbest_birak(kuruldu, gevsek_fm_eski)
             gevsek_kullanildi = True
             dusulecek += time.time() - t_g
         if durum not in (cp_model.OPTIMAL, cp_model.FEASIBLE):

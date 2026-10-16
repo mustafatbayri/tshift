@@ -23,6 +23,7 @@
 16. 15 Ekim 14:30–17:15 — fazla mesai onarımı komşuluk aramasıyla (K-68 ayar 3 ekleme); PART_TIME_LIMIT yeniden üretilemedi (HATA planı kaydı); yama `-e`
 17. 15 Ekim 17:07–20:00 — merdiven zinciri 2. tur (bulut); iki doğrulayıcı hatası kapandı (kayan nokta; K-71 alanı FAZLA_MESAI_TAVANI'nda); 25 VS2, 151 üretildi
 18. 16 Ekim 01:54–06:40 — test denetimi (A–H planı); Mustafa'nın "başla" talimatı (motor / edit / suggest); **ekili sahne** (A1: motordan bağımsız tanık plan, 49'da motor tanıktan −%3,9, 25'te kurulamaz), **çapraz denetim** (D: 11 fikstür + 30 plan kaydı temiz), **metamorfik testler** (E: 7 ilişki), bulut makinesi rehberi + betikler
+19. 16 Ekim 14:38–18:30 — devam bloğu okundu (VS2 500 ref tuttu; VS1 3.600 × 3 → **0/3**, VS2 1.800 × 3 → 1/3 −%17,4; 751 ref 12 sn'de ilk plan): **L1 sahnesi plan bulmayı yapay zorlaştırıyor** (taban sahnede 500'de 31 sn); ekili 500 kuruldu (tanık 26.248), motor 900 sn'de fm 27,75 sa — arama zaafı; `gevsek_fm0` ölçüm seçeneği; cetvel kararı ölçümle (karar kuralı); **A3 insan planı sahnesi** (`insan-plani.py`: gerçek müşterinin elle planı, anonim; 22 Haziran 83 kişi, 20 Temmuz 70 kişi); gece bloğu
 
 ## 1 · Mustafa'nın kararları (13 Ekim 23:08–23:5x)
 
@@ -974,3 +975,121 @@ K-72 sahneleri (ekili tanık + bozulma), F veri fizibilitesi (sözleşme toplam�
 ↔ talep toplamı, lider-günü ↔ gereken), G CI kalite kapısı (49 kişi ekili
 sahnede motor ≤ tanık + %x, haftalık), H sistem testi (`servis.py` uçtan uca).
 Edit ve `/suggest` yazımı bunlardan sonra.
+
+## 19 · 16 Ekim 14:38–17:00 — devam bloğu okundu: L1 sahnesi plan bulmayı yapay olarak zorlaştırıyor; ekili sahne 500'de kuruldu, motor fm'li kaldı; `gevsek_fm0` ölçüm seçeneği
+
+**Blok (05:46–12:33, Mustafa'nın makinesi, 6 çekirdek; `kosu-gunlugu-2026-10-15-d.txt`):**
+
+| Adım | Sonuç |
+|---|---|
+| Yama `-f`, testler, DENETIM, **`f4f16c4` push** (05:57) | yeşil |
+| VS2 500 referansı (1.800 sn) | **tuttu**: 1.575 sn, 2.468 atama, fm 0, sert 0; fm'siz ilk plan **30,7 sn** (yarım bütçe düzeltmesi işe yaradı); seviye 1 puanı 81.672 (MOLA 43.953, ADALET 21.755, **TERCIH 15.840**, ROT 66, EKIP 58) |
+| VS1 L1 `varsayilan` 3.600 × 3 | **0/3 plan.** Üç koşuda da fm'siz deneme 20 sn UNKNOWN, açık adım **2.677 sn UNKNOWN, 0 çözüm**; durma "bütçe doldu" |
+| VS2 L1 `varsayilan` 1.800 × 3 | **1/3 plan.** 1. koşu: açık adım 117. sn'de ilk plan (123 sn'de OPTIMAL), iyileştirme 955 sn (3.367.687 → 115.371), devam → 97.451, mola adımı → **67.449 = referanstan −%17,4**, fm 0, sert 0, aşım 0, hedef eksiği 20 kişi-saat (180 puan); 2.–3. koşu açık adım 1.330 sn UNKNOWN |
+| Tam mutasyon | 522, yaşayan 0 |
+| 751 üreteç referansı (3.600 sn) | tuttu: 3.095 sn, 3.525 atama, fm 0; fm'siz ilk plan **12,4 sn**; seviye 1 puanı 81.360 (MOLA 64.414) |
+
+**Okuma — sorun L1 sahnesinin kendisi.** Aynı motor, aynı makine: **taban** sahnede
+(üreteçin asgarisi, HEDEF_ASIMI yumuşak) 500 kişide 31 sn'de, 751 kişide 12 sn'de
+geçerli plan buluyor; **L1** sahnesinde (her hücre `[hedef−1, hedef]`, aşım sert)
+500'de 2.677 sn'de bile bulamıyor, bulduğunda da piyango: ≥ 1.800 sn'de **VS1 4/12,
+VS2 1/3**. Süre vermek işe yaramıyor (1.800'de 2/3, 3.600'de 0/3 — aynı sahne, aynı
+ayar; fark yalnız iş parçacığı zamanlaması) → ilk çözüm ya ilk ~1.000 sn'de geliyor ya
+hiç. K-62'nin seviye 1 kurgusu (referansın sayımı hedef, asgari = hedef − 1; 12 Ekim)
+415 hücrenin hepsini aynı anda 1 kişilik banda sıkıştırıyor; gerçek müşteri talebi böyle
+olmaz. **Motorun "500'de plan bulamıyor" görüntüsü büyük ölçüde bu kurgunun eseri.**
+Karar Mustafa'da: kalite ölçüsü ekili sahneye taşınsın, L1 stres testi olarak kalsın
+(öneri; K-62'ye ek).
+
+**Ekili sahne 500 (bulut, 2 çekirdek; VS2 tabanı):** desen çözücü 900 sn'de tanık
+buldu (FEASIBLE; arama amacı 242.305, alt sınır 51.010): 2.399 atama, fm 0, aşım 0,
+eksik 0; türetilen hedef 21.987 kişi-saat (taban 17.860 — tam zamanlıların 45 saati ve
+sözleşmeli yarı zamanlılar hedefin üstünü dolduruyor), asgari 12.993; **tanık puanı
+26.248** (ADALET 25.000, ROT 1.236, EKIP 12). Fikstürler
+`_sahne-L1-EK-VS2-95.json` / `_referans-L1-EK-VS2-95.json` (yama `-h`).
+
+**Motor bu sahnede (`varsayilan`, 900 sn × 1, bulut 2 çekirdek):** plan buldu — açık
+adım ilk planı **160. sn** (L1'de 1.330 sn'de yok; sahne tezi burada da tutuyor) — ama
+**amaç 366.124 = tanığın 14 katı; fazla mesai 27,75 sa (27 kişi)**, hedef eksiği 91
+kişi-saat, adalet ham 4.983 (tanık 5.000). Komşuluk onarımı 4 turda da bulamadı
+(50 / 70 / 91 kişi serbestken **ÇÖZÜMSÜZ**, 109'da süre bitti). Bütçe darlığı gerçek
+(iyileştirmeye 268 sn kaldı) ama bulgu ayırıcı: **fm'siz planın kesin var olduğu sahnede
+motor fm'li planda kalıyor — arama zaafı, veri sıkılığı değil.** Teyit: Mustafa'nın
+makinesinde 1.800 × 3 (gece bloğu).
+
+**L1'de desenli arama (bulut):** aynı desen çözücü (≤ 3 şablon/kişi), fm 0 ve fm
+serbest, L1 VS2 500 sahnesinde 420 sn'de **UNKNOWN** — L1 desenli aramaya da kapalı;
+"desenli ilk plan" fikri L1'i kurtarmaz, ekili/ürün sahnelerinde ise açık adım zaten
+buluyor → bu fikir şimdilik rafta (ölçülmeden yazılmaz).
+
+**`gevsek_fazla_mesai_sifir` (ÖLÇÜM seçeneği; `kalite-olc.py gevsek_fm0`):** fm'siz
+ilk arama bulamayınca açık adım fm alanları [0,0] ile koşar; plan bulursa fm sonraki
+aşamalarda da 0'da tutulur (sert kesim gibi), bulamazsa alanlar açılır ve ana aşama
+tam modelle sürer. Ürün varsayılanı **False** (K-38 zorunlu fm yolu kapanmaz). Gerekçe:
+ekili 500'de açık adım fm serbestken 27 kişiye fm yazıyor ve onarım geri alamıyor; fm
+0 iken açık adım plan bulabiliyorsa sorun kökünden çözülür. 2 test
+(`test_gevsekten_serte.py` 48), `onarim` mutasyon grubu +3 (19; toplam 525),
+çıktıda "acik adim fazla mesai 0 ile: …" notu.
+
+**Fazla mesainin anatomisi (bulut EK-VS2 planı, 27 kişi / 27,75 sa):** hepsi 6 gün
+çalışan tam zamanlı; 19'u +1,25 sa, 8'i +0,5 sa; hepsinde karışık şablon (örn. 3 × S-UZUN
++ S-KISA + S-GECE + S-SABAH = 46,25). Tanık aynı kişilere **tam 45,0** veriyor (5 × S-GECE
++ 1 × S-ARA; 5 × S-UZUN …) — yani 45'i tam tutturan dizilişler var, açık adım fm
+serbestken kapsama uğruna 45'in üstünü seçiyor, iyileştirme ve komşuluk onarımı bunu
+geri çeviremiyor (6 günlük tam zamanlıların 219'unda motor 149 kişiye karışık şablon
+yazdı, tanık 116). `gevsek_fm0` tam bu mekanizmaya karşı.
+
+**16:26 (Mustafa):** *"Bu kararı ölçüm yaparak vermeliyiz diye düşünüyorum. A veya C
+arasında kaldım."* → **karar kuralı koşudan önce yazıldı (16:30; K-62 durum notu):**
+sıkılık ölçüldü — asgari/hedef **taban 0,68 · L1 0,98 · tanıklı 0,59**; oynama payı
+L1'de 415 hücrenin hepsinde tam 1, tabanda 359 hücrede ≥ 2, tanıklıda 301 hücrede ≥ 2.
+Dört ölçüt: güvenilirlik (≥ 5/6 plan), gerçekçilik (tabana yakınlık), ayırt edicilik
+(yapılandırma farkı > tekrar oynaması), tutarlılık (iki cetvel aynı sıra mı). A: tanıklı
+1–2–3'ü geçer ve L1 1'i geçemez ya da 4'te aynı sıra; C: ikisi 1'i geçer, 4'te farklı
+sıra. Gece bloğuna L1 VS2 `gevsek_fm0` × 3 eklendi (aynı yapılandırma iki cetvelde).
+
+**17:26 (Mustafa):** *"Sana daha önce attığım tatilbudur'un plan verileri işine
+yaramıyor mu?"* — yarar, **A3'ün cetveli tam bu** ve plan yazılırken unutulmuştu. Gerçek
+müşterinin elle yaptığı planlar (`06-veri/ham/plan`, 69 Excel, 15 hafta; haftada 58–83
+kişi, 311–485 atama, 18 vardiya deseni; `07-GERCEK-VERI-BULGULARI.md`). Yapılan
+(`insan-plani.py`, A3): 07 dönüştürücüsünün kanonik tablosu Mustafa'nın makinesinde
+yeniden üretildi (4.625 atama, 98 kişi — **isim ve sicil PC'den çıkmadı**, çıkmayacak);
+seçilen hafta anonim motor girdisine çevrilir (kişi → `I001…`, eşleme yalnız
+`06-veri/anonim/insan` altında git dışı; takım → ekip kodu, "Takım Lideri" → rol; o haftanın
+izin kodları → onaylı izin; sözleşme saati = insan planının **net** saati ≤ 45; o haftada
+kullanılan her (takım, desen) → şablon, mola politikası vardiya uzunluğundan), **talep insan
+planından** (tanıklı sahnenin yöntemi: hedef = sayılan kişi, asgari = en kötü çeyrekte
+sahadaki; HEDEF_ASIMI SERT), insan planına **varsayılan molalar** yerleştirilir (müşteri
+planı mola yazmaz: yemek baş+4 sa 60 dk / 7,5 sa altı 30 dk; 15 dk dinlenmeler) ve plan
+bugünkü doğrulayıcıdan geçer. Katalog üreteç sahnesinden; ROL/YETKINLIK_KAPSAMASI ve
+CALISMA_SAATLERI atıldı (veri yok). İki hafta kuruldu:
+
+| Hafta | Kişi (lider) | Atama | Şablon | Ekip | Hedef / asgari kişi-saat | İnsan planı: sert | yumuşak | fm |
+|---|---|---|---|---|---|---|---|---|
+| 22 Haziran | 83 (6) | 485 | 31 | 8 | 4.223 / 2.822 | **5** (DINLENME 4, ARDISIK_GECE 1) | 15 (ROTASYON 14, ADALET 1) | 0 |
+| 20 Temmuz | 70 (4) | 404 | 25 | 5 | 3.533 / 2.360 | **2** (DINLENME 1, ARDISIK_GECE 1) | 8 (ROTASYON 7, ADALET 1) | 0 |
+
+Net saat dağılımı (22 Haziran): 43 kişi ≈ 43 sa, 28 kişi 45 sa (6 gün × 09–18), 12 kişi
+30–38 sa; 45 üstü yok. Sert ihlal sayısı 07 bulgusundaki 529'dan çok düşük: o sayı 15
+haftanın ve **brüt** aralığın toplamıydı; burada tek hafta, molalar düşülmüş.
+`kalite-olc.py --sahne <dosya>` (yeni): hazır sahne dosyasıyla ölçüm; insan planının
+puanı `insan-plani.py --puan` ile (ortools; Windows'ta) — sert ihlalli plan modele oturmazsa
+puan yerine durum yazılır ve REFERANS KIYASI atlanır, kıyas doğrulayıcı raporuyla kalem kalem
+(sert, fm, kapsama = aynı, adalet, rotasyon, mola). Testler `test_insan_plani.py` 5 (uydurma
+kanonik tablo; isim/sicil çıktıda yok), `test_kalite_olc.py` +3 (30).
+
+**Gece bloğu (ekili 500 + insan planı; Mustafa'nın makinesi; `gece-16d`):** yama i2 + j →
+testler → commit → tanıklı `varsayilan` 1.800 × 3 → tanıklı `gevsek_fm0` 1.800 × 3 →
+L1 VS2 `gevsek_fm0` 1.800 × 3 → **insan planı puanı (iki hafta) → INSAN 22 Haziran
+`varsayilan` 1.800 × 2 → INSAN 20 Temmuz 1.800 × 2** → tanıklı `onarim_tam` 1.800 × 2 →
+üreteç tabanından ekili 500 → çapraz denetim → tam mutasyon. İnsan sahnesinde okunacak:
+motor sert 0 mı (insan 5 / 2), fm (insan 0), adalet / rotasyon / mola kalemleri, ilk plan
+saniyesi (83 kişi, 31 şablon).
+
+~~**Gece bloğu (ekili 500, Mustafa'nın makinesi; `gece-16c`):**~~ (d ile birleşti; sırası aşağıda) yama i → tanıklı
+`varsayilan` 1.800 × 3 → tanıklı `gevsek_fm0` 1.800 × 3 → **L1 VS2 `gevsek_fm0` 1.800 × 3**
+→ tanıklı `onarim_tam` 1.800 × 2 → üreteç tabanından ekili 500 tanık (900 sn) +
+`varsayilan` 1.800 × 2 → çapraz denetim `--puan` → tam mutasyon. Okunacak: (1) ilk plan
+saniyesi ve plan sayısı (sahne tezi; ölçüt 1), (2) fm — `varsayilan` ↔ `gevsek_fm0`,
+(3) tanığa uzaklık kalem kalem (OPTIMUM HESABI), (4) iki cetvelde sıra (ölçüt 4),
+(5) 6 çekirdek ↔ bulut 2 çekirdek farkı.

@@ -1142,6 +1142,18 @@ MUTASYONLAR = [
      'testler/test_gevsekten_serte.py'),
     # ---- 15 Ekim: fazla mesai onarimi KOMSULUK aramasiyla (VS1 500: butun-model
     # ---- onarimi 7/7 bulamadi; fm 10-31 kiside, +0,5 / +1,25 sa)
+    ('onarim', C, 'Gevsek fm0 (16 Ekim): secenek okunmasin (acik adim hep fm serbest)',
+     '            if ayar.get("gevsek_fazla_mesai_sifir") and fm_eski and not sifirda:',
+     '            if False and fm_eski and not sifirda:',
+     'testler/test_gevsekten_serte.py'),
+    ('onarim', C, 'Gevsek fm0 (16 Ekim): plan bulununca 0da tutulmasin',
+     '                        kuruldu.fazla_mesai_once_sifir["sifirda_tutuldu"] = True',
+     '                        kuruldu.fazla_mesai_once_sifir["sifirda_tutuldu"] = False',
+     'testler/test_gevsekten_serte.py'),
+    ('onarim', C, 'Gevsek fm0 (16 Ekim): bulamayinca alanlar acilmasin',
+     '                    _fazla_mesaiyi_serbest_birak(kuruldu, gevsek_fm_eski)',
+     '                    pass',
+     'testler/test_gevsekten_serte.py'),
     ('onarim', C, 'Komsuluk: yontem okunmasin, hep tam',
      '    yontem = str(ayar.get("fazla_mesai_onarim_yontemi") or VARSAYILAN["fazla_mesai_onarim_yontemi"])',
      '    yontem = "tam"',

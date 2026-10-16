@@ -3385,8 +3385,32 @@ ayırma ölçümünden sonra. ~~**Durum (7 Ekim 00:45): karar verildi, araç yaz
 (49 ve 151 kişi, bulut):
 `08-motor-testleri/gercekci-veri-seti/kesif/2026-10-06-veri-seti-merdiveni/OKU-BENI.md`.
 
+**Durum (16 Ekim 16:30) — cetvel kararı ÖLÇÜMLE (Mustafa: *"Bu kararı ölçüm
+yaparak vermeliyiz … A veya C arasında kaldım"*).** Devam bloğu (15–16 Ekim) ve
+bulut denemeleri seviye 1 kurgusunun iki kusurunu gösterdi (oturum 14 Ekim §19):
+(1) referans aynı motorun planı — *"referanstan −%x"* kendi kendimizle kıyas;
+(2) **yapay sıkılık** — 415 hücrenin hepsinde oynama payı tam 1 (asgari/hedef
+0,98), veri setinin kendisinde ise 0,68 ve 359 hücrede pay ≥ 2; bu yüzden 500
+kişide çoğu koşuda plan bulunamıyor (3.600 sn × 3 → 0/3) ama taban sahnede
+500/751 kişi 31/12 sn'de çözülüyor. Aday yeni cetvel: **ekili (tanıklı) sahne**
+(`ekili.py`; A1): motordan bağımsız desen çözücü geçerli bir **tanık** plan bulur,
+talep ondan türer — fm'siz/aşımsız/eksiksiz planın varlığı kesin, tanık puanı
+optimumun üst sınırı; asgari/hedef 0,59 (tabana yakın), aşım sert. Seçenekler:
+**A** tanıklı sahne asıl cetvel, L1 stres testi · **C** ikisi de (iki kat ölçüm
+süresi). **Karar kuralı (koşudan ÖNCE yazıldı):** aynı yapılandırmalar iki
+cetvelde (VS2 500, 1.800 sn); (1) *güvenilirlik* — `varsayilan` ve `gevsek_fm0`
+için ≥ 5/6 plan; (2) *gerçekçilik* — asgari/hedef ve oynama payı tabana yakın
+(nihai hakem gerçek müşterinin talep tablosu); (3) *ayırt edicilik* —
+yapılandırmalar arası fark 3 tekrarın oynamasından büyük; (4) *tutarlılık* — iki
+cetvel yapılandırmaları aynı sıraya koyuyor mu. **A**: tanıklı 1–2–3'ü geçer ve L1
+ya 1'i geçemez ya 4'te aynı sırayı verir. **C**: ikisi de 1'i geçer ama 4'te
+farklı sıra. L1 her durumda stres testi olarak kalır. Ölçüm: 16 Ekim gece bloğu
+(tanıklı `varsayilan` × 3, `gevsek_fm0` × 3, `onarim_tam` × 2; L1 VS2
+`gevsek_fm0` × 3; L1 `varsayilan` × 3 dünden). Karar sabah bu tabloya uygulanır.
+
 → K-37 · K-50 · K-61 · O-17 · T-60 bulgu 22 ·
-`08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py`
+`08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
+`08-motor-testleri/gercekci-veri-seti/ekili.py`
 
 
 ---

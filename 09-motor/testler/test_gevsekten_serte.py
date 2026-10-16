@@ -309,7 +309,7 @@ def test_BIRIM_BUTCE_yedek_ayrilir_acik_adim_kalanin_TAMAMINI_daraltma_esit_bole
 #    degiskenler var, gevsek yol acilabilir).
 # ----------------------------------------------------------------------
 
-from test_fazla_mesai_once_sifir import _sahne as _fm_sahne, _fm  # noqa: E402
+from test_fazla_mesai_once_sifir import _sahne as _fm_sahne, _fm, _alanlar  # noqa: E402
 
 AYAR_FM = {"azami_saniye": 30, "iki_asama_esigi": 0, "durgunluk_saniye": 5, "isci_sayisi": 2}
 
@@ -348,6 +348,58 @@ def test_AYAR1_fazla_mesaisiz_arama_SURE_doldurunca_yeniden_arama_ATLANIR(fm_siz
     assert yeniden_arama_kaydi == []
     gs = c["cozum_istatistikleri"]["gevsekten_serte"]
     assert gs["yeniden_arama_atlandi"] is True and gs["tam_sert"] is True
+
+
+def test_GEVSEK_FM0_acik_adim_fazla_mesai_SIFIR_ile_kosar_bulunca_SIFIRDA_tutar(fm_siz_bulamaz, monkeypatch):
+    """16 Ekim olcum secenegi `gevsek_fazla_mesai_sifir`: fm'siz ilk arama bulamayinca acik
+    adim fm alanlari [0,0] ile kosar (ekili 500: fm'siz plan KESIN varken acik adim 27 kisiye
+    fazla mesai yazmisti). Alanlar acik adim SIRASINDA [0,0] olmali; plan bulununca
+    `sifirda_tutuldu` True, plan fazla mesaisiz, kayitta `fazla_mesai_sifirda`."""
+    gorulen = {}
+    asil = C._gevsekten_serte
+
+    def gozle(kuruldu, ayar, basladi, **k):
+        gorulen["alanlar"] = _alanlar(kuruldu, _fm(kuruldu))
+        gorulen["fm_sifirda"] = k.get("fm_sifirda")
+        return asil(kuruldu, ayar, basladi, **k)
+    monkeypatch.setattr(C, "_gevsekten_serte", gozle)
+    c = coz(_fm_sert(), dict(AYAR_FM, gevsek_fazla_mesai_sifir=True))
+    assert c["durum"] == "cozuldu", c["durum"]
+    assert gorulen["alanlar"] and all(a == [0, 0] for a in gorulen["alanlar"]) and gorulen["fm_sifirda"] is True
+    ist = c["cozum_istatistikleri"]
+    assert ist["gevsekten_serte"]["fazla_mesai_sifirda"] == {"bulundu": True, "degisken": len(gorulen["alanlar"])}
+    assert ist["fazla_mesai_once_sifir"]["sifirda_tutuldu"] is True
+    assert c["metrikler"]["fazla_mesai_saat"] == 0
+    assert any("fazla mesai 0 ile plan buldu" in n for n in c.get("uygulanmayan_notlar") or ist.get("notlar") or [])
+    # varsayilan (secenek kapali): acik adim fm SERBEST, kayit yok
+    gorulen.clear()
+    c2 = coz(_fm_sert(), dict(AYAR_FM))
+    assert c2["durum"] == "cozuldu" and gorulen["fm_sifirda"] is False
+    assert all(a != [0, 0] for a in gorulen["alanlar"])
+    assert "fazla_mesai_sifirda" not in c2["cozum_istatistikleri"]["gevsekten_serte"]
+
+
+def test_GEVSEK_FM0_acik_adim_bulamazsa_alanlar_ACILIR_ve_sure_yetmedi(fm_siz_bulamaz, monkeypatch):
+    """Acik adim fm 0 ile plan bulamazsa: alanlar geri acilir (model tam modele doner; ana
+    asama fm serbest tam modelle surer, kucuk sahnede plani orada bulur), kayit `bulundu
+    False`, `sifirda_tutuldu` False kalir (olcum secenegi; acik adim yeniden denenmez)."""
+    sonra = {}
+    asil = C._gevsekten_serte
+
+    def basarisiz(kuruldu, ayar, basladi, **k):
+        asil(kuruldu, ayar, basladi, **k)
+        sonra["alanlar_once"] = _alanlar(kuruldu, _fm(kuruldu))
+        return cp_model.UNKNOWN, None
+    monkeypatch.setattr(C, "_gevsekten_serte", basarisiz)
+    g = _fm_sert()
+    k = Model(g).kur()
+    c = coz(g, dict(AYAR_FM, gevsek_fazla_mesai_sifir=True), kuruldu=k)
+    assert all(a == [0, 0] for a in sonra["alanlar_once"])
+    # acik adim bitince (plan yok) alanlar GERI ACILMIS olmali -- ana asama tam modelle kosar
+    assert all(a != [0, 0] for a in _alanlar(k, _fm(k))), _alanlar(k, _fm(k))
+    ist = c["cozum_istatistikleri"]
+    assert ist["gevsekten_serte"]["fazla_mesai_sifirda"]["bulundu"] is False
+    assert ist["fazla_mesai_once_sifir"]["sifirda_tutuldu"] is False
 
 
 def test_AYAR1_kapaliyken_ve_asim_YUMUSAKken_yeniden_arama_KOSAR(fm_siz_bulamaz, yeniden_arama_kaydi):

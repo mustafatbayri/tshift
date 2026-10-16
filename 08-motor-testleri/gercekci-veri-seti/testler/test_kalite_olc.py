@@ -22,6 +22,8 @@ import json
 import os
 import sys
 
+import pytest
+
 BURASI = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MOTOR = os.path.join(os.path.dirname(os.path.dirname(BURASI)), "09-motor")
 for y in (MOTOR, BURASI):
@@ -358,7 +360,7 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
              "mola_ayri_adim", "mola_adimi_tam", "b_paralel_3", "b_paralel_2"}
     iki_asamasiz = {"ipucu_kapali"}                                     # deneme zaten yapilmaz
     rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
-    gevsek = {"gevsek_parca", "acik_lin0", "acik_ls"}                   # K-68 ayar 2 / oneri 2b olcum secenekleri: urun yolu + acik adim ayari
+    gevsek = {"gevsek_parca", "acik_lin0", "acik_ls", "gevsek_fm0"}     # K-68 ayar 2 / oneri 2b / 16 Ekim olcum secenekleri: urun yolu + acik adim ayari
     onarim = {"onarim_tam"}                                             # 15 Ekim: komsuluk onariminin kiyasi (butun model, acikca)
     assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek | onarim
     assert KO.YAPILANDIRMALAR["onarim_tam"][1] == {"fazla_mesai_onarim_yontemi": "tam"} and KO.YAPILANDIRMALAR["onarim_tam"][2] == {}
@@ -372,6 +374,8 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
     assert KO.YAPILANDIRMALAR["acik_ls"][1] == {"gevsek_acik_cozucu_parametreleri": {"use_ls_only": True}}
     assert KO.YAPILANDIRMALAR["acik_lin0"][2] == {} and KO.YAPILANDIRMALAR["acik_ls"][2] == {}
     assert KO.COZ_VARSAYILAN["gevsek_acik_cozucu_parametreleri"] == {}     # urun: acik adim ek ayarsiz
+    assert KO.YAPILANDIRMALAR["gevsek_fm0"][1] == {"gevsek_fazla_mesai_sifir": True} and KO.YAPILANDIRMALAR["gevsek_fm0"][2] == {}
+    assert KO.COZ_VARSAYILAN["gevsek_fazla_mesai_sifir"] is False          # urun: acik adim fm serbest (K-38 yolu acik)
     assert KO.YAPILANDIRMALAR["rotasyon_0"][1] == {} and KO.YAPILANDIRMALAR["rotasyon_0"][2] == {"agirliklar": {"VARDIYA_ROTASYON_YONU": 0}}
     for ad in urun | iki_asamasiz | gevsek:
         assert "fazla_mesai_once_sifir" not in KO.YAPILANDIRMALAR[ad][1], ad
@@ -644,3 +648,46 @@ def test_onarim_yazisi_KOMSULUK_turlari_ve_yontemi_yazar_eski_kayit_DEGISMEZ():
     y = KO.onarim_yazisi(o)
     assert "0, amac 109971 -> 80000 ALINDI" in y and "yontem komsuluk, 10 fm'li kisi" in y
     assert "1. 24 kisi serbest INFEASIBLE 2.1 sn; 2. 41 kisi serbest OPTIMAL 9.7 sn" in y
+
+
+# ----------------------------------------------------------------------
+# 16 Ekim (A3): --sahne <dosya> -- insan plani sahnesi (06-veri/anonim/insan, git disi)
+# ----------------------------------------------------------------------
+
+def test_SAHNE_dosyasi_adi_ve_dosya_adi(monkeypatch, tmp_path):
+    assert KO.sahne_adi(r"C:\x\06-veri\anonim\insan\_sahne-INSAN-2026-06-22.json") == "INSAN-2026-06-22"
+    assert KO.sahne_adi("/a/b/baska.json") == "baska"
+    monkeypatch.setattr(KO, "SAHNE_DOSYASI", str(tmp_path / "_sahne-INSAN-2026-06-22.json"))
+    monkeypatch.setattr(KO, "SEVIYE", None)
+    monkeypatch.setattr(KO, "ETIKET", "insan-1800")
+    assert os.path.basename(KO.dosya_adi()) == "kalite-olcumu-INSAN-2026-06-22-insan-1800.json"
+
+
+def test_SAHNE_dosyadan_yuklenir_seviye_ile_birlikte_REDDEDILIR_yoksa_yol_gosterir(monkeypatch, tmp_path, capsys):
+    yol = tmp_path / "_sahne-INSAN-2026-06-22.json"
+    g = {"ad": "INSAN-2026-06-22", "calisanlar": [], "talep": [], "kurallar": [], "vardiya_sablonlari": [],
+         "_merdiven": {"seviye": "insan", "referans_puani": {"durum": "INFEASIBLE", "amac": None, "dagilim": {}}}}
+    yol.write_text(json.dumps(g), encoding="utf-8")
+    monkeypatch.setattr(KO, "SAHNE_DOSYASI", str(yol))
+    monkeypatch.setattr(KO, "SEVIYE", None)
+    monkeypatch.setattr(KO, "CESIT", None)
+    assert KO.sahne_yukle()["ad"] == "INSAN-2026-06-22"
+    assert "INFEASIBLE" in capsys.readouterr().out                       # puan yok: durumu yazar
+    monkeypatch.setattr(KO, "SEVIYE", "1")
+    with pytest.raises(SystemExit):
+        KO.sahne_yukle()
+    monkeypatch.setattr(KO, "SEVIYE", None)
+    monkeypatch.setattr(KO, "SAHNE_DOSYASI", str(tmp_path / "yok.json"))
+    with pytest.raises(SystemExit) as h:
+        KO.sahne_yukle()
+    assert "insan-plani.py" in str(h.value)
+
+
+def test_SAHNE_referans_puani_yoksa_KIYAS_ATLANIR_varsa_yapilir(capsys):
+    sonuc = {"kosular": [{"yapilandirma": "varsayilan", "tekrar": 1, "amac_degeri": 100, "amac_dagilimi": {"ADALET_DENGESI": {"ceza": 100}}}]}
+    KO.referans_kiyasi({"_merdiven": {"referans_puani": {"durum": "INFEASIBLE", "amac": None, "dagilim": {}}}}, sonuc)
+    assert "ATLANDI" in capsys.readouterr().out and "referansa_gore_yuzde" not in sonuc["kosular"][0]
+    KO.referans_kiyasi({"_merdiven": {}}, sonuc)
+    assert "ATLANDI" in capsys.readouterr().out
+    KO.referans_kiyasi({"_merdiven": {"referans_puani": {"durum": "OPTIMAL", "amac": 200, "dagilim": {"ADALET_DENGESI": {"ceza": 200}}}}}, sonuc)
+    assert sonuc["kosular"][0]["referansa_gore_yuzde"] == -50.0
