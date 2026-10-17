@@ -18,6 +18,7 @@ KOSTURMA
 """
 
 import importlib.util
+import io
 import json
 import os
 import sys
@@ -691,3 +692,25 @@ def test_SAHNE_referans_puani_yoksa_KIYAS_ATLANIR_varsa_yapilir(capsys):
     assert "ATLANDI" in capsys.readouterr().out
     KO.referans_kiyasi({"_merdiven": {"referans_puani": {"durum": "OPTIMAL", "amac": 200, "dagilim": {"ADALET_DENGESI": {"ceza": 200}}}}}, sonuc)
     assert sonuc["kosular"][0]["referansa_gore_yuzde"] == -50.0
+
+
+def test_SAHNE_dogrulayici_kiyasi_referans_plani_ve_kosulari_AYNI_dogrulayiciyla_sayar(capsys):
+    """16 Ekim (A3): insan plani modele oturmayinca puan kiyasi yok; dogrulayici kiyasi
+    kural kural ihlal satirlarini, sert toplami, fm'yi ve yayinlanabilirligi yan yana yazar.
+    Tanikli 49 fiksturu referans gibi kullanilir (tanik: sert 0, fm 0)."""
+    sahne = os.path.join(BURASI, "fikstur", "_sahne-L1-EK-95-0.1.json")
+    assert KO.referans_dosyasi(sahne).endswith("_referans-L1-EK-95-0.1.json")
+    assert KO.referans_dosyasi(os.path.join(BURASI, "fikstur", "baska.json")) is None
+    assert KO.referans_dosyasi(os.path.join(BURASI, "fikstur", "_sahne-YOK-1.json")) is None
+    g = json.load(io.open(sahne, encoding="utf-8"))
+    sonuc = {"kosular": [{"yapilandirma": "varsayilan", "tekrar": 1, "ihlal": {"MOLA_KAPSAMASI": 65, "VARDIYA_ROTASYON_YONU": 3},
+                          "sert_ihlal": 0, "yayinlanabilir": True, "dogrulayici_metrikler": {"fazla_mesai_saat": 0.0}},
+                         {"yapilandirma": "gevsek_fm0", "tekrar": 1}]}            # plansiz kosu tabloya girmez
+    rk = KO.dogrulayici_kiyasi(g, sonuc, KO.referans_dosyasi(sahne))
+    assert rk["sert_ihlal"] == 0 and rk["fazla_mesai_saat"] == 0.0 and rk["yayinlanabilir"] is True and rk["atama"] == 185
+    assert sonuc["dogrulayici_kiyasi"]["referans"] is rk
+    assert "MOLA_KAPSAMASI" in sonuc["dogrulayici_kiyasi"]["kurallar"] and "VARDIYA_ROTASYON_YONU" in sonuc["dogrulayici_kiyasi"]["kurallar"]
+    cikti = capsys.readouterr().out
+    assert "DOGRULAYICI KIYASI" in cikti and "SERT TOPLAM" in cikti and "varsayil-1" in cikti and "gevsek_f" not in cikti
+    assert KO.dogrulayici_kiyasi(g, {"kosular": []}, None) is None
+    assert "ATLANDI" in capsys.readouterr().out

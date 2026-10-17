@@ -1422,8 +1422,60 @@ def main():
     ozet(sonuc)
     if SEVIYE or SAHNE_DOSYASI:
         referans_kiyasi(g, sonuc)
+    if SAHNE_DOSYASI:
+        dogrulayici_kiyasi(g, sonuc, referans_dosyasi(SAHNE_DOSYASI))
     yaz(sonuc)
     print("\nSonuc yazildi: %s" % os.path.basename(dosya_adi()))
+
+
+def referans_dosyasi(sahne_yolu):
+    """`_sahne-X.json` yanindaki `_referans-X.json` (insan plani / tanik); yoksa None."""
+    klasor, ad = os.path.split(sahne_yolu)
+    if not ad.startswith("_sahne-"):
+        return None
+    yol = os.path.join(klasor, "_referans-" + ad[len("_sahne-"):])
+    return yol if os.path.exists(yol) else None
+
+
+DOGRULAYICI_KALEMLER = ("VARDIYA_ARASI_DINLENME", "ARDISIK_GECE_LIMIT", "HAFTALIK_AZAMI", "GUNLUK_AZAMI", "HAFTA_TATILI",
+                        "HEDEF_KAPSAMA", "HEDEF_ASIMI", "MOLA_KAPSAMASI", "ADALET_DENGESI", "VARDIYA_ROTASYON_YONU",
+                        "EKIP_SUREKLILIGI", "TERCIH_KARSILAMA", "MOLA_YERLESIMI")
+
+
+def dogrulayici_kiyasi(g, sonuc, referans_yolu):
+    """16 Ekim (A3): referans plan (insan plani) sert ihlalleriyle modele oturmayinca puan
+    kiyasi yapilamaz; DOGRULAYICI ikisini de ayni olcuyle sayar -- kural kural ihlal satiri,
+    sert toplam, fazla mesai, yayinlanabilirlik. Referans dosyasi `{"atamalar": [...]}`."""
+    if not referans_yolu:
+        print("\nDOGRULAYICI KIYASI ATLANDI: sahnenin yaninda _referans-… dosyasi yok")
+        return None
+    from dogrulayici import degerlendir
+    ref = json.load(io.open(referans_yolu, encoding="utf-8"))
+    r = degerlendir(g, ref["atamalar"])
+    ih = [i for i in r.get("ihlaller", []) if not i.get("gecmis")]
+    sayi = {}
+    for i in ih:
+        sayi[i["kural"]] = sayi.get(i["kural"], 0) + 1
+    rk = {"dosya": os.path.basename(referans_yolu), "atama": len(ref["atamalar"]), "ihlal": sayi,
+          "sert_ihlal": sum(1 for i in ih if i.get("agirlik") == "SERT"),
+          "fazla_mesai_saat": round((r.get("metrikler") or {}).get("fazla_mesai_saat") or 0.0, 2),
+          "yayinlanabilir": bool((r.get("yayin_kapisi") or {}).get("yayinlanabilir"))}
+    kosular = [s for s in sonuc["kosular"] if s.get("ihlal") is not None]
+    gorulen = {k for s in kosular for k in s["ihlal"]} | set(sayi)
+    kurallar = [k for k in DOGRULAYICI_KALEMLER if k in gorulen] + sorted(k for k in gorulen if k not in DOGRULAYICI_KALEMLER)
+    print("\nDOGRULAYICI KIYASI (ayni sahne, ayni dogrulayici; ihlal satiri sayisi -- referans = %s)" % rk["dosya"])
+    bas = "  %-26s %10s" % ("kural", "referans") + "".join(
+        " %12s" % ("%s-%s" % (s["yapilandirma"][:8], s.get("tekrar", 1))) for s in kosular)
+    print(bas)
+    for k in kurallar:
+        print("  %-26s %10s" % (k, sayi.get(k, 0)) + "".join(" %12s" % s["ihlal"].get(k, 0) for s in kosular))
+    print("  %-26s %10s" % ("SERT TOPLAM", rk["sert_ihlal"]) + "".join(" %12s" % s.get("sert_ihlal") for s in kosular))
+    print("  %-26s %10s" % ("fazla mesai (sa)", rk["fazla_mesai_saat"]) + "".join(
+        " %12s" % ((s.get("dogrulayici_metrikler") or {}).get("fazla_mesai_saat")) for s in kosular))
+    print("  %-26s %10s" % ("yayinlanabilir", "evet" if rk["yayinlanabilir"] else "hayir") + "".join(
+        " %12s" % ("evet" if s.get("yayinlanabilir") else "hayir") for s in kosular))
+    sonuc["dogrulayici_kiyasi"] = {"referans": rk, "kurallar": kurallar}
+    return rk
 
 
 def referans_kiyasi(g, sonuc):

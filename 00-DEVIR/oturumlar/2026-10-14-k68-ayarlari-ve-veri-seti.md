@@ -1078,15 +1078,78 @@ puan yerine durum yazılır ve REFERANS KIYASI atlanır, kıyas doğrulayıcı r
 (sert, fm, kapsama = aynı, adalet, rotasyon, mola). Testler `test_insan_plani.py` 5 (uydurma
 kanonik tablo; isim/sicil çıktıda yok), `test_kalite_olc.py` +3 (30).
 
-**Gece bloğu (ekili 500 + insan planı; Mustafa'nın makinesi; `gece-16d`):** yama i2 + j →
+**Gece bloğu (ekili 500 + insan planı + edit; Mustafa'nın makinesi; `gece-16f`):** yama k (i2 + j akşam uygulandı) →
 testler → commit → tanıklı `varsayilan` 1.800 × 3 → tanıklı `gevsek_fm0` 1.800 × 3 →
 L1 VS2 `gevsek_fm0` 1.800 × 3 → **insan planı puanı (iki hafta) → INSAN 22 Haziran
 `varsayilan` 1.800 × 2 → INSAN 20 Temmuz 1.800 × 2** → tanıklı `onarim_tam` 1.800 × 2 →
-üreteç tabanından ekili 500 → çapraz denetim → tam mutasyon. İnsan sahnesinde okunacak:
+üreteç tabanından ekili 500 → **yeniden planlama INSAN 22 Haziran (3 × 5, 1 × 5 örnek)** → çapraz denetim → tam mutasyon. İnsan sahnesinde okunacak:
 motor sert 0 mı (insan 5 / 2), fm (insan 0), adalet / rotasyon / mola kalemleri, ilk plan
 saniyesi (83 kişi, 31 şablon).
 
-~~**Gece bloğu (ekili 500, Mustafa'nın makinesi; `gece-16c`):**~~ (d ile birleşti; sırası aşağıda) yama i → tanıklı
+~~**Gece bloğu (ekili 500, Mustafa'nın makinesi; `gece-16c`):**~~ (d ile birleşti; sırası aşağıda)
+
+### 19.1 · 19:47–20:03 — akşam bloğu: `e815ebe` push; **insan planı ↔ motor, ilk gerçek kıyas**
+
+Yama i2 + j uygulandı (757 + 109 test, DENETIM 0, **`e815ebe`** push). İnsan planının motor
+ölçüsüyle puanı iki haftada da hesaplanamadı (beklenen: sert ihlalli plan modele oturmaz) →
+kıyas doğrulayıcıyla kalem kalem. **22 Haziran, `varsayilan` 300 sn × 1 (6 çekirdek):**
+
+| Kalem (doğrulayıcı) | Planlamacının planı | Motor (300 sn) |
+|---|---|---|
+| Sert ihlal | **5** (DINLENME 4, ARDISIK_GECE 1) | **0** |
+| Yayınlanabilir | hayır | evet |
+| Hedef kapsama / aşım | %100 / 0 (tanım) | %100 / 0 |
+| Fazla mesai | 0 | 0 |
+| Rotasyon (geri geçiş satırı) | 14 | **3** (8 sa) |
+| Adalet (eşik aşan kişi) | 1 (gece) | **0** |
+| Mola kapsaması (en kötü çeyrekte asgari altı hücre) | 0 (asgari onun sayısından) | 65 (1.344'te; hepsi 1 kişi eksik) |
+| Net saat / gün dağılımı | — | insan planıyla aynı (71 kişi 6 gün, 11 kişi 5 gün) |
+
+**⚠ Bu kıyasın sınırı (Mustafa 22:40: *"TatilBudur'un yaptığı plana dair elimizde bilgi yok ki —
+çıktı var, çalışan sözleşmeleri yok, vardiya kuralları yok"*).** Doğru. Elimizde planlamacının
+**girdisi değil çıktısı** var; sahne o çıktıdan **geri kuruldu** ve dört varsayım taşır:
+(1) sözleşme saati = planda çalışılan net saat (gerçek sözleşmeler bilinmiyor); (2) talep =
+planın saat başına kişi sayısı (planlamacının Erlang-C ihtiyacı bilinmiyor; plan fazla ya da
+eksik kadroluysa onu miras alıyoruz); (3) kurallar = **bizim** katalog (yasal eşikler + ürün
+kuralları), planlamacının kendi iç kuralları, çalışan istekleri, yetkinlik zorunlulukları
+bilinmiyor; (4) molalar bizim varsayılan yerleşimimiz. Bu yüzden tablo **"motor planlamacıdan
+iyi"** demez. Sağlam söylenebilenler: (a) planlamacının çıktısı Türk iş hukukunun eşiklerine
+göre 5 sert ihlal taşıyor (11 saat dinlenme brüt aralıkla ölçülür, mola varsayımından
+etkilenmez; ardışık gece de öyle) — bu çıktının gerçek bir özelliği; (b) aynı kadro, aynı
+desenler ve aynı saat başı kişi sayısıyla **yasal** bir plan var ve motor onu saniyeler içinde
+buluyor; (c) rotasyon / adalet / mola sayıları iki ÇIKTININ aynı ölçüyle sayımı — planlamacının
+görmediğimiz bir kısıtı (istek, yetkinlik) bu farkı açıklayabilir. **Kıyası tam yapmak için
+müşteriden istenecekler:** çalışan sözleşmeleri (tip, haftalık saat), kendi kural/eşik listesi,
+talep (Erlang-C çıktısı / HC hedefi), çalışan istek ve kısıtları. Gelene kadar A3 cetveli
+**"çıktıdan kurulmuş, varsayımlı"** etiketiyle okunur; kabul ölçütünde yalnız (a) ve (b)
+kullanılır. "Doğrulayıcı kıyası" = iki planın da **bağımsız kural denetçisinden** (09-motor/
+dogrulayici) geçirilip kural kural ihlal satırlarının yan yana yazılması; puan değil sayımdır
+ve puan kıyası (plan_puani) sert ihlalli planda mümkün olmadığı için tek adil kıyastır.
+
+Motor: fm'siz ilk plan **0,46 sn** (OPTIMAL), ilk plan 1,55 sn, kazancın %90'ı **2,5 sn**;
+amaç 1.348 (ADALET 680 = ham 136 × 5; MOLA 644 = 92 × 7; ROT 24); aşamalar 35.333 →
+3.707 (240 sn) → 1.348 (mola adımı 59 sn; adımın sınırı 1.264). **Okuma (yukarıdaki
+sınırla):** gerçek müşterinin kadrosu, desenleri ve saat başı kişi sayısıyla motor saniyeler
+içinde **yasal** plan buluyor; planlamacının çıktısındaki 5 yasal ihlal bu planda yok; rotasyon
+14 → 3 ve adalet 1 → 0 aynı ölçüyle sayım (planlamacının görünmeyen kısıtları olabilir); zayıf
+kalem mola kapsaması (65 hücrede 1 kişi eksik) — hem cetvelin insan lehine kuruluşu (asgari bizim
+varsayılan molalarımızdan türedi) hem mola adımının bu atamalarla sınırına dayanması
+(atamalar değişmeden daha iyisi yok). Tablo ve optimum hesabı `Claude outputs\insan-motor-
+kiyasi-2026-06-22.xlsx` (4 sayfa, formüllü).
+
+**Eklenen (yama k):** `kalite-olc.py --sahne` için **DOĞRULAYICI KIYASI** bölümü — sahnenin
+yanındaki `_referans-…` planı (insan planı / tanık) ve her koşu aynı doğrulayıcıyla kural kural
+ihlal satırı, sert toplam, fm, yayınlanabilirlik (puan kıyası olmadığında tek kıyas bu;
+`dogrulayici_kiyasi`, test). **"Edit" ölçümü `yeniden-planlama.py`:** "yayınlanmış plan" = ölçümde **mevcut plan yerine
+konan** geçerli bir plan (insan planının çıktısı ya da tanık; kimin yaptığı değil, motorun bir
+mevcut plana karşı davranışı ölçülür) + bozulma (`--hastalik k`: k kişi planda çalıştığı bir günde onaylı rapor) →
+A ürün yolu (`mevcut_plan` + K-70) ve B sıfırdan; ölçülen: dokunulan kişi-gün (değişen +
+kaldırılan + eklenen), **fazladan dokunulan** = dokunulan − 2k, sert, fm, eksik, raporlu
+günde çalışan (0 olmalı), süre. Bulut 49 (tanıklı sahne, 2 kişi raporlu, 60 sn, 2 örnek):
+**A 10 / 27 kişi-gün dokundu (fazladan 6 / 23), B 119 / 122** — K-70 değişikliği ~6 kat
+azaltıyor ama en aza (2k = 4) inmiyor: ADALET vb. kalemler planı yayınlanandan uzaklaştırıyor
+→ K-70 ağırlığı (6) ölçülecek bir ayar (B planı: karar/ağırlık testleri). 4 test.
+Gece bloğuna eklendi: INSAN 22 Haziran, 3 kişi raporlu × 5 örnek ve 1 kişi × 5 örnek, 120 sn. yama i → tanıklı
 `varsayilan` 1.800 × 3 → tanıklı `gevsek_fm0` 1.800 × 3 → **L1 VS2 `gevsek_fm0` 1.800 × 3**
 → tanıklı `onarim_tam` 1.800 × 2 → üreteç tabanından ekili 500 tanık (900 sn) +
 `varsayilan` 1.800 × 2 → çapraz denetim `--puan` → tam mutasyon. Okunacak: (1) ilk plan

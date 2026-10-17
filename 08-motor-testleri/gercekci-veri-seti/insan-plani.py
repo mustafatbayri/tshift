@@ -35,6 +35,15 @@ OLCUM
   Okunacak: motor sert 0 mi (insan: N ihlal), fazla mesai (insan: X sa), kapsama (ayni,
   kurulus geregi), adalet / rotasyon / mola kalemleri.
 
+SINIR -- bu sahne planlamacinin GIRDISI degil CIKTISINDAN geri kurulur (Mustafa 16 Ekim 22:40)
+  Bilinmeyenler ve yerine konan varsayimlar: sozlesme saati (-> plandaki net saat), talep
+  (-> plandaki saat basi kisi; Erlang-C ihtiyaci bilinmiyor), kurallar (-> bizim katalog;
+  planlamacinin ic kurallari, calisan istekleri, yetkinlik zorunluluklari bilinmiyor), molalar
+  (-> varsayilan yerlesim). Kiyas "motor planlamacidan iyi" DEMEZ. Saglam olan: ciktinin yasal
+  eslere gore ihlalleri (dinlenme/ardisik gece brut aralikla olculur) ve ayni kadro, desen ve
+  saat basi kisi sayisiyla yasal planin varligi / suresi. Musteriden istenecek: sozlesmeler,
+  kural listesi, talep (HC hedefi), istek ve kisitlar.
+
 GIZLILIK
   Isim, sicil, firma adi bu dosyadan DISARI CIKMAZ: sahnede yalniz anonim kimlik,
   ekip kodu, rol, saatler. Esleme dosyasi 06-veri altinda kalir (.gitignore).

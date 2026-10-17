@@ -1,0 +1,16 @@
+﻿19:47:30  AKSAM BLOGU (b) BASLADI: yama i2 + j, testler, commit; insan plani puani; INSAN 22 Haziran 300 sn hizli bakis (~25 dk)
+19:47:30  paket-16ekim-i2.patch md5 b7aa9313ee3b85e3d018756c2ae2a4ef
+19:47:30  paket-16ekim-i2.patch uygulandi cikis 0
+19:47:30  paket-16ekim-j.patch md5 b6eb2fe97f6ebd60bc8eabf8bee80767
+19:47:30  paket-16ekim-j.patch uygulandi cikis 0
+19:50:02  09 testleri cikis 0
+19:58:09  08 testleri cikis 0
+19:58:10  DENETIM cikis 0 (0 = HATA yok)
+19:58:13  commit + push cikis 0
+19:58:13  INSAN 2026-06-22: insan planinin puani (plan_puani) hesaplaniyor
+19:58:19  INSAN 2026-06-22 puan cikis 0
+19:58:19  INSAN 2026-07-20: insan planinin puani (plan_puani) hesaplaniyor
+19:58:25  INSAN 2026-07-20 puan cikis 0
+19:58:25  INSAN 2026-06-22 varsayilan 300 x 1 hizli bakis basliyor
+20:03:36  INSAN 2026-06-22 300 x 1 cikis 0
+20:03:36  AKSAM BLOGU BITTI (gece: gece-16e.ps1 -- yamalar uygulanmis olacak, dogrudan olcumlere gecer)

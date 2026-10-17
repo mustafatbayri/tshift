@@ -1,0 +1,655 @@
+{
+ "olcek": 1.0,
+ "doluluk": 0.95,
+ "saniye": 300,
+ "tekrar": 1,
+ "kisi": 83,
+ "hucre": 1344,
+ "kural": 38,
+ "yapilandirmalar": [
+  "varsayilan"
+ ],
+ "tarih": "2026-10-16 19:58",
+ "cekirdek": 6,
+ "kosular": [
+  {
+   "yapilandirma": "varsayilan",
+   "ayar": {
+    "azami_saniye": 300
+   },
+   "once_fazla_mesaisiz": true,
+   "sert_kesim": false,
+   "girdi_ek": {},
+   "kurma_sn": 4.3,
+   "toplam_sn": 300.4,
+   "durum": "cozuldu",
+   "durma_sebebi": "butce_doldu",
+   "iki_asama": true,
+   "cozum_sayisi": 37,
+   "amac_degeri": 1348,
+   "alt_sinir": null,
+   "ilk_asama_sn": 241.09,
+   "ana_asama_butce_sn": 58.91,
+   "ilk_cozum_sn": 1.55,
+   "isci_sayisi": 6,
+   "amac_dagilimi": {
+    "ADALET_DENGESI": {
+     "ceza": 680,
+     "deger": 136,
+     "degisken": 747,
+     "pay_yuzde": 50.4
+    },
+    "MOLA_KAPSAMASI": {
+     "ceza": 644,
+     "deger": 92,
+     "degisken": 502,
+     "pay_yuzde": 47.8
+    },
+    "VARDIYA_ROTASYON_YONU": {
+     "ceza": 24,
+     "deger": 8,
+     "degisken": 456,
+     "pay_yuzde": 1.8
+    },
+    "FAZLA_MESAI": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 83,
+     "pay_yuzde": 0.0
+    },
+    "HEDEF_KAPSAMA": {
+     "ceza": 0,
+     "deger": 0,
+     "degisken": 654,
+     "pay_yuzde": 0.0
+    }
+   },
+   "iyilesme": {
+    "ilk_amac": 3630.0,
+    "son_amac": 1348.0,
+    "cozum": 37,
+    "son_iyilesme_sn": 3.81,
+    "alt_sinir_son": 1264.0,
+    "egri": [
+     [
+      1.55,
+      3630.0,
+      452.0
+     ],
+     [
+      1.61,
+      2986.0,
+      452.0
+     ],
+     [
+      1.62,
+      2972.0,
+      704.0
+     ],
+     [
+      1.64,
+      2951.0,
+      1236.0
+     ],
+     [
+      1.73,
+      2629.0,
+      1243.0
+     ],
+     [
+      1.75,
+      2622.0,
+      1243.0
+     ],
+     [
+      1.88,
+      2594.0,
+      1243.0
+     ],
+     [
+      1.94,
+      2468.0,
+      1264.0
+     ],
+     [
+      1.95,
+      2461.0,
+      1264.0
+     ],
+     [
+      1.97,
+      1971.0,
+      1264.0
+     ],
+     [
+      1.99,
+      1964.0,
+      1264.0
+     ],
+     [
+      2.03,
+      1943.0,
+      1264.0
+     ],
+     [
+      2.07,
+      1936.0,
+      1264.0
+     ],
+     [
+      2.09,
+      1887.0,
+      1264.0
+     ],
+     [
+      2.11,
+      1852.0,
+      1264.0
+     ],
+     [
+      2.13,
+      1845.0,
+      1264.0
+     ],
+     [
+      2.14,
+      1831.0,
+      1264.0
+     ],
+     [
+      2.16,
+      1782.0,
+      1264.0
+     ],
+     [
+      2.22,
+      1768.0,
+      1264.0
+     ],
+     [
+      2.35,
+      1635.0,
+      1264.0
+     ],
+     [
+      2.37,
+      1628.0,
+      1264.0
+     ],
+     [
+      2.43,
+      1586.0,
+      1264.0
+     ],
+     [
+      2.46,
+      1565.0,
+      1264.0
+     ],
+     [
+      2.51,
+      1537.0,
+      1264.0
+     ],
+     [
+      2.51,
+      1530.0,
+      1264.0
+     ],
+     [
+      2.57,
+      1523.0,
+      1264.0
+     ],
+     [
+      2.57,
+      1502.0,
+      1264.0
+     ],
+     [
+      2.59,
+      1467.0,
+      1264.0
+     ],
+     [
+      2.73,
+      1411.0,
+      1264.0
+     ],
+     [
+      2.87,
+      1404.0,
+      1264.0
+     ],
+     [
+      2.89,
+      1397.0,
+      1264.0
+     ],
+     [
+      3.02,
+      1390.0,
+      1264.0
+     ],
+     [
+      3.07,
+      1376.0,
+      1264.0
+     ],
+     [
+      3.11,
+      1369.0,
+      1264.0
+     ],
+     [
+      3.16,
+      1362.0,
+      1264.0
+     ],
+     [
+      3.37,
+      1355.0,
+      1264.0
+     ],
+     [
+      3.81,
+      1348.0,
+      1264.0
+     ]
+    ],
+    "yuzde50_sn": 1.94,
+    "yuzde90_sn": 2.46,
+    "yuzde99_sn": 3.11
+   },
+   "ilk_asama_iyilestirme": {
+    "istenen_saniye": 240.0,
+    "saniye": 240.11,
+    "ipucusuz": false,
+    "amacsiz_amac": 35333,
+    "iyilesmis_amac": 3707,
+    "plan_bulundu": true,
+    "cozum_sayisi": 28,
+    "optimum": false,
+    "iyilesme": {
+     "ilk_amac": 3989.0,
+     "son_amac": 3707.0,
+     "cozum": 28,
+     "son_iyilesme_sn": 10.71,
+     "alt_sinir_son": 3677.0,
+     "egri": [
+      [
+       0.61,
+       3989.0,
+       3165.0
+      ],
+      [
+       0.62,
+       3988.0,
+       3165.0
+      ],
+      [
+       0.63,
+       3983.0,
+       3530.0
+      ],
+      [
+       0.63,
+       3982.0,
+       3530.0
+      ],
+      [
+       0.68,
+       3980.0,
+       3668.0
+      ],
+      [
+       0.68,
+       3977.0,
+       3668.0
+      ],
+      [
+       0.69,
+       3971.0,
+       3668.0
+      ],
+      [
+       0.7,
+       3968.0,
+       3668.0
+      ],
+      [
+       0.72,
+       3965.0,
+       3668.0
+      ],
+      [
+       0.73,
+       3962.0,
+       3668.0
+      ],
+      [
+       0.73,
+       3959.0,
+       3668.0
+      ],
+      [
+       0.87,
+       3854.0,
+       3668.0
+      ],
+      [
+       0.98,
+       3815.0,
+       3668.0
+      ],
+      [
+       0.99,
+       3806.0,
+       3668.0
+      ],
+      [
+       1.14,
+       3782.0,
+       3668.0
+      ],
+      [
+       1.4,
+       3770.0,
+       3668.0
+      ],
+      [
+       1.48,
+       3758.0,
+       3668.0
+      ],
+      [
+       1.91,
+       3752.0,
+       3671.0
+      ],
+      [
+       2.42,
+       3731.0,
+       3673.0
+      ],
+      [
+       3.16,
+       3725.0,
+       3674.0
+      ],
+      [
+       3.61,
+       3719.0,
+       3674.0
+      ],
+      [
+       5.76,
+       3718.0,
+       3677.0
+      ],
+      [
+       7.88,
+       3716.0,
+       3677.0
+      ],
+      [
+       8.19,
+       3713.0,
+       3677.0
+      ],
+      [
+       10.71,
+       3707.0,
+       3677.0
+      ]
+     ],
+     "yuzde50_sn": 0.88,
+     "yuzde90_sn": 2.42,
+     "yuzde99_sn": 10.71
+    },
+    "ipucu_korundu": false,
+    "amac_dagilimi": {
+     "MOLA_KAPSAMASI": {
+      "ceza": 3003,
+      "deger": 429,
+      "degisken": 502,
+      "pay_yuzde": 81.0
+     },
+     "ADALET_DENGESI": {
+      "ceza": 680,
+      "deger": 136,
+      "degisken": 747,
+      "pay_yuzde": 18.3
+     },
+     "VARDIYA_ROTASYON_YONU": {
+      "ceza": 24,
+      "deger": 8,
+      "degisken": 456,
+      "pay_yuzde": 0.6
+     },
+     "FAZLA_MESAI": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 83,
+      "pay_yuzde": 0.0
+     },
+     "HEDEF_KAPSAMA": {
+      "ceza": 0,
+      "deger": 0,
+      "degisken": 654,
+      "pay_yuzde": 0.0
+     }
+    }
+   },
+   "paralel": null,
+   "mola_adimi": true,
+   "atamalar_sabit": true,
+   "mola_adimi_alt_sinir": 1264,
+   "fazla_mesaisiz_alt_sinir": null,
+   "fazla_mesai_once_sifir": {
+    "bulundu": true,
+    "degisken": 83,
+    "saniye": 0.65,
+    "deneme_siniri": 1,
+    "denemeler": [
+     {
+      "tohum": 1,
+      "saniye": 0.46,
+      "durum": "OPTIMAL"
+     }
+    ],
+    "gevsek_kisa_saniye": 20.0,
+    "atlandi": false,
+    "kanitlandi_yok": false,
+    "molalar_sabit": true,
+    "sifirda_tutuldu": false
+   },
+   "ipucu_plani": null,
+   "gevsekten_serte": null,
+   "fazla_mesai_onarimi": null,
+   "taslak": false,
+   "taslak_asim": null,
+   "uygulanmayan_notlar": [],
+   "optimuma_uzaklik_yuzde": null,
+   "metrikler": {
+    "asgari_kapsama_yuzde": 100.0,
+    "hedef_kapsama_yuzde": 100.0,
+    "eksik_hedef_dakika": 0,
+    "toplam_saat": 3531.75,
+    "fazla_mesai_saat": 0.0,
+    "optimuma_uzaklik_yuzde": null,
+    "cozum_suresi_sn": 59.02,
+    "rotasyon_geri_gecis": 3,
+    "rotasyon_geri_saat": 8.0,
+    "plan_degisikligi": null
+   },
+   "plan_dosyasi": "planlar\\kalite-olcumu-INSAN-2026-06-22-insan-300\\varsayilan-1.json",
+   "ihlal": {
+    "MOLA_KAPSAMASI": 65,
+    "VARDIYA_ROTASYON_YONU": 3
+   },
+   "sert_ihlal": 0,
+   "yayinlanabilir": true,
+   "hedef_dokumu": {
+    "ekip": {},
+    "toplam": {
+     "eksik_kisi_saat": 0,
+     "asim_kisi_saat": 0,
+     "eksik_hucre": 0,
+     "asim_hucre": 0
+    },
+    "hucreler": []
+   },
+   "dogrulayici_metrikler": {
+    "hedef_kapsama_yuzde": 100.0,
+    "asgari_kapsama_yuzde": 100.0,
+    "fazla_mesai_saat": 0.0,
+    "sozlesme_ustu_ucret_saat": 230.75,
+    "toplam_saat": 3531.75
+   },
+   "optimum_hesabi": {
+    "kalemler": [
+     {
+      "kural": "ADALET_DENGESI",
+      "birim": "ucgensel sapma birimi",
+      "ham": 136,
+      "agirlik": 5.0,
+      "ceza": 680,
+      "pay_yuzde": 50.4,
+      "ilk_asama_ceza": 680,
+      "referans_ceza": null,
+      "fark": null,
+      "fark_yuzde": null,
+      "toplam_farka_pay_yuzde": null
+     },
+     {
+      "kural": "MOLA_KAPSAMASI",
+      "birim": "hucre x en kotu ceyrek eksik kisi",
+      "ham": 92,
+      "agirlik": 7.0,
+      "ceza": 644,
+      "pay_yuzde": 47.8,
+      "ilk_asama_ceza": 3003,
+      "referans_ceza": null,
+      "fark": null,
+      "fark_yuzde": null,
+      "toplam_farka_pay_yuzde": null
+     },
+     {
+      "kural": "VARDIYA_ROTASYON_YONU",
+      "birim": "geri kaydirilan saat",
+      "ham": 8,
+      "agirlik": 3.0,
+      "ceza": 24,
+      "pay_yuzde": 1.8,
+      "ilk_asama_ceza": 24,
+      "referans_ceza": null,
+      "fark": null,
+      "fark_yuzde": null,
+      "toplam_farka_pay_yuzde": null
+     },
+     {
+      "kural": "HEDEF_KAPSAMA",
+      "birim": "kisi-saat eksik",
+      "ham": 0,
+      "agirlik": null,
+      "ceza": 0,
+      "pay_yuzde": 0.0,
+      "ilk_asama_ceza": 0,
+      "referans_ceza": null,
+      "fark": null,
+      "fark_yuzde": null,
+      "toplam_farka_pay_yuzde": null
+     },
+     {
+      "kural": "FAZLA_MESAI",
+      "birim": "dakika",
+      "ham": 0,
+      "agirlik": null,
+      "ceza": 0,
+      "pay_yuzde": 0.0,
+      "ilk_asama_ceza": 0,
+      "referans_ceza": null,
+      "fark": null,
+      "fark_yuzde": null,
+      "toplam_farka_pay_yuzde": null
+     }
+    ],
+    "asamalar": [
+     {
+      "asama": "ilk plan (fazla mesaisiz arama)",
+      "amac": 35333,
+      "saniye": 0.65,
+      "fark": null,
+      "fark_yuzde": null,
+      "aciklama": "fazla mesai 0 ile bulundu; amacsiz plan, amac degeri bu plandan"
+     },
+     {
+      "asama": "ilk asama iyilestirmesi",
+      "amac": 3707,
+      "saniye": 240.11,
+      "fark": -31626,
+      "fark_yuzde": -89.5,
+      "aciklama": "28 cozum"
+     },
+     {
+      "asama": "mola adimi (atamalar sabit)",
+      "amac": 1348,
+      "saniye": 58.91,
+      "fark": -2359,
+      "fark_yuzde": -63.6,
+      "aciklama": "37 cozum; adimin kaniti 1264 (planin tamami icin degil, O-16)"
+     }
+    ],
+    "ozet": {
+     "amac": 1348,
+     "referans": null,
+     "fark": null,
+     "fark_yuzde": null,
+     "fm_disi_amac": 1348,
+     "fm_disi_referans": null,
+     "fm_disi_fark_yuzde": null
+    }
+   },
+   "fazla_mesai_kisiler": [],
+   "tekrar": 1,
+   "fazla_mesai_uyumu": "ayni"
+  }
+ ],
+ "kapasite_tabani": {
+  "hedef": {
+   "toplam_kisi_saat": 4223.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  },
+  "asgari": {
+   "toplam_kisi_saat": 2822.0,
+   "taban_hucre": 0.0,
+   "taban_ekip_gun": 0.0,
+   "taban_gun": 0.0,
+   "taban_hafta": 0.0,
+   "taban": 0.0
+  }
+ },
+ "fazla_mesai_tabani": {
+  "kisi": 83,
+  "saat": 0.0,
+  "dakika": 0,
+  "ceza": 0,
+  "borcunu_tutturamayan": 0,
+  "saat_dengesi_sert": true,
+  "borc_toplam_saat": 3502.7
+ },
+ "degisken": 62524,
+ "kisit": 135857,
+ "bagimsiz_alt_sinir": 0,
+ "referans": {
+  "durum": "INFEASIBLE",
+  "amac": null,
+  "dagilim": {},
+  "not": "insan plani sert kural ihlalleriyle modele oturmuyor; kiyas kalem kalem dogrulayici raporuyla (kayit)"
+ }
+}
