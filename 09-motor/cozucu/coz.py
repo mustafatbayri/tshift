@@ -2076,8 +2076,13 @@ def _atamalari_cikar(kuruldu, cozucu):
         # ekibi -- modelin kapsama sayimiyla (Model._atama_ekibi) AYNI.
         kisi = next((c for c in kuruldu.calisanlar if c["id"] == e), None)
         ekip = kuruldu._atama_ekibi(kisi or {}, sablon)
-        cikan.append({"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,
-                      "bas": sablon["bas"], "bit": sablon["bit"], "molalar": molalar})
+        satir = {"calisan": e, "ekip": ekip, "sablon": tid, "gun": d,
+                 "bas": sablon["bas"], "bit": sablon["bit"], "molalar": molalar}
+        if sablon.get("kayma"):
+            # K-73: kaymis kopya secildi -- okuyan "bu vardiya 2 saat uzadi" gorsun;
+            # taban sablon ve kayma miktari satirda durur (cozucu/kayma.py).
+            satir["kayma"] = {k: sablon["kayma"][k] for k in ("taban", "erken", "gec", "saat")}
+        cikan.append(satir)
     if kuruldu.donmus_satirlar:
         # Mevcut planin donmus gun satirlari: cozucu URETMEDI, AKTARDI.
         # Molalar dahil yoneticinin biraktigi haliyle; `donmus: True` isareti
@@ -2228,6 +2233,10 @@ def _metrikler(kuruldu, atamalar, cozucu, sure):
         # K-70 (14 Ekim): ayni haftanin yeniden planlanmasinda mevcut plana
         #   gore degisim, kisi-gun. `mevcut_plan` yoksa None.
         "plan_degisikligi": plan_degisikligi(kuruldu.girdi, atamalar),
+        # K-73 (17 Ekim): vardiya kaymasi -- kaymis kopya secilen atama sayisi
+        #   ve toplam kayma saati. Kopya yoksa 0 / 0.
+        "kayma_atama": sum(1 for a in atamalar if a.get("kayma")),
+        "kayma_saat": sum((a.get("kayma") or {}).get("saat", 0) for a in atamalar),
     }
 
 
@@ -2272,6 +2281,7 @@ _CEZA_ONEKI = {"he": "HEDEF_KAPSAMA", "ha": "HEDEF_ASIMI", "me": "MOLA_KAPSAMASI
                "tk": "TERCIH_KARSILAMA",               # K-71 (14 Ekim): yari zamanli eksik dakika
                "es": "EKIP_SUREKLILIGI",               # K-72 (14 Ekim): birincil ekip disi atama sayisi
                "pk": "PLAN_KARARLILIGI",               # K-70 (14 Ekim): mevcut plana gore degisen kisi-gun
+               "fs": "FAZLA_SURELER",                  # K-73 (17 Ekim): yari zamanlinin sozlesme ustu dakikasi (olcum kalemi)
                "gk": "HEDEF_ASIMI_TOLERANS_USTU"}      # K-68 eki: yalniz gevsekten serte taslak yolunda
 
 

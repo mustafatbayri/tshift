@@ -363,7 +363,11 @@ def test_K61_kayit_yapilandirmalari_KAPALI_sabit_urun_hali_varsayilandan_ALIR():
     rotasyon = {"rotasyon_0"}                                           # K-65 kiyasi: urun yolu, kural agirligi 0
     gevsek = {"gevsek_parca", "acik_lin0", "acik_ls", "gevsek_fm0"}     # K-68 ayar 2 / oneri 2b / 16 Ekim olcum secenekleri: urun yolu + acik adim ayari
     onarim = {"onarim_tam"}                                             # 15 Ekim: komsuluk onariminin kiyasi (butun model, acikca)
-    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek | onarim
+    agirlik = {"kapsama_once", "kapsama_once6", "fazla_sureler"}       # 17 Ekim: agirlik olcumleri (urun yolu + agirliklar)
+    assert set(KO.YAPILANDIRMALAR) == urun | acik | yeniden | sert | kayit | iki_asamasiz | rotasyon | gevsek | onarim | agirlik
+    assert KO.YAPILANDIRMALAR["kapsama_once"][1] == {} and KO.YAPILANDIRMALAR["kapsama_once"][2] == {"agirliklar": {"HEDEF_KAPSAMA": 3000}}
+    assert KO.YAPILANDIRMALAR["kapsama_once6"][2] == {"agirliklar": {"HEDEF_KAPSAMA": 6000}}
+    assert KO.YAPILANDIRMALAR["fazla_sureler"][1] == {} and KO.YAPILANDIRMALAR["fazla_sureler"][2] == {"agirliklar": {"FAZLA_SURELER": 42}}
     assert KO.YAPILANDIRMALAR["onarim_tam"][1] == {"fazla_mesai_onarim_yontemi": "tam"} and KO.YAPILANDIRMALAR["onarim_tam"][2] == {}
     assert KO.COZ_VARSAYILAN["fazla_mesai_onarim_yontemi"] == "komsuluk"   # urun yolu: komsuluk
     for ad in urun | gevsek:

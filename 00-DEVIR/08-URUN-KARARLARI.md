@@ -3056,6 +3056,22 @@ mola adımı koştuysa `durma_sebebi: mola_adimi_optimum`, adımın sınırı
 
 ## K-61 · Motor **önce fazla mesaisiz plan arar** (ürünün varsayılanı); **hakem ağırlıklardır** — bulunan plan yalnız başlangıç noktasıdır *(uygulanışı 7 Ekim'de düzeltildi, O-18)* — ✅ **KAPANDI (8 Ekim 00:10): yeniden başlatma 3 × 40 sn ölçüldü, varsayılan oldu**
 
+**Durum (17 Ekim) — hakem ağırlıklar yeniden soruda (oturum 14 Ekim §19.2–19.3).**
+Gece bloğunun bütün tanıklı kıyaslarında aynı desen: motor **18–66 kişi-saat hedef
+açığı bırakıp adaletle ödüyor** (üreteç tabanlı tanıklı, koşu 1: adalet 11.165 ↔ tanık
+11.835; açık 234 = 26 kişi-saat × 9; net −554), tanık açık 0 + fm 0'ın mümkün olduğunu
+kanıtlıyor. Ağırlık tablosu böyle diyor: 1 kişi-saat açık 9, 1 adalet birimi 5, 1 saat fm
+3.000, 1 dk sözleşme altı 33 → motor için 1 saat fm = 333 kişi-saat açık; **hedef için
+asla fm yapmaz, adalet için hedefi feda eder.** Küçük sahnede ölçülen beraberlik (K-73
+testi): asgari gevşekken 1 kişi-saat açık = 1 saat fm (3.000) → kararlılık cezası (6)
+teraziyi açık bırakmaya iter, motor komşuyu **uzatmaz** (açık 8, kayma 0); 6.000'de
+uzatır (açık 2, kayma 6 sa). Yani insan planlamacı gibi davranması için kapsamanın
+ağırlığı fm bedelinin **üstünde** olmalı. Ölçüm seçenekleri `kalite-olc` `kapsama_once`
+(3.000) / `kapsama_once6` (6.000), `yeniden-planlama` `A_yumusak` / `A_kayma_yumusak(6)`.
+**Soru Mustafa'da: açıkta kalan 1 kişi-saat, adalet sapması ve 1 saat fazla mesaiyle nasıl
+kıyaslanacak?** Öneri: kapsama birinci (sıralı amaç ya da HEDEF_KAPSAMA ≥ 6.000); ürün
+değeri karar verilince değişir, bugün 9 / 20 / 5.
+
 **Karar (6 Ekim 2026, 23:44, Mustafa).** 21:08'de sorulan *"önce fazla
 mesaisiz, ürünün standart davranışı olsun mu?"* sorusuna:
 
@@ -3407,6 +3423,17 @@ ya 1'i geçemez ya 4'te aynı sırayı verir. **C**: ikisi de 1'i geçer ama 4't
 farklı sıra. L1 her durumda stres testi olarak kalır. Ölçüm: 16 Ekim gece bloğu
 (tanıklı `varsayilan` × 3, `gevsek_fm0` × 3, `onarim_tam` × 2; L1 VS2
 `gevsek_fm0` × 3; L1 `varsayilan` × 3 dünden). Karar sabah bu tabloya uygulanır.
+
+**Sonuç (17 Ekim 13:50, gece bloğu okundu; oturum 14 Ekim §19.2):** (1) güvenilirlik
+— tanıklı 6/6 ✔, L1 4/6 ✘ (`varsayilan` 1/3 + `gevsek_fm0` 3/3); (2) gerçekçilik —
+tanıklı 0,59 ✔, L1 0,98 ✘; (3) ayırt edicilik — tanıklıda yapılandırma farkı (ortanca
+14.500) üç tekrarın oynamasından (34.000) **küçük** ✘ — üstelik `gevsek_fm0` dalı
+tanıklıda hiç çalışmadı (fm'siz ilk arama üç koşuda tuttu), fark şans; L1'de fark plan
+var/yok düzeyinde ✔; (4) tutarlılık — ikisi de `gevsek_fm0`'ı öne koyuyor ✔. Kural ne A'yı
+ne C'yi tam veriyor. **Okuma: A'ya en yakın — tanıklı asıl cetvel, L1 gerilim testi**;
+3'ün tutmaması cetvelin değil motorun oynaklığının kusuru (aynı yol, üç koşu +63 %;
+kaynağı TERCİH_KARŞILAMA 0 / 10.395 / 14.850). "Hangi yapılandırma iyi" sorusu oynaklık
+düşürülmeden cevaplanamaz. Mustafa'nın onayı bekleniyor (⏳).
 
 → K-37 · K-50 · K-61 · O-17 · T-60 bulgu 22 ·
 `08-motor-testleri/gercekci-veri-seti/uret_veri_seti.py` ·
@@ -4324,3 +4351,112 @@ kişide yazılır. Sezonluk tipi zaten yok (K-58).
   ödünç kavramı kapsamada görünmez, K-50), mutasyon `k72` 10 (yaşayan 0).
 
 → K-50 · K-58 · şartname §6.5 · `02-spec/v1.4-hazirlik/04-sira-3-kalan-uc-kural-sorulari.md` Soru 4
+
+
+---
+
+## K-73 · **Vardiya kayması**: komşu vardiyalar yasal sınır içinde uzar / erken başlar; sınır yasal, miktara puanlama karar verir; firma ayarı, edit'te onayla — ✅ uygulandı (17 Ekim), ölçümü gece bloğunda
+
+**Bağlam (17 Ekim 13:53).** Gece bloğunda insan planı sahnesinde 3 kişi raporlu
+örneklerinin üçü "cozumsuz" çıktı (beden yok, asgari sert). Mustafa: *"Çözümsüz diye bir
+şey yok, olmamalı. … sert kuralı ihlal etmeyerek plan oluşturmamak mı yoksa fazla mesaili
+plan üretmek mi?"* Motor zaten K-10 taslak + K-37 teşhis döndürüyordu; ölçüm betiği
+atmıştı (düzeltildi). Asıl eksik: motorda vardiya **sabit şablondu**; raporlu bir günün
+tek çaresi yeni bir bedendi. İnsan planlamacı önce komşu vardiyaları kaydırır.
+
+**Karar (14:46, Mustafa):** *"Bence kayma değişkenini de eklemeliyiz. Yasal kuralları da
+dikkate alarak tabii ki. İnsanlar planı düzenlerken vardiya dahi kaydırabilir. … öğlen
+1'deki vardiyada kişi eksik ya, o kişi eksiğini yasal kuralları da dikkate alarak 2 kişinin
+mesaisini 2 saat uzatır, bir sonraki mesaiye gelecek kişinin vardiyasını 2 saat erken
+başlatır."*
+
+**Parametreler (14:52, 14:58, Mustafa):**
+- **Sınır yok, ölçüm karar verir:** *"En fazla kaymayı da kafamıza göre belirlememeliyiz …
+  ölçümler karar vermeli, optimum 1 saat mı kaydırarak çözüme ulaşıyor mesela 2 mi. Motor
+  elindeki veriyle bu kararı vermeli."* → kayma alanı yalnız yasal sınırla (günlük 11 saat
+  net, 11 saat dinlenme, gece 7,5 saat, departman açık saatleri, kişinin `uygunluk`
+  penceresi); kaç saat kayılacağına puanlama karar verir. Ölçüm tavanı (1 / 2 / sınırsız)
+  yalnız kıyas için (`kayma_tavan`); ürün varsayılanı yok, firma isterse koyar.
+- **Herkes uzatmaya açık varsayılsın; sıfırdan planda kapalı.**
+- **Firma seçeneği + edit'te onay:** *"firma bu seçeneği kendi belirlesin. Edit tarafında
+  bu bir onay olarak sorulsun, sistem ona göre ilerlesin."* → varsayılan kapalı; edit
+  akışında "vardiya kaydırmaya izin veriyor musunuz?" sorusu; cevaba göre `kayma_ekle`.
+- **Sözleşme penceresi:** *"Biz vardiyayı sabah 8 akşam 8 yaptık, içine 9–6 çalışanları 9–6
+  koyarız. Sözleşmesinin dışına çıkmayız."* → kişi başına `uygunluk` (uygun değil gün+saat)
+  zaten var; kopya pencere dışına taşıyorsa kendiliğinden kapanır.
+- **45 saate kadar:** *"yasa zaten part time çalışanı da 45 saate kadar fazla mesai kuralı
+  işlemeden çalıştırabilirsin diyor … bu sorunun cevabı burada."* → İş K. md. 41 **fazla
+  sürelerle çalışma** (%25): sözleşme ile 45 arası fm değil ama bedava da değil. Yarı
+  zamanlının sözleşme üstü saati modelde 0 puandı (T-54 "fren yok"); **FAZLA_SURELER**
+  ölçüm kalemi (42/dk = 2.500/saat = 1,25×), ürün ağırlığı 0 (davranış değişmedi).
+  Tam zamanlıda sözleşme üstü zaten FAZLA_MESAI (K-57 tanımı, 1,5×) — 37,5 saatlik tam
+  zamanlıda 37,5–45 bandı yasal olarak %25 iken %50 fiyatlanıyor; K-57 yeniden tanım
+  sorusu, açık.
+- Adım 1 saat (ızgara saatlik; yarım saat kayma kapsamaya katkı vermez).
+
+**Uygulama (17 Ekim, bulut) ✅.** `09-motor/cozucu/kayma.py`: **türetilmiş şablon** —
+tabanın erken başlayan / geç biten kopyaları (`kayma_sekilleri`: erken+geç ≤ yasal azami =
+GUNLUK_AZAMI − net saat), yalnız etkilenen (ekip, gün)de mevcut planda çalışan kişiye
+(`kisiler`) ve o güne (`gunler`); `etkilenen_bul` raporludan (ekip, gün) türetir;
+`kayma_ekle` girdinin kopyasına ekler (motor ve doğrulayıcı aynı girdiyi görür);
+`kayma_ozeti`. Model: `_sablonlari` `kisiler` süzgeci (+ kişi başına önbellek); bütün yasal
+kurallar şablonun saatlerine baktığı için kopyalarda kendiliğinden işler, yeni kural kodu
+yok. Çıktı satırı `kayma` {taban, erken, geç, saat}; metrikler `kayma_atama`, `kayma_saat`;
+K-70 kaymış kişi-günü DEĞİŞEN sayar. Testler `test_kayma.py` (6; Mustafa'nın örneği:
+kapalı → cozumsuz kanıtlı, açık → P1 08–16 → 08–20, P2 14–22 → 12–22, sert 0), mutasyon
+`kayma` 15 (yaşayan 0). Ölçüm: `yeniden-planlama.py --yapilandirma A_kayma,…`; gece bloğu
+17 Ekim (insan planı 22 Haz, 3 raporlu × 5: A_urun / A_kayma / tavan 1 / tavan 2 /
+A_yumusak / A_kayma_yumusak / A_kayma_yumusak6).
+
+**Bağ:** ağırlık kararı olmadan kayma boşa çalışır — ölçülen beraberlik K-61 durum notunda.
+
+→ K-10 · K-37 · K-57 · K-61 · K-70 · T-54 · oturum 14 Ekim §19.3 · `09-motor/cozucu/kayma.py`
+
+
+---
+
+## K-74 · **ADAY — Vardiya tasarımı modülü**: şablonları talepten türeten ayrı çözücü (motordan önce), firmaya öneri ekranı — ⏳ analiz yapıldı (17 Ekim), karar ve sıra Mustafa'da
+
+**Soru (17 Ekim 14:49, Mustafa):** *"Biz hep vardiyayı sabit, kişileri değişken tuttuk.
+Neden vardiyada da değişiklik yapmıyoruz? Hatta firma belki de vardiya planını değiştirse
+böyle bir durumda elindeki kaynağı daha iyi kapsam yarattırır. … literatürde de araştır."*
+
+**Literatür (oturum 14 Ekim §19.3):** personel çizelgeleme süreci modüllere ayrılır —
+talep modelleme → izin günleri → **vardiya çizelgeleme** (hangi vardiyalar, kaçar kişi) →
+çalışma hattı → atama ([Ernst ve ark. 2004](https://ideas.repec.org/a/eee/ejores/v153y2004i1p3-27.html));
+bizim motor son halkalar. **Shift design** ([Musliu, Schaerf, Slany](https://dbai.tuwien.ac.at/staff/musliu/ShiftAnnals.pdf)):
+dilim başına gereken kişi + vardiya tipi aralıkları (en erken/en geç başlangıç, en kısa/en
+uzun süre) → hangi vardiyalar kaç kişi; amaç eksik + fazla + **vardiya çeşidi sayısı**;
+çağrı merkezi, Ximes OPA. Örtük modeller ([Bechtold–Jacobs 1990](https://pubsonline.informs.org/doi/fpi/10.1287/mnsc.36.11.1339),
+[Thompson 1995](https://pubsonline.informs.org/doi/fpi/10.1287/mnsc.41.4.595)) = kaymanın
+akademik hali. Gramerle tanımlı vardiya ([Côté, Gendron, Rousseau](https://pubsonline.informs.org/doi/fpi/10.1287/mnsc.1100.1264))
+= tam esnek. Rerostering ([Wickert, Smet, Vanden Berghe](https://lirias.kuleuven.be/bitstream/123456789/631863/2/rerostering.pdf)):
+değişiklik sayısı en ağır kalem (100), ufuk daraltma ucuz. Sektör: perakende / çağrı
+merkezi WFM "talebe dayalı çizelgeleme" ([Workday](https://www.workday.com/en-gb/products/workforce-management/scheduling.html),
+[StoreForce](https://storeforce.com/glossary/glossary-terms/demand-based-scheduling)).
+
+**Bizde:** `kalite-olc` "kapasite tabanı (çözücüden bağımsız): en az X kişi-saat açık
+kalır" satırı, **şablonlar sabitken** hiçbir motorun aşamayacağı sınırdır; vardiya tasarımı
+bu tabanı düşüren modüldür. Üç seviye: (1) kayma (K-73); (2) **tasarım modülü** — saat
+ızgarasında (ekip, gün, başlangıç, uzunluk) → kaç vardiya; kısıt asgari/hedef kapsama,
+yasal uzunluklar (11 saat, gece 7,5), toplam saat ≤ kadronun sözleşme saati; amaç eksik +
+aşım + çeşit sayısı; firmaya öneri ("09–18 / 14–23 düzeniniz talebi %93 kapatıyor; 10–19
+ve 13–22 aynı kadroyla %98"), sonra bugünkü motor atamayı yapar; 2–3 gün, motor
+çekirdeğine dokunmaz; (3) tam esnek — mimariyle uyumsuz, kapalı.
+
+**Engel — bağımsız talep:** tasarım kazancı yalnız vardiyadan bağımsız talep varsa
+ölçülür. Üreteçte var (Mustafa 14:58: *"test modeli için bir talep datası … hedef kişiler
+için olan veriler … ek versiyonlar da oluşturup deneyebiliriz"*); insan planı sahnesinde
+talep planın kopyası (döngüsel) → müşteriden saatlik çağrı/işlem verisi (veri alma işi).
+
+**Riskler ve Mustafa'nın cevapları (14:58):** hukuk — başlangıç saati değişikliği "esaslı
+değişiklik" (md. 22, yazılı kabul), denkleştirme (md. 63); hukukçuya; Mustafa: sözleşme
+penceresi zaten kısıt (`uygunluk`). Çalışan öngörülebilirliği — pencere içinde oynama,
+çeşit sayısı amaçta. Hesap yükü — *"korkmuyorum"*; tasarım ayrı küçük modelde. Ölçüm
+döngüselliği — üreteç talebiyle.
+
+**Sıra önerisi:** ağırlık kararı → K-73 ölçümü → merdiven → **K-74 modülü** (üreteç
+sahnelerinde "kapasite tabanı şablon sabitken / tasarlanınca" ölçümüyle). Karar Mustafa'nın.
+
+→ K-62 · K-73 · T-82 · oturum 14 Ekim §19.3
+

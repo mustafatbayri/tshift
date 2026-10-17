@@ -2869,6 +2869,16 @@ eklendi (katalog 41).
 
 ---
 
+**Ek (17 Ekim, K-73):** K-53 hedef aşımını kapattı ama yarı zamanlının sözleşme üstü
+saati modelde hâlâ 0 puan ("fren yok" notu, K-39). Vardiya kayması (K-73) ölçülürken
+bu saat bedava kalırsa uzatma da bedava olur. Mustafa (17 Ekim): *"yasa zaten 45 saate
+kadar fazla mesai kuralı işlemeden çalıştırabilirsin diyor … bu sorunun cevabı burada"* →
+İş K. md. 41 **fazla sürelerle çalışma** (%25): **FAZLA_SURELER** ölçüm kalemi
+(`model._sure_sinirlari`, yarı zamanlı dalı; 42/dk = 2.500/saat = 1,25×; ürün ağırlığı 0,
+değişken yazılmaz, model aynı; `kalite-olc` `fazla_sureler`). Ürün değeri karar bekliyor;
+tam zamanlıda sözleşme üstü zaten FAZLA_MESAI'de (K-57; 37,5 saatlik tam zamanlıda 37,5–45
+bandı %25 yerine %50 fiyatlanıyor — K-57 yeniden tanım sorusu, açık).
+
 ## ✅ T-55 · ~~*"Gece vardiyası yapamaz"* işareti yok~~ — **KAPANDI (29 Eylül, K-40)**
 
 **Çözüm:** `gece_vardiyasi` (şablon) + `gece_calisamaz` (çalışan) alanları ve `GECE_UYGUNLUGU` kuralı (SERT, katalog 40). İşaret tahmini ezer; işaret yoksa tahmine düşülür ve not yazılır. 8 test, 3 mutasyon. Ayrıntı K-40'ta.

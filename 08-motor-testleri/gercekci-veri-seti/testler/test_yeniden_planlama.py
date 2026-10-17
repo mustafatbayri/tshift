@@ -102,3 +102,59 @@ def test_UCTAN_UCA_raporlu_kisi_calismaz_degisiklik_yayinlanmis_plana_gore_A_B_d
     assert A["dokunulan"] <= B["dokunulan"]                               # K-70 degisikligi artirmaz
     assert A["kararlilik_cezasi"] is not None and B["kararlilik_cezasi"] is None
     print(YP.ozet(sonuclar))
+
+
+# ---- 17 Ekim: teshis + taslak kaydi, vardiya kaymasi (K-73) yapilandirmalari ----------------
+
+_kspec = importlib.util.spec_from_file_location(
+    "test_kayma_sahne", os.path.join(os.path.dirname(os.path.dirname(BURASI)), "09-motor", "testler", "test_kayma.py"))
+TK = importlib.util.module_from_spec(_kspec)
+_kspec.loader.exec_module(TK)
+
+
+def test_yapilandirmalar_bozuk_sahneyi_dogru_kurar():
+    g = TK._sahne(raporlu=None)
+    plan = g["mevcut_plan"]
+    a = YP.bozuk_sahne(g, plan, [("P3", 2)], **YP.YAPILANDIRMALAR["A_kayma"][1])
+    assert a["_kayma"]["etkilenen"] == [["E", 2]] and a["_kayma"]["sablon"] > 0
+    assert a["mevcut_plan"] == plan and any(t.get("kayma") for t in a["vardiya_sablonlari"])
+    t1 = YP.bozuk_sahne(g, plan, [("P3", 2)], **YP.YAPILANDIRMALAR["A_kayma_tavan1"][1])
+    assert all(t["kayma"]["saat"] <= 1 for t in t1["vardiya_sablonlari"] if t.get("kayma"))
+    y = YP.bozuk_sahne(g, plan, [("P3", 2)], **YP.YAPILANDIRMALAR["A_kayma_yumusak"][1])
+    assert not any(k["kod"] == "ASGARI_KAPSAMA" for k in y["kurallar"]) and y["agirliklar"] == {"HEDEF_KAPSAMA": 3000}
+    assert any(k["kod"] == "ASGARI_KAPSAMA" for k in g["kurallar"]) and "agirliklar" not in g     # kaynak degismedi
+    with pytest.raises(SystemExit):
+        list(YP.olc(g, plan, hastalik=1, ornek=1, saniye=5, yapilandirmalar=["yok_boyle"]))
+
+
+def test_UCTAN_UCA_cozumsuzde_teshis_ve_taslak_kaydedilir_kaymayla_plan_cikar():
+    g = TK._sahne(raporlu=None)
+    plan = g["mevcut_plan"]
+    # tohum secimi: bozulma_sec rastgele; P3 / gun 2 olmasi icin dogrudan kuruyoruz
+    ayar = dict(YP.AYAR, azami_saniye=20)
+    bozulma = [("P3", 2)]
+    A = YP._kosu(YP.bozuk_sahne(g, plan, bozulma, **YP.YAPILANDIRMALAR["A_urun"][1]), plan, bozulma, ayar)
+    assert A["durum"] == "cozumsuz" and A["teshis"]["kesin"] is True
+    assert A["teshis"]["kapsam"] in ("kural", "hucre")              # kucuk sahnede kural duzeyinde kanit
+    assert "ASGARI_KAPSAMA" in {k["kod"] for k in A["teshis"]["engelleyen"]}
+    assert A["taslak"]["dokunulan"] is not None and A["taslak"]["eksik_kisi_saat"] > 0
+    assert A["taslak"]["kayma"]["toplam_saat"] == 0 and "ASGARI_KAPSAMA" in A["taslak"]["gevsetilen"]
+    K = YP._kosu(YP.bozuk_sahne(g, plan, bozulma, **YP.YAPILANDIRMALAR["A_kayma"][1]), plan, bozulma, ayar)
+    assert K["durum"] == "cozuldu" and K["sert_ihlal"] == 0 and K["raporlu_gunde_calisan"] == 0
+    assert K["kayma"] == {"kisi_sayisi": 2, "atama_sayisi": 2, "toplam_saat": 6, "en_buyuk_saat": 4, "dagilim": {"2": 1, "4": 1}}
+    assert sorted((s["calisan"], s["erken"], s["gec"]) for s in K["kayma_satirlari"]) == [("P1", 0, 4), ("P2", 2, 0)]
+    assert K["dokunulan"] == 3 and K["fazladan_dokunulan"] == 1 and K["eksik_kisi_saat"] == 2    # 14-16: 2/3
+    assert K["kayma_sablon"] > 0 and A["kayma_sablon"] == 0
+    T2 = YP._kosu(YP.bozuk_sahne(g, plan, bozulma, **YP.YAPILANDIRMALAR["A_kayma_tavan2"][1]), plan, bozulma, ayar)
+    assert T2["durum"] == "cozumsuz"                     # P1'in +4'u yok; tavan plani kacirdi
+    # asgari gevsek + 1 kisi-saat acik = 1 saat fazla mesai (3000): BERABERE -- kararlilik cezasi (6)
+    # teraziyi acik birakmaya dogru iter, motor UZATMAZ (acik 8). 6000'de uzatir (acik 2, kayma 6 sa).
+    # Mustafa'nin agirlik karari icin olculen gercek: kapsama, fazla mesai bedelinin USTUNDE olmali.
+    Y = YP._kosu(YP.bozuk_sahne(g, plan, bozulma, **YP.YAPILANDIRMALAR["A_kayma_yumusak"][1]), plan, bozulma, ayar)
+    assert Y["durum"] == "cozuldu" and Y["eksik_kisi_saat"] == 8 and Y["kayma"]["toplam_saat"] == 0
+    Y6 = YP._kosu(YP.bozuk_sahne(g, plan, bozulma, **YP.YAPILANDIRMALAR["A_kayma_yumusak6"][1]), plan, bozulma, ayar)
+    assert Y6["durum"] == "cozuldu" and Y6["eksik_kisi_saat"] == 2 and Y6["kayma"]["toplam_saat"] == 6 and Y6["fazla_mesai_saat"] == 6.0
+    o = {"ornek": 1, "A_urun": A, "A_kayma": K}
+    metin = YP.ozet([o], ["A_urun", "A_kayma"])
+    assert "plan 0/1" in metin and "cozumsuz 1: taslak" in metin and "kayma ort 6.0 sa (1 planda)" in metin
+    assert "teshis" in YP._satir(o, "A_urun", A) and "kayma 2 kisi 6 sa" in YP._satir(o, "A_kayma", K)

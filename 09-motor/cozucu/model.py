@@ -135,6 +135,18 @@ AGIRLIK_TABLOSU = {
     # dengesi deneyi, Mustafa: "olcup karar vermeliyiz"). Urun davranisi
     # degismedi: uc profilde de 50.
     "FAZLA_MESAI":           {"DENGELI": 50, "KAPSAMA": 50, "CALISAN": 50},
+    # FAZLA_SURELER -- K-73 OLCUM KALEMI (17 Ekim). Is K. md. 41: haftalik
+    # sure sozlesmeyle 45'in altinda belirlenmisse, sozlesmeyi asan ve 45'e
+    # kadar yapilan calisma "fazla surelerle calisma"dir (%25 zamli); fazla
+    # mesai (%50) degildir. Modelde YARI ZAMANLININ sozlesme ustu saati
+    # bedavaydi (K-39 notu: "burada bir fren yok", T-54) -- vardiya kaymasi
+    # (K-73) olculurken bu saat bedava kalirsa uzatma da bedava olur, olcum
+    # bir sey olcmez (Mustafa 17 Ekim: "yasa zaten 45 saate kadar ... bu
+    # sorunun cevabi burada"). DAKIKA basina; 1,25 x saat ucreti = fazla
+    # mesainin (3.000 = 1,5x) olceginde 2.500/saat ~ 42/dakika. Urun degeri
+    # 0 (davranis degismedi); olcum `agirliklar` ile 42 verir. Tam zamanlida
+    # sozlesme ustu zaten FAZLA_MESAI'de (K-57 tanimi), ikinci kez yazilmaz.
+    "FAZLA_SURELER":         {"DENGELI": 0, "KAPSAMA": 0, "CALISAN": 0},
 }
 
 # #6 FAZLA_MESAI_TAVANI.azami_saat_hafta de profile baglidir (#5.2 tablosu):
@@ -905,9 +917,19 @@ class Model(object):
           Neden simdiye kadar gorulmedi: butun test sahnelerinde TEK EKIP
           vardi, capraz atama tanimsizdi.
         """
+        # K-73 (17 Ekim): `kisiler` alani olan sablon (vardiya kaymasi kopyasi,
+        # cozucu/kayma.py) YALNIZ o kisilere acilir. Liste kisi basina bir kez
+        # kurulur: _atanmis her hucre icin her kisiye bakar (415 x 500), kopyalar
+        # eklenince suzgec pahalilasiyordu.
+        onbellek = self.__dict__.setdefault("_sablon_onbellek", {})
+        if c["id"] in onbellek:
+            return onbellek[c["id"]]
         ekipler = set(c.get("ekipler") or [])
-        return [t for t in self.sablonlar
-                if t.get("ekip") is None or t.get("ekip") in ekipler]
+        liste = [t for t in self.sablonlar
+                 if (t.get("ekip") is None or t.get("ekip") in ekipler)
+                 and (t.get("kisiler") is None or c["id"] in t["kisiler"])]
+        onbellek[c["id"]] = liste
+        return liste
 
     def _calisan_sablonlari(self, kimlik):
         """Kimlikten sablon listesi -- yalniz id bilen cagiranlar icin."""
@@ -1800,6 +1822,16 @@ class Model(object):
                 #   sebebi yok -- hedef asimini cezalandiran bir kural
                 #   gelene kadar bu acik durur (bkz. 06-ACIK-RISKLER T-54).
                 self._kisit(dakika <= int(pt_tavan * 60))
+                # K-73 OLCUM KALEMI (17 Ekim): sozlesme ustu dakika -- "fazla
+                # surelerle calisma" (Is K. md. 41, %25 zamli). Agirlik urunde 0:
+                # o zaman degisken de yazilmaz, model bugunku haliyle ayni kalir.
+                # Olcum `agirliklar: {"FAZLA_SURELER": 42}` ile acar (K-73).
+                fs_agirlik = self._agirlik("FAZLA_SURELER")
+                borc = _borc_dakika(c)
+                if fs_agirlik and tavan is not None and borc < int(pt_tavan * 60):
+                    fs = self.m.NewIntVar(0, int(pt_tavan * 60), "fs_%s" % c["id"])
+                    self._kisit(fs >= dakika - borc)
+                    self.cezalar.append((fs_agirlik, fs))
             elif tavan is not None:
                 self._kisit(dakika <= int(round((tavan + fm_pay) * 60)))
                 # Fazla mesai YUMUSAK cezayla sifira itilir (A1: esit 0).

@@ -180,6 +180,18 @@ YAPILANDIRMALAR = {
                      {"gevsek_fazla_mesai_sifir": True}, {}),
     "onarim_tam":   ("urun yolu + fazla mesai onarimi BUTUN modelle (14 Ekim davranisi) -- komsuluk kiyasi",
                      {"fazla_mesai_onarim_yontemi": "tam"}, {}),
+    # 17 Ekim (K-73 hazirligi; Mustafa 16 Ekim gecesi okumasi: motor her kiyasta 18-66
+    #   kisi-saat hedef acigi birakip adalet aliyor, tanik acik 0'la mumkunken -- agirlik
+    #   9/kisi-saat adaletin 5/birimine karsi kucuk). "Kapsama once": 1 kisi-saat acik =
+    #   1 saat fazla mesai (3.000) ve iki kati (6.000). OLCUM; urun agirligi karari Mustafa'nin.
+    "kapsama_once": ("urun yolu + HEDEF_KAPSAMA 3000/kisi-saat (1 kisi-saat acik = 1 saat fazla mesai) -- 17 Ekim agirlik olcumu",
+                     {}, {"agirliklar": {"HEDEF_KAPSAMA": 3000}}),
+    "kapsama_once6": ("urun yolu + HEDEF_KAPSAMA 6000/kisi-saat (acik, fazla mesainin iki kati) -- 17 Ekim agirlik olcumu",
+                     {}, {"agirliklar": {"HEDEF_KAPSAMA": 6000}}),
+    # K-73 olcum kalemi: yari zamanlinin sozlesme ustu dakikasi (Is K. md. 41 "fazla
+    #   surelerle calisma", %25) -- urunde 0 (bedava, T-54 "fren yok"); 42/dakika = 2.500/saat.
+    "fazla_sureler": ("urun yolu + FAZLA_SURELER 42/dakika (yari zamanlinin sozlesme ustu saati 1,25 x ucret) -- K-73 olcum kalemi",
+                     {}, {"agirliklar": {"FAZLA_SURELER": 42}}),
     # ⚠ 8 Ekim (K-61 kapanisi): motorun varsayilani 3 deneme oldu. `fm_once*`
     #   bulgu 23'un kaydidir (7 Ekim sabahi, TEK deneme) -- anlami degismesin
     #   diye `fazla_mesaisiz_deneme: 1` ACIKCA yazili. Bugunku urun yolu

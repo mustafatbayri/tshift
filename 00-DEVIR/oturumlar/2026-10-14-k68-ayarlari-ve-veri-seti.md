@@ -1156,3 +1156,119 @@ Gece bloğuna eklendi: INSAN 22 Haziran, 3 kişi raporlu × 5 örnek ve 1 kişi 
 saniyesi ve plan sayısı (sahne tezi; ölçüt 1), (2) fm — `varsayilan` ↔ `gevsek_fm0`,
 (3) tanığa uzaklık kalem kalem (OPTIMUM HESABI), (4) iki cetvelde sıra (ölçüt 4),
 (5) 6 çekirdek ↔ bulut 2 çekirdek farkı.
+
+### 19.2 · 17 Ekim 13:23–14:00 — gece bloğu okundu: tanıklı 6/6, L1 `gevsek_fm0` 3/3 fm 0; cetvel kuralı uygulandı → **A**
+
+Gece bloğu (`gece-16g.ps1`, 04:16–13:50, 6 çekirdek): yama k2 uygulandı, 09/08 testleri ve
+DENETIM yeşil, 04:27 commit + push `2a4bd77`; bütün ölçümler 13:12'de bitti; tam mutasyon
+13:11–13:50, **525 mutant, yaşayan 0**; çapraz denetim 15 fikstür + 53 plan kaydı, şart
+tutmayan 0 (motor fm = doğrulayıcı fm hepsinde). Günlük: `kosu-gunlugu-2026-10-16-gece.txt`.
+
+**Sonuçlar (500 kişi, 1.800 sn).** Tanıklı EK-VS2 (tanık 26.248; fm 0, açık 0):
+`varsayilan` × 3 → 3/3, amaç 27.382 / 61.807 / 48.782 (+4 / +136 / +86 %), fm 1,25 / 6,25 /
+4,75 sa, hedef açığı 30 / 27 / 23 kişi-saat; `gevsek_fm0` × 3 → 3/3, 23.566 / 34.230 /
+38.368 (**−10** / +30 / +46 %), fm 0 / 0 / 0, açık 28 / 50 / 25; `onarim_tam` × 2 → 59.956
+(fm 3,0) / 39.461 (fm 0). **L1 VS2 `gevsek_fm0` × 3 → 3/3 plan** (dün `varsayilan` 1/3):
+68.205 / 68.039 / 72.544 (−16,5 / −16,7 / −11,2 %), fm 0, sert 0, açık 35 / 63 / 66; açık
+adım fm 0 ile 749 / 194 / 762 sn'de plan buldu. Tanıklı EK (üreteç tabanı; tanık 905 sn'de
+kuruldu, puan 12.033, asgari/hedef 0,58): `varsayilan` × 2 → 11.479 / 11.347 (−4,6 / −5,7 %),
+fm 0, açık 26 / 18. İnsan planı 1.800 × 2: 22 Haziran 1.348 / 1.348 (300 sn ile aynı), 20
+Temmuz 1.200 / 1.186; doğrulayıcı kıyası değişmedi. Yeniden planlama (INSAN 22 Haz, 120 sn):
+1 kişi raporlu × 5 → A 5/5, ort 18 kişi-gün dokunuldu (fazladan 16), B 255; 3 kişi raporlu
+× 5 → ikisi de 2/5, üç örnek "cozumsuz" (260–277 sn) — **ölçüm betiği motorun teşhisini ve
+taslağını kaydetmemişti** (§19.3'te düzeltildi).
+
+**Dürüst okuma.** (1) L1'de fm alanlarını kapatmak plan bulduruyor (1/3 → 3/3); "−16,5 %"in
+tamamı mola kapsamasından (ref 43.953 → 29.736), hedef kapsamasında motor referanstan **geri**
+(35–66 kişi-saat açık, referansta 0). (2) Tanıklı sahnede `gevsek_fm0` **dalı hiç çalışmadı**
+(üç koşuda fm'siz ilk arama 10 sn'de tuttu) → 23.566 ↔ 27.382 farkı yapılandırma değil şans;
+aynı yolun üç koşusu 23.566–38.368 (+63 %), kaynağı tek kalem: TERCİH_KARŞILAMA 0 / 10.395 /
+14.850 (tanık 0'ın mümkün olduğunu kanıtlıyor). 500'de sonuç ilk 20 sn'de dönen piyango.
+(3) **Her kıyasta aynı desen: motor 18–66 kişi-saat hedef açığı bırakıp adaletle ödüyor**
+(EK üreteç koşu 1: adalet 11.165 ↔ tanık 11.835, açık 234 = 26 × 9; net −554). Ağırlıklar
+böyle diyor: 1 kişi-saat açık 9, 1 adalet birimi 5, 1 saat fm 3.000, 1 dk sözleşme altı 33 —
+motor için 1 saat fm = 333 kişi-saat açık. Karar Mustafa'nın (K-61). (4) İnsan planında
+1.800 sn = 300 sn: sınır süre değil arama şekli. (5) Edit: K-70 dokunuşu 14 kat azaltıyor ama
+1 raporlu gün için 10–22 kişi-gün fazladan dokunuş; kararlılık ağırlığı (6) adaletin (5/birim)
+ve tercihin (33/dk) yanında zayıf.
+
+**Cetvel kuralı (K-62 durum notu, koşudan önce yazıldı) uygulandı:** (1) güvenilirlik —
+tanıklı 6/6 ✔, L1 4/6 ✘; (2) gerçekçilik — tanıklı 0,59 ✔, L1 0,98 ✘; (3) ayırt edicilik —
+tanıklıda ortanca farkı 14.500 < 3 tekrarın oynaması 34.000 ✘ (dal çalışmadı), L1'de plan
+var/yok düzeyinde ✔; (4) tutarlılık — ikisi de `gevsek_fm0`'ı öne koyuyor ✔. Kural ne A'yı ne
+C'yi tam veriyor (A: tanıklı 1-2-3 — 3 tutmadı; C: ikisi de 1 — L1 geçemedi). Okuma: **A'ya en
+yakın** — tanıklı asıl cetvel, L1 gerilim testi; 3'ün tutmaması cetvelin değil motorun
+oynaklığının kusuru. "Hangi yapılandırma iyi" sorusu oynaklık düşürülmeden (ilk aramaya
+tekrar/bütçe, daha çok tekrar) cevaplanamaz. Mustafa'ya sunuldu, onayı bekleniyor.
+
+### 19.3 · 17 Ekim 14:00–17:30 — **"çözümsüz diye bir şey yok"**; K-73 vardiya kayması; vardiya tasarımı analizi (K-74 aday); teşhis/taslak kaydı; ölçülen beraberlik
+
+**Mustafa (13:53):** *"Çözümsüz diye bir şey yok, olmamalı. … sert kuralı ihlal etmeyerek plan
+oluşturmamak mı yoksa fazla mesaili plan üretmek mi?"* Cevap: motor zaten böyle tasarlandı
+(K-10 taslak + K-37 teşhis): "çözümsüz" ancak fazla mesai serbestken de kanıtla imkânsızsa
+denir; teşhis hangi hücre / gereken / mümkün / hangi kural (yasal mı) der; yasal kuralları hiç
+gevşetmeden asgariyi gevşetip **taslak** döndürür. Kusur ölçüm betiğindeydi (`yeniden-planlama.py`
+yalnız "cozumsuz" kelimesini kaydetti; 260 sn'nin çoğu teşhisin kendisi: her sert kural tek
+tek gevşetilip yeniden çözülüyor). Beden eksiği inceliği: raporlunun saatlerinde takımın
+kalanı zaten sahada; komşu vardiya 11 saat sınırını aşmadan uzayamazsa hiçbir motor bedeni
+yaratamaz → doğru cevap "Çarşamba 09–18 Satış Destek 1 kişi eksik, seçenekler şunlar".
+**İlke: yasal kurallar sert kalır, firma kuralları (asgari, hedef aşımı) sırayla gevşer,
+cevap hiçbir zaman boş olmaz.**
+
+**Soruları (13:53):** molalar mı kötülüyor → hayır (L1'de mola kazanç, insan sahnesinde
+insanın 0'ı kuruluş gereği); 26 kişi-saat açık fm'den kaçmak için mi → hayır, adalet için
+(yukarıdaki rakamlar; fm 0'dı, tanık açık 0'ı kanıtlıyor); "1 raporlu gün" = 5 ayrı deney,
+her birinde tek kişi; tavan fikri (1→3, 2→5, 3→7 kişi) → sert tavan yine "çözümsüz"e düşürür,
+doğrusu "en az kişiye dokun" sıralı amacı + tavan müşteriye söz olarak kontrol.
+
+**K-73 — VARDİYA KAYMASI (Mustafa 14:46, 14:52, 14:58).** *"İnsanlar planı düzenlerken
+vardiya dahi kaydırabilir … 2 kişinin mesaisini 2 saat uzatır, bir sonraki mesaiye gelecek
+kişinin vardiyasını 2 saat erken başlatır."* Kararlar: kayma değişkeni eklenir; **sınır
+yasal, miktara puanlama karar verir** (*"En fazla kaymayı kafamıza göre belirlememeliyiz,
+ölçümler karar vermeli"*); herkes uzatmaya açık; sıfırdan planda kapalı; **firma ayarı,
+edit'te onay sorusu**; sözleşme penceresi zaten `uygunluk` ile (*"Sözleşmesinin dışına
+çıkmayız"*); 45 saate kadar: İş K. md. 41 **fazla sürelerle çalışma** (%25) — *"bu sorunun
+cevabı burada"*. Kuruluş: `09-motor/cozucu/kayma.py` — **türetilmiş şablon**: tabanın erken
+başlayan / geç biten kopyaları, yalnız etkilenen (ekip, gün)de mevcut planda çalışan kişiye
+(`kisiler`) ve o güne (`gunler`); yasal sınır net ≤ GUNLUK_AZAMI (11); kopya gün öncesine
+taşamaz; gece işareti yeniden hesaplanır (K-43 tabanı korur). Model: `_sablonlari` `kisiler`
+süzgeci + kişi başına önbellek; çıktı satırı `kayma` {taban, erken, geç, saat}; metrikler
+`kayma_atama`, `kayma_saat`; `kayma_ozeti`. **FAZLA_SURELER** ölçüm kalemi: yarı zamanlının
+sözleşme üstü dakikası (tam zamanlıda sözleşme üstü zaten FAZLA_MESAI'de, K-57 tanımı), ürün
+ağırlığı 0 (değişken yazılmaz, model aynı), ölçüm 42/dk (= 2.500/saat, 1,25×). Testler 6
+(`test_kayma.py`): kapalı → cozumsuz kanıtlı, açık → P1 08–16 → 08–20 (geç 4, net 11),
+P2 14–22 → 12–22 (erken 2), sert 0, K-70 iki kişi-gün DEĞİŞEN; yasal sınır 10 → +4 üretilmez →
+cozumsuz. Mutasyon grubu `kayma` 15, yaşayan 0 (**toplam 540**).
+
+**Vardiya tasarımı analizi (Mustafa 14:49: "Biz hep vardiyayı sabit, kişileri değişken
+tuttuk. Neden vardiyada da değişiklik yapmıyoruz? … literatürde de araştır").** Literatür:
+Ernst ve ark. 2004 derlemesi süreci modüllere ayırır (talep → izin günleri → **vardiya
+çizelgeleme** → çalışma hattı → atama); bizim motor son halkalar. Musliu–Schaerf–Slany
+**shift design**: dilim başına gereken kişi + vardiya tipi aralıkları → hangi vardiyalar kaç
+kişi; amaç eksik + fazla + **çeşit sayısı**; çağrı merkezi verisi, Ximes OPA. Örtük modeller
+(Bechtold–Jacobs 1990, Thompson 1995) = kaymanın akademik hali. Gramerle tanımlı vardiya
+(Côté–Gendron–Rousseau) = tam esnek. Rerostering (Wickert–Smet–Vanden Berghe): **değişiklik
+sayısı en ağır kalem (100)**, ufuk daraltma ucuz — Mustafa'nın tavan içgüdüsünün karşılığı;
+bizim kararlılık 6 ters uçta. Sektör: perakende/çağrı merkezi WFM "talebe dayalı çizelgeleme".
+Bizde: kapasite tabanı satırı ("şablonlar sabitken en az X açık") tasarımın düşüreceği sınır.
+Engel: bağımsız talep (üreteçte var — Mustafa: hedef kişi verisinin sürümlerini üretelim;
+insan planında yok, döngüsel → müşteriden saatlik talep). Üç seviye: (1) kayma — K-73;
+(2) **vardiya tasarımı modülü**, motordan önce ayrı küçük çözücü, firmaya öneri ekranı
+("09–18 / 14–23 düzeniniz %93 kapatıyor; 10–19 ve 13–22 aynı kadroyla %98") — **K-74 aday**;
+(3) tam esnek — mimariyle uyumsuz, kapalı. Riskler: hukuk (md. 22 esaslı değişiklik yazılı
+kabul, md. 63 denkleştirme — hukukçuya), çalışan öngörülebilirliği (pencere içinde oynama),
+hesap yükü (Mustafa: korkmuyorum), ölçüm döngüselliği. Kaynak bağlantıları K-74'te.
+
+**Ölçüm betiği (`yeniden-planlama.py`, 17 Ekim):** yapılandırma tablosu (`--yapilandirma`):
+`A_urun`, `B_sifirdan`, `A_kayma`, `A_kayma_tavan1/2`, `A_yumusak` (asgari kaldırıldı +
+HEDEF_KAPSAMA 3.000), `A_kayma_yumusak` (3.000), `A_kayma_yumusak6` (6.000); çözümsüzde
+**teşhis + taslak** kaydı (kapsam, hücre, gereken/mümkün, engelleyen kurallar, kanıtlı mı;
+taslağın açığı/sert/fm/kayma); her planda kayma özeti ve açık kişi-saat (doğrulayıcıdan);
+özet satırlarında kayma ortalaması ve taslak satırı. `kalite-olc.py`: `kapsama_once`
+(3.000), `kapsama_once6` (6.000), `fazla_sureler` (42) ölçüm yapılandırmaları.
+
+**Ölçülen gerçek (küçük sahne, testte sabit):** asgari gevşek + **1 kişi-saat açık = 1 saat
+fm (3.000) → berabere**, kararlılık cezası (6) teraziyi açık bırakmaya iter: motor
+**uzatmaz** (açık 8, kayma 0). 6.000'de uzatır (açık 2, kayma 6 sa, fm 6). Yani kapsamanın
+ağırlığı fm bedelinin **üstünde** olmalı ki motor insan planlamacı gibi davransın; sayı
+Mustafa'nın (K-61). Gece bloğu (17 Ekim) bu tabloyu insan planı sahnesinde ölçer.
