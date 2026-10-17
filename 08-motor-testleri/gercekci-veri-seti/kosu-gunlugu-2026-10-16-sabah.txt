@@ -5,3 +5,5 @@
 15:38:28  08 testleri cikis 0
 15:38:29  DENETIM cikis 0 (0 = HATA yok)
 15:38:48  capraz denetim (fikstur) cikis 0 (0 = sart tutmayan yok)
+15:38:51  commit + push cikis 0
+15:38:51  SABAH BLOGU BITTI

@@ -1,0 +1,297 @@
+{
+ "sahne": "INSAN-2026-06-22",
+ "referans": "_referans-INSAN-2026-06-22.json",
+ "hastalik": 1,
+ "ornek": 5,
+ "saniye": 120,
+ "tohum": 16,
+ "tarih": "2026-10-17 12:42",
+ "cekirdek": 6,
+ "ornekler": [
+  {
+   "ornek": 1,
+   "bozulma": [
+    {
+     "kisi": "I047",
+     "gun": 3
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 81.0,
+    "amac": 1573,
+    "degisiklik": {
+     "korunan": 465,
+     "degisen": 18,
+     "kaldirilan": 2,
+     "eklenen": 2
+    },
+    "dokunulan": 22,
+    "fazladan_dokunulan": 20,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 58,
+     "PLAN_KARARLILIGI": 22,
+     "VARDIYA_ROTASYON_YONU": 9
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 11.01,
+    "kararlilik_cezasi": 132
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1348,
+    "degisiklik": {
+     "korunan": 256,
+     "degisen": 180,
+     "kaldirilan": 49,
+     "eklenen": 49
+    },
+    "dokunulan": 278,
+    "fazladan_dokunulan": 276,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 62,
+     "VARDIYA_ROTASYON_YONU": 3
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.55,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 2,
+   "bozulma": [
+    {
+     "kisi": "I062",
+     "gun": 2
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 87.3,
+    "amac": 1546,
+    "degisiklik": {
+     "korunan": 476,
+     "degisen": 6,
+     "kaldirilan": 3,
+     "eklenen": 3
+    },
+    "dokunulan": 12,
+    "fazladan_dokunulan": 10,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 64,
+     "PLAN_KARARLILIGI": 12,
+     "VARDIYA_ROTASYON_YONU": 12
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 12.39,
+    "kararlilik_cezasi": 72
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1348,
+    "degisiklik": {
+     "korunan": 264,
+     "degisen": 168,
+     "kaldirilan": 53,
+     "eklenen": 53
+    },
+    "dokunulan": 274,
+    "fazladan_dokunulan": 272,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 67,
+     "VARDIYA_ROTASYON_YONU": 3
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.52,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 3,
+   "bozulma": [
+    {
+     "kisi": "I054",
+     "gun": 1
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 124.8,
+    "amac": 1606,
+    "degisiklik": {
+     "korunan": 468,
+     "degisen": 14,
+     "kaldirilan": 3,
+     "eklenen": 3
+    },
+    "dokunulan": 20,
+    "fazladan_dokunulan": 18,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 62,
+     "PLAN_KARARLILIGI": 20,
+     "VARDIYA_ROTASYON_YONU": 14
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 28.97,
+    "kararlilik_cezasi": 120
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1348,
+    "degisiklik": {
+     "korunan": 266,
+     "degisen": 169,
+     "kaldirilan": 50,
+     "eklenen": 50
+    },
+    "dokunulan": 269,
+    "fazladan_dokunulan": 267,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 66,
+     "VARDIYA_ROTASYON_YONU": 3
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.58,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 4,
+   "bozulma": [
+    {
+     "kisi": "I058",
+     "gun": 0
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 111.9,
+    "amac": 1528,
+    "degisiklik": {
+     "korunan": 475,
+     "degisen": 8,
+     "kaldirilan": 2,
+     "eklenen": 2
+    },
+    "dokunulan": 12,
+    "fazladan_dokunulan": 10,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 65,
+     "PLAN_KARARLILIGI": 12,
+     "VARDIYA_ROTASYON_YONU": 10
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 12.82,
+    "kararlilik_cezasi": 72
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1354,
+    "degisiklik": {
+     "korunan": 308,
+     "degisen": 131,
+     "kaldirilan": 46,
+     "eklenen": 46
+    },
+    "dokunulan": 223,
+    "fazladan_dokunulan": 221,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 72,
+     "VARDIYA_ROTASYON_YONU": 4
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.57,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 5,
+   "bozulma": [
+    {
+     "kisi": "I053",
+     "gun": 5
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 82.1,
+    "amac": 1594,
+    "degisiklik": {
+     "korunan": 465,
+     "degisen": 16,
+     "kaldirilan": 4,
+     "eklenen": 4
+    },
+    "dokunulan": 24,
+    "fazladan_dokunulan": 22,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 61,
+     "PLAN_KARARLILIGI": 24,
+     "VARDIYA_ROTASYON_YONU": 10
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 11.28,
+    "kararlilik_cezasi": 144
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1348,
+    "degisiklik": {
+     "korunan": 292,
+     "degisen": 153,
+     "kaldirilan": 40,
+     "eklenen": 40
+    },
+    "dokunulan": 233,
+    "fazladan_dokunulan": 231,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 63,
+     "VARDIYA_ROTASYON_YONU": 3
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.55,
+    "kararlilik_cezasi": null
+   }
+  }
+ ]
+}

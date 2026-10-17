@@ -1,0 +1,217 @@
+{
+ "sahne": "INSAN-2026-06-22",
+ "referans": "_referans-INSAN-2026-06-22.json",
+ "hastalik": 3,
+ "ornek": 5,
+ "saniye": 120,
+ "tohum": 16,
+ "tarih": "2026-10-17 12:09",
+ "cekirdek": 6,
+ "ornekler": [
+  {
+   "ornek": 1,
+   "bozulma": [
+    {
+     "kisi": "I047",
+     "gun": 2
+    },
+    {
+     "kisi": "I061",
+     "gun": 3
+    },
+    {
+     "kisi": "I062",
+     "gun": 1
+    }
+   ],
+   "A_urun": {
+    "durum": "cozumsuz",
+    "sure_sn": 260.0
+   },
+   "B_sifirdan": {
+    "durum": "cozumsuz",
+    "sure_sn": 269.4
+   }
+  },
+  {
+   "ornek": 2,
+   "bozulma": [
+    {
+     "kisi": "I058",
+     "gun": 5
+    },
+    {
+     "kisi": "I001",
+     "gun": 5
+    },
+    {
+     "kisi": "I053",
+     "gun": 2
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 32.3,
+    "amac": 17597,
+    "degisiklik": {
+     "korunan": 458,
+     "degisen": 19,
+     "kaldirilan": 8,
+     "eklenen": 8
+    },
+    "dokunulan": 35,
+    "fazladan_dokunulan": 29,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 71,
+     "PLAN_KARARLILIGI": 35,
+     "VARDIYA_ROTASYON_YONU": 17
+    },
+    "fazla_mesai_saat": 5.25,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 23.46,
+    "kararlilik_cezasi": 210
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 126.7,
+    "amac": 17098,
+    "degisiklik": {
+     "korunan": 273,
+     "degisen": 158,
+     "kaldirilan": 54,
+     "eklenen": 54
+    },
+    "dokunulan": 266,
+    "fazladan_dokunulan": 260,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 71,
+     "VARDIYA_ROTASYON_YONU": 4
+    },
+    "fazla_mesai_saat": 5.25,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.55,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 3,
+   "bozulma": [
+    {
+     "kisi": "I031",
+     "gun": 0
+    },
+    {
+     "kisi": "I082",
+     "gun": 4
+    },
+    {
+     "kisi": "I029",
+     "gun": 2
+    }
+   ],
+   "A_urun": {
+    "durum": "cozuldu",
+    "sure_sn": 86.2,
+    "amac": 1621,
+    "degisiklik": {
+     "korunan": 461,
+     "degisen": 17,
+     "kaldirilan": 7,
+     "eklenen": 7
+    },
+    "dokunulan": 31,
+    "fazladan_dokunulan": 25,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "ADALET_DENGESI": 1,
+     "MOLA_KAPSAMASI": 66,
+     "PLAN_KARARLILIGI": 31,
+     "VARDIYA_ROTASYON_YONU": 11
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 17.91,
+    "kararlilik_cezasi": 186
+   },
+   "B_sifirdan": {
+    "durum": "cozuldu",
+    "sure_sn": 124.6,
+    "amac": 1348,
+    "degisiklik": {
+     "korunan": 255,
+     "degisen": 178,
+     "kaldirilan": 52,
+     "eklenen": 52
+    },
+    "dokunulan": 282,
+    "fazladan_dokunulan": 276,
+    "sert_ihlal": 0,
+    "ihlal": {
+     "MOLA_KAPSAMASI": 66,
+     "VARDIYA_ROTASYON_YONU": 3
+    },
+    "fazla_mesai_saat": 0.0,
+    "eksik_hedef_dakika": 0,
+    "raporlu_gunde_calisan": 0,
+    "ilk_cozum_sn": 1.58,
+    "kararlilik_cezasi": null
+   }
+  },
+  {
+   "ornek": 4,
+   "bozulma": [
+    {
+     "kisi": "I043",
+     "gun": 2
+    },
+    {
+     "kisi": "I019",
+     "gun": 0
+    },
+    {
+     "kisi": "I078",
+     "gun": 1
+    }
+   ],
+   "A_urun": {
+    "durum": "cozumsuz",
+    "sure_sn": 277.3
+   },
+   "B_sifirdan": {
+    "durum": "cozumsuz",
+    "sure_sn": 272.6
+   }
+  },
+  {
+   "ornek": 5,
+   "bozulma": [
+    {
+     "kisi": "I078",
+     "gun": 1
+    },
+    {
+     "kisi": "I033",
+     "gun": 5
+    },
+    {
+     "kisi": "I003",
+     "gun": 6
+    }
+   ],
+   "A_urun": {
+    "durum": "cozumsuz",
+    "sure_sn": 264.2
+   },
+   "B_sifirdan": {
+    "durum": "cozumsuz",
+    "sure_sn": 273.8
+   }
+  }
+ ]
+}

@@ -6,3 +6,5 @@
 16:31:47  08 testleri cikis 0
 16:31:47  DENETIM cikis 0 (0 = HATA yok)
 16:32:08  capraz denetim (fikstur) cikis 0 (0 = sart tutmayan yok)
+16:32:11  commit + push cikis 0
+16:32:11  OGLE BLOGU BITTI

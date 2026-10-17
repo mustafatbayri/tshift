@@ -1,0 +1,36 @@
+﻿04:16:47  GECE BLOGU (g) BASLADI: yama k2, ekili 500 + L1 kiyasi + INSAN PLANI sahneleri + yeniden planlama; kesilirse ayni komut --devam ile surer
+04:16:47  paket-16ekim-k2.patch md5 48dea77d145fd7aa3ce839c8bac0a552
+04:16:47  paket-16ekim-k2.patch uygulandi cikis 0
+04:19:19  09 testleri cikis 0
+04:27:23  08 testleri cikis 0
+04:27:24  DENETIM cikis 0 (0 = HATA yok)
+04:27:26  commit + push cikis 0
+04:27:26  EK-VS2 500 varsayilan 1800 x 3 basliyor (--devam)
+05:45:33  EK-VS2 500 varsayilan 1800 x 3 cikis 0
+05:45:33  EK-VS2 500 gevsek_fm0 1800 x 3 basliyor (--devam)
+07:03:37  EK-VS2 500 gevsek_fm0 1800 x 3 cikis 0
+07:03:37  L1 VS2 500 gevsek_fm0 1800 x 3 basliyor (--devam; cetvel kiyasi)
+08:34:39  L1 VS2 500 gevsek_fm0 1800 x 3 cikis 0
+08:34:39  INSAN 2026-06-22: insan planinin puani (plan_puani) hesaplaniyor
+08:34:45  INSAN 2026-06-22 puan cikis 0
+08:34:45  INSAN 2026-06-22 varsayilan 1800 x 2 basliyor (--devam)
+09:15:32  INSAN 2026-06-22 varsayilan 1800 x 2 cikis 0
+09:15:32  INSAN 2026-07-20: insan planinin puani (plan_puani) hesaplaniyor
+09:15:38  INSAN 2026-07-20 puan cikis 0
+09:15:38  INSAN 2026-07-20 varsayilan 1800 x 2 basliyor (--devam)
+10:08:08  INSAN 2026-07-20 varsayilan 1800 x 2 cikis 0
+10:08:08  EK-VS2 500 onarim_tam 1800 x 2 basliyor (--devam)
+11:00:21  EK-VS2 500 onarim_tam 1800 x 2 cikis 0
+11:00:21  EK (uretec tabani) 500 tanigi basliyor (900 sn)
+11:16:52  EK (uretec) 500 tanigi cikis 0
+11:16:52  EK (uretec) 500 varsayilan 1800 x 2 basliyor (--devam)
+12:09:11  EK (uretec) 500 varsayilan 1800 x 2 cikis 0
+12:09:11  YENIDEN PLANLAMA (edit) INSAN 2026-06-22: 3 kisi raporlu x 5 ornek, 120 sn (A urun + B sifirdan)
+12:42:25  yeniden planlama h3 cikis 0
+12:42:25  YENIDEN PLANLAMA (edit) INSAN 2026-06-22: 1 kisi raporlu x 5 ornek, 120 sn
+13:01:07  yeniden planlama h1 cikis 0
+13:01:07  capraz denetim (--puan) basliyor
+13:12:31  capraz denetim cikis 0 (0 = sart tutmayan yok)
+13:12:31  tam mutasyon basliyor
+13:50:40  tam mutasyon cikis 0
+13:50:40  GECE BLOGU BITTI
